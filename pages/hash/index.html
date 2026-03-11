@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash 计算 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 Hash 计算工具，支持 SHA-1、SHA-256、SHA-384、SHA-512。纯前端，数据不上传。">
+  <meta property="og:title" content="Hash 计算 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线哈希计算工具，支持 MD5、SHA-1、SHA-256、SHA-512 实时计算">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/hash">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hash 计算 — DevKit">
+  <meta name="twitter:description" content="在线哈希计算工具，支持 MD5、SHA-1、SHA-256、SHA-512 实时计算">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Hash 计算","description":"在线哈希计算工具，支持 MD5、SHA-1、SHA-256、SHA-512 实时计算","url":"https://devkit.dev/hash","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/hash">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.main { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 1; }
+.hash-input { flex: 0 0 40%; border-bottom: 0.5px solid var(--border-glass-outer); }
+.hash-input textarea { width: 100%; height: 100%; padding: 16px 18px; font-family: var(--font-code); font-size: 13px; line-height: 1.7; background: transparent; border: none; outline: none; color: var(--text-primary); resize: none; }
+.hash-input textarea::placeholder { color: var(--text-caption); }
+.hash-results { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.hash-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg-glass-card); backdrop-filter: blur(12px); border: 0.5px solid var(--border-glass); border-radius: 10px; }
+.hash-algo { font-size: 10px; font-weight: 700; min-width: 56px; font-family: var(--font-code); padding: 2px 8px; border-radius: 6px; text-align: center; }
+.hash-algo[data-algo="MD5"] { background: #FEE2E2; color: #DC2626; }
+.hash-algo[data-algo="SHA-1"] { background: #DBEAFE; color: #1D4ED8; }
+.hash-algo[data-algo="SHA-256"] { background: #EDE9FE; color: #6D28D9; }
+.hash-algo[data-algo="SHA-384"] { background: #FEF3C7; color: #D97706; }
+.hash-algo[data-algo="SHA-512"] { background: #D1FAE5; color: #059669; }
+[data-theme="dark"] .hash-algo[data-algo="MD5"] { background: rgba(220,38,38,0.2); color: #FCA5A5; }
+[data-theme="dark"] .hash-algo[data-algo="SHA-1"] { background: rgba(29,78,216,0.2); color: #60A5FA; }
+[data-theme="dark"] .hash-algo[data-algo="SHA-256"] { background: rgba(109,40,217,0.2); color: #A78BFA; }
+[data-theme="dark"] .hash-algo[data-algo="SHA-384"] { background: rgba(217,119,6,0.2); color: #FBBF24; }
+[data-theme="dark"] .hash-algo[data-algo="SHA-512"] { background: rgba(5,150,105,0.2); color: #34D399; }
+.hash-value { flex: 1; font-size: 12px; color: var(--text-primary); font-family: var(--font-code); word-break: break-all; }
+.hash-copy { flex-shrink: 0; }
+</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Hash 计算 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Hash 计算</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <label class="checkbox-label"><input type="checkbox" id="upper"> 大写</label>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="main">
+  <div class="hash-input"><textarea id="input" placeholder="输入要计算 Hash 的文本..."></textarea></div>
+  <div class="hash-results" id="results">
+    <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div class="hash-row" style="opacity:0.3"><span class="hash-algo" data-algo="MD5">MD5</span><span class="hash-value" style="color:var(--text-caption)">输入文本后自动计算…</span></div>
+      <div class="hash-row" style="opacity:0.3"><span class="hash-algo" data-algo="SHA-1">SHA-1</span><span class="hash-value" style="color:var(--text-caption)">— — —</span></div>
+      <div class="hash-row" style="opacity:0.3"><span class="hash-algo" data-algo="SHA-256">SHA-256</span><span class="hash-value" style="color:var(--text-caption)">— — —</span></div>
+      <div class="hash-row" style="opacity:0.3"><span class="hash-algo" data-algo="SHA-384">SHA-384</span><span class="hash-value" style="color:var(--text-caption)">— — —</span></div>
+      <div class="hash-row" style="opacity:0.3"><span class="hash-algo" data-algo="SHA-512">SHA-512</span><span class="hash-value" style="color:var(--text-caption)">— — —</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="charCount">0 字符</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/uuid">UUID 生成</a>
+  <a href="/timestamp">时间戳</a>
+  <a href="/base64">Base64</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const algos = ['MD5','SHA-1','SHA-256','SHA-384','SHA-512'];
+
+// Pure JS MD5
+function md5(str){const k=[],s=[7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];for(let i=0;i<64;i++)k[i]=Math.floor(2**32*Math.abs(Math.sin(i+1)))>>>0;const bytes=new TextEncoder().encode(str);const bits=bytes.length*8;const padLen=bytes.length%64<56?56-bytes.length%64:120-bytes.length%64;const padded=new Uint8Array(bytes.length+padLen+8);padded.set(bytes);padded[bytes.length]=0x80;const dv=new DataView(padded.buffer);dv.setUint32(padded.length-8,bits>>>0,true);dv.setUint32(padded.length-4,(bits/2**32)>>>0,true);let a0=0x67452301>>>0,b0=0xefcdab89>>>0,c0=0x98badcfe>>>0,d0=0x10325476>>>0;for(let i=0;i<padded.length;i+=64){const M=[];for(let j=0;j<16;j++)M[j]=dv.getUint32(i+j*4,true);let a=a0,b=b0,c=c0,d=d0;for(let j=0;j<64;j++){let f,g;if(j<16){f=(b&c)|((~b>>>0)&d);g=j}else if(j<32){f=(d&b)|((~d>>>0)&c);g=(5*j+1)%16}else if(j<48){f=b^c^d;g=(3*j+5)%16}else{f=c^(b|(~d>>>0));g=(7*j)%16}f=(f>>>0);const temp=d;d=c;c=b;const sum=(a+f+k[j]+M[g])>>>0;b=(b+((sum<<s[j])|(sum>>>(32-s[j]))))>>>0;a=temp}a0=(a0+a)>>>0;b0=(b0+b)>>>0;c0=(c0+c)>>>0;d0=(d0+d)>>>0}const hex=v=>{const h=v.toString(16).padStart(8,'0');return h.slice(6,8)+h.slice(4,6)+h.slice(2,4)+h.slice(0,2)};return hex(a0)+hex(b0)+hex(c0)+hex(d0)}
+
+async function computeHash(algo, text) {
+  if (algo === 'MD5') return md5(text);
+  const data = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest(algo, data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function calculate() {
+  const text = document.getElementById('input').value;
+  if (!text) return;
+  const upper = document.getElementById('upper').checked;
+  const results = await Promise.all(algos.map(async a => {
+    let h = await computeHash(a, text);
+    if (upper) h = h.toUpperCase();
+    return { algo: a, hash: h };
+  }));
+  document.getElementById('results').innerHTML = results.map(r =>
+    `<div class="hash-row"><span class="hash-algo" data-algo="${r.algo}">${r.algo}</span><span class="hash-value">${r.hash}</span><span style="font-size:11px;color:var(--text-caption)">${r.hash.length*4} bit</span><button class="btn-tool hash-copy" data-hash="${r.hash}">📋</button></div>`
+  ).join('') + '<div style="font-size:11px;color:var(--text-caption);padding:4px 14px">⚠ MD5 不安全，仅供兼容需要，推荐使用 SHA-256</div>';
+  document.getElementById('charCount').textContent = `${text.length} 字符 · ${algos.length} 种算法`;
+}
+
+let debounceTimer;
+document.getElementById('input').addEventListener('input', () => {
+  document.getElementById('charCount').textContent = `${document.getElementById('input').value.length} 字符`;
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(calculate, 300);
+});
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('input').value = '';
+  document.getElementById('results').innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-caption)">输入文本即可实时计算</div>';
+  document.getElementById('charCount').textContent = '0 字符';
+});
+document.getElementById('results').addEventListener('click', e => {
+  const btn = e.target.closest('.hash-copy');
+  if (btn) navigator.clipboard.writeText(btn.dataset.hash);
+});
+</script>
+  <noscript><p>Hash 计算 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

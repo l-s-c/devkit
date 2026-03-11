@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本对比 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线文本对比工具，逐行高亮差异，支持忽略空白和大小写。纯前端，数据不上传。">
+  <meta property="og:title" content="文本对比 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线文本对比工具，逐行差异高亮，支持忽略空白和大小写">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/text-diff">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="文本对比 — DevKit">
+  <meta name="twitter:description" content="在线文本对比工具，逐行差异高亮，支持忽略空白和大小写">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"文本对比","description":"在线文本对比工具，逐行差异高亮，支持忽略空白和大小写","url":"https://devkit.dev/text-diff","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/text-diff">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;z-index:1}
+.input-area{display:grid;grid-template-columns:1fr 1fr;flex:0 0 40%;border-bottom:0.5px solid var(--border-glass-outer)}
+.input-pane{display:flex;flex-direction:column;min-height:0}
+.input-pane:first-child{border-right:0.5px solid var(--border-glass-outer)}
+.input-head{height:28px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:var(--bg-glass);border-bottom:0.5px solid var(--border-glass-outer);flex-shrink:0;font-size:11px;font-weight:600;color:var(--text-tertiary)}
+.input-pane textarea{flex:1;width:100%;padding:12px 16px;font-family:var(--font-code);font-size:13px;line-height:1.7;background:transparent;border:none;outline:none;color:var(--text-primary);resize:none}
+.diff-result{flex:1;overflow-y:auto;font-family:var(--font-code);font-size:12px;line-height:1.8}
+.diff-line{display:flex;padding:0 16px;min-height:22px}
+.diff-ln{min-width:40px;text-align:right;padding-right:8px;color:var(--text-caption);user-select:none}
+.diff-content{flex:1;white-space:pre-wrap;word-break:break-all}
+.diff-add{background:rgba(34,197,94,0.12)}
+.diff-del{background:rgba(239,68,68,0.12)}
+.diff-add .diff-content{color:#16A34A}
+.diff-del .diff-content{color:#DC2626}
+[data-theme="dark"] .diff-add{background:rgba(34,197,94,0.08)}
+[data-theme="dark"] .diff-del{background:rgba(239,68,68,0.08)}
+[data-theme="dark"] .diff-add .diff-content{color:#4ADE80}
+[data-theme="dark"] .diff-del .diff-content{color:#FCA5A5}
+.diff-header{padding:8px 16px;font-size:11px;font-weight:600;color:var(--text-caption);background:var(--bg-glass);border-bottom:0.5px solid var(--border-glass-outer)}
+</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">文本对比 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">文本对比</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <button class="btn-tool" id="btnDiff" style="background:var(--brand-500);color:white;border:none">🔍 对比</button>
+  <button class="btn-tool" id="btnSample">示例</button>
+  <label class="checkbox-label"><input type="checkbox" id="ignoreWs"> 忽略空白</label>
+  <label class="checkbox-label"><input type="checkbox" id="ignoreCase"> 忽略大小写</label>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnSwap">🔄 交换</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="main">
+  <div class="input-area">
+    <div class="input-pane"><div class="input-head"><span>原始文本</span><span id="leftMeta"></span></div><textarea id="leftText" placeholder="输入原始文本..."></textarea></div>
+    <div class="input-pane"><div class="input-head"><span>修改文本</span><span id="rightMeta"></span></div><textarea id="rightText" placeholder="输入修改后的文本..."></textarea></div>
+  </div>
+  <div class="diff-header" id="diffHeader" style="display:none"></div>
+  <div class="diff-result" id="diffResult"><div style="text-align:center;color:var(--text-caption);padding:40px">输入两段文本即可实时对比</div></div>
+</div>
+
+<div class="statusbar">
+  <span id="statLabel">—</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/json">JSON 对比</a>
+  <a href="/markdown">Markdown</a>
+  <a href="/regex">正则测试</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function lcs(a, b) {
+  const m=a.length, n=b.length;
+  const dp = Array.from({length:m+1},()=>new Uint16Array(n+1));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j],dp[i][j-1]);
+  const result=[];
+  let i=m,j=n;
+  while(i>0&&j>0){
+    if(a[i-1]===b[j-1]){result.unshift({type:'eq',left:i,right:j,text:a[i-1]});i--;j--}
+    else if(dp[i-1][j]>=dp[i][j-1]){result.unshift({type:'del',left:i,text:a[i-1]});i--}
+    else{result.unshift({type:'add',right:j,text:b[j-1]});j--}
+  }
+  while(i>0){result.unshift({type:'del',left:i,text:a[i-1]});i--}
+  while(j>0){result.unshift({type:'add',right:j,text:b[j-1]});j--}
+  return result;
+}
+
+function doDiff() {
+  let left = document.getElementById('leftText').value;
+  let right = document.getElementById('rightText').value;
+  const ignoreWs = document.getElementById('ignoreWs').checked;
+  const ignoreCase = document.getElementById('ignoreCase').checked;
+
+  const leftLines = left.split('\n');
+  const rightLines = right.split('\n');
+  document.getElementById('leftMeta').textContent = `${leftLines.length} 行`;
+  document.getElementById('rightMeta').textContent = `${rightLines.length} 行`;
+
+  let cmpLeft = leftLines, cmpRight = rightLines;
+  if (ignoreWs) { cmpLeft = leftLines.map(l=>l.trim()); cmpRight = rightLines.map(l=>l.trim()); }
+  if (ignoreCase) { cmpLeft = cmpLeft.map(l=>l.toLowerCase()); cmpRight = cmpRight.map(l=>l.toLowerCase()); }
+
+  const diff = lcs(cmpLeft, cmpRight);
+  let adds=0, dels=0;
+  let html = '';
+  diff.forEach(d => {
+    if(d.type==='eq'){
+      const ln = d.left;
+      html += `<div class="diff-line"><span class="diff-ln">${ln}</span><span class="diff-content"> ${esc(leftLines[ln-1])}</span></div>`;
+    } else if(d.type==='del'){
+      dels++;
+      html += `<div class="diff-line diff-del"><span class="diff-ln">${d.left}</span><span class="diff-content">-${esc(leftLines[d.left-1])}</span></div>`;
+    } else {
+      adds++;
+      html += `<div class="diff-line diff-add"><span class="diff-ln">${d.right}</span><span class="diff-content">+${esc(rightLines[d.right-1])}</span></div>`;
+    }
+  });
+  document.getElementById('diffResult').innerHTML = html || '<div style="text-align:center;color:var(--success);padding:40px">✓ 两段文本完全相同</div>';
+  document.getElementById('diffHeader').style.display = '';
+  document.getElementById('diffHeader').textContent = `${adds} 行新增 · ${dels} 行删除 · ${diff.filter(d=>d.type==='eq').length} 行相同`;
+  document.getElementById('statLabel').textContent = `${adds+dels} 处差异`;
+}
+
+document.getElementById('btnSample').addEventListener('click', () => {
+  document.getElementById('leftText').value='function greet(name) {\n  console.log("Hello, " + name);\n  return true;\n}\n\ngreet("world");';
+  document.getElementById('rightText').value='function greet(name, greeting = "Hi") {\n  console.log(greeting + ", " + name + "!");\n  return name;\n}\n\ngreet("DevKit");';
+  doDiff();
+});
+document.getElementById('btnDiff').addEventListener('click', doDiff);
+let diffTimer;
+document.getElementById('leftText').addEventListener('input', () => { clearTimeout(diffTimer); diffTimer = setTimeout(doDiff, 400); });
+document.getElementById('rightText').addEventListener('input', () => { clearTimeout(diffTimer); diffTimer = setTimeout(doDiff, 400); });
+document.getElementById('btnSwap').addEventListener('click', () => {
+  const l = document.getElementById('leftText'), r = document.getElementById('rightText');
+  [l.value, r.value] = [r.value, l.value];
+});
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('leftText').value=''; document.getElementById('rightText').value='';
+  document.getElementById('diffResult').innerHTML='<div style="text-align:center;color:var(--text-caption);padding:40px">输入两段文本即可实时对比</div>';
+  document.getElementById('diffHeader').style.display='none';
+  document.getElementById('statLabel').textContent='—';
+});
+</script>
+  <noscript><p>文本对比 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

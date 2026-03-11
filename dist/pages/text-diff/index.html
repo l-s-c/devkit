@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本对比 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线文本对比工具，逐行高亮差异，支持忽略空白和大小写。纯前端，数据不上传。">
+  <meta property="og:title" content="文本对比 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线文本对比工具，逐行差异高亮，支持忽略空白和大小写">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/text-diff">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="文本对比 — DevKit">
+  <meta name="twitter:description" content="在线文本对比工具，逐行差异高亮，支持忽略空白和大小写">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"文本对比","description":"在线文本对比工具，逐行差异高亮，支持忽略空白和大小写","url":"https://devkit.dev/text-diff","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/text-diff">
+<style>
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;z-index:1}
+.input-area{display:grid;grid-template-columns:1fr 1fr;flex:0 0 40%;border-bottom:0.5px solid var(--border-glass-outer)}
+.input-pane{display:flex;flex-direction:column;min-height:0}
+.input-pane:first-child{border-right:0.5px solid var(--border-glass-outer)}
+.input-head{height:28px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:var(--bg-glass);border-bottom:0.5px solid var(--border-glass-outer);flex-shrink:0;font-size:11px;font-weight:600;color:var(--text-tertiary)}
+.input-pane textarea{flex:1;width:100%;padding:12px 16px;font-family:var(--font-code);font-size:13px;line-height:1.7;background:transparent;border:none;outline:none;color:var(--text-primary);resize:none}
+.diff-result{flex:1;overflow-y:auto;font-family:var(--font-code);font-size:12px;line-height:1.8}
+.diff-line{display:flex;padding:0 16px;min-height:22px}
+.diff-ln{min-width:40px;text-align:right;padding-right:8px;color:var(--text-caption);user-select:none}
+.diff-content{flex:1;white-space:pre-wrap;word-break:break-all}
+.diff-add{background:rgba(34,197,94,0.12)}
+.diff-del{background:rgba(239,68,68,0.12)}
+.diff-add .diff-content{color:#16A34A}
+.diff-del .diff-content{color:#DC2626}
+[data-theme="dark"] .diff-add{background:rgba(34,197,94,0.08)}
+[data-theme="dark"] .diff-del{background:rgba(239,68,68,0.08)}
+[data-theme="dark"] .diff-add .diff-content{color:#4ADE80}
+[data-theme="dark"] .diff-del .diff-content{color:#FCA5A5}
+.diff-header{padding:8px 16px;font-size:11px;font-weight:600;color:var(--text-caption);background:var(--bg-glass);border-bottom:0.5px solid var(--border-glass-outer)}
+</style>
+  <script type="module" crossorigin src="/assets/text-diff-4dPSssw9.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/theme-CrLl7tUf.js">
+  <link rel="stylesheet" crossorigin href="/assets/theme-nJ2zlTPs.css">
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">文本对比 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">文本对比</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <button class="btn-tool" id="btnDiff" style="background:var(--brand-500);color:white;border:none">🔍 对比</button>
+  <button class="btn-tool" id="btnSample">示例</button>
+  <label class="checkbox-label"><input type="checkbox" id="ignoreWs"> 忽略空白</label>
+  <label class="checkbox-label"><input type="checkbox" id="ignoreCase"> 忽略大小写</label>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnSwap">🔄 交换</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="main">
+  <div class="input-area">
+    <div class="input-pane"><div class="input-head"><span>原始文本</span><span id="leftMeta"></span></div><textarea id="leftText" placeholder="输入原始文本..."></textarea></div>
+    <div class="input-pane"><div class="input-head"><span>修改文本</span><span id="rightMeta"></span></div><textarea id="rightText" placeholder="输入修改后的文本..."></textarea></div>
+  </div>
+  <div class="diff-header" id="diffHeader" style="display:none"></div>
+  <div class="diff-result" id="diffResult"><div style="text-align:center;color:var(--text-caption);padding:40px">输入两段文本即可实时对比</div></div>
+</div>
+
+<div class="statusbar">
+  <span id="statLabel">—</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/json">JSON 对比</a>
+  <a href="/markdown">Markdown</a>
+  <a href="/regex">正则测试</a>
+</div>
+
+  <noscript><p>文本对比 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

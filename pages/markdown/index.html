@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown 预览 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 Markdown 编辑器，实时预览渲染效果，支持导出 HTML。纯前端，数据不上传。">
+  <meta property="og:title" content="Markdown 预览 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/markdown">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Markdown 预览 — DevKit">
+  <meta name="twitter:description" content="在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown 预览","description":"在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML","url":"https://devkit.dev/markdown","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/markdown">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:0;position:relative;z-index:1}
+.edit-pane{display:flex;flex-direction:column;border-right:0.5px solid var(--border-glass-outer);min-height:0}
+.preview-pane{display:flex;flex-direction:column;min-height:0}
+.pane-head{height:32px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:var(--bg-glass);border-bottom:0.5px solid var(--border-glass-outer);flex-shrink:0;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase}
+.edit-area{flex:1;min-height:0}
+.edit-area textarea{width:100%;height:100%;padding:16px 18px;font-family:var(--font-code);font-size:13px;line-height:1.7;background:transparent;border:none;outline:none;color:var(--text-primary);resize:none;tab-size:2}
+.edit-area textarea::placeholder{color:var(--text-caption)}
+.preview-area{flex:1;overflow-y:auto;padding:20px 24px;font-size:14px;line-height:1.8;color:var(--text-primary)}
+.preview-area h1{font-size:28px;font-weight:700;margin:20px 0 12px;padding-bottom:8px;border-bottom:0.5px solid var(--border-glass-outer)}
+.preview-area h2{font-size:22px;font-weight:600;margin:18px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--border-glass-outer)}
+.preview-area h3{font-size:17px;font-weight:600;margin:16px 0 8px}
+.preview-area p{margin:8px 0}
+.preview-area code{font-family:var(--font-code);font-size:12px;background:var(--bg-glass-input);padding:2px 6px;border-radius:4px}
+.preview-area pre{background:var(--bg-glass-input);border:0.5px solid var(--border-input);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:12px 0}
+.preview-area pre code{background:none;padding:0;font-size:13px;line-height:1.6}
+.preview-area blockquote{border-left:3px solid var(--brand-500);padding:4px 16px;margin:12px 0;color:var(--text-secondary);background:var(--bg-glass-input);border-radius:0 8px 8px 0}
+.preview-area ul,.preview-area ol{padding-left:24px;margin:8px 0}
+.preview-area li{margin:4px 0}
+.preview-area a{color:var(--brand-500);text-decoration:none}
+.preview-area a:hover{text-decoration:underline}
+.preview-area table{border-collapse:collapse;width:100%;margin:12px 0}
+.preview-area th,.preview-area td{border:0.5px solid var(--border-input);padding:8px 12px;text-align:left;font-size:13px}
+.preview-area th{background:var(--bg-glass);font-weight:600}
+.preview-area img{max-width:100%;border-radius:8px}
+.preview-area li.task{list-style:none;margin-left:-20px}
+.preview-area li.task input{margin-right:6px;accent-color:var(--brand-500)}
+.preview-area hr{border:none;border-top:0.5px solid var(--border-glass-outer);margin:20px 0}
+</style>
+</head>
+<body>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Markdown 预览</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <button class="btn-tool" id="btnSample">示例</button>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnCopyHtml">📋 复制 HTML</button>
+  <button class="btn-tool" id="btnExport">⬇ 导出 HTML</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="main">
+  <div class="edit-pane">
+    <div class="pane-head"><span>Markdown</span><span id="editMeta"></span></div>
+    <div class="edit-area"><textarea id="editor" placeholder="输入 Markdown 内容...">## 欢迎使用 Markdown 预览
+
+在左侧编辑 Markdown，右侧实时预览渲染效果。
+
+### 支持的语法
+
+- **粗体** 和 *斜体*
+- `行内代码` 和代码块
+- [链接](https://example.com) 和 ~~删除线~~
+
+> 引用文字
+
+```javascript
+console.log('Hello, DevKit!');
+```
+
+---
+
+点击上方「示例」可加载完整示例，或清空后输入你自己的内容。</textarea></div>
+  </div>
+  <div class="preview-pane">
+    <div class="pane-head"><span>预览</span></div>
+    <div class="preview-area" id="preview"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="charCount">0 字符</span>
+  <span id="lineCount">0 行</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/json">JSON 格式化</a>
+  <a href="/regex">正则测试</a>
+  <a href="/base64">Base64</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+// Simple Markdown parser (no dependency)
+function parseMd(md) {
+  // Extract code blocks first to protect them
+  const codeBlocks = [];
+  md = md.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    codeBlocks.push(`<pre><code>${esc(code.trim())}</code></pre>`);
+    return `%%CODEBLOCK_${codeBlocks.length-1}%%`;
+  });
+
+  // Tables (GFM) — must be before other inline processing
+  md = md.replace(/^(\|.+\|)\n(\|[-| :]+\|)\n((?:\|.+\|\n?)*)/gm, (_, header, sep, body) => {
+    const aligns = sep.split('|').filter(Boolean).map(c => {
+      c = c.trim();
+      if (c.startsWith(':') && c.endsWith(':')) return 'center';
+      if (c.endsWith(':')) return 'right';
+      return 'left';
+    });
+    const ths = header.split('|').filter(Boolean).map((c,i) => `<th style="text-align:${aligns[i]||'left'}">${c.trim()}</th>`).join('');
+    const rows = body.trim().split('\n').filter(Boolean).map(row => {
+      const tds = row.split('|').filter(Boolean).map((c,i) => `<td style="text-align:${aligns[i]||'left'}">${c.trim()}</td>`).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    return `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+  });
+
+  let html = md
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^######\s+(.+)$/gm, '<h6>$1</h6>')
+    .replace(/^#####\s+(.+)$/gm, '<h5>$1</h5>')
+    .replace(/^####\s+(.+)$/gm, '<h4>$1</h4>')
+    .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
+    .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
+    .replace(/^#\s+(.+)$/gm, '<h1>$1</h1>')
+    .replace(/^---+$/gm, '<hr>')
+    .replace(/^>\s+(.+)$/gm, '<blockquote><p>$1</p></blockquote>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/~~(.+?)~~/g, '<del>$1</del>')
+    // Task lists (GFM)
+    .replace(/^[-*]\s+\[x\]\s+(.+)$/gim, '<li class="task"><input type="checkbox" checked disabled> $1</li>')
+    .replace(/^[-*]\s+\[\s?\]\s+(.+)$/gm, '<li class="task"><input type="checkbox" disabled> $1</li>')
+    // Regular lists
+    .replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
+    .replace(/^(?!<[huplobid\|t]|<li|<hr|<pre|<block|<table|%%CODE)(.+)$/gm, '<p>$1</p>');
+
+  html = html.replace(/((?:<li[^>]*>.*<\/li>\s*)+)/g, '<ul>$1</ul>');
+
+  // Restore code blocks
+  codeBlocks.forEach((block, i) => { html = html.replace(`%%CODEBLOCK_${i}%%`, block); });
+  return html;
+}
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+
+function render() {
+  preview.innerHTML = parseMd(editor.value);
+  document.getElementById('charCount').textContent = `${editor.value.length} 字符`;
+  document.getElementById('lineCount').textContent = `${editor.value.split('\n').length} 行`;
+}
+
+editor.addEventListener('input', render);
+render(); // render default content
+// Tab support
+editor.addEventListener('keydown', e => {
+  if (e.key==='Tab') { e.preventDefault(); const s=editor.selectionStart; editor.value=editor.value.slice(0,s)+'  '+editor.value.slice(editor.selectionEnd); editor.selectionStart=editor.selectionEnd=s+2; render(); }
+});
+
+document.getElementById('btnSample').addEventListener('click', () => {
+  editor.value = `# DevKit 使用指南
+
+## 功能列表
+
+DevKit 是面向开发者的在线工具箱，包含以下工具：
+
+- **JSON 格式化** — 格式化、压缩、校验
+- **Base64 编解码** — 支持 URL 安全模式
+- **正则表达式测试** — 实时高亮匹配
+
+## 代码示例
+
+\`\`\`javascript
+const uuid = crypto.randomUUID();
+console.log(uuid);
+\`\`\`
+
+> 所有数据仅在浏览器本地处理，不会上传到服务器。
+
+## 对比表
+
+| 工具 | 状态 | 说明 |
+| --- | --- | --- |
+| JSON | ✅ | 格式化 + 校验 + 对比 |
+| Base64 | ✅ | 编码 + 解码 |
+| Hash | ✅ | SHA-1/256/384/512 |
+
+---
+
+*Made with ❤️ by DevKit*`;
+  render();
+});
+
+document.getElementById('btnCopyHtml').addEventListener('click', () => {
+  navigator.clipboard.writeText(preview.innerHTML);
+});
+document.getElementById('btnExport').addEventListener('click', () => {
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Markdown Export</title><style>body{max-width:800px;margin:40px auto;padding:0 20px;font-family:-apple-system,sans-serif;line-height:1.7}code{background:#f4f4f5;padding:2px 6px;border-radius:3px}pre{background:#f4f4f5;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:3px solid #6366f1;padding:4px 16px;color:#666}</style></head><body>${preview.innerHTML}
+</body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='export.html'; a.click();
+});
+document.getElementById('btnClear').addEventListener('click', () => { editor.value=''; preview.innerHTML=''; render(); });
+</script>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Markdown 预览 — DevKit 在线开发者工具箱</h1>
+<noscript><p>Markdown 预览 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

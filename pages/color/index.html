@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色转换器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线颜色转换工具，HEX/RGB/HSL/CMYK 互转，调色板生成，CSS 渐变生成，WCAG 对比度检查。">
+  <meta property="og:title" content="颜色转换器 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="HEX/RGB/HSL/CMYK 在线颜色转换，调色板生成，WCAG 对比度检查">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/color">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="颜色转换器 — DevKit">
+  <meta name="twitter:description" content="HEX/RGB/HSL/CMYK 在线颜色转换，调色板生成，WCAG 对比度检查">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"颜色转换器","description":"HEX/RGB/HSL/CMYK 在线颜色转换，调色板生成，WCAG 对比度检查","url":"https://devkit.dev/color","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/color">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:grid;grid-template-columns:360px 1fr;min-height:0;position:relative;z-index:1;overflow:hidden}
+
+/* Left panel */
+.left-panel{display:flex;flex-direction:column;gap:0;border-right:0.5px solid var(--border-glass-outer);overflow-y:auto;padding:16px}
+.color-swatch{width:100%;height:180px;border-radius:16px;border:0.5px solid var(--border-glass-outer);position:relative;overflow:hidden;cursor:pointer;flex-shrink:0}
+.color-swatch input[type="color"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+
+.hue-bar{width:100%;height:16px;border-radius:8px;margin-top:12px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);cursor:crosshair;position:relative;flex-shrink:0}
+.hue-thumb{width:12px;height:20px;border-radius:4px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);position:absolute;top:-2px;transform:translateX(-50%);pointer-events:none}
+
+.format-group{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.format-row{display:flex;align-items:center;gap:8px}
+.format-label{font-size:10px;font-weight:700;color:var(--text-tertiary);min-width:36px;font-family:var(--font-code)}
+.format-input{flex:1;height:32px;padding:0 10px;font-family:var(--font-code);font-size:12px;background:var(--bg-glass-input);border:0.5px solid var(--border-input);border-radius:8px;color:var(--text-primary);outline:none}
+.format-input:focus{border-color:var(--brand-500)}
+.fmt-copy{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--text-tertiary);cursor:pointer;border-radius:6px;font-size:12px}
+.fmt-copy:hover{background:var(--bg-glass-hover)}
+
+.recent-colors{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.recent-dot{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border-glass-outer);cursor:pointer;transition:transform 200ms}
+.recent-dot:hover{transform:scale(1.12)}
+
+/* Right panel */
+.right-panel{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px}
+.panel-card{padding:16px;background:var(--bg-glass-card);backdrop-filter:blur(12px);border:0.5px solid var(--border-glass);border-radius:14px}
+.panel-title{font-size:12px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.palette-grid{display:flex;gap:8px;flex-wrap:wrap}
+.palette-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.palette-swatch{width:56px;height:56px;border-radius:10px;border:0.5px solid var(--border-glass-outer);transition:transform 200ms}
+.palette-swatch:hover{transform:scale(1.08)}
+.palette-label{font-size:10px;color:var(--text-caption)}
+.palette-hex{font-size:10px;font-family:var(--font-code);color:var(--text-tertiary)}
+
+.gradient-preview{height:80px;border-radius:12px;border:0.5px solid var(--border-glass-outer);margin-bottom:12px}
+.gradient-code{font-family:var(--font-code);font-size:12px;color:var(--text-primary);background:var(--bg-glass-input);padding:8px 12px;border-radius:8px;word-break:break-all;cursor:pointer}
+.gradient-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.gradient-stop{width:32px;height:32px;border-radius:8px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;position:relative}
+.gradient-stop input[type="color"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.gradient-angle{width:60px}
+
+.contrast-section{display:flex;gap:12px;align-items:center}
+.contrast-preview{width:120px;height:60px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border:0.5px solid var(--border-glass-outer)}
+.contrast-details{flex:1}
+.contrast-ratio-big{font-size:28px;font-weight:700;font-family:var(--font-code)}
+.contrast-badges{display:flex;gap:6px;margin-top:4px}
+.cbadge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700}
+.cbadge-pass{background:#D1FAE5;color:#059669}
+.cbadge-fail{background:#FEE2E2;color:#DC2626}
+[data-theme="dark"] .cbadge-pass{background:rgba(5,150,105,0.2);color:#34D399}
+[data-theme="dark"] .cbadge-fail{background:rgba(220,38,38,0.2);color:#FCA5A5}
+.contrast-bg-input{display:flex;gap:8px;align-items:center;margin-top:8px}
+</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">颜色转换器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">颜色转换器</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- Left: Picker + Formats -->
+  <div class="left-panel">
+    <div class="color-swatch" id="swatch" style="background:#6366F1"><input type="color" id="picker" value="#6366F1"><div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.25);padding:2px 10px;border-radius:100px;pointer-events:none">点击选色</div></div>
+    <div class="hue-bar" id="hueBar"><div class="hue-thumb" id="hueThumb" style="left:66%"></div></div>
+
+    <div class="format-group">
+      <div class="format-row"><span class="format-label">HEX</span><input class="format-input" id="hexInput" value="#6366F1" spellcheck="false"><button class="fmt-copy" onclick="copyText(document.getElementById('hexInput').value,'✓ HEX 已复制')">📋</button></div>
+      <div class="format-row"><span class="format-label">RGB</span><input class="format-input" id="rgbInput" value="rgb(99, 102, 241)" spellcheck="false"><button class="fmt-copy" onclick="copyText(document.getElementById('rgbInput').value,'✓ RGB 已复制')">📋</button></div>
+      <div class="format-row"><span class="format-label">HSL</span><input class="format-input" id="hslInput" value="hsl(239, 84%, 67%)" spellcheck="false"><button class="fmt-copy" onclick="copyText(document.getElementById('hslInput').value,'✓ HSL 已复制')">📋</button></div>
+      <div class="format-row"><span class="format-label">CMYK</span><input class="format-input" id="cmykInput" value="cmyk(59%, 58%, 0%, 5%)" spellcheck="false" readonly><button class="fmt-copy" onclick="copyText(document.getElementById('cmykInput').value,'✓ CMYK 已复制')">📋</button></div>
+    </div>
+
+    <div class="recent-colors" id="recentColors"></div>
+  </div>
+
+  <!-- Right: Palette + Gradient + Contrast -->
+  <div class="right-panel">
+    <!-- Palette -->
+    <div class="panel-card">
+      <div class="panel-title">调色板方案</div>
+      <div class="palette-grid" id="palette"></div>
+    </div>
+
+    <!-- Gradient -->
+    <div class="panel-card">
+      <div class="panel-title">CSS 渐变生成器</div>
+      <div class="gradient-controls">
+        <div class="gradient-stop" id="gradStop1" style="background:#6366F1"><input type="color" id="gradColor1" value="#6366F1"></div>
+        <span style="color:var(--text-caption)">→</span>
+        <div class="gradient-stop" id="gradStop2" style="background:#EC4899"><input type="color" id="gradColor2" value="#EC4899"></div>
+        <span class="format-label">角度</span>
+        <input type="number" class="format-input gradient-angle" id="gradAngle" value="135" min="0" max="360">°
+      </div>
+      <div class="gradient-preview" id="gradPreview" style="background:linear-gradient(135deg,#6366F1,#EC4899)"></div>
+      <div class="gradient-code" id="gradCode" onclick="copyText(this.textContent,'✓ 渐变代码已复制')">background: linear-gradient(135deg, #6366F1, #EC4899);</div>
+    </div>
+
+    <!-- Contrast -->
+    <div class="panel-card">
+      <div class="panel-title">WCAG 对比度检查</div>
+      <div class="contrast-section">
+        <div class="contrast-preview" id="contrastPreview" style="background:white;color:#6366F1">Aa 文字</div>
+        <div class="contrast-details">
+          <div><span class="contrast-ratio-big" id="contrastRatio">3.45</span><span style="color:var(--text-caption)">:1</span></div>
+          <div class="contrast-badges"><span class="cbadge" id="cAA">AA</span><span class="cbadge" id="cAAA">AAA</span><span class="cbadge" id="cAALarge">AA 大字</span></div>
+        </div>
+      </div>
+      <div class="contrast-bg-input">
+        <span class="format-label" style="min-width:auto">背景色</span>
+        <input class="format-input" id="contrastBg" value="#FFFFFF" style="width:100px" spellcheck="false">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="colorName">Indigo 500</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/base64">Base64</a>
+  <a href="/hash">Hash 计算</a>
+  <a href="/timestamp">时间戳</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let r=99,g=102,b=241;
+const recent=[];
+
+function hexToRgb(hex){hex=hex.replace(/^#/,'');if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];return{r:parseInt(hex.slice(0,2),16),g:parseInt(hex.slice(2,4),16),b:parseInt(hex.slice(4,6),16)}}
+function rgbToHex(r,g,b){return'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;let h=0,s=0,l=(max+min)/2;if(d){s=l>0.5?d/(2-max-min):d/(max+min);if(max===r)h=((g-b)/d+(g<b?6:0))/6;else if(max===g)h=((b-r)/d+2)/6;else h=((r-g)/d+4)/6}return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)}}
+function hslToRgb(h,s,l){h/=360;s/=100;l/=100;let R,G,B;if(s===0){R=G=B=l}else{const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const q=l<0.5?l*(1+s):l+s-l*s,p=2*l-q;R=hue2rgb(p,q,h+1/3);G=hue2rgb(p,q,h);B=hue2rgb(p,q,h-1/3)}return{r:Math.round(R*255),g:Math.round(G*255),b:Math.round(B*255)}}
+function rgbToCmyk(r,g,b){if(r===0&&g===0&&b===0)return{c:0,m:0,y:0,k:100};const c1=1-r/255,m1=1-g/255,y1=1-b/255,k=Math.min(c1,m1,y1);return{c:Math.round((c1-k)/(1-k)*100),m:Math.round((m1-k)/(1-k)*100),y:Math.round((y1-k)/(1-k)*100),k:Math.round(k*100)}}
+function luminance(r,g,b){const[rs,gs,bs]=[r,g,b].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});return 0.2126*rs+0.7152*gs+0.0722*bs}
+function contrastRatio(fg,bg){const l1=luminance(fg.r,fg.g,fg.b),l2=luminance(bg.r,bg.g,bg.b);return((Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05))}
+
+function updateAll(source){
+  const hex=rgbToHex(r,g,b),hsl=rgbToHsl(r,g,b),cmyk=rgbToCmyk(r,g,b);
+  if(source!=='hex')document.getElementById('hexInput').value=hex;
+  if(source!=='rgb')document.getElementById('rgbInput').value=`rgb(${r}, ${g}, ${b})`;
+  if(source!=='hsl')document.getElementById('hslInput').value=`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+  document.getElementById('cmykInput').value=`cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`;
+  document.getElementById('swatch').style.background=hex;
+  try{document.getElementById('picker').value=hex}catch(e){}
+  // Hue thumb
+  document.getElementById('hueThumb').style.left=`${hsl.h/360*100}%`;
+  // Palette
+  updatePalette(hsl);
+  // Gradient
+  document.getElementById('gradColor1').value=hex;
+  document.getElementById('gradStop1').style.background=hex;
+  updateGradient();
+  // Contrast
+  updateContrast();
+  // Recent
+  addRecent(hex);
+}
+
+function updatePalette(hsl){
+  const schemes=[
+    {name:'互补色',colors:[{h:(hsl.h+180)%360,s:hsl.s,l:hsl.l}]},
+    {name:'类似色',colors:[{h:(hsl.h+30)%360,s:hsl.s,l:hsl.l},{h:(hsl.h-30+360)%360,s:hsl.s,l:hsl.l}]},
+    {name:'三角色',colors:[{h:(hsl.h+120)%360,s:hsl.s,l:hsl.l},{h:(hsl.h+240)%360,s:hsl.s,l:hsl.l}]},
+    {name:'分裂互补',colors:[{h:(hsl.h+150)%360,s:hsl.s,l:hsl.l},{h:(hsl.h+210)%360,s:hsl.s,l:hsl.l}]},
+    {name:'明度变化',colors:[{h:hsl.h,s:hsl.s,l:Math.min(90,hsl.l+20)},{h:hsl.h,s:hsl.s,l:Math.max(10,hsl.l-20)}]}
+  ];
+  let html=`<div class="palette-item" onclick="copyText('${rgbToHex(r,g,b)}','✓ 已复制')"><div class="palette-swatch" style="background:${rgbToHex(r,g,b)}"></div><div class="palette-label">当前</div><div class="palette-hex">${rgbToHex(r,g,b)}</div></div>`;
+  schemes.forEach(s=>{s.colors.forEach(c=>{const rgb=hslToRgb(c.h,c.s,c.l);const hex=rgbToHex(rgb.r,rgb.g,rgb.b);html+=`<div class="palette-item" onclick="window._setHex('${hex}')"><div class="palette-swatch" style="background:${hex}"></div><div class="palette-label">${s.name}</div><div class="palette-hex">${hex}</div></div>`})});
+  document.getElementById('palette').innerHTML=html;
+}
+
+function updateGradient(){
+  const c1=document.getElementById('gradColor1').value,c2=document.getElementById('gradColor2').value,angle=document.getElementById('gradAngle').value;
+  const css=`linear-gradient(${angle}deg, ${c1}, ${c2})`;
+  document.getElementById('gradPreview').style.background=css;
+  document.getElementById('gradCode').textContent=`background: ${css};`;
+}
+
+function updateContrast(){
+  const bgHex=document.getElementById('contrastBg').value.trim();
+  const bgM=bgHex.match(/^#?([0-9a-f]{3,6})$/i);
+  if(!bgM)return;
+  const bg=hexToRgb(bgM[1]);
+  const cr=contrastRatio({r,g,b},bg);
+  const crStr=cr.toFixed(2);
+  document.getElementById('contrastRatio').textContent=crStr;
+  document.getElementById('contrastPreview').style.background=`rgb(${bg.r},${bg.g},${bg.b})`;
+  document.getElementById('contrastPreview').style.color=`rgb(${r},${g},${b})`;
+  const aa=document.getElementById('cAA'),aaa=document.getElementById('cAAA'),aaL=document.getElementById('cAALarge');
+  aa.className='cbadge '+(cr>=4.5?'cbadge-pass':'cbadge-fail');aa.textContent=cr>=4.5?'AA ✓':'AA ✗';
+  aaa.className='cbadge '+(cr>=7?'cbadge-pass':'cbadge-fail');aaa.textContent=cr>=7?'AAA ✓':'AAA ✗';
+  aaL.className='cbadge '+(cr>=3?'cbadge-pass':'cbadge-fail');aaL.textContent=cr>=3?'AA 大字 ✓':'AA 大字 ✗';
+}
+
+function addRecent(hex){const i=recent.indexOf(hex);if(i>-1)recent.splice(i,1);recent.unshift(hex);if(recent.length>16)recent.pop();document.getElementById('recentColors').innerHTML=recent.map(c=>`<div class="recent-dot" style="background:${c}" onclick="window._setHex('${c}')"></div>`).join('')}
+
+window._setHex=function(hex){const c=hexToRgb(hex);r=c.r;g=c.g;b=c.b;updateAll('picker')};
+
+document.getElementById('picker').addEventListener('input',e=>{const c=hexToRgb(e.target.value);r=c.r;g=c.g;b=c.b;updateAll('picker')});
+document.getElementById('hexInput').addEventListener('input',e=>{const m=e.target.value.match(/^#?([0-9a-f]{3,6})$/i);if(m){const c=hexToRgb(m[1]);r=c.r;g=c.g;b=c.b;updateAll('hex')}});
+document.getElementById('rgbInput').addEventListener('input',e=>{const m=e.target.value.match(/(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})/);if(m){r=Math.min(255,+m[1]);g=Math.min(255,+m[2]);b=Math.min(255,+m[3]);updateAll('rgb')}});
+document.getElementById('hslInput').addEventListener('input',e=>{const m=e.target.value.match(/(\d{1,3})\s*[,\s]\s*(\d{1,3})%?\s*[,\s]\s*(\d{1,3})%?/);if(m){const c=hslToRgb(+m[1],+m[2],+m[3]);r=c.r;g=c.g;b=c.b;updateAll('hsl')}});
+
+// Hue bar drag
+const hueBar=document.getElementById('hueBar');
+function setHue(e){const rect=hueBar.getBoundingClientRect();const x=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));const hsl=rgbToHsl(r,g,b);const c=hslToRgb(Math.round(x*360),hsl.s,hsl.l);r=c.r;g=c.g;b=c.b;updateAll('hue')}
+hueBar.addEventListener('mousedown',e=>{setHue(e);const move=e=>setHue(e);document.addEventListener('mousemove',move);document.addEventListener('mouseup',()=>document.removeEventListener('mousemove',move),{once:true})});
+
+// Gradient
+document.getElementById('gradColor2').addEventListener('input',e=>{document.getElementById('gradStop2').style.background=e.target.value;updateGradient()});
+document.getElementById('gradAngle').addEventListener('input',updateGradient);
+// Contrast bg
+document.getElementById('contrastBg').addEventListener('input',updateContrast);
+
+updateAll('init');
+</script>
+  <noscript><p>颜色转换器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

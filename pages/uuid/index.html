@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID 生成器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线批量生成 UUID v4，支持大写输出和无连字符格式。纯前端，数据不上传。">
+  <meta property="og:title" content="UUID 生成器 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线 UUID 批量生成工具，支持 v1/v4/v7 版本，一键复制">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/uuid">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="UUID 生成器 — DevKit">
+  <meta name="twitter:description" content="在线 UUID 批量生成工具，支持 v1/v4/v7 版本，一键复制">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID 生成器","description":"在线 UUID 批量生成工具，支持 v1/v4/v7 版本，一键复制","url":"https://devkit.dev/uuid","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/uuid">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.main { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 1; }
+.uuid-list { flex: 1; overflow-y: auto; padding: 16px; font-family: var(--font-code); font-size: 13px; line-height: 2; color: var(--text-primary); }
+.uuid-item { display: flex; align-items: center; gap: 8px; padding: 2px 8px; border-radius: 6px; cursor: pointer; }
+.uuid-item:hover { background: var(--bg-glass-hover); }
+.uuid-item .idx { color: var(--text-caption); font-size: 11px; min-width: 24px; }
+</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">UUID 生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">UUID 生成器</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <select class="glass-select" id="version"><option value="v4">UUID v4（随机）</option><option value="v1">UUID v1（时间）</option><option value="v7">UUID v7（排序）</option></select>
+  <label style="font-size:12px;color:var(--text-secondary)">数量</label>
+  <input type="number" class="glass-input" id="count" value="10" min="1" max="1000" style="width:70px">
+  <label class="checkbox-label"><input type="checkbox" id="upper"> 大写</label>
+  <label class="checkbox-label"><input type="checkbox" id="noDash"> 无连字符</label>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnGen" style="background:var(--brand-500);color:white;border:none">⟳ 生成</button>
+  <button class="btn-tool" id="btnCopy">📋 全部复制</button>
+</div>
+
+<div class="main">
+  <div class="uuid-list" id="uuidList"></div>
+</div>
+
+<div class="statusbar">
+  <span id="countLabel">0 个 UUID</span>
+  <span>v4</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/hash">Hash 计算</a>
+  <a href="/timestamp">时间戳</a>
+  <a href="/base64">Base64</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random()*16|0;
+    return (c==='x'?r:(r&0x3|0x8)).toString(16);
+  });
+}
+function uuidv1() {
+  // Pseudo v1: timestamp-based layout (real v1 needs MAC, this uses random node)
+  const now = Date.now();
+  const ticks = BigInt(now) * 10000n + 122192928000000000n;
+  const timeLow = (ticks & 0xFFFFFFFFn).toString(16).padStart(8,'0');
+  const timeMid = ((ticks >> 32n) & 0xFFFFn).toString(16).padStart(4,'0');
+  const timeHi = ((ticks >> 48n) & 0x0FFFn | 0x1000n).toString(16).padStart(4,'0');
+  const clock = (Math.random()*0x3FFF|0x8000).toString(16).padStart(4,'0');
+  const node = Array.from({length:6},()=>Math.floor(Math.random()*256).toString(16).padStart(2,'0')).join('');
+  return `${timeLow}-${timeMid}-${timeHi}-${clock}-${node}`;
+}
+function uuidv7() {
+  // UUIDv7: Unix ms timestamp + random
+  const ms = Date.now();
+  const hex = ms.toString(16).padStart(12,'0');
+  const r = () => Math.random().toString(16).slice(2);
+  const rand = r()+r();
+  return `${hex.slice(0,8)}-${hex.slice(8,12)}-7${rand.slice(0,3)}-${(0x80|Math.random()*0x3F|0).toString(16).padStart(2,'0')}${rand.slice(3,5)}-${rand.slice(5,17)}`;
+}
+
+function generate() {
+  const count = Math.min(1000, Math.max(1, parseInt(document.getElementById('count').value)||10));
+  const upper = document.getElementById('upper').checked;
+  const noDash = document.getElementById('noDash').checked;
+  const list = document.getElementById('uuidList');
+  const ver = document.getElementById('version').value;
+  const gen = ver === 'v1' ? uuidv1 : ver === 'v7' ? uuidv7 : uuidv4;
+  const uuids = [];
+  for (let i = 0; i < count; i++) {
+    let u = gen();
+    if (noDash) u = u.replace(/-/g,'');
+    if (upper) u = u.toUpperCase();
+    uuids.push(u);
+  }
+  list.innerHTML = uuids.map((u,i) => `<div class="uuid-item" onclick="copyText('${u}','✓ 已复制 UUID')"><span class="idx">${i+1}</span><span>${u}</span></div>`).join('');
+  document.getElementById('countLabel').textContent = `${count} 个 UUID`;
+  window._uuids = uuids;
+}
+
+document.getElementById('btnGen').addEventListener('click', generate);
+document.getElementById('btnCopy').addEventListener('click', () => {
+  if (window._uuids) copyText(window._uuids.join('\n'), '✓ 已复制全部 UUID');
+});
+generate();
+</script>
+  <noscript><p>UUID 生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

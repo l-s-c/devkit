@@ -1,0 +1,29 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+
+export default defineConfig({
+  root: '.',
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'pages/index.html'),
+        json: resolve(__dirname, 'pages/json/index.html'),
+        base64: resolve(__dirname, 'pages/base64/index.html'),
+        'url-codec': resolve(__dirname, 'pages/url-codec/index.html'),
+        jwt: resolve(__dirname, 'pages/jwt/index.html'),
+        regex: resolve(__dirname, 'pages/regex/index.html'),
+        timestamp: resolve(__dirname, 'pages/timestamp/index.html'),
+        uuid: resolve(__dirname, 'pages/uuid/index.html'),
+        hash: resolve(__dirname, 'pages/hash/index.html'),
+        color: resolve(__dirname, 'pages/color/index.html'),
+        markdown: resolve(__dirname, 'pages/markdown/index.html'),
+        cron: resolve(__dirname, 'pages/cron/index.html'),
+        'text-diff': resolve(__dirname, 'pages/text-diff/index.html'),
+        'code-formatter': resolve(__dirname, 'pages/code-formatter/index.html'),
+        'sql-formatter': resolve(__dirname, 'pages/sql-formatter/index.html'),
+      },
+    },
+  },
+});

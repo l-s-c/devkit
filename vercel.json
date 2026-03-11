@@ -1,0 +1,30 @@
+{
+  "buildCommand": "npx vite build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/", "destination": "/pages/index.html" },
+    { "source": "/json", "destination": "/pages/json/index.html" },
+    { "source": "/json/(.*)", "destination": "/pages/json/index.html" },
+    { "source": "/base64", "destination": "/pages/base64/index.html" },
+    { "source": "/url-codec", "destination": "/pages/url-codec/index.html" },
+    { "source": "/jwt", "destination": "/pages/jwt/index.html" },
+    { "source": "/regex", "destination": "/pages/regex/index.html" },
+    { "source": "/timestamp", "destination": "/pages/timestamp/index.html" },
+    { "source": "/uuid", "destination": "/pages/uuid/index.html" },
+    { "source": "/hash", "destination": "/pages/hash/index.html" },
+    { "source": "/color", "destination": "/pages/color/index.html" },
+    { "source": "/markdown", "destination": "/pages/markdown/index.html" },
+    { "source": "/cron", "destination": "/pages/cron/index.html" },
+    { "source": "/text-diff", "destination": "/pages/text-diff/index.html" },
+    { "source": "/code-formatter", "destination": "/pages/code-formatter/index.html" },
+    { "source": "/sql-formatter", "destination": "/pages/sql-formatter/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

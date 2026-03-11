@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevKit — 免费在线开发者工具箱 | JSON、Base64、时间戳、正则等 14 个工具</title>
+<meta name="description" content="DevKit 是纯前端在线开发者工具箱，提供 JSON 格式化、Base64 编解码、时间戳转换、正则测试、Hash 计算、UUID 生成等 14 个常用工具。数据不离开浏览器，安全可靠。">
+<meta name="keywords" content="开发者工具,JSON格式化,Base64编码,时间戳转换,正则表达式,Hash计算,UUID生成,JWT解码,颜色转换,Markdown预览,Cron表达式,在线工具">
+<link rel="canonical" href="https://devkit.dev/">
+<meta property="og:title" content="DevKit — 免费在线开发者工具箱">
+<meta property="og:description" content="14 个纯前端开发者工具，JSON 格式化、Base64、时间戳、正则、Hash、UUID 等，数据不离开浏览器。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://devkit.dev/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DevKit — 在线开发者工具箱">
+<meta name="twitter:description" content="14 个纯前端开发者工具，数据不离开浏览器。">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"DevKit","description":"免费在线开发者工具箱，提供 JSON 格式化、Base64 编解码、时间戳转换等 14 个常用工具","url":"https://devkit.dev/"}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --brand-400: #818CF8;
+  --brand-500: #6366F1;
+  --brand-600: #4F46E5;
+  --bg-page: #F2F2F7;
+  --bg-glass: rgba(255,255,255,0.55);
+  --bg-glass-thick: rgba(255,255,255,0.72);
+  --bg-glass-card: rgba(255,255,255,0.45);
+  --bg-glass-hover: rgba(255,255,255,0.65);
+  --bg-mesh-1: #C7D2FE;
+  --bg-mesh-2: #DDD6FE;
+  --bg-mesh-3: #BFDBFE;
+  --bg-mesh-4: #A5F3FC;
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #86868B;
+  --text-caption: #AEAEB2;
+  --border-glass: rgba(255,255,255,0.5);
+  --border-glass-outer: rgba(0,0,0,0.06);
+  --success: #30D158;
+  --glass-blur: 40px;
+  --glass-saturate: 200%;
+  --glass-shadow: 0 2px 16px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.1);
+  --glass-shadow-hover: 0 8px 32px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.12);
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%);
+  --font-ui: -apple-system, 'SF Pro Display', 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-code: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --bg-page: #000000;
+  --bg-glass: rgba(38,38,40,0.55);
+  --bg-glass-thick: rgba(44,44,46,0.72);
+  --bg-glass-card: rgba(38,38,40,0.45);
+  --bg-glass-hover: rgba(50,50,54,0.65);
+  --bg-mesh-1: #312E81;
+  --bg-mesh-2: #4C1D95;
+  --bg-mesh-3: #1E3A5F;
+  --bg-mesh-4: #164E63;
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1A6;
+  --text-tertiary: #6E6E73;
+  --text-caption: #48484A;
+  --border-glass: rgba(255,255,255,0.12);
+  --border-glass-outer: rgba(255,255,255,0.06);
+  --glass-shadow: 0 2px 16px rgba(0,0,0,0.3), 0 0 1px rgba(255,255,255,0.06);
+  --glass-shadow-hover: 0 8px 32px rgba(0,0,0,0.4), 0 0 1px rgba(255,255,255,0.08);
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%);
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Mesh Gradient Background — 液态色彩 ── */
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: mesh-float 20s ease-in-out infinite;
+}
+.mesh-blob:nth-child(1) {
+  width: 600px; height: 600px;
+  background: var(--bg-mesh-1);
+  top: -10%; left: -5%;
+  animation-delay: 0s;
+}
+.mesh-blob:nth-child(2) {
+  width: 500px; height: 500px;
+  background: var(--bg-mesh-2);
+  top: 20%; right: -10%;
+  animation-delay: -5s;
+}
+.mesh-blob:nth-child(3) {
+  width: 450px; height: 450px;
+  background: var(--bg-mesh-3);
+  bottom: 10%; left: 20%;
+  animation-delay: -10s;
+}
+.mesh-blob:nth-child(4) {
+  width: 350px; height: 350px;
+  background: var(--bg-mesh-4);
+  bottom: 30%; right: 15%;
+  animation-delay: -15s;
+}
+@keyframes mesh-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -40px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(40px, 30px) scale(1.02); }
+}
+
+[data-theme="dark"] .mesh-blob { opacity: 0.25; filter: blur(100px); }
+
+/* ── Content wrapper ── */
+.content { position: relative; z-index: 1; }
+
+/* ── Liquid Glass Navigation ── */
+.navbar {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 44px;
+  background: var(--bg-glass-thick);
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
+  border: 0.5px solid var(--border-glass);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  z-index: 100;
+  box-shadow: var(--glass-shadow);
+  max-width: 640px;
+  width: calc(100% - 32px);
+}
+.navbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: var(--glass-shine);
+  pointer-events: none;
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+.navbar-logo-icon {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #6366F1, #818CF8);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-code);
+  box-shadow: 0 1px 4px rgba(99,102,241,0.3);
+}
+.navbar-logo-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.navbar-spacer { flex: 1; }
+.navbar-links {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.navbar-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 16px;
+  transition: all 250ms ease;
+  cursor: pointer;
+}
+.navbar-link:hover {
+  background: var(--bg-glass-hover);
+  color: var(--text-primary);
+}
+.theme-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 200ms ease;
+  margin-left: 2px;
+}
+.theme-btn:hover { background: var(--bg-glass-hover); }
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  padding: 130px 20px 64px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brand-500);
+  letter-spacing: 0.3px;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.08;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+.hero-title-gradient {
+  background: linear-gradient(90deg, #6366F1 0%, #818CF8 35%, #A78BFA 65%, #C084FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  letter-spacing: -0.2px;
+}
+.hero-pills {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+}
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid var(--border-glass);
+  border-radius: 100px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.hero-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 6px rgba(48,209,88,0.4);
+}
+
+/* ── Section ── */
+.section {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 22px 64px;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.8px;
+}
+.section-count {
+  font-size: 13px;
+  color: var(--text-caption);
+}
+
+/* ── Liquid Glass Tool Cards ── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.tool-card {
+  background: var(--bg-glass-card);
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
+  border: 0.5px solid var(--border-glass);
+  border-radius: 24px;
+  padding: 28px 24px 24px;
+  cursor: pointer;
+  transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+}
+/* 液态光泽 — 顶部高光 */
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  border-radius: 24px 24px 0 0;
+  background: var(--glass-shine);
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+/* 底部反射 */
+.tool-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  pointer-events: none;
+}
+.tool-card:hover {
+  background: var(--bg-glass-hover);
+  box-shadow: var(--glass-shadow-hover);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255,255,255,0.7);
+}
+[data-theme="dark"] .tool-card:hover {
+  border-color: rgba(255,255,255,0.18);
+}
+.tool-card:hover .tool-card-arrow { opacity: 1; transform: translate(0, 0); }
+.tool-card:active { transform: translateY(-2px) scale(0.99); transition-duration: 150ms; }
+
+.tool-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.tool-card-name {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  position: relative;
+  z-index: 1;
+}
+.tool-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  letter-spacing: -0.1px;
+  position: relative;
+  z-index: 1;
+}
+.tool-card-arrow {
+  position: absolute;
+  top: 28px;
+  right: 24px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid var(--border-glass);
+  border-radius: 50%;
+  color: var(--brand-500);
+  opacity: 0;
+  transform: translate(-4px, 0);
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 13px;
+  z-index: 1;
+}
+
+.tool-card-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--brand-500);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid var(--border-glass);
+  border-radius: 100px;
+  letter-spacing: 0.3px;
+  z-index: 1;
+}
+
+/* ── Icon Colors ── */
+.icon-json {
+  background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+  color: #6366F1;
+  font-family: var(--font-code);
+  font-size: 16px;
+}
+.icon-convert {
+  background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+  color: #16A34A;
+}
+.icon-diff {
+  background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
+  color: #EA580C;
+}
+.icon-base64 {
+  background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+  color: #059669;
+}
+.icon-url {
+  background: linear-gradient(135deg, #F0F9FF, #E0F2FE);
+  color: #0284C7;
+}
+.icon-jwt {
+  background: linear-gradient(135deg, #FEF2F2, #FECACA);
+  color: #DC2626;
+}
+.icon-uuid {
+  background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
+  color: #DB2777;
+  font-family: var(--font-code);
+  font-size: 14px;
+}
+.icon-hash {
+  background: linear-gradient(135deg, #FAF5FF, #F3E8FF);
+  color: #7C3AED;
+  font-family: var(--font-code);
+}
+.icon-timestamp {
+  background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+  color: #2563EB;
+}
+.icon-regex {
+  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+  color: #D97706;
+  font-family: var(--font-code);
+  font-size: 13px;
+}
+
+[data-theme="dark"] .icon-json { background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.1)); }
+[data-theme="dark"] .icon-convert { background: linear-gradient(135deg, rgba(22,163,74,0.2), rgba(22,163,74,0.1)); }
+[data-theme="dark"] .icon-diff { background: linear-gradient(135deg, rgba(234,88,12,0.2), rgba(234,88,12,0.1)); }
+[data-theme="dark"] .icon-base64 { background: linear-gradient(135deg, rgba(5,150,105,0.2), rgba(5,150,105,0.1)); }
+[data-theme="dark"] .icon-url { background: linear-gradient(135deg, rgba(2,132,199,0.2), rgba(2,132,199,0.1)); }
+[data-theme="dark"] .icon-jwt { background: linear-gradient(135deg, rgba(220,38,38,0.2), rgba(220,38,38,0.1)); }
+[data-theme="dark"] .icon-uuid { background: linear-gradient(135deg, rgba(219,39,119,0.2), rgba(219,39,119,0.1)); }
+[data-theme="dark"] .icon-hash { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.1)); }
+[data-theme="dark"] .icon-timestamp { background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(37,99,235,0.1)); }
+[data-theme="dark"] .icon-regex { background: linear-gradient(135deg, rgba(217,119,6,0.2), rgba(217,119,6,0.1)); }
+
+/* ── Section Divider — Glass ── */
+.section-divider {
+  max-width: 980px;
+  margin: 0 auto 64px;
+  padding: 0 22px;
+  border: none;
+  border-top: 0.5px solid var(--border-glass-outer);
+}
+
+/* ── Footer ── */
+.footer {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 22px 48px;
+  border-top: 0.5px solid var(--border-glass-outer);
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-link {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.footer-link:hover { color: var(--brand-500); }
+.footer-copy {
+  font-size: 11px;
+  color: var(--text-caption);
+  line-height: 1.7;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .hero { padding: 110px 20px 48px; }
+  .hero-title { font-size: 38px; letter-spacing: -1.2px; }
+  .hero-subtitle { font-size: 15px; }
+  .section { padding: 0 16px 48px; }
+  .section-title { font-size: 22px; }
+  .tool-card { padding: 20px; border-radius: 20px; }
+  .navbar { max-width: 480px; }
+}
+@media (max-width: 480px) {
+  .tools-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 32px; }
+  .navbar-links .navbar-link { display: none; }
+}
+
+/* ── Card entrance animation ── */
+@media (prefers-reduced-motion: no-preference) {
+  .tool-card {
+    animation: glass-in 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  }
+  .tools-grid .tool-card:nth-child(1) { animation-delay: 100ms; }
+  .tools-grid .tool-card:nth-child(2) { animation-delay: 180ms; }
+  .tools-grid .tool-card:nth-child(3) { animation-delay: 260ms; }
+}
+@keyframes glass-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- Mesh Gradient Background -->
+<div class="mesh-bg">
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+</div>
+
+<div class="content">
+
+<!-- Liquid Glass Navbar -->
+<nav class="navbar">
+  <div class="navbar-logo">
+    <div class="navbar-logo-icon">{ }</div>
+    <span class="navbar-logo-text">DevKit</span>
+  </div>
+  <div class="navbar-spacer"></div>
+  <div class="navbar-links">
+    <a class="navbar-link" href="#json">JSON</a>
+    <a class="navbar-link" href="#encode">编码</a>
+    <a class="navbar-link" href="#generate">生成</a>
+    <a class="navbar-link" href="#text">文本</a>
+    <a class="navbar-link" href="#more">更多</a>
+    <button class="theme-btn" onclick="toggleTheme()" title="切换主题">🌙</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">开发者工具箱</div>
+  <h1 class="hero-title">
+    日常开发，<br>
+    <span class="hero-title-gradient">一站搞定。</span>
+  </h1>
+  <p class="hero-subtitle">JSON 格式化、编码转换、正则测试…… 精心打磨的在线工具集，为开发者的日常工作流而生。</p>
+  <div class="hero-pills">
+    <span class="hero-pill"><span class="hero-pill-dot"></span> 免费</span>
+    <span class="hero-pill">🔒 数据不离开浏览器</span>
+    <span class="hero-pill">✨ 无广告</span>
+  </div>
+</section>
+
+<!-- JSON Tools -->
+<section class="section" id="json">
+  <div class="section-header">
+    <h2 class="section-title">JSON 工具</h2>
+    <span class="section-count">3 个工具</span>
+  </div>
+  <div class="tools-grid">
+    <a class="tool-card" href="./json/">
+      <span class="tool-card-badge">核心</span>
+      <div class="tool-card-icon icon-json">{ }</div>
+      <div class="tool-card-name">JSON 格式化 & 校验</div>
+      <div class="tool-card-desc">格式化、压缩、校验 JSON，智能错误定位，内置树形视图。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./json/#convert">
+      <div class="tool-card-icon icon-convert">⇄</div>
+      <div class="tool-card-name">JSON 格式转换</div>
+      <div class="tool-card-desc">JSON 与 YAML、XML、TS、Python 等 8 种格式互转。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./json/#diff">
+      <div class="tool-card-icon icon-diff">≠</div>
+      <div class="tool-card-name">JSON 智能对比</div>
+      <div class="tool-card-desc">结构化对比 JSON 差异，支持合并与字符级高亮。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- Encode Tools -->
+<section class="section" id="encode">
+  <div class="section-header">
+    <h2 class="section-title">编码工具</h2>
+    <span class="section-count">3 个工具</span>
+  </div>
+  <div class="tools-grid">
+    <a class="tool-card" href="./base64/">
+      <span class="tool-card-badge" style="background:#DBEAFE;color:#2563EB">热门</span>
+      <div class="tool-card-icon icon-base64">B64</div>
+      <div class="tool-card-name">Base64 编解码</div>
+      <div class="tool-card-desc">文本与文件的 Base64 编解码，支持 URL 安全模式。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./url-codec/">
+      <div class="tool-card-icon icon-url">%</div>
+      <div class="tool-card-name">URL 编解码</div>
+      <div class="tool-card-desc">URL 编码与解码，支持 Component 和 URI 两种模式。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./jwt/">
+      <div class="tool-card-icon icon-jwt">🔑</div>
+      <div class="tool-card-name">JWT 解码器</div>
+      <div class="tool-card-desc">解析 JWT Token，自动识别时间字段与过期状态。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- Generate Tools -->
+<section class="section" id="generate">
+  <div class="section-header">
+    <h2 class="section-title">生成 & 计算</h2>
+    <span class="section-count">3 个工具</span>
+  </div>
+  <div class="tools-grid">
+    <a class="tool-card" href="./uuid/">
+      <div class="tool-card-icon icon-uuid">ID</div>
+      <div class="tool-card-name">UUID 生成器</div>
+      <div class="tool-card-desc">批量生成 UUID v1/v4/v7，支持大写输出和无连字符格式。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./hash/">
+      <div class="tool-card-icon icon-hash">#</div>
+      <div class="tool-card-name">Hash 计算</div>
+      <div class="tool-card-desc">一键计算 MD5、SHA-1、SHA-256、SHA-512 等多种哈希值。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./timestamp/">
+      <span class="tool-card-badge" style="background:#DBEAFE;color:#2563EB">热门</span>
+      <div class="tool-card-icon icon-timestamp">⏱</div>
+      <div class="tool-card-name">时间戳转换</div>
+      <div class="tool-card-desc">Unix 时间戳与可读时间双向转换，实时时钟显示，多时区支持。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- Text Tools -->
+<section class="section" id="text">
+  <div class="section-header">
+    <h2 class="section-title">文本工具</h2>
+    <span class="section-count">4 个工具</span>
+  </div>
+  <div class="tools-grid">
+    <a class="tool-card" href="./regex/">
+      <div class="tool-card-icon icon-regex">/•/</div>
+      <div class="tool-card-name">正则表达式测试</div>
+      <div class="tool-card-desc">实时匹配高亮与分组捕获，替换预览，内置常用正则表达式模板库。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./markdown/">
+      <div class="tool-card-icon" style="background:#E0E7FF;color:#4338CA">M↓</div>
+      <div class="tool-card-name">Markdown 预览</div>
+      <div class="tool-card-desc">实时渲染 GFM 语法，支持表格、任务列表、代码块，导出 HTML。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./text-diff/">
+      <div class="tool-card-icon" style="background:#FEE2E2;color:#DC2626">≠</div>
+      <div class="tool-card-name">文本对比</div>
+      <div class="tool-card-desc">逐行对比两段文本，红绿高亮差异，支持忽略空白和大小写。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./code-formatter/">
+      <div class="tool-card-icon" style="background:#DBEAFE;color:#2563EB">&lt;/&gt;</div>
+      <div class="tool-card-name">代码格式化</div>
+      <div class="tool-card-desc">HTML/CSS/JavaScript 代码美化与压缩，支持多种缩进风格。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- More Tools -->
+<section class="section" id="more">
+  <div class="section-header">
+    <h2 class="section-title">更多工具</h2>
+    <span class="section-count">3 个工具</span>
+  </div>
+  <div class="tools-grid">
+    <a class="tool-card" href="./color/">
+      <div class="tool-card-icon" style="background:linear-gradient(135deg,#F472B6,#818CF8);color:white">🎨</div>
+      <div class="tool-card-name">颜色转换器</div>
+      <div class="tool-card-desc">HEX/RGB/HSL/CMYK 互转，调色板与渐变生成。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./cron/">
+      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">⏰</div>
+      <div class="tool-card-name">Cron 表达式</div>
+      <div class="tool-card-desc">Cron 表达式解析，显示未来执行时间与可读描述。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+    <a class="tool-card" href="./sql-formatter/">
+      <div class="tool-card-icon" style="background:#E0E7FF;color:#4338CA">SQL</div>
+      <div class="tool-card-name">SQL 格式化</div>
+      <div class="tool-card-desc">SQL 语句美化，关键字大写，智能缩进，SELECT 列拆行。</div>
+      <span class="tool-card-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-logo"><span>{ }</span> DevKit</div>
+    <div class="footer-links">
+      <a class="footer-link" href="javascript:void(0)" title="即将上线">GitHub</a>
+      <a class="footer-link" href="javascript:void(0)" title="即将上线">反馈建议</a>
+      <a class="footer-link" href="javascript:void(0)" title="即将上线">更新日志</a>
+    </div>
+  </div>
+  <div class="footer-copy">
+    纯前端应用，所有数据处理均在你的浏览器本地完成，不会上传至任何服务器。<br>
+    © 2026 DevKit. 面向开发者的在线工具箱。
+  </div>
+</footer>
+
+</div><!-- .content -->
+
+<script>
+// 初始化主题
+(function() {
+  const saved = localStorage.getItem('devkit-theme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.querySelector('.theme-btn');
+    if (btn) btn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  });
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-btn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('devkit-theme', 'light');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    localStorage.setItem('devkit-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+document.querySelectorAll('.navbar-link[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(link.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+  <noscript>
+    <h2>DevKit 在线开发者工具箱</h2>
+    <p>纯前端开发者工具，数据不离开浏览器。请启用 JavaScript 以使用。</p>
+    <ul>
+      <li><a href="./json/">JSON 格式化、校验、转换、对比</a></li>
+      <li><a href="./base64/">Base64 编解码</a></li>
+      <li><a href="./url-codec/">URL 编解码</a></li>
+      <li><a href="./jwt/">JWT 解码器</a></li>
+      <li><a href="./hash/">Hash 计算（MD5/SHA）</a></li>
+      <li><a href="./uuid/">UUID 生成器</a></li>
+      <li><a href="./timestamp/">时间戳转换</a></li>
+      <li><a href="./regex/">正则表达式测试</a></li>
+      <li><a href="./color/">颜色转换器</a></li>
+      <li><a href="./markdown/">Markdown 预览</a></li>
+      <li><a href="./cron/">Cron 表达式解析</a></li>
+      <li><a href="./text-diff/">文本对比</a></li>
+      <li><a href="./code-formatter/">代码格式化</a></li>
+      <li><a href="./sql-formatter/">SQL 格式化</a></li>
+    </ul>
+  </noscript>
+</body>
+</html>

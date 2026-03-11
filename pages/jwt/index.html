@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT 解码器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 JWT 解码工具，解析 Header 和 Payload，自动识别时间字段并标注过期状态。纯前端，数据不上传。">
+  <meta property="og:title" content="JWT 解码器 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线 JWT Token 解析工具，可视化 Header/Payload，自动识别过期状态">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/jwt">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JWT 解码器 — DevKit">
+  <meta name="twitter:description" content="在线 JWT Token 解析工具，可视化 Header/Payload，自动识别过期状态">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JWT 解码器","description":"在线 JWT Token 解析工具，可视化 Header/Payload，自动识别过期状态","url":"https://devkit.dev/jwt","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/jwt">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.main { flex: 1; overflow-y: auto; position: relative; z-index: 1; display: flex; flex-direction: column; }
+.jwt-input-area { padding: 16px; flex-shrink: 0; background: var(--bg-glass); backdrop-filter: saturate(var(--glass-saturate)) blur(20px); border-bottom: 0.5px solid var(--border-glass-outer); }
+.jwt-input-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.jwt-input-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; }
+.jwt-textarea { width: 100%; height: 56px; padding: 10px 14px; font-family: var(--font-code); font-size: 12px; line-height: 1.5; background: var(--bg-glass-input); border: 0.5px solid var(--border-input); border-radius: 12px; color: var(--text-primary); outline: none; resize: none; }
+.jwt-textarea:focus { border-color: var(--brand-500); }
+.jwt-textarea::placeholder { color: var(--text-caption); }
+.jwt-result { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+.jwt-segment { display: flex; flex-direction: column; min-height: 0; border-right: 0.5px solid var(--border-glass-outer); }
+.jwt-segment:last-child { border-right: none; }
+.jwt-segment-header { height: 36px; padding: 0 16px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; border-bottom: 0.5px solid var(--border-glass-outer); background: var(--bg-glass); }
+.jwt-segment-tag { padding: 2px 8px; font-size: 10px; font-weight: 700; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.tag-header { background: #DBEAFE; color: #1D4ED8; }
+.tag-payload { background: #EDE9FE; color: #6D28D9; }
+[data-theme="dark"] .tag-header { background: rgba(29,78,216,0.2); color: #60A5FA; }
+[data-theme="dark"] .tag-payload { background: rgba(109,40,217,0.2); color: #A78BFA; }
+.jwt-segment-meta { font-size: 11px; color: var(--text-caption); }
+.jwt-segment-body { flex: 1; padding: 16px; overflow: auto; font-family: var(--font-code); font-size: 13px; line-height: 1.8; color: var(--text-primary); min-height: 0; white-space: pre-wrap; }
+.expire-bar { height: 32px; padding: 0 16px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: var(--bg-glass); border-top: 0.5px solid var(--border-glass-outer); font-size: 12px; color: var(--text-secondary); }
+.expire-dot { width: 8px; height: 8px; border-radius: 50%; }
+.expire-dot.ok { background: var(--success); box-shadow: 0 0 6px rgba(48,209,88,0.4); }
+.expire-dot.expired { background: var(--error); box-shadow: 0 0 6px rgba(255,69,58,0.4); }
+</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">JWT 解码器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">JWT 解码器</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="jwt-input-area">
+    <div class="jwt-input-bar">
+      <span class="jwt-input-label">JWT Token</span>
+      <span class="badge" id="statusBadge" style="display:none"></span>
+      <div class="toolbar-spacer"></div>
+      <button class="btn-tool" id="btnSample">示例</button>
+      <button class="btn-tool" id="btnClear">✕ 清空</button>
+    </div>
+    <textarea class="jwt-textarea" id="jwtInput" placeholder="粘贴 JWT Token（eyJhbG...）"></textarea>
+  </div>
+  <div class="jwt-result">
+    <div class="jwt-segment"><div class="jwt-segment-header"><span class="jwt-segment-tag tag-header">Header</span><span class="jwt-segment-meta" id="headerMeta"></span></div><div class="jwt-segment-body" id="headerBody" style="color:var(--text-caption)">粘贴 JWT 后自动解析 Header</div></div>
+    <div class="jwt-segment"><div class="jwt-segment-header"><span class="jwt-segment-tag tag-payload">Payload</span><span class="jwt-segment-meta" id="payloadMeta"></span></div><div class="jwt-segment-body" id="payloadBody" style="color:var(--text-caption)">Payload 将显示在这里</div></div>
+  </div>
+  <div class="expire-bar" id="expireBar" style="display:none"></div>
+</div>
+
+<div class="statusbar">
+  <span id="algoLabel">—</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/base64">Base64</a>
+  <a href="/url-codec">URL 编解码</a>
+  <a href="/timestamp">时间戳</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+function b64decode(str) {
+  str = str.replace(/-/g,'+').replace(/_/g,'/');
+  while (str.length % 4) str += '=';
+  return decodeURIComponent(escape(atob(str)));
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatDate(ts) { return new Date(ts*1000).toLocaleString('zh-CN'); }
+
+function decode() {
+  const token = document.getElementById('jwtInput').value.trim();
+  const badge = document.getElementById('statusBadge');
+  const expireBar = document.getElementById('expireBar');
+  if (!token) {
+    document.getElementById('headerBody').textContent = '粘贴 JWT 后自动解析';
+    document.getElementById('payloadBody').textContent = '';
+    badge.style.display = 'none'; expireBar.style.display = 'none';
+    document.getElementById('algoLabel').textContent = '—';
+    return;
+  }
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    document.getElementById('headerBody').textContent = '无效的 JWT 格式（应有 3 段）';
+    document.getElementById('payloadBody').textContent = '';
+    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '❌ 格式错误';
+    expireBar.style.display = 'none'; return;
+  }
+  try {
+    const header = JSON.parse(b64decode(parts[0]));
+    const payload = JSON.parse(b64decode(parts[1]));
+    document.getElementById('headerBody').textContent = JSON.stringify(header, null, 2);
+    document.getElementById('headerMeta').textContent = header.alg || '';
+    document.getElementById('algoLabel').textContent = (header.alg || '?') + ' · 3 段';
+    
+    let payloadStr = JSON.stringify(payload, null, 2);
+    document.getElementById('payloadBody').textContent = payloadStr;
+    document.getElementById('payloadMeta').textContent = Object.keys(payload).length + ' 个字段';
+    
+    // Expiration
+    if (payload.exp) {
+      const expDate = new Date(payload.exp * 1000);
+      const isExpired = expDate < new Date();
+      const diffDays = Math.ceil((expDate - new Date()) / 86400000);
+      badge.style.display = ''; 
+      badge.className = 'badge ' + (isExpired ? 'badge-error' : 'badge-success');
+      badge.textContent = isExpired ? '🔴 已过期' : '🟢 未过期';
+      
+      let html = `<span class="expire-dot ${isExpired?'expired':'ok'}"></span>`;
+      html += `<span>${isExpired?'已过期':'未过期'}</span>`;
+      if (payload.iat) html += `<span style="color:var(--text-caption)">·</span><span>签发于 ${formatDate(payload.iat)}</span>`;
+      html += `<span style="color:var(--text-caption)">·</span><span>过期于 ${formatDate(payload.exp)}</span>`;
+      if (!isExpired) html += `<span style="color:var(--text-caption)">·</span><span style="color:var(--success)">剩余 ${diffDays} 天</span>`;
+      expireBar.innerHTML = html;
+      expireBar.style.display = '';
+    } else {
+      badge.style.display = ''; badge.className = 'badge badge-success'; badge.textContent = '✓ 已解码';
+      expireBar.style.display = 'none';
+    }
+  } catch (e) {
+    document.getElementById('headerBody').textContent = '解码失败：' + e.message;
+    document.getElementById('payloadBody').textContent = '';
+    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '❌ 解码失败';
+    expireBar.style.display = 'none';
+  }
+}
+
+document.getElementById('jwtInput').addEventListener('input', decode);
+document.getElementById('btnClear').addEventListener('click', () => { document.getElementById('jwtInput').value = ''; decode(); });
+document.getElementById('btnSample').addEventListener('click', () => {
+  const now = Math.floor(Date.now()/1000);
+  const header = btoa(JSON.stringify({alg:'HS256',typ:'JWT'}));
+  const payload = btoa(JSON.stringify({sub:'1234567890',name:'DevKit',role:'admin',iat:now,exp:now+86400*30}));
+  document.getElementById('jwtInput').value = header.replace(/=/g,'') + '.' + payload.replace(/=/g,'') + '.demo_signature';
+  decode();
+});
+</script>
+  <noscript><p>JWT 解码器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时间戳转换 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 Unix 时间戳与日期时间互转，支持毫秒、秒，实时时钟显示，多时区。纯前端，数据不上传。">
+  <meta property="og:title" content="时间戳转换 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="Unix 时间戳与日期时间在线互转，实时时钟显示">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/timestamp">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="时间戳转换 — DevKit">
+  <meta name="twitter:description" content="Unix 时间戳与日期时间在线互转，实时时钟显示">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"时间戳转换","description":"Unix 时间戳与日期时间在线互转，实时时钟显示","url":"https://devkit.dev/timestamp","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/timestamp">
+<style>
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.main { flex: 1; overflow-y: auto; position: relative; z-index: 1; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.clock-card { text-align: center; padding: 40px 60px; }
+.clock-time { font-size: 64px; font-weight: 700; letter-spacing: -2px; font-family: var(--font-code); color: var(--text-primary); }
+.clock-date { font-size: 15px; color: var(--text-secondary); margin-top: 8px; }
+.clock-unix { font-size: 13px; color: var(--text-tertiary); margin-top: 4px; font-family: var(--font-code); }
+.clock-copy { margin-top: 12px; }
+.convert-card { width: 100%; max-width: 640px; }
+.convert-title { font-size: 13px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 12px; }
+.convert-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.convert-result { background: var(--bg-glass-input); border: 0.5px solid var(--border-input); border-radius: 8px; padding: 12px 14px; font-family: var(--font-code); font-size: 13px; line-height: 1.7; color: var(--text-primary); }
+</style>
+  <script type="module" crossorigin src="/assets/timestamp-BY_rZEzo.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/theme-CrLl7tUf.js">
+  <link rel="stylesheet" crossorigin href="/assets/theme-nJ2zlTPs.css">
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">时间戳转换 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">时间戳转换</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="glass-card clock-card">
+    <div class="clock-time" id="clockTime">--:--:--</div>
+    <div class="clock-date" id="clockDate"></div>
+    <div class="clock-unix" id="clockUnix"></div>
+    <button class="btn-tool clock-copy" id="btnCopyTs">📋 复制时间戳</button>
+  </div>
+
+  <div class="glass-card convert-card">
+    <div class="convert-title">时间戳 → 可读时间</div>
+    <div class="convert-row">
+      <input type="text" class="glass-input" id="tsInput" placeholder="输入 Unix 时间戳" style="flex:1">
+      <select class="glass-select" id="tsUnit"><option value="s">秒</option><option value="ms">毫秒</option></select>
+      <span style="font-size:12px;color:var(--text-caption)">实时转换 →</span>
+    </div>
+    <div class="convert-result" id="tsResult" style="display:none"></div>
+  </div>
+
+  <div class="glass-card convert-card">
+    <div class="convert-title">可读时间 → 时间戳</div>
+    <div class="convert-row">
+      <input type="datetime-local" class="glass-input" id="dtInput" step="1" style="flex:1">
+      <span style="font-size:12px;color:var(--text-caption)">← 实时转换</span>
+    </div>
+    <div class="convert-result" id="dtResult" style="display:none"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span>UTC+8 · 北京时间</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/uuid">UUID 生成</a>
+  <a href="/hash">Hash 计算</a>
+  <a href="/base64">Base64</a>
+</div>
+
+  <noscript><p>时间戳转换 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

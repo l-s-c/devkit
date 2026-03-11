@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://devkit.dev/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://devkit.dev/json</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://devkit.dev/base64</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/url-codec</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/jwt</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/hash</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/uuid</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/timestamp</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/regex</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/color</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/markdown</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/cron</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/text-diff</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/code-formatter</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/sql-formatter</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-yaml</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-xml</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-csv</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-typescript</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-go</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-java</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-to-python</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-schema</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-formatter</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-validator</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-viewer</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/jsonpath</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://devkit.dev/json-diff</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+</urlset>

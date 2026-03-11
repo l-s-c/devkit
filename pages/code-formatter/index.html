@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代码格式化 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 HTML/CSS/JavaScript 代码格式化工具，支持压缩和美化。纯前端，数据不上传。">
+  <meta property="og:title" content="代码格式化 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="HTML/CSS/JavaScript 在线代码美化与压缩工具">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/code-formatter">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="代码格式化 — DevKit">
+  <meta name="twitter:description" content="HTML/CSS/JavaScript 在线代码美化与压缩工具">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"代码格式化","description":"HTML/CSS/JavaScript 在线代码美化与压缩工具","url":"https://devkit.dev/code-formatter","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/code-formatter">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>body{height:100vh;display:flex;flex-direction:column;overflow:hidden}</style>
+</head>
+<body>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">代码格式化</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <div class="toggle-pill">
+    <button class="toggle-pill-option active" data-lang="html">HTML</button>
+    <button class="toggle-pill-option" data-lang="css">CSS</button>
+    <button class="toggle-pill-option" data-lang="js">JavaScript</button>
+  </div>
+  <select class="glass-select" id="indent"><option value="2">2 空格</option><option value="4">4 空格</option><option value="tab">Tab</option></select>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnFormat" style="background:var(--brand-500);color:white;border:none" title="快捷键 ⌘+Enter">✨ 格式化</button>
+  <button class="btn-tool" id="btnMinify">⚡ 压缩</button>
+  <button class="btn-tool" id="btnSample">示例</button>
+  <button class="btn-tool" id="btnCopy">📋 复制</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="work-area">
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">输入</span><span class="pane-meta" id="inputMeta"></span></div>
+    <div class="pane-editor"><textarea id="input" placeholder="粘贴 HTML/CSS/JS 代码..."></textarea></div>
+  </div>
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">输出</span><span class="pane-meta" id="outputMeta"></span></div>
+    <div class="pane-editor"><textarea id="output" readonly></textarea></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="langLabel">HTML</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/sql-formatter">SQL 格式化</a>
+  <a href="/json">JSON 格式化</a>
+  <a href="/markdown">Markdown</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let lang = 'html';
+
+document.querySelectorAll('.toggle-pill-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.toggle-pill-option').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    lang = btn.dataset.lang;
+    document.getElementById('langLabel').textContent = btn.textContent;
+  });
+});
+
+// Simple formatters (no external dependency)
+function formatHtml(code, indent) {
+  // Basic HTML beautifier
+  let result = '', level = 0;
+  const voidTags = new Set(['area','base','br','col','embed','hr','img','input','link','meta','source','track','wbr']);
+  code = code.replace(/>\s+</g, '><').trim();
+  const tokens = code.split(/(<[^>]+>)/);
+  tokens.forEach(token => {
+    if (!token.trim()) return;
+    if (token.startsWith('</')) {
+      level = Math.max(0, level - 1);
+      result += indent.repeat(level) + token + '\n';
+    } else if (token.startsWith('<')) {
+      result += indent.repeat(level) + token + '\n';
+      const tagName = (token.match(/<(\w+)/)||[])[1];
+      if (tagName && !voidTags.has(tagName.toLowerCase()) && !token.endsWith('/>')) level++;
+    } else {
+      result += indent.repeat(level) + token.trim() + '\n';
+    }
+  });
+  return result.trim();
+}
+
+function formatCss(code, indent) {
+  return code.replace(/\s*{\s*/g, ' {\n').replace(/\s*}\s*/g, '\n}\n\n').replace(/;\s*/g, ';\n').split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return '';
+    if (trimmed.endsWith('{')) return trimmed;
+    if (trimmed === '}') return trimmed;
+    return indent + trimmed;
+  }).filter(Boolean).join('\n').replace(/\n{3,}/g, '\n\n');
+}
+
+function formatJs(code, indent) {
+  // Very basic JS formatter
+  let result = '', level = 0;
+  code = code.replace(/\s+/g, ' ').trim();
+  for (let i = 0; i < code.length; i++) {
+    const ch = code[i];
+    if (ch === '{') { result += ' {\n'; level++; result += indent.repeat(level); }
+    else if (ch === '}') { level = Math.max(0, level-1); result = result.trimEnd() + '\n' + indent.repeat(level) + '}\n' + indent.repeat(level); }
+    else if (ch === ';') { result += ';\n' + indent.repeat(level); }
+    else { result += ch; }
+  }
+  return result.trim();
+}
+
+function minifyHtml(code) { return code.replace(/\s+/g,' ').replace(/>\s+</g,'><').trim(); }
+function minifyCss(code) { return code.replace(/\s+/g,' ').replace(/\s*([{}:;,])\s*/g,'$1').replace(/;}/g,'}').trim(); }
+function minifyJs(code) { return code.replace(/\s+/g,' ').replace(/\s*([{}()=+\-*/<>!&|;:,?])\s*/g,'$1').trim(); }
+
+function getIndent() {
+  const v = document.getElementById('indent').value;
+  return v === 'tab' ? '\t' : ' '.repeat(+v);
+}
+
+document.getElementById('btnFormat').addEventListener('click', () => {
+  const code = document.getElementById('input').value;
+  const indent = getIndent();
+  let out = '';
+  try {
+    if (lang==='html') out = formatHtml(code, indent);
+    else if (lang==='css') out = formatCss(code, indent);
+    else out = formatJs(code, indent);
+  } catch(e) { out = '格式化失败：'+e.message; }
+  document.getElementById('output').value = out;
+  document.getElementById('inputMeta').textContent = `${code.length} 字符`;
+  document.getElementById('outputMeta').textContent = `${out.length} 字符`;
+});
+
+document.getElementById('btnMinify').addEventListener('click', () => {
+  const code = document.getElementById('input').value;
+  let out = '';
+  if (lang==='html') out = minifyHtml(code);
+  else if (lang==='css') out = minifyCss(code);
+  else out = minifyJs(code);
+  document.getElementById('output').value = out;
+  document.getElementById('inputMeta').textContent = `${code.length} 字符`;
+  document.getElementById('outputMeta').textContent = `${out.length} 字符 (${Math.round(out.length/code.length*100)}%)`;
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const v = document.getElementById('output').value;
+  if(v) navigator.clipboard.writeText(v);
+});
+document.getElementById('btnSample').addEventListener('click', () => {
+  const samples = {html:'<div class="container"><h1>Hello</h1><p>World</p><ul><li>Item 1</li><li>Item 2</li></ul></div>',css:'body{margin:0;padding:0;font-family:sans-serif}.container{max-width:800px;margin:0 auto;padding:20px}.title{color:#333;font-size:24px}',js:'function fibonacci(n){if(n<=1)return n;let a=0,b=1;for(let i=2;i<=n;i++){const t=a+b;a=b;b=t}return b}console.log(fibonacci(10));'};
+  document.getElementById('input').value = samples[lang] || samples.html;
+  document.getElementById('btnFormat').click();
+});
+document.getElementById('input').addEventListener('keydown', e => {
+  if ((e.metaKey||e.ctrlKey) && e.key==='Enter') { e.preventDefault(); document.getElementById('btnFormat').click(); }
+});
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('input').value=''; document.getElementById('output').value='';
+  document.getElementById('inputMeta').textContent=''; document.getElementById('outputMeta').textContent='';
+});
+</script>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">代码格式化 — DevKit 在线开发者工具箱</h1>
+  <noscript><p>代码格式化 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 编解码 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 Base64 编码解码工具，支持文本和文件互转，URL 安全模式。纯前端，数据不上传。">
+  <meta property="og:title" content="Base64 编解码 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="在线 Base64 编码解码工具，支持文本和文件转换、URL 安全模式">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/base64">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Base64 编解码 — DevKit">
+  <meta name="twitter:description" content="在线 Base64 编码解码工具，支持文本和文件转换、URL 安全模式">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Base64 编解码","description":"在线 Base64 编码解码工具，支持文本和文件转换、URL 安全模式","url":"https://devkit.dev/base64","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<meta name="keywords" content="Base64编码,Base64解码,在线Base64,Base64转换,URL安全Base64">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/base64">
+<style>body{height:100vh;display:flex;flex-direction:column;overflow:hidden}</style>
+  <script type="module" crossorigin src="/assets/base64-C9mivfrd.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/theme-CrLl7tUf.js">
+  <link rel="stylesheet" crossorigin href="/assets/theme-nJ2zlTPs.css">
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Base64 编解码 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Base64 编解码</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <div class="toggle-pill">
+    <button class="toggle-pill-option active" id="modeEncode">编码</button>
+    <button class="toggle-pill-option" id="modeDecode">解码</button>
+  </div>
+  <label class="checkbox-label"><input type="checkbox" id="urlSafe"> URL 安全模式</label>
+  <div class="toolbar-spacer"></div>
+  <span class="badge badge-success" id="statusBadge" style="display:none">✓ 已编码</span>
+  <button class="btn-tool" id="btnCopy">📋 复制结果</button>
+  <button class="btn-tool" id="btnSwap">🔄 交换</button>
+  <button class="btn-tool" id="btnSample">示例</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="work-area">
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">原文</span><span class="pane-meta" id="inputMeta"></span></div>
+    <div class="pane-editor"><textarea id="input" placeholder="输入文本，或拖拽文件到此处..."></textarea></div>
+  </div>
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">BASE64</span><span class="pane-meta" id="outputMeta"></span></div>
+    <div class="pane-editor"><textarea id="output" readonly placeholder="结果将显示在这里..."></textarea></div>
+  </div>
+  <button class="swap-btn" id="btnSwap2" title="交换">⇄</button>
+</div>
+
+<div class="statusbar">
+  <span class="statusbar-item">UTF-8</span>
+  <span class="statusbar-item" id="modeLabel">Base64 标准模式</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/url-codec">URL 编解码</a>
+  <a href="/hash">Hash 计算</a>
+  <a href="/jwt">JWT 解码</a>
+</div>
+
+  <noscript><p>Base64 编解码 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

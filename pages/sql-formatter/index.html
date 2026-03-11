@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL 格式化 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 SQL 格式化工具，关键字大写，智能缩进。纯前端，数据不上传。">
+  <meta property="og:title" content="SQL 格式化 — DevKit 在线开发者工具箱">
+  <meta property="og:description" content="SQL 语句在线美化工具，关键字大写，智能缩进">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devkit.dev/sql-formatter">
+  <meta property="og:site_name" content="DevKit">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SQL 格式化 — DevKit">
+  <meta name="twitter:description" content="SQL 语句在线美化工具，关键字大写，智能缩进">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"SQL 格式化","description":"SQL 语句在线美化工具，关键字大写，智能缩进","url":"https://devkit.dev/sql-formatter","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://devkit.dev/sql-formatter">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>body{height:100vh;display:flex;flex-direction:column;overflow:hidden}</style>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">SQL 格式化 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">SQL 格式化</span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-btn" href="/">← 返回首页</a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="tool-toolbar">
+  <label class="checkbox-label"><input type="checkbox" id="upperKw" checked> 关键字大写</label>
+  <select class="glass-select" id="indent"><option value="2">2 空格</option><option value="4" selected>4 空格</option><option value="tab">Tab</option></select>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-tool" id="btnFormat" style="background:var(--brand-500);color:white;border:none" title="快捷键 ⌘+Enter">✨ 格式化</button>
+  <button class="btn-tool" id="btnMinify">⚡ 压缩</button>
+  <button class="btn-tool" id="btnSample">示例</button>
+  <button class="btn-tool" id="btnCopy">📋 复制</button>
+  <button class="btn-tool" id="btnClear">✕ 清空</button>
+</div>
+
+<div class="work-area">
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">SQL 输入</span><span class="pane-meta" id="inputMeta"></span></div>
+    <div class="pane-editor"><textarea id="input" placeholder="输入 SQL 语句..."></textarea></div>
+  </div>
+  <div class="work-pane">
+    <div class="pane-header"><span class="pane-label">格式化结果</span><span class="pane-meta" id="outputMeta"></span></div>
+    <div class="pane-editor"><textarea id="output" readonly></textarea></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span>SQL</span>
+  <div class="statusbar-spacer"></div>
+  <a href="/code-formatter">代码格式化</a>
+  <a href="/json">JSON 格式化</a>
+  <a href="/regex">正则测试</a>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const majorKw = ['SELECT','FROM','WHERE','JOIN','LEFT JOIN','RIGHT JOIN','INNER JOIN','OUTER JOIN','FULL JOIN','CROSS JOIN','ON','AND','OR','ORDER BY','GROUP BY','HAVING','LIMIT','OFFSET','UNION','UNION ALL','INSERT INTO','VALUES','UPDATE','SET','DELETE FROM','CREATE TABLE','ALTER TABLE','DROP TABLE','CREATE INDEX','CASE','WHEN','THEN','ELSE','END','AS','IN','NOT IN','EXISTS','NOT EXISTS','BETWEEN','LIKE','IS NULL','IS NOT NULL','ASC','DESC','DISTINCT'];
+
+function formatSql(sql, indent, upper) {
+  // Normalize whitespace
+  sql = sql.replace(/\s+/g, ' ').trim();
+
+  // Uppercase keywords
+  if (upper) {
+    majorKw.forEach(kw => {
+      const regex = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
+      sql = sql.replace(regex, kw);
+    });
+  }
+
+  // Add newlines before major keywords
+  const breakBefore = ['SELECT','FROM','WHERE','JOIN','LEFT JOIN','RIGHT JOIN','INNER JOIN','OUTER JOIN','FULL JOIN','CROSS JOIN','ORDER BY','GROUP BY','HAVING','LIMIT','OFFSET','UNION','UNION ALL','INSERT INTO','UPDATE','DELETE FROM','CREATE TABLE','ALTER TABLE','SET','VALUES'];
+  breakBefore.forEach(kw => {
+    const regex = new RegExp('\\s+(' + kw.replace(/ /g, '\\s+') + ')\\b', 'gi');
+    sql = sql.replace(regex, '\n$1');
+  });
+
+  // Indent after SELECT, etc.
+  const lines = sql.split('\n');
+  let result = [];
+  let level = 0;
+  lines.forEach(line => {
+    line = line.trim();
+    if (!line) return;
+    const upper = line.toUpperCase();
+    // Sub-indent for AND/OR
+    if (upper.startsWith('AND ') || upper.startsWith('OR ')) {
+      result.push(indent.repeat(level + 1) + line);
+    } else if (upper.startsWith('ON ')) {
+      result.push(indent.repeat(level + 1) + line);
+    } else {
+      result.push(indent.repeat(level) + line);
+    }
+  });
+
+  // Handle commas in SELECT (one column per line)
+  let final = result.join('\n');
+  // Split SELECT columns
+  final = final.replace(/(SELECT\s+)([\s\S]*?)(\n(?:FROM|$))/gi, (_, sel, cols, next) => {
+    const parts = cols.split(',').map(c => c.trim()).filter(Boolean);
+    if (parts.length <= 1) return sel + cols + next;
+    return sel + '\n' + parts.map((p, i) => indent + p + (i < parts.length - 1 ? ',' : '')).join('\n') + next;
+  });
+
+  return final.trim();
+}
+
+function minifySql(sql) {
+  return sql.replace(/\s+/g, ' ').replace(/\s*([(),;])\s*/g, '$1').trim();
+}
+
+function getIndent() {
+  const v = document.getElementById('indent').value;
+  return v === 'tab' ? '\t' : ' '.repeat(+v);
+}
+
+document.getElementById('btnFormat').addEventListener('click', () => {
+  const sql = document.getElementById('input').value;
+  const indent = getIndent();
+  const upper = document.getElementById('upperKw').checked;
+  const out = formatSql(sql, indent, upper);
+  document.getElementById('output').value = out;
+  document.getElementById('inputMeta').textContent = `${sql.length} 字符`;
+  document.getElementById('outputMeta').textContent = `${out.split('\n').length} 行`;
+});
+
+document.getElementById('btnMinify').addEventListener('click', () => {
+  const sql = document.getElementById('input').value;
+  const out = minifySql(sql);
+  document.getElementById('output').value = out;
+  document.getElementById('inputMeta').textContent = `${sql.length} 字符`;
+  document.getElementById('outputMeta').textContent = `${out.length} 字符`;
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const v = document.getElementById('output').value;
+  if(v) navigator.clipboard.writeText(v);
+});
+document.getElementById('btnSample').addEventListener('click', () => {
+  document.getElementById('input').value = "select u.id, u.name, u.email, o.order_id, o.total from users u left join orders o on u.id = o.user_id where u.status = 'active' and o.created_at > '2024-01-01' order by o.total desc limit 50";
+  document.getElementById('btnFormat').click();
+});
+document.getElementById('input').addEventListener('keydown', e => {
+  if ((e.metaKey||e.ctrlKey) && e.key==='Enter') { e.preventDefault(); document.getElementById('btnFormat').click(); }
+});
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('input').value=''; document.getElementById('output').value='';
+  document.getElementById('inputMeta').textContent=''; document.getElementById('outputMeta').textContent='';
+});
+</script>
+  <noscript><p>SQL 格式化 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
