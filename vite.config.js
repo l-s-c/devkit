@@ -8,6 +8,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
+        root: resolve(__dirname, 'index.html'),
         main: resolve(__dirname, 'pages/index.html'),
         json: resolve(__dirname, 'pages/json/index.html'),
         base64: resolve(__dirname, 'pages/base64/index.html'),

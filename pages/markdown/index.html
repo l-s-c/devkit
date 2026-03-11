@@ -52,10 +52,9 @@ body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 <div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
 
 <div class="topbar">
-  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <a class="topbar-logo" href="/"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
   <span class="topbar-tool-name">Markdown 预览</span>
   <div class="topbar-spacer"></div>
-  <a class="topbar-btn" href="/">← 返回首页</a>
   <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 </div>
 
@@ -100,9 +99,6 @@ console.log('Hello, DevKit!');
   <span id="charCount">0 字符</span>
   <span id="lineCount">0 行</span>
   <div class="statusbar-spacer"></div>
-  <a href="/json">JSON 格式化</a>
-  <a href="/regex">正则测试</a>
-  <a href="/base64">Base64</a>
 </div>
 
 <script type="module">

@@ -1,5 +1,5 @@
 // ============================================================
-// JSONKit — Main Application
+// DevKit JSON — Main Application
 // ============================================================
 
 const $ = (sel) => document.querySelector(sel);
@@ -7,7 +7,7 @@ const $$ = (sel) => document.querySelectorAll(sel);
 
 // ── Theme ──
 (function initTheme() {
-  const saved = localStorage.getItem('jsonkit-theme');
+  const saved = localStorage.getItem('devkit-theme');
   if (saved) {
     document.documentElement.setAttribute('data-theme', saved);
   }
@@ -17,7 +17,7 @@ const $$ = (sel) => document.querySelectorAll(sel);
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('jsonkit-theme', next);
+      localStorage.setItem('devkit-theme', next);
     });
   }
 })();
@@ -54,32 +54,8 @@ function hideLoading() {
 }
 
 // ── Route → View mapping ──
-const ROUTE_MAP = {
-  '/': 'format', '/formatter': 'format',
-  '/tree': 'tree',
-  '/converter': 'convert',
-  '/diff': 'diff',
-  // Long-tail SEO routes
-  '/json-to-yaml': 'convert', '/json-to-xml': 'convert', '/json-to-csv': 'convert',
-  '/json-to-typescript': 'convert', '/json-to-go': 'convert', '/json-to-java': 'convert',
-  '/json-to-python': 'convert', '/json-schema': 'convert',
-  '/json-formatter': 'format', '/json-validator': 'format', '/json-minifier': 'format',
-  '/json-viewer': 'tree', '/jsonpath': 'tree',
-  '/json-diff': 'diff', '/json-compare': 'diff',
-};
-const VIEW_ROUTES = { format: '/formatter', tree: '/tree', convert: '/converter', diff: '/diff' };
-const VIEW_TITLES = {
-  format: 'JSON 格式化 — JSONKit',
-  tree: 'JSON 树形视图 — JSONKit',
-  convert: 'JSON 转换 — JSONKit',
-  diff: 'JSON 对比 — JSONKit',
-};
-const VIEW_DESCRIPTIONS = {
-  format: '在线 JSON 格式化、压缩、校验工具，支持宽松模式、错误行定位。免费无广告，纯前端处理数据不上传。',
-  tree: '在线 JSON 树形结构可视化浏览，支持 JSONPath 查询（$..key、?() 过滤）、虚拟滚动处理万级节点。',
-  convert: '在线 JSON 格式转换工具，支持 JSON 与 YAML、XML、CSV、TypeScript、Go Struct、Java Class、Python Dataclass、JSON Schema 互转。',
-  diff: '在线 JSON 语义化对比工具，支持差异合并、字符级高亮、折叠未变更区域。忽略键顺序对比。',
-};
+const VALID_TOOLS = ['format', 'tree', 'convert', 'diff', 'jsonpath'];
+
 
 function switchView(tool, pushState = true) {
   $$('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -88,18 +64,14 @@ function switchView(tool, pushState = true) {
   $(`#view-${tool}`).classList.add('active');
   // Update URL + meta
   if (pushState) {
-    history.pushState({ tool }, '', VIEW_ROUTES[tool] || '/');
+    location.hash = '#' + tool;
     trackEvent('navigation', 'switch', tool);
   }
-  document.title = VIEW_TITLES[tool] || 'JSONKit — JSON 在线工具箱';
-  const metaDesc = $('meta[name="description"]');
-  if (metaDesc) metaDesc.content = VIEW_DESCRIPTIONS[tool] || '';
-  // Update canonical + OG URL
-  const canon = $('link[rel="canonical"]');
-  const ogUrl = $('meta[property="og:url"]');
-  const fullUrl = `https://jsonkit.dev${VIEW_ROUTES[tool] || '/'}`;
-  if (canon) canon.href = fullUrl;
-  if (ogUrl) ogUrl.content = fullUrl;
+  const titles = {
+    format: 'JSON 格式化 — DevKit', tree: 'JSON 树形视图 — DevKit',
+    convert: 'JSON 转换 — DevKit', diff: 'JSON 对比 — DevKit',
+  };
+  document.title = titles[tool] || 'DevKit — JSON 在线工具箱';
 }
 
 // ── View Switching ──
@@ -107,15 +79,16 @@ $$('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => switchView(btn.dataset.tool));
 });
 
-// Handle browser back/forward
-window.addEventListener('popstate', (e) => {
-  const tool = e.state?.tool || ROUTE_MAP[location.pathname] || 'format';
-  switchView(tool, false);
+// Handle hash change (browser back/forward)
+window.addEventListener('hashchange', () => {
+  const hash = location.hash.replace('#', '');
+  if (VALID_TOOLS.includes(hash)) switchView(hash, false);
 });
 
 // Init view from URL on page load
 (function initRoute() {
-  const tool = ROUTE_MAP[location.pathname] || 'format';
+  const hash = location.hash.replace('#', '');
+  const tool = VALID_TOOLS.includes(hash) ? hash : 'format';
   switchView(tool, false);
 })();
 
@@ -305,13 +278,13 @@ async function doFormat(mode) {
 
 // Sample data
 const SAMPLE_JSON = JSON.stringify({
-  "name": "JSONKit",
+  "name": "DevKit JSON",
   "version": "1.0.0",
   "description": "JSON 在线工具箱",
   "features": ["格式化", "校验", "树形视图", "转换", "对比"],
   "author": {
     "name": "开发团队",
-    "url": "https://jsonkit.dev"
+    "url": "https://devkit.dev"
   },
   "users": [
     { "id": 1, "name": "Alice", "age": 30, "active": true },

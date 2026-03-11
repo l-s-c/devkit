@@ -448,4 +448,3 @@ const Converters = {
 };
 
 export default Converters;
-window.Converters = Converters;

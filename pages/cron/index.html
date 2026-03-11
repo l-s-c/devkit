@@ -44,15 +44,17 @@ body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 <div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
 
 <div class="topbar">
-  <a class="topbar-logo" href="/"><div class="topbar-logo-icon">{ }</div><span class="topbar-logo-text">DevKit</span></a>
+  <a class="topbar-logo" href="/"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
   <span class="topbar-tool-name">Cron 表达式解析</span>
   <div class="topbar-spacer"></div>
-  <a class="topbar-btn" href="/">← 返回首页</a>
   <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 </div>
 
 <div class="main">
   <div class="glass-card cron-input-card">
+    <div style="margin-bottom:12px">
+      <input id="cronPaste" type="text" placeholder="粘贴完整表达式，如 0 9 * * 1-5" style="width:100%;height:40px;padding:0 14px;font-family:var(--font-code);font-size:14px;background:var(--bg-glass-input);border:0.5px solid var(--border-input);border-radius:10px;color:var(--text-primary);outline:none" spellcheck="false">
+    </div>
     <div class="cron-expr">
       <div class="cron-field"><input id="f0" value="*"><div class="cron-field-label">分</div></div>
       <div class="cron-field"><input id="f1" value="*"><div class="cron-field-label">时</div></div>
@@ -85,9 +87,6 @@ body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 <div class="statusbar">
   <span id="cronExpr">* * * * *</span>
   <div class="statusbar-spacer"></div>
-  <a href="/timestamp">时间戳</a>
-  <a href="/regex">正则测试</a>
-  <a href="/json">JSON 格式化</a>
 </div>
 
 <script type="module">
@@ -185,6 +184,13 @@ function update() {
 }
 
 document.getElementById('btnCopyCron').addEventListener('click',()=>copyText(getCron(),'✓ Cron 表达式已复制'));
+document.getElementById('cronPaste').addEventListener('input', function() {
+  const parts = this.value.trim().split(/\s+/);
+  if (parts.length >= 5) {
+    for (let i = 0; i < 5; i++) document.getElementById('f'+i).value = parts[i] || '*';
+    update();
+  }
+});
 [0,1,2,3,4].forEach(i=>document.getElementById('f'+i).addEventListener('input',update));
 document.querySelectorAll('.preset-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
