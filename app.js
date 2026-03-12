@@ -38,7 +38,7 @@ function trackEvent(category, action, label) {
 function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `<div class="toast-bar ${type}"></div><span class="toast-text">${message}</span>`;
+  toast.innerHTML = `<div class="toast-bar ${type}"></div><span class="toast-text">${escapeHtml(message)}</span>`;
   $('#toasts').appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = '0';
@@ -217,7 +217,7 @@ initConvert({ $, $$, showToast, trackEvent });
 
 
 // ── Diff Module (extracted to modules/diff.js) ──
-initDiff({ $, $$, showToast, escapeHtml, formatBytes, trackEvent, truncate, debounce, workerManager });
+initDiff({ $, $$, showToast, showLoading, hideLoading, escapeHtml, formatBytes, trackEvent, truncate, debounce, workerManager });
 
 function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

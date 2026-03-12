@@ -213,7 +213,7 @@ function initCodeMirror() {
     right: diffRightView,
   };
 
-  console.log('✅ CodeMirror 6 initialized');
+  // CodeMirror 6 initialized
 }
 
 if (document.readyState === 'complete') {

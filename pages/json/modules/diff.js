@@ -2,7 +2,7 @@
 // DIFF MODULE
 // ============================================================
 
-export function initDiff({ $, $$, showToast, escapeHtml, formatBytes, trackEvent, truncate, debounce, workerManager }) {
+export function initDiff({ $, $$, showToast, showLoading, hideLoading, escapeHtml, formatBytes, trackEvent, truncate, debounce, workerManager }) {
 
   // ============================================================
   // ============================================================
