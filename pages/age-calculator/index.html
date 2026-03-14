@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>年龄计算器 | Age Calculator Online — DevKit</title>
+<meta name="description" content="在线年龄计算器，精确计算年龄、生肖、星座、生日倒计时、已活天数秒数实时跳动。Age calculator online.">
+<meta name="keywords" content="age calculator, 年龄计算器, birthday calculator, 生肖查询, 星座查询, chinese zodiac, DevKit">
+<meta property="og:title" content="年龄计算器 | Age Calculator Online — DevKit">
+<meta property="og:description" content="精确年龄、生肖星座、生日倒计时、已活秒数实时跳动">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/age-calculator/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="年龄计算器 — DevKit">
+<meta name="twitter:description" content="精确年龄、生肖星座、生日倒计时">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"年龄计算器","description":"在线年龄计算器，精确年龄、生肖星座、已活时间","url":"https://l-s-c.github.io/devkit/pages/age-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/age-calculator/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.panel {
+  padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass); margin-bottom: 16px;
+}
+
+/* 日期输入 */
+.input-label { font-size: 12px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.date-input {
+  width: 100%; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 18px; font-weight: 700;
+  color: var(--text-primary); text-align: center;
+}
+.date-input:focus { outline: none; border-color: var(--brand-500); }
+
+/* 年龄大数字 */
+.age-hero { text-align: center; padding: 20px 0; }
+.age-number {
+  font-family: var(--font-code); font-size: 72px; font-weight: 900;
+  background: linear-gradient(135deg, #6366F1, #A855F7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+.age-unit { font-size: 16px; color: var(--text-secondary); font-weight: 600; margin-top: 4px; }
+.age-detail { display: flex; gap: 16px; justify-content: center; margin-top: 12px; }
+.age-part { text-align: center; }
+.age-part-val { font-family: var(--font-code); font-size: 24px; font-weight: 800; color: var(--brand-500); }
+.age-part-label { font-size: 10px; color: var(--text-caption); }
+
+/* 生肖星座 */
+.zodiac-row { display: flex; gap: 12px; }
+.zodiac-card {
+  flex: 1; padding: 16px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.zodiac-icon { font-size: 32px; margin-bottom: 4px; }
+.zodiac-name { font-size: 14px; font-weight: 700; }
+.zodiac-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* 生日倒计时 */
+.bday-card {
+  padding: 20px; border-radius: 10px; text-align: center;
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(236,72,153,0.06));
+  border: 1px solid rgba(99,102,241,0.1);
+}
+.bday-icon { font-size: 28px; margin-bottom: 4px; }
+.bday-days { font-family: var(--font-code); font-size: 36px; font-weight: 900; color: var(--brand-500); }
+.bday-label { font-size: 12px; color: var(--text-caption); margin-top: 2px; }
+.bday-date { font-family: var(--font-code); font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.bday-today { color: #EC4899; }
+
+/* 实时计数 */
+.live-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.live-card {
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.live-value { font-family: var(--font-code); font-size: 18px; font-weight: 800; }
+.live-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+.live-card.highlight { border-color: var(--brand-500); background: rgba(99,102,241,0.06); grid-column: 1 / -1; }
+.live-card.highlight .live-value { color: var(--brand-500); font-size: 28px; }
+
+/* 错误提示 */
+.error-msg { text-align: center; color: #EF4444; font-size: 14px; font-weight: 600; padding: 20px; display: none; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .age-number { font-size: 56px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">年龄计算器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">年龄计算器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧 -->
+    <div>
+      <div class="panel">
+        <div class="input-label">🎂 出生日期</div>
+        <input type="date" class="date-input" id="birthDate" value="1995-06-15">
+      </div>
+
+      <div class="panel" id="agePanel">
+        <div class="age-hero">
+          <div class="age-number" id="ageYears">—</div>
+          <div class="age-unit">岁</div>
+          <div class="age-detail">
+            <div class="age-part"><div class="age-part-val" id="ageMonths">—</div><div class="age-part-label">月</div></div>
+            <div class="age-part"><div class="age-part-val" id="ageDays">—</div><div class="age-part-label">日</div></div>
+          </div>
+        </div>
+        <div class="error-msg" id="errorMsg">⚠️ 出生日期不能是未来</div>
+      </div>
+
+      <div class="panel">
+        <div class="zodiac-row">
+          <div class="zodiac-card">
+            <div class="zodiac-icon" id="zodiacAnimal">🐷</div>
+            <div class="zodiac-name" id="zodiacAnimalName">猪</div>
+            <div class="zodiac-label">生肖</div>
+          </div>
+          <div class="zodiac-card">
+            <div class="zodiac-icon" id="zodiacStar">♊</div>
+            <div class="zodiac-name" id="zodiacStarName">双子座</div>
+            <div class="zodiac-label">星座</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧 -->
+    <div>
+      <div class="panel">
+        <div class="bday-card" id="bdayCard">
+          <div class="bday-icon">🎉</div>
+          <div class="bday-days" id="bdayDays">—</div>
+          <div class="bday-label" id="bdayLabel">天后是你的生日</div>
+          <div class="bday-date" id="bdayDate"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="live-title">⏱ 已活时间（实时）</div>
+        <div class="live-grid">
+          <div class="live-card"><div class="live-value" id="liveDays">—</div><div class="live-label">天</div></div>
+          <div class="live-card"><div class="live-value" id="liveWeeks">—</div><div class="live-label">周</div></div>
+          <div class="live-card"><div class="live-value" id="liveHours">—</div><div class="live-label">小时</div></div>
+          <div class="live-card"><div class="live-value" id="liveMinutes">—</div><div class="live-label">分钟</div></div>
+          <div class="live-card highlight">
+            <div class="live-value" id="liveSeconds">—</div>
+            <div class="live-label">秒（实时跳动）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择出生日期查看年龄</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地计算</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+const ANIMAL_EMOJI = ['🐭','🐂','🐯','🐰','🐲','🐍','🐴','🐑','🐵','🐔','🐶','🐷'];
+const STARS = [
+  [1,20,'摩羯座','♑'],[2,19,'水瓶座','♒'],[3,21,'双鱼座','♓'],[4,20,'白羊座','♈'],
+  [5,21,'金牛座','♉'],[6,22,'双子座','♊'],[7,23,'巨蟹座','♋'],[8,23,'狮子座','♌'],
+  [9,23,'处女座','♍'],[10,24,'天秤座','♎'],[11,23,'天蝎座','♏'],[12,22,'射手座','♐'],
+  [13,31,'摩羯座','♑']
+];
+const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+
+let timer = null;
+
+function getConstellation(month, day) {
+  for (let i = 0; i < 12; i++) {
+    if ((month === STARS[i][0] && day >= STARS[i][1]) || (month === STARS[i + 1][0] && day < STARS[i + 1][1])) {
+      return STARS[i];
+    }
+  }
+  return STARS[0];
+}
+
+function calculate() {
+  const input = document.getElementById('birthDate').value;
+  if (!input) return;
+
+  const birth = new Date(input + 'T00:00:00');
+  const now = new Date();
+
+  // 未来日期检查（AC-06）
+  if (birth > now) {
+    document.getElementById('errorMsg').style.display = 'block';
+    document.querySelector('.age-hero').style.display = 'none';
+    if (timer) { clearInterval(timer); timer = null; }
+    return;
+  }
+  document.getElementById('errorMsg').style.display = 'none';
+  document.querySelector('.age-hero').style.display = '';
+
+  // 精确年龄
+  let years = now.getFullYear() - birth.getFullYear();
+  let months = now.getMonth() - birth.getMonth();
+  let days = now.getDate() - birth.getDate();
+  if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+
+  document.getElementById('ageYears').textContent = years;
+  document.getElementById('ageMonths').textContent = months;
+  document.getElementById('ageDays').textContent = days;
+
+  // 生肖
+  const zi = (birth.getFullYear() - 4) % 12;
+  document.getElementById('zodiacAnimal').textContent = ANIMAL_EMOJI[zi];
+  document.getElementById('zodiacAnimalName').textContent = ANIMALS[zi];
+
+  // 星座
+  const star = getConstellation(birth.getMonth() + 1, birth.getDate());
+  document.getElementById('zodiacStar').textContent = star[3];
+  document.getElementById('zodiacStarName').textContent = star[2];
+
+  // 下次生日
+  let nextBday = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+  // 闰年 2/29 处理（AC-05）
+  if (birth.getMonth() === 1 && birth.getDate() === 29) {
+    // 找下一个闰年的 2/29，或者今年如果是闰年且还没过
+    let y = now.getFullYear();
+    for (let i = 0; i < 8; i++) {
+      const test = new Date(y + i, 1, 29);
+      if (test.getMonth() === 1 && test > now) { nextBday = test; break; }
+    }
+  } else {
+    if (nextBday <= now) nextBday = new Date(now.getFullYear() + 1, birth.getMonth(), birth.getDate());
+  }
+
+  const bdayDiff = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+  const bdayCard = document.getElementById('bdayCard');
+
+  if (bdayDiff === 0 || (now.getMonth() === birth.getMonth() && now.getDate() === birth.getDate())) {
+    // 今天生日（AC-07）
+    document.getElementById('bdayDays').textContent = '🎂';
+    document.getElementById('bdayLabel').textContent = '今天是你的生日！';
+    document.getElementById('bdayLabel').classList.add('bday-today');
+    document.getElementById('bdayDate').textContent = '';
+  } else {
+    document.getElementById('bdayDays').textContent = bdayDiff;
+    document.getElementById('bdayLabel').textContent = '天后是你的生日';
+    document.getElementById('bdayLabel').classList.remove('bday-today');
+    document.getElementById('bdayDate').textContent = `${nextBday.getFullYear()}-${String(nextBday.getMonth() + 1).padStart(2, '0')}-${String(nextBday.getDate()).padStart(2, '0')}（${WEEKDAYS[nextBday.getDay()]}）`;
+  }
+
+  // 实时计数（AC-08: clearInterval 防泄漏）
+  if (timer) clearInterval(timer);
+  function updateLive() {
+    const n = new Date();
+    const diff = n - birth;
+    const secs = Math.floor(diff / 1000);
+    const mins = Math.floor(secs / 60);
+    const hrs = Math.floor(mins / 60);
+    const d = Math.floor(hrs / 24);
+    const w = Math.floor(d / 7);
+    document.getElementById('liveDays').textContent = d.toLocaleString();
+    document.getElementById('liveWeeks').textContent = w.toLocaleString();
+    document.getElementById('liveHours').textContent = hrs.toLocaleString();
+    document.getElementById('liveMinutes').textContent = mins.toLocaleString();
+    document.getElementById('liveSeconds').textContent = secs.toLocaleString();
+  }
+  updateLive();
+  timer = setInterval(updateLive, 1000);
+
+  document.getElementById('statusInfo').textContent = `${years} 岁 ${months} 月 ${days} 日 · ${ANIMALS[zi]} · ${star[2]}`;
+}
+
+document.getElementById('birthDate').addEventListener('change', calculate);
+
+// 页面离开清理（AC-08）
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && timer) { clearInterval(timer); timer = null; }
+  else if (!document.hidden) calculate();
+});
+
+calculate();
+</script>
+<noscript><p>年龄计算器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
