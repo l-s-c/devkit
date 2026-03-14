@@ -79,6 +79,33 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 .pie-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
 .pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+/* 提前还款 */
+.prepay-header {
+  font-size: 13px; font-weight: 700; color: var(--text-caption);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.prepay-toggle { font-size: 11px; color: var(--brand-500); cursor: pointer; font-weight: 600; }
+.prepay-content { display: none; }
+.prepay-result { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; }
+.prepay-card {
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.prepay-card-value { font-family: var(--font-code); font-size: 18px; font-weight: 800; }
+.prepay-card-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+.prepay-save { color: #10B981; }
+.prepay-compare {
+  margin-top: 12px; padding: 12px; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.06));
+  border: 1px solid rgba(16,185,129,0.1); font-size: 12px;
+}
+.prepay-compare-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.prepay-bar { height: 6px; border-radius: 3px; margin-top: 8px; position: relative; }
+.prepay-bar-bg { height: 100%; border-radius: 3px; background: var(--border-glass); }
+.prepay-bar-fill { height: 100%; border-radius: 3px; position: absolute; top: 0; left: 0; background: linear-gradient(90deg, #10B981, var(--brand-500)); transition: width 400ms; }
+.prepay-error { color: #EF4444; font-size: 13px; font-weight: 600; text-align: center; padding: 12px; display: none; }
+
 /* 还款明细表 */
 .schedule-title {
   font-size: 13px; font-weight: 700; color: var(--text-caption);
@@ -187,6 +214,62 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <thead><tr><th>期数</th><th>月供</th><th>本金</th><th>利息</th><th>剩余本金</th></tr></thead>
           <tbody id="scheduleBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="prepay-header">
+        <span>⚡ 提前还款计算</span>
+        <span class="prepay-toggle" id="prepayToggle">展开 ↓</span>
+      </div>
+      <div class="prepay-content" id="prepayContent">
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">📅 已还月数</div>
+            <input type="number" class="field-input" id="prepayMonth" value="24">
+            <div class="field-unit">期（第 N 个月后）</div>
+          </div>
+          <div class="field">
+            <div class="field-label">💰 提前还款金额</div>
+            <input type="number" class="field-input" id="prepayAmount" value="200000">
+            <div class="field-unit">元</div>
+          </div>
+        </div>
+        <div class="radio-row">
+          <button class="radio-btn active" id="btnShortenTerm">缩短期限</button>
+          <button class="radio-btn" id="btnReducePayment">减少月供</button>
+        </div>
+        <div class="prepay-error" id="prepayError"></div>
+        <div id="prepayResultArea">
+          <div class="prepay-result">
+            <div class="prepay-card">
+              <div class="prepay-card-value" id="prepayMonthly">—</div>
+              <div class="prepay-card-label" id="prepayMonthlyLabel">月供</div>
+            </div>
+            <div class="prepay-card">
+              <div class="prepay-card-value" id="prepayTerm">—</div>
+              <div class="prepay-card-label">剩余期限</div>
+            </div>
+            <div class="prepay-card">
+              <div class="prepay-card-value prepay-save" id="prepaySave">—</div>
+              <div class="prepay-card-label">🎉 节省利息</div>
+            </div>
+          </div>
+          <div class="prepay-compare">
+            <div class="prepay-compare-row">
+              <span>不提前还款总利息</span>
+              <strong id="prepayOrigInt">—</strong>
+            </div>
+            <div class="prepay-compare-row">
+              <span>提前还款后总利息</span>
+              <strong id="prepayNewInt" style="color:#10B981">—</strong>
+            </div>
+            <div class="prepay-bar">
+              <div class="prepay-bar-bg"></div>
+              <div class="prepay-bar-fill" id="prepayBar" style="width:0"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -322,6 +405,142 @@ function calcLoan() {
     `${fmtInt(P)} · ${annualRate}% · ${years}年 · 月供 ${fmtInt(monthly)} · 总利息 ${fmtInt(totalInt)}`;
 }
 
+/* ===== 提前还款计算 ===== */
+let prepayMode = 'shorten'; // shorten | reduce
+
+function calcPrepay() {
+  const P = parseFloat(document.getElementById('loanAmount').value) || 0;
+  const annualRate = parseFloat(document.getElementById('loanRate').value) || 0;
+  const r = annualRate / 100 / 12;
+  const years = parseInt(document.getElementById('loanYears').value) || 0;
+  const n = years * 12;
+  const prepayMonth = parseInt(document.getElementById('prepayMonth').value) || 0;
+  const prepayAmount = parseFloat(document.getElementById('prepayAmount').value) || 0;
+
+  const errEl = document.getElementById('prepayError');
+  const resultArea = document.getElementById('prepayResultArea');
+
+  if (!P || !n || !r) return;
+
+  // AC-11: 提前还款时间 > 总期限
+  if (prepayMonth >= n) {
+    errEl.textContent = '⚠️ 已还月数不能大于等于总期限';
+    errEl.style.display = 'block';
+    resultArea.style.display = 'none';
+    return;
+  }
+
+  // 先算原始还款计划到第 N 期的剩余本金
+  let origMonthly, origTotalInt;
+  let balance = P;
+
+  if (loanType === 'equal' && r > 0) {
+    const factor = Math.pow(1 + r, n);
+    origMonthly = P * r * factor / (factor - 1);
+    origTotalInt = origMonthly * n - P;
+    for (let i = 0; i < prepayMonth; i++) {
+      const intPart = balance * r;
+      balance -= (origMonthly - intPart);
+    }
+  } else {
+    const capPart = P / n;
+    origTotalInt = 0;
+    for (let i = 0; i < n; i++) {
+      origTotalInt += balance * r;
+      if (i < prepayMonth) balance -= capPart;
+    }
+    // recalc balance for principal method
+    balance = P;
+    for (let i = 0; i < prepayMonth; i++) balance -= P / n;
+    origMonthly = P / n + P * r; // first month for display
+  }
+
+  // AC-12: 提前还款金额 > 剩余本金
+  if (prepayAmount >= balance) {
+    errEl.textContent = '⚠️ 提前还款金额不能大于等于剩余本金（' + fmtInt(balance) + '）';
+    errEl.style.display = 'block';
+    resultArea.style.display = 'none';
+    return;
+  }
+
+  errEl.style.display = 'none';
+  resultArea.style.display = '';
+
+  const newBalance = balance - prepayAmount;
+  let newMonthly, newTerm, newTotalInt;
+
+  // 已还部分的利息
+  let paidInterest = 0;
+  let bal2 = P;
+  if (loanType === 'equal' && r > 0) {
+    const factor = Math.pow(1 + r, n);
+    const m = P * r * factor / (factor - 1);
+    for (let i = 0; i < prepayMonth; i++) {
+      const intPart = bal2 * r;
+      paidInterest += intPart;
+      bal2 -= (m - intPart);
+    }
+  } else {
+    const capPart = P / n;
+    for (let i = 0; i < prepayMonth; i++) {
+      paidInterest += bal2 * r;
+      bal2 -= capPart;
+    }
+  }
+
+  if (prepayMode === 'shorten') {
+    // 缩短期限：月供不变，算新期限
+    if (loanType === 'equal' && r > 0) {
+      newMonthly = origMonthly; // 月供不变
+      // newBalance = newMonthly * ((1-(1+r)^-newN) / r)
+      // solve for newN: newN = -ln(1 - newBalance*r/newMonthly) / ln(1+r)
+      const x = 1 - newBalance * r / newMonthly;
+      if (x <= 0) { errEl.textContent = '⚠️ 参数无效'; errEl.style.display = 'block'; resultArea.style.display = 'none'; return; }
+      newTerm = Math.ceil(-Math.log(x) / Math.log(1 + r));
+      // 新总利息 = 已还利息 + 新期限月供总额 - 新剩余本金
+      newTotalInt = paidInterest + newMonthly * newTerm - newBalance;
+    } else {
+      // 等额本金缩短期限：每月本金 = newBalance / newTerm，但月供不变 → 复杂，简化为重算
+      const capPart = P / n; // 原每月本金不变
+      newTerm = Math.ceil(newBalance / capPart);
+      let ni = 0; let b = newBalance;
+      for (let i = 0; i < newTerm; i++) { ni += b * r; b -= capPart; }
+      newTotalInt = paidInterest + ni;
+      newMonthly = capPart + newBalance * r; // 首月
+    }
+  } else {
+    // 减少月供：期限不变
+    const remainN = n - prepayMonth;
+    newTerm = remainN;
+    if (loanType === 'equal' && r > 0) {
+      const factor2 = Math.pow(1 + r, remainN);
+      newMonthly = newBalance * r * factor2 / (factor2 - 1);
+      newTotalInt = paidInterest + newMonthly * remainN - newBalance;
+    } else {
+      const capPart = newBalance / remainN;
+      let ni = 0; let b = newBalance;
+      for (let i = 0; i < remainN; i++) { ni += b * r; b -= capPart; }
+      newTotalInt = paidInterest + ni;
+      newMonthly = capPart + newBalance * r; // 首月
+    }
+  }
+
+  const saved = origTotalInt - newTotalInt;
+
+  document.getElementById('prepayMonthly').textContent = fmtInt(newMonthly);
+  document.getElementById('prepayMonthlyLabel').textContent = prepayMode === 'shorten' ? '月供（不变）' : '新月供';
+
+  const termYears = Math.floor(newTerm / 12);
+  const termMonths = newTerm % 12;
+  document.getElementById('prepayTerm').textContent = termYears + '年' + (termMonths ? termMonths + '月' : '');
+  document.getElementById('prepaySave').textContent = fmtInt(saved);
+  document.getElementById('prepayOrigInt').textContent = fmtInt(origTotalInt);
+  document.getElementById('prepayNewInt').textContent = fmtInt(newTotalInt);
+
+  const pct = origTotalInt > 0 ? Math.round(newTotalInt / origTotalInt * 100) : 0;
+  document.getElementById('prepayBar').style.width = pct + '%';
+}
+
 /* ===== 存款计算 ===== */
 function calcDeposit() {
   const P = parseFloat(document.getElementById('depositAmount').value) || 0;
@@ -375,6 +594,46 @@ document.getElementById('btnEqualPrincipal').addEventListener('click', () => {
   document.getElementById('btnEqualPayment').classList.remove('active');
   calcLoan();
 });
+
+// 提前还款展开/收起
+document.getElementById('prepayToggle').addEventListener('click', () => {
+  const content = document.getElementById('prepayContent');
+  const toggle = document.getElementById('prepayToggle');
+  if (content.style.display === 'none' || !content.style.display) {
+    content.style.display = 'block';
+    toggle.textContent = '收起 ↑';
+    calcPrepay();
+  } else {
+    content.style.display = 'none';
+    toggle.textContent = '展开 ↓';
+  }
+});
+
+// 提前还款输入
+['prepayMonth', 'prepayAmount'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcPrepay)
+);
+
+// 缩短期限/减少月供
+document.getElementById('btnShortenTerm').addEventListener('click', () => {
+  prepayMode = 'shorten';
+  document.getElementById('btnShortenTerm').classList.add('active');
+  document.getElementById('btnReducePayment').classList.remove('active');
+  calcPrepay();
+});
+document.getElementById('btnReducePayment').addEventListener('click', () => {
+  prepayMode = 'reduce';
+  document.getElementById('btnReducePayment').classList.add('active');
+  document.getElementById('btnShortenTerm').classList.remove('active');
+  calcPrepay();
+});
+
+// 贷款参数变化时也重新算提前还款
+['loanAmount', 'loanRate', 'loanYears'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => {
+    if (document.getElementById('prepayContent').style.display === 'block') calcPrepay();
+  })
+);
 
 // 存款输入
 ['depositAmount', 'depositRate', 'depositYears'].forEach(id =>
