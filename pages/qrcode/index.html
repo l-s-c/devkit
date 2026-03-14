@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码生成器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线二维码生成器，支持自定义颜色、Logo、WiFi/邮件/名片模板，下载 PNG/SVG/JPG。纯浏览器端，零上传。">
+<meta property="og:title" content="二维码生成器 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="在线二维码生成，支持自定义颜色、Logo、多种模板，下载 PNG/SVG/JPG">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/qrcode/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二维码生成器 — DevKit">
+<meta name="twitter:description" content="在线二维码生成，自定义颜色、Logo、多种模板">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"二维码生成器","description":"在线二维码生成器，支持自定义颜色、Logo、多种模板","url":"https://l-s-c.github.io/devkit/pages/qrcode/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/qrcode/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 900px; margin: 0 auto; width: 100%; }
+
+/* 双栏布局 */
+.main-layout { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: start; }
+
+/* 输入区 */
+.input-section {
+  padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-label { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+/* 类型 Tab */
+.type-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.type-tab {
+  padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; gap: 5px;
+}
+.type-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.type-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+/* 输入框 */
+.text-input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: inherit; font-size: 14px; color: var(--text-primary);
+  resize: vertical; min-height: 100px; line-height: 1.6; transition: border-color 200ms;
+}
+.text-input:focus { outline: none; border-color: var(--brand-500); }
+.text-input::placeholder { color: var(--text-caption); }
+.char-count { font-size: 11px; color: var(--text-caption); text-align: right; margin-top: 4px; font-family: var(--font-code); }
+
+/* WiFi 表单 */
+.wifi-form { display: none; }
+.wifi-form.show { display: block; }
+.wifi-row { margin-bottom: 12px; }
+.wifi-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+.wifi-input {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 13px; color: var(--text-primary);
+}
+.wifi-input:focus { outline: none; border-color: var(--brand-500); }
+.wifi-enc-tabs { display: flex; gap: 4px; }
+.wifi-enc-tab {
+  padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.wifi-enc-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+/* 邮件表单 */
+.email-form { display: none; }
+.email-form.show { display: block; }
+
+/* 设置网格 */
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.setting-card {
+  padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+}
+.setting-name { font-size: 11px; font-weight: 600; color: var(--text-caption); margin-bottom: 6px; }
+.setting-select {
+  width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 600;
+  color: var(--text-primary); cursor: pointer;
+}
+.setting-select:focus { outline: none; border-color: var(--brand-500); }
+
+/* 颜色选择 */
+.color-row { display: flex; align-items: center; gap: 8px; }
+.color-swatch {
+  width: 32px; height: 32px; border-radius: 8px; border: 2px solid var(--border-glass);
+  cursor: pointer; overflow: hidden; flex-shrink: 0;
+}
+.color-swatch input { width: 100%; height: 100%; border: none; cursor: pointer; padding: 0; }
+.color-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; font-family: var(--font-code); }
+
+/* Logo 上传 */
+.logo-upload {
+  margin-top: 12px; padding: 12px; border-radius: 10px;
+  border: 1.5px dashed var(--border-glass); text-align: center;
+  cursor: pointer; transition: all 200ms; position: relative;
+}
+.logo-upload:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.logo-upload-text { font-size: 12px; color: var(--text-caption); }
+.logo-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.logo-preview { display: none; align-items: center; gap: 8px; }
+.logo-preview.show { display: flex; }
+.logo-preview img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+.logo-preview-name { font-size: 12px; font-weight: 600; flex: 1; }
+.logo-remove {
+  width: 24px; height: 24px; border-radius: 6px; border: none;
+  background: rgba(239,68,68,0.1); color: #EF4444; cursor: pointer;
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+}
+
+/* 预览区 */
+.preview-section { position: sticky; top: 72px; }
+.preview-card {
+  padding: 24px; text-align: center; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.qr-display {
+  width: 232px; height: 232px; margin: 0 auto 16px; border-radius: 12px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06); position: relative; overflow: hidden;
+}
+.qr-display canvas { max-width: 100%; max-height: 100%; }
+.preview-info { font-size: 11px; color: var(--text-caption); margin-bottom: 12px; }
+.preview-actions { display: flex; flex-direction: column; gap: 8px; }
+.btn-download-qr {
+  width: 100%; padding: 12px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: white;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 200ms;
+  box-shadow: 0 4px 24px rgba(99,102,241,0.18);
+}
+.btn-download-qr:hover { box-shadow: 0 6px 28px rgba(99,102,241,0.25); transform: translateY(-1px); }
+.download-options { display: flex; gap: 6px; }
+.download-opt {
+  flex: 1; padding: 8px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.download-opt:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.download-opt.active { border-color: var(--brand-500); color: var(--brand-500); background: rgba(99,102,241,0.08); }
+
+/* 快捷模板 */
+.presets {
+  margin-top: 16px; padding: 16px 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.presets-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.preset-card {
+  padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center; cursor: pointer; transition: all 150ms;
+}
+.preset-card:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.preset-icon { font-size: 20px; margin-bottom: 4px; }
+.preset-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+
+/* Logo 提示 */
+.logo-hint { font-size: 10px; color: var(--text-caption); margin-top: 4px; }
+
+@media (max-width: 640px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .preview-section { position: static; }
+  .settings-grid { grid-template-columns: 1fr; }
+  .preset-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">二维码生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">二维码生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="main-layout">
+    <!-- 左侧输入 -->
+    <div>
+      <div class="input-section">
+        <div class="type-tabs" id="typeTabs">
+          <button class="type-tab active" data-type="link">🔗 链接</button>
+          <button class="type-tab" data-type="text">📝 文本</button>
+          <button class="type-tab" data-type="email">📧 邮件</button>
+          <button class="type-tab" data-type="wifi">📶 WiFi</button>
+        </div>
+
+        <!-- 通用文本输入 -->
+        <div id="textInputWrap">
+          <textarea class="text-input" id="textInput" placeholder="输入链接或文本...&#10;例如：https://l-s-c.github.io/devkit/"></textarea>
+          <div class="char-count" id="charCount">0 / 2953 字符</div>
+        </div>
+
+        <!-- WiFi 表单 -->
+        <div class="wifi-form" id="wifiForm">
+          <div class="wifi-row">
+            <div class="wifi-label">网络名称 (SSID)</div>
+            <input type="text" class="wifi-input" id="wifiSSID" placeholder="MyWiFi">
+          </div>
+          <div class="wifi-row">
+            <div class="wifi-label">密码</div>
+            <input type="text" class="wifi-input" id="wifiPassword" placeholder="password123">
+          </div>
+          <div class="wifi-row">
+            <div class="wifi-label">加密方式</div>
+            <div class="wifi-enc-tabs" id="wifiEncTabs">
+              <button class="wifi-enc-tab active" data-enc="WPA">WPA/WPA2</button>
+              <button class="wifi-enc-tab" data-enc="WEP">WEP</button>
+              <button class="wifi-enc-tab" data-enc="nopass">无密码</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 邮件表单 -->
+        <div class="email-form" id="emailForm">
+          <div class="wifi-row">
+            <div class="wifi-label">收件人</div>
+            <input type="email" class="wifi-input" id="emailTo" placeholder="hello@example.com">
+          </div>
+          <div class="wifi-row">
+            <div class="wifi-label">主题</div>
+            <input type="text" class="wifi-input" id="emailSubject" placeholder="邮件主题">
+          </div>
+          <div class="wifi-row">
+            <div class="wifi-label">正文</div>
+            <textarea class="text-input" id="emailBody" placeholder="邮件内容..." style="min-height:60px"></textarea>
+          </div>
+        </div>
+
+        <!-- 设置 -->
+        <div class="settings-grid">
+          <div class="setting-card">
+            <div class="setting-name">尺寸</div>
+            <select class="setting-select" id="sizeSelect">
+              <option value="256">256 × 256</option>
+              <option value="512" selected>512 × 512</option>
+              <option value="1024">1024 × 1024</option>
+              <option value="2048">2048 × 2048</option>
+            </select>
+          </div>
+          <div class="setting-card">
+            <div class="setting-name">容错级别</div>
+            <select class="setting-select" id="ecSelect">
+              <option value="L">L (7%)</option>
+              <option value="M" selected>M (15%)</option>
+              <option value="Q">Q (25%)</option>
+              <option value="H">H (30%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-grid" style="margin-top:8px">
+          <div class="setting-card">
+            <div class="setting-name">前景色</div>
+            <div class="color-row">
+              <div class="color-swatch"><input type="color" id="fgColor" value="#1A1A2E"></div>
+              <span class="color-label" id="fgLabel">#1A1A2E</span>
+            </div>
+          </div>
+          <div class="setting-card">
+            <div class="setting-name">背景色</div>
+            <div class="color-row">
+              <div class="color-swatch"><input type="color" id="bgColor" value="#FFFFFF"></div>
+              <span class="color-label" id="bgLabel">#FFFFFF</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo-upload" id="logoUploadZone">
+          <input type="file" id="logoInput" accept="image/*">
+          <div class="logo-upload-text" id="logoText">🖼️ 上传 Logo（可选，居中显示）</div>
+          <div class="logo-preview" id="logoPreview">
+            <img id="logoPreviewImg" src="" alt="">
+            <span class="logo-preview-name" id="logoName"></span>
+          </div>
+        </div>
+        <div class="logo-hint" id="logoHint" style="display:none">⚠️ 添加 Logo 时容错级别自动切换为 H (30%)</div>
+        <button class="logo-remove" id="logoRemove" style="display:none;margin-top:4px">✕ 移除</button>
+      </div>
+
+      <!-- 快捷模板 -->
+      <div class="presets">
+        <div class="presets-title">快捷模板</div>
+        <div class="preset-grid" id="presetGrid">
+          <div class="preset-card" data-preset="url"><div class="preset-icon">🌐</div><div class="preset-name">网址</div></div>
+          <div class="preset-card" data-preset="wifi"><div class="preset-icon">📶</div><div class="preset-name">WiFi</div></div>
+          <div class="preset-card" data-preset="email"><div class="preset-icon">📧</div><div class="preset-name">邮件</div></div>
+          <div class="preset-card" data-preset="tel"><div class="preset-icon">📞</div><div class="preset-name">电话</div></div>
+          <div class="preset-card" data-preset="geo"><div class="preset-icon">📍</div><div class="preset-name">位置</div></div>
+          <div class="preset-card" data-preset="vcard"><div class="preset-icon">💳</div><div class="preset-name">名片</div></div>
+          <div class="preset-card" data-preset="event"><div class="preset-icon">📅</div><div class="preset-name">日历</div></div>
+          <div class="preset-card" data-preset="sms"><div class="preset-icon">💬</div><div class="preset-name">短信</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧预览 -->
+    <div class="preview-section">
+      <div class="preview-card">
+        <div class="qr-display" id="qrDisplay">
+          <canvas id="qrCanvas"></canvas>
+        </div>
+        <div class="preview-info" id="previewInfo">512 × 512 · 容错 M (15%)</div>
+        <div class="preview-actions">
+          <button class="btn-download-qr" id="btnDownload">⬇️ 下载二维码</button>
+          <div class="download-options" id="downloadOpts">
+            <button class="download-opt active" data-fmt="png">PNG</button>
+            <button class="download-opt" data-fmt="svg">SVG</button>
+            <button class="download-opt" data-fmt="jpg">JPG</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入内容即可生成二维码</span>
+  <div class="statusbar-spacer"></div>
+  <span>qrcode.js 本地生成</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* ===== 状态 ===== */
+let currentType = 'link';
+let downloadFormat = 'png';
+let logoImg = null;
+let logoUrl = null;
+let debounceTimer = null;
+
+/* ===== DOM ===== */
+const textInput = document.getElementById('textInput');
+const qrCanvas = document.getElementById('qrCanvas');
+const sizeSelect = document.getElementById('sizeSelect');
+const ecSelect = document.getElementById('ecSelect');
+const fgColor = document.getElementById('fgColor');
+const bgColor = document.getElementById('bgColor');
+
+const EC_LABELS = { L: 'L (7%)', M: 'M (15%)', Q: 'Q (25%)', H: 'H (30%)' };
+
+/* ===== 获取内容 ===== */
+function getContent() {
+  if (currentType === 'wifi') {
+    const ssid = document.getElementById('wifiSSID').value;
+    const pass = document.getElementById('wifiPassword').value;
+    const enc = document.querySelector('.wifi-enc-tab.active').dataset.enc;
+    if (!ssid) return '';
+    return `WIFI:T:${enc};S:${ssid};P:${pass};;`;
+  }
+  if (currentType === 'email') {
+    const to = document.getElementById('emailTo').value;
+    const subj = document.getElementById('emailSubject').value;
+    const body = document.getElementById('emailBody').value;
+    if (!to) return '';
+    return `mailto:${to}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+  }
+  return textInput.value;
+}
+
+/* ===== 生成二维码 ===== */
+async function generate() {
+  const content = getContent();
+  if (!content) {
+    qrCanvas.width = 0; qrCanvas.height = 0;
+    document.getElementById('statusInfo').textContent = '输入内容即可生成二维码';
+    return;
+  }
+
+  const size = parseInt(sizeSelect.value);
+  let ec = ecSelect.value;
+
+  // Logo 时强制 H 级别
+  if (logoImg) {
+    ec = 'H';
+    ecSelect.value = 'H';
+  }
+
+  try {
+    // 先生成到临时 canvas
+    const tmpCanvas = document.createElement('canvas');
+    await QRCode.toCanvas(tmpCanvas, content, {
+      width: size,
+      margin: 2,
+      color: { dark: fgColor.value, light: bgColor.value },
+      errorCorrectionLevel: ec,
+    });
+
+    // 复制到显示 canvas
+    qrCanvas.width = size;
+    qrCanvas.height = size;
+    const ctx = qrCanvas.getContext('2d');
+    ctx.drawImage(tmpCanvas, 0, 0);
+
+    // 叠加 Logo
+    if (logoImg) {
+      const logoSize = Math.round(size * 0.22);
+      const x = Math.round((size - logoSize) / 2);
+      const y = Math.round((size - logoSize) / 2);
+      const pad = Math.round(logoSize * 0.1);
+
+      // 白底圆角
+      ctx.fillStyle = bgColor.value;
+      roundRect(ctx, x - pad, y - pad, logoSize + pad * 2, logoSize + pad * 2, 8);
+      ctx.fill();
+
+      // Logo
+      ctx.drawImage(logoImg, x, y, logoSize, logoSize);
+    }
+
+    document.getElementById('previewInfo').textContent = `${size} × ${size} · 容错 ${EC_LABELS[ec]}`;
+    document.getElementById('statusInfo').textContent = `二维码已生成 · ${content.length} 字符`;
+  } catch (e) {
+    document.getElementById('statusInfo').textContent = '生成失败：' + e.message;
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function debouncedGenerate() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(generate, 200);
+}
+
+/* ===== 下载 ===== */
+function download() {
+  const content = getContent();
+  if (!content) return;
+
+  const size = parseInt(sizeSelect.value);
+  const ec = logoImg ? 'H' : ecSelect.value;
+
+  if (downloadFormat === 'svg') {
+    QRCode.toString(content, {
+      type: 'svg', width: size, margin: 2,
+      color: { dark: fgColor.value, light: bgColor.value },
+      errorCorrectionLevel: ec,
+    }).then(svg => {
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'qrcode.svg'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    return;
+  }
+
+  // PNG or JPG — use the current canvas
+  const mime = downloadFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+  const ext = downloadFormat === 'jpg' ? 'jpg' : 'png';
+
+  // For JPG, need white background
+  if (downloadFormat === 'jpg') {
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = qrCanvas.width;
+    tmpCanvas.height = qrCanvas.height;
+    const ctx = tmpCanvas.getContext('2d');
+    ctx.fillStyle = bgColor.value;
+    ctx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+    ctx.drawImage(qrCanvas, 0, 0);
+    tmpCanvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `qrcode.${ext}`; a.click();
+      URL.revokeObjectURL(url);
+    }, mime, 0.95);
+    return;
+  }
+
+  qrCanvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `qrcode.${ext}`; a.click();
+    URL.revokeObjectURL(url);
+  }, mime);
+}
+
+/* ===== 类型切换 ===== */
+document.getElementById('typeTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.type-tab');
+  if (!tab) return;
+  document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentType = tab.dataset.type;
+
+  document.getElementById('textInputWrap').style.display = (currentType === 'wifi' || currentType === 'email') ? 'none' : '';
+  document.getElementById('wifiForm').classList.toggle('show', currentType === 'wifi');
+  document.getElementById('emailForm').classList.toggle('show', currentType === 'email');
+
+  if (currentType === 'link') textInput.placeholder = '输入链接...\n例如：https://l-s-c.github.io/devkit/';
+  else if (currentType === 'text') textInput.placeholder = '输入任意文本...';
+
+  debouncedGenerate();
+});
+
+/* ===== WiFi 加密切换 ===== */
+document.getElementById('wifiEncTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.wifi-enc-tab');
+  if (!tab) return;
+  document.querySelectorAll('.wifi-enc-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  debouncedGenerate();
+});
+
+/* ===== 快捷模板 ===== */
+const PRESETS = {
+  url: { type: 'link', text: 'https://example.com' },
+  wifi: { type: 'wifi' },
+  email: { type: 'email' },
+  tel: { type: 'link', text: 'tel:+8613800138000' },
+  geo: { type: 'link', text: 'geo:39.9042,116.4074?q=北京天安门' },
+  vcard: { type: 'text', text: 'BEGIN:VCARD\nVERSION:3.0\nN:张三\nTEL:+8613800138000\nEMAIL:zhangsan@example.com\nEND:VCARD' },
+  event: { type: 'text', text: 'BEGIN:VEVENT\nSUMMARY:项目会议\nDTSTART:20260315T100000Z\nDTEND:20260315T110000Z\nLOCATION:会议室 A\nEND:VEVENT' },
+  sms: { type: 'link', text: 'sms:+8613800138000?body=你好' },
+};
+
+document.getElementById('presetGrid').addEventListener('click', (e) => {
+  const card = e.target.closest('.preset-card');
+  if (!card) return;
+  const preset = PRESETS[card.dataset.preset];
+  if (!preset) return;
+
+  // 切换类型 tab
+  const typeTab = document.querySelector(`.type-tab[data-type="${preset.type}"]`);
+  if (typeTab) typeTab.click();
+
+  if (preset.text) {
+    textInput.value = preset.text;
+    updateCharCount();
+  }
+  debouncedGenerate();
+});
+
+/* ===== Logo ===== */
+document.getElementById('logoInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const img = new Image();
+  img.onload = () => {
+    logoImg = img;
+    document.getElementById('logoText').style.display = 'none';
+    const preview = document.getElementById('logoPreview');
+    preview.classList.add('show');
+    document.getElementById('logoPreviewImg').src = logoUrl;
+    document.getElementById('logoName').textContent = file.name;
+    document.getElementById('logoHint').style.display = '';
+    document.getElementById('logoRemove').style.display = '';
+    debouncedGenerate();
+  };
+  if (logoUrl) URL.revokeObjectURL(logoUrl);
+  logoUrl = URL.createObjectURL(file);
+  img.src = logoUrl;
+});
+
+document.getElementById('logoRemove').addEventListener('click', () => {
+  logoImg = null;
+  if (logoUrl) { URL.revokeObjectURL(logoUrl); logoUrl = null; }
+  document.getElementById('logoText').style.display = '';
+  document.getElementById('logoPreview').classList.remove('show');
+  document.getElementById('logoHint').style.display = 'none';
+  document.getElementById('logoRemove').style.display = 'none';
+  document.getElementById('logoInput').value = '';
+  debouncedGenerate();
+});
+
+/* ===== 颜色 ===== */
+fgColor.addEventListener('input', () => { document.getElementById('fgLabel').textContent = fgColor.value.toUpperCase(); debouncedGenerate(); });
+bgColor.addEventListener('input', () => { document.getElementById('bgLabel').textContent = bgColor.value.toUpperCase(); debouncedGenerate(); });
+
+/* ===== 设置变更 ===== */
+sizeSelect.addEventListener('change', debouncedGenerate);
+ecSelect.addEventListener('change', debouncedGenerate);
+
+/* ===== 文本输入 ===== */
+function updateCharCount() {
+  document.getElementById('charCount').textContent = textInput.value.length + ' / 2953 字符';
+}
+textInput.addEventListener('input', () => { updateCharCount(); debouncedGenerate(); });
+
+// WiFi/Email 输入
+['wifiSSID', 'wifiPassword', 'emailTo', 'emailSubject', 'emailBody'].forEach(id => {
+  document.getElementById(id).addEventListener('input', debouncedGenerate);
+});
+
+/* ===== 下载格式 ===== */
+document.getElementById('downloadOpts').addEventListener('click', (e) => {
+  const btn = e.target.closest('.download-opt');
+  if (!btn) return;
+  document.querySelectorAll('.download-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  downloadFormat = btn.dataset.fmt;
+});
+
+document.getElementById('btnDownload').addEventListener('click', download);
+
+/* ===== 初始生成 ===== */
+generate();
+</script>
+<noscript><p>二维码生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

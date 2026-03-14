@@ -31,6 +31,7 @@ export default defineConfig({
         yaml: resolve(__dirname, 'pages/yaml/index.html'),
         'image-compress': resolve(__dirname, 'pages/image-compress/index.html'),
         'image-format': resolve(__dirname, 'pages/image-format/index.html'),
+        qrcode: resolve(__dirname, 'pages/qrcode/index.html'),
       },
     },
   },
