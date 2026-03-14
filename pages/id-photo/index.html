@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>证件照换底色 | 证件照尺寸裁剪 — DevKit</title>
+<meta name="description" content="免费在线证件照换底色，白蓝红一键切换，一寸二寸护照签证尺寸裁剪，300dpi打印级导出，纯前端处理数据不上传。">
+<meta name="keywords" content="证件照换底色, 证件照尺寸, passport photo, 一寸照片, 二寸照片, 证件照在线制作, 证件照免费在线, 蓝底证件照, 一寸照片电子版, DevKit">
+<meta property="og:title" content="证件照换底色 | 证件照尺寸裁剪 — DevKit">
+<meta property="og:description" content="免费在线证件照换底色+尺寸裁剪，300dpi导出">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/id-photo/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="证件照换底色 — DevKit">
+<meta name="twitter:description" content="证件照换底色+尺寸裁剪，免费在线">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"证件照换底色","description":"免费在线证件照换底色，一寸二寸护照签证尺寸裁剪，300dpi导出","url":"https://l-s-c.github.io/devkit/pages/id-photo/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/id-photo/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Upload */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 40px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* Compare */
+.compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.compare-card {
+  text-align: center; padding: 12px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+}
+.compare-card canvas { max-width: 100%; max-height: 200px; display: block; margin: 0 auto 6px; border-radius: 4px; }
+.compare-label { font-size: 11px; font-weight: 700; color: var(--text-caption); }
+
+/* Multi-size preview */
+.preview-wrap { display: flex; gap: 12px; justify-content: center; align-items: end; }
+.preview-card { text-align: center; }
+.preview-card canvas { display: block; margin: 0 auto 6px; border: 2px solid var(--border-glass); border-radius: 4px; }
+.preview-label { font-size: 10px; color: var(--text-caption); font-family: var(--font-code); }
+
+/* Color */
+.color-row { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
+.color-btn {
+  width: 44px; height: 44px; border-radius: 6px; border: 3px solid transparent;
+  cursor: pointer; transition: all 150ms; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 800; color: #fff;
+}
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.active { border-color: var(--text-primary); box-shadow: 0 0 0 2px var(--bg-glass); }
+.color-btn-custom {
+  width: 44px; height: 44px; border-radius: 6px; border: 2px dashed var(--border-glass);
+  cursor: pointer; position: relative; display: flex; align-items: center;
+  justify-content: center; font-size: 16px; transition: all 150ms;
+}
+.color-btn-custom:hover { border-color: var(--brand-500); }
+.color-btn-custom input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* Size */
+.size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+.size-chip {
+  padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; transition: all 150ms; text-align: center;
+}
+.size-chip:hover { border-color: var(--brand-500); }
+.size-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.size-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.size-dim { font-size: 10px; color: var(--text-caption); font-family: var(--font-code); margin-top: 2px; }
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 60px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 36px; text-align: right; }
+
+/* Warning */
+.warning-box {
+  padding: 10px 14px; border-radius: 6px; background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.15); font-size: 11px; color: #F59E0B;
+  display: flex; gap: 6px; align-items: center; margin-bottom: 12px;
+}
+
+/* Action */
+.action-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .size-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">证件照换底色 证件照尺寸裁剪 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">证件照换底色</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左：上传 + 预览 -->
+    <div>
+      <div class="panel" id="uploadPanel">
+        <div class="upload-area" id="uploadArea">
+          <input type="file" accept="image/*" id="fileInput">
+          <div style="font-size:40px;margin-bottom:6px">📸</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text-secondary)">上传证件照</div>
+          <div style="font-size:11px;color:var(--text-caption);margin-top:4px">建议使用纯色背景照片效果最佳</div>
+        </div>
+      </div>
+
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="section-title">👁️ 对比预览</div>
+        <div class="compare-row">
+          <div class="compare-card">
+            <canvas id="beforeCanvas"></canvas>
+            <div class="compare-label">原图</div>
+          </div>
+          <div class="compare-card">
+            <canvas id="afterCanvas"></canvas>
+            <div class="compare-label">效果</div>
+          </div>
+        </div>
+        <div class="section-title">📐 多尺寸预览</div>
+        <div class="preview-wrap">
+          <div class="preview-card"><canvas id="p1" width="74" height="104"></canvas><div class="preview-label">一寸</div></div>
+          <div class="preview-card"><canvas id="p2" width="86" height="120"></canvas><div class="preview-label">二寸</div></div>
+          <div class="preview-card"><canvas id="p3" width="82" height="119"></canvas><div class="preview-label">小二寸</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：控件 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">🎨 底色选择</div>
+        <div class="color-row" id="colorRow">
+          <div class="color-btn active" style="background:#FFFFFF;color:#333;border-color:#ddd" data-color="#FFFFFF">白</div>
+          <div class="color-btn" style="background:#438EDB" data-color="#438EDB">蓝</div>
+          <div class="color-btn" style="background:#D9363E" data-color="#D9363E">红</div>
+          <div class="color-btn-custom">
+            🎨
+            <input type="color" id="customColor" value="#438EDB">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📐 证件照尺寸</div>
+        <div class="size-grid" id="sizeGrid">
+          <div class="size-chip active" data-w="295" data-h="413" data-name="一寸"><div class="size-name">📋 一寸</div><div class="size-dim">25×35mm / 295×413px</div></div>
+          <div class="size-chip" data-w="413" data-h="579" data-name="二寸"><div class="size-name">📋 二寸</div><div class="size-dim">35×49mm / 413×579px</div></div>
+          <div class="size-chip" data-w="390" data-h="567" data-name="小二寸"><div class="size-name">📋 小二寸</div><div class="size-dim">33×48mm / 390×567px</div></div>
+          <div class="size-chip" data-w="390" data-h="567" data-name="护照"><div class="size-name">🛂 护照</div><div class="size-dim">33×48mm / 390×567px</div></div>
+          <div class="size-chip" data-w="600" data-h="600" data-name="美国签证"><div class="size-name">🇺🇸 美国签证</div><div class="size-dim">51×51mm / 600×600px</div></div>
+          <div class="size-chip" data-w="354" data-h="472" data-name="日本签证"><div class="size-name">🇯🇵 日本签证</div><div class="size-dim">30×40mm / 354×472px</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">⚙️ 换色参数</div>
+        <div class="slider-row">
+          <span class="slider-label">容差阈值</span>
+          <input type="range" class="slider-input" id="threshold" min="30" max="150" value="80">
+          <span class="slider-val" id="thresholdVal">80</span>
+        </div>
+        <div class="warning-box">
+          ⚠️ 纯前端颜色替换，适用于纯色背景照片。复杂背景或头发丝边缘可能不够精细。
+        </div>
+      </div>
+
+      <div class="panel">
+        <button class="action-btn" id="downloadBtn" disabled>💾 导出证件照（300dpi）</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传证件照开始处理</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理 · 照片不上传</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let img = null, bgColor = '#FFFFFF', targetW = 295, targetH = 413, sizeName = '一寸';
+let origBgColor = null;
+
+/* ===== 四角采样原始背景色 ===== */
+function sampleBgColor(image) {
+  const c = document.createElement('canvas');
+  c.width = image.width; c.height = image.height;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(image, 0, 0);
+  const d = ctx.getImageData(0, 0, c.width, c.height).data;
+  // 四角各取 5×5 区域平均，更稳定
+  const corners = [[0, 0], [c.width - 1, 0], [0, c.height - 1], [c.width - 1, c.height - 1]];
+  let r = 0, g = 0, b = 0, count = 0;
+  corners.forEach(([cx, cy]) => {
+    for (let dy = -2; dy <= 2; dy++) {
+      for (let dx = -2; dx <= 2; dx++) {
+        const x = Math.max(0, Math.min(c.width - 1, cx + dx));
+        const y = Math.max(0, Math.min(c.height - 1, cy + dy));
+        const i = (y * c.width + x) * 4;
+        r += d[i]; g += d[i + 1]; b += d[i + 2]; count++;
+      }
+    }
+  });
+  c.width = 0; // 释放内存
+  return { r: Math.round(r / count), g: Math.round(g / count), b: Math.round(b / count) };
+}
+
+function hexToRgb(hex) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16),
+    g: parseInt(hex.slice(3, 5), 16),
+    b: parseInt(hex.slice(5, 7), 16)
+  };
+}
+
+/* ===== 欧几里得颜色距离 ===== */
+function colorDist(r1, g1, b1, r2, g2, b2) {
+  return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+}
+
+/* ===== 替换背景像素 ===== */
+function replaceBackground(imageData, origBg, targetRgb, threshold) {
+  const d = imageData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const dist = colorDist(d[i], d[i + 1], d[i + 2], origBg.r, origBg.g, origBg.b);
+    if (dist < threshold) {
+      d[i] = targetRgb.r;
+      d[i + 1] = targetRgb.g;
+      d[i + 2] = targetRgb.b;
+    }
+  }
+}
+
+/* ===== 裁剪绘制（居中裁剪按目标比例）===== */
+function drawCropped(ctx, image, dw, dh) {
+  const srcRatio = image.width / image.height;
+  const dstRatio = dw / dh;
+  let sx = 0, sy = 0, sw = image.width, sh = image.height;
+  if (srcRatio > dstRatio) { sw = image.height * dstRatio; sx = (image.width - sw) / 2; }
+  else { sh = image.width / dstRatio; sy = (image.height - sh) / 2; }
+  ctx.drawImage(image, sx, sy, sw, sh, 0, 0, dw, dh);
+}
+
+/* ===== 主处理 ===== */
+function process() {
+  if (!img || !origBgColor) return;
+  const threshold = parseInt(document.getElementById('threshold').value);
+  const target = hexToRgb(bgColor);
+
+  // 对比预览 - 原图
+  const bc = document.getElementById('beforeCanvas');
+  const scale = Math.min(1, 180 / Math.max(img.width, img.height));
+  bc.width = img.width * scale; bc.height = img.height * scale;
+  bc.getContext('2d').drawImage(img, 0, 0, bc.width, bc.height);
+
+  // 对比预览 - 换色效果
+  const ac = document.getElementById('afterCanvas');
+  ac.width = bc.width; ac.height = bc.height;
+  const actx = ac.getContext('2d');
+  actx.drawImage(img, 0, 0, ac.width, ac.height);
+  const imgData = actx.getImageData(0, 0, ac.width, ac.height);
+  replaceBackground(imgData, origBgColor, target, threshold);
+  actx.putImageData(imgData, 0, 0);
+
+  // 多尺寸预览
+  const sizes = [
+    { id: 'p1', w: 74, h: 104 },
+    { id: 'p2', w: 86, h: 120 },
+    { id: 'p3', w: 82, h: 119 }
+  ];
+  sizes.forEach(({ id, w, h }) => {
+    const c = document.getElementById(id);
+    c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, w, h);
+    drawCropped(ctx, img, w, h);
+    const pd = ctx.getImageData(0, 0, w, h);
+    replaceBackground(pd, origBgColor, target, threshold);
+    ctx.putImageData(pd, 0, 0);
+  });
+
+  document.getElementById('statusInfo').textContent = `${sizeName} ${targetW}×${targetH}px · 容差 ${threshold}`;
+}
+
+/* ===== 导出 ===== */
+function download() {
+  if (!img || !origBgColor) return;
+  const threshold = parseInt(document.getElementById('threshold').value);
+  const target = hexToRgb(bgColor);
+  const c = document.createElement('canvas');
+  c.width = targetW; c.height = targetH;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, targetW, targetH);
+  drawCropped(ctx, img, targetW, targetH);
+  const imgData = ctx.getImageData(0, 0, targetW, targetH);
+  replaceBackground(imgData, origBgColor, target, threshold);
+  ctx.putImageData(imgData, 0, 0);
+  c.toBlob(blob => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = `证件照_${sizeName}_${targetW}x${targetH}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
+    c.width = 0; c.height = 0; // 释放内存
+  }, 'image/png');
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  img = new Image();
+  img.onload = () => {
+    document.getElementById('previewPanel').style.display = 'block';
+    document.getElementById('downloadBtn').disabled = false;
+    origBgColor = sampleBgColor(img);
+    process();
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+});
+
+document.getElementById('colorRow').addEventListener('click', e => {
+  const btn = e.target.closest('.color-btn');
+  if (!btn) return;
+  bgColor = btn.dataset.color;
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  process();
+});
+
+document.getElementById('customColor').addEventListener('input', function() {
+  bgColor = this.value;
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  process();
+});
+
+document.getElementById('sizeGrid').addEventListener('click', e => {
+  const chip = e.target.closest('.size-chip');
+  if (!chip) return;
+  targetW = parseInt(chip.dataset.w);
+  targetH = parseInt(chip.dataset.h);
+  sizeName = chip.dataset.name;
+  document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  process();
+});
+
+document.getElementById('threshold').addEventListener('input', function() {
+  document.getElementById('thresholdVal').textContent = this.value;
+  process();
+});
+
+document.getElementById('downloadBtn').addEventListener('click', download);
+</script>
+<noscript><p>证件照换底色 证件照尺寸裁剪 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

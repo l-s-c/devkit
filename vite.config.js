@@ -53,6 +53,7 @@ export default defineConfig({
         'lorem': resolve(__dirname, 'pages/lorem/index.html'),
         'encrypt': resolve(__dirname, 'pages/encrypt/index.html'),
         'gradient': resolve(__dirname, 'pages/gradient/index.html'),
+        'id-photo': resolve(__dirname, 'pages/id-photo/index.html'),
       },
     },
   },
