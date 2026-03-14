@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Schema 验证器 | JSON Schema Validator — DevKit</title>
+<meta name="description" content="在线 JSON Schema 验证器，支持 Draft-07，错误路径定位，常用模板。JSON Schema Validator online.">
+<meta name="keywords" content="json schema validator, JSON Schema 验证, json validate, DevKit">
+<meta property="og:title" content="JSON Schema 验证器 — DevKit">
+<meta property="og:description" content="JSON Schema 验证，Draft-07，错误路径定位">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/json-schema/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JSON Schema 验证器 — DevKit">
+<meta name="twitter:description" content="JSON Schema 验证，错误路径定位">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Schema 验证器","description":"在线 JSON Schema 验证器，Draft-07，错误路径定位","url":"https://l-s-c.github.io/devkit/pages/json-schema/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/json-schema/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Templates */
+.tpl-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tpl-pill {
+  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.tpl-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tpl-pill.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Dual editors */
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.editor-label { font-size: 11px; font-weight: 700; color: var(--text-caption); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.editor-ta {
+  width: 100%; height: 320px; padding: 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 12px; line-height: 1.6;
+  color: var(--text-primary); outline: none; resize: vertical; transition: border-color 200ms;
+}
+.editor-ta:focus { border-color: var(--brand-500); }
+.editor-ta.has-error { border-color: #EF4444; }
+
+/* Validate button */
+.validate-wrap { text-align: center; margin: 16px 0; }
+.validate-btn {
+  padding: 14px 48px; border-radius: 28px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 800; cursor: pointer; transition: all 200ms;
+}
+.validate-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
+
+/* Result */
+.result-bar {
+  padding: 16px 20px; border-radius: 10px; display: flex; align-items: center;
+  gap: 10px; margin-bottom: 16px;
+}
+.result-bar.pass { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); }
+.result-bar.fail { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+.result-icon { font-size: 24px; }
+.result-text { font-size: 14px; font-weight: 700; }
+.result-bar.pass .result-text { color: #10B981; }
+.result-bar.fail .result-text { color: #EF4444; }
+.result-sub { font-size: 12px; color: var(--text-secondary); }
+
+/* Error list */
+.error-list { list-style: none; }
+.error-item {
+  padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); margin-bottom: 8px; transition: border-color 150ms;
+}
+.error-item:hover { border-color: #EF4444; }
+.error-path { font-family: var(--font-code); font-size: 12px; font-weight: 700; color: #EF4444; margin-bottom: 4px; }
+.error-msg { font-size: 12px; color: var(--text-secondary); }
+.error-keyword {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  background: rgba(239,68,68,0.08); font-family: var(--font-code);
+  font-size: 10px; font-weight: 700; color: #EF4444; margin-left: 6px;
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .editor-ta { height: 200px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">JSON Schema 验证器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">JSON Schema 验证器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📦 模板</div>
+    <div class="tpl-row" id="tplRow">
+      <span class="tpl-pill active" data-tpl="user">👤 用户信息</span>
+      <span class="tpl-pill" data-tpl="product">🛒 商品</span>
+      <span class="tpl-pill" data-tpl="api">📡 API 响应</span>
+      <span class="tpl-pill" data-tpl="empty">📝 空白</span>
+    </div>
+  </div>
+
+  <div class="dual">
+    <div>
+      <div class="editor-label">📐 JSON Schema</div>
+      <textarea class="editor-ta" id="schemaInput" spellcheck="false"></textarea>
+    </div>
+    <div>
+      <div class="editor-label">📄 JSON 数据</div>
+      <textarea class="editor-ta" id="dataInput" spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div class="validate-wrap">
+    <button class="validate-btn" id="validateBtn">🔍 验证</button>
+  </div>
+
+  <div id="resultArea"></div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">JSON Schema 验证器 · Draft-07</span>
+  <div class="statusbar-spacer"></div>
+  <span>Ajv 8.12.0</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ajv@8.12.0/dist/ajv7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ajv-formats@2.1.1/dist/formats.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+const TEMPLATES = {
+  user: {
+    schema: { type:"object", required:["name","email","age"], properties:{ name:{type:"string",minLength:1}, email:{type:"string",format:"email"}, age:{type:"integer",minimum:0,maximum:150}, phone:{type:"string",pattern:"^1[3-9]\\d{9}$"} } },
+    data: { name:"张三", email:"zhangsan@example.com", age:28, phone:"13800138000" }
+  },
+  product: {
+    schema: { type:"object", required:["id","name","price"], properties:{ id:{type:"integer"}, name:{type:"string"}, price:{type:"number",minimum:0}, tags:{type:"array",items:{type:"string"}}, inStock:{type:"boolean"} } },
+    data: { id:1001, name:"无线蓝牙耳机", price:299.99, tags:["电子","音频"], inStock:true }
+  },
+  api: {
+    schema: { type:"object", required:["code","message","data"], properties:{ code:{type:"integer"}, message:{type:"string"}, data:{type:"object"}, timestamp:{type:"integer"} } },
+    data: { code:200, message:"success", data:{items:[],total:0}, timestamp:1710000000 }
+  },
+  empty: { schema:{}, data:{} }
+};
+
+function loadTemplate(key) {
+  const t = TEMPLATES[key];
+  document.getElementById('schemaInput').value = JSON.stringify(t.schema, null, 2);
+  document.getElementById('dataInput').value = JSON.stringify(t.data, null, 2);
+  document.getElementById('resultArea').innerHTML = '';
+  document.getElementById('schemaInput').classList.remove('has-error');
+  document.getElementById('dataInput').classList.remove('has-error');
+}
+
+function validate() {
+  const schemaEl = document.getElementById('schemaInput');
+  const dataEl = document.getElementById('dataInput');
+  const area = document.getElementById('resultArea');
+  schemaEl.classList.remove('has-error');
+  dataEl.classList.remove('has-error');
+
+  const sv = schemaEl.value.trim();
+  const dv = dataEl.value.trim();
+  if (!sv && !dv) { area.innerHTML = ''; return; }
+
+  let schema, data;
+  try { schema = JSON.parse(sv || '{}'); } catch(e) {
+    schemaEl.classList.add('has-error');
+    area.innerHTML = `<div class="result-bar fail"><span class="result-icon">❌</span><div><div class="result-text">Schema JSON 语法错误</div><div class="result-sub">${esc(e.message)}</div></div></div>`;
+    document.getElementById('statusInfo').textContent = 'Schema 语法错误';
+    return;
+  }
+  try { data = JSON.parse(dv || '{}'); } catch(e) {
+    dataEl.classList.add('has-error');
+    area.innerHTML = `<div class="result-bar fail"><span class="result-icon">❌</span><div><div class="result-text">数据 JSON 语法错误</div><div class="result-sub">${esc(e.message)}</div></div></div>`;
+    document.getElementById('statusInfo').textContent = '数据语法错误';
+    return;
+  }
+
+  try {
+    const ajv = new Ajv({ allErrors: true });
+    if (window.ajvFormats) window.ajvFormats(ajv);
+    const valid = ajv.validate(schema, data);
+    if (valid) {
+      area.innerHTML = `<div class="result-bar pass"><span class="result-icon">✅</span><div><div class="result-text">验证通过</div><div class="result-sub">JSON 数据完全符合 Schema 定义</div></div></div>`;
+      document.getElementById('statusInfo').textContent = '验证通过 ✅';
+    } else {
+      const errors = ajv.errors || [];
+      let html = `<div class="result-bar fail"><span class="result-icon">❌</span><div><div class="result-text">验证失败</div><div class="result-sub">发现 ${errors.length} 个错误</div></div></div><ul class="error-list">`;
+      errors.forEach(err => {
+        const path = esc(err.instancePath || '/');
+        html += `<li class="error-item"><div class="error-path">${path}<span class="error-keyword">${esc(err.keyword)}</span></div><div class="error-msg">${esc(err.message)}</div></li>`;
+      });
+      html += '</ul>';
+      area.innerHTML = html;
+      document.getElementById('statusInfo').textContent = `验证失败 · ${errors.length} 个错误`;
+    }
+  } catch(e) {
+    area.innerHTML = `<div class="result-bar fail"><span class="result-icon">⚠️</span><div><div class="result-text">Schema 编译错误</div><div class="result-sub">${esc(e.message)}</div></div></div>`;
+    document.getElementById('statusInfo').textContent = 'Schema 编译错误';
+  }
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+/* Events */
+document.getElementById('tplRow').addEventListener('click', e => {
+  const pill = e.target.closest('.tpl-pill');
+  if (!pill) return;
+  document.querySelectorAll('.tpl-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  loadTemplate(pill.dataset.tpl);
+});
+
+document.getElementById('validateBtn').addEventListener('click', validate);
+
+// Load default
+loadTemplate('user');
+</script>
+<noscript><p>JSON Schema 验证器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
