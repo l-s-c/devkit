@@ -58,6 +58,7 @@ export default defineConfig({
         'img-to-pdf': resolve(__dirname, 'pages/img-to-pdf/index.html'),
         'currency': resolve(__dirname, 'pages/currency/index.html'),
         'calendar': resolve(__dirname, 'pages/calendar/index.html'),
+        'signature': resolve(__dirname, 'pages/signature/index.html'),
       },
     },
   },
