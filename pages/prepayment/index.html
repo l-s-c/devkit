@@ -458,7 +458,7 @@ function calc() {
   });
   document.getElementById('timelineBody').innerHTML = html;
 
-  document.getElementById('statusInfo').textContent = `${fmtShort(P)} · ${annualR * 100}% · ${origY}年 · 节省 ${fmt(bestSaved)}（${bestPct}%）`;
+  document.getElementById('statusInfo').textContent = `${fmtShort(P)} · ${parseFloat((annualR * 100).toPrecision(10))}% · ${origY}年 · 节省 ${fmt(bestSaved)}（${bestPct}%）`;
 }
 
 function fmtShort(n) { return n >= 10000 ? (n / 10000).toFixed(0) + '万' : n.toLocaleString() + '元'; }
