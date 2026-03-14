@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI 计算器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 BMI 身体质量指数计算器，基于中国成人标准，实时计算健康体重范围，渐变仪表条直观展示。">
+<meta property="og:title" content="BMI 计算器 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="BMI 身体质量指数计算，中国成人标准，健康体重范围">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/bmi/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BMI 计算器 — DevKit">
+<meta name="twitter:description" content="BMI 身体质量指数计算，中国成人标准">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BMI 计算器","description":"在线 BMI 身体质量指数计算器，基于中国成人标准","url":"https://l-s-c.github.io/devkit/pages/bmi/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/bmi/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 560px; margin: 0 auto; width: 100%; }
+
+/* 结果 Hero */
+.result-hero {
+  text-align: center; padding: 32px 24px; margin-bottom: 16px;
+  border-radius: 16px; background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.bmi-number { font-family: var(--font-code); font-size: 64px; font-weight: 900; line-height: 1; transition: color 300ms; }
+.bmi-label { font-size: 18px; font-weight: 700; margin-top: 6px; transition: color 300ms; }
+.bmi-desc { font-size: 13px; color: var(--text-caption); margin-top: 4px; }
+
+/* 仪表条 */
+.gauge { margin: 20px auto; max-width: 400px; position: relative; }
+.gauge-track {
+  height: 12px; border-radius: 6px; overflow: hidden;
+  background: linear-gradient(90deg, #3B82F6 0%, #10B981 22%, #10B981 33%, #F59E0B 50%, #EF4444 75%, #DC2626 100%);
+}
+.gauge-marker {
+  position: absolute; top: -4px; width: 4px; height: 20px; border-radius: 2px;
+  background: var(--text-primary); box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  transition: left 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.gauge-labels { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: var(--text-caption); font-family: var(--font-code); }
+
+/* 分类胶囊 */
+.weight-range { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.range-chip {
+  padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary);
+  transition: all 200ms;
+}
+.range-chip.c-underweight { border-color: #3B82F6; color: #3B82F6; background: rgba(59,130,246,0.08); }
+.range-chip.c-normal { border-color: #10B981; color: #10B981; background: rgba(16,185,129,0.08); }
+.range-chip.c-overweight { border-color: #F59E0B; color: #F59E0B; background: rgba(245,158,11,0.08); }
+.range-chip.c-obese { border-color: #EF4444; color: #EF4444; background: rgba(239,68,68,0.08); }
+
+/* 输入区 */
+.input-section {
+  margin-top: 16px; padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.input-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.input-group { flex: 1; }
+.input-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.value-input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 20px; font-weight: 700;
+  text-align: center; color: var(--text-primary); transition: border-color 200ms;
+}
+.value-input:focus { outline: none; border-color: var(--brand-500); }
+.input-unit { font-size: 11px; color: var(--text-caption); text-align: center; margin-top: 4px; }
+
+/* 滑块 */
+.slider-wrap { margin-bottom: 16px; }
+.slider-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-caption); margin-bottom: 4px; }
+.bmi-slider {
+  width: 100%; height: 6px; border-radius: 3px; -webkit-appearance: none; appearance: none;
+  background: var(--border-glass); cursor: pointer;
+}
+.bmi-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--brand-500); border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.3); cursor: pointer;
+}
+
+/* 信息卡片 */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.info-card {
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.info-value { font-family: var(--font-code); font-size: 18px; font-weight: 800; color: var(--brand-500); }
+.info-label { font-size: 11px; color: var(--text-caption); margin-top: 2px; }
+
+/* 参考表 */
+.ref-section {
+  margin-top: 16px; padding: 20px 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.ref-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.ref-row {
+  display: flex; align-items: center; padding: 10px 14px; border-radius: 6px;
+  margin-bottom: 4px; transition: background 150ms; border: 1px solid transparent;
+}
+.ref-row.current { background: rgba(99,102,241,0.08); border-color: var(--brand-500); }
+.ref-color { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-right: 10px; }
+.ref-name { font-size: 13px; font-weight: 600; flex: 1; }
+.ref-range { font-family: var(--font-code); font-size: 12px; color: var(--text-caption); }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .bmi-number { font-size: 48px; }
+  .info-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">BMI 计算器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">BMI 计算器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 结果 Hero -->
+  <div class="result-hero">
+    <div class="bmi-number" id="bmiNumber">22.5</div>
+    <div class="bmi-label" id="bmiLabel">正常 ✅</div>
+    <div class="bmi-desc" id="bmiDesc">BMI 18.5-24 为正常范围</div>
+
+    <div class="gauge">
+      <div class="gauge-track">
+        <div class="gauge-marker" id="gaugeMarker" style="left:38%"></div>
+      </div>
+      <div class="gauge-labels">
+        <span>15</span><span>18.5</span><span>24</span><span>28</span><span>32</span><span>40</span>
+      </div>
+    </div>
+
+    <div class="weight-range" id="weightRange">
+      <span class="range-chip" data-cat="underweight">偏瘦 &lt;18.5</span>
+      <span class="range-chip" data-cat="normal">正常 18.5-24</span>
+      <span class="range-chip" data-cat="overweight">偏胖 24-28</span>
+      <span class="range-chip" data-cat="obese">肥胖 ≥28</span>
+    </div>
+  </div>
+
+  <!-- 输入区 -->
+  <div class="input-section">
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-name">📏 身高</div>
+        <input type="number" class="value-input" id="heightInput" value="175" min="100" max="250" step="1">
+        <div class="input-unit">厘米 (cm)</div>
+      </div>
+      <div class="input-group">
+        <div class="input-name">⚖️ 体重</div>
+        <input type="number" class="value-input" id="weightInput" value="69" min="20" max="300" step="0.1">
+        <div class="input-unit">千克 (kg)</div>
+      </div>
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label"><span>身高</span><span id="hSliderVal">175 cm</span></div>
+      <input type="range" class="bmi-slider" id="hSlider" min="100" max="220" value="175">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label"><span>体重</span><span id="wSliderVal">69 kg</span></div>
+      <input type="range" class="bmi-slider" id="wSlider" min="30" max="200" value="69">
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-value" id="idealWeight">56.6 - 73.5</div>
+        <div class="info-label">健康体重范围 (kg)</div>
+      </div>
+      <div class="info-card">
+        <div class="info-value" id="weightDiff">-4.5</div>
+        <div class="info-label">距离正常上限 (kg)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参考表 -->
+  <div class="ref-section">
+    <div class="ref-title">📋 中国成人 BMI 标准</div>
+    <div id="refRows">
+      <div class="ref-row" data-cat="underweight"><div class="ref-color" style="background:#3B82F6"></div><span class="ref-name">偏瘦</span><span class="ref-range">&lt; 18.5</span></div>
+      <div class="ref-row" data-cat="normal"><div class="ref-color" style="background:#10B981"></div><span class="ref-name">正常</span><span class="ref-range">18.5 - 24.0</span></div>
+      <div class="ref-row" data-cat="overweight"><div class="ref-color" style="background:#F59E0B"></div><span class="ref-name">偏胖（超重）</span><span class="ref-range">24.0 - 28.0</span></div>
+      <div class="ref-row" data-cat="obese"><div class="ref-color" style="background:#EF4444"></div><span class="ref-name">肥胖</span><span class="ref-range">28.0 - 32.0</span></div>
+      <div class="ref-row" data-cat="severe"><div class="ref-color" style="background:#DC2626"></div><span class="ref-name">重度肥胖</span><span class="ref-range">≥ 32.0</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">拖动滑块实时计算</span>
+  <div class="statusbar-spacer"></div>
+  <span>中国成人 BMI 标准</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const heightInput = document.getElementById('heightInput');
+const weightInput = document.getElementById('weightInput');
+const hSlider = document.getElementById('hSlider');
+const wSlider = document.getElementById('wSlider');
+
+const BMI_CATEGORIES = [
+  { key: 'underweight', max: 18.5, label: '偏瘦', color: '#3B82F6', desc: 'BMI < 18.5，建议适当增重' },
+  { key: 'normal', max: 24, label: '正常 ✅', color: '#10B981', desc: 'BMI 18.5-24 为正常范围' },
+  { key: 'overweight', max: 28, label: '偏胖', color: '#F59E0B', desc: 'BMI 24-28，建议控制饮食' },
+  { key: 'obese', max: 32, label: '肥胖', color: '#EF4444', desc: 'BMI 28-32，建议减重' },
+  { key: 'severe', max: Infinity, label: '重度肥胖', color: '#DC2626', desc: 'BMI ≥ 32，建议就医咨询' },
+];
+
+function calc() {
+  const h = parseFloat(heightInput.value) / 100;
+  const w = parseFloat(weightInput.value);
+  if (!h || !w || h <= 0 || w <= 0) return;
+
+  const bmi = w / (h * h);
+  const bmiStr = bmi.toFixed(1);
+
+  // 分类
+  const cat = BMI_CATEGORIES.find(c => bmi < c.max) || BMI_CATEGORIES[BMI_CATEGORIES.length - 1];
+
+  document.getElementById('bmiNumber').textContent = bmiStr;
+  document.getElementById('bmiNumber').style.color = cat.color;
+  document.getElementById('bmiLabel').textContent = cat.label;
+  document.getElementById('bmiLabel').style.color = cat.color;
+  document.getElementById('bmiDesc').textContent = cat.desc;
+
+  // 仪表条标记位置 (BMI 15-40 映射到 0-100%)
+  const pct = Math.min(100, Math.max(0, ((bmi - 15) / (40 - 15)) * 100));
+  document.getElementById('gaugeMarker').style.left = pct + '%';
+
+  // 分类胶囊高亮
+  document.querySelectorAll('.range-chip').forEach(chip => {
+    chip.className = 'range-chip';
+    if (chip.dataset.cat === cat.key) {
+      chip.classList.add('c-' + cat.key);
+    }
+  });
+
+  // 参考表高亮
+  document.querySelectorAll('.ref-row').forEach(row => {
+    row.classList.toggle('current', row.dataset.cat === cat.key);
+  });
+
+  // 健康体重范围
+  const minW = (18.5 * h * h).toFixed(1);
+  const maxW = (24 * h * h).toFixed(1);
+  document.getElementById('idealWeight').textContent = minW + ' - ' + maxW;
+
+  // 距正常上限
+  const diff = (w - 24 * h * h).toFixed(1);
+  document.getElementById('weightDiff').textContent = (diff > 0 ? '+' : '') + diff;
+
+  // 状态栏
+  document.getElementById('statusInfo').textContent = `BMI ${bmiStr} · ${cat.label.replace(' ✅', '')} · 身高 ${heightInput.value}cm 体重 ${weightInput.value}kg`;
+}
+
+// 输入框 ↔ 滑块同步
+heightInput.addEventListener('input', () => { hSlider.value = heightInput.value; document.getElementById('hSliderVal').textContent = heightInput.value + ' cm'; calc(); });
+weightInput.addEventListener('input', () => { wSlider.value = weightInput.value; document.getElementById('wSliderVal').textContent = weightInput.value + ' kg'; calc(); });
+hSlider.addEventListener('input', () => { heightInput.value = hSlider.value; document.getElementById('hSliderVal').textContent = hSlider.value + ' cm'; calc(); });
+wSlider.addEventListener('input', () => { weightInput.value = wSlider.value; document.getElementById('wSliderVal').textContent = wSlider.value + ' kg'; calc(); });
+
+calc();
+</script>
+<noscript><p>BMI 计算器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
