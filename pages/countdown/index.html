@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倒数日计算器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线倒数日计算器，计算距离目标日期天数，支持日期差值计算、常用节日快捷入口、今年进度可视化。">
+<meta property="og:title" content="倒数日计算器 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="计算距离目标日期天数，日期差值计算，常用节日快捷入口">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/countdown/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="倒数日计算器 — DevKit">
+<meta name="twitter:description" content="计算距离目标日期天数，日期差值计算">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"倒数日计算器","description":"在线倒数日计算器，计算距离目标日期天数，支持日期差值计算","url":"https://l-s-c.github.io/devkit/pages/countdown/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/countdown/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* Hero 卡片 */
+.hero-card {
+  text-align: center; padding: 32px 24px; margin-bottom: 16px;
+  border-radius: 16px; background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.hero-number {
+  font-family: var(--font-code); font-size: 72px; font-weight: 900;
+  background: linear-gradient(135deg, #6366F1, #A855F7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+.hero-unit { font-size: 18px; font-weight: 700; color: var(--text-secondary); margin-top: 4px; }
+.hero-event { font-size: 14px; color: var(--text-caption); margin-top: 8px; }
+.hero-date { font-family: var(--font-code); font-size: 13px; color: var(--brand-500); margin-top: 4px; }
+.hero-past { color: #F59E0B; }
+
+/* 明细网格 */
+.detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 20px; }
+.detail-item {
+  text-align: center; padding: 12px 8px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+}
+.detail-number { font-family: var(--font-code); font-size: 24px; font-weight: 800; }
+.detail-label { font-size: 11px; color: var(--text-caption); margin-top: 2px; font-weight: 500; }
+
+/* 今年进度 */
+.progress-section { margin-top: 16px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-caption); margin-bottom: 6px; }
+.progress-bar { height: 8px; border-radius: 4px; background: var(--border-glass); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #6366F1, #A855F7); transition: width 500ms; }
+
+/* 输入区 */
+.input-section {
+  margin-top: 16px; padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-label { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.input-row { display: flex; gap: 10px; align-items: end; }
+.input-group { flex: 1; }
+.input-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+.date-input {
+  width: 100%; padding: 12px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 14px; color: var(--text-primary); cursor: pointer;
+}
+.date-input:focus { outline: none; border-color: var(--brand-500); }
+.event-input {
+  width: 100%; padding: 12px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 14px; color: var(--text-primary); margin-top: 10px;
+}
+.event-input:focus { outline: none; border-color: var(--brand-500); }
+.event-input::placeholder { color: var(--text-caption); }
+.btn-calc {
+  padding: 12px 20px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: white;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 200ms; white-space: nowrap;
+  box-shadow: 0 4px 24px rgba(99,102,241,0.18);
+}
+.btn-calc:hover { box-shadow: 0 6px 28px rgba(99,102,241,0.25); transform: translateY(-1px); }
+
+/* 常用日期 */
+.quick-section {
+  margin-top: 16px; padding: 20px 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.quick-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  cursor: pointer; transition: all 150ms;
+}
+.quick-card:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.quick-emoji { font-size: 24px; flex-shrink: 0; }
+.quick-info { flex: 1; }
+.quick-name { font-size: 13px; font-weight: 600; }
+.quick-date { font-size: 11px; color: var(--text-caption); font-family: var(--font-code); }
+.quick-days { font-family: var(--font-code); font-size: 13px; font-weight: 700; color: var(--brand-500); flex-shrink: 0; }
+
+/* 日期差值 */
+.diff-section {
+  margin-top: 16px; padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.diff-result {
+  margin-top: 16px; padding: 16px; border-radius: 10px;
+  background: rgba(99,102,241,0.08); text-align: center;
+}
+.diff-number { font-family: var(--font-code); font-size: 32px; font-weight: 900; color: var(--brand-500); }
+.diff-unit { font-size: 16px; font-weight: 700; color: var(--text-secondary); }
+.diff-detail { font-size: 12px; color: var(--text-secondary); margin-top: 4px; font-family: var(--font-code); }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .hero-number { font-size: 56px; }
+  .detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .input-row { flex-direction: column; }
+  .quick-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">倒数日计算器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">倒数日计算器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- Hero 卡片 -->
+  <div class="hero-card" id="heroCard">
+    <div class="hero-number" id="heroDays">0</div>
+    <div class="hero-unit" id="heroUnit">天</div>
+    <div class="hero-event" id="heroEvent"></div>
+    <div class="hero-date" id="heroDate"></div>
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-number" id="detailMonths">0</div>
+        <div class="detail-label">月</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-number" id="detailWeeks">0</div>
+        <div class="detail-label">周</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-number" id="detailHours">0</div>
+        <div class="detail-label">小时</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-number" id="detailMins">0</div>
+        <div class="detail-label">分钟</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>今年已过</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 输入区 -->
+  <div class="input-section">
+    <div class="section-label">设置目标日期</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-name">目标日期</div>
+        <input type="date" class="date-input" id="targetDate">
+      </div>
+      <button class="btn-calc" id="btnCalc">计算</button>
+    </div>
+    <input type="text" class="event-input" id="eventName" placeholder="事件名称（可选）：如 国庆节">
+  </div>
+
+  <!-- 常用日期 -->
+  <div class="quick-section">
+    <div class="section-label">常用日期</div>
+    <div class="quick-grid" id="quickGrid"></div>
+  </div>
+
+  <!-- 日期差值 -->
+  <div class="diff-section">
+    <div class="section-label">日期差值计算</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-name">起始日期</div>
+        <input type="date" class="date-input" id="diffStart">
+      </div>
+      <div class="input-group">
+        <div class="input-name">结束日期</div>
+        <input type="date" class="date-input" id="diffEnd">
+      </div>
+    </div>
+    <div class="diff-result" id="diffResult">
+      <div class="diff-number" id="diffDays">0</div>
+      <div class="diff-unit">天</div>
+      <div class="diff-detail" id="diffDetail"></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择日期开始计算</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地计算</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+
+/* ===== 获取下一个节日日期 ===== */
+function getNextDate(month, day) {
+  const now = new Date();
+  const thisYear = new Date(now.getFullYear(), month - 1, day);
+  if (thisYear > now) return thisYear;
+  return new Date(now.getFullYear() + 1, month - 1, day);
+}
+
+function formatDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function daysFromNow(d) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const target = new Date(d);
+  target.setHours(0, 0, 0, 0);
+  return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+}
+
+function formatNum(n) {
+  if (n >= 100000) return (n / 1000).toFixed(0) + 'K';
+  return n.toLocaleString();
+}
+
+/* ===== 常用日期（动态计算下一个） ===== */
+const QUICK_DATES = [
+  { emoji: '🎈', name: '儿童节', month: 6, day: 1 },
+  { emoji: '🇨🇳', name: '国庆节', month: 10, day: 1 },
+  { emoji: '🎆', name: '元旦', month: 1, day: 1 },
+  { emoji: '🎄', name: '圣诞节', month: 12, day: 25 },
+  { emoji: '🛒', name: '618 购物节', month: 6, day: 18 },
+  { emoji: '🛍️', name: '双十一', month: 11, day: 11 },
+];
+
+function renderQuickDates() {
+  const grid = document.getElementById('quickGrid');
+  grid.innerHTML = QUICK_DATES.map((q, i) => {
+    const d = getNextDate(q.month, q.day);
+    const days = daysFromNow(d);
+    return `<div class="quick-card" data-date="${formatDate(d)}" data-name="${q.name}">
+      <span class="quick-emoji">${q.emoji}</span>
+      <div class="quick-info">
+        <div class="quick-name">${q.name}</div>
+        <div class="quick-date">${formatDate(d)}</div>
+      </div>
+      <span class="quick-days">${days}天</span>
+    </div>`;
+  }).join('');
+}
+
+/* ===== Hero 计算 ===== */
+function calculate() {
+  const dateStr = document.getElementById('targetDate').value;
+  if (!dateStr) return;
+
+  const target = new Date(dateStr + 'T00:00:00');
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const diffMs = target - now;
+  const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  const absDays = Math.abs(days);
+  const eventName = document.getElementById('eventName').value || dateStr;
+
+  // Hero
+  document.getElementById('heroDays').textContent = absDays;
+  document.getElementById('heroUnit').textContent = '天';
+  document.getElementById('heroEvent').textContent = days >= 0 ? `距离 ${eventName}` : `${eventName} 已过`;
+  document.getElementById('heroDate').textContent = `${dateStr} · 星期${WEEKDAYS[target.getDay()]}`;
+
+  if (days < 0) {
+    document.getElementById('heroDate').classList.add('hero-past');
+  } else {
+    document.getElementById('heroDate').classList.remove('hero-past');
+  }
+
+  // 明细
+  document.getElementById('detailMonths').textContent = Math.floor(absDays / 30);
+  document.getElementById('detailWeeks').textContent = Math.floor(absDays / 7);
+  document.getElementById('detailHours').textContent = formatNum(absDays * 24);
+  document.getElementById('detailMins').textContent = formatNum(absDays * 24 * 60);
+
+  // 今年进度
+  const yearStart = new Date(now.getFullYear(), 0, 1);
+  const yearEnd = new Date(now.getFullYear(), 11, 31);
+  const pct = Math.round(((now - yearStart) / (yearEnd - yearStart)) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  document.getElementById('statusInfo').textContent = days >= 0
+    ? `距离 ${eventName} 还有 ${absDays} 天`
+    : `${eventName} 已过 ${absDays} 天`;
+}
+
+/* ===== 日期差值 ===== */
+function calcDiff() {
+  const startStr = document.getElementById('diffStart').value;
+  const endStr = document.getElementById('diffEnd').value;
+  if (!startStr || !endStr) return;
+
+  const start = new Date(startStr + 'T00:00:00');
+  const end = new Date(endStr + 'T00:00:00');
+  const diffMs = end - start;
+  const days = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  const absDays = Math.abs(days);
+
+  document.getElementById('diffDays').textContent = absDays;
+  const months = Math.floor(absDays / 30);
+  const weeks = Math.floor(absDays / 7);
+  const hours = absDays * 24;
+  document.getElementById('diffDetail').textContent = `= ${months} 个月 · ${weeks} 周 · ${formatNum(hours)} 小时`;
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('btnCalc').addEventListener('click', calculate);
+document.getElementById('targetDate').addEventListener('change', calculate);
+document.getElementById('eventName').addEventListener('input', calculate);
+
+document.getElementById('quickGrid').addEventListener('click', (e) => {
+  const card = e.target.closest('.quick-card');
+  if (!card) return;
+  document.getElementById('targetDate').value = card.dataset.date;
+  document.getElementById('eventName').value = card.dataset.name;
+  calculate();
+});
+
+document.getElementById('diffStart').addEventListener('change', calcDiff);
+document.getElementById('diffEnd').addEventListener('change', calcDiff);
+
+/* ===== 初始化 ===== */
+renderQuickDates();
+
+// 默认计算国庆节
+const defaultDate = getNextDate(10, 1);
+document.getElementById('targetDate').value = formatDate(defaultDate);
+document.getElementById('eventName').value = '国庆节';
+calculate();
+
+// 日期差默认值
+const now = new Date();
+document.getElementById('diffStart').value = `${now.getFullYear()}-01-01`;
+document.getElementById('diffEnd').value = `${now.getFullYear()}-12-31`;
+calcDiff();
+</script>
+<noscript><p>倒数日计算器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

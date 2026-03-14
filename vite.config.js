@@ -32,6 +32,7 @@ export default defineConfig({
         'image-compress': resolve(__dirname, 'pages/image-compress/index.html'),
         'image-format': resolve(__dirname, 'pages/image-format/index.html'),
         qrcode: resolve(__dirname, 'pages/qrcode/index.html'),
+        countdown: resolve(__dirname, 'pages/countdown/index.html'),
       },
     },
   },
