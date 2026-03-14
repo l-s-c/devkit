@@ -139,10 +139,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="statusbar">
   <span id="statusInfo">JSON Schema 验证器 · Draft-07</span>
   <div class="statusbar-spacer"></div>
-  <span>Ajv 8.12.0</span>
+  <span>Ajv 6.12.6 · Draft-07</span>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/ajv@8.12.0/dist/ajv.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ajv@6.12.6/dist/ajv.bundle.js"></script>
 
 <script type="module">
 import '../../shared/theme.js';
@@ -198,14 +198,7 @@ function validate() {
   }
 
   try {
-    const ajv = new Ajv({ allErrors: true, formats: {
-      email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      uri: /^https?:\/\/.+/,
-      date: /^\d{4}-\d{2}-\d{2}$/,
-      'date-time': /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
-      ipv4: /^(\d{1,3}\.){3}\d{1,3}$/,
-      uuid: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-    } });
+    const ajv = new Ajv({ allErrors: true });
     const valid = ajv.validate(schema, data);
     if (valid) {
       area.innerHTML = `<div class="result-bar pass"><span class="result-icon">✅</span><div><div class="result-text">验证通过</div><div class="result-sub">JSON 数据完全符合 Schema 定义</div></div></div>`;
