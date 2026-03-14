@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorem Ipsum 生成器 | 假文生成 — DevKit</title>
+<meta name="description" content="Lorem Ipsum 假文生成器，英文/中文，段落/句子/单词/字符可控，HTML标签包裹，一键复制。Lorem ipsum generator.">
+<meta name="keywords" content="lorem ipsum generator, 假文生成器, 占位文本, lorem ipsum中文, 千字文, DevKit">
+<meta property="og:title" content="Lorem Ipsum 生成器 | 假文生成 — DevKit">
+<meta property="og:description" content="英文/中文假文生成，段落句子单词字符可控">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/lorem/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lorem Ipsum 生成器 — DevKit">
+<meta name="twitter:description" content="英文/中文假文生成器">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Lorem Ipsum 生成器","description":"英文/中文假文生成，段落句子单词字符可控","url":"https://l-s-c.github.io/devkit/pages/lorem/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lorem/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* 标签 */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 模式 */
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.mode-chip {
+  padding: 8px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.mode-chip:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.mode-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 数量 */
+.num-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.num-label { font-size: 12px; font-weight: 700; color: var(--text-caption); width: 40px; }
+.num-input {
+  width: 80px; padding: 8px 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 14px; font-weight: 700;
+  color: var(--text-primary); text-align: center;
+}
+.num-input:focus { outline: none; border-color: var(--brand-500); }
+.num-slider { flex: 1; accent-color: var(--brand-500); }
+
+/* Toggle */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-top: 0.5px solid var(--border-glass); margin-top: 8px;
+}
+.toggle-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+.toggle {
+  width: 40px; height: 22px; border-radius: 11px; background: var(--border-glass);
+  position: relative; cursor: pointer; transition: all 200ms;
+}
+.toggle.on { background: var(--brand-500); }
+.toggle-knob {
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  position: absolute; top: 2px; left: 2px; transition: all 200ms;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on .toggle-knob { left: 20px; }
+
+/* 输出 */
+.output-text {
+  width: 100%; min-height: 300px; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 14px; line-height: 1.8; color: var(--text-primary); resize: vertical;
+}
+.output-text:focus { outline: none; border-color: var(--brand-500); }
+.output-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.stats { display: flex; gap: 8px; }
+.stat-chip {
+  padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.06);
+  font-family: var(--font-code); font-size: 10px; font-weight: 700; color: var(--brand-500);
+}
+.copy-btn {
+  padding: 8px 20px; border-radius: 6px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.copy-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+
+/* 生成按钮 */
+.gen-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms; margin-top: 12px;
+}
+.gen-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Lorem Ipsum 生成器 假文生成 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Lorem Ipsum 生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧：控制 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">🌐 语言</div>
+        <div class="tabs" id="langTabs">
+          <button class="tab active" data-lang="en">🇺🇸 English</button>
+          <button class="tab" data-lang="zh">🇨🇳 中文</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-title">📐 生成模式</div>
+        <div class="mode-row" id="modeRow">
+          <button class="mode-chip active" data-unit="paragraphs">📄 段落</button>
+          <button class="mode-chip" data-unit="sentences">💬 句子</button>
+          <button class="mode-chip" data-unit="words">📝 单词</button>
+          <button class="mode-chip" data-unit="chars">🔤 字符</button>
+        </div>
+        <div class="num-row">
+          <span class="num-label">数量</span>
+          <input type="number" class="num-input" id="count" value="3" min="1" max="100">
+          <input type="range" class="num-slider" id="countSlider" min="1" max="20" value="3">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">📎 首段经典开头</span>
+          <div class="toggle on" id="toggleClassic"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">&lt;p&gt; HTML 标签包裹</span>
+          <div class="toggle" id="toggleHtml"><div class="toggle-knob"></div></div>
+        </div>
+        <button class="gen-btn" id="genBtn">🎲 生成</button>
+      </div>
+    </div>
+
+    <!-- 右侧：输出 -->
+    <div>
+      <div class="panel">
+        <div class="output-bar">
+          <div class="stats">
+            <div class="stat-chip" id="statWords">0 词</div>
+            <div class="stat-chip" id="statChars">0 字符</div>
+          </div>
+          <button class="copy-btn" id="copyBtn">📋 复制</button>
+        </div>
+        <textarea class="output-text" id="output" readonly></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择模式生成假文</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地生成</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let lang = 'en', unit = 'paragraphs';
+
+const EN_SENTENCES = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.',
+  'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
+  'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+  'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.',
+  'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.',
+  'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.',
+  'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis.',
+  'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit.',
+  'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus.',
+  'Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis.',
+  'Nulla facilisi. Morbi tempus iaculis urna id volutpat lacus laoreet non.',
+  'Viverra justo nec ultrices dui sapien eget mi proin sed libero.',
+  'Pellentesque habitant morbi tristique senectus et netus et malesuada fames.',
+  'Integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque.',
+  'Amet consectetur adipiscing elit ut aliquam purus sit amet luctus.',
+  'Facilisis magna etiam tempor orci eu lobortis elementum nibh tellus.',
+  'Turpis egestas integer eget aliquet nibh praesent tristique magna sit.'
+];
+const EN_CLASSIC = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+
+const ZH_SENTENCES = [
+  '天地玄黄，宇宙洪荒，日月盈昃，辰宿列张。',
+  '寒来暑往，秋收冬藏，闰余成岁，律吕调阳。',
+  '云腾致雨，露结为霜，金生丽水，玉出昆冈。',
+  '剑号巨阙，珠称夜光，果珍李柰，菜重芥姜。',
+  '海咸河淡，鳞潜羽翔，龙师火帝，鸟官人皇。',
+  '始制文字，乃服衣裳，推位让国，有虞陶唐。',
+  '吊民伐罪，周发殷汤，坐朝问道，垂拱平章。',
+  '爱育黎首，臣伏戎羌，遐迩一体，率宾归王。',
+  '鸣凤在竹，白驹食场，化被草木，赖及万方。',
+  '盖此身发，四大五常，恭惟鞠养，岂敢毁伤。',
+  '大江东去浪淘尽，千古风流人物。',
+  '明月几时有，把酒问青天，不知天上宫阙，今夕是何年。',
+  '人生若只如初见，何事秋风悲画扇，等闲变却故人心，却道故人心易变。',
+  '春江潮水连海平，海上明月共潮生，滟滟随波千万里，何处春江无月明。',
+  '落霞与孤鹜齐飞，秋水共长天一色。',
+  '山不在高有仙则名，水不在深有龙则灵。',
+  '前不见古人后不见来者，念天地之悠悠独怆然而涕下。',
+  '会当凌绝顶一览众山小，欲穷千里目更上一层楼。',
+  '长风破浪会有时直挂云帆济沧海。',
+  '不畏浮云遮望眼自缘身在最高层。'
+];
+const ZH_CLASSIC = '天地玄黄，宇宙洪荒，日月盈昃，辰宿列张。';
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function makeSentences(n) {
+  const src = lang === 'en' ? EN_SENTENCES : ZH_SENTENCES;
+  const classic = lang === 'en' ? EN_CLASSIC : ZH_CLASSIC;
+  const useClassic = document.getElementById('toggleClassic').classList.contains('on');
+  const result = [];
+  if (useClassic && n > 0) { result.push(classic); n--; }
+  for (let i = 0; i < n; i++) result.push(pick(src));
+  return result;
+}
+
+function makeParagraph(isFirst) {
+  const count = 3 + Math.floor(Math.random() * 4);
+  const useClassic = isFirst && document.getElementById('toggleClassic').classList.contains('on');
+  const classic = lang === 'en' ? EN_CLASSIC : ZH_CLASSIC;
+  const src = lang === 'en' ? EN_SENTENCES : ZH_SENTENCES;
+  const sep = lang === 'en' ? ' ' : '';
+  const sents = [];
+  if (useClassic) sents.push(classic);
+  for (let i = sents.length; i < count; i++) sents.push(pick(src));
+  return sents.join(sep);
+}
+
+function generate() {
+  const count = Math.max(0, Math.min(1000, parseInt(document.getElementById('count').value) || 0));
+  const useHtml = document.getElementById('toggleHtml').classList.contains('on');
+  let text = '';
+
+  if (count === 0) { document.getElementById('output').value = ''; updateStats(''); return; }
+
+  const sep = lang === 'en' ? ' ' : '';
+
+  if (unit === 'paragraphs') {
+    const paras = [];
+    for (let i = 0; i < count; i++) paras.push(makeParagraph(i === 0));
+    text = useHtml ? paras.map(p => '<p>' + p + '</p>').join('\n\n') : paras.join('\n\n');
+  } else if (unit === 'sentences') {
+    const sents = makeSentences(count);
+    text = useHtml ? '<p>' + sents.join(sep) + '</p>' : sents.join(sep);
+  } else if (unit === 'words') {
+    if (lang === 'en') {
+      const allWords = EN_SENTENCES.join(' ').replace(/[.,]/g, '').split(/\s+/);
+      const useClassic = document.getElementById('toggleClassic').classList.contains('on');
+      const words = [];
+      if (useClassic) words.push('Lorem', 'ipsum', 'dolor', 'sit', 'amet');
+      while (words.length < count) words.push(pick(allWords));
+      text = words.slice(0, count).join(' ') + '.';
+    } else {
+      const allChars = ZH_SENTENCES.join('').replace(/[，。、]/g, '');
+      const chars = [];
+      while (chars.length < count) chars.push(allChars[Math.floor(Math.random() * allChars.length)]);
+      text = chars.slice(0, count).join('');
+    }
+  } else if (unit === 'chars') {
+    const src = lang === 'en' ? EN_SENTENCES.join(' ') : ZH_SENTENCES.join('');
+    let result = '';
+    while (result.length < count) result += src;
+    text = result.slice(0, count);
+  }
+
+  document.getElementById('output').value = text;
+  updateStats(text);
+}
+
+function updateStats(text) {
+  const words = lang === 'en' ? text.split(/\s+/).filter(Boolean).length : [...text].length;
+  const chars = text.length;
+  document.getElementById('statWords').textContent = words + (lang === 'en' ? ' 词' : ' 字');
+  document.getElementById('statChars').textContent = chars + ' 字符';
+  document.getElementById('statusInfo').textContent = `${lang === 'en' ? 'English' : '中文'} · ${unit} · ${words}${lang === 'en' ? ' words' : ' 字'} · ${chars} chars`;
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('langTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  lang = tab.dataset.lang;
+  document.querySelectorAll('#langTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.lang === lang));
+  generate();
+});
+
+document.getElementById('modeRow').addEventListener('click', e => {
+  const chip = e.target.closest('.mode-chip');
+  if (!chip) return;
+  unit = chip.dataset.unit;
+  document.querySelectorAll('.mode-chip').forEach(c => c.classList.toggle('active', c.dataset.unit === unit));
+  const maxMap = { paragraphs: 20, sentences: 50, words: 200, chars: 1000 };
+  const defMap = { paragraphs: 3, sentences: 5, words: 50, chars: 200 };
+  document.getElementById('countSlider').max = maxMap[unit];
+  document.getElementById('countSlider').value = defMap[unit];
+  document.getElementById('count').value = defMap[unit];
+  generate();
+});
+
+document.getElementById('count').addEventListener('input', function() {
+  document.getElementById('countSlider').value = this.value;
+  generate();
+});
+document.getElementById('countSlider').addEventListener('input', function() {
+  document.getElementById('count').value = this.value;
+  generate();
+});
+
+document.getElementById('toggleClassic').addEventListener('click', function() { this.classList.toggle('on'); generate(); });
+document.getElementById('toggleHtml').addEventListener('click', function() { this.classList.toggle('on'); generate(); });
+
+document.getElementById('genBtn').addEventListener('click', generate);
+
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard.writeText(document.getElementById('output').value).then(() => {
+    this.textContent = '已复制 ✓';
+    setTimeout(() => this.textContent = '📋 复制', 1500);
+  });
+});
+
+generate();
+</script>
+<noscript><p>Lorem Ipsum 生成器 假文生成 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

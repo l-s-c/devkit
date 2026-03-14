@@ -50,6 +50,7 @@ export default defineConfig({
         'watermark': resolve(__dirname, 'pages/watermark/index.html'),
         'favicon': resolve(__dirname, 'pages/favicon/index.html'),
         'unicode': resolve(__dirname, 'pages/unicode/index.html'),
+        'lorem': resolve(__dirname, 'pages/lorem/index.html'),
       },
     },
   },
