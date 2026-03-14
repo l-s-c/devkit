@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单位换算 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线单位换算工具，支持长度、重量、温度、CSS、数据、时间六大类单位实时互转。纯前端，数据不上传。">
+<meta property="og:title" content="单位换算 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="在线单位换算，长度/重量/温度/CSS/数据/时间六大类实时互转">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/unit-converter/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单位换算 — DevKit">
+<meta name="twitter:description" content="在线单位换算，长度/重量/温度/CSS/数据/时间实时互转">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"单位换算","description":"在线单位换算工具，支持长度、重量、温度、CSS、数据、时间六大类实时互转","url":"https://l-s-c.github.io/devkit/pages/unit-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/unit-converter/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* 类别 Tab */
+.cat-tabs {
+  display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px;
+}
+.cat-tabs::-webkit-scrollbar { display: none; }
+.cat-tab {
+  padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; white-space: nowrap;
+  transition: all 150ms; flex-shrink: 0;
+}
+.cat-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.cat-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+/* 输入区 */
+.input-area { margin-bottom: 16px; }
+.input-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.input-row { display: flex; gap: 10px; align-items: stretch; }
+.unit-input {
+  flex: 1; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); font-family: var(--font-code);
+  font-size: 20px; font-weight: 600; color: var(--text-primary);
+  transition: border-color 200ms;
+}
+.unit-input:focus { outline: none; border-color: var(--brand-500); }
+.unit-select {
+  width: 100px; padding: 0 12px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); font-size: 14px; font-weight: 600;
+  color: var(--text-primary); cursor: pointer; appearance: none; text-align: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%236B7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.unit-select:focus { outline: none; border-color: var(--brand-500); }
+
+/* 交换按钮 */
+.swap-row { display: flex; justify-content: center; padding: 8px 0; }
+.swap-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; transition: all 200ms; color: var(--text-secondary);
+}
+.swap-btn:hover { border-color: var(--brand-500); color: var(--brand-500); transform: rotate(180deg); }
+
+/* 结果列表 */
+.results { display: flex; flex-direction: column; gap: 6px; }
+.result-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); transition: all 150ms; cursor: pointer;
+}
+.result-card:hover { border-color: var(--brand-500); }
+.result-left { display: flex; align-items: baseline; gap: 8px; flex: 1; min-width: 0; }
+.result-value { font-family: var(--font-code); font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.result-unit { font-size: 13px; font-weight: 600; color: var(--brand-500); }
+.result-name { font-size: 11px; color: var(--text-caption); margin-left: auto; flex-shrink: 0; padding-left: 8px; }
+.result-copy {
+  width: 28px; height: 28px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text-caption); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+  flex-shrink: 0; transition: all 150ms; margin-left: 8px;
+}
+.result-copy:hover { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.result-copy.ok { color: #10B981; }
+
+/* 公式栏 */
+.formula {
+  margin-top: 16px; padding: 12px 16px; border-radius: 10px;
+  background: rgba(99,102,241,0.08); font-size: 13px; color: var(--text-secondary);
+  font-family: var(--font-code); line-height: 1.6;
+}
+.formula strong { color: var(--brand-500); font-weight: 700; }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .unit-input { font-size: 18px; }
+  .input-row { flex-direction: column; }
+  .unit-select { width: 100%; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">单位换算 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">单位换算</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 类别 Tab -->
+  <div class="cat-tabs" id="catTabs">
+    <button class="cat-tab active" data-cat="length">📏 长度</button>
+    <button class="cat-tab" data-cat="weight">⚖️ 重量</button>
+    <button class="cat-tab" data-cat="temperature">🌡️ 温度</button>
+    <button class="cat-tab" data-cat="css">🎨 CSS</button>
+    <button class="cat-tab" data-cat="data">💾 数据</button>
+    <button class="cat-tab" data-cat="time">⏱️ 时间</button>
+  </div>
+
+  <!-- 输入区 -->
+  <div class="input-area">
+    <div class="input-label">输入数值</div>
+    <div class="input-row">
+      <input type="number" class="unit-input" id="unitInput" value="1" step="any" spellcheck="false">
+      <select class="unit-select" id="fromUnit"></select>
+    </div>
+  </div>
+
+  <div class="swap-row">
+    <button class="swap-btn" id="swapBtn" title="交换单位">⇅</button>
+  </div>
+
+  <!-- 结果列表 -->
+  <div class="results" id="results"></div>
+
+  <!-- 公式栏 -->
+  <div class="formula" id="formula"></div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择类别，输入数值实时转换</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯前端计算</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* ===== 文案常量（预留 i18n） ===== */
+const LABELS = {
+  ready: '选择类别，输入数值实时转换',
+  catNames: {
+    length: '长度', weight: '重量', temperature: '温度',
+    css: 'CSS', data: '数据', time: '时间',
+  },
+};
+
+/* ===== 单位定义 ===== */
+const CATEGORIES = {
+  length: {
+    units: ['mm', 'cm', 'm', 'km', 'in', 'ft', 'yd', 'mi'],
+    names: { mm: '毫米', cm: '厘米', m: '米', km: '千米', in: '英寸', ft: '英尺', yd: '码', mi: '英里' },
+    // 转为基准单位（m）的系数
+    toBase: { mm: 0.001, cm: 0.01, m: 1, km: 1000, in: 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344 },
+  },
+  weight: {
+    units: ['mg', 'g', 'kg', 't', 'oz', 'lb'],
+    names: { mg: '毫克', g: '克', kg: '千克', t: '吨', oz: '盎司', lb: '磅' },
+    toBase: { mg: 0.000001, g: 0.001, kg: 1, t: 1000, oz: 0.0283495, lb: 0.453592 },
+  },
+  temperature: {
+    units: ['°C', '°F', 'K'],
+    names: { '°C': '摄氏度', '°F': '华氏度', K: '开尔文' },
+    custom: true, // 非线性，独立公式
+  },
+  css: {
+    units: ['px', 'rem', 'em', 'vw', 'vh', '%', 'pt'],
+    names: { px: '像素', rem: '根em (16px)', em: 'em (16px)', vw: '视口宽% (1440px)', vh: '视口高% (960px)', '%': '百分比', pt: '点' },
+    // 基准：px，rem/em 基于 16px
+    toBase: { px: 1, rem: 16, em: 16, vw: 14.4, vh: 9.6, '%': 10, pt: 1.333 },
+  },
+  data: {
+    units: ['B', 'KB', 'MB', 'GB', 'TB'],
+    names: { B: '字节', KB: '千字节', MB: '兆字节', GB: '吉字节', TB: '太字节' },
+    // 1024 进制
+    toBase: { B: 1, KB: 1024, MB: 1048576, GB: 1073741824, TB: 1099511627776 },
+  },
+  time: {
+    units: ['ms', 's', 'min', 'h', 'd', 'w'],
+    names: { ms: '毫秒', s: '秒', min: '分钟', h: '小时', d: '天', w: '周' },
+    toBase: { ms: 0.001, s: 1, min: 60, h: 3600, d: 86400, w: 604800 },
+  },
+};
+
+let currentCat = 'length';
+let lastSwapTarget = null;
+
+/* ===== 温度独立转换（非线性） ===== */
+function convertTemperature(val, from, to) {
+  // 先转为 °C，再转为目标
+  let celsius;
+  if (from === '°C') celsius = val;
+  else if (from === '°F') celsius = (val - 32) * 5 / 9;
+  else if (from === 'K') celsius = val - 273.15;
+
+  if (to === '°C') return celsius;
+  if (to === '°F') return celsius * 9 / 5 + 32;
+  if (to === 'K') return celsius + 273.15;
+  return 0;
+}
+
+/* ===== 数值格式化（避免浮点精度问题） ===== */
+function formatNum(n) {
+  if (n === 0) return '0';
+  if (Math.abs(n) < 0.000001) return n.toExponential(4);
+  if (Math.abs(n) >= 1e12) return n.toExponential(4);
+  if (Number.isInteger(n)) return n.toLocaleString();
+  return parseFloat(n.toPrecision(10)).toString();
+}
+
+/* ===== 填充单位下拉 ===== */
+function populateUnits() {
+  const cat = CATEGORIES[currentCat];
+  const sel = document.getElementById('fromUnit');
+  sel.innerHTML = cat.units.map(u => `<option value="${u}">${u}</option>`).join('');
+}
+
+/* ===== 转换核心 ===== */
+function convert() {
+  const cat = CATEGORIES[currentCat];
+  const val = parseFloat(document.getElementById('unitInput').value);
+  const from = document.getElementById('fromUnit').value;
+  const container = document.getElementById('results');
+  const formulaEl = document.getElementById('formula');
+
+  if (isNaN(val)) {
+    container.innerHTML = '';
+    formulaEl.innerHTML = '';
+    return;
+  }
+
+  let results;
+  if (cat.custom) {
+    // 温度：独立公式
+    results = cat.units.filter(u => u !== from).map(u => ({
+      unit: u,
+      value: convertTemperature(val, from, u),
+      name: cat.names[u],
+    }));
+  } else {
+    // 通用：乘除系数
+    const baseVal = val * cat.toBase[from];
+    results = cat.units.filter(u => u !== from).map(u => ({
+      unit: u,
+      value: baseVal / cat.toBase[u],
+      name: cat.names[u],
+    }));
+  }
+
+  // 渲染结果卡片
+  container.innerHTML = results.map(r => {
+    const display = formatNum(r.value);
+    const escaped = (display + ' ' + r.unit).replace(/"/g, '&quot;');
+    return `<div class="result-card" data-copy="${escaped}">
+      <div class="result-left">
+        <span class="result-value">${display}</span>
+        <span class="result-unit">${r.unit}</span>
+        <span class="result-name">${r.name}</span>
+      </div>
+      <button class="result-copy">📋</button>
+    </div>`;
+  }).join('');
+
+  // 公式栏
+  const top3 = results.slice(0, 3).map(r => `${formatNum(r.value)} ${r.unit}`).join(' = ');
+  formulaEl.innerHTML = `<strong>${formatNum(val)} ${from}</strong> = ${top3}`;
+
+  // 记录第一个结果单位供交换用
+  lastSwapTarget = results.length > 0 ? results[0].unit : null;
+
+  // 状态栏
+  document.getElementById('statusInfo').textContent = `${LABELS.catNames[currentCat]} · ${from} → ${results.length} 种单位`;
+}
+
+/* ===== 交换单位 ===== */
+function swapUnits() {
+  if (!lastSwapTarget) return;
+  const sel = document.getElementById('fromUnit');
+  sel.value = lastSwapTarget;
+  convert();
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('unitInput').addEventListener('input', convert);
+document.getElementById('fromUnit').addEventListener('change', convert);
+document.getElementById('swapBtn').addEventListener('click', swapUnits);
+
+// 类别 Tab 切换
+document.getElementById('catTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.cat-tab');
+  if (!tab) return;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentCat = tab.dataset.cat;
+  populateUnits();
+  convert();
+});
+
+// 结果卡片点击复制
+document.getElementById('results').addEventListener('click', (e) => {
+  const card = e.target.closest('.result-card');
+  if (!card) return;
+  const text = card.dataset.copy;
+  navigator.clipboard.writeText(text);
+  const btn = card.querySelector('.result-copy');
+  btn.textContent = '✅';
+  btn.classList.add('ok');
+  setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('ok'); }, 1200);
+});
+
+// 初始化
+populateUnits();
+convert();
+</script>
+<noscript><p>单位换算 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
