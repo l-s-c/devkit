@@ -29,6 +29,7 @@ export default defineConfig({
         'number-base': resolve(__dirname, 'pages/number-base/index.html'),
         'unit-converter': resolve(__dirname, 'pages/unit-converter/index.html'),
         yaml: resolve(__dirname, 'pages/yaml/index.html'),
+        'image-compress': resolve(__dirname, 'pages/image-compress/index.html'),
       },
     },
   },
