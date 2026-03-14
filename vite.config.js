@@ -61,6 +61,7 @@ export default defineConfig({
         'signature': resolve(__dirname, 'pages/signature/index.html'),
         'chart': resolve(__dirname, 'pages/chart/index.html'),
         'invoice': resolve(__dirname, 'pages/invoice/index.html'),
+        'placeholder': resolve(__dirname, 'pages/placeholder/index.html'),
       },
     },
   },

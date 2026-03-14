@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>占位图生成器 | Placeholder Image Generator — DevKit</title>
+<meta name="description" content="在线占位图生成器，自定义尺寸/颜色/文字，导出 PNG/SVG，复制 img 标签。Placeholder image generator online.">
+<meta name="keywords" content="placeholder image, 占位图, placeholder generator, 占位符图片, DevKit">
+<meta property="og:title" content="占位图生成器 | Placeholder Image Generator — DevKit">
+<meta property="og:description" content="自定义尺寸颜色文字，导出 PNG/SVG，复制 img 标签">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/placeholder/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="占位图生成器 — DevKit">
+<meta name="twitter:description" content="自定义占位图生成，PNG/SVG 导出">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"占位图生成器","description":"在线占位图生成器，自定义尺寸颜色文字，导出 PNG/SVG","url":"https://l-s-c.github.io/devkit/pages/placeholder/","applicationCategory":"DesignApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/placeholder/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Size inputs */
+.size-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.size-input {
+  flex: 1; padding: 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 16px;
+  font-weight: 700; color: var(--text-primary); text-align: center; outline: none;
+  transition: border-color 150ms;
+}
+.size-input:focus { border-color: var(--brand-500); }
+.size-x { font-size: 16px; font-weight: 800; color: var(--text-caption); }
+
+/* Presets */
+.preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.preset-chip {
+  padding: 8px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.preset-chip:hover { border-color: var(--brand-500); }
+.preset-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.preset-name { font-size: 11px; font-weight: 700; }
+.preset-dim { font-size: 9px; color: var(--text-caption); font-family: var(--font-code); margin-top: 1px; }
+
+/* Color */
+.color-row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.color-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 50px; }
+.color-input { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+.color-hex { font-family: var(--font-code); font-size: 12px; color: var(--text-secondary); }
+
+/* Text input */
+.text-input {
+  width: 100%; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; color: var(--text-primary); outline: none;
+  transition: border-color 150ms; margin-bottom: 6px;
+}
+.text-input:focus { border-color: var(--brand-500); }
+.text-hint { font-size: 10px; color: var(--text-caption); }
+
+/* Preview */
+.preview-wrap {
+  border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(rgba(0,0,0,0.06) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+  display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 200px;
+}
+.preview-wrap canvas { max-width: 100%; max-height: 300px; display: block; border-radius: 4px; }
+
+/* Actions */
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.action-btn {
+  padding: 12px; border-radius: 10px; border: none; font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all 150ms;
+}
+.btn-primary { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-secondary { border: 1.5px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary); }
+.btn-secondary:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Code block */
+.code-block {
+  padding: 10px; border-radius: 6px; background: var(--bg-glass); border: 1px solid var(--border-glass);
+  font-family: var(--font-code); font-size: 11px; color: var(--text-secondary);
+  word-break: break-all; margin-top: 10px; position: relative; cursor: pointer;
+}
+.code-block:hover { border-color: var(--brand-500); }
+.code-copy { position: absolute; right: 6px; top: 6px; font-size: 10px; color: var(--text-caption); }
+
+/* Stats */
+.stats { display: flex; gap: 6px; margin-top: 10px; }
+.stat-chip {
+  padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.08);
+  font-family: var(--font-code); font-size: 10px; font-weight: 700; color: var(--brand-500);
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .preset-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">占位图生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">占位图生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- Left: Controls -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📐 尺寸</div>
+        <div class="size-row">
+          <input type="number" class="size-input" id="widthInput" value="300" min="1" max="4096">
+          <span class="size-x">×</span>
+          <input type="number" class="size-input" id="heightInput" value="200" min="1" max="4096">
+        </div>
+        <div class="preset-grid" id="presetGrid">
+          <div class="preset-chip" data-w="1920" data-h="1080"><div class="preset-name">🖥️ 16:9</div><div class="preset-dim">1920×1080</div></div>
+          <div class="preset-chip" data-w="800" data-h="600"><div class="preset-name">📺 4:3</div><div class="preset-dim">800×600</div></div>
+          <div class="preset-chip" data-w="1080" data-h="1080"><div class="preset-name">⬛ 1:1</div><div class="preset-dim">1080×1080</div></div>
+          <div class="preset-chip" data-w="200" data-h="200"><div class="preset-name">👤 头像</div><div class="preset-dim">200×200</div></div>
+          <div class="preset-chip" data-w="1200" data-h="400"><div class="preset-name">🏞️ Banner</div><div class="preset-dim">1200×400</div></div>
+          <div class="preset-chip" data-w="375" data-h="812"><div class="preset-name">📱 手机</div><div class="preset-dim">375×812</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">🎨 颜色</div>
+        <div class="color-row">
+          <span class="color-label">背景</span>
+          <input type="color" class="color-input" id="bgColor" value="#CCCCCC">
+          <span class="color-hex" id="bgHex">#CCCCCC</span>
+        </div>
+        <div class="color-row">
+          <span class="color-label">文字</span>
+          <input type="color" class="color-input" id="textColor" value="#969696">
+          <span class="color-hex" id="textHex">#969696</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">✏️ 文字</div>
+        <input class="text-input" id="customText" placeholder="留空默认显示尺寸（如 300×200）">
+        <div class="text-hint">留空时自动显示「宽×高」</div>
+      </div>
+
+      <div class="panel">
+        <div class="action-grid">
+          <button class="action-btn btn-primary" id="btnPNG">💾 导出 PNG</button>
+          <button class="action-btn btn-primary" id="btnSVG">💾 导出 SVG</button>
+          <button class="action-btn btn-secondary" id="btnImgTag">📋 复制 img 标签</button>
+          <button class="action-btn btn-secondary" id="btnDataURL">📋 复制 Data URL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Preview -->
+    <div>
+      <div class="panel">
+        <div class="section-title">👁️ 预览</div>
+        <div class="preview-wrap"><canvas id="previewCanvas"></canvas></div>
+        <div class="stats">
+          <div class="stat-chip" id="statSize">300 × 200</div>
+          <div class="stat-chip" id="statRatio">3:2</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📋 代码</div>
+        <div class="code-block" id="codeBlock">
+          <span class="code-copy">📋 点击复制</span>
+          &lt;img src="placeholder.png" width="300" height="200" alt="300×200"&gt;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">占位图生成器</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+
+function getParams() {
+  const w = Math.max(1, Math.min(4096, parseInt(document.getElementById('widthInput').value) || 0));
+  const h = Math.max(1, Math.min(4096, parseInt(document.getElementById('heightInput').value) || 0));
+  const bg = document.getElementById('bgColor').value;
+  const tc = document.getElementById('textColor').value;
+  const text = document.getElementById('customText').value || `${w}×${h}`;
+  return { w, h, bg, tc, text };
+}
+
+function generate() {
+  const { w, h, bg, tc, text } = getParams();
+  const canvas = document.getElementById('previewCanvas');
+  const scale = Math.min(1, 400 / Math.max(w, h));
+  canvas.width = w * scale; canvas.height = h * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const fontSize = Math.max(12, Math.min(canvas.width / text.length * 1.2, canvas.height * 0.25));
+  ctx.fillStyle = tc; ctx.font = `bold ${fontSize}px -apple-system,sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+  const g = gcd(w, h);
+  document.getElementById('statSize').textContent = `${w} × ${h}`;
+  document.getElementById('statRatio').textContent = `${w / g}:${h / g}`;
+  document.getElementById('codeBlock').innerHTML = `<span class="code-copy">📋 点击复制</span>&lt;img src="placeholder.png" width="${w}" height="${h}" alt="${text}"&gt;`;
+  document.getElementById('bgHex').textContent = bg;
+  document.getElementById('textHex').textContent = tc;
+  document.getElementById('statusInfo').textContent = `${w} × ${h} · ${w / g}:${h / g}`;
+}
+
+function getFullCanvas() {
+  const { w, h, bg, tc, text } = getParams();
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+  const fontSize = Math.max(14, Math.min(w / text.length * 1.2, h * 0.25));
+  ctx.fillStyle = tc; ctx.font = `bold ${fontSize}px -apple-system,sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, w / 2, h / 2);
+  return c;
+}
+
+/* Events */
+document.getElementById('widthInput').addEventListener('input', generate);
+document.getElementById('heightInput').addEventListener('input', generate);
+document.getElementById('bgColor').addEventListener('input', generate);
+document.getElementById('textColor').addEventListener('input', generate);
+document.getElementById('customText').addEventListener('input', generate);
+
+document.getElementById('presetGrid').addEventListener('click', e => {
+  const chip = e.target.closest('.preset-chip');
+  if (!chip) return;
+  document.getElementById('widthInput').value = chip.dataset.w;
+  document.getElementById('heightInput').value = chip.dataset.h;
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  generate();
+});
+
+document.getElementById('btnPNG').addEventListener('click', () => {
+  const c = getFullCanvas();
+  c.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `placeholder_${c.width}x${c.height}.png`; a.click();
+    URL.revokeObjectURL(url); URL.revokeObjectURL(url); URL.revokeObjectURL(url);
+    c.width = 0;
+  }, 'image/png');
+});
+
+document.getElementById('btnSVG').addEventListener('click', () => {
+  const { w, h, bg, tc, text } = getParams();
+  const fs = Math.max(14, Math.min(w / text.length * 1.2, h * 0.25));
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="${bg}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="${tc}" font-family="-apple-system,sans-serif" font-size="${fs}" font-weight="bold">${text}</text></svg>`;
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `placeholder_${w}x${h}.svg`; a.click();
+  URL.revokeObjectURL(url); URL.revokeObjectURL(url); URL.revokeObjectURL(url);
+});
+
+document.getElementById('btnImgTag').addEventListener('click', () => {
+  const { w, h, text } = getParams();
+  const c = getFullCanvas();
+  const dataUrl = c.toDataURL('image/png');
+  navigator.clipboard.writeText(`<img src="${dataUrl}" width="${w}" height="${h}" alt="${text}">`);
+  c.width = 0;
+});
+
+document.getElementById('btnDataURL').addEventListener('click', () => {
+  const c = getFullCanvas();
+  navigator.clipboard.writeText(c.toDataURL('image/png'));
+  c.width = 0;
+});
+
+document.getElementById('codeBlock').addEventListener('click', () => {
+  document.getElementById('btnImgTag').click();
+});
+
+generate();
+</script>
+<noscript><p>占位图生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
