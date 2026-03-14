@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片加水印 | Image Watermark Online — DevKit</title>
+<meta name="description" content="在线图片加水印，文字水印/图片水印，自定义颜色透明度旋转角度，9宫格定位，平铺模式，批量处理。Image watermark online.">
+<meta name="keywords" content="watermark, 图片加水印, add watermark online, 水印工具, 文字水印, 图片水印, DevKit">
+<meta property="og:title" content="图片加水印 | Image Watermark Online — DevKit">
+<meta property="og:description" content="文字/图片水印，9宫格定位，平铺模式">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/watermark/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图片加水印 — DevKit">
+<meta name="twitter:description" content="在线图片加水印，文字/图片水印">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"图片加水印","description":"在线图片加水印，文字/图片水印，9宫格定位，平铺模式","url":"https://l-s-c.github.io/devkit/pages/watermark/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/watermark/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.field { margin-bottom: 12px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text-caption); margin-bottom: 5px; }
+.field-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 14px; font-weight: 700; color: var(--text-primary);
+}
+.field-input:focus { outline: none; border-color: var(--brand-500); }
+
+/* 上传 */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 32px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover, .upload-area.dragover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-icon { font-size: 36px; margin-bottom: 6px; }
+.upload-text { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+
+/* 预览 Canvas */
+.preview-wrap {
+  position: relative; border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(var(--border-glass) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+  min-height: 240px; display: flex; align-items: center; justify-content: center;
+}
+.preview-canvas { max-width: 100%; max-height: 400px; display: block; }
+
+/* Radio */
+.radio-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.radio-btn {
+  flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.radio-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.radio-btn.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 9宫格 */
+.grid9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 120px; margin: 0 auto 12px; }
+.grid9-cell {
+  width: 36px; height: 28px; border-radius: 4px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; justify-content: center; font-size: 8px; color: var(--text-caption);
+}
+.grid9-cell:hover { border-color: var(--brand-500); }
+.grid9-cell.active { border-color: var(--brand-500); background: var(--brand-500); color: #fff; }
+
+/* 滑块行 */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 50px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 40px; text-align: right; }
+
+/* 颜色 */
+.color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.color-input { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+.color-hex { font-family: var(--font-code); font-size: 12px; color: var(--text-secondary); }
+
+/* Logo 上传 */
+.logo-upload {
+  border: 2px dashed var(--border-glass); border-radius: 6px;
+  padding: 16px; text-align: center; cursor: pointer; position: relative;
+  font-size: 12px; color: var(--text-caption); transition: all 150ms;
+}
+.logo-upload:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.logo-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.logo-preview { width: 48px; height: 48px; object-fit: contain; border-radius: 6px; margin: 0 auto 4px; display: block; }
+
+/* 操作按钮 */
+.action-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* 批量列表 */
+.batch-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  border-radius: 6px; border: 1px solid var(--border-glass); margin-bottom: 6px; font-size: 12px;
+}
+.batch-name { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.batch-status { font-size: 14px; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">图片加水印 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">图片加水印</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧：上传+预览 -->
+    <div>
+      <div class="panel" id="uploadPanel">
+        <div class="upload-area" id="dropZone">
+          <input type="file" accept="image/*" multiple class="upload-input" id="fileInput">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text">拖拽图片到这里，或点击上传</div>
+        </div>
+      </div>
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="preview-wrap">
+          <canvas id="previewCanvas" class="preview-canvas"></canvas>
+        </div>
+      </div>
+      <div class="panel" id="batchPanel" style="display:none">
+        <div class="section-title">📦 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
+        <div id="batchList"></div>
+      </div>
+    </div>
+
+    <!-- 右侧：控制 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">💧 水印类型</div>
+        <div class="radio-row">
+          <button class="radio-btn active" id="btnText">✏️ 文字水印</button>
+          <button class="radio-btn" id="btnLogo">🖼️ 图片水印</button>
+        </div>
+
+        <!-- 文字水印 -->
+        <div id="textPanel">
+          <div class="field">
+            <div class="field-label">水印文字</div>
+            <input type="text" class="field-input" id="wmText" value="© DevKit 2024">
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">大小</span>
+            <input type="range" class="slider-input" id="wmSize" min="12" max="120" value="32">
+            <span class="slider-val" id="wmSizeVal">32px</span>
+          </div>
+          <div class="color-row">
+            <span class="slider-label" style="width:50px">颜色</span>
+            <input type="color" class="color-input" id="wmColor" value="#ffffff">
+            <span class="color-hex" id="wmColorHex">#ffffff</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">透明度</span>
+            <input type="range" class="slider-input" id="wmOpacity" min="0" max="100" value="50">
+            <span class="slider-val" id="wmOpacityVal">50%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">旋转</span>
+            <input type="range" class="slider-input" id="wmRotate" min="-90" max="90" value="-30">
+            <span class="slider-val" id="wmRotateVal">-30°</span>
+          </div>
+        </div>
+
+        <!-- 图片水印 -->
+        <div id="logoPanel" style="display:none">
+          <div class="logo-upload" id="logoUpload">
+            <input type="file" accept="image/*" id="logoInput">
+            <div id="logoPreviewWrap">📁 上传 Logo / 水印图片</div>
+          </div>
+          <div class="slider-row" style="margin-top:10px">
+            <span class="slider-label">大小</span>
+            <input type="range" class="slider-input" id="logoSize" min="5" max="50" value="20">
+            <span class="slider-val" id="logoSizeVal">20%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">透明度</span>
+            <input type="range" class="slider-input" id="logoOpacity" min="0" max="100" value="60">
+            <span class="slider-val" id="logoOpacityVal">60%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📍 水印位置</div>
+        <div class="radio-row">
+          <button class="radio-btn active" id="btnPos">📍 固定位置</button>
+          <button class="radio-btn" id="btnTile">🔲 平铺</button>
+        </div>
+        <div id="posPanel">
+          <div class="grid9" id="grid9">
+            <div class="grid9-cell" data-pos="tl">↖</div>
+            <div class="grid9-cell" data-pos="tc">↑</div>
+            <div class="grid9-cell" data-pos="tr">↗</div>
+            <div class="grid9-cell" data-pos="ml">←</div>
+            <div class="grid9-cell active" data-pos="mc">●</div>
+            <div class="grid9-cell" data-pos="mr">→</div>
+            <div class="grid9-cell" data-pos="bl">↙</div>
+            <div class="grid9-cell" data-pos="bc">↓</div>
+            <div class="grid9-cell" data-pos="br">↘</div>
+          </div>
+        </div>
+        <div id="tilePanel" style="display:none">
+          <div class="slider-row">
+            <span class="slider-label">间距</span>
+            <input type="range" class="slider-input" id="tileGap" min="50" max="400" value="150">
+            <span class="slider-val" id="tileGapVal">150px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <button class="action-btn" id="downloadBtn" disabled>💾 导出水印图片</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传图片开始添加水印</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let wmType = 'text', posMode = 'single', pos = 'mc';
+let img = null, logoImg = null, files = [];
+
+/* ===== 滑块值显示 ===== */
+const sliderUnits = { wmSize: 'px', wmOpacity: '%', wmRotate: '°', logoSize: '%', logoOpacity: '%', tileGap: 'px' };
+Object.keys(sliderUnits).forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    document.getElementById(id + 'Val').textContent = el.value + sliderUnits[id];
+    render();
+  });
+});
+document.getElementById('wmColor').addEventListener('input', e => {
+  document.getElementById('wmColorHex').textContent = e.target.value;
+  render();
+});
+document.getElementById('wmText').addEventListener('input', render);
+
+/* ===== 文件上传 ===== */
+document.getElementById('fileInput').addEventListener('change', e => {
+  files = [...e.target.files].filter(f => f.type.startsWith('image/'));
+  if (!files.length) return;
+  loadMainImage(files[0]);
+  renderBatchList();
+});
+
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('dragover');
+  files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+  if (files.length) { loadMainImage(files[0]); renderBatchList(); }
+});
+
+function loadMainImage(file) {
+  const url = URL.createObjectURL(file);
+  img = new Image();
+  img.onload = () => {
+    document.getElementById('previewPanel').style.display = 'block';
+    document.getElementById('downloadBtn').disabled = false;
+    render();
+    document.getElementById('statusInfo').textContent = `${file.name} · ${img.width}×${img.height}`;
+  };
+  img.src = url;
+}
+
+function renderBatchList() {
+  if (files.length <= 1) { document.getElementById('batchPanel').style.display = 'none'; return; }
+  document.getElementById('batchPanel').style.display = 'block';
+  document.getElementById('batchCount').textContent = `(${files.length} 张)`;
+  document.getElementById('batchList').innerHTML = files.map((f, i) =>
+    `<div class="batch-item"><div class="batch-name">${f.name}</div><div class="batch-status" id="batchS${i}">⏳</div></div>`
+  ).join('');
+}
+
+/* ===== Logo 上传 ===== */
+document.getElementById('logoInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  logoImg = new Image();
+  logoImg.onload = () => {
+    document.getElementById('logoPreviewWrap').innerHTML =
+      `<img class="logo-preview" src="${logoImg.src}"><div style="font-size:11px;color:var(--text-caption)">点击更换</div>`;
+    render();
+  };
+  logoImg.src = url;
+});
+
+/* ===== 水印类型切换 ===== */
+document.getElementById('btnText').addEventListener('click', () => {
+  wmType = 'text';
+  document.getElementById('btnText').classList.add('active');
+  document.getElementById('btnLogo').classList.remove('active');
+  document.getElementById('textPanel').style.display = 'block';
+  document.getElementById('logoPanel').style.display = 'none';
+  render();
+});
+document.getElementById('btnLogo').addEventListener('click', () => {
+  wmType = 'logo';
+  document.getElementById('btnLogo').classList.add('active');
+  document.getElementById('btnText').classList.remove('active');
+  document.getElementById('textPanel').style.display = 'none';
+  document.getElementById('logoPanel').style.display = 'block';
+  render();
+});
+
+/* ===== 位置模式 ===== */
+document.getElementById('btnPos').addEventListener('click', () => {
+  posMode = 'single';
+  document.getElementById('btnPos').classList.add('active');
+  document.getElementById('btnTile').classList.remove('active');
+  document.getElementById('posPanel').style.display = 'block';
+  document.getElementById('tilePanel').style.display = 'none';
+  render();
+});
+document.getElementById('btnTile').addEventListener('click', () => {
+  posMode = 'tile';
+  document.getElementById('btnTile').classList.add('active');
+  document.getElementById('btnPos').classList.remove('active');
+  document.getElementById('posPanel').style.display = 'none';
+  document.getElementById('tilePanel').style.display = 'block';
+  render();
+});
+
+/* ===== 9宫格（事件委托）===== */
+document.getElementById('grid9').addEventListener('click', e => {
+  const cell = e.target.closest('.grid9-cell');
+  if (!cell) return;
+  pos = cell.dataset.pos;
+  document.querySelectorAll('.grid9-cell').forEach(c => c.classList.toggle('active', c.dataset.pos === pos));
+  render();
+});
+
+/* ===== 9宫格坐标计算 ===== */
+function getPosition(cw, ch, ww, wh, p) {
+  const pad = 20;
+  const map = {
+    tl: { x: pad + ww / 2, y: pad + wh / 2 },
+    tc: { x: cw / 2, y: pad + wh / 2 },
+    tr: { x: cw - pad - ww / 2, y: pad + wh / 2 },
+    ml: { x: pad + ww / 2, y: ch / 2 },
+    mc: { x: cw / 2, y: ch / 2 },
+    mr: { x: cw - pad - ww / 2, y: ch / 2 },
+    bl: { x: pad + ww / 2, y: ch - pad - wh / 2 },
+    bc: { x: cw / 2, y: ch - pad - wh / 2 },
+    br: { x: cw - pad - ww / 2, y: ch - pad - wh / 2 },
+  };
+  return map[p] || map.mc;
+}
+
+/* ===== 绘制水印（通用，支持预览和导出）===== */
+function drawWatermark(ctx, cw, ch, scale) {
+  if (wmType === 'text') {
+    const text = document.getElementById('wmText').value || '';
+    if (!text) return;
+    const size = parseInt(document.getElementById('wmSize').value) * scale;
+    const color = document.getElementById('wmColor').value;
+    const opacity = parseInt(document.getElementById('wmOpacity').value) / 100;
+    const rotate = parseInt(document.getElementById('wmRotate').value) * Math.PI / 180;
+
+    ctx.globalAlpha = opacity;
+    ctx.font = `bold ${size}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    ctx.fillStyle = color;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+
+    if (posMode === 'tile') {
+      const gap = parseInt(document.getElementById('tileGap').value) * scale;
+      for (let y = -ch; y < ch * 2; y += gap) {
+        for (let x = -cw; x < cw * 2; x += gap) {
+          ctx.save(); ctx.translate(x, y); ctx.rotate(rotate);
+          ctx.fillText(text, 0, 0); ctx.restore();
+        }
+      }
+    } else {
+      const { x, y } = getPosition(cw, ch, size * 2, size, pos);
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rotate);
+      ctx.fillText(text, 0, 0); ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  } else if (wmType === 'logo' && logoImg) {
+    const sizePct = parseInt(document.getElementById('logoSize').value) / 100;
+    const opacity = parseInt(document.getElementById('logoOpacity').value) / 100;
+    const lw = cw * sizePct;
+    const lh = lw * (logoImg.height / logoImg.width);
+
+    ctx.globalAlpha = opacity;
+    if (posMode === 'tile') {
+      const gap = parseInt(document.getElementById('tileGap').value) * scale;
+      for (let y = 0; y < ch; y += gap) {
+        for (let x = 0; x < cw; x += gap) {
+          ctx.drawImage(logoImg, x - lw / 2, y - lh / 2, lw, lh);
+        }
+      }
+    } else {
+      const { x, y } = getPosition(cw, ch, lw, lh, pos);
+      ctx.drawImage(logoImg, x - lw / 2, y - lh / 2, lw, lh);
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+/* ===== 预览渲染 ===== */
+function render() {
+  if (!img) return;
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  // 预览缩放（max 800px）
+  const scale = Math.min(1, 800 / Math.max(img.width, img.height));
+  canvas.width = img.width * scale;
+  canvas.height = img.height * scale;
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  drawWatermark(ctx, canvas.width, canvas.height, scale);
+}
+
+/* ===== 导出（原图分辨率重新绘制）===== */
+function doDownload() {
+  if (!img || !files.length) return;
+  document.getElementById('downloadBtn').disabled = true;
+  document.getElementById('downloadBtn').textContent = '⏳ 处理中…';
+
+  let idx = 0;
+  function processNext() {
+    if (idx >= files.length) {
+      document.getElementById('downloadBtn').disabled = false;
+      document.getElementById('downloadBtn').textContent = '💾 导出水印图片';
+      document.getElementById('statusInfo').textContent = `✅ ${files.length} 张图片处理完成`;
+      return;
+    }
+    const file = files[idx];
+    const url = URL.createObjectURL(file);
+    const tmpImg = new Image();
+    tmpImg.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = tmpImg.width;
+      canvas.height = tmpImg.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(tmpImg, 0, 0);
+      // 原图分辨率水印，scale=1
+      drawWatermark(ctx, canvas.width, canvas.height, 1);
+      canvas.toBlob(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = file.name.replace(/\.[^.]+$/, '') + '_watermarked.png';
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(url);
+        canvas.width = 0; canvas.height = 0;
+        const statusEl = document.getElementById('batchS' + idx);
+        if (statusEl) statusEl.textContent = '✅';
+        idx++;
+        setTimeout(processNext, 300);
+      }, 'image/png');
+    };
+    tmpImg.src = url;
+  }
+  processNext();
+}
+
+document.getElementById('downloadBtn').addEventListener('click', doDownload);
+</script>
+<noscript><p>图片加水印 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

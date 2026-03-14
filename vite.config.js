@@ -47,6 +47,7 @@ export default defineConfig({
         'prepayment': resolve(__dirname, 'pages/prepayment/index.html'),
         'image-resize': resolve(__dirname, 'pages/image-resize/index.html'),
         'tax': resolve(__dirname, 'pages/tax/index.html'),
+        'watermark': resolve(__dirname, 'pages/watermark/index.html'),
       },
     },
   },
