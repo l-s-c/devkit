@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片转 PDF | Image to PDF — DevKit</title>
+<meta name="description" content="在线图片转PDF，多张图片合并为一个PDF，排序调整，A4/Letter/A3/自适应尺寸，边距可调，纯前端处理。Image to PDF online.">
+<meta name="keywords" content="image to pdf, jpg to pdf, 图片转pdf, 多图合并pdf, DevKit">
+<meta property="og:title" content="图片转 PDF | Image to PDF — DevKit">
+<meta property="og:description" content="多图合并PDF，纯前端处理不上传">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/img-to-pdf/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图片转 PDF — DevKit">
+<meta name="twitter:description" content="多图合并PDF在线工具">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"图片转 PDF","description":"在线图片转PDF，多图合并，纯前端处理","url":"https://l-s-c.github.io/devkit/pages/img-to-pdf/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/img-to-pdf/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Upload */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 32px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* Image list */
+.img-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.img-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px;
+  border-radius: 6px; border: 1px solid var(--border-glass); background: var(--bg-glass);
+}
+.img-thumb { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; }
+.img-info { flex: 1; overflow: hidden; }
+.img-name { font-size: 11px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.img-dim { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); }
+.img-page { font-family: var(--font-code); font-size: 10px; color: var(--brand-500); font-weight: 700; }
+.img-btn {
+  width: 24px; height: 24px; border: none; background: none; cursor: pointer;
+  font-size: 12px; color: var(--text-caption); border-radius: 4px; transition: all 150ms;
+}
+.img-btn:hover { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.img-del:hover { background: rgba(239,68,68,0.1); color: #EF4444; }
+
+/* Stats */
+.stats { display: flex; gap: 6px; margin-top: 10px; }
+.stat-chip {
+  padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.06);
+  font-family: var(--font-code); font-size: 10px; font-weight: 700; color: var(--brand-500);
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Options grid */
+.opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+.opt-chip {
+  padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; transition: all 150ms; text-align: center;
+}
+.opt-chip:hover { border-color: var(--brand-500); }
+.opt-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.opt-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.opt-dim { font-size: 10px; color: var(--text-caption); font-family: var(--font-code); margin-top: 2px; }
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 50px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 44px; text-align: right; }
+
+/* Fit tabs */
+.fit-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.fit-tab {
+  flex: 1; padding: 8px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.fit-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.fit-tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Preview */
+.preview-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0; }
+.preview-page {
+  flex-shrink: 0; border: 1px solid var(--border-glass); border-radius: 6px;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  position: relative; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.preview-page img { max-width: 90%; max-height: 90%; object-fit: contain; }
+.page-num {
+  position: absolute; bottom: 4px; right: 6px; font-family: var(--font-code);
+  font-size: 9px; color: var(--text-caption);
+}
+
+/* Action */
+.action-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">图片转 PDF — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">图片转 PDF</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左 -->
+    <div>
+      <div class="panel">
+        <div class="upload-area">
+          <input type="file" accept="image/*" multiple id="fileInput">
+          <div style="font-size:36px;margin-bottom:6px">📄</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-secondary)">拖拽或点击上传图片</div>
+          <div style="font-size:11px;color:var(--text-caption);margin-top:4px">支持 JPG / PNG / WebP，多选</div>
+        </div>
+        <div class="stats" id="statsWrap" style="display:none">
+          <span class="stat-chip" id="statCount">0 张</span>
+          <span class="stat-chip" id="statPages">0 页 PDF</span>
+        </div>
+        <div class="img-list" id="imgList"></div>
+      </div>
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="section-title">👁️ PDF 页面预览</div>
+        <div class="preview-scroll" id="previewScroll"></div>
+      </div>
+    </div>
+
+    <!-- 右 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📐 页面方向</div>
+        <div class="tabs" id="orientTabs">
+          <button class="tab active" data-orient="portrait">📄 纵向</button>
+          <button class="tab" data-orient="landscape">📃 横向</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📏 页面尺寸</div>
+        <div class="opt-grid" id="sizeGrid">
+          <div class="opt-chip active" data-size="a4"><div class="opt-name">📋 A4</div><div class="opt-dim">210 × 297mm</div></div>
+          <div class="opt-chip" data-size="letter"><div class="opt-name">📋 Letter</div><div class="opt-dim">216 × 279mm</div></div>
+          <div class="opt-chip" data-size="a3"><div class="opt-name">📋 A3</div><div class="opt-dim">297 × 420mm</div></div>
+          <div class="opt-chip" data-size="fit"><div class="opt-name">🔲 自适应</div><div class="opt-dim">按图片尺寸</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">⚙️ 参数</div>
+        <div class="slider-row">
+          <span class="slider-label">边距</span>
+          <input type="range" class="slider-input" id="margin" min="0" max="30" value="10">
+          <span class="slider-val" id="marginVal">10mm</span>
+        </div>
+        <div style="margin-top:10px">
+          <div style="font-size:11px;font-weight:700;color:var(--text-caption);margin-bottom:6px">图片填充方式</div>
+          <div class="fit-tabs" id="fitTabs">
+            <button class="fit-tab active" data-fit="contain">等比缩放</button>
+            <button class="fit-tab" data-fit="cover">填充裁切</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <button class="action-btn" id="genBtn" disabled>📥 生成 PDF 并下载</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传图片生成 PDF</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理 · jsPDF</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+let images = [], orientation = 'portrait', pageSize = 'a4', fitMode = 'contain';
+const SIZES = { a4: [210, 297], letter: [216, 279], a3: [297, 420] };
+
+/* ===== 图片列表渲染 ===== */
+function renderList() {
+  const list = document.getElementById('imgList');
+  list.innerHTML = '';
+  images.forEach((im, i) => {
+    const item = document.createElement('div');
+    item.className = 'img-item';
+    item.innerHTML = `
+      <img class="img-thumb" src="${im.url}">
+      <div class="img-info"><div class="img-name">${im.name}</div><div class="img-dim">${im.w}×${im.h}</div></div>
+      <span class="img-page">P${i + 1}</span>
+    `;
+    const upBtn = document.createElement('button');
+    upBtn.className = 'img-btn'; upBtn.textContent = '↑';
+    upBtn.addEventListener('click', () => { if (i > 0) { [images[i], images[i-1]] = [images[i-1], images[i]]; renderList(); renderPreview(); } });
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'img-btn'; downBtn.textContent = '↓';
+    downBtn.addEventListener('click', () => { if (i < images.length - 1) { [images[i], images[i+1]] = [images[i+1], images[i]]; renderList(); renderPreview(); } });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'img-btn img-del'; delBtn.textContent = '✕';
+    delBtn.addEventListener('click', () => { URL.revokeObjectURL(images[i].url); images.splice(i, 1); renderList(); renderPreview(); });
+
+    item.appendChild(upBtn);
+    item.appendChild(downBtn);
+    item.appendChild(delBtn);
+    list.appendChild(item);
+  });
+
+  document.getElementById('statsWrap').style.display = images.length ? 'flex' : 'none';
+  document.getElementById('statCount').textContent = images.length + ' 张';
+  document.getElementById('statPages').textContent = images.length + ' 页 PDF';
+  document.getElementById('genBtn').disabled = images.length === 0;
+}
+
+/* ===== 页面预览 ===== */
+function renderPreview() {
+  const panel = document.getElementById('previewPanel');
+  const scroll = document.getElementById('previewScroll');
+  if (!images.length) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const isLand = orientation === 'landscape';
+  const pw = isLand ? 170 : 120, ph = isLand ? 120 : 170;
+  scroll.innerHTML = images.map((im, i) =>
+    `<div class="preview-page" style="width:${pw}px;height:${ph}px">
+      <img src="${im.url}">
+      <span class="page-num">${i + 1}</span>
+    </div>`
+  ).join('');
+  document.getElementById('statusInfo').textContent = `${images.length} 张 · ${pageSize.toUpperCase()} · ${orientation === 'portrait' ? '纵向' : '横向'}`;
+}
+
+/* ===== 生成 PDF ===== */
+function generatePDF() {
+  if (!images.length) return;
+  const { jsPDF } = window.jspdf;
+  const margin = parseInt(document.getElementById('margin').value);
+
+  let doc = null;
+  images.forEach((im, i) => {
+    let pw, ph;
+    if (pageSize === 'fit') {
+      pw = im.w * 25.4 / 96 + margin * 2;
+      ph = im.h * 25.4 / 96 + margin * 2;
+    } else {
+      [pw, ph] = SIZES[pageSize];
+    }
+    if (orientation === 'landscape') [pw, ph] = [ph, pw];
+
+    const fmt = pageSize === 'fit' ? [pw, ph] : pageSize;
+    if (i === 0) {
+      doc = new jsPDF({ orientation, unit: 'mm', format: fmt });
+    } else {
+      doc.addPage(fmt, orientation);
+    }
+
+    const areaW = pw - margin * 2, areaH = ph - margin * 2;
+    const imgRatio = im.w / im.h;
+    let dw, dh;
+    if (fitMode === 'contain') {
+      if (imgRatio > areaW / areaH) { dw = areaW; dh = areaW / imgRatio; }
+      else { dh = areaH; dw = areaH * imgRatio; }
+    } else {
+      if (imgRatio > areaW / areaH) { dh = areaH; dw = areaH * imgRatio; }
+      else { dw = areaW; dh = areaW / imgRatio; }
+    }
+    const x = margin + (areaW - dw) / 2;
+    const y = margin + (areaH - dh) / 2;
+    doc.addImage(im.url, 'JPEG', x, y, dw, dh);
+  });
+  doc.save('images.pdf');
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('fileInput').addEventListener('change', e => {
+  const files = [...e.target.files];
+  let loaded = 0;
+  files.forEach(f => {
+    const url = URL.createObjectURL(f);
+    const img = new Image();
+    img.onload = () => {
+      images.push({ img, name: f.name, w: img.width, h: img.height, url });
+      loaded++;
+      if (loaded === files.length) { renderList(); renderPreview(); }
+    };
+    img.src = url;
+  });
+});
+
+document.getElementById('orientTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  orientation = tab.dataset.orient;
+  document.querySelectorAll('#orientTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.orient === orientation));
+  renderPreview();
+});
+
+document.getElementById('sizeGrid').addEventListener('click', e => {
+  const chip = e.target.closest('.opt-chip');
+  if (!chip) return;
+  pageSize = chip.dataset.size;
+  document.querySelectorAll('#sizeGrid .opt-chip').forEach(c => c.classList.toggle('active', c.dataset.size === pageSize));
+  renderPreview();
+});
+
+document.getElementById('margin').addEventListener('input', function() {
+  document.getElementById('marginVal').textContent = this.value + 'mm';
+  renderPreview();
+});
+
+document.getElementById('fitTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.fit-tab');
+  if (!tab) return;
+  fitMode = tab.dataset.fit;
+  document.querySelectorAll('.fit-tab').forEach(t => t.classList.toggle('active', t.dataset.fit === fitMode));
+});
+
+document.getElementById('genBtn').addEventListener('click', generatePDF);
+</script>
+<noscript><p>图片转 PDF — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
