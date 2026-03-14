@@ -124,6 +124,21 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 .history-len { font-size: 11px; color: var(--text-caption); flex-shrink: 0; margin-left: 8px; }
 .history-empty { font-size: 13px; color: var(--text-caption); text-align: center; padding: 16px; }
 
+/* 批量模式 */
+.batch-list { margin-bottom: 16px; }
+.batch-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.batch-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.batch-items { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.batch-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  border-radius: 6px; background: var(--bg-glass); border: 0.5px solid var(--border-glass);
+  font-family: var(--font-code); font-size: 13px; color: var(--text-primary);
+  cursor: pointer; transition: all 150ms; word-break: break-all;
+}
+.batch-item:hover { background: rgba(99,102,241,0.06); }
+.batch-item .batch-idx { color: var(--text-caption); font-size: 11px; min-width: 24px; flex-shrink: 0; }
+.batch-item .batch-pwd { flex: 1; }
+
 @media (max-width: 480px) {
   .main { padding: 16px 16px 60px; }
   .pwd-output { font-size: 16px; padding: 16px 48px 16px 16px; }
@@ -145,13 +160,21 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 </div>
 
 <div class="main">
-  <!-- 密码显示 -->
-  <div class="pwd-display">
+  <!-- 密码显示（单个模式） -->
+  <div class="pwd-display" id="singleMode">
     <div class="pwd-output" id="pwdOutput"></div>
     <div class="pwd-actions">
       <button class="pwd-action-btn" id="copyBtn" title="复制密码">📋</button>
       <button class="pwd-action-btn" id="refreshBtn" title="重新生成">🔄</button>
     </div>
+  </div>
+  <!-- 批量模式列表 -->
+  <div class="batch-list" id="batchMode" style="display:none">
+    <div class="batch-header">
+      <span class="batch-title" id="batchTitle"></span>
+      <button class="pwd-action-btn" id="batchCopyAll" title="复制全部">📋</button>
+    </div>
+    <div class="batch-items" id="batchItems"></div>
   </div>
 
   <!-- 强度指示 -->
@@ -308,16 +331,28 @@ function generate() {
     passwords.push(generatePassword(length, charset));
   }
 
-  // 显示第一个密码
-  document.getElementById('pwdOutput').textContent = passwords[0];
   evaluateStrength(length, charset.length);
 
-  // 更新历史
+  const singleMode = document.getElementById('singleMode');
+  const batchMode = document.getElementById('batchMode');
+
   if (batch === 1) {
+    // 单个模式
+    singleMode.style.display = '';
+    batchMode.style.display = 'none';
+    document.getElementById('pwdOutput').textContent = passwords[0];
     history.unshift({ pwd: passwords[0], len: length });
     if (history.length > MAX_HISTORY) history.pop();
   } else {
-    // 批量模式：替换历史
+    // 批量模式：显示所有密码
+    singleMode.style.display = 'none';
+    batchMode.style.display = '';
+    document.getElementById('batchTitle').textContent = `已生成 ${batch} 个密码`;
+    const items = document.getElementById('batchItems');
+    items.innerHTML = passwords.map((p, i) => {
+      const escaped = p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return `<div class="batch-item" data-pwd="${escaped}"><span class="batch-idx">${i + 1}</span><span class="batch-pwd">${escaped}</span></div>`;
+    }).join('');
     history = passwords.map(p => ({ pwd: p, len: length }));
   }
   renderHistory();
@@ -388,6 +423,16 @@ document.querySelectorAll('#charOptions .option').forEach(opt => {
     }
     generate();
   });
+});
+
+// 批量列表点击复制单个
+document.getElementById('batchItems').addEventListener('click', (e) => {
+  const item = e.target.closest('.batch-item');
+  if (item) navigator.clipboard.writeText(item.dataset.pwd);
+});
+// 批量全部复制
+document.getElementById('batchCopyAll').addEventListener('click', () => {
+  if (window._passwords) navigator.clipboard.writeText(window._passwords.join('\n'));
 });
 
 // 历史记录点击复制
