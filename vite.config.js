@@ -28,6 +28,7 @@ export default defineConfig({
         password: resolve(__dirname, 'pages/password/index.html'),
         'number-base': resolve(__dirname, 'pages/number-base/index.html'),
         'unit-converter': resolve(__dirname, 'pages/unit-converter/index.html'),
+        yaml: resolve(__dirname, 'pages/yaml/index.html'),
       },
     },
   },

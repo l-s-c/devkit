@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML 格式化 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线 YAML 格式化、压缩、校验工具，支持 JSON ↔ YAML 互转。纯前端，数据不上传。">
+<meta property="og:title" content="YAML 格式化 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="在线 YAML 格式化、压缩、校验，支持 JSON ↔ YAML 互转">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/yaml/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="YAML 格式化 — DevKit">
+<meta name="twitter:description" content="在线 YAML 格式化、压缩、校验，JSON ↔ YAML 互转">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"YAML 格式化","description":"在线 YAML 格式化、压缩、校验工具，支持 JSON ↔ YAML 互转","url":"https://l-s-c.github.io/devkit/pages/yaml/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/yaml/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* 工具栏 */
+.tool-toolbar-yaml {
+  display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+  border-bottom: 0.5px solid var(--border-glass); flex-wrap: wrap;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+}
+.tool-btn-yaml {
+  padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; gap: 5px;
+}
+.tool-btn-yaml:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tool-btn-yaml.primary { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+.tool-btn-yaml.primary:hover { opacity: 0.9; }
+.tool-sep { width: 1px; height: 20px; background: var(--border-glass); margin: 0 4px; }
+.tool-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.indent-select {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; appearance: none;
+}
+
+/* 编辑器布局 */
+.editor-wrap { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+.editor-pane { display: flex; flex-direction: column; min-height: 0; }
+.editor-pane + .editor-pane { border-left: 0.5px solid var(--border-glass); }
+.pane-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px; border-bottom: 0.5px solid var(--border-glass);
+}
+.pane-label { font-size: 12px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+.pane-badge {
+  padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.pane-badge.yaml { background: rgba(239,68,68,0.1); color: #EF4444; }
+.pane-badge.json { background: rgba(59,130,246,0.1); color: #3B82F6; }
+.pane-action {
+  padding: 4px 10px; border-radius: 5px; border: none;
+  background: transparent; font-size: 11px; font-weight: 600;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.pane-action:hover { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.yaml-editor {
+  flex: 1; width: 100%; border: none; resize: none; padding: 16px;
+  font-family: var(--font-code); font-size: 13px; line-height: 1.7;
+  color: var(--text-primary); background: transparent; tab-size: 2;
+}
+.yaml-editor:focus { outline: none; }
+.yaml-editor::placeholder { color: var(--text-caption); }
+
+/* 错误横幅 */
+.error-banner {
+  display: none; padding: 10px 16px;
+  background: rgba(239,68,68,0.08); border-top: 1px solid rgba(239,68,68,0.15);
+  font-size: 12px; color: #EF4444; font-family: var(--font-code); line-height: 1.5;
+}
+.error-banner.show { display: block; }
+.error-line { font-weight: 700; }
+
+/* 状态栏 */
+.yaml-statusbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 16px; border-top: 0.5px solid var(--border-glass);
+  font-size: 11px; color: var(--text-caption);
+}
+.status-left { display: flex; align-items: center; gap: 12px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.ok { background: #10B981; }
+.status-dot.err { background: #EF4444; }
+.status-dot.idle { background: var(--text-caption); }
+.status-msg { font-weight: 500; }
+.status-right { display: flex; gap: 12px; font-family: var(--font-code); }
+
+@media (max-width: 768px) {
+  .editor-wrap { grid-template-columns: 1fr; }
+  .editor-pane + .editor-pane { border-left: none; border-top: 0.5px solid var(--border-glass); }
+  .yaml-editor { min-height: 200px; }
+  .tool-toolbar-yaml { gap: 4px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">YAML 格式化 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">YAML 格式化</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<!-- 工具栏 -->
+<div class="tool-toolbar-yaml">
+  <button class="tool-btn-yaml primary" id="btnFormat">✨ 格式化</button>
+  <button class="tool-btn-yaml" id="btnMinify">📦 压缩</button>
+  <button class="tool-btn-yaml" id="btnValidate">✅ 校验</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn-yaml" id="btnToJSON">YAML → JSON</button>
+  <button class="tool-btn-yaml" id="btnToYAML">JSON → YAML</button>
+  <div class="tool-right">
+    <select class="indent-select" id="indentSize" title="缩进">
+      <option value="2">2 空格</option>
+      <option value="4">4 空格</option>
+      <option value="8">8 空格</option>
+    </select>
+    <button class="tool-btn-yaml" id="btnClear">🗑️ 清空</button>
+  </div>
+</div>
+
+<!-- 编辑器 -->
+<div class="editor-wrap">
+  <div class="editor-pane">
+    <div class="pane-header">
+      <span class="pane-label"><span class="pane-badge yaml">YAML</span> 输入</span>
+      <button class="pane-action" id="btnSample">📋 示例</button>
+    </div>
+    <textarea class="yaml-editor" id="inputEditor" placeholder="在此粘贴 YAML 或 JSON..." spellcheck="false"></textarea>
+  </div>
+  <div class="editor-pane">
+    <div class="pane-header">
+      <span class="pane-label"><span class="pane-badge yaml" id="outputBadge">YAML</span> 输出</span>
+      <button class="pane-action" id="btnCopy">📋 复制</button>
+    </div>
+    <textarea class="yaml-editor" id="outputEditor" readonly placeholder="格式化结果将显示在这里..." spellcheck="false"></textarea>
+  </div>
+</div>
+
+<!-- 错误横幅 -->
+<div class="error-banner" id="errorBanner"></div>
+
+<!-- 状态栏 -->
+<div class="yaml-statusbar">
+  <div class="status-left">
+    <span class="status-dot idle" id="statusDot"></span>
+    <span class="status-msg" id="statusMsg">就绪</span>
+  </div>
+  <div class="status-right">
+    <span id="lineCount">0 行</span>
+    <span id="charCount">0 字符</span>
+  </div>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* ===== 文案常量（预留 i18n） ===== */
+const LABELS = {
+  ready: '就绪',
+  empty: '请输入 YAML 或 JSON',
+  formatOk: '格式化成功',
+  minifyOk: '压缩完成',
+  validateOk: '校验通过 ✅',
+  toJsonOk: 'YAML → JSON 转换完成',
+  toYamlOk: 'JSON → YAML 转换完成',
+  parseError: '解析失败',
+  copied: '✅ 已复制',
+  copy: '📋 复制',
+};
+
+/* ===== YAML 示例 ===== */
+const SAMPLE = `# 示例 YAML 配置
+server:
+  host: localhost
+  port: 8080
+  debug: true
+  cors:
+    origins:
+      - "https://example.com"
+      - "https://app.example.com"
+    methods:
+      - GET
+      - POST
+      - PUT
+
+database:
+  driver: postgres
+  connection:
+    host: db.example.com
+    port: 5432
+    name: myapp
+    pool:
+      min: 5
+      max: 20
+
+logging:
+  level: info
+  format: json
+  output:
+    - stdout
+    - file: /var/log/app.log`;
+
+/* ===== DOM ===== */
+const inputEl = document.getElementById('inputEditor');
+const outputEl = document.getElementById('outputEditor');
+const errorBanner = document.getElementById('errorBanner');
+const statusDot = document.getElementById('statusDot');
+const statusMsg = document.getElementById('statusMsg');
+const outputBadge = document.getElementById('outputBadge');
+
+/* ===== 工具函数 ===== */
+function getIndent() {
+  return parseInt(document.getElementById('indentSize').value) || 2;
+}
+
+function setStatus(type, msg) {
+  statusDot.className = 'status-dot ' + type;
+  statusMsg.textContent = msg;
+}
+
+function showError(msg) {
+  errorBanner.innerHTML = msg;
+  errorBanner.classList.add('show');
+}
+
+function hideError() {
+  errorBanner.classList.remove('show');
+}
+
+function setBadge(type) {
+  outputBadge.textContent = type;
+  outputBadge.className = 'pane-badge ' + (type === 'JSON' ? 'json' : 'yaml');
+}
+
+function updateStats() {
+  const t = inputEl.value;
+  document.getElementById('lineCount').textContent = (t ? t.split('\n').length : 0) + ' 行';
+  document.getElementById('charCount').textContent = t.length + ' 字符';
+}
+
+/* ===== 安全解析 YAML（JSON_SCHEMA） ===== */
+function safeLoadYAML(str) {
+  return jsyaml.load(str, { schema: jsyaml.JSON_SCHEMA });
+}
+
+function formatYAMLError(e) {
+  if (e.mark && e.mark.line !== undefined) {
+    return `<span class="error-line">第 ${e.mark.line + 1} 行</span>：${e.reason || e.message}`;
+  }
+  return e.message;
+}
+
+/* ===== 格式化 ===== */
+function doFormat() {
+  hideError();
+  const input = inputEl.value.trim();
+  if (!input) { setStatus('idle', LABELS.empty); return; }
+
+  try {
+    const obj = safeLoadYAML(input);
+    outputEl.value = jsyaml.dump(obj, { indent: getIndent(), lineWidth: -1, noRefs: true });
+    setBadge('YAML');
+    setStatus('ok', LABELS.formatOk);
+  } catch (e) {
+    showError(formatYAMLError(e));
+    setStatus('err', LABELS.parseError);
+  }
+}
+
+/* ===== 压缩 ===== */
+function doMinify() {
+  hideError();
+  const input = inputEl.value.trim();
+  if (!input) { setStatus('idle', LABELS.empty); return; }
+
+  try {
+    const obj = safeLoadYAML(input);
+    outputEl.value = jsyaml.dump(obj, { flowLevel: 0, lineWidth: -1, noRefs: true });
+    setBadge('YAML');
+    setStatus('ok', LABELS.minifyOk);
+  } catch (e) {
+    showError(formatYAMLError(e));
+    setStatus('err', LABELS.parseError);
+  }
+}
+
+/* ===== 校验 ===== */
+function doValidate() {
+  hideError();
+  const input = inputEl.value.trim();
+  if (!input) { setStatus('idle', LABELS.empty); return; }
+
+  try {
+    safeLoadYAML(input);
+    outputEl.value = '✅ YAML 语法校验通过';
+    setBadge('YAML');
+    setStatus('ok', LABELS.validateOk);
+  } catch (e) {
+    showError(formatYAMLError(e));
+    outputEl.value = '';
+    setStatus('err', LABELS.parseError);
+  }
+}
+
+/* ===== YAML → JSON ===== */
+function doToJSON() {
+  hideError();
+  const input = inputEl.value.trim();
+  if (!input) { setStatus('idle', LABELS.empty); return; }
+
+  try {
+    const obj = safeLoadYAML(input);
+    outputEl.value = JSON.stringify(obj, null, getIndent());
+    setBadge('JSON');
+    setStatus('ok', LABELS.toJsonOk);
+  } catch (e) {
+    showError(formatYAMLError(e));
+    setStatus('err', LABELS.parseError);
+  }
+}
+
+/* ===== JSON → YAML ===== */
+function doToYAML() {
+  hideError();
+  const input = inputEl.value.trim();
+  if (!input) { setStatus('idle', LABELS.empty); return; }
+
+  try {
+    const obj = JSON.parse(input);
+    outputEl.value = jsyaml.dump(obj, { indent: getIndent(), lineWidth: -1, noRefs: true });
+    setBadge('YAML');
+    setStatus('ok', LABELS.toYamlOk);
+  } catch (e) {
+    // 可能不是 JSON，尝试 YAML
+    try {
+      const obj = safeLoadYAML(input);
+      outputEl.value = jsyaml.dump(obj, { indent: getIndent(), lineWidth: -1, noRefs: true });
+      setBadge('YAML');
+      setStatus('ok', LABELS.toYamlOk);
+    } catch (e2) {
+      showError(`输入不是有效的 JSON 或 YAML：${e.message}`);
+      setStatus('err', LABELS.parseError);
+    }
+  }
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('btnFormat').addEventListener('click', doFormat);
+document.getElementById('btnMinify').addEventListener('click', doMinify);
+document.getElementById('btnValidate').addEventListener('click', doValidate);
+document.getElementById('btnToJSON').addEventListener('click', doToJSON);
+document.getElementById('btnToYAML').addEventListener('click', doToYAML);
+
+document.getElementById('btnSample').addEventListener('click', () => {
+  inputEl.value = SAMPLE;
+  updateStats();
+  doFormat();
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  inputEl.value = '';
+  outputEl.value = '';
+  hideError();
+  setStatus('idle', LABELS.ready);
+  updateStats();
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  if (!outputEl.value) return;
+  navigator.clipboard.writeText(outputEl.value);
+  const btn = document.getElementById('btnCopy');
+  btn.textContent = LABELS.copied;
+  setTimeout(() => { btn.textContent = LABELS.copy; }, 1200);
+});
+
+inputEl.addEventListener('input', updateStats);
+updateStats();
+</script>
+<noscript><p>YAML 格式化 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
