@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文字转语音 | Text to Speech Online — DevKit</title>
+<meta name="description" content="在线文字转语音 TTS，浏览器原生朗读，语速/音调可调，中英文语音切换。Text to Speech online.">
+<meta name="keywords" content="text to speech, 文字转语音, TTS, 在线朗读, DevKit">
+<meta property="og:title" content="文字转语音 | Text to Speech — DevKit">
+<meta property="og:description" content="浏览器原生 TTS，语速/音调可调，中英文语音">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/tts/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文字转语音 — DevKit">
+<meta name="twitter:description" content="浏览器原生 TTS 朗读">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"文字转语音","description":"在线文字转语音 TTS，浏览器原生朗读，语速音调可调","url":"https://l-s-c.github.io/devkit/pages/tts/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/tts/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Textarea */
+.text-area {
+  width: 100%; height: 200px; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 14px; line-height: 1.8; color: var(--text-primary);
+  outline: none; resize: vertical; transition: border-color 200ms;
+  font-family: var(--font-ui);
+}
+.text-area:focus { border-color: var(--brand-500); }
+.text-area::placeholder { color: var(--text-caption); }
+.char-count { font-family: var(--font-code); font-size: 11px; color: var(--text-caption); text-align: right; margin-top: 6px; }
+
+/* Example pills */
+.example-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.example-pill {
+  padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.example-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Voice select */
+.voice-select {
+  width: 100%; padding: 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; color: var(--text-primary);
+  outline: none; cursor: pointer; transition: border-color 150ms;
+}
+.voice-select:focus { border-color: var(--brand-500); }
+.voice-hint { font-size: 10px; color: var(--text-caption); margin-top: 6px; }
+
+/* Lang filter */
+.lang-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.lang-pill {
+  padding: 5px 12px; border-radius: 16px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.lang-pill:hover { border-color: var(--brand-500); }
+.lang-pill.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Sliders */
+.slider-group { margin-bottom: 14px; }
+.slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.slider-name { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+.slider-val { font-family: var(--font-code); font-size: 12px; font-weight: 700; color: var(--brand-500); }
+.slider {
+  width: 100%; -webkit-appearance: none; height: 6px; border-radius: 3px;
+  background: var(--border-glass); outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--brand-500); cursor: pointer; box-shadow: 0 2px 6px rgba(99,102,241,0.3);
+}
+
+/* Controls */
+.controls { display: flex; gap: 8px; margin-top: 8px; }
+.ctrl-btn {
+  flex: 1; padding: 14px; border-radius: 10px; border: none;
+  font-size: 14px; font-weight: 800; cursor: pointer; transition: all 200ms;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-play { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+.btn-play:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-play:disabled { opacity: 0.5; transform: none; box-shadow: none; cursor: not-allowed; }
+.btn-pause { border: 1.5px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary); }
+.btn-pause:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.btn-stop { border: 1.5px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary); }
+.btn-stop:hover { border-color: #EF4444; color: #EF4444; }
+
+/* Status */
+.status-bar { padding: 12px 16px; border-radius: 6px; display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+.status-idle { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.status-playing { background: rgba(16,185,129,0.08); color: #10B981; }
+.status-paused { background: rgba(245,158,11,0.08); color: #F59E0B; }
+.status-icon { font-size: 16px; }
+.status-text { font-size: 12px; font-weight: 700; }
+
+/* Compat notice */
+.compat {
+  padding: 10px 14px; border-radius: 6px;
+  background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.15);
+  font-size: 11px; color: var(--text-secondary); margin-top: 14px; line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .controls { flex-wrap: wrap; }
+  .ctrl-btn { min-width: calc(50% - 4px); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">文字转语音 TTS — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">文字转语音</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- Left: Input -->
+    <div>
+      <div class="panel">
+        <div class="section-title">✏️ 输入文字</div>
+        <div class="example-row" id="exampleRow">
+          <span class="example-pill" data-ex="zh">🇨🇳 中文示例</span>
+          <span class="example-pill" data-ex="en">🇺🇸 英文示例</span>
+          <span class="example-pill" data-ex="mix">🌐 中英混合</span>
+        </div>
+        <textarea class="text-area" id="textInput" placeholder="在此输入要朗读的文字…">你好，欢迎使用 DevKit 文字转语音工具。输入任意文字，点击播放即可朗读。</textarea>
+        <div class="char-count"><span id="charCount">0</span> 字</div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">🎤 语音设置</div>
+        <div class="lang-row" id="langRow">
+          <span class="lang-pill active" data-lang="all">全部</span>
+          <span class="lang-pill" data-lang="zh">🇨🇳 中文</span>
+          <span class="lang-pill" data-lang="en">🇺🇸 英文</span>
+          <span class="lang-pill" data-lang="ja">🇯🇵 日文</span>
+        </div>
+        <select class="voice-select" id="voiceSelect"><option>加载语音列表…</option></select>
+        <div class="voice-hint">⚠️ 可用语音取决于您的浏览器和操作系统</div>
+      </div>
+    </div>
+
+    <!-- Right: Controls -->
+    <div>
+      <div class="panel">
+        <div class="section-title">⚙️ 参数调节</div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">🏃 语速</span><span class="slider-val" id="rateVal">1.0x</span></div>
+          <input type="range" class="slider" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">🎵 音调</span><span class="slider-val" id="pitchVal">1.0</span></div>
+          <input type="range" class="slider" id="pitchSlider" min="0.5" max="2" step="0.1" value="1">
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">🎮 播放控制</div>
+        <div class="controls">
+          <button class="ctrl-btn btn-play" id="playBtn">▶️ 播放</button>
+          <button class="ctrl-btn btn-pause" id="pauseBtn">⏸️ 暂停</button>
+          <button class="ctrl-btn btn-stop" id="stopBtn">⏹️ 停止</button>
+        </div>
+        <div class="status-bar status-idle" id="statusBar">
+          <span class="status-icon" id="statusIcon">💤</span>
+          <span class="status-text" id="statusText">就绪 — 输入文字后点击播放</span>
+        </div>
+      </div>
+
+      <div class="compat">
+        💡 <strong>兼容性提示</strong>：Web Speech API 为浏览器原生功能。Chrome/Edge 语音较丰富，Safari 内置高质量语音，Firefox 支持有限。语音列表因设备而异。
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">文字转语音 · Web Speech API</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const EXAMPLES = {
+  zh: '你好，欢迎使用 DevKit 文字转语音工具。这是一个纯浏览器端的 TTS 工具，无需登录，数据不上传。',
+  en: 'Hello! Welcome to DevKit Text-to-Speech tool. This is a browser-based TTS tool with no login required and no data uploaded.',
+  mix: 'Hello 你好！DevKit 是一个开发者工具箱，提供 50+ 纯前端工具。Try it now — 试试看！'
+};
+
+let voices = [], currentLang = 'all', isPaused = false;
+
+function updateCount() {
+  document.getElementById('charCount').textContent = document.getElementById('textInput').value.length;
+}
+
+function loadVoices() {
+  voices = speechSynthesis.getVoices();
+  renderVoices();
+}
+
+function renderVoices() {
+  const sel = document.getElementById('voiceSelect');
+  let filtered = voices;
+  if (currentLang !== 'all') filtered = voices.filter(v => v.lang.toLowerCase().startsWith(currentLang));
+  sel.innerHTML = filtered.length
+    ? filtered.map(v => {
+        const idx = voices.indexOf(v);
+        return `<option value="${idx}">${v.name} (${v.lang})${v.default ? ' ⭐' : ''}</option>`;
+      }).join('')
+    : '<option>无可用语音</option>';
+}
+
+function setStatus(type, icon, text) {
+  const bar = document.getElementById('statusBar');
+  bar.className = 'status-bar status-' + type;
+  document.getElementById('statusIcon').textContent = icon;
+  document.getElementById('statusText').textContent = text;
+}
+
+function playTTS() {
+  const text = document.getElementById('textInput').value.trim();
+  if (!text) { setStatus('idle', '⚠️', '请先输入文字'); return; }
+
+  if (isPaused) { speechSynthesis.resume(); isPaused = false; setStatus('playing', '🔊', '正在朗读…'); return; }
+
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  const sel = document.getElementById('voiceSelect');
+  if (sel.value && voices[sel.value]) utter.voice = voices[sel.value];
+  utter.rate = parseFloat(document.getElementById('rateSlider').value);
+  utter.pitch = parseFloat(document.getElementById('pitchSlider').value);
+
+  utter.onstart = () => { setStatus('playing', '🔊', '正在朗读…'); document.getElementById('statusInfo').textContent = '正在朗读…'; };
+  utter.onend = () => { setStatus('idle', '✅', '朗读完成'); document.getElementById('statusInfo').textContent = '朗读完成'; };
+  utter.onerror = () => setStatus('idle', '❌', '朗读出错');
+  utter.onpause = () => setStatus('paused', '⏸️', '已暂停');
+  utter.onresume = () => setStatus('playing', '🔊', '正在朗读…');
+
+  speechSynthesis.speak(utter);
+}
+
+function pauseTTS() {
+  if (speechSynthesis.speaking && !speechSynthesis.paused) {
+    speechSynthesis.pause(); isPaused = true;
+    setStatus('paused', '⏸️', '已暂停 — 再次点击播放继续');
+  }
+}
+
+function stopTTS() {
+  speechSynthesis.cancel(); isPaused = false;
+  setStatus('idle', '⏹️', '已停止');
+  document.getElementById('statusInfo').textContent = '文字转语音 · Web Speech API';
+}
+
+/* Events */
+document.getElementById('textInput').addEventListener('input', updateCount);
+
+document.getElementById('exampleRow').addEventListener('click', e => {
+  const pill = e.target.closest('.example-pill');
+  if (!pill) return;
+  document.getElementById('textInput').value = EXAMPLES[pill.dataset.ex];
+  updateCount();
+});
+
+document.getElementById('langRow').addEventListener('click', e => {
+  const pill = e.target.closest('.lang-pill');
+  if (!pill) return;
+  currentLang = pill.dataset.lang;
+  document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  renderVoices();
+});
+
+document.getElementById('rateSlider').addEventListener('input', function() {
+  document.getElementById('rateVal').textContent = this.value + 'x';
+});
+document.getElementById('pitchSlider').addEventListener('input', function() {
+  document.getElementById('pitchVal').textContent = this.value;
+});
+
+document.getElementById('playBtn').addEventListener('click', playTTS);
+document.getElementById('pauseBtn').addEventListener('click', pauseTTS);
+document.getElementById('stopBtn').addEventListener('click', stopTTS);
+
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+updateCount();
+</script>
+<noscript><p>文字转语音 TTS — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

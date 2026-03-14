@@ -63,6 +63,7 @@ export default defineConfig({
         'invoice': resolve(__dirname, 'pages/invoice/index.html'),
         'placeholder': resolve(__dirname, 'pages/placeholder/index.html'),
         'json-schema': resolve(__dirname, 'pages/json-schema/index.html'),
+        'tts': resolve(__dirname, 'pages/tts/index.html'),
       },
     },
   },
