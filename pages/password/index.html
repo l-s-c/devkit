@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>密码生成器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线安全密码生成器，使用 crypto.getRandomValues 生成真随机密码，支持自定义长度、字符类型、批量生成。纯前端，数据不上传。">
+<meta property="og:title" content="密码生成器 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="在线安全密码生成器，支持自定义长度、字符类型、批量生成，密码强度实时评估">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/password">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="密码生成器 — DevKit">
+<meta name="twitter:description" content="在线安全密码生成器，支持自定义长度、字符类型、批量生成">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"密码生成器","description":"在线安全密码生成器，使用 crypto.getRandomValues 生成真随机密码","url":"https://l-s-c.github.io/devkit/password","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/password">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* 密码显示区 */
+.pwd-display { position: relative; margin-bottom: 16px; }
+.pwd-output {
+  width: 100%; padding: 20px 56px 20px 20px; min-height: 68px;
+  font-family: var(--font-code); font-size: 20px; font-weight: 600;
+  letter-spacing: 1px; word-break: break-all; line-height: 1.5;
+  background: var(--bg-glass); backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid var(--border-glass); border-radius: 12px;
+  color: var(--text-primary); transition: border-color 200ms;
+}
+.pwd-output.copied { border-color: #10B981; }
+.pwd-actions { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 6px; }
+.pwd-action-btn {
+  width: 36px; height: 36px; border-radius: 6px; border: none;
+  background: rgba(99,102,241,0.08); color: var(--brand-500);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 150ms;
+}
+.pwd-action-btn:hover { background: var(--brand-500); color: white; }
+.pwd-action-btn.copy-ok { background: rgba(16,185,129,0.1); color: #10B981; }
+
+/* 强度条 */
+.strength { margin-bottom: 20px; }
+.strength-bar { height: 6px; border-radius: 3px; background: var(--border-glass); overflow: hidden; margin-bottom: 6px; }
+.strength-fill { height: 100%; border-radius: 3px; transition: all 300ms; }
+.strength-fill.weak { width: 25%; background: #EF4444; }
+.strength-fill.fair { width: 50%; background: #F59E0B; }
+.strength-fill.strong { width: 75%; background: #3B82F6; }
+.strength-fill.excellent { width: 100%; background: #10B981; }
+.strength-labels { display: flex; justify-content: space-between; }
+.strength-text { font-size: 12px; font-weight: 600; }
+.strength-text.weak { color: #EF4444; }
+.strength-text.fair { color: #F59E0B; }
+.strength-text.strong { color: #3B82F6; }
+.strength-text.excellent { color: #10B981; }
+.entropy { font-size: 12px; color: var(--text-caption); font-family: var(--font-code); }
+
+/* 控制区 */
+.control-group { margin-bottom: 16px; }
+.control-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.control-name { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.control-value { font-size: 15px; font-weight: 800; color: var(--brand-500); font-family: var(--font-code); }
+
+/* 滑块 */
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; outline: none;
+  background: linear-gradient(90deg, var(--brand-500) 0%, var(--brand-500) var(--pct, 20%), var(--border-glass) var(--pct, 20%));
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+  background: white; border: 3px solid var(--brand-500);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12); cursor: pointer; transition: transform 150ms;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+/* 选项 */
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.option {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  border-radius: 10px; border: 1px solid var(--border-glass);
+  cursor: pointer; transition: all 150ms; user-select: none;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+}
+.option:hover { border-color: var(--brand-500); }
+.option.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.option input { display: none; }
+.option-check {
+  width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border-glass);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all 150ms; font-size: 11px; color: transparent;
+}
+.option.active .option-check { background: var(--brand-500); border-color: var(--brand-500); color: white; }
+.option-text { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.option-sample { font-size: 11px; color: var(--text-caption); font-family: var(--font-code); margin-top: 1px; }
+
+/* 生成按钮 */
+.btn-generate {
+  width: 100%; height: 48px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: white;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 24px rgba(99,102,241,0.18); transition: all 200ms;
+}
+.btn-generate:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(99,102,241,0.25); }
+.btn-generate:active { transform: translateY(0); }
+
+/* 历史记录 */
+.history { margin-top: 20px; }
+.history-title { font-size: 13px; font-weight: 600; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.history-list { display: flex; flex-direction: column; gap: 6px; }
+.history-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-radius: 6px;
+  background: var(--bg-glass); border: 0.5px solid var(--border-glass);
+  font-family: var(--font-code); font-size: 13px; color: var(--text-secondary);
+  cursor: pointer; transition: all 150ms; overflow: hidden;
+}
+.history-item:hover { background: rgba(99,102,241,0.06); color: var(--text-primary); }
+.history-pwd { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-len { font-size: 11px; color: var(--text-caption); flex-shrink: 0; margin-left: 8px; }
+.history-empty { font-size: 13px; color: var(--text-caption); text-align: center; padding: 16px; }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .pwd-output { font-size: 16px; padding: 16px 48px 16px 16px; }
+  .options { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">密码生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">密码生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 密码显示 -->
+  <div class="pwd-display">
+    <div class="pwd-output" id="pwdOutput"></div>
+    <div class="pwd-actions">
+      <button class="pwd-action-btn" id="copyBtn" title="复制密码">📋</button>
+      <button class="pwd-action-btn" id="refreshBtn" title="重新生成">🔄</button>
+    </div>
+  </div>
+
+  <!-- 强度指示 -->
+  <div class="strength">
+    <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+    <div class="strength-labels">
+      <span class="strength-text" id="strengthText"></span>
+      <span class="entropy" id="entropyText"></span>
+    </div>
+  </div>
+
+  <!-- 密码长度 -->
+  <div class="control-group">
+    <div class="control-label">
+      <span class="control-name">密码长度</span>
+      <span class="control-value" id="lenValue">16</span>
+    </div>
+    <input type="range" min="4" max="64" value="16" id="lenSlider">
+  </div>
+
+  <!-- 字符类型 -->
+  <div class="options" id="charOptions">
+    <label class="option active" data-chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ">
+      <input type="checkbox" checked>
+      <div class="option-check">✓</div>
+      <div><div class="option-text">大写字母</div><div class="option-sample">A-Z</div></div>
+    </label>
+    <label class="option active" data-chars="abcdefghijklmnopqrstuvwxyz">
+      <input type="checkbox" checked>
+      <div class="option-check">✓</div>
+      <div><div class="option-text">小写字母</div><div class="option-sample">a-z</div></div>
+    </label>
+    <label class="option active" data-chars="0123456789">
+      <input type="checkbox" checked>
+      <div class="option-check">✓</div>
+      <div><div class="option-text">数字</div><div class="option-sample">0-9</div></div>
+    </label>
+    <label class="option active" data-chars="!@#$%^&*()_+-=[]{}|;:,.<>?">
+      <input type="checkbox" checked>
+      <div class="option-check">✓</div>
+      <div><div class="option-text">特殊符号</div><div class="option-sample">!@#$%</div></div>
+    </label>
+  </div>
+
+  <!-- 批量生成 -->
+  <div class="control-group">
+    <div class="control-label">
+      <span class="control-name">批量生成</span>
+      <span class="control-value" id="batchValue">1</span>
+    </div>
+    <input type="range" min="1" max="50" value="1" id="batchSlider">
+  </div>
+
+  <!-- 生成按钮 -->
+  <button class="btn-generate" id="generateBtn">生成新密码</button>
+
+  <!-- 历史记录 -->
+  <div class="history">
+    <div class="history-title">历史记录</div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">生成密码后自动记录</div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">就绪</span>
+  <div class="statusbar-spacer"></div>
+  <span>crypto.getRandomValues</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* ===== 文案常量（预留国际化） ===== */
+const LABELS = {
+  weak: '弱',
+  fair: '一般',
+  strong: '强',
+  excellent: '非常强',
+  copied: '✅',
+  copyIcon: '📋',
+  historyEmpty: '生成密码后自动记录',
+  statusReady: '就绪',
+  statusGenerated: (n) => n === 1 ? '已生成 1 个密码' : `已生成 ${n} 个密码`,
+  copiedToast: '✓ 已复制密码',
+};
+
+/* ===== 密码生成核心（crypto.getRandomValues） ===== */
+function generatePassword(length, charset) {
+  const arr = new Uint32Array(length);
+  crypto.getRandomValues(arr);
+  let pwd = '';
+  for (let i = 0; i < length; i++) {
+    pwd += charset[arr[i] % charset.length];
+  }
+  return pwd;
+}
+
+function getCharset() {
+  let chars = '';
+  document.querySelectorAll('#charOptions .option input:checked').forEach(cb => {
+    chars += cb.closest('.option').dataset.chars;
+  });
+  return chars || 'abcdefghijklmnopqrstuvwxyz'; // fallback
+}
+
+/* ===== 强度评估 ===== */
+function evaluateStrength(length, poolSize) {
+  const bits = Math.round(length * Math.log2(poolSize));
+  const fill = document.getElementById('strengthFill');
+  const text = document.getElementById('strengthText');
+  const ent = document.getElementById('entropyText');
+
+  ent.textContent = '~' + bits + ' bits';
+  fill.className = 'strength-fill';
+  text.className = 'strength-text';
+
+  if (bits < 30) {
+    fill.classList.add('weak'); text.classList.add('weak'); text.textContent = LABELS.weak;
+  } else if (bits < 50) {
+    fill.classList.add('fair'); text.classList.add('fair'); text.textContent = LABELS.fair;
+  } else if (bits < 70) {
+    fill.classList.add('strong'); text.classList.add('strong'); text.textContent = LABELS.strong;
+  } else {
+    fill.classList.add('excellent'); text.classList.add('excellent'); text.textContent = LABELS.excellent;
+  }
+}
+
+/* ===== 历史记录 ===== */
+const MAX_HISTORY = 20;
+let history = [];
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = `<div class="history-empty">${LABELS.historyEmpty}</div>`;
+    return;
+  }
+  list.innerHTML = history.map(h => {
+    const escaped = h.pwd.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return `<div class="history-item" data-pwd="${escaped}"><span class="history-pwd">${escaped}</span><span class="history-len">${h.len}位</span></div>`;
+  }).join('');
+}
+
+/* ===== 生成主函数 ===== */
+function generate() {
+  const length = parseInt(document.getElementById('lenSlider').value) || 16;
+  const batch = parseInt(document.getElementById('batchSlider').value) || 1;
+  const charset = getCharset();
+
+  const passwords = [];
+  for (let i = 0; i < batch; i++) {
+    passwords.push(generatePassword(length, charset));
+  }
+
+  // 显示第一个密码
+  document.getElementById('pwdOutput').textContent = passwords[0];
+  evaluateStrength(length, charset.length);
+
+  // 更新历史
+  if (batch === 1) {
+    history.unshift({ pwd: passwords[0], len: length });
+    if (history.length > MAX_HISTORY) history.pop();
+  } else {
+    // 批量模式：替换历史
+    history = passwords.map(p => ({ pwd: p, len: length }));
+  }
+  renderHistory();
+
+  // 状态栏
+  document.getElementById('statusInfo').textContent = LABELS.statusGenerated(batch);
+
+  // 保存密码列表供复制
+  window._passwords = passwords;
+}
+
+/* ===== 复制 ===== */
+function doCopy() {
+  const text = document.getElementById('pwdOutput').textContent;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = LABELS.copied;
+    btn.classList.add('copy-ok');
+    document.querySelector('.pwd-output').classList.add('copied');
+    if (typeof copyText === 'function') {
+      // 使用 DevKit 共享 toast（如果有）
+    }
+    setTimeout(() => {
+      btn.textContent = LABELS.copyIcon;
+      btn.classList.remove('copy-ok');
+      document.querySelector('.pwd-output').classList.remove('copied');
+    }, 1500);
+  });
+}
+
+/* ===== 滑块更新 ===== */
+function updateSlider(el, valueId, min, max) {
+  const pct = ((el.value - min) / (max - min)) * 100;
+  el.style.setProperty('--pct', pct + '%');
+  document.getElementById(valueId).textContent = el.value;
+}
+
+/* ===== 事件绑定 ===== */
+const lenSlider = document.getElementById('lenSlider');
+const batchSlider = document.getElementById('batchSlider');
+
+lenSlider.addEventListener('input', () => {
+  updateSlider(lenSlider, 'lenValue', 4, 64);
+  generate();
+});
+
+batchSlider.addEventListener('input', () => {
+  updateSlider(batchSlider, 'batchValue', 1, 50);
+  generate();
+});
+
+document.getElementById('generateBtn').addEventListener('click', generate);
+document.getElementById('copyBtn').addEventListener('click', doCopy);
+document.getElementById('refreshBtn').addEventListener('click', generate);
+
+// 字符类型切换
+document.querySelectorAll('#charOptions .option').forEach(opt => {
+  opt.addEventListener('click', (e) => {
+    e.preventDefault();
+    const cb = opt.querySelector('input');
+    cb.checked = !cb.checked;
+    opt.classList.toggle('active', cb.checked);
+    // 至少保留一种字符类型
+    if (document.querySelectorAll('#charOptions .option input:checked').length === 0) {
+      cb.checked = true;
+      opt.classList.add('active');
+    }
+    generate();
+  });
+});
+
+// 历史记录点击复制
+document.getElementById('historyList').addEventListener('click', (e) => {
+  const item = e.target.closest('.history-item');
+  if (item) {
+    const pwd = item.dataset.pwd;
+    navigator.clipboard.writeText(pwd);
+    if (typeof copyText === 'function') copyText(pwd, LABELS.copiedToast);
+  }
+});
+
+// 初始化
+updateSlider(lenSlider, 'lenValue', 4, 64);
+updateSlider(batchSlider, 'batchValue', 1, 50);
+generate();
+</script>
+<noscript><p>密码生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

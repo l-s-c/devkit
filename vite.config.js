@@ -25,6 +25,7 @@ export default defineConfig({
         'text-diff': resolve(__dirname, 'pages/text-diff/index.html'),
         'code-formatter': resolve(__dirname, 'pages/code-formatter/index.html'),
         'sql-formatter': resolve(__dirname, 'pages/sql-formatter/index.html'),
+        password: resolve(__dirname, 'pages/password/index.html'),
       },
     },
   },
