@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片尺寸调整 | Image Resizer Online — DevKit</title>
+<meta name="description" content="在线图片尺寸调整，锁定比例缩放，8 个预设尺寸（淘宝主图、小红书、公众号），批量处理，导出 JPG/PNG/WebP。Image resizer online.">
+<meta name="keywords" content="image resizer, resize image online, 图片尺寸调整, 图片缩放, 淘宝主图尺寸, 小红书封面尺寸, 公众号封面尺寸, DevKit">
+<meta property="og:title" content="图片尺寸调整 | Image Resizer Online — DevKit">
+<meta property="og:description" content="图片缩放、锁定比例、预设尺寸、批量处理">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/image-resize/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图片尺寸调整 — DevKit">
+<meta name="twitter:description" content="图片缩放、预设尺寸、批量处理">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"图片尺寸调整","description":"在线图片尺寸调整，锁定比例，预设尺寸，批量处理","url":"https://l-s-c.github.io/devkit/pages/image-resize/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/image-resize/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* 上传 */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 40px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover, .upload-area.dragover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-icon { font-size: 40px; margin-bottom: 8px; }
+.upload-text { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
+.upload-hint { font-size: 11px; color: var(--text-caption); margin-top: 4px; }
+.upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* 预览 */
+.preview-wrap {
+  position: relative; border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(var(--border-glass) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+  min-height: 200px; display: flex; align-items: center; justify-content: center;
+}
+.preview-img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
+.preview-badge {
+  position: absolute; top: 8px; left: 8px; padding: 4px 8px; border-radius: 6px;
+  background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; font-family: var(--font-code); font-weight: 700;
+}
+
+/* 信息卡 */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.info-card {
+  padding: 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.info-value { font-family: var(--font-code); font-size: 14px; font-weight: 800; }
+.info-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* 输入 */
+.field { margin-bottom: 14px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text-caption); margin-bottom: 6px; }
+.field-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 15px; font-weight: 700; color: var(--text-primary);
+}
+.field-input:focus { outline: none; border-color: var(--brand-500); }
+.field-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: end; }
+.lock-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 150ms; margin-bottom: 6px;
+}
+.lock-btn.locked { border-color: var(--brand-500); background: rgba(99,102,241,0.06); color: var(--brand-500); }
+.radio-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.radio-btn {
+  flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.radio-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.radio-btn.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 预设 */
+.presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.preset-btn {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.preset-btn:hover { border-color: var(--brand-500); color: var(--brand-500); background: rgba(99,102,241,0.06); }
+
+/* 格式 */
+.format-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.format-btn {
+  flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.format-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.format-btn.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 操作按钮 */
+.action-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* 批量列表 */
+.batch-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  border-radius: 6px; border: 1px solid var(--border-glass); margin-bottom: 6px; font-size: 12px;
+}
+.batch-thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+.batch-name { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.batch-size { font-family: var(--font-code); font-size: 11px; color: var(--text-caption); }
+.batch-status { font-size: 14px; }
+
+/* 放大警告 */
+.upscale-warn {
+  padding: 8px 12px; border-radius: 6px; background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.15); font-size: 11px; color: #F59E0B;
+  margin-bottom: 10px; display: none;
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">图片尺寸调整 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">图片尺寸调整</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧：上传 + 预览 -->
+    <div>
+      <div class="panel" id="uploadPanel">
+        <div class="upload-area" id="dropZone">
+          <input type="file" accept="image/*" multiple class="upload-input" id="fileInput">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text">拖拽图片到这里，或点击上传</div>
+          <div class="upload-hint">支持 JPG / PNG / WebP，可多选批量</div>
+        </div>
+      </div>
+
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="preview-wrap">
+          <img id="previewImg" class="preview-img">
+          <div class="preview-badge" id="previewBadge">—</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-value" id="origSize">—</div><div class="info-label">原始尺寸</div></div>
+          <div class="info-card"><div class="info-value" id="origFileSize">—</div><div class="info-label">文件大小</div></div>
+          <div class="info-card"><div class="info-value" id="newSize" style="color:#10B981">—</div><div class="info-label">调整后尺寸</div></div>
+          <div class="info-card"><div class="info-value" id="newFileSize" style="color:#10B981">—</div><div class="info-label">预估大小</div></div>
+        </div>
+      </div>
+
+      <div class="panel" id="batchPanel" style="display:none">
+        <div class="section-title">📦 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
+        <div id="batchList"></div>
+      </div>
+    </div>
+
+    <!-- 右侧：设置 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📐 尺寸设置</div>
+        <div class="radio-row">
+          <button class="radio-btn active" id="btnPixel">像素 px</button>
+          <button class="radio-btn" id="btnPercent">百分比 %</button>
+        </div>
+
+        <div id="pixelMode">
+          <div class="field-row">
+            <div class="field">
+              <div class="field-label">宽度</div>
+              <input type="number" class="field-input" id="inputW" value="960">
+            </div>
+            <button class="lock-btn locked" id="lockBtn">🔗</button>
+            <div class="field">
+              <div class="field-label">高度</div>
+              <input type="number" class="field-input" id="inputH" value="540">
+            </div>
+          </div>
+        </div>
+
+        <div id="percentMode" style="display:none">
+          <div class="field">
+            <div class="field-label">缩放比例</div>
+            <input type="number" class="field-input" id="inputPct" value="50">
+            <div style="font-size:11px;color:var(--text-caption);margin-top:3px">% · 原始尺寸的百分比</div>
+          </div>
+        </div>
+
+        <div class="upscale-warn" id="upscaleWarn">⚠️ 放大图片可能导致模糊，建议使用原始尺寸或缩小</div>
+
+        <div class="field-label" style="margin-top:14px;margin-bottom:8px">📱 预设尺寸</div>
+        <div class="presets" id="presets">
+          <button class="preset-btn" data-w="100" data-h="100">头像 100²</button>
+          <button class="preset-btn" data-w="800" data-h="800">淘宝主图 800²</button>
+          <button class="preset-btn" data-w="1080" data-h="1080">朋友圈 1080²</button>
+          <button class="preset-btn" data-w="1080" data-h="1440">小红书 1080×1440</button>
+          <button class="preset-btn" data-w="1080" data-h="1920">手机壁纸 1080×1920</button>
+          <button class="preset-btn" data-w="900" data-h="383">公众号封面 900×383</button>
+          <button class="preset-btn" data-w="1280" data-h="720">720p</button>
+          <button class="preset-btn" data-w="1920" data-h="1080">1080p</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">💾 导出设置</div>
+        <div class="format-row">
+          <button class="format-btn active" id="fmtJPG" data-fmt="jpg">JPG</button>
+          <button class="format-btn" id="fmtPNG" data-fmt="png">PNG</button>
+          <button class="format-btn" id="fmtWebP" data-fmt="webp">WebP</button>
+        </div>
+        <div class="field" id="qualityField">
+          <div class="field-label">质量 <span id="qualityVal">85</span>%</div>
+          <input type="range" id="quality" min="10" max="100" value="85" style="width:100%">
+        </div>
+        <button class="action-btn" id="resizeBtn" disabled>📐 调整并下载</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传图片开始调整</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let origW = 0, origH = 0, locked = true, mode = 'pixel', format = 'jpg';
+let files = [], previewUrl = null;
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+/* ===== 加载图片 ===== */
+function loadImage(file) {
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    origW = img.naturalWidth;
+    origH = img.naturalHeight;
+    document.getElementById('previewImg').src = previewUrl;
+    document.getElementById('previewBadge').textContent = `${origW} × ${origH}`;
+    document.getElementById('origSize').textContent = `${origW} × ${origH}`;
+    document.getElementById('origFileSize').textContent = fmtSize(file.size);
+    document.getElementById('previewPanel').style.display = 'block';
+    document.getElementById('resizeBtn').disabled = false;
+    // 默认 50%
+    document.getElementById('inputW').value = Math.round(origW / 2);
+    document.getElementById('inputH').value = Math.round(origH / 2);
+    document.getElementById('inputPct').value = 50;
+    updateNewSize();
+    document.getElementById('statusInfo').textContent = `${file.name} · ${origW}×${origH} · ${fmtSize(file.size)}`;
+  };
+  img.src = previewUrl;
+}
+
+/* ===== 批量列表 ===== */
+function renderBatchList() {
+  if (files.length <= 1) { document.getElementById('batchPanel').style.display = 'none'; return; }
+  document.getElementById('batchPanel').style.display = 'block';
+  document.getElementById('batchCount').textContent = `(${files.length} 张)`;
+  const list = document.getElementById('batchList');
+  list.innerHTML = files.map((f, i) => `
+    <div class="batch-item">
+      <div class="batch-thumb" style="background:var(--brand-500);border-radius:6px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">🖼️</div>
+      <div class="batch-name">${f.name}</div>
+      <div class="batch-size">${fmtSize(f.size)}</div>
+      <div class="batch-status" id="batchStatus${i}">⏳</div>
+    </div>
+  `).join('');
+}
+
+/* ===== 尺寸计算 ===== */
+function updateNewSize() {
+  const w = parseInt(document.getElementById('inputW').value) || 1;
+  const h = parseInt(document.getElementById('inputH').value) || 1;
+  document.getElementById('newSize').textContent = `${w} × ${h}`;
+  // 预估文件大小
+  const ratio = (w * h) / (origW * origH || 1);
+  const est = ratio * 300 * 1024; // 粗估
+  document.getElementById('newFileSize').textContent = '~' + fmtSize(Math.max(1024, est));
+  // 放大警告（AC-10）
+  document.getElementById('upscaleWarn').style.display = (origW > 0 && (w > origW || h > origH)) ? 'block' : 'none';
+}
+
+/* ===== 调整并下载 ===== */
+function doResize() {
+  if (!files.length) return;
+  const w = parseInt(document.getElementById('inputW').value) || origW;
+  const h = parseInt(document.getElementById('inputH').value) || origH;
+  const q = parseInt(document.getElementById('quality').value) / 100;
+  const mime = format === 'jpg' ? 'image/jpeg' : format === 'png' ? 'image/png' : 'image/webp';
+  const ext = format === 'jpg' ? 'jpg' : format;
+
+  document.getElementById('resizeBtn').disabled = true;
+  document.getElementById('resizeBtn').textContent = '⏳ 处理中…';
+
+  // 串行处理 + revokeObjectURL 释放
+  let idx = 0;
+  function processNext() {
+    if (idx >= files.length) {
+      document.getElementById('resizeBtn').disabled = false;
+      document.getElementById('resizeBtn').textContent = '📐 调整并下载';
+      document.getElementById('statusInfo').textContent = `✅ ${files.length} 张图片处理完成`;
+      return;
+    }
+    const file = files[idx];
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      // JPG 白色背景填充
+      if (format === 'jpg') { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, w, h); }
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = file.name.replace(/\.[^.]+$/, '') + `_${w}x${h}.${ext}`;
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(url);
+        canvas.width = 0; canvas.height = 0; // 内存释放
+        // 更新批量状态
+        const statusEl = document.getElementById('batchStatus' + idx);
+        if (statusEl) statusEl.textContent = '✅';
+        idx++;
+        setTimeout(processNext, 300);
+      }, mime, q);
+    };
+    img.src = url;
+  }
+  processNext();
+}
+
+/* ===== 事件绑定 ===== */
+// 文件上传
+document.getElementById('fileInput').addEventListener('change', e => {
+  files = [...e.target.files].filter(f => f.type.startsWith('image/'));
+  if (files.length) { loadImage(files[0]); renderBatchList(); }
+});
+
+// 拖拽
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('dragover');
+  files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+  if (files.length) { loadImage(files[0]); renderBatchList(); }
+});
+
+// 像素/百分比模式
+document.getElementById('btnPixel').addEventListener('click', () => {
+  mode = 'pixel';
+  document.getElementById('btnPixel').classList.add('active');
+  document.getElementById('btnPercent').classList.remove('active');
+  document.getElementById('pixelMode').style.display = 'block';
+  document.getElementById('percentMode').style.display = 'none';
+});
+document.getElementById('btnPercent').addEventListener('click', () => {
+  mode = 'percent';
+  document.getElementById('btnPercent').classList.add('active');
+  document.getElementById('btnPixel').classList.remove('active');
+  document.getElementById('pixelMode').style.display = 'none';
+  document.getElementById('percentMode').style.display = 'block';
+  // 从当前宽度反算百分比
+  const w = parseInt(document.getElementById('inputW').value) || origW;
+  document.getElementById('inputPct').value = origW ? Math.round(w / origW * 100) : 100;
+});
+
+// 锁定比例
+document.getElementById('lockBtn').addEventListener('click', () => {
+  locked = !locked;
+  const btn = document.getElementById('lockBtn');
+  btn.classList.toggle('locked', locked);
+  btn.textContent = locked ? '🔗' : '🔓';
+});
+
+// 宽高输入
+document.getElementById('inputW').addEventListener('input', () => {
+  const w = parseInt(document.getElementById('inputW').value) || 1;
+  if (locked && origW > 0) {
+    document.getElementById('inputH').value = Math.round(w * origH / origW);
+  }
+  updateNewSize();
+});
+document.getElementById('inputH').addEventListener('input', () => {
+  const h = parseInt(document.getElementById('inputH').value) || 1;
+  if (locked && origH > 0) {
+    document.getElementById('inputW').value = Math.round(h * origW / origH);
+  }
+  updateNewSize();
+});
+document.getElementById('inputPct').addEventListener('input', () => {
+  const pct = (parseFloat(document.getElementById('inputPct').value) || 100) / 100;
+  document.getElementById('inputW').value = Math.round(origW * pct);
+  document.getElementById('inputH').value = Math.round(origH * pct);
+  updateNewSize();
+});
+
+// 预设尺寸（事件委托）
+document.getElementById('presets').addEventListener('click', e => {
+  const btn = e.target.closest('.preset-btn');
+  if (!btn) return;
+  const w = parseInt(btn.dataset.w), h = parseInt(btn.dataset.h);
+  document.getElementById('inputW').value = w;
+  document.getElementById('inputH').value = h;
+  // 预设时解锁比例
+  locked = false;
+  document.getElementById('lockBtn').classList.remove('locked');
+  document.getElementById('lockBtn').textContent = '🔓';
+  // 切回像素模式
+  if (mode === 'percent') {
+    mode = 'pixel';
+    document.getElementById('btnPixel').classList.add('active');
+    document.getElementById('btnPercent').classList.remove('active');
+    document.getElementById('pixelMode').style.display = 'block';
+    document.getElementById('percentMode').style.display = 'none';
+  }
+  updateNewSize();
+});
+
+// 格式选择（事件委托）
+document.querySelectorAll('.format-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    format = btn.dataset.fmt;
+    document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('qualityField').style.display = format === 'png' ? 'none' : 'block';
+  });
+});
+
+// 质量滑块
+document.getElementById('quality').addEventListener('input', e => {
+  document.getElementById('qualityVal').textContent = e.target.value;
+});
+
+// 调整按钮
+document.getElementById('resizeBtn').addEventListener('click', doResize);
+</script>
+<noscript><p>图片尺寸调整 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
