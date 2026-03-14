@@ -57,6 +57,7 @@ export default defineConfig({
         'collage': resolve(__dirname, 'pages/collage/index.html'),
         'img-to-pdf': resolve(__dirname, 'pages/img-to-pdf/index.html'),
         'currency': resolve(__dirname, 'pages/currency/index.html'),
+        'calendar': resolve(__dirname, 'pages/calendar/index.html'),
       },
     },
   },
