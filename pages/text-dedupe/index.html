@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本去重 | Remove Duplicate Lines Online — DevKit</title>
+<meta name="description" content="在线文本去重工具，按行去重、去空行、去首尾空格、忽略大小写，支持升序降序排列。Remove duplicate lines online.">
+<meta name="keywords" content="文本去重, remove duplicate lines, 去重工具, dedupe text, 行去重, DevKit">
+<meta property="og:title" content="文本去重 | Remove Duplicate Lines Online — DevKit">
+<meta property="og:description" content="按行去重、去空行、排序，快速清理重复文本">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/text-dedupe/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文本去重 | Remove Duplicate Lines — DevKit">
+<meta name="twitter:description" content="按行去重、去空行、排序">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"文本去重","description":"在线文本去重工具，按行去重、去空行、排序","url":"https://l-s-c.github.io/devkit/pages/text-dedupe/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/text-dedupe/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+/* 选项面板 */
+.options-panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.options-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.options-bar:last-child { margin-bottom: 0; }
+.opt-btn {
+  padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; gap: 4px;
+}
+.opt-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.opt-btn.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 操作按钮 */
+.action-row { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.action-btn {
+  padding: 10px 20px; border-radius: 10px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: all 200ms;
+}
+.action-btn.primary {
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: white;
+  box-shadow: 0 4px 24px rgba(99,102,241,0.18);
+}
+.action-btn.primary:hover { box-shadow: 0 6px 28px rgba(99,102,241,0.25); transform: translateY(-1px); }
+.action-btn.secondary {
+  background: var(--bg-glass); border: 1.5px solid var(--border-glass);
+  color: var(--text-secondary);
+}
+.action-btn.secondary:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* 双栏 */
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.col-card {
+  padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.col-title { font-size: 12px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; }
+.col-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.col-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.text-area {
+  width: 100%; height: 280px; resize: vertical; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 13px; line-height: 1.7;
+  color: var(--text-primary); transition: border-color 200ms;
+}
+.text-area:focus { outline: none; border-color: var(--brand-500); }
+.text-area::placeholder { color: var(--text-caption); }
+
+/* 统计卡片 */
+.stats-section {
+  margin-top: 16px; padding: 20px 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.stats-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-card {
+  flex: 1; min-width: 100px; padding: 14px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass); text-align: center;
+}
+.stat-value { font-family: var(--font-code); font-size: 24px; font-weight: 900; color: var(--brand-500); }
+.stat-value.removed { color: #EF4444; }
+.stat-value.kept { color: #10B981; }
+.stat-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .stat-card { min-width: 80px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">文本去重 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">文本去重</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 选项 -->
+  <div class="options-panel">
+    <div class="options-bar">
+      <button class="opt-btn active" id="optDedupe">🔁 按行去重</button>
+      <button class="opt-btn" id="optEmpty">🚫 去空行</button>
+      <button class="opt-btn" id="optTrim">✂️ 去首尾空格</button>
+      <button class="opt-btn" id="optCase">Aa 忽略大小写</button>
+    </div>
+    <div class="options-bar">
+      <button class="opt-btn sort-btn" data-sort="asc">↑ 升序排列</button>
+      <button class="opt-btn sort-btn" data-sort="desc">↓ 降序排列</button>
+      <button class="opt-btn sort-btn" data-sort="shuffle">🔀 随机打乱</button>
+    </div>
+    <div class="action-row">
+      <button class="action-btn primary" id="btnProcess">🧹 处理</button>
+      <button class="action-btn secondary" id="btnClear">✕ 清空</button>
+      <button class="action-btn secondary" id="btnSwap">⇄ 结果回填</button>
+      <button class="action-btn secondary" id="btnExport">📥 导出 .txt</button>
+    </div>
+  </div>
+
+  <!-- 双栏 -->
+  <div class="dual">
+    <div class="col-card">
+      <div class="col-header">
+        <span class="col-title">📥 输入文本</span>
+        <button class="col-btn" id="btnPaste">📋 粘贴</button>
+      </div>
+      <textarea class="text-area" id="inputText" placeholder="每行一条文本，粘贴后点击「处理」...
+苹果
+香蕉
+苹果
+橙子
+香蕉
+葡萄"></textarea>
+    </div>
+    <div class="col-card">
+      <div class="col-header">
+        <span class="col-title">📤 处理结果</span>
+        <button class="col-btn" id="btnCopy">📋 复制</button>
+      </div>
+      <textarea class="text-area" id="outputText" readonly placeholder="处理结果将显示在这里..."></textarea>
+    </div>
+  </div>
+
+  <!-- 统计 -->
+  <div class="stats-section">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value" id="statOriginal">0</div><div class="stat-label">原始行数</div></div>
+      <div class="stat-card"><div class="stat-value kept" id="statResult">0</div><div class="stat-label">结果行数</div></div>
+      <div class="stat-card"><div class="stat-value removed" id="statRemoved">0</div><div class="stat-label">移除行数</div></div>
+      <div class="stat-card"><div class="stat-value" id="statDupeRate">0%</div><div class="stat-label">重复率</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择选项后点击「处理」</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let sortMode = null;
+
+/* ===== 选项切换 ===== */
+document.querySelectorAll('.opt-btn:not(.sort-btn)').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('active'));
+});
+
+document.querySelectorAll('.sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mode = btn.dataset.sort;
+    if (sortMode === mode) {
+      sortMode = null;
+      btn.classList.remove('active');
+    } else {
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      sortMode = mode;
+      btn.classList.add('active');
+    }
+  });
+});
+
+/* ===== 处理 ===== */
+function process() {
+  const input = document.getElementById('inputText').value;
+  if (!input.trim()) {
+    document.getElementById('outputText').value = '';
+    updateStats(0, 0);
+    return;
+  }
+
+  let lines = input.split('\n');
+  const original = lines.length;
+
+  // 去首尾空格
+  if (document.getElementById('optTrim').classList.contains('active')) {
+    lines = lines.map(l => l.trim());
+  }
+
+  // 去空行
+  if (document.getElementById('optEmpty').classList.contains('active')) {
+    lines = lines.filter(l => l.trim() !== '');
+  }
+
+  // 按行去重 (Set O(n))
+  if (document.getElementById('optDedupe').classList.contains('active')) {
+    const ignoreCase = document.getElementById('optCase').classList.contains('active');
+    const seen = new Set();
+    lines = lines.filter(l => {
+      const key = ignoreCase ? l.toLowerCase() : l;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  // 排序
+  if (sortMode === 'asc') lines.sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  else if (sortMode === 'desc') lines.sort((a, b) => b.localeCompare(a, 'zh-CN'));
+  else if (sortMode === 'shuffle') {
+    for (let i = lines.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [lines[i], lines[j]] = [lines[j], lines[i]];
+    }
+  }
+
+  document.getElementById('outputText').value = lines.join('\n');
+  updateStats(original, lines.length);
+  document.getElementById('statusInfo').textContent = `已处理 ${original} 行 → ${lines.length} 行`;
+}
+
+function updateStats(orig, result) {
+  document.getElementById('statOriginal').textContent = orig;
+  document.getElementById('statResult').textContent = result;
+  const removed = orig - result;
+  document.getElementById('statRemoved').textContent = removed;
+  document.getElementById('statDupeRate').textContent = orig ? Math.round(removed / orig * 100) + '%' : '0%';
+}
+
+/* ===== 操作按钮 ===== */
+document.getElementById('btnProcess').addEventListener('click', process);
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('inputText').value = '';
+  document.getElementById('outputText').value = '';
+  updateStats(0, 0);
+  document.getElementById('statusInfo').textContent = '已清空';
+});
+
+document.getElementById('btnSwap').addEventListener('click', () => {
+  document.getElementById('inputText').value = document.getElementById('outputText').value;
+  document.getElementById('outputText').value = '';
+  document.getElementById('statusInfo').textContent = '结果已回填到输入';
+});
+
+document.getElementById('btnExport').addEventListener('click', () => {
+  const output = document.getElementById('outputText').value;
+  if (!output) return;
+  const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dedupe-result.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('btnPaste').addEventListener('click', async () => {
+  try {
+    document.getElementById('inputText').value = await navigator.clipboard.readText();
+  } catch (e) { /* denied */ }
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const output = document.getElementById('outputText').value;
+  if (output) navigator.clipboard.writeText(output);
+});
+</script>
+<noscript><p>文本去重 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

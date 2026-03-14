@@ -36,6 +36,7 @@ export default defineConfig({
         bmi: resolve(__dirname, 'pages/bmi/index.html'),
         random: resolve(__dirname, 'pages/random/index.html'),
         'case-converter': resolve(__dirname, 'pages/case-converter/index.html'),
+        'text-dedupe': resolve(__dirname, 'pages/text-dedupe/index.html'),
       },
     },
   },
