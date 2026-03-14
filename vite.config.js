@@ -48,6 +48,7 @@ export default defineConfig({
         'image-resize': resolve(__dirname, 'pages/image-resize/index.html'),
         'tax': resolve(__dirname, 'pages/tax/index.html'),
         'watermark': resolve(__dirname, 'pages/watermark/index.html'),
+        'favicon': resolve(__dirname, 'pages/favicon/index.html'),
       },
     },
   },

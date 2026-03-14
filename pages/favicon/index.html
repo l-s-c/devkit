@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favicon 生成器 | Favicon Generator — DevKit</title>
+<meta name="description" content="Favicon 生成器，文字/图片/Emoji 生成网站图标，多尺寸预览，一键导出 PNG。Favicon generator online.">
+<meta name="keywords" content="favicon generator, favicon制作, ico生成器, 网站图标生成, favicon在线生成, DevKit">
+<meta property="og:title" content="Favicon 生成器 | Favicon Generator — DevKit">
+<meta property="og:description" content="文字/图片/Emoji生成Favicon，多尺寸预览">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/favicon/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Favicon 生成器 — DevKit">
+<meta name="twitter:description" content="文字/图片/Emoji生成网站图标">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Favicon 生成器","description":"Favicon生成器，文字/图片/Emoji，多尺寸预览，一键导出","url":"https://l-s-c.github.io/devkit/pages/favicon/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/favicon/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.field { margin-bottom: 12px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text-caption); margin-bottom: 5px; }
+.field-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 14px; font-weight: 700; color: var(--text-primary);
+}
+.field-input:focus { outline: none; border-color: var(--brand-500); }
+
+/* 模式 */
+.mode-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.mode-tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.mode-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.mode-tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 大预览 */
+.preview-main {
+  width: 180px; height: 180px; margin: 0 auto 16px; border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(var(--border-glass) 0% 25%, transparent 0% 50%) 0 0/12px 12px;
+  display: flex; align-items: center; justify-content: center; border: 2px solid var(--border-glass);
+}
+.preview-main canvas { display: block; }
+
+/* 多尺寸预览 */
+.size-row { display: flex; align-items: end; justify-content: center; gap: 16px; margin-bottom: 16px; }
+.size-item { text-align: center; }
+.size-item canvas { display: block; margin: 0 auto 4px; border: 1px solid var(--border-glass); border-radius: 3px; }
+.size-label { font-size: 10px; color: var(--text-caption); font-family: var(--font-code); }
+
+/* 颜色预设 */
+.color-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.color-dot {
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: all 150ms;
+}
+.color-dot:hover { transform: scale(1.15); }
+.color-dot.active { border-color: var(--text-primary); box-shadow: 0 0 0 2px var(--bg-glass); }
+
+/* 滑块 */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 40px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 36px; text-align: right; }
+
+/* 颜色 */
+.color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.color-input { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+
+/* Emoji */
+.emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-bottom: 12px; }
+.emoji-cell {
+  width: 100%; aspect-ratio: 1; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; transition: all 150ms;
+}
+.emoji-cell:hover { border-color: var(--brand-500); transform: scale(1.1); }
+.emoji-cell.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+
+/* 上传 */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 24px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* 按钮 */
+.action-btn {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+
+/* 代码片段 */
+.code-box {
+  background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: 6px;
+  padding: 10px 14px; font-family: var(--font-code); font-size: 11px;
+  color: var(--text-secondary); line-height: 1.6; overflow-x: auto; margin-top: 10px;
+  position: relative;
+}
+.copy-btn {
+  position: absolute; top: 6px; right: 6px; padding: 4px 8px; border-radius: 4px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 10px; cursor: pointer; color: var(--text-caption); transition: all 150ms;
+}
+.copy-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .emoji-grid { grid-template-columns: repeat(6, 1fr); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Favicon 生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Favicon 生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧：预览 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">👁️ 预览</div>
+        <div class="preview-main"><canvas id="mainCanvas" width="180" height="180"></canvas></div>
+        <div class="size-row">
+          <div class="size-item"><canvas id="s16" width="16" height="16"></canvas><div class="size-label">16px</div></div>
+          <div class="size-item"><canvas id="s32" width="32" height="32"></canvas><div class="size-label">32px</div></div>
+          <div class="size-item"><canvas id="s48" width="48" height="48"></canvas><div class="size-label">48px</div></div>
+          <div class="size-item"><canvas id="s180" width="48" height="48"></canvas><div class="size-label">180px</div></div>
+          <div class="size-item"><canvas id="s512" width="64" height="64"></canvas><div class="size-label">512px</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <button class="action-btn" id="downloadBtn">💾 导出 PNG 多尺寸</button>
+        <div class="code-box" id="codeBox">
+          <button class="copy-btn" id="copyBtn">复制</button>
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png"&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧：控制 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">🎨 生成模式</div>
+        <div class="mode-tabs" id="modeTabs">
+          <button class="mode-tab active" data-mode="text">✏️ 文字</button>
+          <button class="mode-tab" data-mode="emoji">😀 Emoji</button>
+          <button class="mode-tab" data-mode="image">🖼️ 图片</button>
+        </div>
+
+        <!-- 文字模式 -->
+        <div id="panelText">
+          <div class="field">
+            <div class="field-label">文字内容</div>
+            <input type="text" class="field-input" id="faviconText" value="D" maxlength="2" style="font-size:24px;text-align:center;font-weight:900">
+          </div>
+          <div class="field">
+            <div class="field-label">背景色</div>
+            <div class="color-presets" id="bgColors"></div>
+            <div class="color-row">
+              <input type="color" class="color-input" id="bgColor" value="#6366F1">
+              <span style="font-family:var(--font-code);font-size:12px;color:var(--text-secondary)" id="bgHex">#6366F1</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">文字颜色</div>
+            <div class="color-row">
+              <input type="color" class="color-input" id="textColor" value="#FFFFFF">
+              <span style="font-family:var(--font-code);font-size:12px;color:var(--text-secondary)" id="textHex">#FFFFFF</span>
+            </div>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">圆角</span>
+            <input type="range" class="slider-input" id="borderRadius" min="0" max="50" value="20">
+            <span class="slider-val" id="borderRadiusVal">20%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">字号</span>
+            <input type="range" class="slider-input" id="fontSize" min="30" max="90" value="65">
+            <span class="slider-val" id="fontSizeVal">65%</span>
+          </div>
+        </div>
+
+        <!-- Emoji 模式 -->
+        <div id="panelEmoji" style="display:none">
+          <div class="emoji-grid" id="emojiGrid"></div>
+          <div class="field">
+            <div class="field-label">背景色</div>
+            <div class="color-row">
+              <input type="color" class="color-input" id="emojiBg" value="#FFFFFF">
+              <span style="font-family:var(--font-code);font-size:12px;color:var(--text-secondary)" id="emojiBgHex">#FFFFFF</span>
+            </div>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">圆角</span>
+            <input type="range" class="slider-input" id="emojiRadius" min="0" max="50" value="20">
+            <span class="slider-val" id="emojiRadiusVal">20%</span>
+          </div>
+        </div>
+
+        <!-- 图片模式 -->
+        <div id="panelImage" style="display:none">
+          <div class="upload-area">
+            <input type="file" accept="image/*" id="imgInput">
+            <div style="font-size:32px;margin-bottom:4px">🖼️</div>
+            <div style="font-size:13px;color:var(--text-secondary);font-weight:600">上传图片，自动裁剪为正方形</div>
+          </div>
+          <div class="slider-row" style="margin-top:12px">
+            <span class="slider-label">圆角</span>
+            <input type="range" class="slider-input" id="imgRadius" min="0" max="50" value="0">
+            <span class="slider-val" id="imgRadiusVal">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择模式生成 Favicon</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地生成</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let mode = 'text', selectedEmoji = '⚡', uploadedImg = null;
+const COLORS = ['#6366F1','#EC4899','#EF4444','#F59E0B','#10B981','#3B82F6','#8B5CF6','#06B6D4','#1A1A2E','#F8F8FC'];
+const EMOJIS = ['⚡','🔥','💎','🚀','⭐','💡','🎯','🎨','💻','🌈','☀️','🌙','❤️','✨','🎵','🏆','📦','🔧','🌍','🎮','📱','🍀','🦄','🐱'];
+const SIZES = [16, 32, 48, 180, 512];
+
+/* ===== 圆角矩形（Architect: ctx.beginPath + ctx.arcTo）===== */
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+/* ===== 绘制 Favicon ===== */
+function drawFavicon(ctx, size) {
+  ctx.clearRect(0, 0, size, size);
+
+  if (mode === 'text') {
+    const bg = document.getElementById('bgColor').value;
+    const fg = document.getElementById('textColor').value;
+    const radius = size * (parseInt(document.getElementById('borderRadius').value) / 100);
+    const fsPct = parseInt(document.getElementById('fontSize').value) / 100;
+    const text = document.getElementById('faviconText').value || '';
+
+    roundRect(ctx, 0, 0, size, size, radius);
+    ctx.fillStyle = bg; ctx.fill();
+
+    if (text) {
+      ctx.fillStyle = fg;
+      ctx.font = `900 ${size * fsPct}px -apple-system,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(text, size / 2, size / 2 + size * 0.03);
+    }
+  } else if (mode === 'emoji') {
+    const bg = document.getElementById('emojiBg').value;
+    const radius = size * (parseInt(document.getElementById('emojiRadius').value) / 100);
+    roundRect(ctx, 0, 0, size, size, radius);
+    ctx.fillStyle = bg; ctx.fill();
+    ctx.font = `${size * 0.65}px serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(selectedEmoji, size / 2, size / 2 + size * 0.05);
+  } else if (mode === 'image' && uploadedImg) {
+    const radius = size * (parseInt(document.getElementById('imgRadius').value) / 100);
+    const s = Math.min(uploadedImg.width, uploadedImg.height);
+    const sx = (uploadedImg.width - s) / 2, sy = (uploadedImg.height - s) / 2;
+    ctx.save();
+    roundRect(ctx, 0, 0, size, size, radius); ctx.clip();
+    ctx.drawImage(uploadedImg, sx, sy, s, s, 0, 0, size, size);
+    ctx.restore();
+  }
+}
+
+/* ===== 渲染所有预览 ===== */
+function render() {
+  const mc = document.getElementById('mainCanvas');
+  mc.width = 180; mc.height = 180;
+  drawFavicon(mc.getContext('2d'), 180);
+
+  const sizeMap = { s16: 16, s32: 32, s48: 48, s180: 48, s512: 64 };
+  Object.entries(sizeMap).forEach(([id, dispSize]) => {
+    const c = document.getElementById(id);
+    c.width = dispSize; c.height = dispSize;
+    drawFavicon(c.getContext('2d'), dispSize);
+  });
+}
+
+/* ===== 颜色预设 ===== */
+const bgP = document.getElementById('bgColors');
+COLORS.forEach((c, i) => {
+  const d = document.createElement('div');
+  d.className = 'color-dot' + (i === 0 ? ' active' : '');
+  d.style.background = c;
+  d.addEventListener('click', () => {
+    document.getElementById('bgColor').value = c;
+    document.getElementById('bgHex').textContent = c;
+    bgP.querySelectorAll('.color-dot').forEach(x => x.classList.remove('active'));
+    d.classList.add('active');
+    render();
+  });
+  bgP.appendChild(d);
+});
+
+/* ===== Emoji 网格 ===== */
+const eg = document.getElementById('emojiGrid');
+EMOJIS.forEach(e => {
+  const d = document.createElement('div');
+  d.className = 'emoji-cell' + (e === selectedEmoji ? ' active' : '');
+  d.textContent = e;
+  d.addEventListener('click', () => {
+    selectedEmoji = e;
+    eg.querySelectorAll('.emoji-cell').forEach(x => x.classList.remove('active'));
+    d.classList.add('active');
+    render();
+  });
+  eg.appendChild(d);
+});
+
+/* ===== 事件绑定 ===== */
+// 滑块
+['borderRadius', 'fontSize', 'emojiRadius', 'imgRadius'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    document.getElementById(id + 'Val').textContent = el.value + '%';
+    render();
+  });
+});
+
+// 颜色
+document.getElementById('bgColor').addEventListener('input', e => { document.getElementById('bgHex').textContent = e.target.value; render(); });
+document.getElementById('textColor').addEventListener('input', e => { document.getElementById('textHex').textContent = e.target.value; render(); });
+document.getElementById('emojiBg').addEventListener('input', e => { document.getElementById('emojiBgHex').textContent = e.target.value; render(); });
+
+// 文字输入
+document.getElementById('faviconText').addEventListener('input', render);
+
+// 模式切换（事件委托）
+document.getElementById('modeTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.mode-tab');
+  if (!tab) return;
+  mode = tab.dataset.mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  document.getElementById('panelText').style.display = mode === 'text' ? 'block' : 'none';
+  document.getElementById('panelEmoji').style.display = mode === 'emoji' ? 'block' : 'none';
+  document.getElementById('panelImage').style.display = mode === 'image' ? 'block' : 'none';
+  render();
+});
+
+// 图片上传
+document.getElementById('imgInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  uploadedImg = new Image();
+  uploadedImg.onload = () => { render(); URL.revokeObjectURL(url); };
+  uploadedImg.src = url;
+});
+
+// 导出多尺寸 PNG
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  SIZES.forEach(size => {
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    drawFavicon(c.getContext('2d'), size);
+    c.toBlob(blob => {
+      const a = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `favicon-${size}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      c.width = 0; c.height = 0;
+    }, 'image/png');
+  });
+  document.getElementById('statusInfo').textContent = '✅ 已导出 5 个尺寸（16/32/48/180/512px）';
+});
+
+// 复制代码片段
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const code = `<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">\n<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`;
+  navigator.clipboard.writeText(code).then(() => {
+    document.getElementById('copyBtn').textContent = '✅';
+    setTimeout(() => document.getElementById('copyBtn').textContent = '复制', 1500);
+  });
+});
+
+render();
+</script>
+<noscript><p>Favicon 生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
