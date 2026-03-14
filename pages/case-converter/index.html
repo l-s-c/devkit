@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大小写转换 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线大小写转换工具，支持全大写、全小写、首字母大写、camelCase、PascalCase、snake_case、kebab-case 等 8 种模式。">
+<meta property="og:title" content="大小写转换 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="8 种大小写转换模式，支持 camelCase/snake_case/kebab-case 命名格式">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/case-converter/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大小写转换 — DevKit">
+<meta name="twitter:description" content="8 种大小写转换模式">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"大小写转换","description":"在线大小写转换工具，支持 8 种模式","url":"https://l-s-c.github.io/devkit/pages/case-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/case-converter/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+/* 转换模式 4×2 网格 */
+.convert-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.convert-btn {
+  padding: 14px 8px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; text-align: center; transition: all 200ms;
+}
+.convert-btn:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); transform: translateY(-1px); }
+.convert-btn.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.convert-icon { font-size: 22px; margin-bottom: 4px; }
+.convert-name { font-size: 12px; font-weight: 700; }
+.convert-example { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* 双栏 */
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.col-card {
+  padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.col-title {
+  font-size: 12px; font-weight: 700; color: var(--text-caption); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
+}
+.col-actions { display: flex; gap: 4px; }
+.col-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.col-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.text-area {
+  width: 100%; height: 240px; resize: vertical; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 14px; line-height: 1.6;
+  color: var(--text-primary); transition: border-color 200ms;
+}
+.text-area:focus { outline: none; border-color: var(--brand-500); }
+.text-area::placeholder { color: var(--text-caption); }
+.char-count { font-size: 11px; color: var(--text-caption); text-align: right; margin-top: 4px; font-family: var(--font-code); }
+
+/* 统计胶囊 */
+.stats-section {
+  margin-top: 16px; padding: 16px 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.stats-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.stat-chip {
+  padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; color: var(--text-secondary);
+  display: flex; align-items: center; gap: 4px;
+}
+.stat-value { font-family: var(--font-code); font-weight: 700; color: var(--brand-500); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .convert-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">大小写转换 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">大小写转换</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 8 种模式 -->
+  <div style="padding:24px;border-radius:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)">
+    <div class="convert-grid" id="convertGrid">
+      <button class="convert-btn active" data-mode="upper"><div class="convert-icon">🔠</div><div class="convert-name">全部大写</div><div class="convert-example">HELLO WORLD</div></button>
+      <button class="convert-btn" data-mode="lower"><div class="convert-icon">🔡</div><div class="convert-name">全部小写</div><div class="convert-example">hello world</div></button>
+      <button class="convert-btn" data-mode="title"><div class="convert-icon">🔤</div><div class="convert-name">首字母大写</div><div class="convert-example">Hello World</div></button>
+      <button class="convert-btn" data-mode="sentence"><div class="convert-icon">📝</div><div class="convert-name">句首大写</div><div class="convert-example">Hello world. Foo bar.</div></button>
+      <button class="convert-btn" data-mode="camel"><div class="convert-icon">🐪</div><div class="convert-name">camelCase</div><div class="convert-example">helloWorld</div></button>
+      <button class="convert-btn" data-mode="pascal"><div class="convert-icon">📐</div><div class="convert-name">PascalCase</div><div class="convert-example">HelloWorld</div></button>
+      <button class="convert-btn" data-mode="snake"><div class="convert-icon">🐍</div><div class="convert-name">snake_case</div><div class="convert-example">hello_world</div></button>
+      <button class="convert-btn" data-mode="kebab"><div class="convert-icon">🍢</div><div class="convert-name">kebab-case</div><div class="convert-example">hello-world</div></button>
+    </div>
+  </div>
+
+  <!-- 双栏输入/输出 -->
+  <div class="dual">
+    <div class="col-card">
+      <div class="col-title">
+        <span>📥 输入文本</span>
+        <div class="col-actions">
+          <button class="col-btn" id="btnPaste">📋 粘贴</button>
+          <button class="col-btn" id="btnClear">✕ 清空</button>
+        </div>
+      </div>
+      <textarea class="text-area" id="inputText" placeholder="输入或粘贴文本..."></textarea>
+      <div class="char-count"><span id="inputCount">0</span> 字符</div>
+    </div>
+    <div class="col-card">
+      <div class="col-title">
+        <span>📤 转换结果</span>
+        <div class="col-actions">
+          <button class="col-btn" id="btnCopy">📋 复制</button>
+        </div>
+      </div>
+      <textarea class="text-area" id="outputText" readonly></textarea>
+      <div class="char-count"><span id="outputCount">0</span> 字符</div>
+    </div>
+  </div>
+
+  <!-- 统计 -->
+  <div class="stats-section">
+    <div class="stats-row">
+      <div class="stat-chip">字符 <span class="stat-value" id="statChars">0</span></div>
+      <div class="stat-chip">单词 <span class="stat-value" id="statWords">0</span></div>
+      <div class="stat-chip">行数 <span class="stat-value" id="statLines">0</span></div>
+      <div class="stat-chip">大写 <span class="stat-value" id="statUpper">0</span></div>
+      <div class="stat-chip">小写 <span class="stat-value" id="statLower">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入文本实时转换</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let currentMode = 'upper';
+
+/* ===== 分词：按空格、下划线、短横线、大写字母边界拆分 ===== */
+function toWords(str) {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1 $2')  // camelCase → camel Case
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')  // XMLParser → XML Parser
+    .replace(/[_\-]+/g, ' ')  // snake_case / kebab-case → 空格
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function capitalize(w) {
+  return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+}
+
+/* ===== 转换 ===== */
+function convert(input) {
+  switch (currentMode) {
+    case 'upper': return input.toUpperCase();
+    case 'lower': return input.toLowerCase();
+    case 'title': return input.replace(/\b\w/g, c => c.toUpperCase());
+    case 'sentence': return input.toLowerCase().replace(/(^\s*|[.!?]\s+)(\w)/g, (_, p, c) => p + c.toUpperCase());
+    case 'camel': return toWords(input).map((w, i) => i === 0 ? w.toLowerCase() : capitalize(w)).join('');
+    case 'pascal': return toWords(input).map(w => capitalize(w)).join('');
+    case 'snake': return toWords(input).map(w => w.toLowerCase()).join('_');
+    case 'kebab': return toWords(input).map(w => w.toLowerCase()).join('-');
+    default: return input;
+  }
+}
+
+function doConvert() {
+  const input = document.getElementById('inputText').value;
+  const output = convert(input);
+  document.getElementById('outputText').value = output;
+  updateStats(input);
+  document.getElementById('inputCount').textContent = input.length;
+  document.getElementById('outputCount').textContent = output.length;
+}
+
+function updateStats(s) {
+  document.getElementById('statChars').textContent = s.length;
+  document.getElementById('statWords').textContent = s.trim() ? s.trim().split(/\s+/).length : 0;
+  document.getElementById('statLines').textContent = s ? s.split('\n').length : 0;
+  document.getElementById('statUpper').textContent = (s.match(/[A-Z]/g) || []).length;
+  document.getElementById('statLower').textContent = (s.match(/[a-z]/g) || []).length;
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('convertGrid').addEventListener('click', (e) => {
+  const btn = e.target.closest('.convert-btn');
+  if (!btn) return;
+  document.querySelectorAll('.convert-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMode = btn.dataset.mode;
+  doConvert();
+});
+
+document.getElementById('inputText').addEventListener('input', doConvert);
+
+document.getElementById('btnPaste').addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('inputText').value = text;
+    doConvert();
+  } catch (e) { /* clipboard permission denied */ }
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('inputText').value = '';
+  doConvert();
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const output = document.getElementById('outputText').value;
+  if (output) navigator.clipboard.writeText(output);
+});
+</script>
+<noscript><p>大小写转换 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
