@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发票税额计算器 | Tax Calculator — DevKit</title>
+<meta name="description" content="在线发票税额计算器，含税价不含税价互算，13%/9%/6%/3%/1%税率，批量计算，精确到分。Tax calculator online.">
+<meta name="keywords" content="发票税额, 含税价, 不含税价, tax calculator, 增值税计算, DevKit">
+<meta property="og:title" content="发票税额计算器 | Tax Calculator — DevKit">
+<meta property="og:description" content="含税不含税互算，批量计算，精确到分">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/invoice/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="发票税额计算器 — DevKit">
+<meta name="twitter:description" content="含税不含税价互算">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"发票税额计算器","description":"在线发票税额计算器，含税不含税互算，批量计算","url":"https://l-s-c.github.io/devkit/pages/invoice/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/invoice/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Direction tabs */
+.dir-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.dir-tab {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.dir-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.dir-tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Rate pills */
+.rate-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.rate-pill {
+  padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.rate-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.rate-pill.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.rate-custom {
+  display: flex; align-items: center; gap: 4px; padding: 4px 12px;
+  border-radius: 20px; border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+}
+.rate-custom input {
+  width: 48px; border: none; background: transparent; font-family: var(--font-code);
+  font-size: 13px; font-weight: 700; color: var(--text-primary); outline: none; text-align: center;
+}
+
+/* Input */
+.input-label { font-size: 11px; font-weight: 700; color: var(--text-caption); margin-bottom: 6px; }
+.input-field {
+  width: 100%; padding: 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 20px; font-weight: 700;
+  font-family: var(--font-code); color: var(--text-primary); outline: none; transition: border-color 150ms;
+}
+.input-field:focus { border-color: var(--brand-500); }
+
+/* Result cards */
+.result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.result-card {
+  padding: 16px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.result-label { font-size: 10px; font-weight: 700; color: var(--text-caption); margin-bottom: 4px; }
+.result-val { font-size: 22px; font-weight: 800; font-family: var(--font-code); color: var(--brand-500); }
+.result-val.tax { color: #10B981; }
+
+/* Copy btn */
+.copy-btn {
+  padding: 6px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.copy-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Batch */
+.batch-area {
+  width: 100%; height: 120px; padding: 12px; border-radius: 6px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 12px; color: var(--text-primary);
+  resize: vertical; outline: none; transition: border-color 150ms;
+}
+.batch-area:focus { border-color: var(--brand-500); }
+
+.batch-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+.batch-table th {
+  padding: 8px; text-align: left; font-weight: 700; color: var(--text-caption);
+  border-bottom: 1.5px solid var(--border-glass); font-size: 11px;
+}
+.batch-table td {
+  padding: 8px; border-bottom: 1px solid var(--border-glass);
+  font-family: var(--font-code); font-weight: 600;
+}
+.tax-col { color: #10B981; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; }
+  .result-val { font-size: 18px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">发票税额计算器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">发票税额计算器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左：单条计算 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">🔄 计算方向</div>
+        <div class="dir-tabs" id="dirTabs">
+          <button class="dir-tab active" data-dir="toEx">含税 → 不含税</button>
+          <button class="dir-tab" data-dir="toIn">不含税 → 含税</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📊 税率</div>
+        <div class="rate-row" id="rateRow">
+          <span class="rate-pill active" data-rate="13">13%</span>
+          <span class="rate-pill" data-rate="9">9%</span>
+          <span class="rate-pill" data-rate="6">6%</span>
+          <span class="rate-pill" data-rate="3">3%</span>
+          <span class="rate-pill" data-rate="1">1%</span>
+          <span class="rate-custom"><input id="customRate" placeholder="自定义">%</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">💰 金额输入</div>
+        <div class="input-label" id="inputLabel">含税金额（元）</div>
+        <input type="number" class="input-field" id="amountInput" value="11300" placeholder="请输入金额">
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📋 计算结果</div>
+        <div class="result-grid">
+          <div class="result-card">
+            <div class="result-label">不含税金额</div>
+            <div class="result-val" id="resExTax">—</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">税额</div>
+            <div class="result-val tax" id="resTax">—</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">价税合计</div>
+            <div class="result-val" id="resTotal">—</div>
+          </div>
+        </div>
+        <div style="text-align:right"><button class="copy-btn" id="copyResultBtn">📋 复制结果</button></div>
+      </div>
+    </div>
+
+    <!-- 右：批量 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📦 批量计算</div>
+        <textarea class="batch-area" id="batchInput" placeholder="每行一个金额，如：&#10;11300&#10;5650&#10;22600">11300
+5650
+22600</textarea>
+        <table class="batch-table" id="batchTable">
+          <thead><tr><th>含税</th><th>不含税</th><th>税额</th></tr></thead>
+          <tbody id="batchBody"></tbody>
+        </table>
+        <div style="text-align:right;margin-top:8px"><button class="copy-btn" id="copyBatchBtn">📋 复制表格</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">发票税额计算器</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let dir = 'toEx', rate = 13;
+
+function getRate() {
+  const c = parseFloat(document.getElementById('customRate').value);
+  return c > 0 ? c : rate;
+}
+
+function fmt(n) { return n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+function calcOne(amount) {
+  const r = getRate() / 100;
+  let exTax, tax, total;
+  if (dir === 'toEx') {
+    exTax = amount / (1 + r); tax = amount - exTax; total = amount;
+  } else {
+    exTax = amount; tax = amount * r; total = amount + tax;
+  }
+  return { exTax, tax, total };
+}
+
+function calc() {
+  const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+  const { exTax, tax, total } = calcOne(amount);
+  document.getElementById('resExTax').textContent = fmt(exTax);
+  document.getElementById('resTax').textContent = fmt(tax);
+  document.getElementById('resTotal').textContent = fmt(total);
+  document.getElementById('statusInfo').textContent = `税率 ${getRate()}% · ${dir === 'toEx' ? '含税→不含税' : '不含税→含税'}`;
+}
+
+function batchCalc() {
+  const lines = document.getElementById('batchInput').value.trim().split('\n').filter(l => l.trim());
+  const thDir = dir === 'toEx' ? '含税' : '不含税';
+  document.querySelector('#batchTable thead').innerHTML = `<tr><th>${thDir}</th><th>${dir === 'toEx' ? '不含税' : '含税'}</th><th>税额</th></tr>`;
+  document.getElementById('batchBody').innerHTML = lines.map(l => {
+    const amt = parseFloat(l.trim()) || 0;
+    const { exTax, tax, total } = calcOne(amt);
+    return `<tr><td>${fmt(dir === 'toEx' ? total : exTax)}</td><td>${fmt(dir === 'toEx' ? exTax : total)}</td><td class="tax-col">${fmt(tax)}</td></tr>`;
+  }).join('');
+}
+
+function update() { calc(); batchCalc(); }
+
+/* ===== Events ===== */
+document.getElementById('dirTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.dir-tab');
+  if (!tab) return;
+  dir = tab.dataset.dir;
+  document.querySelectorAll('.dir-tab').forEach(t => t.classList.toggle('active', t.dataset.dir === dir));
+  document.getElementById('inputLabel').textContent = dir === 'toEx' ? '含税金额（元）' : '不含税金额（元）';
+  update();
+});
+
+document.getElementById('rateRow').addEventListener('click', e => {
+  const pill = e.target.closest('.rate-pill');
+  if (!pill) return;
+  rate = parseFloat(pill.dataset.rate);
+  document.querySelectorAll('.rate-pill').forEach(p => p.classList.toggle('active', p.dataset.rate === String(rate)));
+  document.getElementById('customRate').value = '';
+  update();
+});
+
+document.getElementById('customRate').addEventListener('input', update);
+document.getElementById('amountInput').addEventListener('input', update);
+document.getElementById('batchInput').addEventListener('input', batchCalc);
+
+document.getElementById('copyResultBtn').addEventListener('click', () => {
+  const r = getRate();
+  const amt = parseFloat(document.getElementById('amountInput').value) || 0;
+  const { exTax, tax, total } = calcOne(amt);
+  navigator.clipboard.writeText(`税率: ${r}%\n不含税: ${exTax.toFixed(2)}\n税额: ${tax.toFixed(2)}\n价税合计: ${total.toFixed(2)}`);
+});
+
+document.getElementById('copyBatchBtn').addEventListener('click', () => {
+  const rows = [...document.querySelectorAll('#batchBody tr')].map(r => [...r.cells].map(c => c.textContent).join('\t')).join('\n');
+  navigator.clipboard.writeText(rows);
+});
+
+update();
+</script>
+<noscript><p>发票税额计算器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
