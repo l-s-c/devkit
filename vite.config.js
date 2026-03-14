@@ -54,6 +54,7 @@ export default defineConfig({
         'encrypt': resolve(__dirname, 'pages/encrypt/index.html'),
         'gradient': resolve(__dirname, 'pages/gradient/index.html'),
         'id-photo': resolve(__dirname, 'pages/id-photo/index.html'),
+        'collage': resolve(__dirname, 'pages/collage/index.html'),
       },
     },
   },

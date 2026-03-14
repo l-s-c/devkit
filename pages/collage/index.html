@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片拼接 | Image Collage Maker — DevKit</title>
+<meta name="description" content="在线图片拼接，横向/纵向/网格拼接，间距可调，自动等高等宽对齐，导出PNG/JPG。Image collage maker online.">
+<meta name="keywords" content="image collage, 图片拼接, photo joiner, 多图合并, 拼图, DevKit">
+<meta property="og:title" content="图片拼接 | Image Collage Maker — DevKit">
+<meta property="og:description" content="横向/纵向/网格拼接，间距可调，自动对齐">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/collage/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图片拼接 — DevKit">
+<meta name="twitter:description" content="多图拼接，横向纵向网格">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"图片拼接","description":"在线图片拼接，横向纵向网格，间距可调，自动对齐","url":"https://l-s-c.github.io/devkit/pages/collage/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/collage/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Upload */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 32px; text-align: center; cursor: pointer; transition: all 200ms; position: relative;
+}
+.upload-area:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* Image list */
+.img-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.img-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px;
+  border-radius: 6px; border: 1px solid var(--border-glass); background: var(--bg-glass);
+}
+.img-thumb { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; }
+.img-name { flex: 1; font-size: 11px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.img-dim { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); }
+.img-btn {
+  width: 24px; height: 24px; border: none; background: none; cursor: pointer;
+  font-size: 12px; color: var(--text-caption); border-radius: 4px; transition: all 150ms;
+}
+.img-btn:hover { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.img-del:hover { background: rgba(239,68,68,0.1); color: #EF4444; }
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Grid */
+.grid-options { display: flex; gap: 6px; margin-bottom: 12px; }
+.grid-opt {
+  padding: 8px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.grid-opt:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.grid-opt.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 50px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 36px; text-align: right; }
+
+/* Color */
+.color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.color-input { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+
+/* Preview */
+.preview-wrap {
+  border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(var(--border-glass) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+  min-height: 200px; display: flex; align-items: center; justify-content: center;
+}
+.preview-wrap canvas { max-width: 100%; max-height: 400px; display: block; }
+
+/* Action */
+.action-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.action-btn {
+  padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.format-select {
+  padding: 14px 16px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700; color: var(--text-primary); cursor: pointer;
+}
+
+/* Stats */
+.stat-chip {
+  padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.06);
+  font-family: var(--font-code); font-size: 10px; font-weight: 700; color: var(--brand-500);
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">图片拼接 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">图片拼接</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左：上传 + 列表 + 预览 -->
+    <div>
+      <div class="panel">
+        <div class="upload-area">
+          <input type="file" accept="image/*" multiple id="fileInput">
+          <div style="font-size:36px;margin-bottom:6px">🖼️</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-secondary)">拖拽或点击上传多张图片</div>
+        </div>
+        <div style="margin-top:10px;display:none" id="statsWrap">
+          <span class="stat-chip" id="statCount">0 张</span>
+        </div>
+        <div class="img-list" id="imgList"></div>
+      </div>
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="section-title">👁️ 预览</div>
+        <div class="preview-wrap"><canvas id="previewCanvas"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 右：控件 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📐 拼接模式</div>
+        <div class="tabs" id="modeTabs">
+          <button class="tab active" data-mode="horizontal">➡️ 横向</button>
+          <button class="tab" data-mode="vertical">⬇️ 纵向</button>
+          <button class="tab" data-mode="grid">⊞ 网格</button>
+        </div>
+        <div id="gridPanel" style="display:none">
+          <div class="grid-options" id="gridOptions">
+            <button class="grid-opt active" data-cols="2">2×2</button>
+            <button class="grid-opt" data-cols="3">3×3</button>
+            <button class="grid-opt" data-cols="4">4×4</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">⚙️ 参数</div>
+        <div class="slider-row">
+          <span class="slider-label">间距</span>
+          <input type="range" class="slider-input" id="gap" min="0" max="50" value="8">
+          <span class="slider-val" id="gapVal">8px</span>
+        </div>
+        <div class="color-row">
+          <span class="slider-label">背景色</span>
+          <input type="color" class="color-input" id="bgColor" value="#FFFFFF">
+          <span style="font-family:var(--font-code);font-size:12px;color:var(--text-secondary)" id="bgHex">#FFFFFF</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="action-row">
+          <button class="action-btn" id="downloadBtn" disabled>💾 导出拼接图</button>
+          <select class="format-select" id="exportFormat">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPG</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传多张图片开始拼接</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let images = [], mode = 'horizontal', gridCols = 2;
+
+/* ===== 渲染图片列表 ===== */
+function renderList() {
+  const list = document.getElementById('imgList');
+  list.innerHTML = '';
+  images.forEach((im, i) => {
+    const item = document.createElement('div');
+    item.className = 'img-item';
+    item.innerHTML = `
+      <img class="img-thumb" src="${im.url}">
+      <span class="img-name">${im.name}</span>
+      <span class="img-dim">${im.w}×${im.h}</span>
+    `;
+    // ↑ 按钮
+    const upBtn = document.createElement('button');
+    upBtn.className = 'img-btn'; upBtn.textContent = '↑';
+    upBtn.addEventListener('click', () => { if (i > 0) { [images[i], images[i-1]] = [images[i-1], images[i]]; renderList(); render(); } });
+    // ↓ 按钮
+    const downBtn = document.createElement('button');
+    downBtn.className = 'img-btn'; downBtn.textContent = '↓';
+    downBtn.addEventListener('click', () => { if (i < images.length - 1) { [images[i], images[i+1]] = [images[i+1], images[i]]; renderList(); render(); } });
+    // ✕ 删除
+    const delBtn = document.createElement('button');
+    delBtn.className = 'img-btn img-del'; delBtn.textContent = '✕';
+    delBtn.addEventListener('click', () => { URL.revokeObjectURL(images[i].url); images.splice(i, 1); renderList(); render(); });
+
+    item.appendChild(upBtn);
+    item.appendChild(downBtn);
+    item.appendChild(delBtn);
+    list.appendChild(item);
+  });
+
+  const sw = document.getElementById('statsWrap');
+  sw.style.display = images.length ? 'block' : 'none';
+  document.getElementById('statCount').textContent = images.length + ' 张';
+  document.getElementById('downloadBtn').disabled = images.length === 0;
+}
+
+/* ===== 绘制拼接（预览用缩放尺寸）===== */
+function drawCollage(canvas, previewMode) {
+  const ctx = canvas.getContext('2d');
+  const gap = parseInt(document.getElementById('gap').value);
+  const bg = document.getElementById('bgColor').value;
+
+  if (mode === 'horizontal') {
+    // 等高：预览用 300px 高，导出用原图最大高度
+    const targetH = previewMode ? 300 : Math.max(...images.map(im => im.h));
+    const scaled = images.map(im => ({ img: im.img, w: Math.round(im.w * (targetH / im.h)), h: targetH }));
+    const totalW = scaled.reduce((s, im) => s + im.w, 0) + gap * (images.length - 1);
+    canvas.width = totalW; canvas.height = targetH;
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, totalW, targetH);
+    let x = 0;
+    scaled.forEach(im => { ctx.drawImage(im.img, x, 0, im.w, im.h); x += im.w + gap; });
+  } else if (mode === 'vertical') {
+    // 等宽：预览用 400px 宽，导出用原图最大宽度
+    const targetW = previewMode ? 400 : Math.max(...images.map(im => im.w));
+    const scaled = images.map(im => ({ img: im.img, w: targetW, h: Math.round(im.h * (targetW / im.w)) }));
+    const totalH = scaled.reduce((s, im) => s + im.h, 0) + gap * (images.length - 1);
+    canvas.width = targetW; canvas.height = totalH;
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, targetW, totalH);
+    let y = 0;
+    scaled.forEach(im => { ctx.drawImage(im.img, 0, y, im.w, im.h); y += im.h + gap; });
+  } else {
+    // 网格：预览用 200px 格子，导出用 600px 格子
+    const cols = gridCols;
+    const rows = Math.ceil(images.length / cols);
+    const cellW = previewMode ? 200 : 600;
+    const cellH = cellW;
+    canvas.width = cols * cellW + (cols - 1) * gap;
+    canvas.height = rows * cellH + (rows - 1) * gap;
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    images.forEach((im, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      const x = col * (cellW + gap), y = row * (cellH + gap);
+      const scale = Math.min(cellW / im.w, cellH / im.h);
+      const dw = im.w * scale, dh = im.h * scale;
+      ctx.drawImage(im.img, x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
+    });
+  }
+}
+
+function render() {
+  if (!images.length) { document.getElementById('previewPanel').style.display = 'none'; return; }
+  document.getElementById('previewPanel').style.display = 'block';
+  drawCollage(document.getElementById('previewCanvas'), true);
+  document.getElementById('statusInfo').textContent = `${images.length} 张 · ${mode} · 间距 ${document.getElementById('gap').value}px`;
+}
+
+/* ===== 导出（全尺寸渲染）===== */
+function download() {
+  if (!images.length) return;
+  const canvas = document.createElement('canvas');
+  drawCollage(canvas, false);
+  const fmt = document.getElementById('exportFormat').value;
+  const mimeType = fmt === 'jpeg' ? 'image/jpeg' : 'image/png';
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = `collage.${fmt === 'jpeg' ? 'jpg' : 'png'}`;
+    a.click();
+    URL.revokeObjectURL(url);
+    canvas.width = 0; canvas.height = 0;
+  }, mimeType, 0.92);
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('fileInput').addEventListener('change', e => {
+  const files = [...e.target.files];
+  let loaded = 0;
+  files.forEach(f => {
+    const url = URL.createObjectURL(f);
+    const img = new Image();
+    img.onload = () => {
+      images.push({ img, name: f.name, w: img.width, h: img.height, url });
+      loaded++;
+      if (loaded === files.length) { renderList(); render(); }
+    };
+    img.src = url;
+  });
+});
+
+document.getElementById('modeTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  mode = tab.dataset.mode;
+  document.querySelectorAll('#modeTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  document.getElementById('gridPanel').style.display = mode === 'grid' ? 'block' : 'none';
+  render();
+});
+
+document.getElementById('gridOptions').addEventListener('click', e => {
+  const opt = e.target.closest('.grid-opt');
+  if (!opt) return;
+  gridCols = parseInt(opt.dataset.cols);
+  document.querySelectorAll('.grid-opt').forEach(o => o.classList.toggle('active', o.dataset.cols === String(gridCols)));
+  render();
+});
+
+document.getElementById('gap').addEventListener('input', function() {
+  document.getElementById('gapVal').textContent = this.value + 'px';
+  render();
+});
+
+document.getElementById('bgColor').addEventListener('input', function() {
+  document.getElementById('bgHex').textContent = this.value;
+  render();
+});
+
+document.getElementById('downloadBtn').addEventListener('click', download);
+</script>
+<noscript><p>图片拼接 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
