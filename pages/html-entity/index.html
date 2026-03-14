@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 实体转换 | HTML Entity Encoder/Decoder — DevKit</title>
+<meta name="description" content="在线 HTML 实体编码解码工具，支持命名实体和数字实体，常用实体参考表。HTML entity encoder decoder online.">
+<meta name="keywords" content="html entity encoder, html实体转换, html encode decode, html entities, 实体编码, DevKit">
+<meta property="og:title" content="HTML 实体转换 | HTML Entity Encoder/Decoder — DevKit">
+<meta property="og:description" content="HTML 实体编码解码，常用实体参考表">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/html-entity/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTML 实体转换 — DevKit">
+<meta name="twitter:description" content="HTML 实体编码解码">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTML 实体转换","description":"在线 HTML 实体编码解码工具","url":"https://l-s-c.github.io/devkit/pages/html-entity/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/html-entity/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+/* 模式切换 */
+.mode-toggle { display: flex; gap: 4px; margin-bottom: 16px; }
+.mode-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 14px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.mode-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.mode-btn.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+/* 双栏 */
+.dual-wrap {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; position: relative; }
+.swap-btn {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-glass);
+  background: var(--bg-glass); color: var(--brand-500); font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 200ms;
+}
+.swap-btn:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 4px 24px rgba(99,102,241,0.18); }
+.col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.col-title { font-size: 12px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; }
+.col-actions { display: flex; gap: 4px; }
+.col-btn {
+  padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.col-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.text-area {
+  width: 100%; height: 200px; resize: vertical; padding: 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 13px; line-height: 1.7;
+  color: var(--text-primary); transition: border-color 200ms;
+}
+.text-area:focus { outline: none; border-color: var(--brand-500); }
+.text-area::placeholder { color: var(--text-caption); }
+
+/* 参考表 */
+.ref-section {
+  padding: 24px; border-radius: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.ref-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+.cat-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.cat-tab {
+  padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.cat-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.cat-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+.ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+.ref-item {
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+  border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; transition: all 150ms;
+}
+.ref-item:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.ref-char { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.ref-info { flex: 1; min-width: 0; }
+.ref-name { font-size: 11px; color: var(--text-secondary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ref-code { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); }
+.ref-copy { font-size: 10px; color: var(--brand-500); opacity: 0; transition: opacity 150ms; font-weight: 600; }
+.ref-item:hover .ref-copy { opacity: 1; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .swap-btn { top: auto; bottom: -20px; }
+  .ref-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">HTML 实体转换 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">HTML 实体转换</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 编码/解码 -->
+  <div class="dual-wrap">
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode="encode">📝 编码 → 实体</button>
+      <button class="mode-btn" data-mode="decode">🔓 实体 → 解码</button>
+    </div>
+
+    <div class="dual">
+      <div>
+        <div class="col-header">
+          <span class="col-title" id="leftTitle">📥 原始文本</span>
+          <div class="col-actions">
+            <button class="col-btn" id="btnPaste">📋 粘贴</button>
+            <button class="col-btn" id="btnClear">✕ 清空</button>
+          </div>
+        </div>
+        <textarea class="text-area" id="inputText" placeholder='<div class="hello">你好 & 世界</div>'></textarea>
+      </div>
+      <button class="swap-btn" id="btnSwap" title="交换">⇄</button>
+      <div>
+        <div class="col-header">
+          <span class="col-title" id="rightTitle">📤 编码结果</span>
+          <div class="col-actions">
+            <button class="col-btn" id="btnCopy">📋 复制</button>
+          </div>
+        </div>
+        <textarea class="text-area" id="outputText" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参考表 -->
+  <div class="ref-section">
+    <div class="ref-title">📖 常用 HTML 实体参考</div>
+    <div class="cat-tabs" id="catTabs">
+      <button class="cat-tab active" data-cat="common">常用符号</button>
+      <button class="cat-tab" data-cat="math">数学符号</button>
+      <button class="cat-tab" data-cat="arrow">箭头符号</button>
+      <button class="cat-tab" data-cat="currency">货币符号</button>
+      <button class="cat-tab" data-cat="special">特殊符号</button>
+    </div>
+    <div class="ref-grid" id="refGrid"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入文本实时编码/解码</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let mode = 'encode';
+
+const entities = {
+  common: [
+    ['&','&amp;','ampersand'],['<','&lt;','小于号'],['>','&gt;','大于号'],
+    ['"','&quot;','双引号'],["'",'&apos;','单引号'],[' ','&nbsp;','空格'],
+    ['©','&copy;','版权'],['®','&reg;','注册商标'],['™','&trade;','商标'],
+    ['…','&hellip;','省略号'],['—','&mdash;','长破折号'],['–','&ndash;','短破折号'],
+    ['·','&middot;','中间点'],['§','&sect;','章节号'],['¶','&para;','段落号'],
+    ['†','&dagger;','匕首号'],['‡','&Dagger;','双匕首号'],['•','&bull;','圆点'],
+  ],
+  math: [
+    ['±','&plusmn;','正负号'],['×','&times;','乘号'],['÷','&divide;','除号'],
+    ['≠','&ne;','不等于'],['≈','&asymp;','约等于'],['≤','&le;','小于等于'],
+    ['≥','&ge;','大于等于'],['∞','&infin;','无穷'],['√','&radic;','根号'],
+    ['∑','&sum;','求和'],['∏','&prod;','乘积'],['∫','&int;','积分'],
+    ['π','&pi;','圆周率'],['°','&deg;','度'],['%','&#37;','百分号'],
+  ],
+  arrow: [
+    ['←','&larr;','左箭头'],['→','&rarr;','右箭头'],['↑','&uarr;','上箭头'],
+    ['↓','&darr;','下箭头'],['↔','&harr;','双向箭头'],['⇐','&lArr;','双线左'],
+    ['⇒','&rArr;','双线右'],['⇑','&uArr;','双线上'],['⇓','&dArr;','双线下'],
+    ['⇔','&hArr;','双线双向'],
+  ],
+  currency: [
+    ['¥','&yen;','人民币/日元'],['$','&#36;','美元'],['€','&euro;','欧元'],
+    ['£','&pound;','英镑'],['¢','&cent;','美分'],['₩','&#8361;','韩元'],
+    ['₹','&#8377;','印度卢比'],['₽','&#8381;','俄罗斯卢布'],
+  ],
+  special: [
+    ['♠','&spades;','黑桃'],['♥','&hearts;','红心'],['♦','&diams;','方块'],
+    ['♣','&clubs;','梅花'],['★','&#9733;','实心星'],['☆','&#9734;','空心星'],
+    ['♪','&#9834;','音符'],['✓','&#10003;','对勾'],['✗','&#10007;','叉号'],
+    ['☎','&#9742;','电话'],['✉','&#9993;','邮件'],['⚡','&#9889;','闪电'],
+  ],
+};
+
+/* ===== 编码/解码 ===== */
+function htmlEncode(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function htmlDecode(str) {
+  // textarea.innerHTML trick: 只解码一次，不会双重解码 &amp;lt; → &lt;（不会变成 <）
+  const ta = document.createElement('textarea');
+  ta.innerHTML = str;
+  return ta.value;
+}
+
+function convert() {
+  const input = document.getElementById('inputText').value;
+  const output = mode === 'encode' ? htmlEncode(input) : htmlDecode(input);
+  document.getElementById('outputText').value = output;
+}
+
+/* ===== 模式切换 ===== */
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+    document.getElementById('leftTitle').textContent = mode === 'encode' ? '📥 原始文本' : '📥 实体文本';
+    document.getElementById('rightTitle').textContent = mode === 'encode' ? '📤 编码结果' : '📤 解码结果';
+    convert();
+  });
+});
+
+/* ===== 参考表 ===== */
+function renderRef(cat) {
+  const grid = document.getElementById('refGrid');
+  grid.innerHTML = entities[cat].map(([ch, code, name]) => {
+    const escapedCode = code.replace(/&/g, '&amp;');
+    return `<div class="ref-item" data-code="${code.replace(/"/g, '&quot;')}">
+      <span class="ref-char">${ch}</span>
+      <div class="ref-info"><div class="ref-name">${name}</div><div class="ref-code">${escapedCode}</div></div>
+      <span class="ref-copy">复制</span>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('catTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.cat-tab');
+  if (!tab) return;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderRef(tab.dataset.cat);
+});
+
+document.getElementById('refGrid').addEventListener('click', (e) => {
+  const item = e.target.closest('.ref-item');
+  if (item) navigator.clipboard.writeText(item.dataset.code);
+});
+
+/* ===== 事件 ===== */
+document.getElementById('inputText').addEventListener('input', convert);
+
+document.getElementById('btnSwap').addEventListener('click', () => {
+  document.getElementById('inputText').value = document.getElementById('outputText').value;
+  convert();
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  document.getElementById('inputText').value = '';
+  convert();
+});
+
+document.getElementById('btnPaste').addEventListener('click', async () => {
+  try {
+    document.getElementById('inputText').value = await navigator.clipboard.readText();
+    convert();
+  } catch (e) { /* denied */ }
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const output = document.getElementById('outputText').value;
+  if (output) navigator.clipboard.writeText(output);
+});
+
+renderRef('common');
+</script>
+<noscript><p>HTML 实体转换 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
