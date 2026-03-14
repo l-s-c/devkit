@@ -398,6 +398,7 @@ function renderFileList() {
     let sizeHtml = `<span style="font-family:var(--font-code);font-size:11px">${formatSize(f.file.size)}</span>`;
     let statusIcon = '';
 
+    const isGif = f.file.type === 'image/gif';
     if (f.status === 'done' && f.convertedBlob) {
       const diff = f.convertedBlob.size - f.file.size;
       const pct = Math.round((diff / f.file.size) * 100);
@@ -427,6 +428,7 @@ function renderFileList() {
         </div>
         <div class="file-size-info">${sizeHtml}</div>
         ${progress > 0 ? `<div class="file-progress"><div class="file-progress-bar" style="width:${progress}%"></div></div>` : ''}
+        ${isGif ? `<div style="font-size:10px;color:#F59E0B;margin-top:4px">⚠️ GIF 仅保留第一帧</div>` : ''}
       </div>
       ${statusIcon ? `<span class="file-status">${statusIcon}</span>` : ''}
       <div class="file-actions">
