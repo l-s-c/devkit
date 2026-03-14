@@ -42,6 +42,7 @@ export default defineConfig({
         'word-counter': resolve(__dirname, 'pages/word-counter/index.html'),
         'age-calculator': resolve(__dirname, 'pages/age-calculator/index.html'),
         'date-diff': resolve(__dirname, 'pages/date-diff/index.html'),
+        'interest': resolve(__dirname, 'pages/interest/index.html'),
       },
     },
   },
