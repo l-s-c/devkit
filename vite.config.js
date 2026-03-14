@@ -46,6 +46,7 @@ export default defineConfig({
         'csv-viewer': resolve(__dirname, 'pages/csv-viewer/index.html'),
         'prepayment': resolve(__dirname, 'pages/prepayment/index.html'),
         'image-resize': resolve(__dirname, 'pages/image-resize/index.html'),
+        'tax': resolve(__dirname, 'pages/tax/index.html'),
       },
     },
   },

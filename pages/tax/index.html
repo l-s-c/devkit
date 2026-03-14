@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个税计算器 | 个人所得税计算 — DevKit</title>
+<meta name="description" content="2024 个人所得税计算器，七级累进税率，五险一金扣除，专项附加扣除，年终奖单独计税 vs 合并计税对比，智能建议。Tax calculator.">
+<meta name="keywords" content="个税计算器, 个人所得税计算, tax calculator, 工资计算器, 税后工资, 年终奖计税, 五险一金, DevKit">
+<meta property="og:title" content="个税计算器 | 个人所得税计算 — DevKit">
+<meta property="og:description" content="个税计算，五险一金，专项附加扣除，年终奖对比">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/tax/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="个税计算器 — DevKit">
+<meta name="twitter:description" content="个税计算，年终奖单独vs合并对比">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"个税计算器","description":"2024个人所得税计算，五险一金，专项附加扣除，年终奖对比","url":"https://l-s-c.github.io/devkit/pages/tax/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/tax/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.field { margin-bottom: 12px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text-caption); margin-bottom: 5px; }
+.field-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 15px; font-weight: 700; color: var(--text-primary);
+}
+.field-input:focus { outline: none; border-color: var(--brand-500); }
+.field-unit { font-size: 11px; color: var(--text-caption); margin-top: 3px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+/* 展开收起 */
+.toggle-title {
+  font-size: 12px; font-weight: 700; color: var(--text-caption);
+  margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+}
+.toggle-arrow { font-size: 10px; color: var(--brand-500); }
+
+/* 专项附加扣除 chip */
+.deduction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+.deduction-chip {
+  padding: 8px 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); display: flex; align-items: center; gap: 6px;
+  cursor: pointer; transition: all 150ms; font-size: 11px;
+}
+.deduction-chip:hover { border-color: var(--brand-500); }
+.deduction-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.deduction-chip input[type=checkbox] { display: none; }
+.chip-icon { font-size: 14px; }
+.chip-text { font-weight: 600; color: var(--text-secondary); flex: 1; }
+.chip-amount { font-family: var(--font-code); font-size: 10px; color: var(--brand-500); font-weight: 700; }
+
+/* Hero */
+.hero-result {
+  text-align: center; padding: 16px; border-radius: 10px; margin-bottom: 16px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(99,102,241,0.06));
+  border: 1px solid rgba(16,185,129,0.12);
+}
+.hero-label { font-size: 12px; color: var(--text-caption); margin-bottom: 4px; }
+.hero-value { font-family: var(--font-code); font-size: 40px; font-weight: 900; color: #10B981; line-height: 1; }
+
+/* 结果卡片 */
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.result-card {
+  padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.result-card-value { font-family: var(--font-code); font-size: 16px; font-weight: 800; }
+.result-card-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* 分段条 */
+.breakdown-bar { height: 32px; border-radius: 10px; overflow: hidden; display: flex; margin-bottom: 8px; }
+.breakdown-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: #fff; transition: width 400ms;
+}
+.breakdown-legend { display: flex; gap: 12px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* 年终奖对比 */
+.bonus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bonus-card { padding: 14px; border-radius: 10px; border: 1.5px solid var(--border-glass); text-align: center; }
+.bonus-card.better { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.06); }
+.bonus-card-title { font-size: 11px; color: var(--text-caption); margin-bottom: 6px; }
+.bonus-card-value { font-family: var(--font-code); font-size: 18px; font-weight: 800; }
+.bonus-card-sub { font-size: 10px; color: var(--text-caption); margin-top: 4px; }
+.bonus-advice {
+  padding: 10px 14px; border-radius: 6px; background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.15); font-size: 12px; color: #10B981;
+  margin-top: 10px; display: flex; gap: 6px; align-items: center;
+}
+
+/* 税率表 */
+.tax-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+.tax-table th {
+  padding: 6px 8px; text-align: right; font-weight: 700; color: var(--text-caption);
+  border-bottom: 1px solid var(--border-glass); font-size: 10px;
+}
+.tax-table td {
+  padding: 6px 8px; text-align: right; font-family: var(--font-code); font-size: 11px;
+  border-bottom: 0.5px solid var(--border-glass);
+}
+.tax-table tr.current { background: rgba(99,102,241,0.06); font-weight: 700; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .deduction-grid { grid-template-columns: 1fr; }
+  .hero-value { font-size: 32px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">个税计算器 个人所得税计算 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">个税计算器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左侧：输入 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">💼 收入信息</div>
+        <div class="field">
+          <div class="field-label">💰 税前月薪</div>
+          <input type="number" class="field-input" id="salary" value="15000">
+          <div class="field-unit">元/月</div>
+        </div>
+        <div class="field">
+          <div class="field-label">🎁 年终奖</div>
+          <input type="number" class="field-input" id="bonus" value="30000">
+          <div class="field-unit">元/年（可选）</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="toggle-title" id="insToggle">🏥 五险一金 <span class="toggle-arrow" id="insArrow">▼</span></div>
+        <div id="insPanel">
+          <div class="field-row-3">
+            <div class="field"><div class="field-label">养老 %</div><input type="number" class="field-input ins-input" id="pension" value="8" step="0.1"></div>
+            <div class="field"><div class="field-label">医疗 %</div><input type="number" class="field-input ins-input" id="medical" value="2" step="0.1"></div>
+            <div class="field"><div class="field-label">失业 %</div><input type="number" class="field-input ins-input" id="unemploy" value="0.5" step="0.1"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><div class="field-label">公积金 %</div><input type="number" class="field-input ins-input" id="housing" value="12" step="1"></div>
+            <div class="field"><div class="field-label">基数上限</div><input type="number" class="field-input ins-input" id="insBase" value="35283"><div class="field-unit">默认北京 2024</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📋 专项附加扣除</div>
+        <div class="deduction-grid" id="deductionGrid">
+          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">👶</span><span class="chip-text">子女教育</span><span class="chip-amount">2000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="1000"><span class="chip-icon">🏠</span><span class="chip-text">房贷利息</span><span class="chip-amount">1000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="1500"><span class="chip-icon">🏢</span><span class="chip-text">住房租金</span><span class="chip-amount">1500/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="3000"><span class="chip-icon">👴</span><span class="chip-text">赡养老人</span><span class="chip-amount">3000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="400"><span class="chip-icon">📚</span><span class="chip-text">继续教育</span><span class="chip-amount">400/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">👶</span><span class="chip-text">3岁以下婴幼儿</span><span class="chip-amount">2000/月</span></label>
+        </div>
+        <div style="font-size:11px;color:var(--text-caption)">专项扣除合计 <strong id="deductionTotal" style="color:var(--brand-500)">¥0</strong>/月</div>
+      </div>
+    </div>
+
+    <!-- 右侧：结果 -->
+    <div>
+      <div class="panel">
+        <div class="hero-result">
+          <div class="hero-label">💰 每月到手</div>
+          <div class="hero-value" id="takeHome">—</div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-card"><div class="result-card-value" style="color:#EF4444" id="monthTax">—</div><div class="result-card-label">月个税</div></div>
+          <div class="result-card"><div class="result-card-value" style="color:#F59E0B" id="monthIns">—</div><div class="result-card-label">五险一金</div></div>
+          <div class="result-card"><div class="result-card-value" id="yearTax">—</div><div class="result-card-label">年个税合计</div></div>
+          <div class="result-card"><div class="result-card-value" style="color:#10B981" id="yearTakeHome">—</div><div class="result-card-label">年到手合计</div></div>
+        </div>
+
+        <div class="breakdown-bar">
+          <div class="breakdown-seg" id="segTakeHome" style="width:75%;background:#10B981">75%</div>
+          <div class="breakdown-seg" id="segIns" style="width:22%;background:#F59E0B">22%</div>
+          <div class="breakdown-seg" id="segTax" style="width:3%;background:#EF4444">3%</div>
+        </div>
+        <div class="breakdown-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>到手</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>五险一金</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>个税</div>
+        </div>
+      </div>
+
+      <!-- 年终奖对比 -->
+      <div class="panel" id="bonusPanel">
+        <div class="section-title">🎁 年终奖计税方式对比</div>
+        <div class="bonus-grid">
+          <div class="bonus-card" id="bonusSeparate">
+            <div class="bonus-card-title">单独计税</div>
+            <div class="bonus-card-value" id="bonusSepTax">—</div>
+            <div class="bonus-card-sub">税率 <span id="bonusSepRate">—</span></div>
+            <div class="bonus-card-sub">到手 <span id="bonusSepNet">—</span></div>
+          </div>
+          <div class="bonus-card" id="bonusCombined">
+            <div class="bonus-card-title">合并计税</div>
+            <div class="bonus-card-value" id="bonusCmbTax">—</div>
+            <div class="bonus-card-sub">并入年收入</div>
+            <div class="bonus-card-sub">到手 <span id="bonusCmbNet">—</span></div>
+          </div>
+        </div>
+        <div class="bonus-advice">
+          <span>💡</span>
+          <span id="bonusAdviceText"></span>
+        </div>
+      </div>
+
+      <!-- 税率表 -->
+      <div class="panel">
+        <div class="toggle-title" id="tableToggle">📊 七级税率表 <span class="toggle-arrow" id="tableArrow">▶</span></div>
+        <div id="tablePanel" style="display:none">
+          <table class="tax-table">
+            <thead><tr><th>级数</th><th>年应纳税所得额</th><th>税率</th><th>速算扣除数</th></tr></thead>
+            <tbody id="taxTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入月薪自动计算</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地计算</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const fmt = n => '¥' + Math.round(n).toLocaleString();
+
+// Architect 指定的税率表
+const BRACKETS = [0, 36000, 144000, 300000, 420000, 660000, 960000];
+const RATES    = [0.03, 0.10, 0.20, 0.25, 0.30, 0.35, 0.45];
+const DEDUCTS  = [0, 2520, 16920, 31920, 52920, 85920, 181920];
+const BRACKET_LABELS = ['≤36,000', '36,000~144,000', '144,000~300,000', '300,000~420,000', '420,000~660,000', '660,000~960,000', '>960,000'];
+
+// 月度速算（年终奖单独计税用）
+const M_BRACKETS = [0, 3000, 12000, 25000, 35000, 55000, 80000];
+
+function findBracket(taxable, brackets) {
+  let idx = 0;
+  for (let i = brackets.length - 1; i >= 0; i--) {
+    if (taxable > brackets[i]) { idx = i; break; }
+  }
+  return idx;
+}
+
+function calcYearTax(yearTaxable) {
+  if (yearTaxable <= 0) return { tax: 0, rate: 0, bracket: 0 };
+  const b = findBracket(yearTaxable, BRACKETS);
+  const tax = Math.max(0, yearTaxable * RATES[b] - DEDUCTS[b]);
+  return { tax, rate: RATES[b], bracket: b };
+}
+
+function calcBonusTax(bonus) {
+  if (bonus <= 0) return { tax: 0, rate: 0 };
+  const monthly = bonus / 12;
+  const b = findBracket(monthly, M_BRACKETS);
+  const tax = Math.max(0, bonus * RATES[b] - DEDUCTS[b]);
+  return { tax, rate: RATES[b] };
+}
+
+function getDeductions() {
+  let total = 0;
+  document.querySelectorAll('#deductionGrid input:checked').forEach(cb => {
+    total += parseInt(cb.dataset.amount) || 0;
+  });
+  return total;
+}
+
+function calc() {
+  const salary = parseFloat(document.getElementById('salary').value) || 0;
+  const bonus = parseFloat(document.getElementById('bonus').value) || 0;
+  const pension = (parseFloat(document.getElementById('pension').value) || 0) / 100;
+  const medical = (parseFloat(document.getElementById('medical').value) || 0) / 100;
+  const unemploy = (parseFloat(document.getElementById('unemploy').value) || 0) / 100;
+  const housing = (parseFloat(document.getElementById('housing').value) || 0) / 100;
+  const insBase = parseFloat(document.getElementById('insBase').value) || salary;
+  const base = Math.min(salary, insBase);
+  const deductions = getDeductions();
+
+  // 月五险一金
+  const monthIns = base * (pension + medical + unemploy + housing);
+
+  // 月应纳税所得额 → 年
+  const monthTaxable = salary - monthIns - 5000 - deductions;
+  const yearTaxable = Math.max(0, monthTaxable * 12);
+  const { tax: yearTax, rate, bracket } = calcYearTax(yearTaxable);
+  const monthTax = yearTax / 12;
+
+  // 到手
+  const takeHome = salary - monthIns - monthTax;
+  const yearTakeHome = takeHome * 12;
+
+  document.getElementById('takeHome').textContent = fmt(takeHome);
+  document.getElementById('monthTax').textContent = fmt(monthTax);
+  document.getElementById('monthIns').textContent = fmt(monthIns);
+  document.getElementById('yearTax').textContent = fmt(yearTax);
+  document.getElementById('yearTakeHome').textContent = fmt(yearTakeHome);
+  document.getElementById('deductionTotal').textContent = fmt(deductions);
+
+  // 分段条
+  if (salary > 0) {
+    const pctTake = Math.round(takeHome / salary * 100);
+    const pctIns = Math.round(monthIns / salary * 100);
+    const pctTax = Math.max(0, 100 - pctTake - pctIns);
+    document.getElementById('segTakeHome').style.width = pctTake + '%';
+    document.getElementById('segTakeHome').textContent = pctTake + '%';
+    document.getElementById('segIns').style.width = pctIns + '%';
+    document.getElementById('segIns').textContent = pctIns + '%';
+    document.getElementById('segTax').style.width = Math.max(1, pctTax) + '%';
+    document.getElementById('segTax').textContent = pctTax + '%';
+  }
+
+  // 年终奖对比
+  if (bonus > 0) {
+    document.getElementById('bonusPanel').style.display = 'block';
+    // 单独计税
+    const sep = calcBonusTax(bonus);
+    document.getElementById('bonusSepTax').textContent = fmt(sep.tax);
+    document.getElementById('bonusSepRate').textContent = Math.round(sep.rate * 100) + '%';
+    document.getElementById('bonusSepNet').textContent = fmt(bonus - sep.tax);
+    // 合并计税
+    const combinedTaxable = yearTaxable + bonus;
+    const cmbResult = calcYearTax(combinedTaxable);
+    const cmbTax = cmbResult.tax - yearTax; // 年终奖导致的增量税
+    document.getElementById('bonusCmbTax').textContent = fmt(cmbTax);
+    document.getElementById('bonusCmbNet').textContent = fmt(bonus - cmbTax);
+    // 哪个更好
+    const sepBetter = sep.tax <= cmbTax;
+    document.getElementById('bonusSeparate').className = 'bonus-card' + (sepBetter ? ' better' : '');
+    document.getElementById('bonusCombined').className = 'bonus-card' + (sepBetter ? '' : ' better');
+    const diff = Math.abs(sep.tax - cmbTax);
+    document.getElementById('bonusAdviceText').textContent = sepBetter
+      ? `建议选择「单独计税」，可多到手 ${fmt(diff)}`
+      : `建议选择「合并计税」，可多到手 ${fmt(diff)}`;
+  } else {
+    document.getElementById('bonusPanel').style.display = 'none';
+  }
+
+  // 税率表
+  renderTaxTable(bracket);
+
+  // 状态栏
+  document.getElementById('statusInfo').textContent =
+    `月薪 ${fmt(salary)} · 到手 ${fmt(takeHome)} · 个税 ${fmt(monthTax)} · 税率 ${Math.round(rate * 100)}%`;
+}
+
+function renderTaxTable(currentBracket) {
+  document.getElementById('taxTableBody').innerHTML = BRACKETS.map((b, i) => {
+    const cls = i === currentBracket ? ' class="current"' : '';
+    return `<tr${cls}><td>${i + 1}</td><td>${BRACKET_LABELS[i]}</td><td>${Math.round(RATES[i] * 100)}%</td><td>${DEDUCTS[i].toLocaleString()}</td></tr>`;
+  }).join('');
+}
+
+/* ===== 事件绑定 ===== */
+['salary', 'bonus'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calc)
+);
+document.querySelectorAll('.ins-input').forEach(el =>
+  el.addEventListener('input', calc)
+);
+
+// 专项附加扣除 chip
+document.getElementById('deductionGrid').addEventListener('change', e => {
+  const chip = e.target.closest('.deduction-chip');
+  if (chip) chip.classList.toggle('active', e.target.checked);
+  calc();
+});
+
+// 五险一金展开/收起
+document.getElementById('insToggle').addEventListener('click', () => {
+  const p = document.getElementById('insPanel');
+  const a = document.getElementById('insArrow');
+  if (p.style.display === 'none') { p.style.display = 'block'; a.textContent = '▼'; }
+  else { p.style.display = 'none'; a.textContent = '▶'; }
+});
+
+// 税率表展开/收起
+document.getElementById('tableToggle').addEventListener('click', () => {
+  const p = document.getElementById('tablePanel');
+  const a = document.getElementById('tableArrow');
+  if (p.style.display === 'none') { p.style.display = 'block'; a.textContent = '▼'; }
+  else { p.style.display = 'none'; a.textContent = '▶'; }
+});
+
+calc();
+</script>
+<noscript><p>个税计算器 个人所得税计算 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
