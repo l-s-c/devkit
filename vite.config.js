@@ -41,6 +41,7 @@ export default defineConfig({
         toml: resolve(__dirname, 'pages/toml/index.html'),
         'word-counter': resolve(__dirname, 'pages/word-counter/index.html'),
         'age-calculator': resolve(__dirname, 'pages/age-calculator/index.html'),
+        'date-diff': resolve(__dirname, 'pages/date-diff/index.html'),
       },
     },
   },

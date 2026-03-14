@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日期差计算 | Date Duration Calculator — DevKit</title>
+<meta name="description" content="在线日期差计算器，计算两个日期间隔天数、工作日周末统计、日期加减。Days between dates calculator online.">
+<meta name="keywords" content="date calculator, days between dates, 日期差计算, 日期间隔, 工作日计算, date duration, DevKit">
+<meta property="og:title" content="日期差计算 | Date Duration Calculator — DevKit">
+<meta property="og:description" content="日期间隔计算，工作日周末统计，日期加减">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/date-diff/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="日期差计算 — DevKit">
+<meta name="twitter:description" content="日期间隔计算，工作日统计">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"日期差计算","description":"在线日期差计算器，日期间隔、工作日统计、日期加减","url":"https://l-s-c.github.io/devkit/pages/date-diff/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/date-diff/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+
+/* 模式 Tab */
+.mode-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.mode-tab {
+  flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.mode-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.mode-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+
+/* 日期输入行 */
+.input-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: end; margin-bottom: 20px; }
+.input-label { font-size: 12px; font-weight: 700; color: var(--text-caption); margin-bottom: 6px; }
+.date-input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 16px; font-weight: 700; color: var(--text-primary);
+}
+.date-input:focus { outline: none; border-color: var(--brand-500); }
+.swap-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-glass);
+  background: var(--bg-glass); color: var(--brand-500); font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 200ms; margin-bottom: 4px;
+}
+.swap-btn:hover { transform: rotate(180deg); border-color: var(--brand-500); }
+
+/* Hero 大数字 */
+.hero-result { text-align: center; padding: 8px 0 16px; }
+.hero-number {
+  font-family: var(--font-code); font-size: 64px; font-weight: 900;
+  background: linear-gradient(135deg, #6366F1, #A855F7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+.hero-unit { font-size: 16px; color: var(--text-secondary); font-weight: 600; margin-top: 4px; }
+.hero-desc { font-size: 13px; color: var(--text-caption); margin-top: 8px; font-family: var(--font-code); }
+
+/* 详情 4 格 */
+.detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+.detail-card {
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.detail-value { font-family: var(--font-code); font-size: 20px; font-weight: 800; }
+.detail-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* 工作日统计 */
+.work-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.work-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.work-card {
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+}
+.work-value { font-family: var(--font-code); font-size: 22px; font-weight: 800; }
+.work-value.workday { color: var(--brand-500); }
+.work-value.weekend { color: #F59E0B; }
+.work-value.total { color: #10B981; }
+.work-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+.work-bar { height: 8px; border-radius: 4px; background: var(--border-glass); margin-top: 10px; overflow: hidden; }
+.work-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand-500), #F59E0B); transition: width 400ms; }
+.work-pct { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: var(--text-caption); }
+
+/* 加减模式 */
+.addsub-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: end; margin-bottom: 16px; }
+.num-input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 16px; font-weight: 700;
+  color: var(--text-primary); text-align: center;
+}
+.num-input:focus { outline: none; border-color: var(--brand-500); }
+.addsub-btns { display: flex; gap: 4px; }
+.addsub-btn {
+  flex: 1; padding: 14px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.addsub-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.addsub-btn.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+.result-card {
+  padding: 20px; border-radius: 10px; text-align: center; margin-top: 16px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(168,85,247,0.06));
+  border: 1px solid rgba(99,102,241,0.1);
+}
+.result-date { font-family: var(--font-code); font-size: 28px; font-weight: 900; color: var(--brand-500); }
+.result-weekday { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .input-row { grid-template-columns: 1fr; }
+  .swap-btn { margin: 0 auto; }
+  .detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-row { grid-template-columns: 1fr; }
+  .hero-number { font-size: 48px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">日期差计算 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">日期差计算</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="mode-tabs" id="modeTabs">
+    <button class="mode-tab active" data-mode="diff">📅 日期差值</button>
+    <button class="mode-tab" data-mode="addsub">➕ 日期加减</button>
+  </div>
+
+  <!-- 日期差值模式 -->
+  <div id="diffPanel">
+    <div class="panel">
+      <div class="input-row">
+        <div>
+          <div class="input-label">📅 开始日期</div>
+          <input type="date" class="date-input" id="startDate" value="2025-01-01">
+        </div>
+        <button class="swap-btn" id="btnSwap">⇄</button>
+        <div>
+          <div class="input-label">📅 结束日期</div>
+          <input type="date" class="date-input" id="endDate">
+        </div>
+      </div>
+
+      <div class="hero-result">
+        <div class="hero-number" id="diffDays">—</div>
+        <div class="hero-unit">天</div>
+        <div class="hero-desc" id="diffDesc"></div>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-card"><div class="detail-value" id="diffWeeks">—</div><div class="detail-label">周</div></div>
+        <div class="detail-card"><div class="detail-value" id="diffMonths">—</div><div class="detail-label">月</div></div>
+        <div class="detail-card"><div class="detail-value" id="diffHours">—</div><div class="detail-label">小时</div></div>
+        <div class="detail-card"><div class="detail-value" id="diffMinutes">—</div><div class="detail-label">分钟</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="work-title">📊 工作日 / 周末统计</div>
+      <div class="work-row">
+        <div class="work-card"><div class="work-value workday" id="workdays">—</div><div class="work-label">工作日</div></div>
+        <div class="work-card"><div class="work-value weekend" id="weekends">—</div><div class="work-label">周末</div></div>
+        <div class="work-card"><div class="work-value total" id="totalDays">—</div><div class="work-label">总天数</div></div>
+      </div>
+      <div class="work-bar"><div class="work-bar-fill" id="workBar" style="width:0"></div></div>
+      <div class="work-pct">
+        <span>工作日 <span id="workPct">0%</span></span>
+        <span>周末 <span id="weekendPct">0%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 日期加减模式 -->
+  <div id="addsubPanel" style="display:none">
+    <div class="panel">
+      <div style="margin-bottom:16px">
+        <div class="input-label">📅 起始日期</div>
+        <input type="date" class="date-input" id="baseDate">
+      </div>
+      <div class="addsub-row">
+        <div>
+          <div class="input-label">天数</div>
+          <input type="number" class="num-input" id="addDays" value="30">
+        </div>
+        <div class="addsub-btns">
+          <button class="addsub-btn active" id="btnAdd">➕ 加</button>
+          <button class="addsub-btn" id="btnSub">➖ 减</button>
+        </div>
+      </div>
+      <div class="result-card">
+        <div style="font-size:12px;color:var(--text-caption);margin-bottom:4px">📅 目标日期</div>
+        <div class="result-date" id="resultDate">—</div>
+        <div class="result-weekday" id="resultWeekday"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择日期自动计算</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地计算</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+let op = 'add';
+
+// 初始化日期
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('endDate').value = today;
+document.getElementById('baseDate').value = today;
+
+/* ===== 日期差值 ===== */
+function calcDiff() {
+  const sVal = document.getElementById('startDate').value;
+  const eVal = document.getElementById('endDate').value;
+  if (!sVal || !eVal) return;
+
+  const s = new Date(sVal + 'T00:00:00');
+  const e = new Date(eVal + 'T00:00:00');
+  const diffMs = e - s;
+  const days = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  const absDays = Math.abs(days);
+
+  document.getElementById('diffDays').textContent = days;
+  document.getElementById('diffWeeks').textContent = Math.floor(absDays / 7);
+  document.getElementById('diffHours').textContent = (absDays * 24).toLocaleString();
+  document.getElementById('diffMinutes').textContent = (absDays * 24 * 60).toLocaleString();
+
+  // 年月日分解
+  const earlier = s < e ? s : e;
+  const later = s < e ? e : s;
+  let y = later.getFullYear() - earlier.getFullYear();
+  let m = later.getMonth() - earlier.getMonth();
+  let d = later.getDate() - earlier.getDate();
+  if (d < 0) { m--; d += new Date(later.getFullYear(), later.getMonth(), 0).getDate(); }
+  if (m < 0) { y--; m += 12; }
+  document.getElementById('diffMonths').textContent = y * 12 + m;
+  document.getElementById('diffDesc').textContent = `${y} 年 ${m} 月 ${d} 天`;
+
+  // 工作日/周末（遍历 getDay）
+  let workdays = 0, weekends = 0;
+  const cur = new Date(earlier);
+  while (cur < later) {
+    const dow = cur.getDay();
+    if (dow === 0 || dow === 6) weekends++; else workdays++;
+    cur.setDate(cur.getDate() + 1);
+  }
+  document.getElementById('workdays').textContent = workdays;
+  document.getElementById('weekends').textContent = weekends;
+  document.getElementById('totalDays').textContent = absDays;
+  const pct = absDays ? Math.round(workdays / absDays * 100) : 0;
+  document.getElementById('workBar').style.width = pct + '%';
+  document.getElementById('workPct').textContent = pct + '%';
+  document.getElementById('weekendPct').textContent = (100 - pct) + '%';
+
+  document.getElementById('statusInfo').textContent = `${sVal} → ${eVal} · ${days} 天 · 工作日 ${workdays}`;
+}
+
+/* ===== 日期加减 ===== */
+function calcAddSub() {
+  const baseVal = document.getElementById('baseDate').value;
+  const days = parseInt(document.getElementById('addDays').value) || 0;
+  if (!baseVal) return;
+  const base = new Date(baseVal + 'T00:00:00');
+  const result = new Date(base);
+  result.setDate(result.getDate() + (op === 'add' ? days : -days));
+  const rStr = result.toISOString().split('T')[0];
+  document.getElementById('resultDate').textContent = rStr;
+  document.getElementById('resultWeekday').textContent = WEEKDAYS[result.getDay()];
+  document.getElementById('statusInfo').textContent = `${baseVal} ${op === 'add' ? '+' : '-'} ${days} 天 = ${rStr}`;
+}
+
+/* ===== 事件 ===== */
+document.getElementById('modeTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.mode-tab');
+  if (!tab) return;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const mode = tab.dataset.mode;
+  document.getElementById('diffPanel').style.display = mode === 'diff' ? '' : 'none';
+  document.getElementById('addsubPanel').style.display = mode === 'addsub' ? '' : 'none';
+  if (mode === 'addsub') calcAddSub();
+});
+
+document.getElementById('startDate').addEventListener('change', calcDiff);
+document.getElementById('endDate').addEventListener('change', calcDiff);
+document.getElementById('btnSwap').addEventListener('click', () => {
+  const s = document.getElementById('startDate'), e = document.getElementById('endDate');
+  [s.value, e.value] = [e.value, s.value];
+  calcDiff();
+});
+
+document.getElementById('baseDate').addEventListener('change', calcAddSub);
+document.getElementById('addDays').addEventListener('input', calcAddSub);
+document.getElementById('btnAdd').addEventListener('click', () => {
+  op = 'add';
+  document.getElementById('btnAdd').classList.add('active');
+  document.getElementById('btnSub').classList.remove('active');
+  calcAddSub();
+});
+document.getElementById('btnSub').addEventListener('click', () => {
+  op = 'sub';
+  document.getElementById('btnSub').classList.add('active');
+  document.getElementById('btnAdd').classList.remove('active');
+  calcAddSub();
+});
+
+calcDiff();
+calcAddSub();
+</script>
+<noscript><p>日期差计算 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
