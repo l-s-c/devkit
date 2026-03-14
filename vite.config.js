@@ -51,6 +51,7 @@ export default defineConfig({
         'favicon': resolve(__dirname, 'pages/favicon/index.html'),
         'unicode': resolve(__dirname, 'pages/unicode/index.html'),
         'lorem': resolve(__dirname, 'pages/lorem/index.html'),
+        'encrypt': resolve(__dirname, 'pages/encrypt/index.html'),
       },
     },
   },

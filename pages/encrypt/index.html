@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本加密解密 | Text Encrypt Decrypt — DevKit</title>
+<meta name="description" content="在线文本加密解密，支持 AES-256-GCM、ROT13、Caesar 位移、SHA 哈希，纯浏览器运算。Text encrypt decrypt online.">
+<meta name="keywords" content="text encrypt, AES加密, 在线加密, 文本加密工具, ROT13, Caesar, SHA256, DevKit">
+<meta property="og:title" content="文本加密解密 | Text Encrypt Decrypt — DevKit">
+<meta property="og:description" content="AES-GCM加密/ROT13/Caesar/SHA哈希，纯前端">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/encrypt/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文本加密解密 — DevKit">
+<meta name="twitter:description" content="AES/ROT13/Caesar/SHA 在线加密解密">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"文本加密解密","description":"在线文本加密解密，AES-GCM/ROT13/Caesar/SHA哈希","url":"https://l-s-c.github.io/devkit/pages/encrypt/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/encrypt/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Field */
+.field { margin-bottom: 12px; }
+.field-label {
+  font-size: 12px; font-weight: 700; color: var(--text-caption);
+  margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;
+}
+.field-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 13px; font-weight: 700;
+  color: var(--text-primary);
+}
+.field-input:focus { outline: none; border-color: var(--brand-500); }
+.text-area {
+  width: 100%; min-height: 140px; padding: 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 13px; color: var(--text-primary);
+  resize: vertical; line-height: 1.6;
+}
+.text-area:focus { outline: none; border-color: var(--brand-500); }
+
+/* Password */
+.pwd-wrap { position: relative; }
+.pwd-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  border: none; background: none; cursor: pointer; font-size: 16px; color: var(--text-caption);
+}
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slider-label { font-size: 11px; font-weight: 700; color: var(--text-caption); width: 40px; flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--brand-500); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500); width: 28px; text-align: right; }
+
+/* Copy */
+.copy-btn {
+  padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 10px; font-weight: 700;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.copy-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Actions */
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.action-btn {
+  padding: 12px; border-radius: 10px; border: none; font-size: 13px;
+  font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.btn-encrypt { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+.btn-decrypt { background: var(--bg-glass); border: 1.5px solid var(--brand-500); color: var(--brand-500); }
+.btn-encrypt:hover, .btn-decrypt:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.2); }
+
+/* Status */
+.status {
+  padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  margin-top: 10px; display: none; align-items: center; gap: 6px;
+}
+.status.success { display: flex; background: rgba(16,185,129,0.08); color: #10B981; border: 1px solid rgba(16,185,129,0.15); }
+.status.error { display: flex; background: rgba(239,68,68,0.08); color: #EF4444; border: 1px solid rgba(239,68,68,0.15); }
+
+/* Algo info */
+.algo-info {
+  padding: 10px 14px; border-radius: 6px; background: rgba(99,102,241,0.06);
+  font-size: 11px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;
+}
+.algo-info strong { color: var(--brand-500); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">文本加密解密 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">文本加密解密</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔧 加密算法</div>
+    <div class="tabs" id="algoTabs">
+      <button class="tab active" data-algo="aes">🔐 AES</button>
+      <button class="tab" data-algo="rot13">🔄 ROT13</button>
+      <button class="tab" data-algo="caesar">🏛️ Caesar</button>
+      <button class="tab" data-algo="hash">🔒 哈希</button>
+    </div>
+  </div>
+
+  <div class="dual">
+    <!-- 左：输入 -->
+    <div>
+      <div class="panel">
+        <div class="field-label">
+          <span>📝 输入文本</span>
+          <button class="copy-btn" id="copyInput">复制</button>
+        </div>
+        <textarea class="text-area" id="inputText" placeholder="输入要加密的文本...">Hello World 你好世界 😀</textarea>
+      </div>
+
+      <!-- AES 密码面板 -->
+      <div class="panel" id="aesPanel">
+        <div class="section-title">🔑 密码</div>
+        <div class="field">
+          <div class="pwd-wrap">
+            <input type="password" class="field-input" id="password" placeholder="输入加密密码...">
+            <button class="pwd-toggle" id="pwdToggle">👁️</button>
+          </div>
+        </div>
+        <div class="algo-info">
+          <strong>AES-256-GCM</strong> + PBKDF2 密钥派生<br>
+          随机 Salt(16B) + IV(12B)，每次加密结果不同，安全性高
+        </div>
+      </div>
+
+      <!-- Caesar 面板 -->
+      <div class="panel" id="caesarPanel" style="display:none">
+        <div class="slider-row">
+          <span class="slider-label">位移</span>
+          <input type="range" class="slider-input" id="caesarShift" min="1" max="25" value="3">
+          <span class="slider-val" id="caesarShiftVal">3</span>
+        </div>
+        <div class="algo-info">
+          <strong>Caesar 密码</strong>：字母表位移 1-25，仅对 A-Z/a-z 有效
+        </div>
+      </div>
+
+      <!-- 哈希面板 -->
+      <div class="panel" id="hashPanel" style="display:none">
+        <div class="tabs" id="hashTabs">
+          <button class="tab active" data-hash="SHA-256">SHA-256</button>
+          <button class="tab" data-hash="SHA-1">SHA-1</button>
+          <button class="tab" data-hash="SHA-384">SHA-384</button>
+          <button class="tab" data-hash="SHA-512">SHA-512</button>
+        </div>
+        <div class="algo-info">
+          <strong>单向哈希</strong>：不可逆，常用于数据完整性校验和密码存储
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="action-row">
+          <button class="action-btn btn-encrypt" id="encryptBtn">🔒 加密</button>
+          <button class="action-btn btn-decrypt" id="decryptBtn">🔓 解密</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：输出 -->
+    <div>
+      <div class="panel">
+        <div class="field-label">
+          <span>🔢 输出结果</span>
+          <button class="copy-btn" id="copyOutput">复制</button>
+        </div>
+        <textarea class="text-area" id="outputText" placeholder="加密/解密结果..." readonly style="min-height:200px"></textarea>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">选择算法加密或解密</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地运算 · 数据不离开浏览器</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let algo = 'aes', hashAlgo = 'SHA-256';
+
+/* ===== ROT13 ===== */
+function rot13(str) {
+  return str.replace(/[a-zA-Z]/g, c => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + 13) % 26 + base);
+  });
+}
+
+/* ===== Caesar ===== */
+function caesar(str, shift, decrypt = false) {
+  const s = decrypt ? (26 - shift) % 26 : shift;
+  return str.replace(/[a-zA-Z]/g, c => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + s) % 26 + base);
+  });
+}
+
+/* ===== AES-256-GCM + PBKDF2 ===== */
+/* 密文格式: base64(salt(16) + iv(12) + ciphertext) */
+async function aesEncrypt(text, password) {
+  const enc = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+  );
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(text));
+  const buf = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+  buf.set(salt, 0);
+  buf.set(iv, 16);
+  buf.set(new Uint8Array(encrypted), 28);
+  return btoa(String.fromCharCode(...buf));
+}
+
+async function aesDecrypt(b64, password) {
+  const dec = new TextDecoder();
+  const enc = new TextEncoder();
+  const buf = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const salt = buf.slice(0, 16);
+  const iv = buf.slice(16, 28);
+  const data = buf.slice(28);
+  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+  );
+  const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+  return dec.decode(decrypted);
+}
+
+/* ===== Hash ===== */
+async function hashText(text, algorithm) {
+  const buf = await crypto.subtle.digest(algorithm, new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/* ===== 状态 ===== */
+function showStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.className = 'status ' + type;
+  el.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + msg;
+}
+function clearStatus() { document.getElementById('status').className = 'status'; }
+
+/* ===== 加密 ===== */
+async function doEncrypt() {
+  const input = document.getElementById('inputText').value;
+  if (!input) { showStatus('请输入文本', 'error'); return; }
+  try {
+    let result = '';
+    if (algo === 'aes') {
+      const pwd = document.getElementById('password').value;
+      if (!pwd) { showStatus('请输入密码', 'error'); return; }
+      result = await aesEncrypt(input, pwd);
+      showStatus('AES-256-GCM 加密成功', 'success');
+    } else if (algo === 'rot13') {
+      result = rot13(input);
+      showStatus('ROT13 转换完成', 'success');
+    } else if (algo === 'caesar') {
+      const shift = parseInt(document.getElementById('caesarShift').value);
+      result = caesar(input, shift);
+      showStatus(`Caesar 位移 ${shift} 加密完成`, 'success');
+    } else if (algo === 'hash') {
+      result = await hashText(input, hashAlgo);
+      showStatus(`${hashAlgo} 哈希完成（不可逆）`, 'success');
+    }
+    document.getElementById('outputText').value = result;
+    document.getElementById('statusInfo').textContent = `${algo.toUpperCase()} · 加密完成`;
+  } catch (e) { showStatus('加密失败: ' + e.message, 'error'); }
+}
+
+/* ===== 解密 ===== */
+async function doDecrypt() {
+  const input = document.getElementById('outputText').value || document.getElementById('inputText').value;
+  if (!input) { showStatus('请输入要解密的文本', 'error'); return; }
+  try {
+    let result = '';
+    if (algo === 'aes') {
+      const pwd = document.getElementById('password').value;
+      if (!pwd) { showStatus('请输入密码', 'error'); return; }
+      result = await aesDecrypt(input, pwd);
+      showStatus('AES-256-GCM 解密成功', 'success');
+    } else if (algo === 'rot13') {
+      result = rot13(input);
+      showStatus('ROT13 转换完成（自反）', 'success');
+    } else if (algo === 'caesar') {
+      const shift = parseInt(document.getElementById('caesarShift').value);
+      result = caesar(input, shift, true);
+      showStatus(`Caesar 位移 ${shift} 解密完成`, 'success');
+    }
+    document.getElementById('inputText').value = result;
+    document.getElementById('statusInfo').textContent = `${algo.toUpperCase()} · 解密完成`;
+  } catch (e) { showStatus('解密失败：密码错误或密文损坏', 'error'); }
+}
+
+/* ===== 自动处理（ROT13/Caesar/Hash 输入即转换）===== */
+function autoProcess() {
+  if (algo === 'rot13' || algo === 'caesar' || algo === 'hash') doEncrypt();
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('algoTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  algo = tab.dataset.algo;
+  document.querySelectorAll('#algoTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.algo === algo));
+  document.getElementById('aesPanel').style.display = algo === 'aes' ? 'block' : 'none';
+  document.getElementById('caesarPanel').style.display = algo === 'caesar' ? 'block' : 'none';
+  document.getElementById('hashPanel').style.display = algo === 'hash' ? 'block' : 'none';
+  document.getElementById('decryptBtn').style.display = algo === 'hash' ? 'none' : '';
+  clearStatus();
+  autoProcess();
+});
+
+document.getElementById('hashTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  hashAlgo = tab.dataset.hash;
+  document.querySelectorAll('#hashTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.hash === hashAlgo));
+  autoProcess();
+});
+
+document.getElementById('caesarShift').addEventListener('input', function() {
+  document.getElementById('caesarShiftVal').textContent = this.value;
+  autoProcess();
+});
+
+document.getElementById('inputText').addEventListener('input', autoProcess);
+document.getElementById('encryptBtn').addEventListener('click', doEncrypt);
+document.getElementById('decryptBtn').addEventListener('click', doDecrypt);
+
+document.getElementById('pwdToggle').addEventListener('click', () => {
+  const el = document.getElementById('password');
+  el.type = el.type === 'password' ? 'text' : 'password';
+});
+
+document.getElementById('copyInput').addEventListener('click', function() {
+  navigator.clipboard.writeText(document.getElementById('inputText').value).then(() => {
+    this.textContent = '已复制 ✓'; setTimeout(() => this.textContent = '复制', 1500);
+  });
+});
+document.getElementById('copyOutput').addEventListener('click', function() {
+  navigator.clipboard.writeText(document.getElementById('outputText').value).then(() => {
+    this.textContent = '已复制 ✓'; setTimeout(() => this.textContent = '复制', 1500);
+  });
+});
+</script>
+<noscript><p>文本加密解密 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
