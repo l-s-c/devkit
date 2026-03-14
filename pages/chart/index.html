@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图表生成器 | Chart Maker Online — DevKit</title>
+<meta name="description" content="在线图表生成器，柱状图/折线图/饼图/环形图，输入数据即时生成，导出PNG。Chart maker online.">
+<meta name="keywords" content="chart maker, 图表生成器, 在线做图表, chart generator, DevKit">
+<meta property="og:title" content="图表生成器 | Chart Maker Online — DevKit">
+<meta property="og:description" content="输入数据生成柱状图折线图饼图环形图">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/chart/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图表生成器 — DevKit">
+<meta name="twitter:description" content="在线图表生成器">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"图表生成器","description":"在线图表生成器，柱状图折线图饼图环形图","url":"https://l-s-c.github.io/devkit/pages/chart/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/chart/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Title input */
+.title-input {
+  width: 100%; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 600;
+  color: var(--text-primary); outline: none; transition: border-color 150ms; margin-bottom: 12px;
+}
+.title-input:focus { border-color: var(--brand-500); }
+
+/* Templates */
+.tpl-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.tpl-chip {
+  padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.tpl-chip:hover { border-color: var(--brand-500); color: var(--brand-500); background: rgba(99,102,241,0.08); }
+
+/* Textarea */
+.data-textarea {
+  width: 100%; height: 180px; padding: 12px; border-radius: 6px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 12px; color: var(--text-primary);
+  resize: vertical; outline: none; transition: border-color 150ms;
+}
+.data-textarea:focus { border-color: var(--brand-500); }
+.data-hint { font-size: 10px; color: var(--text-caption); margin-top: 4px; }
+
+/* Chart */
+.chart-wrap {
+  border-radius: 10px; padding: 16px; background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+}
+.chart-wrap canvas { width: 100% !important; max-height: 360px; }
+
+/* Actions */
+.action-row { display: flex; gap: 8px; }
+.gen-btn {
+  flex: 1; padding: 14px; border-radius: 10px; border: 1.5px solid var(--brand-500);
+  background: rgba(99,102,241,0.08); color: var(--brand-500);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.gen-btn:hover { background: var(--brand-500); color: #fff; }
+.action-btn {
+  flex: 1; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 150ms;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">图表生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">图表生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- 左：输入 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">📋 图表类型</div>
+        <div class="tabs" id="typeTabs">
+          <button class="tab active" data-type="bar">📊 柱状图</button>
+          <button class="tab" data-type="line">📈 折线图</button>
+          <button class="tab" data-type="pie">🥧 饼图</button>
+          <button class="tab" data-type="doughnut">🍩 环形图</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📝 数据输入</div>
+        <input class="title-input" id="chartTitle" placeholder="图表标题（可选）" value="季度销售额">
+        <div class="tpl-row" id="tplRow">
+          <span class="tpl-chip" data-tpl="0">📈 季度销售</span>
+          <span class="tpl-chip" data-tpl="1">💰 月度支出</span>
+          <span class="tpl-chip" data-tpl="2">📱 市场份额</span>
+          <span class="tpl-chip" data-tpl="3">👥 部门人数</span>
+        </div>
+        <textarea class="data-textarea" id="dataInput">Q1, 120
+Q2, 180
+Q3, 150
+Q4, 210</textarea>
+        <div class="data-hint">每行格式：标签, 数值（逗号分隔）</div>
+      </div>
+
+      <div class="panel">
+        <div class="action-row">
+          <button class="gen-btn" id="genBtn">🔄 生成图表</button>
+          <button class="action-btn" id="downloadBtn">💾 导出 PNG</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：预览 -->
+    <div>
+      <div class="panel">
+        <div class="section-title">👁️ 图表预览</div>
+        <div class="chart-wrap">
+          <canvas id="chartCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">图表生成器</span>
+  <div class="statusbar-spacer"></div>
+  <span>Chart.js 4.4.1 · 纯本地</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+const COLORS = ['#6366F1','#EC4899','#10B981','#F59E0B','#3B82F6','#8B5CF6','#EF4444','#14B8A6','#F97316','#06B6D4'];
+const TEMPLATES = [
+  { title: '季度销售额', data: 'Q1, 120\nQ2, 180\nQ3, 150\nQ4, 210' },
+  { title: '月度支出', data: '房租, 3000\n餐饮, 2000\n交通, 800\n娱乐, 1200\n购物, 1500' },
+  { title: '市场份额', data: '产品A, 35\n产品B, 25\n产品C, 20\n产品D, 12\n其他, 8' },
+  { title: '部门人数', data: '研发, 45\n产品, 12\n设计, 8\n市场, 15\n运营, 20' },
+];
+
+let chartType = 'bar', chart = null;
+
+function parseData() {
+  const lines = document.getElementById('dataInput').value.trim().split('\n').filter(l => l.trim());
+  const labels = [], values = [];
+  lines.forEach(l => {
+    const parts = l.split(',').map(s => s.trim());
+    if (parts.length >= 2) { labels.push(parts[0]); values.push(parseFloat(parts[1]) || 0); }
+  });
+  return { labels, values };
+}
+
+function generate() {
+  const { labels, values } = parseData();
+  if (!labels.length) return;
+  const title = document.getElementById('chartTitle').value;
+
+  if (chart) chart.destroy();
+
+  const isPie = chartType === 'pie' || chartType === 'doughnut';
+  chart = new Chart(document.getElementById('chartCanvas'), {
+    type: chartType,
+    data: {
+      labels,
+      datasets: [{
+        label: title || '数据',
+        data: values,
+        backgroundColor: isPie ? COLORS.slice(0, labels.length) : COLORS[0] + 'CC',
+        borderColor: isPie ? '#fff' : COLORS[0],
+        borderWidth: isPie ? 2 : 2,
+        borderRadius: isPie ? 0 : 6,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: !!title, text: title, font: { size: 16, weight: 'bold' } },
+        legend: { display: isPie, position: 'bottom' },
+      },
+      scales: isPie ? {} : { y: { beginAtZero: true } },
+    }
+  });
+
+  document.getElementById('statusInfo').textContent = `${chartType} · ${labels.length} 项数据`;
+}
+
+/* ===== Events ===== */
+document.getElementById('typeTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  chartType = tab.dataset.type;
+  document.querySelectorAll('#typeTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.type === chartType));
+  generate();
+});
+
+document.getElementById('tplRow').addEventListener('click', e => {
+  const chip = e.target.closest('.tpl-chip');
+  if (!chip) return;
+  const tpl = TEMPLATES[parseInt(chip.dataset.tpl)];
+  document.getElementById('chartTitle').value = tpl.title;
+  document.getElementById('dataInput').value = tpl.data;
+  generate();
+});
+
+document.getElementById('chartTitle').addEventListener('input', generate);
+document.getElementById('dataInput').addEventListener('input', generate);
+document.getElementById('genBtn').addEventListener('click', generate);
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!chart) return;
+  const url = document.getElementById('chartCanvas').toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = url; a.download = 'chart.png'; a.click();
+});
+
+generate();
+</script>
+<noscript><p>图表生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
