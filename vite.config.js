@@ -30,6 +30,7 @@ export default defineConfig({
         'unit-converter': resolve(__dirname, 'pages/unit-converter/index.html'),
         yaml: resolve(__dirname, 'pages/yaml/index.html'),
         'image-compress': resolve(__dirname, 'pages/image-compress/index.html'),
+        'image-format': resolve(__dirname, 'pages/image-format/index.html'),
       },
     },
   },
