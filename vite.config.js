@@ -56,6 +56,7 @@ export default defineConfig({
         'id-photo': resolve(__dirname, 'pages/id-photo/index.html'),
         'collage': resolve(__dirname, 'pages/collage/index.html'),
         'img-to-pdf': resolve(__dirname, 'pages/img-to-pdf/index.html'),
+        'currency': resolve(__dirname, 'pages/currency/index.html'),
       },
     },
   },
