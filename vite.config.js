@@ -43,6 +43,7 @@ export default defineConfig({
         'age-calculator': resolve(__dirname, 'pages/age-calculator/index.html'),
         'date-diff': resolve(__dirname, 'pages/date-diff/index.html'),
         'interest': resolve(__dirname, 'pages/interest/index.html'),
+        'csv-viewer': resolve(__dirname, 'pages/csv-viewer/index.html'),
       },
     },
   },

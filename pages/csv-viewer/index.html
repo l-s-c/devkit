@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV 查看器 | CSV Viewer Online — DevKit</title>
+<meta name="description" content="在线 CSV 查看器，上传或粘贴 CSV 文件，表格渲染、排序、搜索过滤、导出 JSON。CSV viewer online.">
+<meta name="keywords" content="csv viewer, csv editor, csv to json, CSV查看器, CSV转JSON, 在线表格, DevKit">
+<meta property="og:title" content="CSV 查看器 | CSV Viewer Online — DevKit">
+<meta property="og:description" content="CSV 表格渲染、排序、搜索、导出 JSON">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/csv-viewer/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSV 查看器 — DevKit">
+<meta name="twitter:description" content="CSV 表格渲染、排序、搜索">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSV 查看器","description":"在线 CSV 查看器，表格渲染、排序、搜索、导出 JSON","url":"https://l-s-c.github.io/devkit/pages/csv-viewer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/csv-viewer/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+
+/* 上传区域 */
+.upload-area {
+  border: 2px dashed var(--border-glass); border-radius: 10px;
+  padding: 32px; text-align: center; cursor: pointer; transition: all 200ms;
+  position: relative;
+}
+.upload-area:hover, .upload-area.dragover { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.upload-icon { font-size: 36px; margin-bottom: 8px; }
+.upload-text { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
+.upload-hint { font-size: 11px; color: var(--text-caption); margin-top: 4px; }
+.upload-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.csv-textarea {
+  width: 100%; padding: 12px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 13px; color: var(--text-primary);
+  resize: vertical; margin-top: 12px;
+}
+.csv-textarea:focus { outline: none; border-color: var(--brand-500); }
+
+.parse-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.parse-label { font-size: 12px; color: var(--text-caption); }
+.delimiter-select {
+  padding: 8px 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer;
+}
+.parse-btn {
+  margin-left: auto; padding: 8px 16px; border-radius: 6px; border: none;
+  background: var(--brand-500); color: white; font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all 150ms;
+}
+.parse-btn:hover { opacity: 0.9; }
+
+/* 工具栏 */
+.toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-caption); }
+.search-input {
+  width: 100%; padding: 10px 14px 10px 36px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-size: 13px; color: var(--text-primary);
+}
+.search-input:focus { outline: none; border-color: var(--brand-500); }
+.toolbar-btn {
+  padding: 8px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms; white-space: nowrap;
+}
+.toolbar-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* 统计 */
+.stats { display: flex; gap: 16px; margin-bottom: 16px; font-size: 12px; color: var(--text-caption); }
+.stat-value { font-family: var(--font-code); font-weight: 700; color: var(--brand-500); }
+
+/* 表格 */
+.table-wrap { overflow: auto; max-height: 520px; border: 1px solid var(--border-glass); border-radius: 10px; }
+.csv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.csv-table th {
+  position: sticky; top: 0; z-index: 1;
+  padding: 10px 12px; text-align: left; font-weight: 700; font-size: 11px;
+  color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.3px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border-bottom: 2px solid var(--border-glass);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.csv-table th:hover { color: var(--brand-500); }
+.csv-table th .sort-icon { margin-left: 4px; font-size: 10px; }
+.csv-table td {
+  padding: 8px 12px; border-bottom: 0.5px solid var(--border-glass);
+  font-family: var(--font-code); font-size: 12px;
+  max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.csv-table tr:hover td { background: rgba(99,102,241,0.06); }
+.csv-table .row-num {
+  color: var(--text-caption); font-size: 10px; width: 40px; text-align: right;
+  padding-right: 8px; border-right: 1px solid var(--border-glass);
+}
+.highlight { background: rgba(99,102,241,0.15); border-radius: 2px; }
+
+.empty { text-align: center; padding: 48px 24px; color: var(--text-caption); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .toolbar { flex-direction: column; }
+  .search-wrap { width: 100%; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">CSV 查看器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">CSV 查看器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 上传/粘贴 -->
+  <div class="panel" id="uploadPanel">
+    <div class="upload-area" id="dropZone">
+      <input type="file" accept=".csv,.tsv,.txt" class="upload-input" id="fileInput">
+      <div class="upload-icon">📁</div>
+      <div class="upload-text">拖拽 CSV 文件到这里，或点击上传</div>
+      <div class="upload-hint">支持 .csv / .tsv / .txt，也可以直接在下方粘贴</div>
+    </div>
+    <textarea id="csvInput" class="csv-textarea" rows="6" placeholder="或在此粘贴 CSV 内容…&#10;姓名,年龄,城市&#10;张三,28,北京&#10;李四,32,上海&#10;王五,25,广州"></textarea>
+    <div class="parse-row">
+      <span class="parse-label">分隔符</span>
+      <select class="delimiter-select" id="delimiter">
+        <option value="auto">自动检测</option>
+        <option value=",">逗号 ,</option>
+        <option value="&#9;">Tab ⇥</option>
+        <option value=";">分号 ;</option>
+        <option value="|">竖线 |</option>
+      </select>
+      <button class="parse-btn" id="btnParse">📊 解析</button>
+    </div>
+  </div>
+
+  <!-- 结果 -->
+  <div id="resultPanel" style="display:none">
+    <div class="panel">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="searchInput" placeholder="搜索过滤…">
+        </div>
+        <button class="toolbar-btn" id="btnExport">📋 导出 JSON</button>
+        <button class="toolbar-btn" id="btnCopy">📄 复制表格</button>
+        <button class="toolbar-btn" id="btnReset">🔄 重新选择</button>
+      </div>
+      <div class="stats">
+        <span>📊 行数 <span class="stat-value" id="rowCount">0</span></span>
+        <span>📏 列数 <span class="stat-value" id="colCount">0</span></span>
+        <span id="filterStat" style="display:none">🔍 匹配 <span class="stat-value" id="matchCount">0</span></span>
+      </div>
+      <div class="table-wrap">
+        <table class="csv-table" id="csvTable">
+          <thead id="csvHead"></thead>
+          <tbody id="csvBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 空状态 -->
+  <div id="emptyPanel" style="display:none">
+    <div class="panel">
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div>CSV 为空或解析失败</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">上传或粘贴 CSV 文件</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地解析</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let headers = [], rows = [], sortCol = -1, sortAsc = true;
+
+/* ===== RFC 4180 状态机解析器 ===== */
+function parseCSVText(text, delim) {
+  const result = [];
+  let row = [], field = '', inQuote = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], next = text[i + 1];
+    if (inQuote) {
+      if (c === '"' && next === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuote = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQuote = true; }
+      else if (c === delim) { row.push(field); field = ''; }
+      else if (c === '\r' && next === '\n') { row.push(field); field = ''; result.push(row); row = []; i++; }
+      else if (c === '\n') { row.push(field); field = ''; result.push(row); row = []; }
+      else { field += c; }
+    }
+  }
+  if (field || row.length) result.push([...row, field]);
+  while (result.length && result[result.length - 1].every(c => !c.trim())) result.pop();
+  return result;
+}
+
+function detectDelimiter(text) {
+  const first = text.split('\n')[0] || '';
+  const counts = { ',': (first.match(/,/g) || []).length, '\t': (first.match(/\t/g) || []).length, ';': (first.match(/;/g) || []).length, '|': (first.match(/\|/g) || []).length };
+  let best = ',', max = 0;
+  for (const [k, v] of Object.entries(counts)) { if (v > max) { max = v; best = k; } }
+  return best;
+}
+
+function escHTML(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+/* ===== 解析 ===== */
+function parseCSV() {
+  const text = document.getElementById('csvInput').value.trim();
+  if (!text) {
+    document.getElementById('emptyPanel').style.display = 'block';
+    document.getElementById('resultPanel').style.display = 'none';
+    return;
+  }
+  let delim = document.getElementById('delimiter').value;
+  if (delim === 'auto') delim = detectDelimiter(text);
+  const all = parseCSVText(text, delim);
+  if (!all.length) {
+    document.getElementById('emptyPanel').style.display = 'block';
+    document.getElementById('resultPanel').style.display = 'none';
+    return;
+  }
+  headers = all[0];
+  rows = all.slice(1);
+  sortCol = -1;
+  sortAsc = true;
+  document.getElementById('uploadPanel').style.display = 'none';
+  document.getElementById('emptyPanel').style.display = 'none';
+  document.getElementById('resultPanel').style.display = 'block';
+  document.getElementById('rowCount').textContent = rows.length;
+  document.getElementById('colCount').textContent = headers.length;
+  document.getElementById('searchInput').value = '';
+  renderTable(rows);
+  document.getElementById('statusInfo').textContent = `${rows.length} 行 × ${headers.length} 列`;
+}
+
+/* ===== 渲染 ===== */
+function renderTable(data) {
+  const head = document.getElementById('csvHead');
+  const body = document.getElementById('csvBody');
+  head.innerHTML = '<tr><th class="row-num">#</th>' + headers.map((h, i) => {
+    const icon = sortCol === i ? (sortAsc ? '↑' : '↓') : '↕';
+    return `<th data-col="${i}">${escHTML(h)} <span class="sort-icon">${icon}</span></th>`;
+  }).join('') + '</tr>';
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  body.innerHTML = data.map((r, ri) => {
+    const cells = headers.map((_, ci) => {
+      let val = r[ci] || '';
+      let display = escHTML(val);
+      if (q && val.toLowerCase().includes(q)) {
+        const re = new RegExp('(' + escRegex(q) + ')', 'gi');
+        display = display.replace(re, '<span class="highlight">$1</span>');
+      }
+      return `<td>${display}</td>`;
+    }).join('');
+    return `<tr><td class="row-num">${ri + 1}</td>${cells}</tr>`;
+  }).join('');
+}
+
+/* ===== 排序 ===== */
+function sortBy(col) {
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  applyFilter();
+}
+
+function getSorted() {
+  if (sortCol < 0) return rows;
+  return [...rows].sort((a, b) => {
+    let va = a[sortCol] || '', vb = b[sortCol] || '';
+    const na = parseFloat(va), nb = parseFloat(vb);
+    if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
+    return sortAsc ? va.localeCompare(vb, 'zh-CN') : vb.localeCompare(va, 'zh-CN');
+  });
+}
+
+/* ===== 搜索过滤 ===== */
+function applyFilter() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const sorted = getSorted();
+  const filtered = q ? sorted.filter(r => r.some(c => (c || '').toLowerCase().includes(q))) : sorted;
+  document.getElementById('filterStat').style.display = q ? 'inline' : 'none';
+  document.getElementById('matchCount').textContent = filtered.length;
+  renderTable(filtered);
+}
+
+/* ===== 导出 ===== */
+function exportJSON() {
+  const json = rows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = r[i] || '');
+    return obj;
+  });
+  const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function copyTable() {
+  const text = [headers.join('\t'), ...rows.map(r => r.join('\t'))].join('\n');
+  navigator.clipboard.writeText(text);
+}
+
+function resetView() {
+  document.getElementById('uploadPanel').style.display = 'block';
+  document.getElementById('resultPanel').style.display = 'none';
+  headers = [];
+  rows = [];
+  document.getElementById('statusInfo').textContent = '上传或粘贴 CSV 文件';
+}
+
+/* ===== 事件绑定 ===== */
+// 文件上传
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => { document.getElementById('csvInput').value = ev.target.result; parseCSV(); };
+  reader.readAsText(f);
+});
+
+// 拖拽
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => { document.getElementById('csvInput').value = ev.target.result; parseCSV(); };
+  reader.readAsText(f);
+});
+
+document.getElementById('btnParse').addEventListener('click', parseCSV);
+document.getElementById('searchInput').addEventListener('input', applyFilter);
+document.getElementById('btnExport').addEventListener('click', exportJSON);
+document.getElementById('btnCopy').addEventListener('click', copyTable);
+document.getElementById('btnReset').addEventListener('click', resetView);
+
+// 表头排序（事件委托）
+document.getElementById('csvHead').addEventListener('click', e => {
+  const th = e.target.closest('th[data-col]');
+  if (th) sortBy(parseInt(th.dataset.col));
+});
+</script>
+<noscript><p>CSV 查看器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
