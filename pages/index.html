@@ -3,1079 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DevKit — 免费在线开发者工具箱 | JSON、Base64、时间戳、正则等 14 个工具</title>
-<meta name="description" content="DevKit 是纯前端在线开发者工具箱，提供 JSON 格式化、Base64 编解码、时间戳转换、正则测试、Hash 计算、UUID 生成等 14 个常用工具。数据不离开浏览器，安全可靠。">
-<meta name="keywords" content="开发者工具,JSON格式化,Base64编码,时间戳转换,正则表达式,Hash计算,UUID生成,JWT解码,颜色转换,Markdown预览,Cron表达式,在线工具">
+<title>DevKit — 免费在线开发者工具箱 | 50+ 纯前端工具</title>
+<meta name="description" content="DevKit 是纯前端在线工具箱，提供 50+ 工具：JSON 格式化、图片压缩、个税计算、汇率换算、万年历、密码生成等。数据不离开浏览器，安全可靠。">
+<meta name="keywords" content="开发者工具,JSON格式化,图片压缩,个税计算,汇率换算,万年历,密码生成,在线工具,DevKit">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/">
 <meta property="og:title" content="DevKit — 免费在线开发者工具箱">
-<meta property="og:description" content="14 个纯前端开发者工具，JSON 格式化、Base64、时间戳、正则、Hash、UUID 等，数据不离开浏览器。">
+<meta property="og:description" content="50+ 纯前端工具，数据不离开浏览器。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://l-s-c.github.io/devkit/">
 <meta property="og:site_name" content="DevKit">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DevKit — 在线开发者工具箱">
-<meta name="twitter:description" content="14 个纯前端开发者工具，数据不离开浏览器。">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"DevKit","description":"免费在线开发者工具箱，提供 JSON 格式化、Base64 编解码、时间戳转换等 14 个常用工具","url":"https://l-s-c.github.io/devkit/"}</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="twitter:description" content="50+ 纯前端工具，数据不离开浏览器。">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"DevKit","description":"免费在线工具箱，50+ 纯前端工具","url":"https://l-s-c.github.io/devkit/"}</script>
+<link rel="stylesheet" href="../shared/liquid-glass.css">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; }
 
-:root {
-  --brand-400: #818CF8;
-  --brand-500: #6366F1;
-  --brand-600: #4F46E5;
-  --bg-page: #F2F2F7;
-  --bg-glass: rgba(255,255,255,0.55);
-  --bg-glass-thick: rgba(255,255,255,0.72);
-  --bg-glass-card: rgba(255,255,255,0.45);
-  --bg-glass-hover: rgba(255,255,255,0.65);
-  --bg-mesh-1: #C7D2FE;
-  --bg-mesh-2: #DDD6FE;
-  --bg-mesh-3: #BFDBFE;
-  --bg-mesh-4: #A5F3FC;
-  --text-primary: #1D1D1F;
-  --text-secondary: #6E6E73;
-  --text-tertiary: #86868B;
-  --text-caption: #AEAEB2;
-  --border-glass: rgba(255,255,255,0.5);
-  --border-glass-outer: rgba(0,0,0,0.06);
-  --success: #30D158;
-  --glass-blur: 40px;
-  --glass-saturate: 200%;
-  --glass-shadow: 0 2px 16px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.1);
-  --glass-shadow-hover: 0 8px 32px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.12);
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%);
-  --font-ui: -apple-system, 'SF Pro Display', 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-code: 'JetBrains Mono', 'SF Mono', monospace;
-}
-
-[data-theme="dark"] {
-  --bg-page: #000000;
-  --bg-glass: rgba(38,38,40,0.55);
-  --bg-glass-thick: rgba(44,44,46,0.72);
-  --bg-glass-card: rgba(38,38,40,0.45);
-  --bg-glass-hover: rgba(50,50,54,0.65);
-  --bg-mesh-1: #312E81;
-  --bg-mesh-2: #4C1D95;
-  --bg-mesh-3: #1E3A5F;
-  --bg-mesh-4: #164E63;
-  --text-primary: #F5F5F7;
-  --text-secondary: #A1A1A6;
-  --text-tertiary: #6E6E73;
-  --text-caption: #48484A;
-  --border-glass: rgba(255,255,255,0.12);
-  --border-glass-outer: rgba(255,255,255,0.06);
-  --glass-shadow: 0 2px 16px rgba(0,0,0,0.3), 0 0 1px rgba(255,255,255,0.06);
-  --glass-shadow-hover: 0 8px 32px rgba(0,0,0,0.4), 0 0 1px rgba(255,255,255,0.08);
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%);
-}
-
-body {
-  font-family: var(--font-ui);
-  background: var(--bg-page);
-  color: var(--text-primary);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-/* ── Mesh Gradient Background — 液态色彩 ── */
-.mesh-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
-.mesh-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
-  animation: mesh-float 20s ease-in-out infinite;
-}
-.mesh-blob:nth-child(1) {
-  width: 600px; height: 600px;
-  background: var(--bg-mesh-1);
-  top: -10%; left: -5%;
-  animation-delay: 0s;
-}
-.mesh-blob:nth-child(2) {
-  width: 500px; height: 500px;
-  background: var(--bg-mesh-2);
-  top: 20%; right: -10%;
-  animation-delay: -5s;
-}
-.mesh-blob:nth-child(3) {
-  width: 450px; height: 450px;
-  background: var(--bg-mesh-3);
-  bottom: 10%; left: 20%;
-  animation-delay: -10s;
-}
-.mesh-blob:nth-child(4) {
-  width: 350px; height: 350px;
-  background: var(--bg-mesh-4);
-  bottom: 30%; right: 15%;
-  animation-delay: -15s;
-}
-@keyframes mesh-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(30px, -40px) scale(1.05); }
-  50% { transform: translate(-20px, 20px) scale(0.95); }
-  75% { transform: translate(40px, 30px) scale(1.02); }
-}
-
-[data-theme="dark"] .mesh-blob { opacity: 0.25; filter: blur(100px); }
-
-/* ── Content wrapper ── */
-.content { position: relative; z-index: 1; }
-
-/* ── Liquid Glass Navigation ── */
-.navbar {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  height: 44px;
-  background: var(--bg-glass-thick);
-  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
-  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
-  border: 0.5px solid var(--border-glass);
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  padding: 0 6px;
-  z-index: 100;
-  box-shadow: var(--glass-shadow);
-  max-width: 640px;
-  width: calc(100% - 32px);
-}
-.navbar::before { display: none; }
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 10px;
-}
-.navbar-logo-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-.navbar-logo-text {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.2px;
-}
-.navbar-spacer { flex: 1; }
-.navbar-links {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-}
-.navbar-link {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 16px;
-  transition: all 250ms ease;
-  cursor: pointer;
-}
-.navbar-link:hover {
-  background: var(--bg-glass-hover);
-  color: var(--text-primary);
-}
-.theme-btn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: var(--text-tertiary);
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 200ms ease;
-  margin-left: 2px;
-}
-.theme-btn:hover { background: var(--bg-glass-hover); }
-
-/* ── Hero ── */
-.hero {
-  text-align: center;
-  padding: 130px 20px 64px;
-  max-width: 680px;
-  margin: 0 auto;
-}
-
+/* Hero */
+.hero { text-align: center; padding: 48px 24px 32px; }
 .hero-title {
-  font-size: 52px;
-  font-weight: 700;
-  letter-spacing: -2px;
-  line-height: 1.08;
-  margin-bottom: 20px;
-  color: var(--text-primary);
+  font-size: 36px; font-weight: 800; letter-spacing: -1.2px;
+  background: linear-gradient(135deg, #6366F1, #818CF8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.hero-title-gradient {
-  background: linear-gradient(90deg, #6366F1 0%, #818CF8 35%, #A78BFA 65%, #C084FC 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hero-desc { font-size: 15px; color: var(--text-secondary); margin-top: 8px; }
+
+/* Search */
+.search-wrap { max-width: 560px; margin: 0 auto 24px; position: relative; padding: 0 24px; }
+.search-input {
+  width: 100%; padding: 14px 20px 14px 44px; border-radius: 28px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); font-size: 14px; color: var(--text-primary);
+  outline: none; transition: all 200ms; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.hero-subtitle {
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: 1.55;
-  letter-spacing: -0.2px;
-}
-.hero-pills {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 32px;
-}
-.hero-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 16px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 0.5px solid var(--border-glass);
-  border-radius: 100px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.hero-pill-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 6px rgba(48,209,88,0.4);
+.search-input:focus { border-color: var(--brand-500); box-shadow: 0 2px 16px rgba(99,102,241,0.12); }
+.search-input::placeholder { color: var(--text-caption); }
+.search-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-caption); pointer-events: none; }
+.search-clear {
+  position: absolute; right: 38px; top: 50%; transform: translateY(-50%);
+  width: 24px; height: 24px; border-radius: 50%; border: none;
+  background: var(--border-glass); color: var(--text-caption); cursor: pointer;
+  font-size: 12px; display: none; align-items: center; justify-content: center;
 }
 
-/* ── Section ── */
-.section {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 22px 64px;
+/* Tags */
+.tags-wrap { max-width: 720px; margin: 0 auto 32px; display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 0 24px; }
+.tag {
+  padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); backdrop-filter: blur(10px); font-size: 12px;
+  font-weight: 700; color: var(--text-secondary); cursor: pointer; transition: all 150ms; white-space: nowrap;
 }
-.section-header {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.section-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.8px;
-}
-.section-count {
-  font-size: 13px;
-  color: var(--text-caption);
-}
+.tag:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tag.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
 
-/* ── Liquid Glass Tool Cards ── */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
+/* Container */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
 
+/* Hot section */
+.hot-section { margin-bottom: 32px; }
+.hot-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.hot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hot-card {
+  padding: 16px; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(168,85,247,0.04));
+  border: 1px solid rgba(99,102,241,0.1); cursor: pointer; transition: all 200ms;
+  text-decoration: none; color: var(--text-primary); display: block;
+}
+.hot-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(99,102,241,0.12); border-color: var(--brand-500); }
+.hot-emoji { font-size: 24px; margin-bottom: 6px; }
+.hot-name { font-size: 13px; font-weight: 700; }
+.hot-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+/* Grid */
+.section-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .tool-card {
-  background: var(--bg-glass-card);
-  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
-  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur));
-  border: 0.5px solid var(--border-glass);
-  border-radius: 24px;
-  padding: 28px 24px 24px;
-  cursor: pointer;
-  transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--glass-shadow);
+  padding: 14px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); backdrop-filter: blur(10px); cursor: pointer;
+  transition: all 200ms; text-decoration: none; color: var(--text-primary); display: block;
 }
-/* 液态光泽 — 顶部高光 */
-.tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  border-radius: 24px 24px 0 0;
-  background: var(--glass-shine);
-  pointer-events: none;
-  transition: opacity 500ms ease;
-}
-/* 底部反射 */
-.tool-card::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  pointer-events: none;
-}
-.tool-card:hover {
-  background: var(--bg-glass-hover);
-  box-shadow: var(--glass-shadow-hover);
-  transform: translateY(-4px) scale(1.01);
-  border-color: rgba(255,255,255,0.7);
-}
-[data-theme="dark"] .tool-card:hover {
-  border-color: rgba(255,255,255,0.18);
-}
-.tool-card:hover .tool-card-arrow { opacity: 1; transform: translate(0, 0); }
-.tool-card:active { transform: translateY(-2px) scale(0.99); transition-duration: 150ms; }
-
-.tool-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+.tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: var(--brand-500); }
+.tool-emoji { font-size: 20px; margin-bottom: 4px; }
+.tool-name { font-size: 12px; font-weight: 700; line-height: 1.3; }
+.tool-desc {
+  font-size: 10px; color: var(--text-caption); margin-top: 2px; line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
-.tool-card-name {
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-  letter-spacing: -0.3px;
-  position: relative;
-  z-index: 1;
-}
-.tool-card-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  letter-spacing: -0.1px;
-  position: relative;
-  z-index: 1;
-}
-.tool-card-arrow {
-  position: absolute;
-  top: 28px;
-  right: 24px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 0.5px solid var(--border-glass);
-  border-radius: 50%;
-  color: var(--brand-500);
-  opacity: 0;
-  transform: translate(-4px, 0);
-  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  font-size: 13px;
-  z-index: 1;
+/* Empty */
+.empty { text-align: center; padding: 60px; color: var(--text-caption); }
+.empty-icon { font-size: 48px; margin-bottom: 8px; }
+.empty-text { font-size: 14px; }
+
+/* Nav count badge */
+.nav-count {
+  font-family: var(--font-code); font-size: 11px; font-weight: 700;
+  color: var(--brand-500); padding: 4px 10px; border-radius: 20px;
+  background: rgba(99,102,241,0.08); margin-right: 8px;
 }
 
-.tool-card-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 3px 10px;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--brand-500);
-  background: var(--bg-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 0.5px solid var(--border-glass);
-  border-radius: 100px;
-  letter-spacing: 0.3px;
-  z-index: 1;
-}
-
-/* ── Icon Colors ── */
-.icon-json {
-  background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
-  color: #6366F1;
-  font-family: var(--font-code);
-  font-size: 16px;
-}
-.icon-convert {
-  background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
-  color: #16A34A;
-}
-.icon-diff {
-  background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
-  color: #EA580C;
-}
-.icon-base64 {
-  background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
-  color: #059669;
-}
-.icon-url {
-  background: linear-gradient(135deg, #F0F9FF, #E0F2FE);
-  color: #0284C7;
-}
-.icon-jwt {
-  background: linear-gradient(135deg, #FEF2F2, #FECACA);
-  color: #DC2626;
-}
-.icon-uuid {
-  background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
-  color: #DB2777;
-  font-family: var(--font-code);
-  font-size: 14px;
-}
-.icon-hash {
-  background: linear-gradient(135deg, #FAF5FF, #F3E8FF);
-  color: #7C3AED;
-  font-family: var(--font-code);
-}
-.icon-timestamp {
-  background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
-  color: #2563EB;
-}
-.icon-regex {
-  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
-  color: #D97706;
-  font-family: var(--font-code);
-  font-size: 13px;
-}
-
-[data-theme="dark"] .icon-json { background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.1)); }
-[data-theme="dark"] .icon-convert { background: linear-gradient(135deg, rgba(22,163,74,0.2), rgba(22,163,74,0.1)); }
-[data-theme="dark"] .icon-diff { background: linear-gradient(135deg, rgba(234,88,12,0.2), rgba(234,88,12,0.1)); }
-[data-theme="dark"] .icon-base64 { background: linear-gradient(135deg, rgba(5,150,105,0.2), rgba(5,150,105,0.1)); }
-[data-theme="dark"] .icon-url { background: linear-gradient(135deg, rgba(2,132,199,0.2), rgba(2,132,199,0.1)); }
-[data-theme="dark"] .icon-jwt { background: linear-gradient(135deg, rgba(220,38,38,0.2), rgba(220,38,38,0.1)); }
-[data-theme="dark"] .icon-uuid { background: linear-gradient(135deg, rgba(219,39,119,0.2), rgba(219,39,119,0.1)); }
-[data-theme="dark"] .icon-hash { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.1)); }
-[data-theme="dark"] .icon-timestamp { background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(37,99,235,0.1)); }
-[data-theme="dark"] .icon-regex { background: linear-gradient(135deg, rgba(217,119,6,0.2), rgba(217,119,6,0.1)); }
-
-/* ── Section Divider — Glass ── */
-.section-divider {
-  max-width: 980px;
-  margin: 0 auto 64px;
-  padding: 0 22px;
-  border: none;
-  border-top: 0.5px solid var(--border-glass-outer);
-}
-
-/* ── Footer ── */
-.footer {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 24px 22px 48px;
-  border-top: 0.5px solid var(--border-glass-outer);
-}
-.footer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-.footer-links {
-  display: flex;
-  gap: 20px;
-}
-.footer-link {
-  font-size: 12px;
-  color: var(--text-tertiary);
-  text-decoration: none;
-  transition: color 200ms ease;
-}
-.footer-link:hover { color: var(--brand-500); }
-.footer-copy {
-  font-size: 11px;
-  color: var(--text-caption);
-  line-height: 1.7;
-}
-
-/* ── Responsive ── */
 @media (max-width: 768px) {
-  .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .hero { padding: 110px 20px 48px; }
-  .hero-title { font-size: 38px; letter-spacing: -1.2px; }
-  .hero-subtitle { font-size: 15px; }
-  .section { padding: 0 16px 48px; }
-  .section-title { font-size: 22px; }
-  .tool-card { padding: 20px; border-radius: 20px; }
-  .navbar { max-width: 480px; }
-}
-@media (max-width: 480px) {
-  .tools-grid { grid-template-columns: 1fr; }
-  .hero-title { font-size: 32px; }
-  .navbar-links .navbar-link { display: none; }
-}
-
-/* ── Card entrance animation ── */
-@media (prefers-reduced-motion: no-preference) {
-  .tool-card {
-    animation: glass-in 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
-  }
-  .tools-grid .tool-card:nth-child(1) { animation-delay: 100ms; }
-  .tools-grid .tool-card:nth-child(2) { animation-delay: 180ms; }
-  .tools-grid .tool-card:nth-child(3) { animation-delay: 260ms; }
-}
-@keyframes glass-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  .hero { padding: 32px 16px 24px; }
+  .hero-title { font-size: 28px; }
+  .hot-grid { grid-template-columns: repeat(2, 1fr); }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 0 16px 60px; }
+  .search-wrap, .tags-wrap { padding: 0 16px; }
 }
 </style>
 <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">DevKit — 免费在线开发者工具箱，50+ 纯前端工具</h1>
 
-<!-- Mesh Gradient Background -->
-<div class="mesh-bg">
-  <div class="mesh-blob"></div>
-  <div class="mesh-blob"></div>
-  <div class="mesh-blob"></div>
-  <div class="mesh-blob"></div>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="./"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <div class="topbar-spacer"></div>
+  <span class="nav-count" id="toolCount">50 个工具</span>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 </div>
 
-<div class="content">
+<div class="main">
+  <div class="hero">
+    <div class="hero-title">日常开发，一站搞定</div>
+    <p class="hero-desc">50+ 纯前端工具，无需登录，数据不上传</p>
+  </div>
 
-<!-- Liquid Glass Navbar -->
-<nav class="navbar">
-  <div class="navbar-logo">
-    <svg class="navbar-logo-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#nbg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="nbg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg>
-    <span class="navbar-logo-text">DevKit</span>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" placeholder="搜索工具…（如 JSON、图片、计算器）">
+    <button class="search-clear" id="searchClear">✕</button>
   </div>
-  <div class="navbar-spacer"></div>
-  <div class="navbar-links">
-    <a class="navbar-link" href="#json">JSON</a>
-    <a class="navbar-link" href="#encode">编码</a>
-    <a class="navbar-link" href="#generate">生成</a>
-    <a class="navbar-link" href="#text">文本</a>
-    <a class="navbar-link" href="#more">更多</a>
-    <button class="theme-btn" onclick="toggleTheme()" title="切换主题">🌙</button>
-  </div>
-</nav>
 
-<!-- Hero -->
-<section class="hero">
-  <h1 class="hero-title">
-    日常开发，<br>
-    <span class="hero-title-gradient">一站搞定。</span>
-  </h1>
-  <p class="hero-subtitle">JSON 格式化、编码转换、正则测试…… 精心打磨的在线工具集，为开发者的日常工作流而生。</p>
-  <div class="hero-pills">
-    <span class="hero-pill"><span class="hero-pill-dot"></span> 免费</span>
-    <span class="hero-pill">🔒 数据不离开浏览器</span>
-    <span class="hero-pill">✨ 无广告</span>
+  <div class="tags-wrap" id="tagsWrap">
+    <span class="tag active" data-cat="all">全部</span>
+    <span class="tag" data-cat="text">📝 文本</span>
+    <span class="tag" data-cat="image">🖼️ 图片</span>
+    <span class="tag" data-cat="calc">🔢 计算</span>
+    <span class="tag" data-cat="dev">💻 开发</span>
+    <span class="tag" data-cat="design">🎨 设计</span>
+    <span class="tag" data-cat="encode">🔐 编码</span>
+    <span class="tag" data-cat="life">🏠 生活</span>
   </div>
-</section>
 
-<!-- JSON Tools -->
-<section class="section" id="json">
-  <div class="section-header">
-    <h2 class="section-title">JSON 工具</h2>
-    <span class="section-count">3 个工具</span>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" target="_blank" href="./json/#format">
-      <span class="tool-card-badge">核心</span>
-      <div class="tool-card-icon icon-json">{ }</div>
-      <div class="tool-card-name">JSON 格式化 & 校验</div>
-      <div class="tool-card-desc">格式化、压缩、校验 JSON，智能错误定位，内置树形视图。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./json/#convert">
-      <div class="tool-card-icon icon-convert">⇄</div>
-      <div class="tool-card-name">JSON 格式转换</div>
-      <div class="tool-card-desc">JSON 与 YAML、XML、TS、Python 等 8 种格式互转。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./json/#diff">
-      <div class="tool-card-icon icon-diff">≠</div>
-      <div class="tool-card-name">JSON 智能对比</div>
-      <div class="tool-card-desc">结构化对比 JSON 差异，支持合并与字符级高亮。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- Encode Tools -->
-<section class="section" id="encode">
-  <div class="section-header">
-    <h2 class="section-title">编码工具</h2>
-    <span class="section-count">3 个工具</span>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" target="_blank" href="./base64/">
-      <span class="tool-card-badge" style="background:#DBEAFE;color:#2563EB">热门</span>
-      <div class="tool-card-icon icon-base64">B64</div>
-      <div class="tool-card-name">Base64 编解码</div>
-      <div class="tool-card-desc">文本与文件的 Base64 编解码，支持 URL 安全模式。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./url-codec/">
-      <div class="tool-card-icon icon-url">%</div>
-      <div class="tool-card-name">URL 编解码</div>
-      <div class="tool-card-desc">URL 编码与解码，支持 Component 和 URI 两种模式。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./jwt/">
-      <div class="tool-card-icon icon-jwt">🔑</div>
-      <div class="tool-card-name">JWT 解码器</div>
-      <div class="tool-card-desc">解析 JWT Token，自动识别时间字段与过期状态。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- Generate Tools -->
-<section class="section" id="generate">
-  <div class="section-header">
-    <h2 class="section-title">生成 & 计算</h2>
-    <span class="section-count">3 个工具</span>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" target="_blank" href="./uuid/">
-      <div class="tool-card-icon icon-uuid">ID</div>
-      <div class="tool-card-name">UUID 生成器</div>
-      <div class="tool-card-desc">批量生成 UUID v1/v4/v7，支持大写输出和无连字符格式。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./hash/">
-      <div class="tool-card-icon icon-hash">#</div>
-      <div class="tool-card-name">Hash 计算</div>
-      <div class="tool-card-desc">一键计算 MD5、SHA-1、SHA-256、SHA-512 等多种哈希值。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./timestamp/">
-      <span class="tool-card-badge" style="background:#DBEAFE;color:#2563EB">热门</span>
-      <div class="tool-card-icon icon-timestamp">⏱</div>
-      <div class="tool-card-name">时间戳转换</div>
-      <div class="tool-card-desc">Unix 时间戳与可读时间双向转换，实时时钟显示，多时区支持。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- Text Tools -->
-<section class="section" id="text">
-  <div class="section-header">
-    <h2 class="section-title">文本工具</h2>
-    <span class="section-count">4 个工具</span>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" target="_blank" href="./regex/">
-      <div class="tool-card-icon icon-regex">/•/</div>
-      <div class="tool-card-name">正则表达式测试</div>
-      <div class="tool-card-desc">实时匹配高亮与分组捕获，替换预览，内置常用正则表达式模板库。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./markdown/">
-      <div class="tool-card-icon" style="background:#E0E7FF;color:#4338CA">M↓</div>
-      <div class="tool-card-name">Markdown 预览</div>
-      <div class="tool-card-desc">实时渲染 GFM 语法，支持表格、任务列表、代码块，导出 HTML。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./text-diff/">
-      <div class="tool-card-icon" style="background:#FEE2E2;color:#DC2626">≠</div>
-      <div class="tool-card-name">文本对比</div>
-      <div class="tool-card-desc">逐行对比两段文本，红绿高亮差异，支持忽略空白和大小写。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./code-formatter/">
-      <div class="tool-card-icon" style="background:#DBEAFE;color:#2563EB">&lt;/&gt;</div>
-      <div class="tool-card-name">代码格式化</div>
-      <div class="tool-card-desc">HTML/CSS/JavaScript 代码美化与压缩，支持多种缩进风格。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- More Tools -->
-<section class="section" id="more">
-  <div class="section-header">
-    <h2 class="section-title">更多工具</h2>
-    <span class="section-count">3 个工具</span>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" target="_blank" href="./color/">
-      <div class="tool-card-icon" style="background:linear-gradient(135deg,#F472B6,#818CF8);color:white">🎨</div>
-      <div class="tool-card-name">颜色转换器</div>
-      <div class="tool-card-desc">HEX/RGB/HSL/CMYK 互转，调色板与渐变生成。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./cron/">
-      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">⏰</div>
-      <div class="tool-card-name">Cron 表达式</div>
-      <div class="tool-card-desc">Cron 表达式解析，显示未来执行时间与可读描述。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./sql-formatter/">
-      <div class="tool-card-icon" style="background:#E0E7FF;color:#4338CA">SQL</div>
-      <div class="tool-card-name">SQL 格式化</div>
-      <div class="tool-card-desc">SQL 语句美化，关键字大写，智能缩进，SELECT 列拆行。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./password/">
-      <div class="tool-card-icon" style="background:#EDE9FE;color:#6D28D9">🔐</div>
-      <div class="tool-card-name">密码生成器</div>
-      <div class="tool-card-desc">安全随机密码，自定义长度和字符类型，批量生成，强度评估。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./number-base/">
-      <div class="tool-card-icon" style="background:#DBEAFE;color:#1D4ED8">🔢</div>
-      <div class="tool-card-name">进制转换</div>
-      <div class="tool-card-desc">二进制、八进制、十进制、十六进制实时互转，支持大数。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./unit-converter/">
-      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">📐</div>
-      <div class="tool-card-name">单位换算</div>
-      <div class="tool-card-desc">长度、重量、温度、CSS、数据、时间六大类单位实时互转。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./yaml/">
-      <div class="tool-card-icon" style="background:#FEE2E2;color:#DC2626">📄</div>
-      <div class="tool-card-name">YAML 格式化</div>
-      <div class="tool-card-desc">格式化、压缩、校验 YAML，支持 JSON ↔ YAML 互转。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./image-compress/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">🗜️</div>
-      <div class="tool-card-name">图片压缩</div>
-      <div class="tool-card-desc">纯浏览器端图片压缩，批量处理、格式转换、前后对比。零上传。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./image-format/">
-      <div class="tool-card-icon" style="background:#EFF6FF;color:#3B82F6">🔄</div>
-      <div class="tool-card-name">图片格式转换</div>
-      <div class="tool-card-desc">JPG、PNG、WebP、BMP 格式互转，纯浏览器端处理，零上传。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./qrcode/">
-      <div class="tool-card-icon" style="background:#F3E8FF;color:#9333EA">📱</div>
-      <div class="tool-card-name">二维码生成器</div>
-      <div class="tool-card-desc">输入文本或链接生成二维码，支持自定义颜色、Logo、WiFi 模板。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./countdown/">
-      <div class="tool-card-icon" style="background:#FFF7ED;color:#EA580C">⏳</div>
-      <div class="tool-card-name">倒数日计算器</div>
-      <div class="tool-card-desc">计算距离目标日期天数，日期差值计算，常用节日快捷入口。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./bmi/">
-      <div class="tool-card-icon" style="background:#F0FDF4;color:#16A34A">⚖️</div>
-      <div class="tool-card-name">BMI 计算器</div>
-      <div class="tool-card-desc">输入身高体重计算 BMI，中国成人标准，渐变仪表条直观展示。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./random/">
-      <div class="tool-card-icon" style="background:#FDF2F8;color:#DB2777">🎲</div>
-      <div class="tool-card-name">随机数生成器</div>
-      <div class="tool-card-desc">整数/浮点/骰子三模式，批量不重复，crypto 安全随机。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./case-converter/">
-      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">🔤</div>
-      <div class="tool-card-name">大小写转换</div>
-      <div class="tool-card-desc">8 种模式：大小写、camelCase、snake_case、kebab-case 等。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./text-dedupe/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">🧹</div>
-      <div class="tool-card-name">文本去重</div>
-      <div class="tool-card-desc">按行去重、去空行、排序，快速清理重复文本，支持导出。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./html-entity/">
-      <div class="tool-card-icon" style="background:#FEF2F2;color:#DC2626">&lt;/&gt;</div>
-      <div class="tool-card-name">HTML 实体转换</div>
-      <div class="tool-card-desc">HTML 实体编码解码，5 类常用实体参考表，点击复制。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./toml/">
-      <div class="tool-card-icon" style="background:#FFF7ED;color:#EA580C">📦</div>
-      <div class="tool-card-name">TOML 编辑器</div>
-      <div class="tool-card-desc">TOML 格式化、校验、JSON 互转，支持 TOML v1.0。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./word-counter/">
-      <div class="tool-card-icon" style="background:#EFF6FF;color:#2563EB">📊</div>
-      <div class="tool-card-name">字数统计</div>
-      <div class="tool-card-desc">实时统计字符、单词、段落，阅读时间估算，关键词密度分析。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./age-calculator/">
-      <div class="tool-card-icon" style="background:#FDF2F8;color:#DB2777">🎂</div>
-      <div class="tool-card-name">年龄计算器</div>
-      <div class="tool-card-desc">精确年龄、生肖星座、生日倒计时、已活秒数实时跳动。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./date-diff/">
-      <div class="tool-card-icon" style="background:#F0FDF4;color:#16A34A">📅</div>
-      <div class="tool-card-name">日期差计算</div>
-      <div class="tool-card-desc">日期间隔天数、工作日周末统计、日期加减计算。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./interest/">
-      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">💰</div>
-      <div class="tool-card-name">利息计算器</div>
-      <div class="tool-card-desc">房贷月供、等额本息/本金对比、还款明细表、存款利息。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./csv-viewer/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">📊</div>
-      <div class="tool-card-name">CSV 查看器</div>
-      <div class="tool-card-desc">上传或粘贴 CSV，表格渲染、排序、搜索过滤、导出 JSON。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./prepayment/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">🏠</div>
-      <div class="tool-card-name">提前还款计算器</div>
-      <div class="tool-card-desc">房贷提前还款模拟，多次还款，缩短期限 vs 减少月供，智能建议。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./image-resize/">
-      <div class="tool-card-icon" style="background:#EFF6FF;color:#2563EB">📐</div>
-      <div class="tool-card-name">图片尺寸调整</div>
-      <div class="tool-card-desc">调整图片宽高，锁定比例，8 个预设尺寸，批量处理，多格式导出。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./tax/">
-      <div class="tool-card-icon" style="background:#FEF3C7;color:#D97706">💰</div>
-      <div class="tool-card-name">个税计算器</div>
-      <div class="tool-card-desc">2024 个人所得税，五险一金，专项附加扣除，年终奖单独 vs 合并对比。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./watermark/">
-      <div class="tool-card-icon" style="background:#EFF6FF;color:#2563EB">💧</div>
-      <div class="tool-card-name">图片加水印</div>
-      <div class="tool-card-desc">文字/图片水印，自定义样式，9 宫格定位，平铺模式，批量处理。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./favicon/">
-      <div class="tool-card-icon" style="background:#F5F3FF;color:#7C3AED">⭐</div>
-      <div class="tool-card-name">Favicon 生成器</div>
-      <div class="tool-card-desc">文字/图片/Emoji 生成网站图标，多尺寸预览，一键导出 PNG。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./unicode/">
-      <div class="tool-card-icon" style="background:#EFF6FF;color:#2563EB">🔤</div>
-      <div class="tool-card-name">Unicode 转换</div>
-      <div class="tool-card-desc">文本↔Unicode/HTML实体/UTF-8，双向实时转换，支持 emoji 和 CJK。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./lorem/">
-      <div class="tool-card-icon" style="background:#F5F3FF;color:#7C3AED">📝</div>
-      <div class="tool-card-name">Lorem Ipsum 生成器</div>
-      <div class="tool-card-desc">英文/中文假文生成，段落句子单词字符可控，HTML 标签包裹。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./encrypt/">
-      <div class="tool-card-icon" style="background:#FEF2F2;color:#DC2626">🔐</div>
-      <div class="tool-card-name">文本加密解密</div>
-      <div class="tool-card-desc">AES-256-GCM 加密、ROT13、Caesar 位移、SHA 哈希，纯浏览器运算。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./gradient/">
-      <div class="tool-card-icon" style="background:#FDF4FF;color:#A855F7">🌈</div>
-      <div class="tool-card-name">CSS 渐变生成器</div>
-      <div class="tool-card-desc">线性/径向/锥形渐变可视化编辑，色标拖拽，10+ 预设模板，CSS 代码输出。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./id-photo/">
-      <div class="tool-card-icon" style="background:#FEF2F2;color:#DC2626">📸</div>
-      <div class="tool-card-name">证件照换底色</div>
-      <div class="tool-card-desc">白蓝红一键换底色，一寸二寸护照签证尺寸裁剪，300dpi 打印级导出。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./collage/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">🧩</div>
-      <div class="tool-card-name">图片拼接</div>
-      <div class="tool-card-desc">横向/纵向/网格拼接，间距可调，自动等高等宽对齐，导出 PNG/JPG。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./img-to-pdf/">
-      <div class="tool-card-icon" style="background:#FEF2F2;color:#DC2626">📄</div>
-      <div class="tool-card-name">图片转 PDF</div>
-      <div class="tool-card-desc">多张图片合并为 PDF，A4/Letter/A3/自适应，边距可调，纯前端生成。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./currency/">
-      <div class="tool-card-icon" style="background:#FFFBEB;color:#D97706">💱</div>
-      <div class="tool-card-name">汇率换算</div>
-      <div class="tool-card-desc">实时汇率换算，11 种货币，多币种同时显示，24h 缓存离线可用。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./calendar/">
-      <div class="tool-card-icon" style="background:#FEF2F2;color:#DC2626">📅</div>
-      <div class="tool-card-name">万年历</div>
-      <div class="tool-card-desc">农历查询，天干地支，生肖，24 节气，宜忌黄历，法定节假日标注。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./signature/">
-      <div class="tool-card-icon" style="background:#EEF2FF;color:#6366F1">✍️</div>
-      <div class="tool-card-name">电子签名</div>
-      <div class="tool-card-desc">Canvas 手写签名，画笔粗细颜色可调，透明底 PNG 导出，触屏兼容。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./chart/">
-      <div class="tool-card-icon" style="background:#ECFDF5;color:#059669">📊</div>
-      <div class="tool-card-name">图表生成器</div>
-      <div class="tool-card-desc">柱状图/折线图/饼图/环形图，输入数据即时生成，导出 PNG。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-    <a class="tool-card" target="_blank" href="./invoice/">
-      <div class="tool-card-icon" style="background:#FFFBEB;color:#D97706">🧾</div>
-      <div class="tool-card-name">发票税额计算器</div>
-      <div class="tool-card-desc">含税不含税互算，13%/9%/6%/3%/1% 税率，批量计算，精确到分。</div>
-      <span class="tool-card-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-top">
-    <div class="footer-logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#fbg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="fbg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg> DevKit</div>
-    <div class="footer-links">
-      <a class="footer-link" href="https://jsj.top/f/dZvLFl" target="_blank">反馈建议</a>
+  <div class="container">
+    <div class="hot-section" id="hotSection">
+      <div class="hot-title">🔥 热门工具</div>
+      <div class="hot-grid" id="hotGrid"></div>
+    </div>
+    <div id="toolsSection">
+      <div class="section-title" id="sectionTitle">📦 全部工具</div>
+      <div class="tools-grid" id="toolsGrid"></div>
+    </div>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">没有找到匹配的工具</div>
     </div>
   </div>
-  <div class="footer-copy">
-    纯前端应用，所有数据处理均在你的浏览器本地完成，不会上传至任何服务器。<br>
-    © 2026 DevKit. 面向开发者的在线工具箱。
-  </div>
-</footer>
+</div>
 
-</div><!-- .content -->
+<div class="statusbar">
+  <span>DevKit — 纯前端工具箱</span>
+  <div class="statusbar-spacer"></div>
+  <span>数据不上传 · 开源免费</span>
+</div>
 
-<script>
-// 初始化主题
-(function() {
-  const saved = localStorage.getItem('devkit-theme');
-  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.querySelector('.theme-btn');
-    if (btn) btn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
-  });
-})();
-function toggleTheme() {
-  const html = document.documentElement;
-  const btn = document.querySelector('.theme-btn');
-  if (html.getAttribute('data-theme') === 'dark') {
-    html.removeAttribute('data-theme');
-    localStorage.setItem('devkit-theme', 'light');
-    btn.textContent = '🌙';
-  } else {
-    html.setAttribute('data-theme', 'dark');
-    localStorage.setItem('devkit-theme', 'dark');
-    btn.textContent = '☀️';
-  }
+<script type="module">
+import '../shared/theme.js';
+
+const TOOLS = [
+  { name:'JSON 格式化', desc:'格式化、压缩、验证 JSON', emoji:'📋', cat:'dev', url:'./json/', hot:false },
+  { name:'正则表达式测试', desc:'实时匹配、替换、分组', emoji:'🔣', cat:'dev', url:'./regex/', hot:false },
+  { name:'Base64 编解码', desc:'文本/图片 Base64 转换', emoji:'🔐', cat:'encode', url:'./base64/', hot:false },
+  { name:'URL 编解码', desc:'URL encode/decode', emoji:'🔗', cat:'encode', url:'./url-codec/', hot:false },
+  { name:'JWT 解析', desc:'解析 JWT Token 结构', emoji:'🎫', cat:'dev', url:'./jwt/', hot:false },
+  { name:'UUID 生成器', desc:'批量生成 UUID v4', emoji:'🆔', cat:'dev', url:'./uuid/', hot:false },
+  { name:'Hash 计算', desc:'MD5/SHA-1/SHA-256', emoji:'#️⃣', cat:'encode', url:'./hash/', hot:false },
+  { name:'时间戳转换', desc:'Unix 时间戳 ↔ 日期', emoji:'⏰', cat:'dev', url:'./timestamp/', hot:false },
+  { name:'颜色转换', desc:'HEX/RGB/HSL 互转', emoji:'🎨', cat:'design', url:'./color/', hot:false },
+  { name:'Markdown 预览', desc:'实时渲染 Markdown', emoji:'📝', cat:'text', url:'./markdown/', hot:false },
+  { name:'文本对比', desc:'Diff 对比两段文本', emoji:'📊', cat:'text', url:'./text-diff/', hot:false },
+  { name:'代码格式化', desc:'HTML/CSS/JS 格式化', emoji:'💻', cat:'dev', url:'./code-formatter/', hot:false },
+  { name:'SQL 格式化', desc:'SQL 美化与压缩', emoji:'🗃️', cat:'dev', url:'./sql-formatter/', hot:false },
+  { name:'Cron 表达式', desc:'Cron 可视化解析', emoji:'⏱️', cat:'dev', url:'./cron/', hot:false },
+  { name:'密码生成器', desc:'自定义长度和字符集', emoji:'🔑', cat:'encode', url:'./password/', hot:true },
+  { name:'进制转换', desc:'2/8/10/16 进制互转', emoji:'🔢', cat:'dev', url:'./number-base/', hot:false },
+  { name:'单位换算', desc:'长度/重量/温度/面积', emoji:'📏', cat:'calc', url:'./unit-converter/', hot:false },
+  { name:'YAML 格式化', desc:'格式化/压缩/YAML↔JSON', emoji:'📄', cat:'dev', url:'./yaml/', hot:false },
+  { name:'TOML 编辑器', desc:'格式化/TOML↔JSON', emoji:'⚙️', cat:'dev', url:'./toml/', hot:false },
+  { name:'字数统计', desc:'字符/词/句/段落统计', emoji:'📊', cat:'text', url:'./word-counter/', hot:true },
+  { name:'HTML 实体转换', desc:'编码/解码 + 参考表', emoji:'🏷️', cat:'encode', url:'./html-entity/', hot:false },
+  { name:'大小写转换', desc:'8 种大小写转换模式', emoji:'🔤', cat:'text', url:'./case-converter/', hot:false },
+  { name:'文本去重', desc:'去重 + 排序 + 导出', emoji:'🧹', cat:'text', url:'./text-dedupe/', hot:false },
+  { name:'Lorem Ipsum', desc:'中英文占位文本生成', emoji:'📜', cat:'text', url:'./lorem/', hot:false },
+  { name:'随机数生成器', desc:'自定义范围随机数', emoji:'🎲', cat:'calc', url:'./random/', hot:false },
+  { name:'CSV 查看器', desc:'表格预览/排序/搜索', emoji:'📊', cat:'dev', url:'./csv-viewer/', hot:false },
+  { name:'BMI 计算器', desc:'身体质量指数计算', emoji:'⚖️', cat:'calc', url:'./bmi/', hot:false },
+  { name:'倒计时计算', desc:'距离目标日期天数', emoji:'⏳', cat:'calc', url:'./countdown/', hot:false },
+  { name:'利息计算器', desc:'房贷/存款利息计算', emoji:'🏦', cat:'calc', url:'./interest/', hot:false },
+  { name:'二维码生成器', desc:'文本/URL 生成二维码', emoji:'📱', cat:'dev', url:'./qrcode/', hot:false },
+  { name:'图片压缩', desc:'批量压缩 JPG/PNG/WebP', emoji:'🗜️', cat:'image', url:'./image-compress/', hot:true },
+  { name:'图片格式转换', desc:'JPG/PNG/WebP 互转', emoji:'🖼️', cat:'image', url:'./image-format/', hot:false },
+  { name:'提前还款计算', desc:'多次提前还款模拟', emoji:'💰', cat:'calc', url:'./prepayment/', hot:true },
+  { name:'图片缩放', desc:'8 预设 + 批量缩放', emoji:'📐', cat:'image', url:'./image-resize/', hot:true },
+  { name:'个税计算器', desc:'累计预扣 + 年终奖', emoji:'💳', cat:'calc', url:'./tax/', hot:true },
+  { name:'图片加水印', desc:'文字/图片水印 + 平铺', emoji:'💧', cat:'image', url:'./watermark/', hot:false },
+  { name:'Favicon 生成', desc:'文字/emoji/图片生成图标', emoji:'🌐', cat:'design', url:'./favicon/', hot:false },
+  { name:'Unicode 转换', desc:'4 格式双向转换', emoji:'🔡', cat:'encode', url:'./unicode/', hot:false },
+  { name:'文本加密解密', desc:'AES-256/ROT13/Caesar', emoji:'🔒', cat:'encode', url:'./encrypt/', hot:false },
+  { name:'CSS 渐变生成', desc:'线性/径向/锥形渐变', emoji:'🌈', cat:'design', url:'./gradient/', hot:false },
+  { name:'证件照换底色', desc:'白/蓝/红底色替换', emoji:'📸', cat:'image', url:'./id-photo/', hot:false },
+  { name:'图片拼接', desc:'横向/纵向/网格拼接', emoji:'🧩', cat:'image', url:'./collage/', hot:false },
+  { name:'图片转 PDF', desc:'多图合并 PDF 导出', emoji:'📄', cat:'image', url:'./img-to-pdf/', hot:false },
+  { name:'汇率换算', desc:'实时汇率 11 种货币', emoji:'💱', cat:'life', url:'./currency/', hot:false },
+  { name:'万年历', desc:'农历/黄历/宜忌/节气', emoji:'📅', cat:'life', url:'./calendar/', hot:false },
+  { name:'电子签名', desc:'Canvas 手写签名导出', emoji:'✍️', cat:'life', url:'./signature/', hot:false },
+  { name:'图表生成器', desc:'柱状/折线/饼图导出', emoji:'📊', cat:'design', url:'./chart/', hot:false },
+  { name:'发票税额计算', desc:'含税⇄不含税 + 批量', emoji:'🧾', cat:'calc', url:'./invoice/', hot:false },
+  { name:'年龄计算器', desc:'生肖/星座/生日倒计时', emoji:'🎂', cat:'calc', url:'./age-calculator/', hot:false },
+  { name:'日期差计算', desc:'两日期间隔天数', emoji:'📅', cat:'calc', url:'./date-diff/', hot:false },
+];
+
+let currentCat = 'all', searchQuery = '';
+const CAT_NAMES = { all:'全部', text:'📝 文本', image:'🖼️ 图片', calc:'🔢 计算', dev:'💻 开发', design:'🎨 设计', encode:'🔐 编码', life:'🏠 生活' };
+
+function renderHot() {
+  const hots = TOOLS.filter(t => t.hot);
+  document.getElementById('hotGrid').innerHTML = hots.map(t =>
+    `<a class="hot-card" href="${t.url}" target="_blank"><div class="hot-emoji">${t.emoji}</div><div class="hot-name">${t.name}</div><div class="hot-desc">${t.desc}</div></a>`
+  ).join('');
 }
-document.querySelectorAll('.navbar-link[href^="#"]').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const t = document.querySelector(link.getAttribute('href'));
-    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-</script>
 
-  <noscript>
-    <h2>DevKit 在线开发者工具箱</h2>
-    <p>纯前端开发者工具，数据不离开浏览器。请启用 JavaScript 以使用。</p>
-    <ul>
-      <li><a href="./json/">JSON 格式化、校验、转换、对比</a></li>
-      <li><a href="./base64/">Base64 编解码</a></li>
-      <li><a href="./url-codec/">URL 编解码</a></li>
-      <li><a href="./jwt/">JWT 解码器</a></li>
-      <li><a href="./hash/">Hash 计算（MD5/SHA）</a></li>
-      <li><a href="./uuid/">UUID 生成器</a></li>
-      <li><a href="./timestamp/">时间戳转换</a></li>
-      <li><a href="./regex/">正则表达式测试</a></li>
-      <li><a href="./color/">颜色转换器</a></li>
-      <li><a href="./markdown/">Markdown 预览</a></li>
-      <li><a href="./cron/">Cron 表达式解析</a></li>
-      <li><a href="./text-diff/">文本对比</a></li>
-      <li><a href="./code-formatter/">代码格式化</a></li>
-      <li><a href="./sql-formatter/">SQL 格式化</a></li>
-      <li><a href="./password/">密码生成器</a></li>
-      <li><a href="./number-base/">进制转换</a></li>
-      <li><a href="./unit-converter/">单位换算</a></li>
-      <li><a href="./yaml/">YAML 格式化</a></li>
-      <li><a href="./image-compress/">图片压缩</a></li>
-      <li><a href="./image-format/">图片格式转换</a></li>
-      <li><a href="./qrcode/">二维码生成器</a></li>
-      <li><a href="./countdown/">倒数日计算器</a></li>
-      <li><a href="./bmi/">BMI 计算器</a></li>
-      <li><a href="./random/">随机数生成器</a></li>
-      <li><a href="./case-converter/">大小写转换</a></li>
-      <li><a href="./text-dedupe/">文本去重</a></li>
-      <li><a href="./html-entity/">HTML 实体转换</a></li>
-      <li><a href="./toml/">TOML 编辑器</a></li>
-      <li><a href="./word-counter/">字数统计</a></li>
-      <li><a href="./age-calculator/">年龄计算器</a></li>
-      <li><a href="./date-diff/">日期差计算</a></li>
-      <li><a href="./interest/">利息计算器</a></li>
-      <li><a href="./csv-viewer/">CSV 查看器</a></li>
-      <li><a href="./prepayment/">提前还款计算器</a></li>
-      <li><a href="./image-resize/">图片尺寸调整</a></li>
-      <li><a href="./tax/">个税计算器</a></li>
-      <li><a href="./watermark/">图片加水印</a></li>
-      <li><a href="./favicon/">Favicon 生成器</a></li>
-      <li><a href="./unicode/">Unicode 转换</a></li>
-      <li><a href="./lorem/">Lorem Ipsum 生成器</a></li>
-      <li><a href="./encrypt/">文本加密解密</a></li>
-      <li><a href="./gradient/">CSS 渐变生成器</a></li>
-      <li><a href="./id-photo/">证件照换底色</a></li>
-      <li><a href="./collage/">图片拼接</a></li>
-      <li><a href="./img-to-pdf/">图片转 PDF</a></li>
-      <li><a href="./currency/">汇率换算</a></li>
-      <li><a href="./calendar/">万年历</a></li>
-      <li><a href="./signature/">电子签名</a></li>
-      <li><a href="./chart/">图表生成器</a></li>
-      <li><a href="./invoice/">发票税额计算器</a></li>
-    </ul>
-  </noscript>
+function render() {
+  let list = TOOLS;
+  if (currentCat !== 'all') list = list.filter(t => t.cat === currentCat);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
+  }
+
+  const hotVisible = currentCat === 'all' && !searchQuery;
+  document.getElementById('hotSection').style.display = hotVisible ? 'block' : 'none';
+
+  document.getElementById('sectionTitle').textContent = searchQuery
+    ? `🔍 搜索结果（${list.length}）`
+    : `📦 ${CAT_NAMES[currentCat] || '全部'}工具（${list.length}）`;
+
+  if (!list.length) {
+    document.getElementById('toolsSection').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  } else {
+    document.getElementById('toolsSection').style.display = 'block';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('toolsGrid').innerHTML = list.map(t =>
+      `<a class="tool-card" href="${t.url}" target="_blank"><div class="tool-emoji">${t.emoji}</div><div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`
+    ).join('');
+  }
+
+  document.getElementById('toolCount').textContent = `${list.length} 个工具`;
+}
+
+/* Events */
+document.getElementById('searchInput').addEventListener('input', function() {
+  searchQuery = this.value.trim();
+  document.getElementById('searchClear').style.display = searchQuery ? 'flex' : 'none';
+  render();
+});
+
+document.getElementById('searchClear').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  document.getElementById('searchClear').style.display = 'none';
+  render();
+});
+
+document.getElementById('tagsWrap').addEventListener('click', e => {
+  const tag = e.target.closest('.tag');
+  if (!tag) return;
+  currentCat = tag.dataset.cat;
+  document.querySelectorAll('.tag').forEach(t => t.classList.toggle('active', t.dataset.cat === currentCat));
+  render();
+});
+
+renderHot();
+render();
+</script>
+<noscript>
+<h2>DevKit — 在线开发者工具箱</h2>
+<ul>
+  <li><a href="./json/">JSON 格式化</a></li><li><a href="./regex/">正则表达式</a></li>
+  <li><a href="./base64/">Base64</a></li><li><a href="./url-codec/">URL 编解码</a></li>
+  <li><a href="./jwt/">JWT 解析</a></li><li><a href="./uuid/">UUID 生成</a></li>
+  <li><a href="./hash/">Hash 计算</a></li><li><a href="./timestamp/">时间戳转换</a></li>
+  <li><a href="./color/">颜色转换</a></li><li><a href="./markdown/">Markdown 预览</a></li>
+  <li><a href="./text-diff/">文本对比</a></li><li><a href="./code-formatter/">代码格式化</a></li>
+  <li><a href="./sql-formatter/">SQL 格式化</a></li><li><a href="./cron/">Cron 表达式</a></li>
+  <li><a href="./password/">密码生成器</a></li><li><a href="./number-base/">进制转换</a></li>
+  <li><a href="./unit-converter/">单位换算</a></li><li><a href="./yaml/">YAML 格式化</a></li>
+  <li><a href="./toml/">TOML 编辑器</a></li><li><a href="./word-counter/">字数统计</a></li>
+  <li><a href="./html-entity/">HTML 实体</a></li><li><a href="./case-converter/">大小写转换</a></li>
+  <li><a href="./text-dedupe/">文本去重</a></li><li><a href="./lorem/">Lorem Ipsum</a></li>
+  <li><a href="./random/">随机数生成</a></li><li><a href="./csv-viewer/">CSV 查看器</a></li>
+  <li><a href="./bmi/">BMI 计算器</a></li><li><a href="./countdown/">倒计时</a></li>
+  <li><a href="./interest/">利息计算器</a></li><li><a href="./qrcode/">二维码生成</a></li>
+  <li><a href="./image-compress/">图片压缩</a></li><li><a href="./image-format/">图片格式转换</a></li>
+  <li><a href="./prepayment/">提前还款</a></li><li><a href="./image-resize/">图片缩放</a></li>
+  <li><a href="./tax/">个税计算器</a></li><li><a href="./watermark/">图片加水印</a></li>
+  <li><a href="./favicon/">Favicon 生成</a></li><li><a href="./unicode/">Unicode 转换</a></li>
+  <li><a href="./encrypt/">文本加密</a></li><li><a href="./gradient/">CSS 渐变</a></li>
+  <li><a href="./id-photo/">证件照换底色</a></li><li><a href="./collage/">图片拼接</a></li>
+  <li><a href="./img-to-pdf/">图片转 PDF</a></li><li><a href="./currency/">汇率换算</a></li>
+  <li><a href="./calendar/">万年历</a></li><li><a href="./signature/">电子签名</a></li>
+  <li><a href="./chart/">图表生成器</a></li><li><a href="./invoice/">发票税额</a></li>
+  <li><a href="./age-calculator/">年龄计算器</a></li><li><a href="./date-diff/">日期差计算</a></li>
+</ul>
+</noscript>
 </body>
 </html>
