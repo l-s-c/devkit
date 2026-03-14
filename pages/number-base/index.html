@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进制转换 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线进制转换工具，支持二进制、八进制、十进制、十六进制互转，实时转换，支持大数。纯前端，数据不上传。">
+<meta property="og:title" content="进制转换 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="在线进制转换工具，二进制/八进制/十进制/十六进制实时互转">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/number-base/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进制转换 — DevKit">
+<meta name="twitter:description" content="在线进制转换，二/八/十/十六进制实时互转">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"进制转换","description":"在线进制转换工具，支持二进制、八进制、十进制、十六进制互转","url":"https://l-s-c.github.io/devkit/pages/number-base/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/number-base/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; display: flex; flex-direction: column; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* 输入区 */
+.input-section { margin-bottom: 16px; }
+.input-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.input-row { display: flex; gap: 10px; }
+.radix-select {
+  width: 120px; padding: 12px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); font-size: 14px; font-weight: 600;
+  color: var(--text-primary); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%236B7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+.radix-select:focus { outline: none; border-color: var(--brand-500); }
+.number-input {
+  flex: 1; padding: 12px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); font-family: var(--font-code);
+  font-size: 18px; font-weight: 600; color: var(--text-primary);
+  transition: border-color 200ms;
+}
+.number-input:focus { outline: none; border-color: var(--brand-500); }
+.number-input.error { border-color: #EF4444; }
+.error-msg { font-size: 12px; color: #EF4444; margin-top: 6px; display: none; }
+.error-msg.show { display: block; }
+
+/* 箭头分隔 */
+.arrow-divider { display: flex; align-items: center; justify-content: center; padding: 8px 0; color: var(--text-caption); font-size: 20px; user-select: none; }
+
+/* 输出卡片 */
+.output-grid { display: flex; flex-direction: column; gap: 8px; }
+.output-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-radius: 10px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  backdrop-filter: blur(20px); transition: all 150ms; cursor: pointer;
+}
+.output-card:hover { border-color: var(--brand-500); }
+.output-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.output-badge {
+  width: 40px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: white; flex-shrink: 0; letter-spacing: 0.5px;
+}
+.output-badge.bin { background: linear-gradient(135deg, #EF4444, #F97316); }
+.output-badge.oct { background: linear-gradient(135deg, #F59E0B, #EAB308); }
+.output-badge.dec { background: linear-gradient(135deg, #10B981, #34D399); }
+.output-badge.hex { background: linear-gradient(135deg, #6366F1, #818CF8); }
+.output-info { min-width: 0; flex: 1; }
+.output-name { font-size: 12px; color: var(--text-caption); font-weight: 500; margin-bottom: 2px; }
+.output-value {
+  font-family: var(--font-code); font-size: 16px; font-weight: 600;
+  color: var(--text-primary); word-break: break-all; line-height: 1.4;
+}
+.output-copy {
+  width: 32px; height: 32px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text-caption); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  flex-shrink: 0; transition: all 150ms;
+}
+.output-copy:hover { background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.output-copy.ok { color: #10B981; }
+
+/* 位信息栏 */
+.bit-info {
+  display: flex; gap: 16px; margin-top: 16px; padding: 12px 16px;
+  border-radius: 10px; background: rgba(99,102,241,0.08);
+}
+.bit-item { display: flex; flex-direction: column; gap: 2px; }
+.bit-label { font-size: 11px; color: var(--text-caption); font-weight: 500; }
+.bit-value { font-family: var(--font-code); font-size: 13px; font-weight: 700; color: var(--brand-500); }
+
+/* 快捷值按钮 */
+.quick-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.quick-btn {
+  padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+  font-family: var(--font-code);
+}
+.quick-btn:hover { border-color: var(--brand-500); color: var(--brand-500); background: rgba(99,102,241,0.08); }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .input-row { flex-direction: column; }
+  .radix-select { width: 100%; }
+  .output-value { font-size: 14px; }
+  .bit-info { flex-wrap: wrap; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">进制转换 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">进制转换</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 输入区 -->
+  <div class="input-section">
+    <div class="input-label">输入数字</div>
+    <div class="input-row">
+      <select class="radix-select" id="inputRadix">
+        <option value="2">二进制</option>
+        <option value="8">八进制</option>
+        <option value="10" selected>十进制</option>
+        <option value="16">十六进制</option>
+      </select>
+      <input type="text" class="number-input" id="numberInput" value="255" placeholder="输入数字..." spellcheck="false">
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="arrow-divider">↓</div>
+
+  <!-- 四进制输出卡片 -->
+  <div class="output-grid">
+    <div class="output-card" data-type="bin">
+      <div class="output-left">
+        <div class="output-badge bin">BIN</div>
+        <div class="output-info">
+          <div class="output-name">二进制 (Base 2)</div>
+          <div class="output-value" id="binOutput"></div>
+        </div>
+      </div>
+      <button class="output-copy" data-type="bin" title="复制">📋</button>
+    </div>
+    <div class="output-card" data-type="oct">
+      <div class="output-left">
+        <div class="output-badge oct">OCT</div>
+        <div class="output-info">
+          <div class="output-name">八进制 (Base 8)</div>
+          <div class="output-value" id="octOutput"></div>
+        </div>
+      </div>
+      <button class="output-copy" data-type="oct" title="复制">📋</button>
+    </div>
+    <div class="output-card" data-type="dec">
+      <div class="output-left">
+        <div class="output-badge dec">DEC</div>
+        <div class="output-info">
+          <div class="output-name">十进制 (Base 10)</div>
+          <div class="output-value" id="decOutput"></div>
+        </div>
+      </div>
+      <button class="output-copy" data-type="dec" title="复制">📋</button>
+    </div>
+    <div class="output-card" data-type="hex">
+      <div class="output-left">
+        <div class="output-badge hex">HEX</div>
+        <div class="output-info">
+          <div class="output-name">十六进制 (Base 16)</div>
+          <div class="output-value" id="hexOutput"></div>
+        </div>
+      </div>
+      <button class="output-copy" data-type="hex" title="复制">📋</button>
+    </div>
+  </div>
+
+  <!-- 位信息栏 -->
+  <div class="bit-info">
+    <div class="bit-item"><span class="bit-label">位数</span><span class="bit-value" id="bitCount">—</span></div>
+    <div class="bit-item"><span class="bit-label">字节</span><span class="bit-value" id="byteCount">—</span></div>
+    <div class="bit-item"><span class="bit-label">有符号范围</span><span class="bit-value" id="signedRange">—</span></div>
+  </div>
+
+  <!-- 快捷值 -->
+  <div class="quick-actions">
+    <button class="quick-btn" data-value="0">0</button>
+    <button class="quick-btn" data-value="127">127</button>
+    <button class="quick-btn" data-value="255">255</button>
+    <button class="quick-btn" data-value="1024">1024</button>
+    <button class="quick-btn" data-value="65535">65535</button>
+    <button class="quick-btn" data-value="16777215">0xFFFFFF</button>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入任意进制数字，实时转换</span>
+  <div class="statusbar-spacer"></div>
+  <span>BigInt 大数支持</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* ===== 文案常量（预留 i18n） ===== */
+const LABELS = {
+  invalidChars: {
+    2:  '请输入有效的二进制数字 (0 和 1)',
+    8:  '请输入有效的八进制数字 (0-7)',
+    10: '请输入有效的十进制数字 (0-9)',
+    16: '请输入有效的十六进制数字 (0-9, A-F)',
+  },
+  ready: '输入任意进制数字，实时转换',
+  bits: (n) => n + ' bits',
+  bytes: (n) => n + (n === 1 ? ' byte' : ' bytes'),
+  dash: '—',
+};
+
+/* ===== 验证规则 ===== */
+const VALIDATORS = {
+  2:  /^-?[01]+$/,
+  8:  /^-?[0-7]+$/,
+  10: /^-?[0-9]+$/,
+  16: /^-?[0-9a-fA-F]+$/,
+};
+
+/* ===== 进制转换核心（BigInt 大数支持） ===== */
+function parseToBigInt(value, radix) {
+  const cleaned = value.replace(/[\s_]/g, '');
+  if (!cleaned) return null;
+
+  const isNeg = cleaned.startsWith('-');
+  const abs = isNeg ? cleaned.slice(1) : cleaned;
+  if (!abs) return null;
+
+  const testVal = isNeg ? '-' + abs : abs;
+  if (!VALIDATORS[radix].test(testVal)) return null;
+
+  try {
+    let n;
+    if (radix === 10) n = BigInt(abs);
+    else if (radix === 16) n = BigInt('0x' + abs);
+    else if (radix === 8) n = BigInt('0o' + abs);
+    else if (radix === 2) n = BigInt('0b' + abs);
+    return isNeg ? -n : n;
+  } catch {
+    return null;
+  }
+}
+
+function toBase(n, base) {
+  if (n === 0n) return '0';
+  const isNeg = n < 0n;
+  const abs = isNeg ? -n : n;
+  const str = abs.toString(base).toUpperCase();
+  return isNeg ? '-' + str : str;
+}
+
+function formatBinary(binStr) {
+  // 4 位一组，从右往左分组
+  const isNeg = binStr.startsWith('-');
+  const abs = isNeg ? binStr.slice(1) : binStr;
+  const groups = [];
+  for (let i = abs.length; i > 0; i -= 4) {
+    groups.unshift(abs.slice(Math.max(0, i - 4), i));
+  }
+  return (isNeg ? '-' : '') + groups.join(' ');
+}
+
+/* ===== 输出结果 ===== */
+const outputIds = { bin: 'binOutput', oct: 'octOutput', dec: 'decOutput', hex: 'hexOutput' };
+// 存储未格式化的值用于复制
+const rawValues = { bin: '', oct: '', dec: '', hex: '' };
+
+function clearOutputs() {
+  Object.values(outputIds).forEach(id => { document.getElementById(id).textContent = LABELS.dash; });
+  document.getElementById('bitCount').textContent = LABELS.dash;
+  document.getElementById('byteCount').textContent = LABELS.dash;
+  document.getElementById('signedRange').textContent = LABELS.dash;
+  rawValues.bin = rawValues.oct = rawValues.dec = rawValues.hex = '';
+}
+
+function convert() {
+  const input = document.getElementById('numberInput');
+  const radix = parseInt(document.getElementById('inputRadix').value);
+  const errEl = document.getElementById('errorMsg');
+  const raw = input.value.trim();
+
+  // 清除错误
+  errEl.classList.remove('show');
+  input.classList.remove('error');
+
+  if (!raw) {
+    clearOutputs();
+    document.getElementById('statusInfo').textContent = LABELS.ready;
+    return;
+  }
+
+  const n = parseToBigInt(raw, radix);
+  if (n === null) {
+    errEl.textContent = LABELS.invalidChars[radix];
+    errEl.classList.add('show');
+    input.classList.add('error');
+    clearOutputs();
+    return;
+  }
+
+  // 转换并显示
+  const bin = toBase(n, 2);
+  const oct = toBase(n, 8);
+  const dec = toBase(n, 10);
+  const hex = toBase(n, 16);
+
+  rawValues.bin = bin;
+  rawValues.oct = oct;
+  rawValues.dec = dec;
+  rawValues.hex = hex;
+
+  document.getElementById('binOutput').textContent = formatBinary(bin);
+  document.getElementById('octOutput').textContent = oct;
+  document.getElementById('decOutput').textContent = dec;
+  document.getElementById('hexOutput').textContent = hex;
+
+  // 位信息
+  const absN = n < 0n ? -n : n;
+  const absBin = toBase(absN, 2);
+  const bits = absBin.length;
+  const byteCount = Math.ceil(bits / 8);
+  document.getElementById('bitCount').textContent = LABELS.bits(bits);
+  document.getElementById('byteCount').textContent = LABELS.bytes(byteCount);
+
+  // 有符号范围（基于字节数）
+  if (byteCount <= 8) {
+    const signedMin = -(2n ** (BigInt(byteCount * 8 - 1)));
+    const signedMax = 2n ** (BigInt(byteCount * 8 - 1)) - 1n;
+    document.getElementById('signedRange').textContent = signedMin.toString() + ' ~ ' + signedMax.toString();
+  } else {
+    document.getElementById('signedRange').textContent = '超出常规范围';
+  }
+
+  document.getElementById('statusInfo').textContent = 'DEC ' + dec;
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('numberInput').addEventListener('input', convert);
+document.getElementById('inputRadix').addEventListener('change', convert);
+
+// 复制按钮
+document.querySelectorAll('.output-copy').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const type = btn.dataset.type;
+    const text = rawValues[type];
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    btn.textContent = '✅';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('ok'); }, 1200);
+  });
+});
+
+// 卡片点击也复制
+document.querySelectorAll('.output-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const type = card.dataset.type;
+    const text = rawValues[type];
+    if (text) navigator.clipboard.writeText(text);
+  });
+});
+
+// 快捷值按钮
+document.querySelectorAll('.quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('inputRadix').value = '10';
+    document.getElementById('numberInput').value = btn.dataset.value;
+    convert();
+  });
+});
+
+// 初始化
+convert();
+</script>
+<noscript><p>进制转换 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
