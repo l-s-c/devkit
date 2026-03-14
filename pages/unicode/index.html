@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unicode 转换 | Unicode Converter — DevKit</title>
+<meta name="description" content="Unicode 编码转换，文本↔Unicode/HTML实体/UTF-8十六进制，支持 emoji 代理对和 CJK 字符。Unicode converter online.">
+<meta name="keywords" content="unicode converter, unicode转换, unicode编码, 字符编码转换, html实体, utf-8, DevKit">
+<meta property="og:title" content="Unicode 转换 | Unicode Converter — DevKit">
+<meta property="og:description" content="文本↔Unicode/HTML实体/UTF-8，双向实时转换">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/unicode/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unicode 转换 — DevKit">
+<meta name="twitter:description" content="Unicode编码转换，支持emoji和CJK">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Unicode 转换","description":"Unicode编码转换，文本↔Unicode/HTML实体/UTF-8","url":"https://l-s-c.github.io/devkit/pages/unicode/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/unicode/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* 格式标签 */
+.format-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.format-tab {
+  padding: 8px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.format-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.format-tab.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 统计 */
+.stats-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat-chip {
+  padding: 6px 12px; border-radius: 6px; background: rgba(99,102,241,0.06);
+  font-family: var(--font-code); font-size: 11px; font-weight: 700; color: var(--brand-500);
+}
+
+/* 文本区 */
+.text-area {
+  width: 100%; min-height: 120px; padding: 14px; border-radius: 10px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 13px; color: var(--text-primary);
+  resize: vertical; line-height: 1.6;
+}
+.text-area:focus { outline: none; border-color: var(--brand-500); }
+.text-label {
+  font-size: 12px; font-weight: 700; color: var(--text-caption);
+  margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;
+}
+.copy-btn {
+  padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 10px; font-weight: 700;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.copy-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* 字符详情表 */
+.char-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.char-table th {
+  padding: 8px 10px; text-align: left; font-weight: 700; color: var(--text-caption);
+  border-bottom: 1px solid var(--border-glass); font-size: 10px;
+}
+.char-table td {
+  padding: 8px 10px; border-bottom: 0.5px solid var(--border-glass);
+  font-family: var(--font-code); font-size: 12px;
+}
+.char-table td:first-child { font-size: 20px; text-align: center; font-family: inherit; }
+.char-table tr:hover { background: rgba(99,102,241,0.06); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Unicode 转换 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Unicode 转换</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="format-tabs" id="formatTabs">
+      <button class="format-tab active" data-fmt="unicode">\uXXXX</button>
+      <button class="format-tab" data-fmt="es6">\u{XXXXX}</button>
+      <button class="format-tab" data-fmt="html">&#xXXXX;</button>
+      <button class="format-tab" data-fmt="utf8">UTF-8 Hex</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip" id="statChars">0 字符</div>
+      <div class="stat-chip" id="statPoints">0 码点</div>
+      <div class="stat-chip" id="statFormat">\uXXXX</div>
+    </div>
+  </div>
+
+  <div class="dual">
+    <div>
+      <div class="panel">
+        <div class="text-label">
+          <span>📝 文本</span>
+          <button class="copy-btn" id="copyInput">复制</button>
+        </div>
+        <textarea class="text-area" id="inputText" placeholder="输入文本，如：你好世界 Hello 😀">你好世界 Hello 😀</textarea>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="text-label">
+          <span>🔢 编码结果</span>
+          <button class="copy-btn" id="copyOutput">复制</button>
+        </div>
+        <textarea class="text-area" id="outputText" placeholder="编码结果..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">📊 字符详情</div>
+    <div style="max-height:300px;overflow-y:auto">
+      <table class="char-table">
+        <thead><tr><th>字符</th><th>码点</th><th>\uXXXX</th><th>HTML</th><th>UTF-8</th></tr></thead>
+        <tbody id="charTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">输入文本自动转换</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地转换</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let format = 'unicode';
+const encoder = new TextEncoder();
+
+const FORMAT_LABELS = { unicode: '\\uXXXX', es6: '\\u{XXXXX}', html: '&#xXXXX;', utf8: 'UTF-8 Hex' };
+
+/* ===== 编码：文本→编码（用 codePointAt，不是 charCodeAt）===== */
+function textToEncoded(text) {
+  if (!text) return '';
+  const codePoints = [...text].map(ch => ch.codePointAt(0));
+
+  switch (format) {
+    case 'unicode':
+      // BMP 用 \uXXXX，超出 BMP 的 emoji 用代理对 \uD83D\uDE00
+      return codePoints.map(cp => {
+        if (cp <= 0xFFFF) return '\\u' + cp.toString(16).toUpperCase().padStart(4, '0');
+        const hi = Math.floor((cp - 0x10000) / 0x400) + 0xD800;
+        const lo = (cp - 0x10000) % 0x400 + 0xDC00;
+        return '\\u' + hi.toString(16).toUpperCase() + '\\u' + lo.toString(16).toUpperCase();
+      }).join('');
+    case 'es6':
+      // \u{XXXXX} 格式，emoji 直接 \u{1F600}
+      return codePoints.map(cp => '\\u{' + cp.toString(16).toUpperCase() + '}').join('');
+    case 'html':
+      return codePoints.map(cp => '&#x' + cp.toString(16).toUpperCase() + ';').join('');
+    case 'utf8':
+      // TextEncoder 编码后逐字节 .toString(16)
+      return [...encoder.encode(text)].map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+  }
+}
+
+/* ===== 解码：编码→文本 ===== */
+function encodedToText(encoded) {
+  if (!encoded) return '';
+  try {
+    switch (format) {
+      case 'unicode':
+        // 处理代理对：先还原所有 \uXXXX 为 charCode 数组，再用 fromCharCode
+        return encoded.replace(/\\u([0-9A-Fa-f]{4})/g, (_, h) =>
+          String.fromCharCode(parseInt(h, 16))
+        );
+      case 'es6':
+        return encoded.replace(/\\u\{([0-9A-Fa-f]+)\}/g, (_, h) =>
+          String.fromCodePoint(parseInt(h, 16))
+        );
+      case 'html':
+        return encoded.replace(/&#x([0-9A-Fa-f]+);/g, (_, h) =>
+          String.fromCodePoint(parseInt(h, 16))
+        );
+      case 'utf8':
+        const bytes = encoded.trim().split(/\s+/).map(h => parseInt(h, 16)).filter(n => !isNaN(n));
+        return new TextDecoder().decode(new Uint8Array(bytes));
+    }
+  } catch (e) { return '⚠️ 解码错误'; }
+}
+
+/* ===== 转换 ===== */
+function convert(dir) {
+  if (dir === 'encode') {
+    const text = document.getElementById('inputText').value;
+    document.getElementById('outputText').value = textToEncoded(text);
+    updateInfo(text);
+  } else {
+    const encoded = document.getElementById('outputText').value;
+    const text = encodedToText(encoded);
+    document.getElementById('inputText').value = text;
+    updateInfo(text);
+  }
+}
+
+/* ===== 字符详情 ===== */
+function updateInfo(text) {
+  const chars = [...text];
+  const codePoints = chars.map(ch => ch.codePointAt(0));
+  document.getElementById('statChars').textContent = chars.length + ' 字符';
+  document.getElementById('statPoints').textContent = codePoints.length + ' 码点';
+
+  document.getElementById('charTable').innerHTML = chars.slice(0, 50).map(ch => {
+    const cp = ch.codePointAt(0);
+    const hex = cp.toString(16).toUpperCase();
+    const uEsc = cp <= 0xFFFF ? '\\u' + hex.padStart(4, '0') : '\\u{' + hex + '}';
+    const html = '&#x' + hex + ';';
+    const utf8 = [...encoder.encode(ch)].map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+    return `<tr><td>${ch}</td><td>U+${hex}</td><td>${uEsc}</td><td>${html}</td><td>${utf8}</td></tr>`;
+  }).join('');
+
+  document.getElementById('statusInfo').textContent = `${chars.length} 字符 · ${codePoints.length} 码点 · ${FORMAT_LABELS[format]}`;
+}
+
+/* ===== 复制 ===== */
+function copyText(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).value).then(() => {
+    btn.textContent = '已复制 ✓';
+    setTimeout(() => btn.textContent = '复制', 1500);
+  });
+}
+
+/* ===== 事件绑定 ===== */
+document.getElementById('inputText').addEventListener('input', () => convert('encode'));
+document.getElementById('outputText').addEventListener('input', () => convert('decode'));
+
+document.getElementById('formatTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.format-tab');
+  if (!tab) return;
+  format = tab.dataset.fmt;
+  document.querySelectorAll('.format-tab').forEach(t => t.classList.toggle('active', t.dataset.fmt === format));
+  document.getElementById('statFormat').textContent = FORMAT_LABELS[format];
+  convert('encode');
+});
+
+document.getElementById('copyInput').addEventListener('click', function() { copyText('inputText', this); });
+document.getElementById('copyOutput').addEventListener('click', function() { copyText('outputText', this); });
+
+convert('encode');
+</script>
+<noscript><p>Unicode 转换 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
