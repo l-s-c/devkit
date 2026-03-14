@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机数生成器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线随机数生成器，支持整数、浮点数、骰子模式，批量生成，Fisher-Yates 不重复，crypto 安全随机。">
+<meta property="og:title" content="随机数生成器 — DevKit 在线开发者工具箱">
+<meta property="og:description" content="随机数生成，整数/浮点/骰子模式，批量不重复，安全随机">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/random/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="随机数生成器 — DevKit">
+<meta name="twitter:description" content="随机数生成，整数/浮点/骰子模式">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"随机数生成器","description":"在线随机数生成器，支持整数、浮点数、骰子模式","url":"https://l-s-c.github.io/devkit/pages/random/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/random/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 600px; margin: 0 auto; width: 100%; }
+
+/* 模式 Tab */
+.mode-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.mode-tab {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 13px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.mode-tab:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.mode-tab.active { background: var(--brand-500); color: white; border-color: var(--brand-500); }
+
+/* 面板 */
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.panel.hidden { display: none; }
+
+/* 结果展示 */
+.result-display { text-align: center; margin-bottom: 24px; }
+.result-number {
+  font-family: var(--font-code); font-size: 56px; font-weight: 900;
+  background: linear-gradient(135deg, #6366F1, #A855F7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; padding: 16px 0;
+  user-select: all; cursor: pointer; transition: transform 200ms;
+}
+.result-number:hover { transform: scale(1.02); }
+.result-number.spin { animation: spin 300ms ease; }
+@keyframes spin { 0%{transform:rotateX(0)} 50%{transform:rotateX(90deg);opacity:0} 100%{transform:rotateX(0);opacity:1} }
+.result-actions { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+.result-btn {
+  padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.result-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.result-btn.primary { background: linear-gradient(135deg, #6366F1, #818CF8); color: white; border: none; box-shadow: 0 4px 24px rgba(99,102,241,0.18); }
+.result-btn.primary:hover { box-shadow: 0 6px 28px rgba(99,102,241,0.25); }
+
+/* 设置行 */
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 0.5px solid var(--border-glass);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-left { flex: 1; }
+.setting-name { font-size: 14px; font-weight: 600; }
+.setting-desc { font-size: 11px; color: var(--text-caption); margin-top: 2px; }
+.setting-right { display: flex; align-items: center; gap: 8px; }
+.num-input {
+  width: 80px; padding: 8px 12px; border-radius: 6px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass);
+  font-family: var(--font-code); font-size: 14px; font-weight: 600;
+  text-align: center; color: var(--text-primary);
+}
+.num-input:focus { outline: none; border-color: var(--brand-500); }
+.setting-sep { font-size: 12px; color: var(--text-caption); }
+
+/* 开关 */
+.toggle {
+  width: 44px; height: 24px; border-radius: 12px; border: none;
+  background: var(--border-glass); cursor: pointer; position: relative; transition: background 200ms;
+}
+.toggle.on { background: var(--brand-500); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+  border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 200ms;
+}
+.toggle.on::after { transform: translateX(20px); }
+
+/* 批量结果 */
+.batch-section { margin-top: 16px; display: none; }
+.batch-section.show { display: block; }
+.batch-title { font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.batch-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.batch-item {
+  padding: 10px 4px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); text-align: center;
+  font-family: var(--font-code); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 150ms;
+}
+.batch-item:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* 骰子 */
+.dice-grid { display: flex; gap: 12px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+.dice {
+  width: 64px; height: 64px; border-radius: 10px;
+  border: 2px solid var(--border-glass); background: var(--bg-glass);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 900; color: var(--brand-500);
+  cursor: pointer; transition: all 200ms; font-family: var(--font-code);
+}
+.dice:hover { border-color: var(--brand-500); transform: rotate(15deg); }
+.dice.rolling { animation: roll 400ms ease; }
+@keyframes roll { 0%{transform:rotate(0)} 25%{transform:rotate(90deg)} 50%{transform:rotate(180deg)} 75%{transform:rotate(270deg)} 100%{transform:rotate(360deg)} }
+.dice-total { text-align: center; margin-top: 12px; font-family: var(--font-code); font-size: 14px; color: var(--text-secondary); }
+.dice-total-num { font-weight: 800; color: var(--brand-500); }
+
+/* 历史 */
+.history-title {
+  font-size: 13px; font-weight: 700; color: var(--text-caption); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+}
+.history-clear { font-size: 11px; color: var(--text-caption); cursor: pointer; font-weight: 500; }
+.history-clear:hover { color: #EF4444; }
+.history-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.history-chip {
+  padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 12px;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.history-chip:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.history-empty { font-size: 12px; color: var(--text-caption); }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .result-number { font-size: 40px; }
+  .batch-grid { grid-template-columns: repeat(4, 1fr); }
+  .dice { width: 52px; height: 52px; font-size: 22px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">随机数生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">随机数生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="mode-tabs" id="modeTabs">
+    <button class="mode-tab active" data-mode="integer">🔢 整数</button>
+    <button class="mode-tab" data-mode="float">📊 浮点数</button>
+    <button class="mode-tab" data-mode="dice">🎲 骰子</button>
+  </div>
+
+  <!-- 整数/浮点面板 -->
+  <div class="panel" id="numPanel">
+    <div class="result-display">
+      <div class="result-number" id="mainResult">—</div>
+      <div class="result-actions">
+        <button class="result-btn primary" id="btnGenerate">🎲 生成</button>
+        <button class="result-btn" id="btnCopy">📋 复制</button>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-left">
+        <div class="setting-name">范围</div>
+        <div class="setting-desc">最小值 — 最大值</div>
+      </div>
+      <div class="setting-right">
+        <input type="number" class="num-input" id="minVal" value="1">
+        <span class="setting-sep">—</span>
+        <input type="number" class="num-input" id="maxVal" value="100">
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-left">
+        <div class="setting-name">批量生成</div>
+        <div class="setting-desc">一次生成多个随机数</div>
+      </div>
+      <div class="setting-right">
+        <input type="number" class="num-input" id="batchCount" value="1" min="1" max="100">
+        <span class="setting-sep">个</span>
+      </div>
+    </div>
+    <div class="setting-row" id="uniqueRow">
+      <div class="setting-left">
+        <div class="setting-name">不重复</div>
+        <div class="setting-desc">确保每个数字唯一（Fisher-Yates）</div>
+      </div>
+      <div class="setting-right">
+        <button class="toggle on" id="uniqueToggle"></button>
+      </div>
+    </div>
+    <div class="setting-row" id="decimalRow" style="display:none">
+      <div class="setting-left">
+        <div class="setting-name">小数位数</div>
+        <div class="setting-desc">保留几位小数</div>
+      </div>
+      <div class="setting-right">
+        <input type="number" class="num-input" id="decimalPlaces" value="2" min="1" max="10">
+        <span class="setting-sep">位</span>
+      </div>
+    </div>
+
+    <div class="batch-section" id="batchSection">
+      <div class="batch-title">批量结果</div>
+      <div class="batch-grid" id="batchGrid"></div>
+    </div>
+  </div>
+
+  <!-- 骰子面板 -->
+  <div class="panel hidden" id="dicePanel">
+    <div class="dice-grid" id="diceGrid">
+      <div class="dice">3</div>
+      <div class="dice">5</div>
+    </div>
+    <div class="result-actions" style="justify-content:center;margin-top:12px">
+      <button class="result-btn primary" id="btnRollAll">🎲 掷骰子</button>
+      <button class="result-btn" id="btnAddDice">➕ 加骰子</button>
+      <button class="result-btn" id="btnRemoveDice">➖ 减骰子</button>
+    </div>
+    <div class="dice-total">总计：<span class="dice-total-num" id="diceTotal">8</span></div>
+  </div>
+
+  <!-- 历史记录 -->
+  <div class="panel">
+    <div class="history-title">
+      <span>📋 历史记录</span>
+      <span class="history-clear" id="btnClearHistory">清空</span>
+    </div>
+    <div class="history-list" id="historyList">
+      <span class="history-empty">暂无记录</span>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">crypto.getRandomValues() 安全随机</span>
+  <div class="statusbar-spacer"></div>
+  <span>本地生成</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let currentMode = 'integer';
+let history = [];
+const MAX_HISTORY = 20;
+
+/* ===== 安全随机 ===== */
+function secureRandom() {
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return arr[0] / 4294967296; // [0, 1)
+}
+
+function randomInt(min, max) {
+  return min + Math.floor(secureRandom() * (max - min + 1));
+}
+
+function randomFloat(min, max, decimals) {
+  const val = min + secureRandom() * (max - min);
+  return parseFloat(val.toFixed(decimals));
+}
+
+/* ===== 生成 ===== */
+function generate() {
+  const min = parseFloat(document.getElementById('minVal').value) || 0;
+  const max = parseFloat(document.getElementById('maxVal').value) || 100;
+  const count = parseInt(document.getElementById('batchCount').value) || 1;
+  const unique = document.getElementById('uniqueToggle').classList.contains('on');
+  const isFloat = currentMode === 'float';
+  const decimals = parseInt(document.getElementById('decimalPlaces').value) || 2;
+
+  let nums = [];
+
+  if (isFloat) {
+    for (let i = 0; i < count; i++) nums.push(randomFloat(min, max, decimals));
+  } else {
+    const intMin = Math.ceil(min);
+    const intMax = Math.floor(max);
+    if (unique && count > 1 && (intMax - intMin + 1) >= count) {
+      // Fisher-Yates
+      const pool = [];
+      for (let i = intMin; i <= intMax; i++) pool.push(i);
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      nums = pool.slice(0, count);
+    } else {
+      for (let i = 0; i < count; i++) nums.push(randomInt(intMin, intMax));
+    }
+  }
+
+  // 主数字
+  const el = document.getElementById('mainResult');
+  el.textContent = nums[0];
+  el.classList.remove('spin');
+  void el.offsetWidth;
+  el.classList.add('spin');
+
+  // 批量
+  const batchSection = document.getElementById('batchSection');
+  if (count > 1) {
+    document.getElementById('batchGrid').innerHTML = nums.map(n =>
+      `<div class="batch-item" data-val="${n}">${n}</div>`
+    ).join('');
+    batchSection.classList.add('show');
+  } else {
+    batchSection.classList.remove('show');
+  }
+
+  // 历史
+  nums.forEach(n => addHistory(n));
+
+  document.getElementById('statusInfo').textContent = `已生成 ${count} 个${isFloat ? '浮点' : '整'}数 · 范围 ${min}-${max}`;
+}
+
+/* ===== 骰子 ===== */
+function rollDice(el) {
+  el.classList.remove('rolling');
+  void el.offsetWidth;
+  el.classList.add('rolling');
+  el.textContent = randomInt(1, 6);
+}
+
+function rollAll() {
+  document.querySelectorAll('#diceGrid .dice').forEach(d => rollDice(d));
+  updateDiceTotal();
+}
+
+function addDice() {
+  const grid = document.getElementById('diceGrid');
+  if (grid.children.length >= 6) return;
+  const d = document.createElement('div');
+  d.className = 'dice';
+  d.textContent = randomInt(1, 6);
+  d.addEventListener('click', () => { rollDice(d); updateDiceTotal(); });
+  grid.appendChild(d);
+  updateDiceTotal();
+}
+
+function removeDice() {
+  const grid = document.getElementById('diceGrid');
+  if (grid.children.length <= 1) return;
+  grid.removeChild(grid.lastChild);
+  updateDiceTotal();
+}
+
+function updateDiceTotal() {
+  let sum = 0;
+  document.querySelectorAll('#diceGrid .dice').forEach(d => sum += parseInt(d.textContent));
+  document.getElementById('diceTotal').textContent = sum;
+  addHistory(sum);
+}
+
+/* ===== 历史 ===== */
+function addHistory(val) {
+  history.unshift(val);
+  if (history.length > MAX_HISTORY) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (history.length === 0) {
+    el.innerHTML = '<span class="history-empty">暂无记录</span>';
+    return;
+  }
+  el.innerHTML = history.map(n =>
+    `<span class="history-chip" data-val="${n}">${n}</span>`
+  ).join('');
+}
+
+/* ===== 模式切换 ===== */
+document.getElementById('modeTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.mode-tab');
+  if (!tab) return;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentMode = tab.dataset.mode;
+
+  document.getElementById('numPanel').classList.toggle('hidden', currentMode === 'dice');
+  document.getElementById('dicePanel').classList.toggle('hidden', currentMode !== 'dice');
+  document.getElementById('uniqueRow').style.display = currentMode === 'float' ? 'none' : '';
+  document.getElementById('decimalRow').style.display = currentMode === 'float' ? '' : 'none';
+});
+
+/* ===== 事件绑定 ===== */
+document.getElementById('btnGenerate').addEventListener('click', generate);
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const text = document.getElementById('mainResult').textContent;
+  if (text !== '—') navigator.clipboard.writeText(text);
+});
+document.getElementById('uniqueToggle').addEventListener('click', function() { this.classList.toggle('on'); });
+document.getElementById('btnRollAll').addEventListener('click', rollAll);
+document.getElementById('btnAddDice').addEventListener('click', addDice);
+document.getElementById('btnRemoveDice').addEventListener('click', removeDice);
+document.getElementById('btnClearHistory').addEventListener('click', () => { history = []; renderHistory(); });
+
+// 批量结果点击复制
+document.getElementById('batchGrid').addEventListener('click', (e) => {
+  const item = e.target.closest('.batch-item');
+  if (item) navigator.clipboard.writeText(item.dataset.val);
+});
+
+// 历史点击复制
+document.getElementById('historyList').addEventListener('click', (e) => {
+  const chip = e.target.closest('.history-chip');
+  if (chip) navigator.clipboard.writeText(chip.dataset.val);
+});
+
+// 骰子初始点击事件
+document.querySelectorAll('#diceGrid .dice').forEach(d => {
+  d.addEventListener('click', () => { rollDice(d); updateDiceTotal(); });
+});
+</script>
+<noscript><p>随机数生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
