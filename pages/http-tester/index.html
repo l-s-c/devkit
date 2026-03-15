@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTP 请求测试 | API Tester Online — DevKit</title>
+<meta name="description" content="在线 HTTP 请求测试工具，支持 GET/POST/PUT/DELETE/PATCH，自定义请求头和请求体，响应 JSON 自动格式化。">
+<meta name="keywords" content="http request, API tester, postman online, 接口测试, DevKit">
+<meta property="og:title" content="HTTP 请求测试 | API Tester Online — DevKit">
+<meta property="og:description" content="轻量级在线 API 测试，GET/POST/PUT/DELETE">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/http-tester/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP 请求测试 — DevKit">
+<meta name="twitter:description" content="在线 API 测试，轻量版 Postman">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTTP 请求测试","description":"在线 HTTP 请求测试工具，支持 GET/POST/PUT/DELETE/PATCH，JSON 自动格式化","url":"https://l-s-c.github.io/devkit/pages/http-tester/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/http-tester/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* URL bar */
+.url-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+.method-select {
+  padding: 12px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-family: var(--font-code); font-size: 13px;
+  font-weight: 800; color: #10B981; cursor: pointer; outline: none;
+  min-width: 100px; -webkit-appearance: none; appearance: none;
+}
+.method-select option { color: var(--text-primary); }
+.url-input {
+  flex: 1; padding: 12px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-family: var(--font-code); font-size: 13px;
+  color: var(--text-primary); outline: none; transition: border-color 150ms;
+}
+.url-input:focus { border-color: var(--brand-500); }
+.url-input::placeholder { color: var(--text-caption); }
+.send-btn {
+  padding: 12px 24px; border-radius: 6px; border: none;
+  background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff;
+  font-size: 13px; font-weight: 800; cursor: pointer; transition: all 200ms; white-space: nowrap;
+}
+.send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.send-btn:disabled { opacity: 0.5; transform: none; box-shadow: none; cursor: not-allowed; }
+
+/* Example pills */
+.example-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.example-pill {
+  padding: 5px 12px; border-radius: 16px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 10px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms; font-family: var(--font-code);
+}
+.example-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Tabs */
+.tab-row { display: flex; gap: 0; border-bottom: 1.5px solid var(--border-glass); margin-bottom: 14px; }
+.tab {
+  padding: 10px 16px; font-size: 12px; font-weight: 700; color: var(--text-caption);
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all 150ms; margin-bottom: -1.5px;
+}
+.tab.active { color: var(--brand-500); border-bottom-color: var(--brand-500); }
+
+/* KV rows */
+.kv-list { margin-bottom: 8px; }
+.kv-row { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+.kv-input {
+  flex: 1; padding: 8px 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-family: var(--font-code); font-size: 11px;
+  color: var(--text-primary); outline: none;
+}
+.kv-input:focus { border-color: var(--brand-500); }
+.kv-del {
+  width: 28px; height: 28px; border-radius: 4px; border: none;
+  background: transparent; color: var(--text-caption); cursor: pointer; font-size: 14px;
+}
+.kv-del:hover { background: rgba(239,68,68,0.08); color: #EF4444; }
+.kv-add {
+  padding: 6px 14px; border-radius: 6px; border: 1.5px dashed var(--border-glass);
+  background: transparent; font-size: 11px; font-weight: 700;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms;
+}
+.kv-add:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Body textarea */
+.body-ta {
+  width: 100%; height: 140px; padding: 12px; border-radius: 6px;
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass-input);
+  font-family: var(--font-code); font-size: 11px; line-height: 1.6;
+  color: var(--text-primary); outline: none; resize: vertical;
+}
+.body-ta:focus { border-color: var(--brand-500); }
+
+/* Response */
+.res-status { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.status-badge { padding: 6px 14px; border-radius: 20px; font-family: var(--font-code); font-size: 13px; font-weight: 800; }
+.status-2xx { background: rgba(16,185,129,0.08); color: #10B981; }
+.status-4xx { background: rgba(245,158,11,0.08); color: #F59E0B; }
+.status-5xx { background: rgba(239,68,68,0.08); color: #EF4444; }
+.status-err { background: rgba(239,68,68,0.08); color: #EF4444; }
+.res-meta { font-family: var(--font-code); font-size: 11px; color: var(--text-caption); }
+
+.res-body {
+  width: 100%; min-height: 200px; padding: 14px; border-radius: 6px;
+  border: 1px solid var(--border-glass); background: var(--bg-glass-input);
+  font-family: var(--font-code); font-size: 11px; line-height: 1.6;
+  color: var(--text-primary); white-space: pre-wrap; word-break: break-all;
+  overflow: auto; max-height: 400px;
+}
+.res-headers { font-family: var(--font-code); font-size: 11px; color: var(--text-secondary); line-height: 1.8; }
+.res-header-key { color: var(--brand-500); font-weight: 700; }
+
+/* CORS warning */
+.cors-warn {
+  padding: 12px 16px; border-radius: 6px; background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.15); font-size: 11px;
+  color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;
+}
+
+/* History */
+.history-item {
+  padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border-glass);
+  margin-bottom: 6px; cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; gap: 8px;
+}
+.history-item:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.04); }
+.history-method {
+  font-family: var(--font-code); font-size: 10px; font-weight: 800;
+  padding: 2px 8px; border-radius: 4px;
+}
+.history-method.GET { background: rgba(16,185,129,0.08); color: #10B981; }
+.history-method.POST { background: rgba(99,102,241,0.08); color: #6366F1; }
+.history-method.PUT { background: rgba(245,158,11,0.08); color: #F59E0B; }
+.history-method.PATCH { background: rgba(245,158,11,0.08); color: #F59E0B; }
+.history-method.DELETE { background: rgba(239,68,68,0.08); color: #EF4444; }
+.history-url {
+  font-family: var(--font-code); font-size: 11px; color: var(--text-secondary);
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.history-status { font-family: var(--font-code); font-size: 10px; font-weight: 700; }
+.history-clear {
+  padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: transparent; font-size: 11px; color: var(--text-caption); cursor: pointer;
+}
+.history-clear:hover { border-color: #EF4444; color: #EF4444; }
+
+/* Loading */
+.loading { text-align: center; padding: 40px; color: var(--text-caption); }
+.spinner {
+  display: inline-block; width: 24px; height: 24px;
+  border: 3px solid var(--border-glass); border-top-color: var(--brand-500);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .url-bar { flex-wrap: wrap; }
+  .method-select { min-width: auto; flex: 0 0 90px; }
+  .url-input { flex: 1 1 100%; }
+  .send-btn { flex: 1 1 100%; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">HTTP 请求测试 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">HTTP 请求测试</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- URL Bar -->
+  <div class="panel">
+    <div class="url-bar">
+      <select class="method-select" id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+        <option value="PATCH">PATCH</option>
+      </select>
+      <input class="url-input" id="urlInput" placeholder="https://jsonplaceholder.typicode.com/posts/1" value="https://jsonplaceholder.typicode.com/posts/1">
+      <button class="send-btn" id="sendBtn">🚀 发送</button>
+    </div>
+    <div class="section-title">⚡ 示例 API</div>
+    <div class="example-row" id="exampleRow">
+      <span class="example-pill" data-ex="get">GET /posts/1</span>
+      <span class="example-pill" data-ex="list">GET /posts</span>
+      <span class="example-pill" data-ex="post">POST /posts</span>
+      <span class="example-pill" data-ex="put">PUT /posts/1</span>
+      <span class="example-pill" data-ex="del">DELETE /posts/1</span>
+      <span class="example-pill" data-ex="httpbin">httpbin.org/get</span>
+    </div>
+  </div>
+
+  <!-- Request config -->
+  <div class="panel">
+    <div class="tab-row" id="reqTabRow">
+      <div class="tab active" data-tab="headers">📋 请求头</div>
+      <div class="tab" data-tab="body">📦 请求体</div>
+    </div>
+    <div id="reqHeaders">
+      <div class="kv-list" id="headerList">
+        <div class="kv-row">
+          <input class="kv-input" placeholder="Key" value="Content-Type">
+          <input class="kv-input" placeholder="Value" value="application/json">
+          <button class="kv-del">✕</button>
+        </div>
+      </div>
+      <button class="kv-add" id="addHeaderBtn">+ 添加请求头</button>
+    </div>
+    <div id="reqBody" style="display:none">
+      <textarea class="body-ta" id="bodyInput" placeholder='{"title": "foo", "body": "bar", "userId": 1}'></textarea>
+    </div>
+  </div>
+
+  <!-- CORS Warning -->
+  <div class="cors-warn">
+    ⚠️ <strong>跨域限制</strong>：浏览器安全策略（CORS）限制，仅支持允许跨域的 API。如目标服务器未配置 CORS，请求会被浏览器拦截。示例 API（jsonplaceholder / httpbin）已开启跨域，可直接测试。
+  </div>
+
+  <!-- Response -->
+  <div class="panel" id="responseSection" style="display:none">
+    <div class="section-title">📨 响应</div>
+    <div class="res-status" id="resStatus"></div>
+    <div class="tab-row" id="resTabRow">
+      <div class="tab active" data-tab="body">📄 响应体</div>
+      <div class="tab" data-tab="headers">📋 响应头</div>
+    </div>
+    <div id="resBodyWrap"><div class="res-body" id="resBody"></div></div>
+    <div id="resHeadersWrap" style="display:none"><div class="res-headers" id="resHeaders"></div></div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loadingState" style="display:none">
+    <div class="spinner"></div>
+    <div style="margin-top:8px;font-size:12px">发送中…</div>
+  </div>
+
+  <!-- History -->
+  <div class="panel">
+    <div class="section-title">📜 请求历史 <button class="history-clear" id="clearHistoryBtn">🗑️ 清空</button></div>
+    <div id="historyList">
+      <div style="text-align:center;padding:20px;color:var(--text-caption);font-size:12px">暂无历史记录</div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">HTTP 请求测试</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯前端 · 受 CORS 限制</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const EXAMPLES = {
+  get:     { method: 'GET',    url: 'https://jsonplaceholder.typicode.com/posts/1', body: '' },
+  list:    { method: 'GET',    url: 'https://jsonplaceholder.typicode.com/posts',   body: '' },
+  post:    { method: 'POST',   url: 'https://jsonplaceholder.typicode.com/posts',   body: '{\n  "title": "foo",\n  "body": "bar",\n  "userId": 1\n}' },
+  put:     { method: 'PUT',    url: 'https://jsonplaceholder.typicode.com/posts/1', body: '{\n  "id": 1,\n  "title": "updated",\n  "body": "updated body",\n  "userId": 1\n}' },
+  del:     { method: 'DELETE', url: 'https://jsonplaceholder.typicode.com/posts/1', body: '' },
+  httpbin: { method: 'GET',    url: 'https://httpbin.org/get', body: '' }
+};
+
+let history = JSON.parse(localStorage.getItem('devkit-http-history') || '[]');
+
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+/* Examples */
+document.getElementById('exampleRow').addEventListener('click', e => {
+  const pill = e.target.closest('[data-ex]');
+  if (!pill) return;
+  const ex = EXAMPLES[pill.dataset.ex];
+  document.getElementById('methodSelect').value = ex.method;
+  document.getElementById('urlInput').value = ex.url;
+  document.getElementById('bodyInput').value = ex.body;
+});
+
+/* Request tabs */
+document.getElementById('reqTabRow').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('#reqTabRow .tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const t = tab.dataset.tab;
+  document.getElementById('reqHeaders').style.display = t === 'headers' ? 'block' : 'none';
+  document.getElementById('reqBody').style.display = t === 'body' ? 'block' : 'none';
+});
+
+/* Response tabs */
+document.getElementById('resTabRow').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('#resTabRow .tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const t = tab.dataset.tab;
+  document.getElementById('resBodyWrap').style.display = t === 'body' ? 'block' : 'none';
+  document.getElementById('resHeadersWrap').style.display = t === 'headers' ? 'block' : 'none';
+});
+
+/* Add/remove headers */
+document.getElementById('addHeaderBtn').addEventListener('click', () => {
+  const row = document.createElement('div'); row.className = 'kv-row';
+  row.innerHTML = '<input class="kv-input" placeholder="Key"><input class="kv-input" placeholder="Value"><button class="kv-del">✕</button>';
+  document.getElementById('headerList').appendChild(row);
+});
+document.getElementById('headerList').addEventListener('click', e => {
+  if (e.target.classList.contains('kv-del')) e.target.parentElement.remove();
+});
+
+/* Send request */
+document.getElementById('sendBtn').addEventListener('click', sendRequest);
+document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendRequest(); });
+
+async function sendRequest() {
+  const method = document.getElementById('methodSelect').value;
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+
+  const headers = {};
+  document.querySelectorAll('#headerList .kv-row').forEach(r => {
+    const inputs = r.querySelectorAll('.kv-input');
+    const k = inputs[0].value.trim(), v = inputs[1].value.trim();
+    if (k) headers[k] = v;
+  });
+
+  const body = document.getElementById('bodyInput').value.trim();
+  const opts = { method, headers };
+  if (body && method !== 'GET') opts.body = body;
+
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('responseSection').style.display = 'none';
+  document.getElementById('sendBtn').disabled = true;
+
+  const startTime = Date.now();
+  try {
+    const res = await fetch(url, opts);
+    const elapsed = Date.now() - startTime;
+    const text = await res.text();
+
+    const statusClass = res.status < 300 ? 'status-2xx' : res.status < 500 ? 'status-4xx' : 'status-5xx';
+    document.getElementById('resStatus').innerHTML =
+      `<span class="status-badge ${statusClass}">${res.status} ${esc(res.statusText)}</span><span class="res-meta">${elapsed}ms</span>`;
+
+    let formatted = esc(text);
+    try { formatted = esc(JSON.stringify(JSON.parse(text), null, 2)); } catch (e) {}
+    document.getElementById('resBody').innerHTML = formatted;
+
+    let hhtml = '';
+    res.headers.forEach((v, k) => { hhtml += `<span class="res-header-key">${esc(k)}</span>: ${esc(v)}\n`; });
+    document.getElementById('resHeaders').innerHTML = hhtml;
+
+    document.getElementById('responseSection').style.display = 'block';
+    document.getElementById('statusInfo').textContent = `${method} ${res.status} · ${elapsed}ms`;
+
+    addHistory(method, url, res.status, elapsed);
+  } catch (e) {
+    const elapsed = Date.now() - startTime;
+    document.getElementById('resStatus').innerHTML =
+      `<span class="status-badge status-err">❌ 请求失败</span><span class="res-meta">${elapsed}ms</span>`;
+    document.getElementById('resBody').innerHTML =
+      esc(e.message) + '\n\n💡 可能原因：\n1. 目标服务器未配置 CORS（跨域资源共享）\n2. URL 格式错误\n3. 网络连接问题\n\n建议使用示例 API（jsonplaceholder / httpbin）测试';
+    document.getElementById('resHeaders').innerHTML = '';
+    document.getElementById('responseSection').style.display = 'block';
+    document.getElementById('statusInfo').textContent = `${method} 失败 · ${elapsed}ms`;
+
+    addHistory(method, url, 'ERR', elapsed);
+  } finally {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('sendBtn').disabled = false;
+  }
+}
+
+function addHistory(method, url, status, time) {
+  history.unshift({ method, url, status, time, ts: Date.now() });
+  if (history.length > 20) history = history.slice(0, 20);
+  localStorage.setItem('devkit-http-history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!history.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-caption);font-size:12px">暂无历史记录</div>';
+    return;
+  }
+  el.innerHTML = history.map((h, i) => {
+    const sc = h.status === 'ERR' ? 'color:#EF4444' : h.status < 300 ? 'color:#10B981' : h.status < 500 ? 'color:#F59E0B' : 'color:#EF4444';
+    return `<div class="history-item" data-idx="${i}">
+      <span class="history-method ${esc(h.method)}">${esc(h.method)}</span>
+      <span class="history-url">${esc(h.url)}</span>
+      <span class="history-status" style="${sc}">${esc(String(h.status))}</span>
+      <span class="res-meta">${h.time}ms</span>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('historyList').addEventListener('click', e => {
+  const item = e.target.closest('.history-item');
+  if (!item) return;
+  const h = history[parseInt(item.dataset.idx)];
+  if (h) {
+    document.getElementById('methodSelect').value = h.method;
+    document.getElementById('urlInput').value = h.url;
+  }
+});
+
+document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+  history = []; localStorage.removeItem('devkit-http-history'); renderHistory();
+});
+
+renderHistory();
+</script>
+<noscript><p>HTTP 请求测试 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

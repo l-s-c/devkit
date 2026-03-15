@@ -66,6 +66,7 @@ export default defineConfig({
         'tts': resolve(__dirname, 'pages/tts/index.html'),
         'timer': resolve(__dirname, 'pages/timer/index.html'),
         'grid-splitter': resolve(__dirname, 'pages/grid-splitter/index.html'),
+        'http-tester': resolve(__dirname, 'pages/http-tester/index.html'),
       },
     },
   },
