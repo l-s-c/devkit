@@ -142,7 +142,7 @@ function parseMd(md) {
     .replace(/^---+$/gm, '<hr>')
     .replace(/^>\s+(.+)$/gm, '<blockquote><p>$1</p></blockquote>')
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/~~(.+?)~~/g, '<del>$1</del>')
@@ -162,11 +162,25 @@ function parseMd(md) {
 }
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+function sanitize(html) {
+  // Strip <script> tags
+  html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+  // Strip event handlers (onerror, onload, onclick, etc.)
+  html = html.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '');
+  html = html.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, '');
+  // Strip javascript: protocol in href/src
+  html = html.replace(/(href|src)\s*=\s*["']javascript:[^"']*["']/gi, '$1=""');
+  html = html.replace(/(href|src)\s*=\s*javascript:[^\s>]*/gi, '$1=""');
+  // Strip <iframe>, <object>, <embed>, <form>
+  html = html.replace(/<\/?(iframe|object|embed|form|style|link|meta|base)[\s\S]*?>/gi, '');
+  return html;
+}
+
 const editor = document.getElementById('editor');
 const preview = document.getElementById('preview');
 
 function render() {
-  preview.innerHTML = parseMd(editor.value);
+  preview.innerHTML = sanitize(parseMd(editor.value));
   document.getElementById('charCount').textContent = `${editor.value.length} 字符`;
   document.getElementById('lineCount').textContent = `${editor.value.split('\n').length} 行`;
 }

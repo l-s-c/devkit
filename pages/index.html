@@ -239,7 +239,7 @@ const CAT_NAMES = { all:'全部', text:'📝 文本', image:'🖼️ 图片', ca
 function renderHot() {
   const hots = TOOLS.filter(t => t.hot);
   document.getElementById('hotGrid').innerHTML = hots.map(t =>
-    `<a class="hot-card" href="${t.url}" target="_blank"><div class="hot-emoji">${t.emoji}</div><div class="hot-name">${t.name}</div><div class="hot-desc">${t.desc}</div></a>`
+    `<a class="hot-card" href="${t.url}" target="_blank" rel="noopener"><div class="hot-emoji">${t.emoji}</div><div class="hot-name">${t.name}</div><div class="hot-desc">${t.desc}</div></a>`
   ).join('');
 }
 
@@ -265,7 +265,7 @@ function render() {
     document.getElementById('toolsSection').style.display = 'block';
     document.getElementById('emptyState').style.display = 'none';
     document.getElementById('toolsGrid').innerHTML = list.map(t =>
-      `<a class="tool-card" href="${t.url}" target="_blank"><div class="tool-emoji">${t.emoji}</div><div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`
+      `<a class="tool-card" href="${t.url}" target="_blank" rel="noopener"><div class="tool-emoji">${t.emoji}</div><div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`
     ).join('');
   }
 
