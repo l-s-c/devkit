@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线大转盘 | Spin Wheel — DevKit</title>
+<meta name="description" content="在线大转盘抽奖器，Canvas 转盘动画，权重设置，多转盘管理，淘汰模式，密码学级随机，一键抽奖。">
+<meta name="keywords" content="在线大转盘, 抽奖转盘, spin wheel, 随机转盘, DevKit">
+<meta property="og:title" content="在线大转盘 | Spin Wheel — DevKit">
+<meta property="og:description" content="Canvas 转盘动画，权重设置，多转盘管理">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/spin-wheel/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在线大转盘 — DevKit">
+<meta name="twitter:description" content="Canvas 转盘动画抽奖器">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"在线大转盘","description":"Canvas转盘动画，权重设置，多转盘管理，淘汰模式，密码学级随机","url":"https://l-s-c.github.io/devkit/pages/spin-wheel/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/spin-wheel/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Wheel */
+.wheel-wrap { position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.wheel-container { position: relative; display: inline-block; }
+canvas#wheel { display: block; }
+.pointer {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent;
+  border-top: 28px solid #EF4444; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); z-index: 10;
+}
+.spin-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, #EF4444, #F97316); color: #fff;
+  font-size: 13px; font-weight: 900; border: 4px solid #fff;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.3); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 200ms; z-index: 5;
+}
+.spin-center:hover { transform: translate(-50%,-50%) scale(1.08); box-shadow: 0 6px 24px rgba(239,68,68,0.4); }
+.spin-center:disabled { opacity: 0.6; cursor: not-allowed; transform: translate(-50%,-50%); }
+.spin-center.spinning { animation: pulse-spin 0.5s ease infinite; }
+@keyframes pulse-spin { 0%,100% { box-shadow: 0 4px 16px rgba(239,68,68,0.3); } 50% { box-shadow: 0 4px 24px rgba(239,68,68,0.5); } }
+
+/* Result banner */
+.result-banner {
+  text-align: center; padding: 16px; border-radius: 10px; margin-top: 12px; display: none;
+}
+.result-banner.show { display: block; animation: popIn 0.4s ease; }
+.result-banner.win {
+  background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.08));
+  border: 1.5px solid rgba(245,158,11,0.3);
+}
+.result-text { font-size: 24px; font-weight: 800; }
+.result-sub { font-size: 11px; color: var(--text-caption); margin-top: 4px; }
+@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+
+/* Wheel tabs */
+.wheel-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.wheel-tab {
+  padding: 6px 14px; border-radius: 16px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all 150ms; color: var(--text-secondary);
+}
+.wheel-tab.active { background: var(--brand-500); color: #fff; border-color: var(--brand-500); }
+.wheel-tab-add { border-style: dashed; color: var(--text-caption); }
+.wheel-tab-add:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Item list */
+.item-list { max-height: 320px; overflow-y: auto; }
+.item-row { display: flex; align-items: center; gap: 6px; padding: 8px 0; border-bottom: 1px solid var(--border-glass); }
+.item-row:last-child { border-bottom: none; }
+.item-color { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.item-name-input {
+  flex: 1; padding: 6px 8px; border: 1.5px solid var(--border-glass); border-radius: 6px;
+  background: var(--bg-glass-input); font-size: 12px; color: var(--text-primary); outline: none;
+}
+.item-name-input:focus { border-color: var(--brand-500); }
+.item-weight { display: flex; align-items: center; gap: 2px; }
+.weight-btn {
+  width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 12px; font-weight: 800; cursor: pointer;
+  color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+}
+.weight-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.weight-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; width: 18px; text-align: center; color: var(--brand-500); }
+.item-del { width: 22px; height: 22px; border-radius: 4px; border: none; background: transparent; font-size: 11px; cursor: pointer; color: var(--text-caption); }
+.item-del:hover { color: #EF4444; }
+.item-eliminated { opacity: 0.35; text-decoration: line-through; }
+
+.add-item-btn {
+  width: 100%; padding: 8px; border: 1.5px dashed var(--border-glass); border-radius: 6px;
+  background: transparent; font-size: 11px; font-weight: 700;
+  color: var(--text-caption); cursor: pointer; margin-top: 8px;
+}
+.add-item-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Options */
+.opt-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-glass); }
+.opt-row:last-child { border-bottom: none; }
+.opt-label { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.toggle { position: relative; width: 40px; height: 22px; border-radius: 11px; background: var(--border-glass); cursor: pointer; transition: background 200ms; }
+.toggle.on { background: var(--brand-500); }
+.toggle-dot { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left 200ms; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.toggle.on .toggle-dot { left: 20px; }
+
+/* Presets */
+.preset-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.preset-pill {
+  padding: 5px 12px; border-radius: 16px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 10px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+}
+.preset-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* History */
+.history-list { max-height: 200px; overflow-y: auto; }
+.history-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border-glass); font-size: 12px; }
+.history-item:last-child { border-bottom: none; }
+.history-num {
+  width: 20px; height: 20px; border-radius: 50%; background: #F59E0B; color: #fff;
+  font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.history-name { font-weight: 700; flex: 1; }
+.history-time { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  canvas#wheel { width: 280px !important; height: 280px !important; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">在线大转盘 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">在线大转盘</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <!-- Left: Wheel -->
+    <div>
+      <div class="panel">
+        <div class="wheel-wrap">
+          <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="340" height="340"></canvas>
+            <button class="spin-center" id="spinBtn">SPIN</button>
+          </div>
+        </div>
+        <div class="result-banner win" id="resultBanner">
+          <div class="result-text" id="resultText">🎉</div>
+          <div class="result-sub">恭喜中奖！</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📜 抽奖记录</div>
+        <div class="history-list" id="historyList">
+          <div style="text-align:center;padding:16px;color:var(--text-caption);font-size:12px">转动转盘开始抽奖</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Controls -->
+    <div>
+      <div class="panel">
+        <div class="section-title">🎡 转盘管理</div>
+        <div class="wheel-tabs" id="wheelTabs"></div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📝 选项列表</div>
+        <div class="preset-row" style="margin-bottom:10px" id="presetRow">
+          <span class="preset-pill" data-preset="lunch">🍔 今天吃啥</span>
+          <span class="preset-pill" data-preset="class">👨‍🎓 课堂点名</span>
+          <span class="preset-pill" data-preset="dare">🎭 真心话大冒险</span>
+          <span class="preset-pill" data-preset="weekend">🏖️ 周末活动</span>
+        </div>
+        <div class="item-list" id="itemList"></div>
+        <button class="add-item-btn" id="addItemBtn">+ 添加选项</button>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">⚙️ 设置</div>
+        <div class="opt-row">
+          <div class="opt-label">🚫 淘汰模式<span style="font-size:10px;color:var(--text-caption);font-weight:400">（抽中自动移除）</span></div>
+          <div class="toggle" id="toggleElim"><div class="toggle-dot"></div></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">🔊 声音效果</div>
+          <div class="toggle on" id="toggleSound"><div class="toggle-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">在线大转盘</span>
+  <div class="statusbar-spacer"></div>
+  <span>crypto.getRandomValues</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const COLORS = ['#EF4444','#F97316','#F59E0B','#84CC16','#10B981','#06B6D4','#3B82F6','#6366F1','#8B5CF6','#EC4899','#F43F5E','#14B8A6'];
+const PRESETS = {
+  lunch:   { name: '今天吃啥',     items: ['火锅','烧烤','麻辣烫','披萨','寿司','汉堡','炸鸡','面条','饺子','沙拉'] },
+  class:   { name: '课堂点名',     items: ['小明','小红','小李','小王','小张','小陈','小刘','小杨'] },
+  dare:    { name: '真心话大冒险', items: ['真心话','大冒险','真心话','大冒险','喝水','唱歌','跳舞','讲笑话'] },
+  weekend: { name: '周末活动',     items: ['看电影','逛街','爬山','打球','游泳','打游戏','做饭','宅家'] }
+};
+
+let wheels = [{ name: '转盘 1', items: [
+  { label: '小明', weight: 1 }, { label: '小红', weight: 1 }, { label: '小李', weight: 1 },
+  { label: '小王', weight: 1 }, { label: '小张', weight: 1 }, { label: '小陈', weight: 1 }
+]}];
+let currentWheel = 0, spinning = false, angle = 0, history = [];
+let elimMode = false, soundOn = true;
+
+try { const d = JSON.parse(localStorage.getItem('devkit-spinwheel')); if (d && d.wheels) wheels = d.wheels; } catch (e) {}
+
+function save() { localStorage.setItem('devkit-spinwheel', JSON.stringify({ wheels })); }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function getActiveItems() { return wheels[currentWheel].items.filter(it => !it.eliminated); }
+function cryptoRandom(max) { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % max; }
+
+function drawWheel() {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const cx = 170, cy = 170, r = 155;
+  ctx.clearRect(0, 0, 340, 340);
+
+  const items = wheels[currentWheel].items;
+  const active = items.filter(it => !it.eliminated);
+  if (!active.length) {
+    ctx.fillStyle = '#ddd'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#999'; ctx.font = '700 14px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('暂无选项', cx, cy);
+    return;
+  }
+  const totalW = active.reduce((s, it) => s + it.weight, 0);
+  let startA = angle;
+
+  active.forEach((it, i) => {
+    const sweep = (it.weight / totalW) * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, startA, startA + sweep); ctx.closePath();
+    ctx.fillStyle = COLORS[i % COLORS.length]; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 2; ctx.stroke();
+
+    const mid = startA + sweep / 2;
+    const tx = cx + Math.cos(mid) * (r * 0.65), ty = cy + Math.sin(mid) * (r * 0.65);
+    ctx.save(); ctx.translate(tx, ty); ctx.rotate(mid);
+    ctx.fillStyle = '#fff'; ctx.font = '700 11px -apple-system,sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const label = it.label.length > 6 ? it.label.slice(0, 5) + '…' : it.label;
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+    startA += sweep;
+  });
+
+  ctx.beginPath(); ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill();
+}
+
+/* Spin */
+document.getElementById('spinBtn').addEventListener('click', () => {
+  if (spinning) return;
+  const active = getActiveItems();
+  if (active.length < 2) { alert('至少需要 2 个选项'); return; }
+
+  spinning = true;
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = true; btn.classList.add('spinning');
+  document.getElementById('resultBanner').classList.remove('show');
+
+  const totalW = active.reduce((s, it) => s + it.weight, 0);
+  const rnd = cryptoRandom(totalW);
+  let acc = 0, winnerIdx = 0;
+  for (let i = 0; i < active.length; i++) { acc += active[i].weight; if (rnd < acc) { winnerIdx = i; break; } }
+
+  let sectorStart = 0;
+  for (let i = 0; i < winnerIdx; i++) sectorStart += active[i].weight / totalW * Math.PI * 2;
+  const sectorSweep = active[winnerIdx].weight / totalW * Math.PI * 2;
+  const sectorMid = sectorStart + sectorSweep / 2;
+
+  const extraSpins = 5 + Math.floor(cryptoRandom(3));
+  const targetAngle = -Math.PI / 2 - sectorMid + Math.PI * 2 * extraSpins;
+  const startAngle = angle;
+  const totalRot = targetAngle - startAngle;
+  const duration = 4000 + cryptoRandom(1000);
+  const startTime = Date.now();
+
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    angle = startAngle + totalRot * ease;
+    drawWheel();
+
+    if (soundOn && t < 0.9 && elapsed % 120 < 20) playTick();
+
+    if (t < 1) { requestAnimationFrame(animate); }
+    else {
+      spinning = false; btn.disabled = false; btn.classList.remove('spinning');
+      const winner = active[winnerIdx];
+      document.getElementById('resultText').textContent = '🎉 ' + winner.label;
+      document.getElementById('resultBanner').classList.add('show');
+
+      const now = new Date();
+      const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      history.unshift({ name: winner.label, time });
+      renderHistory();
+
+      if (elimMode) {
+        const orig = wheels[currentWheel].items.find(it => it === winner);
+        if (orig) orig.eliminated = true;
+        renderItems(); drawWheel(); save();
+      }
+      if (soundOn) playBeep();
+      document.getElementById('statusInfo').textContent = `🎉 ${winner.label}`;
+    }
+  }
+  requestAnimationFrame(animate);
+});
+
+function playTick() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination); o.frequency.value = 600; o.type = 'sine';
+    g.gain.setValueAtTime(0.05, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+    o.start(); o.stop(ctx.currentTime + 0.05);
+  } catch (e) {}
+}
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.15, 0.3].forEach(d => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(0.3, ctx.currentTime + d);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + d + 0.15);
+      o.start(ctx.currentTime + d); o.stop(ctx.currentTime + d + 0.15);
+    });
+  } catch (e) {}
+}
+
+/* Wheel tabs */
+function renderWheelTabs() {
+  let html = wheels.map((w, i) => `<div class="wheel-tab${i === currentWheel ? ' active' : ''}" data-wheel="${i}">${esc(w.name)}</div>`).join('');
+  if (wheels.length < 6) html += `<div class="wheel-tab wheel-tab-add" data-wheel="add">+ 新建</div>`;
+  document.getElementById('wheelTabs').innerHTML = html;
+}
+
+document.getElementById('wheelTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.wheel-tab');
+  if (!tab) return;
+  if (tab.dataset.wheel === 'add') {
+    if (wheels.length >= 6) return;
+    wheels.push({ name: `转盘 ${wheels.length + 1}`, items: [{ label: '选项1', weight: 1 }, { label: '选项2', weight: 1 }] });
+    currentWheel = wheels.length - 1;
+  } else {
+    currentWheel = parseInt(tab.dataset.wheel);
+  }
+  renderWheelTabs(); renderItems(); drawWheel(); save();
+});
+
+/* Items */
+function renderItems() {
+  const items = wheels[currentWheel].items;
+  document.getElementById('itemList').innerHTML = items.map((it, i) => `
+    <div class="item-row${it.eliminated ? ' item-eliminated' : ''}">
+      <div class="item-color" style="background:${COLORS[i % COLORS.length]}"></div>
+      <input class="item-name-input" value="${esc(it.label)}" data-idx="${i}" ${it.eliminated ? 'disabled' : ''}>
+      <div class="item-weight">
+        <button class="weight-btn" data-widx="${i}" data-wd="-1">−</button>
+        <span class="weight-val">${it.weight}</span>
+        <button class="weight-btn" data-widx="${i}" data-wd="1">+</button>
+      </div>
+      <button class="item-del" data-delidx="${i}">✕</button>
+    </div>`).join('');
+}
+
+document.getElementById('itemList').addEventListener('change', e => {
+  if (e.target.classList.contains('item-name-input')) {
+    wheels[currentWheel].items[parseInt(e.target.dataset.idx)].label = e.target.value;
+    drawWheel(); save();
+  }
+});
+
+document.getElementById('itemList').addEventListener('click', e => {
+  const wbtn = e.target.closest('[data-widx]');
+  if (wbtn) {
+    const i = parseInt(wbtn.dataset.widx), d = parseInt(wbtn.dataset.wd);
+    const it = wheels[currentWheel].items[i];
+    it.weight = Math.max(1, Math.min(10, it.weight + d));
+    renderItems(); drawWheel(); save();
+    return;
+  }
+  const del = e.target.closest('[data-delidx]');
+  if (del) {
+    if (wheels[currentWheel].items.length <= 2) { alert('至少保留 2 个选项'); return; }
+    wheels[currentWheel].items.splice(parseInt(del.dataset.delidx), 1);
+    renderItems(); drawWheel(); save();
+  }
+});
+
+document.getElementById('addItemBtn').addEventListener('click', () => {
+  wheels[currentWheel].items.push({ label: `选项${wheels[currentWheel].items.length + 1}`, weight: 1 });
+  renderItems(); drawWheel(); save();
+});
+
+/* Presets */
+document.getElementById('presetRow').addEventListener('click', e => {
+  const pill = e.target.closest('[data-preset]');
+  if (!pill) return;
+  const p = PRESETS[pill.dataset.preset];
+  wheels[currentWheel] = { name: p.name, items: p.items.map(l => ({ label: l, weight: 1 })) };
+  renderWheelTabs(); renderItems(); drawWheel(); save();
+});
+
+/* Toggles */
+document.getElementById('toggleElim').addEventListener('click', () => {
+  elimMode = !elimMode;
+  document.getElementById('toggleElim').classList.toggle('on', elimMode);
+  if (!elimMode) { wheels[currentWheel].items.forEach(it => it.eliminated = false); renderItems(); drawWheel(); }
+});
+document.getElementById('toggleSound').addEventListener('click', () => {
+  soundOn = !soundOn;
+  document.getElementById('toggleSound').classList.toggle('on', soundOn);
+});
+
+/* History */
+function renderHistory() {
+  if (!history.length) {
+    document.getElementById('historyList').innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-caption);font-size:12px">转动转盘开始抽奖</div>';
+    return;
+  }
+  document.getElementById('historyList').innerHTML = history.map((h, i) => `
+    <div class="history-item">
+      <div class="history-num">${history.length - i}</div>
+      <div class="history-name">${esc(h.name)}</div>
+      <div class="history-time">${h.time}</div>
+    </div>`).join('');
+}
+
+renderWheelTabs(); renderItems(); drawWheel(); renderHistory();
+</script>
+<noscript><p>在线大转盘 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

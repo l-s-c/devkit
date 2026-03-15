@@ -70,6 +70,7 @@ export default defineConfig({
         'pomodoro': resolve(__dirname, 'pages/pomodoro/index.html'),
         'random-picker': resolve(__dirname, 'pages/random-picker/index.html'),
         'box-shadow': resolve(__dirname, 'pages/box-shadow/index.html'),
+        'spin-wheel': resolve(__dirname, 'pages/spin-wheel/index.html'),
       },
     },
   },
