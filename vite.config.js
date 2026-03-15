@@ -64,6 +64,7 @@ export default defineConfig({
         'placeholder': resolve(__dirname, 'pages/placeholder/index.html'),
         'json-schema': resolve(__dirname, 'pages/json-schema/index.html'),
         'tts': resolve(__dirname, 'pages/tts/index.html'),
+        'timer': resolve(__dirname, 'pages/timer/index.html'),
       },
     },
   },

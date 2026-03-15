@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线计时器 | Timer & Countdown — DevKit</title>
+<meta name="description" content="在线计时器，倒计时+正计时，预设快捷按钮，全屏显示，声音提醒。Online timer & countdown.">
+<meta name="keywords" content="online timer, 在线计时器, countdown, 倒计时, stopwatch, DevKit">
+<meta property="og:title" content="在线计时器 | Timer & Countdown — DevKit">
+<meta property="og:description" content="倒计时+正计时，全屏显示，声音提醒">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/timer/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在线计时器 — DevKit">
+<meta name="twitter:description" content="倒计时+正计时，全屏显示">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"在线计时器","description":"在线计时器，倒计时+正计时，全屏显示，声音提醒","url":"https://l-s-c.github.io/devkit/pages/timer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/timer/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 720px; margin: 0 auto; width: 100%; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Mode tabs */
+.mode-tabs { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border-glass); margin-bottom: 24px; }
+.mode-tab {
+  flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 800;
+  cursor: pointer; transition: all 150ms; background: var(--bg-glass); color: var(--text-secondary);
+}
+.mode-tab.active { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+
+/* Display */
+.display-wrap { text-align: center; padding: 32px 0; }
+.time-display {
+  font-family: var(--font-code); font-size: 72px; font-weight: 800;
+  letter-spacing: -2px; color: var(--text-primary); line-height: 1;
+}
+.time-display.finished { color: #EF4444; animation: pulse 1s ease infinite; }
+.time-ms { font-family: var(--font-code); font-size: 28px; color: var(--text-caption); margin-top: 4px; }
+.time-label { font-size: 12px; color: var(--text-caption); margin-top: 8px; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Presets */
+.preset-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 16px; }
+.preset-btn {
+  padding: 10px 4px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.preset-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Custom input */
+.time-inputs { display: flex; gap: 8px; align-items: center; justify-content: center; margin-bottom: 16px; }
+.time-field { text-align: center; }
+.time-field input {
+  width: 64px; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 20px;
+  font-weight: 700; color: var(--text-primary); text-align: center; outline: none;
+  transition: border-color 150ms;
+}
+.time-field input:focus { border-color: var(--brand-500); }
+.time-field label { display: block; font-size: 10px; color: var(--text-caption); margin-top: 4px; }
+.time-sep { font-size: 24px; font-weight: 800; color: var(--text-caption); }
+
+/* Controls */
+.controls { display: flex; gap: 8px; justify-content: center; }
+.ctrl-btn {
+  padding: 14px 28px; border-radius: 10px; border: none; font-size: 14px;
+  font-weight: 800; cursor: pointer; transition: all 200ms;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-start { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; min-width: 140px; justify-content: center; }
+.btn-start:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-pause { background: #F59E0B; color: #fff; min-width: 140px; justify-content: center; }
+.btn-reset { border: 1.5px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary); }
+.btn-reset:hover { border-color: #EF4444; color: #EF4444; }
+.btn-fullscreen { border: 1.5px solid var(--border-glass); background: var(--bg-glass); color: var(--text-secondary); }
+.btn-fullscreen:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Fullscreen overlay */
+.fs-overlay {
+  display: none; position: fixed; inset: 0; background: #0A0A0F;
+  z-index: 999; flex-direction: column; align-items: center; justify-content: center;
+}
+.fs-overlay.show { display: flex; }
+.fs-time {
+  font-family: var(--font-code); font-size: 120px; font-weight: 800;
+  color: #F8F8FC; letter-spacing: -3px;
+}
+.fs-time.finished { color: #EF4444; animation: pulse 1s ease infinite; }
+.fs-label { font-size: 16px; color: #6B6B8A; margin-top: 12px; }
+.fs-close {
+  position: absolute; top: 24px; right: 24px; width: 48px; height: 48px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+  background: transparent; color: #9494B0; font-size: 24px; cursor: pointer;
+}
+.fs-close:hover { background: rgba(255,255,255,0.05); color: #F8F8FC; }
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .time-display { font-size: 48px; }
+  .time-ms { font-size: 20px; }
+  .preset-grid { grid-template-columns: repeat(3, 1fr); }
+  .controls { flex-wrap: wrap; }
+  .fs-time { font-size: 72px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">在线计时器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">在线计时器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="mode-tabs" id="modeTabs">
+      <div class="mode-tab active" data-mode="countdown">⏳ 倒计时</div>
+      <div class="mode-tab" data-mode="stopwatch">⏱️ 正计时</div>
+    </div>
+    <div class="display-wrap">
+      <div class="time-display" id="timeDisplay">00:00:00</div>
+      <div class="time-ms" id="timeMs" style="display:none">.00</div>
+      <div class="time-label" id="timeLabel">设定时间后点击开始</div>
+    </div>
+  </div>
+
+  <div class="panel" id="countdownSettings">
+    <div class="section-title">⚡ 快捷预设</div>
+    <div class="preset-grid" id="presetGrid">
+      <div class="preset-btn" data-min="1">1 分钟</div>
+      <div class="preset-btn" data-min="3">3 分钟</div>
+      <div class="preset-btn" data-min="5">5 分钟</div>
+      <div class="preset-btn" data-min="10">10 分钟</div>
+      <div class="preset-btn" data-min="15">15 分钟</div>
+      <div class="preset-btn" data-min="30">30 分钟</div>
+    </div>
+    <div class="section-title">🔢 自定义时间</div>
+    <div class="time-inputs">
+      <div class="time-field"><input type="number" id="inputH" value="0" min="0" max="99"><label>时</label></div>
+      <span class="time-sep">:</span>
+      <div class="time-field"><input type="number" id="inputM" value="0" min="0" max="59"><label>分</label></div>
+      <span class="time-sep">:</span>
+      <div class="time-field"><input type="number" id="inputS" value="0" min="0" max="59"><label>秒</label></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="controls">
+      <button class="ctrl-btn btn-start" id="startBtn">▶️ 开始</button>
+      <button class="ctrl-btn btn-reset" id="resetBtn">🔄 重置</button>
+      <button class="ctrl-btn btn-fullscreen" id="fsBtn">🖥️ 全屏</button>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">在线计时器</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<!-- Fullscreen overlay -->
+<div class="fs-overlay" id="fsOverlay">
+  <button class="fs-close" id="fsClose">✕</button>
+  <div class="fs-time" id="fsTime">00:00:00</div>
+  <div class="fs-label" id="fsLabel">倒计时</div>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let mode = 'countdown', timer = null, running = false, paused = false;
+let totalSeconds = 0, pauseRemain = 0, startTime = 0, pauseElapsed = 0;
+
+function fmt(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function updateDisplay(s) {
+  const t = fmt(Math.max(0, s));
+  document.getElementById('timeDisplay').textContent = t;
+  document.getElementById('fsTime').textContent = t;
+  const finished = mode === 'countdown' && s <= 0 && running;
+  document.getElementById('timeDisplay').classList.toggle('finished', finished);
+  document.getElementById('fsTime').classList.toggle('finished', finished);
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    function beep(delay) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.5);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.5);
+    }
+    beep(0); beep(0.6);
+  } catch(e) {}
+}
+
+function tickCountdown() {
+  const elapsed = (Date.now() - startTime) / 1000;
+  const remain = pauseRemain - elapsed;
+  if (remain <= 0) {
+    clearInterval(timer); timer = null; running = false;
+    updateDisplay(0);
+    document.getElementById('timeLabel').textContent = '⏰ 时间到！';
+    document.getElementById('startBtn').innerHTML = '▶️ 开始';
+    document.getElementById('startBtn').className = 'ctrl-btn btn-start';
+    document.getElementById('statusInfo').textContent = '⏰ 时间到！';
+    playBeep();
+    return;
+  }
+  updateDisplay(remain);
+}
+
+function tickStopwatch() {
+  const ms = Date.now() - startTime;
+  updateDisplay(ms / 1000);
+  document.getElementById('timeMs').textContent = '.' + String(Math.floor((ms % 1000) / 10)).padStart(2, '0');
+}
+
+function startTimer() {
+  const btn = document.getElementById('startBtn');
+
+  if (paused) {
+    paused = false; running = true;
+    btn.innerHTML = '⏸️ 暂停'; btn.className = 'ctrl-btn btn-pause';
+    startTime = Date.now();
+    if (mode === 'countdown') {
+      timer = setInterval(tickCountdown, 200);
+    } else {
+      startTime = Date.now() - pauseElapsed;
+      timer = setInterval(tickStopwatch, 30);
+    }
+    document.getElementById('timeLabel').textContent = mode === 'countdown' ? '倒计时中…' : '计时中…';
+    return;
+  }
+
+  if (running) {
+    // Pause
+    paused = true; running = false;
+    clearInterval(timer); timer = null;
+    if (mode === 'countdown') {
+      pauseRemain = pauseRemain - (Date.now() - startTime) / 1000;
+    } else {
+      pauseElapsed = Date.now() - startTime;
+    }
+    btn.innerHTML = '▶️ 继续'; btn.className = 'ctrl-btn btn-start';
+    document.getElementById('timeLabel').textContent = '已暂停';
+    return;
+  }
+
+  // Start fresh
+  if (mode === 'countdown') {
+    const h = parseInt(document.getElementById('inputH').value) || 0;
+    const m = parseInt(document.getElementById('inputM').value) || 0;
+    const s = parseInt(document.getElementById('inputS').value) || 0;
+    totalSeconds = h * 3600 + m * 60 + s;
+    if (totalSeconds <= 0) return;
+    pauseRemain = totalSeconds;
+    startTime = Date.now();
+    timer = setInterval(tickCountdown, 200);
+  } else {
+    startTime = Date.now(); pauseElapsed = 0;
+    timer = setInterval(tickStopwatch, 30);
+  }
+  running = true;
+  btn.innerHTML = '⏸️ 暂停'; btn.className = 'ctrl-btn btn-pause';
+  document.getElementById('timeLabel').textContent = mode === 'countdown' ? '倒计时中…' : '计时中…';
+  document.getElementById('statusInfo').textContent = mode === 'countdown' ? '倒计时中…' : '计时中…';
+}
+
+function resetTimer() {
+  clearInterval(timer); timer = null; running = false; paused = false;
+  totalSeconds = 0; pauseRemain = 0; pauseElapsed = 0;
+  updateDisplay(0);
+  document.getElementById('timeMs').textContent = '.00';
+  document.getElementById('timeDisplay').classList.remove('finished');
+  document.getElementById('fsTime').classList.remove('finished');
+  document.getElementById('startBtn').innerHTML = '▶️ 开始';
+  document.getElementById('startBtn').className = 'ctrl-btn btn-start';
+  document.getElementById('timeLabel').textContent = '设定时间后点击开始';
+  document.getElementById('statusInfo').textContent = '在线计时器';
+}
+
+/* Events */
+document.getElementById('modeTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.mode-tab');
+  if (!tab || running) return;
+  mode = tab.dataset.mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('countdownSettings').style.display = mode === 'countdown' ? 'block' : 'none';
+  document.getElementById('timeMs').style.display = mode === 'stopwatch' ? 'block' : 'none';
+  resetTimer();
+});
+
+document.getElementById('presetGrid').addEventListener('click', e => {
+  const btn = e.target.closest('.preset-btn');
+  if (!btn || running) return;
+  const min = parseInt(btn.dataset.min);
+  document.getElementById('inputH').value = 0;
+  document.getElementById('inputM').value = min;
+  document.getElementById('inputS').value = 0;
+  updateDisplay(min * 60);
+});
+
+document.getElementById('startBtn').addEventListener('click', startTimer);
+document.getElementById('resetBtn').addEventListener('click', resetTimer);
+
+document.getElementById('fsBtn').addEventListener('click', () => {
+  document.getElementById('fsOverlay').classList.add('show');
+  document.getElementById('fsLabel').textContent = mode === 'countdown' ? '倒计时' : '正计时';
+  try { document.documentElement.requestFullscreen(); } catch(e) {}
+});
+
+document.getElementById('fsClose').addEventListener('click', () => {
+  document.getElementById('fsOverlay').classList.remove('show');
+  try { document.exitFullscreen(); } catch(e) {}
+});
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) document.getElementById('fsOverlay').classList.remove('show');
+});
+</script>
+<noscript><p>在线计时器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
