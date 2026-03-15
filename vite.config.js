@@ -67,6 +67,7 @@ export default defineConfig({
         'timer': resolve(__dirname, 'pages/timer/index.html'),
         'grid-splitter': resolve(__dirname, 'pages/grid-splitter/index.html'),
         'http-tester': resolve(__dirname, 'pages/http-tester/index.html'),
+        'pomodoro': resolve(__dirname, 'pages/pomodoro/index.html'),
       },
     },
   },

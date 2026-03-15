@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>番茄钟 | Pomodoro Timer — DevKit</title>
+<meta name="description" content="在线番茄钟，25 分钟专注 + 5 分钟休息循环，SVG 圆环进度，声音提醒，自定义时长，番茄工作法。">
+<meta name="keywords" content="pomodoro timer, 番茄钟, 番茄工作法, 专注计时, DevKit">
+<meta property="og:title" content="番茄钟 | Pomodoro Timer — DevKit">
+<meta property="og:description" content="番茄工作法，25 分钟专注 + 5 分钟休息">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/pomodoro/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="番茄钟 — DevKit">
+<meta name="twitter:description" content="番茄工作法在线计时器">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"番茄钟","description":"在线番茄钟，25分钟专注+5分钟休息循环，SVG圆环进度，声音提醒","url":"https://l-s-c.github.io/devkit/pages/pomodoro/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/pomodoro/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 480px; margin: 0 auto; width: 100%; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Phase tabs */
+.phase-tabs { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border-glass); margin-bottom: 24px; }
+.phase-tab {
+  flex: 1; padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 800;
+  cursor: pointer; transition: all 150ms; background: var(--bg-glass-input); color: var(--text-caption);
+}
+.phase-tab.active-work { background: #EF4444; color: #fff; }
+.phase-tab.active-break { background: #10B981; color: #fff; }
+.phase-tab.active-long { background: #6366F1; color: #fff; }
+
+/* Timer */
+.timer-wrap { text-align: center; padding: 24px 0; }
+.timer-ring { position: relative; display: inline-block; }
+.timer-ring svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--border-glass); stroke-width: 6; }
+.ring-fg { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.timer-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.timer-time { font-family: var(--font-code); font-size: 56px; font-weight: 800; letter-spacing: -2px; }
+.timer-phase { font-size: 13px; font-weight: 700; margin-top: 4px; }
+
+/* Rounds */
+.rounds-wrap { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
+.round-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-glass); transition: all 200ms; }
+.round-dot.done { background: #EF4444; border-color: #EF4444; }
+.round-dot.current { border-color: #EF4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+.round-label { text-align: center; font-size: 11px; color: var(--text-caption); margin-bottom: 8px; }
+
+/* Controls */
+.controls { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+.ctrl-btn {
+  padding: 14px 28px; border-radius: 28px; border: none; font-size: 14px;
+  font-weight: 800; cursor: pointer; transition: all 200ms;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-start { color: #fff; min-width: 140px; justify-content: center; }
+.btn-start.work-mode { background: #EF4444; }
+.btn-start.work-mode:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(239,68,68,0.3); }
+.btn-start.break-mode { background: #10B981; }
+.btn-start.break-mode:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(16,185,129,0.3); }
+.btn-start.long-mode { background: #6366F1; }
+.btn-start.long-mode:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-skip, .btn-reset {
+  border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); color: var(--text-secondary);
+}
+.btn-skip:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.btn-reset:hover { border-color: #EF4444; color: #EF4444; }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.stat-card {
+  text-align: center; padding: 12px; border-radius: 6px;
+  background: var(--bg-glass-input); border: 1px solid var(--border-glass);
+}
+.stat-num { font-family: var(--font-code); font-size: 24px; font-weight: 800; }
+.stat-num.work-c { color: #EF4444; }
+.stat-num.break-c { color: #10B981; }
+.stat-num.time-c { color: #6366F1; }
+.stat-label { font-size: 10px; color: var(--text-caption); margin-top: 2px; }
+
+/* Settings */
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border-glass);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+.setting-icon { font-size: 16px; }
+.setting-input {
+  width: 60px; padding: 6px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-family: var(--font-code); font-size: 14px;
+  font-weight: 700; text-align: center; color: var(--text-primary); outline: none;
+}
+.setting-input:focus { border-color: var(--brand-500); }
+.setting-unit { font-size: 11px; color: var(--text-caption); margin-left: 4px; }
+
+@media (max-width: 480px) {
+  .main { padding: 16px 16px 60px; }
+  .timer-time { font-size: 44px; }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">番茄钟 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">番茄钟</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <!-- Phase tabs -->
+    <div class="phase-tabs" id="phaseTabs">
+      <div class="phase-tab active-work" data-phase="work">🍅 专注</div>
+      <div class="phase-tab" data-phase="break">☕ 短休</div>
+      <div class="phase-tab" data-phase="long">🌴 长休</div>
+    </div>
+
+    <!-- Timer ring -->
+    <div class="timer-wrap">
+      <div class="timer-ring">
+        <svg width="240" height="240">
+          <circle class="ring-bg" cx="120" cy="120" r="108"/>
+          <circle class="ring-fg" id="ringFg" cx="120" cy="120" r="108" stroke="#EF4444" stroke-dasharray="678.58" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-inner">
+          <div class="timer-time" id="timerTime">25:00</div>
+          <div class="timer-phase" id="timerPhase" style="color:#EF4444">🍅 专注时间</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rounds -->
+    <div class="round-label" id="roundLabel">第 1 / 4 轮</div>
+    <div class="rounds-wrap" id="roundDots"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="ctrl-btn btn-start work-mode" id="startBtn">▶️ 开始专注</button>
+      <button class="ctrl-btn btn-skip" id="skipBtn">⏭️ 跳过</button>
+      <button class="ctrl-btn btn-reset" id="resetBtn">🔄</button>
+    </div>
+  </div>
+
+  <!-- Today Stats -->
+  <div class="panel">
+    <div class="section-title">📊 今日统计</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num work-c" id="statRounds">0</div><div class="stat-label">完成轮次</div></div>
+      <div class="stat-card"><div class="stat-num break-c" id="statBreaks">0</div><div class="stat-label">休息次数</div></div>
+      <div class="stat-card"><div class="stat-num time-c" id="statMinutes">0</div><div class="stat-label">专注分钟</div></div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="panel">
+    <div class="section-title">⚙️ 设置</div>
+    <div class="setting-row">
+      <div class="setting-label"><span class="setting-icon">🍅</span> 专注时长</div>
+      <div><input class="setting-input" id="setWork" value="25" type="number" min="1" max="99"><span class="setting-unit">分钟</span></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label"><span class="setting-icon">☕</span> 短休时长</div>
+      <div><input class="setting-input" id="setBreak" value="5" type="number" min="1" max="30"><span class="setting-unit">分钟</span></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label"><span class="setting-icon">🌴</span> 长休时长</div>
+      <div><input class="setting-input" id="setLong" value="15" type="number" min="1" max="60"><span class="setting-unit">分钟</span></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label"><span class="setting-icon">🔄</span> 长休间隔</div>
+      <div><input class="setting-input" id="setInterval" value="4" type="number" min="2" max="10"><span class="setting-unit">轮</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">番茄钟</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地运行</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const CIRC = 2 * Math.PI * 108; // ≈ 678.58
+let phase = 'work', running = false, paused = false, timer = null;
+let totalSec = 25 * 60, remainSec = 25 * 60, startTime = 0, pauseRemain = 0;
+let round = 1, completedRounds = 0, breaks = 0, focusMin = 0;
+
+/* Load settings */
+const saved = JSON.parse(localStorage.getItem('devkit-pomo') || '{}');
+if (saved.work) document.getElementById('setWork').value = saved.work;
+if (saved.brk) document.getElementById('setBreak').value = saved.brk;
+if (saved.lng) document.getElementById('setLong').value = saved.lng;
+if (saved.interval) document.getElementById('setInterval').value = saved.interval;
+
+function saveSettings() {
+  localStorage.setItem('devkit-pomo', JSON.stringify({
+    work: parseInt(document.getElementById('setWork').value) || 25,
+    brk: parseInt(document.getElementById('setBreak').value) || 5,
+    lng: parseInt(document.getElementById('setLong').value) || 15,
+    interval: parseInt(document.getElementById('setInterval').value) || 4
+  }));
+  if (!running) switchPhase(phase);
+}
+
+document.querySelectorAll('.setting-input').forEach(el => el.addEventListener('change', saveSettings));
+
+function getTime(p) {
+  if (p === 'work') return (parseInt(document.getElementById('setWork').value) || 25) * 60;
+  if (p === 'break') return (parseInt(document.getElementById('setBreak').value) || 5) * 60;
+  return (parseInt(document.getElementById('setLong').value) || 15) * 60;
+}
+function getInterval() { return parseInt(document.getElementById('setInterval').value) || 4; }
+
+function fmt(s) {
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}
+
+const COLORS = { work: '#EF4444', break: '#10B981', long: '#6366F1' };
+const LABELS = { work: '🍅 专注时间', break: '☕ 短休息', long: '🌴 长休息' };
+const BTN_LABELS = { work: '开始专注', break: '开始休息', long: '开始休息' };
+const BTN_CLASS = { work: 'work-mode', break: 'break-mode', long: 'long-mode' };
+const TAB_CLASS = { work: 'active-work', break: 'active-break', long: 'active-long' };
+
+function updateDisplay() {
+  const s = Math.max(0, Math.ceil(remainSec));
+  document.getElementById('timerTime').textContent = fmt(s);
+  const progress = 1 - s / totalSec;
+  document.getElementById('ringFg').style.strokeDashoffset = CIRC * (1 - progress);
+}
+
+function setPhaseUI() {
+  document.getElementById('ringFg').setAttribute('stroke', COLORS[phase]);
+  document.getElementById('timerPhase').textContent = LABELS[phase];
+  document.getElementById('timerPhase').style.color = COLORS[phase];
+
+  document.querySelectorAll('.phase-tab').forEach(t => { t.className = 'phase-tab'; });
+  document.querySelector(`.phase-tab[data-phase="${phase}"]`).classList.add(TAB_CLASS[phase]);
+
+  if (!running) {
+    document.getElementById('startBtn').innerHTML = `▶️ ${BTN_LABELS[phase]}`;
+    document.getElementById('startBtn').className = `ctrl-btn btn-start ${BTN_CLASS[phase]}`;
+  }
+
+  // Round dots
+  const interval = getInterval();
+  document.getElementById('roundLabel').textContent = `第 ${round} / ${interval} 轮`;
+  let dots = '';
+  for (let i = 1; i <= interval; i++) {
+    let cls = 'round-dot';
+    if (i < round) cls += ' done';
+    else if (i === round && phase === 'work') cls += ' current';
+    dots += `<div class="${cls}"></div>`;
+  }
+  document.getElementById('roundDots').innerHTML = dots;
+
+  document.getElementById('statusInfo').textContent =
+    running ? `${LABELS[phase]} ${fmt(Math.max(0, Math.ceil(remainSec)))}` : '番茄钟';
+}
+
+function switchPhase(p) {
+  if (running) return;
+  phase = p; totalSec = getTime(p); remainSec = totalSec;
+  updateDisplay(); setPhaseUI();
+}
+
+/* Phase tab clicks */
+document.getElementById('phaseTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.phase-tab');
+  if (tab) switchPhase(tab.dataset.phase);
+});
+
+function toggleTimer() {
+  if (paused) {
+    paused = false; running = true;
+    startTime = Date.now(); pauseRemain = remainSec;
+    timer = setInterval(tick, 200);
+    document.getElementById('startBtn').innerHTML = '⏸️ 暂停';
+    document.getElementById('startBtn').className = `ctrl-btn btn-start ${BTN_CLASS[phase]}`;
+    return;
+  }
+  if (running) {
+    paused = true; running = false; clearInterval(timer);
+    pauseRemain = remainSec;
+    document.getElementById('startBtn').innerHTML = '▶️ 继续';
+    return;
+  }
+  totalSec = getTime(phase); remainSec = totalSec; pauseRemain = totalSec;
+  startTime = Date.now(); running = true;
+  timer = setInterval(tick, 200);
+  document.getElementById('startBtn').innerHTML = '⏸️ 暂停';
+  document.getElementById('startBtn').className = `ctrl-btn btn-start ${BTN_CLASS[phase]}`;
+}
+
+function tick() {
+  remainSec = pauseRemain - (Date.now() - startTime) / 1000;
+  if (remainSec <= 0) {
+    remainSec = 0; clearInterval(timer); running = false; paused = false;
+    updateDisplay(); playBeep();
+
+    if (phase === 'work') {
+      completedRounds++;
+      focusMin += parseInt(document.getElementById('setWork').value) || 25;
+      if (round >= getInterval()) { round = 1; phase = 'long'; }
+      else { round++; phase = 'break'; }
+      breaks++;
+    } else {
+      if (phase === 'long') round = 1;
+      phase = 'work';
+    }
+    totalSec = getTime(phase); remainSec = totalSec;
+    updateDisplay(); setPhaseUI(); updateStats();
+    return;
+  }
+  updateDisplay();
+  document.getElementById('statusInfo').textContent = `${LABELS[phase]} ${fmt(Math.max(0, Math.ceil(remainSec)))}`;
+}
+
+function skipPhase() {
+  clearInterval(timer); running = false; paused = false;
+  if (phase === 'work') {
+    if (round >= getInterval()) { round = 1; phase = 'long'; }
+    else { round++; phase = 'break'; }
+  } else {
+    if (phase === 'long') round = 1;
+    phase = 'work';
+  }
+  totalSec = getTime(phase); remainSec = totalSec;
+  updateDisplay(); setPhaseUI();
+}
+
+function resetAll() {
+  clearInterval(timer); running = false; paused = false;
+  phase = 'work'; round = 1;
+  totalSec = getTime('work'); remainSec = totalSec;
+  updateDisplay(); setPhaseUI();
+}
+
+function updateStats() {
+  document.getElementById('statRounds').textContent = completedRounds;
+  document.getElementById('statBreaks').textContent = breaks;
+  document.getElementById('statMinutes').textContent = focusMin;
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.3, 0.6].forEach(d => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(0.3, ctx.currentTime + d);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + d + 0.2);
+      o.start(ctx.currentTime + d); o.stop(ctx.currentTime + d + 0.2);
+    });
+  } catch (e) {}
+}
+
+document.getElementById('startBtn').addEventListener('click', toggleTimer);
+document.getElementById('skipBtn').addEventListener('click', skipPhase);
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+updateDisplay(); setPhaseUI();
+</script>
+<noscript><p>番茄钟 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
