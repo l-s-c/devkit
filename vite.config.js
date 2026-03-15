@@ -68,6 +68,7 @@ export default defineConfig({
         'grid-splitter': resolve(__dirname, 'pages/grid-splitter/index.html'),
         'http-tester': resolve(__dirname, 'pages/http-tester/index.html'),
         'pomodoro': resolve(__dirname, 'pages/pomodoro/index.html'),
+        'random-picker': resolve(__dirname, 'pages/random-picker/index.html'),
       },
     },
   },
