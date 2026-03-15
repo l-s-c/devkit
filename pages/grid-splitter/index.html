@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九宫格切图 | Image Grid Splitter — DevKit</title>
+<meta name="description" content="在线九宫格切图工具，上传图片自动切割成 9/6/4 宫格，按序编号，一键打包下载，发朋友圈/小红书。">
+<meta name="keywords" content="九宫格切图, image splitter, 长图切割, 朋友圈切图, DevKit">
+<meta property="og:title" content="九宫格切图 | Image Grid Splitter — DevKit">
+<meta property="og:description" content="上传图片切割 9/6/4 宫格，一键打包下载">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/grid-splitter/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="九宫格切图 — DevKit">
+<meta name="twitter:description" content="九宫格切图，一键打包下载">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"九宫格切图","description":"在线九宫格切图，自动居中裁切，按序编号，一键打包下载","url":"https://l-s-c.github.io/devkit/pages/grid-splitter/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/grid-splitter/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel {
+  padding: 24px; border-radius: 16px; margin-bottom: 16px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass);
+}
+.section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+/* Upload */
+.upload-zone {
+  border: 2px dashed var(--border-glass); border-radius: 10px; padding: 40px;
+  text-align: center; cursor: pointer; transition: all 200ms;
+}
+.upload-zone:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.04); }
+.upload-zone.has-image { border-style: solid; padding: 0; overflow: hidden; }
+.upload-icon { font-size: 40px; margin-bottom: 8px; }
+.upload-text { font-size: 13px; color: var(--text-secondary); }
+.upload-hint { font-size: 11px; color: var(--text-caption); margin-top: 4px; }
+.upload-zone img { width: 100%; display: block; }
+input[type=file] { display: none; }
+
+/* Mode pills */
+.mode-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+.mode-pill {
+  padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); cursor: pointer; text-align: center; transition: all 150ms;
+}
+.mode-pill:hover { border-color: var(--brand-500); }
+.mode-pill.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); }
+.mode-name { font-size: 12px; font-weight: 700; }
+.mode-dim { font-size: 10px; color: var(--text-caption); font-family: var(--font-code); margin-top: 2px; }
+
+/* Custom inputs */
+.custom-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.custom-input {
+  width: 60px; padding: 8px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass); font-family: var(--font-code); font-size: 14px;
+  font-weight: 700; text-align: center; color: var(--text-primary); outline: none;
+}
+.custom-input:focus { border-color: var(--brand-500); }
+.custom-x { font-size: 14px; font-weight: 800; color: var(--text-caption); }
+.custom-label { font-size: 11px; color: var(--text-caption); }
+
+/* Preview */
+.preview-wrap {
+  position: relative; border-radius: 10px; overflow: hidden;
+  background: repeating-conic-gradient(rgba(0,0,0,0.06) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+}
+.preview-wrap canvas { width: 100%; display: block; }
+
+/* Result grid */
+.result-grid { display: grid; gap: 4px; margin-top: 14px; }
+.result-cell { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 1; }
+.result-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.result-num {
+  position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Actions */
+.action-row { display: flex; gap: 8px; margin-top: 14px; }
+.action-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 12px;
+  font-weight: 700; cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.btn-primary { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-primary:disabled { opacity: 0.4; transform: none; box-shadow: none; cursor: not-allowed; }
+
+/* Stats */
+.stats { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.stat-chip {
+  padding: 4px 10px; border-radius: 4px; background: rgba(99,102,241,0.08);
+  font-family: var(--font-code); font-size: 10px; font-weight: 700; color: var(--brand-500);
+}
+
+.tip {
+  padding: 10px 14px; border-radius: 6px; background: rgba(99,102,241,0.06);
+  font-size: 11px; color: var(--text-secondary); line-height: 1.5; margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+  .main { padding: 16px 16px 60px; }
+  .dual { grid-template-columns: 1fr; }
+  .mode-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">九宫格切图 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">九宫格切图</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="dual">
+    <div>
+      <div class="panel">
+        <div class="section-title">📷 上传图片</div>
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">点击或拖拽上传图片</div>
+          <div class="upload-hint">支持 JPG/PNG/WebP</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*">
+        <div class="stats" id="imageStats" style="display:none">
+          <span class="stat-chip" id="statSize">0 × 0</span>
+          <span class="stat-chip" id="statFile">0 KB</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">📐 切割模式</div>
+        <div class="mode-grid" id="modeGrid">
+          <div class="mode-pill active" data-c="3" data-r="3"><div class="mode-name">9 宫格</div><div class="mode-dim">3×3</div></div>
+          <div class="mode-pill" data-c="2" data-r="3"><div class="mode-name">6 格</div><div class="mode-dim">2×3</div></div>
+          <div class="mode-pill" data-c="2" data-r="2"><div class="mode-name">4 格</div><div class="mode-dim">2×2</div></div>
+          <div class="mode-pill" data-c="0" data-r="0"><div class="mode-name">自定义</div><div class="mode-dim">N×M</div></div>
+        </div>
+        <div class="custom-row" id="customRow" style="display:none">
+          <span class="custom-label">列</span>
+          <input type="number" class="custom-input" id="customCols" value="3" min="1" max="10">
+          <span class="custom-x">×</span>
+          <span class="custom-label">行</span>
+          <input type="number" class="custom-input" id="customRows" value="3" min="1" max="10">
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="action-row">
+          <button class="action-btn btn-primary" id="splitBtn" disabled>✂️ 开始切割</button>
+          <button class="action-btn btn-primary" id="downloadBtn" disabled>📦 打包下载</button>
+        </div>
+        <div class="tip">💡 图片会自动居中裁切为正方形区域，文件按序编号 01-09，方便发朋友圈按顺序上传</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="section-title">👁️ 预览</div>
+        <div class="preview-wrap"><canvas id="previewCanvas" width="400" height="400"></canvas></div>
+      </div>
+
+      <div class="panel" id="resultSection" style="display:none">
+        <div class="section-title">📦 切割结果</div>
+        <div class="result-grid" id="resultGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">九宫格切图</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地处理</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+let img = null, cols = 3, rows = 3, pieces = [];
+
+/* Upload */
+const zone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+
+zone.addEventListener('click', () => fileInput.click());
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--brand-500)'; });
+zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.style.borderColor = '';
+  if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; loadImage(e.dataTransfer.files[0]); }
+});
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadImage(fileInput.files[0]); });
+
+function loadImage(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const i = new Image();
+    i.onload = () => {
+      img = i;
+      zone.innerHTML = `<img src="${ev.target.result}">`;
+      zone.classList.add('has-image');
+      document.getElementById('imageStats').style.display = 'flex';
+      document.getElementById('statSize').textContent = `${i.width} × ${i.height}`;
+      document.getElementById('statFile').textContent = (file.size / 1024).toFixed(0) + ' KB';
+      document.getElementById('splitBtn').disabled = false;
+      drawPreview();
+    };
+    i.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Mode */
+document.getElementById('modeGrid').addEventListener('click', e => {
+  const pill = e.target.closest('.mode-pill');
+  if (!pill) return;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  const c = parseInt(pill.dataset.c), r = parseInt(pill.dataset.r);
+  if (c === 0) {
+    document.getElementById('customRow').style.display = 'flex';
+    cols = parseInt(document.getElementById('customCols').value) || 3;
+    rows = parseInt(document.getElementById('customRows').value) || 3;
+  } else {
+    document.getElementById('customRow').style.display = 'none';
+    cols = c; rows = r;
+  }
+  drawPreview();
+});
+
+document.getElementById('customCols').addEventListener('input', updateGrid);
+document.getElementById('customRows').addEventListener('input', updateGrid);
+
+function updateGrid() {
+  cols = Math.max(1, Math.min(10, parseInt(document.getElementById('customCols').value) || 1));
+  rows = Math.max(1, Math.min(10, parseInt(document.getElementById('customRows').value) || 1));
+  drawPreview();
+}
+
+function drawPreview() {
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 400; canvas.height = 400;
+  ctx.clearRect(0, 0, 400, 400);
+
+  if (img) {
+    const side = Math.min(img.width, img.height);
+    const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+    ctx.drawImage(img, sx, sy, side, side, 0, 0, 400, 400);
+  } else {
+    ctx.fillStyle = '#e5e7eb';
+    ctx.fillRect(0, 0, 400, 400);
+  }
+
+  // Grid lines
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = 'rgba(99,102,241,0.6)'; ctx.lineWidth = 2;
+  for (let i = 1; i < cols; i++) { const x = 400 / cols * i; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 400); ctx.stroke(); }
+  for (let i = 1; i < rows; i++) { const y = 400 / rows * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(400, y); ctx.stroke(); }
+
+  // Numbers
+  const cw = 400 / cols, ch = 400 / rows;
+  ctx.setLineDash([]);
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const n = r * cols + c + 1;
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.beginPath(); ctx.arc(c * cw + 16, r * ch + 16, 12, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 11px -apple-system,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(n).padStart(2, '0'), c * cw + 16, r * ch + 16);
+    }
+  }
+  document.getElementById('statusInfo').textContent = `${cols}×${rows} · ${cols * rows} 格`;
+}
+
+/* Split */
+document.getElementById('splitBtn').addEventListener('click', () => {
+  if (!img) return;
+  pieces = [];
+  const side = Math.min(img.width, img.height);
+  const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+  const cw = side / cols, ch = side / rows;
+  const total = rows * cols;
+
+  const grid = document.getElementById('resultGrid');
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.innerHTML = '';
+
+  let done = 0;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const n = r * cols + c + 1;
+      const cv = document.createElement('canvas');
+      cv.width = cw; cv.height = ch;
+      const ctx = cv.getContext('2d');
+      ctx.drawImage(img, sx + c * cw, sy + r * ch, cw, ch, 0, 0, cw, ch);
+
+      const url = cv.toDataURL('image/jpeg', 0.92);
+      const cell = document.createElement('div'); cell.className = 'result-cell';
+      cell.innerHTML = `<img src="${url}"><div class="result-num">${String(n).padStart(2, '0')}</div>`;
+      grid.appendChild(cell);
+
+      cv.toBlob(blob => {
+        pieces[n - 1] = { name: `grid_${String(n).padStart(2, '0')}.jpg`, blob };
+        done++;
+        if (done === total) document.getElementById('downloadBtn').disabled = false;
+        cv.width = 0;
+      }, 'image/jpeg', 0.92);
+    }
+  }
+  document.getElementById('resultSection').style.display = 'block';
+});
+
+/* Download ZIP */
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+  if (!pieces.length) return;
+  const zip = new JSZip();
+  pieces.forEach(p => zip.file(p.name, p.blob));
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `grid_${cols}x${rows}.zip`; a.click();
+  URL.revokeObjectURL(url); URL.revokeObjectURL(url); URL.revokeObjectURL(url);
+});
+
+drawPreview();
+</script>
+<noscript><p>九宫格切图 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

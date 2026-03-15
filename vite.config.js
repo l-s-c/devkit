@@ -65,6 +65,7 @@ export default defineConfig({
         'json-schema': resolve(__dirname, 'pages/json-schema/index.html'),
         'tts': resolve(__dirname, 'pages/tts/index.html'),
         'timer': resolve(__dirname, 'pages/timer/index.html'),
+        'grid-splitter': resolve(__dirname, 'pages/grid-splitter/index.html'),
       },
     },
   },
