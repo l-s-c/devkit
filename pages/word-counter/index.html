@@ -183,6 +183,8 @@ import '../../shared/theme.js';
 
 let debounceTimer = null;
 
+function escH(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
 function analyze() {
   const text = document.getElementById('inputText').value;
 
@@ -256,7 +258,7 @@ function analyzeKeywords(text) {
   list.innerHTML = sorted.map(([word, count], i) =>
     `<div class="kw-item">
       <span class="kw-rank">${i + 1}</span>
-      <span class="kw-word">${word}</span>
+      <span class="kw-word">${escH(word)}</span>
       <div class="kw-bar-bg"><div class="kw-bar" style="width:${Math.round(count / max * 100)}%"></div></div>
       <span class="kw-count">${count}</span>
     </div>`
