@@ -69,6 +69,7 @@ export default defineConfig({
         'http-tester': resolve(__dirname, 'pages/http-tester/index.html'),
         'pomodoro': resolve(__dirname, 'pages/pomodoro/index.html'),
         'random-picker': resolve(__dirname, 'pages/random-picker/index.html'),
+        'box-shadow': resolve(__dirname, 'pages/box-shadow/index.html'),
       },
     },
   },
