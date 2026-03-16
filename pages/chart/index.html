@@ -109,7 +109,23 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="dual">
-    <!-- 左：输入 -->
+    <!-- 左：预览（sticky） -->
+    <div style="position:sticky;top:72px">
+      <div class="panel">
+        <div class="section-title">👁️ 图表预览 <button id="fsBtn" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border-glass);background:transparent;font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer">🔍 放大</button></div>
+        <div class="chart-wrap">
+          <canvas id="chartCanvas"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="action-row">
+          <button class="gen-btn" id="genBtn">🔄 生成图表</button>
+          <button class="action-btn" id="downloadBtn">💾 导出 PNG</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：配置 -->
     <div>
       <div class="panel">
         <div class="section-title">📋 图表类型</div>
@@ -182,22 +198,6 @@ Q4, 210</textarea>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="action-row">
-          <button class="gen-btn" id="genBtn">🔄 生成图表</button>
-          <button class="action-btn" id="downloadBtn">💾 导出 PNG</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 右：预览 -->
-    <div>
-      <div class="panel">
-        <div class="section-title">👁️ 图表预览 <button id="fsBtn" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border-glass);background:transparent;font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer">🔍 放大</button></div>
-        <div class="chart-wrap">
-          <canvas id="chartCanvas"></canvas>
-        </div>
-      </div>
     </div>
   </div>
 </div>
