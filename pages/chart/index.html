@@ -138,6 +138,24 @@ Q4, 210</textarea>
       </div>
 
       <div class="panel">
+        <div class="section-title">🎨 样式设置</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:4px">主题色 <input type="color" id="themeColor" value="#6366F1" style="width:28px;height:28px;border:none;background:none;cursor:pointer"></label>
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showGrid" checked> 网格线</label>
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showLegend"> 图例</label>
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showValues"> 数值标签</label>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="tpl-chip" data-color="#6366F1" style="cursor:pointer">💜 靛蓝</span>
+          <span class="tpl-chip" data-color="#10B981" style="cursor:pointer">💚 翠绿</span>
+          <span class="tpl-chip" data-color="#F59E0B" style="cursor:pointer">🧡 琥珀</span>
+          <span class="tpl-chip" data-color="#EF4444" style="cursor:pointer">❤️ 红色</span>
+          <span class="tpl-chip" data-color="#3B82F6" style="cursor:pointer">💙 蓝色</span>
+          <span class="tpl-chip" data-color="#EC4899" style="cursor:pointer">💗 粉色</span>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="action-row">
           <button class="gen-btn" id="genBtn">🔄 生成图表</button>
           <button class="action-btn" id="downloadBtn">💾 导出 PNG</button>
@@ -148,7 +166,7 @@ Q4, 210</textarea>
     <!-- 右：预览 -->
     <div>
       <div class="panel">
-        <div class="section-title">👁️ 图表预览</div>
+        <div class="section-title">👁️ 图表预览 <button id="fsBtn" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border-glass);background:transparent;font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer">🔍 放大</button></div>
         <div class="chart-wrap">
           <canvas id="chartCanvas"></canvas>
         </div>
@@ -163,11 +181,18 @@ Q4, 210</textarea>
   <span>Chart.js 4.4.1 · 纯本地</span>
 </div>
 
+<!-- 全屏查看 -->
+<div id="fsOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);flex-direction:column;align-items:center;justify-content:center;padding:40px">
+  <button id="fsClose" style="position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:18px;cursor:pointer">✕</button>
+  <canvas id="fsCanvas" style="max-width:90vw;max-height:80vh"></canvas>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script type="module">
 import '../../shared/theme.js';
 
-const COLORS = ['#6366F1','#EC4899','#10B981','#F59E0B','#3B82F6','#8B5CF6','#EF4444','#14B8A6','#F97316','#06B6D4'];
+const PIE_COLORS = ['#6366F1','#EC4899','#10B981','#F59E0B','#3B82F6','#8B5CF6','#EF4444','#14B8A6','#F97316','#06B6D4'];
+let themeColor = '#6366F1';
 const TEMPLATES = [
   { title: '季度销售额', data: 'Q1, 120\nQ2, 180\nQ3, 150\nQ4, 210' },
   { title: '月度支出', data: '房租, 3000\n餐饮, 2000\n交通, 800\n娱乐, 1200\n购物, 1500' },
@@ -195,16 +220,26 @@ function generate() {
   if (chart) chart.destroy();
 
   const isPie = chartType === 'pie' || chartType === 'doughnut';
-  chart = new Chart(document.getElementById('chartCanvas'), {
-    type: chartType,
+  const showGrid = document.getElementById('showGrid').checked;
+  const showLegend = document.getElementById('showLegend').checked || isPie;
+  const showValues = document.getElementById('showValues').checked;
+
+  chart = new Chart(document.getElementById('chartCanvas'), buildConfig(chartType, title, labels, values, isPie, showGrid, showLegend, showValues));
+
+  document.getElementById('statusInfo').textContent = `${chartType} · ${labels.length} 项数据`;
+}
+
+function buildConfig(type, title, labels, values, isPie, showGrid, showLegend, showValues) {
+  return {
+    type,
     data: {
       labels,
       datasets: [{
         label: title || '数据',
         data: values,
-        backgroundColor: isPie ? COLORS.slice(0, labels.length) : COLORS[0] + 'CC',
-        borderColor: isPie ? '#fff' : COLORS[0],
-        borderWidth: isPie ? 2 : 2,
+        backgroundColor: isPie ? PIE_COLORS.slice(0, labels.length) : themeColor + 'CC',
+        borderColor: isPie ? '#fff' : themeColor,
+        borderWidth: 2,
         borderRadius: isPie ? 0 : 6,
         tension: 0.3,
       }]
@@ -213,14 +248,55 @@ function generate() {
       responsive: true,
       plugins: {
         title: { display: !!title, text: title, font: { size: 16, weight: 'bold' } },
-        legend: { display: isPie, position: 'bottom' },
+        legend: { display: showLegend, position: 'bottom' },
+        datalabels: showValues ? { display: true } : undefined,
       },
-      scales: isPie ? {} : { y: { beginAtZero: true } },
+      scales: isPie ? {} : {
+        y: { beginAtZero: true, grid: { display: showGrid } },
+        x: { grid: { display: showGrid } },
+      },
     }
-  });
-
-  document.getElementById('statusInfo').textContent = `${chartType} · ${labels.length} 项数据`;
+  };
 }
+
+/* ===== Fullscreen ===== */
+let fsChart = null;
+document.getElementById('fsBtn').addEventListener('click', () => {
+  const overlay = document.getElementById('fsOverlay');
+  overlay.style.display = 'flex';
+  const { labels, values } = parseData();
+  if (!labels.length) return;
+  const title = document.getElementById('chartTitle').value;
+  const isPie = chartType === 'pie' || chartType === 'doughnut';
+  const showGrid = document.getElementById('showGrid').checked;
+  const showLegend = document.getElementById('showLegend').checked || isPie;
+  const showValues = document.getElementById('showValues').checked;
+  if (fsChart) fsChart.destroy();
+  fsChart = new Chart(document.getElementById('fsCanvas'), buildConfig(chartType, title, labels, values, isPie, showGrid, showLegend, showValues));
+});
+document.getElementById('fsClose').addEventListener('click', () => {
+  document.getElementById('fsOverlay').style.display = 'none';
+  if (fsChart) { fsChart.destroy(); fsChart = null; }
+});
+document.getElementById('fsOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('fsOverlay').style.display = 'none';
+    if (fsChart) { fsChart.destroy(); fsChart = null; }
+  }
+});
+
+/* ===== Style controls ===== */
+document.getElementById('themeColor').addEventListener('input', e => { themeColor = e.target.value; generate(); });
+document.querySelectorAll('[data-color]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    themeColor = chip.dataset.color;
+    document.getElementById('themeColor').value = themeColor;
+    generate();
+  });
+});
+document.getElementById('showGrid').addEventListener('change', generate);
+document.getElementById('showLegend').addEventListener('change', generate);
+document.getElementById('showValues').addEventListener('change', generate);
 
 /* ===== Events ===== */
 document.getElementById('typeTabs').addEventListener('click', e => {
