@@ -292,10 +292,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="logo-preview" id="logoPreview">
             <img id="logoPreviewImg" src="" alt="">
             <span class="logo-preview-name" id="logoName"></span>
+            <button class="logo-remove" id="logoRemove" style="display:none">✕</button>
           </div>
         </div>
         <div class="logo-hint" id="logoHint" style="display:none">⚠️ 添加 Logo 时容错级别自动切换为 H (30%)</div>
-        <button class="logo-remove" id="logoRemove" style="display:none;margin-top:4px">✕ 移除</button>
       </div>
 
       <!-- 快捷模板 -->
@@ -578,7 +578,7 @@ document.getElementById('logoInput').addEventListener('change', (e) => {
     document.getElementById('logoPreviewImg').src = logoUrl;
     document.getElementById('logoName').textContent = file.name;
     document.getElementById('logoHint').style.display = '';
-    document.getElementById('logoRemove').style.display = '';
+    document.getElementById('logoRemove').style.display = 'flex';
     debouncedGenerate();
   };
   if (logoUrl) URL.revokeObjectURL(logoUrl);
@@ -586,7 +586,9 @@ document.getElementById('logoInput').addEventListener('change', (e) => {
   img.src = logoUrl;
 });
 
-document.getElementById('logoRemove').addEventListener('click', () => {
+document.getElementById('logoRemove').addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
   logoImg = null;
   if (logoUrl) { URL.revokeObjectURL(logoUrl); logoUrl = null; }
   document.getElementById('logoText').style.display = '';
