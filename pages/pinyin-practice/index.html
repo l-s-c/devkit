@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拼音练习 | Pinyin Practice — DevKit</title>
+<meta name="description" content="在线拼音练习生成器，看字写拼音、看拼音写字两种模式，按年级分难度，支持打印。">
+<meta name="keywords" content="拼音练习, 拼音题, 汉字拼音, 小学拼音, DevKit">
+<meta property="og:title" content="拼音练习 — DevKit">
+<meta property="og:description" content="按年级生成拼音练习题，可打印">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/pinyin-practice/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"拼音练习","url":"https://l-s-c.github.io/devkit/pages/pinyin-practice/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/pinyin-practice/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.num-input{width:60px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-family:var(--font-code);font-size:12px;text-align:center;outline:none;color:var(--text-primary)}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.py-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.py-card{padding:16px 8px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;transition:all 200ms}
+.py-char{font-size:36px;font-weight:800;margin-bottom:8px}
+.py-input{width:80px;padding:5px 4px;border-radius:6px;border:1.5px dashed var(--border-glass);background:rgba(99,102,241,0.05);text-align:center;font-size:13px;font-weight:700;outline:none;color:var(--text-primary)}
+.py-input:focus{border-color:var(--brand-500)}
+.py-input.correct{border-color:#10B981;background:rgba(16,185,129,0.08);color:#10B981}
+.py-input.wrong{border-color:#EF4444;background:rgba(239,68,68,0.08);color:#EF4444}
+.py-answer{font-size:12px;color:#10B981;font-weight:700;margin-top:4px;display:none}
+.grade-desc{font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400}
+@media print{
+  .topbar,.statusbar,.panel:first-child,.btn-row,.mesh-bg{display:none!important}
+  .panel{box-shadow:none;border:1px solid #ddd;backdrop-filter:none;background:#fff}
+  .py-input{border:1px solid #999;background:transparent}body{background:#fff}
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">拼音练习 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">拼音练习</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔤 拼音练习生成器</div>
+    <div class="config-row" id="modeRow">
+      <span class="config-label">模式</span>
+      <div class="pill active" data-v="char2py">看字写拼音</div>
+      <div class="pill" data-v="py2char">看拼音写字</div>
+    </div>
+    <div class="config-row" id="levelRow">
+      <span class="config-label">难度</span>
+      <div class="pill active" data-v="1">一年级常用字</div>
+      <div class="pill" data-v="2">二年级常用字</div>
+      <div class="pill" data-v="3">三年级常用字</div>
+    </div>
+    <div class="config-row">
+      <span class="config-label">题数</span>
+      <input class="num-input" id="countInput" type="number" value="20" min="5" max="50">
+      <span style="font-size:10px;color:var(--text-caption)">道（5-50）</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="genBtn">🎲 生成题目</button>
+      <button class="btn btn-secondary" id="ansBtn">👁️ 显示答案</button>
+      <button class="btn btn-secondary" id="checkBtn">✅ 检查答案</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📝 <span id="modeTitle">看字写拼音</span> <span class="grade-desc" id="gradeDesc">一年级 · 20 题</span></div>
+    <div class="py-grid" id="pyGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">拼音练习</span><div class="statusbar-spacer"></div><span>单音字精选 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+/* Single-pronunciation characters only (no polyphonic) — MVP */
+const DATA={
+  1:[
+    ['大','dà'],['小','xiǎo'],['山','shān'],['水','shuǐ'],['花','huā'],['鸟','niǎo'],['天','tiān'],['地','dì'],
+    ['人','rén'],['口','kǒu'],['手','shǒu'],['足','zú'],['日','rì'],['月','yuè'],['火','huǒ'],['石','shí'],
+    ['田','tián'],['土','tǔ'],['木','mù'],['禾','hé'],['竹','zhú'],['虫','chóng'],['牛','niú'],['马','mǎ'],
+    ['羊','yáng'],['鱼','yú'],['雨','yǔ'],['风','fēng'],['云','yún'],['草','cǎo'],['门','mén'],['耳','ěr'],
+    ['目','mù'],['舌','shé'],['牙','yá'],['心','xīn'],['瓜','guā'],['果','guǒ'],['米','mǐ'],['豆','dòu'],
+    ['刀','dāo'],['尺','chǐ'],['寸','cùn'],['升','shēng'],['斤','jīn'],['两','liǎng'],['皮','pí'],['毛','máo'],
+    ['衣','yī'],['巾','jīn'],['桥','qiáo'],['苗','miáo'],['星','xīng'],['灯','dēng'],['春','chūn'],['冬','dōng'],
+    ['南','nán'],['北','běi'],['左','zuǒ'],['右','yòu'],['前','qián'],['后','hòu'],['远','yuǎn'],['近','jìn'],
+  ],
+  2:[
+    ['园','yuán'],['孔','kǒng'],['桥','qiáo'],['群','qún'],['队','duì'],['旗','qí'],['铜','tóng'],['号','hào'],
+    ['领','lǐng'],['巨','jù'],['位','wèi'],['每','měi'],['棉','mián'],['运','yùn'],['层','céng'],['丰','fēng'],
+    ['壮','zhuàng'],['波','bō'],['浪','làng'],['灾','zāi'],['难','nàn'],['炭','tàn'],['温','wēn'],['暖','nuǎn'],
+    ['岁','suì'],['宝','bǎo'],['趁','chèn'],['掉','diào'],['吐','tǔ'],['忽','hū'],['喊','hǎn'],['挤','jǐ'],
+    ['邻','lín'],['牧','mù'],['汗','hàn'],['伯','bó'],['刺','cì'],['滑','huá'],['炉','lú'],['烟','yān'],
+    ['胆','dǎn'],['敢','gǎn'],['勇','yǒng'],['辉','huī'],['困','kùn'],['钱','qián'],['骨','gǔ'],['筋','jīn'],
+    ['谜','mí'],['传','chuán'],['染','rǎn'],['授','shòu'],['挑','tiāo'],['担','dān'],['窄','zhǎi'],['端','duān'],
+    ['粮','liáng'],['稳','wěn'],['胶','jiāo'],['辨','biàn'],['愿','yuàn'],['符','fú'],['帐','zhàng'],['篇','piān'],
+  ],
+  3:[
+    ['坪','píng'],['坝','bà'],['戴','dài'],['招','zhāo'],['蝴','hú'],['蝶','dié'],['孔','kǒng'],['雀','què'],
+    ['锦','jǐn'],['绒','róng'],['朝','zhāo'],['霞','xiá'],['辫','biàn'],['耍','shuǎ'],['装','zhuāng'],['扮','bàn'],
+    ['朗','lǎng'],['读','dú'],['抖','dǒu'],['搂','lǒu'],['狂','kuáng'],['累','lèi'],['鼓','gǔ'],['掌','zhǎng'],
+    ['融','róng'],['燃','rán'],['罩','zhào'],['淹','yān'],['塌','tā'],['渠','qú'],['灌','guàn'],['稻','dào'],
+    ['粮','liáng'],['碾','niǎn'],['销','xiāo'],['毫','háo'],['废','fèi'],['饲','sì'],['侦','zhēn'],['嫌','xián'],
+    ['拴','shuān'],['饶','ráo'],['纠','jiū'],['缠','chán'],['陌','mò'],['谦','qiān'],['虚','xū'],['嘲','cháo'],
+    ['讽','fěng'],['惩','chéng'],['辩','biàn'],['论','lùn'],['创','chuàng'],['幻','huàn'],['核','hé'],['奥','ào'],
+    ['益','yì'],['联','lián'],['质','zhì'],['哲','zhé'],['贡','gòng'],['域','yù'],['纲','gāng'],['媒','méi'],
+  ],
+};
+
+let mode='char2py',level=1,showAns=false;
+
+['modeRow','levelRow'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    const p=e.target.closest('.pill');if(!p)return;
+    document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    if(id==='modeRow')mode=p.dataset.v;
+    else level=parseInt(p.dataset.v);
+  });
+});
+
+function pickN(arr,n){const s=[...arr];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s.slice(0,n)}
+
+function generate(){
+  const count=Math.max(5,Math.min(50,parseInt(document.getElementById('countInput').value)||20));
+  const pool=DATA[level]||DATA[1];
+  const picks=pickN(pool,Math.min(count,pool.length));
+  document.getElementById('modeTitle').textContent=mode==='char2py'?'看字写拼音':'看拼音写字';
+  document.getElementById('gradeDesc').textContent=['一','二','三'][level-1]+'年级 · '+picks.length+' 题';
+  const grid=document.getElementById('pyGrid');
+  grid.innerHTML=picks.map(([ch,py])=>{
+    if(mode==='char2py'){
+      return `<div class="py-card"><div class="py-char">${ch}</div><input class="py-input" placeholder="拼音" data-ans="${py}"><div class="py-answer">${py}</div></div>`;
+    }else{
+      return `<div class="py-card"><div class="py-char" style="font-size:18px;color:var(--brand-500)">${py}</div><input class="py-input" placeholder="汉字" data-ans="${ch}"><div class="py-answer">${ch}</div></div>`;
+    }
+  }).join('');
+  showAns=false;
+}
+
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('ansBtn').addEventListener('click',()=>{
+  showAns=!showAns;
+  document.querySelectorAll('.py-answer').forEach(el=>el.style.display=showAns?'block':'none');
+  document.getElementById('ansBtn').textContent=showAns?'✏️ 隐藏答案':'👁️ 显示答案';
+});
+document.getElementById('checkBtn').addEventListener('click',()=>{
+  let correct=0,total=0;
+  document.querySelectorAll('.py-input').forEach(input=>{
+    const val=input.value.trim().toLowerCase();
+    const ans=input.dataset.ans;
+    if(!val)return;
+    total++;
+    input.classList.remove('correct','wrong');
+    if(val===ans){input.classList.add('correct');correct++}
+    else{input.classList.add('wrong')}
+  });
+  document.getElementById('statusInfo').textContent=total?`✅ ${correct}/${total} 正确`:'请先填写答案';
+});
+generate();
+</script>
+<noscript><p>拼音练习 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

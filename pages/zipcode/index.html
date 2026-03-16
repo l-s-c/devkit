@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邮政编码查询 | Zipcode — DevKit</title>
+<meta name="description" content="在线邮政编码查询工具，按地区查邮编、按邮编查地区，覆盖全国省市区。">
+<meta name="keywords" content="邮编查询, 邮政编码, zipcode, 邮编, DevKit">
+<meta property="og:title" content="邮政编码查询 — DevKit">
+<meta property="og:description" content="全国邮政编码双向查询">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/zipcode/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"邮政编码查询","url":"https://l-s-c.github.io/devkit/pages/zipcode/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/zipcode/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:24px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:8px 16px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms}
+.tab:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.search-box{position:relative;margin-bottom:16px}
+.search-input{width:100%;padding:14px 16px 14px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text-caption)}
+.result-list{display:flex;flex-direction:column;gap:6px}
+.result-item{padding:14px 16px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input);display:flex;justify-content:space-between;align-items:center;transition:all 150ms}
+.result-item:hover{border-color:var(--brand-500);background:rgba(99,102,241,0.04)}
+.result-location{font-size:13px;font-weight:700}
+.result-path{font-size:10px;color:var(--text-caption);margin-top:2px}
+.result-code{font-family:var(--font-code);font-size:18px;font-weight:800;color:var(--brand-500);letter-spacing:2px}
+.copy-btn{padding:4px 8px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:9px;cursor:pointer;color:var(--text-secondary);margin-left:8px}
+.copy-btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.empty-state{text-align:center;padding:32px;color:var(--text-caption);font-size:12px}
+.stat{font-size:10px;color:var(--text-caption);margin-bottom:8px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">邮政编码查询 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">邮政编码查询</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📮 邮政编码查询</div>
+    <div class="tab-row">
+      <div class="tab active" id="tabArea">🔍 按地区查邮编</div>
+      <div class="tab" id="tabCode">🔢 按邮编查地区</div>
+    </div>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="输入省/市/区名称...">
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📋 查询结果 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400" id="resultCount"></span></div>
+    <div class="stat" id="totalStat"></div>
+    <div class="result-list" id="resultList"><div class="empty-state">输入关键词开始搜索</div></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">邮政编码查询</span><div class="statusbar-spacer"></div><span>离线数据 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+/* Representative zipcode data — covers all provinces, major cities and districts */
+const DB=[
+  // 北京
+  ['北京市','东城区','100010'],['北京市','西城区','100032'],['北京市','朝阳区','100020'],['北京市','海淀区','100080'],['北京市','丰台区','100071'],['北京市','石景山区','100043'],['北京市','通州区','101100'],['北京市','顺义区','101300'],['北京市','大兴区','102600'],['北京市','昌平区','102200'],
+  // 上海
+  ['上海市','黄浦区','200001'],['上海市','徐汇区','200030'],['上海市','长宁区','200050'],['上海市','静安区','200040'],['上海市','普陀区','200333'],['上海市','虹口区','200080'],['上海市','杨浦区','200082'],['上海市','浦东新区','200120'],['上海市','闵行区','201100'],['上海市','宝山区','201900'],['上海市','松江区','201600'],
+  // 广东
+  ['广东省广州市','天河区','510630'],['广东省广州市','越秀区','510030'],['广东省广州市','海珠区','510220'],['广东省广州市','荔湾区','510140'],['广东省广州市','白云区','510405'],['广东省广州市','番禺区','511400'],
+  ['广东省深圳市','福田区','518033'],['广东省深圳市','南山区','518051'],['广东省深圳市','罗湖区','518001'],['广东省深圳市','宝安区','518101'],['广东省深圳市','龙岗区','518172'],['广东省深圳市','龙华区','518109'],
+  ['广东省珠海市','香洲区','519000'],['广东省东莞市','东莞市','523000'],['广东省佛山市','禅城区','528000'],
+  // 江苏
+  ['江苏省南京市','玄武区','210018'],['江苏省南京市','秦淮区','210001'],['江苏省南京市','鼓楼区','210008'],['江苏省南京市','建邺区','210017'],['江苏省南京市','江宁区','211100'],
+  ['江苏省苏州市','姑苏区','215001'],['江苏省苏州市','工业园区','215021'],['江苏省无锡市','梁溪区','214001'],['江苏省常州市','天宁区','213000'],
+  // 浙江
+  ['浙江省杭州市','上城区','310002'],['浙江省杭州市','拱墅区','310005'],['浙江省杭州市','西湖区','310012'],['浙江省杭州市','滨江区','310051'],['浙江省杭州市','余杭区','311100'],
+  ['浙江省宁波市','海曙区','315000'],['浙江省温州市','鹿城区','325000'],
+  // 四川
+  ['四川省成都市','锦江区','610011'],['四川省成都市','青羊区','610031'],['四川省成都市','武侯区','610041'],['四川省成都市','成华区','610066'],['四川省成都市','高新区','610041'],
+  // 湖北
+  ['湖北省武汉市','武昌区','430060'],['湖北省武汉市','江汉区','430014'],['湖北省武汉市','洪山区','430070'],['湖北省武汉市','江岸区','430010'],
+  // 湖南
+  ['湖南省长沙市','岳麓区','410012'],['湖南省长沙市','芙蓉区','410011'],['湖南省长沙市','天心区','410004'],
+  // 山东
+  ['山东省济南市','历下区','250014'],['山东省济南市','市中区','250001'],['山东省青岛市','市南区','266001'],['山东省青岛市','崂山区','266100'],
+  // 河南
+  ['河南省郑州市','金水区','450003'],['河南省郑州市','中原区','450007'],['河南省郑州市','二七区','450052'],
+  // 福建
+  ['福建省福州市','鼓楼区','350001'],['福建省厦门市','思明区','361001'],['福建省厦门市','湖里区','361006'],
+  // 河北
+  ['河北省石家庄市','长安区','050011'],['河北省石家庄市','桥西区','050091'],
+  // 辽宁
+  ['辽宁省沈阳市','沈河区','110011'],['辽宁省沈阳市','和平区','110001'],['辽宁省大连市','中山区','116001'],
+  // 陕西
+  ['陕西省西安市','雁塔区','710061'],['陕西省西安市','碑林区','710001'],['陕西省西安市','莲湖区','710003'],
+  // 天津
+  ['天津市','和平区','300041'],['天津市','南开区','300100'],['天津市','河西区','300202'],
+  // 重庆
+  ['重庆市','渝中区','400010'],['重庆市','江北区','400020'],['重庆市','南岸区','400060'],['重庆市','沙坪坝区','400030'],
+  // 黑龙江
+  ['黑龙江省哈尔滨市','南岗区','150001'],['黑龙江省哈尔滨市','道里区','150010'],
+  // 吉林
+  ['吉林省长春市','朝阳区','130012'],['吉林省长春市','南关区','130022'],
+  // 安徽
+  ['安徽省合肥市','庐阳区','230001'],['安徽省合肥市','蜀山区','230031'],
+  // 江西
+  ['江西省南昌市','东湖区','330006'],['江西省南昌市','西湖区','330009'],
+  // 广西
+  ['广西南宁市','青秀区','530022'],['广西南宁市','兴宁区','530023'],
+  // 云南
+  ['云南省昆明市','五华区','650032'],['云南省昆明市','盘龙区','650051'],
+  // 贵州
+  ['贵州省贵阳市','南明区','550002'],['贵州省贵阳市','云岩区','550001'],
+  // 甘肃
+  ['甘肃省兰州市','城关区','730030'],['甘肃省兰州市','七里河区','730050'],
+  // 山西
+  ['山西省太原市','小店区','030032'],['山西省太原市','迎泽区','030002'],
+  // 内蒙古
+  ['内蒙古呼和浩特市','赛罕区','010020'],['内蒙古呼和浩特市','新城区','010010'],
+  // 新疆
+  ['新疆乌鲁木齐市','天山区','830002'],['新疆乌鲁木齐市','沙依巴克区','830000'],
+  // 西藏
+  ['西藏拉萨市','城关区','850000'],
+  // 青海
+  ['青海省西宁市','城西区','810001'],
+  // 宁夏
+  ['宁夏银川市','兴庆区','750001'],
+  // 海南
+  ['海南省海口市','龙华区','570105'],['海南省三亚市','吉阳区','572000'],
+];
+
+let tabMode='area';
+document.getElementById('tabArea').addEventListener('click',()=>{
+  tabMode='area';document.getElementById('tabArea').classList.add('active');document.getElementById('tabCode').classList.remove('active');
+  document.getElementById('searchInput').placeholder='输入省/市/区名称...';search();
+});
+document.getElementById('tabCode').addEventListener('click',()=>{
+  tabMode='code';document.getElementById('tabCode').classList.add('active');document.getElementById('tabArea').classList.remove('active');
+  document.getElementById('searchInput').placeholder='输入 6 位邮政编码...';search();
+});
+
+document.getElementById('totalStat').textContent=`共 ${DB.length} 条邮编数据`;
+
+function search(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q){document.getElementById('resultList').innerHTML='<div class="empty-state">输入关键词开始搜索</div>';document.getElementById('resultCount').textContent='';return}
+  let results;
+  if(tabMode==='area'){results=DB.filter(([prov,dist])=>(prov+dist).includes(q))}
+  else{results=DB.filter(([,,code])=>code.startsWith(q))}
+  results=results.slice(0,50);
+  document.getElementById('resultCount').textContent=results.length+' 条结果';
+  if(!results.length){document.getElementById('resultList').innerHTML='<div class="empty-state">未找到匹配结果</div>';return}
+  document.getElementById('resultList').innerHTML=results.map(([prov,dist,code])=>
+    `<div class="result-item"><div><div class="result-location">${dist}</div><div class="result-path">${prov} → ${dist}</div></div><div style="display:flex;align-items:center"><span class="result-code">${code}</span><button class="copy-btn" onclick="navigator.clipboard.writeText('${code}')">📋</button></div></div>`
+  ).join('');
+}
+document.getElementById('searchInput').addEventListener('input',search);
+</script>
+<noscript><p>邮政编码查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

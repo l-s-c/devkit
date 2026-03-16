@@ -149,6 +149,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <span class="tag" data-cat="design">🎨 设计</span>
     <span class="tag" data-cat="encode">🔐 编码</span>
     <span class="tag" data-cat="life">🏠 生活</span>
+    <span class="tag" data-cat="edu">📚 教育</span>
   </div>
 
   <div class="container">
@@ -256,6 +257,11 @@ const TOOLS = [
   { name:'UA 分析', desc:'User-Agent解析', emoji:'🔍', cat:'other', url:'./ua-parser/', hot:false },
   { name:'血型遗传', desc:'父母血型查子女血型', emoji:'🩸', cat:'other', url:'./blood-type/', hot:false },
   { name:'生肖查询', desc:'十二生肖+天干地支', emoji:'🐲', cat:'other', url:'./zodiac/', hot:false },
+  { name:'取名器', desc:'宝宝起名+五行+寓意', emoji:'👶', cat:'other', url:'./name-generator/', hot:true },
+  { name:'计算题生成', desc:'小学数学题+打印', emoji:'📐', cat:'edu', url:'./math-practice/', hot:true },
+  { name:'拼音练习', desc:'看字写拼音+打印', emoji:'🔤', cat:'edu', url:'./pinyin-practice/', hot:true },
+  { name:'邮政编码', desc:'全国邮编双向查询', emoji:'📮', cat:'other', url:'./zipcode/', hot:false },
+  { name:'高校查询', desc:'985/211/双一流筛选', emoji:'🏫', cat:'edu', url:'./university/', hot:false },
 ];
 
 let currentCat = 'all', searchQuery = '';

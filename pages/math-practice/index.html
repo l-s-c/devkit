@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>计算题生成 | Math Practice — DevKit</title>
+<meta name="description" content="在线小学计算题生成器，按年级自动控制难度，加减乘除可选，支持打印。答案100%正确。">
+<meta name="keywords" content="小学数学题, 计算题生成, 口算题, 数学练习, DevKit">
+<meta property="og:title" content="计算题生成 — DevKit">
+<meta property="og:description" content="按年级生成计算题，答案100%正确，可打印">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/math-practice/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"计算题生成","url":"https://l-s-c.github.io/devkit/pages/math-practice/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/math-practice/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.num-input{width:60px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-family:var(--font-code);font-size:12px;text-align:center;outline:none;color:var(--text-primary)}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.q-grid{grid-template-columns:1fr}}
+.q-item{padding:14px 16px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input);display:flex;align-items:center;gap:8px}
+.q-num{font-size:10px;font-weight:800;color:var(--text-caption);min-width:24px}
+.q-expr{font-family:var(--font-code);font-size:16px;font-weight:700;flex:1}
+.q-blank{width:48px;padding:4px;border-radius:4px;border:1.5px dashed var(--border-glass);background:rgba(99,102,241,0.05);text-align:center;font-family:var(--font-code);font-size:14px;font-weight:700;outline:none;color:var(--text-primary)}
+.q-answer{font-family:var(--font-code);font-size:14px;font-weight:800;color:#10B981;display:none}
+.grade-desc{font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400}
+@media print{
+  .topbar,.statusbar,.panel:first-child,.btn-row,.mesh-bg{display:none!important}
+  .panel{box-shadow:none;border:1px solid #ddd;backdrop-filter:none;background:#fff}
+  .q-blank{border:1px solid #999;background:transparent}
+  body{background:#fff}
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">计算题生成 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">计算题生成</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📐 计算题生成器</div>
+    <div class="config-row">
+      <span class="config-label">年级</span>
+      <div class="pill active" data-g="1">一年级</div>
+      <div class="pill" data-g="2">二年级</div>
+      <div class="pill" data-g="3">三年级</div>
+      <div class="pill" data-g="4">四年级</div>
+      <div class="pill" data-g="5">五年级</div>
+      <div class="pill" data-g="6">六年级</div>
+    </div>
+    <div class="config-row" id="opRow">
+      <span class="config-label">运算</span>
+      <div class="pill active" data-op="+">➕ 加</div>
+      <div class="pill active" data-op="-">➖ 减</div>
+      <div class="pill" data-op="×">✖️ 乘</div>
+      <div class="pill" data-op="÷">➗ 除</div>
+    </div>
+    <div class="config-row">
+      <span class="config-label">题数</span>
+      <input class="num-input" id="countInput" type="number" value="20" min="5" max="100">
+      <span style="font-size:10px;color:var(--text-caption)">道（5-100）</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="genBtn">🎲 生成题目</button>
+      <button class="btn btn-secondary" id="ansBtn">👁️ 显示答案</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+    </div>
+  </div>
+  <div class="panel" id="qPanel">
+    <div class="section-title">📝 练习题 <span class="grade-desc" id="gradeDesc">一年级 · 20以内加减</span></div>
+    <div class="q-grid" id="qGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">计算题生成</span><div class="statusbar-spacer"></div><span>答案100%正确 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+let grade=1,ops=new Set(['+','-']),showAns=false;
+
+const GRADE_DESC={1:'20以内加减',2:'100以内加减',3:'乘法表内',4:'万以内四则',5:'大数四则',6:'综合运算'};
+
+// Grade pill
+document.querySelectorAll('[data-g]').forEach(p=>p.addEventListener('click',()=>{
+  document.querySelectorAll('[data-g]').forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');grade=parseInt(p.dataset.g);
+}));
+// Op pill (toggle, keep at least 1)
+document.querySelectorAll('[data-op]').forEach(p=>p.addEventListener('click',()=>{
+  const op=p.dataset.op;
+  if(ops.has(op)){if(ops.size>1){ops.delete(op);p.classList.remove('active')}}
+  else{ops.add(op);p.classList.add('active')}
+}));
+
+function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+
+/* Core: generate from answer backwards → guaranteed correct, no negatives, no decimals */
+function makeQ(){
+  const opArr=[...ops];const op=opArr[rnd(0,opArr.length-1)];
+  let a,b,ans;
+  if(op==='+'){
+    if(grade<=1){ans=rnd(2,20);a=rnd(1,ans-1);b=ans-a}
+    else if(grade<=2){ans=rnd(2,100);a=rnd(1,ans-1);b=ans-a}
+    else if(grade<=4){ans=rnd(10,9999);a=rnd(1,ans-1);b=ans-a}
+    else{ans=rnd(100,99999);a=rnd(1,ans-1);b=ans-a}
+    return{expr:`${a} + ${b}`,ans};
+  }
+  if(op==='-'){
+    if(grade<=1){a=rnd(2,20);b=rnd(1,a-1);ans=a-b}
+    else if(grade<=2){a=rnd(2,100);b=rnd(1,a-1);ans=a-b}
+    else if(grade<=4){a=rnd(10,9999);b=rnd(1,a-1);ans=a-b}
+    else{a=rnd(100,99999);b=rnd(1,a-1);ans=a-b}
+    return{expr:`${a} - ${b}`,ans};
+  }
+  if(op==='×'){
+    if(grade<=3){a=rnd(1,9);b=rnd(1,9);ans=a*b}
+    else if(grade<=4){a=rnd(2,99);b=rnd(2,9);ans=a*b}
+    else{a=rnd(10,999);b=rnd(2,99);ans=a*b}
+    return{expr:`${a} × ${b}`,ans};
+  }
+  // ÷ — build from multiplication: ans = a/b, so a = ans * b
+  if(grade<=3){b=rnd(1,9);ans=rnd(1,9)}
+  else if(grade<=4){b=rnd(2,9);ans=rnd(2,99)}
+  else{b=rnd(2,99);ans=rnd(2,999)}
+  a=ans*b;
+  return{expr:`${a} ÷ ${b}`,ans};
+}
+
+function generate(){
+  const count=Math.max(5,Math.min(100,parseInt(document.getElementById('countInput').value)||20));
+  document.getElementById('gradeDesc').textContent=
+    ['一','二','三','四','五','六'][grade-1]+'年级 · '+GRADE_DESC[grade];
+  const grid=document.getElementById('qGrid');
+  const items=[];
+  for(let i=0;i<count;i++){
+    const q=makeQ();
+    items.push(`<div class="q-item"><span class="q-num">${i+1}.</span><span class="q-expr">${q.expr} =</span><input class="q-blank" type="text"><span class="q-answer">${q.ans}</span></div>`);
+  }
+  grid.innerHTML=items.join('');
+  showAns=false;
+  document.querySelectorAll('.q-answer').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.q-blank').forEach(el=>el.style.display='');
+  document.getElementById('ansBtn').textContent='👁️ 显示答案';
+}
+
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('ansBtn').addEventListener('click',()=>{
+  showAns=!showAns;
+  document.querySelectorAll('.q-answer').forEach(el=>el.style.display=showAns?'inline':'none');
+  document.querySelectorAll('.q-blank').forEach(el=>el.style.display=showAns?'none':'');
+  document.getElementById('ansBtn').textContent=showAns?'✏️ 隐藏答案':'👁️ 显示答案';
+});
+
+generate();
+</script>
+<noscript><p>计算题生成 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

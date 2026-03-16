@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>取名器 | Name Generator — DevKit</title>
+<meta name="description" content="在线宝宝取名器，随机生成名字，五行属性、笔画数、寓意解释，男孩女孩中性名。">
+<meta name="keywords" content="起名, 取名器, 宝宝起名, 名字生成器, 五行取名, DevKit">
+<meta property="og:title" content="取名器 — DevKit">
+<meta property="og:description" content="在线宝宝取名，五行+笔画+寓意">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/name-generator/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"取名器","url":"https://l-s-c.github.io/devkit/pages/name-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/name-generator/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:24px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.config-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end}
+@media(max-width:640px){.config-grid{grid-template-columns:1fr}}
+.field-label{font-size:10px;font-weight:700;color:var(--text-caption);margin-bottom:4px}
+.field-input{width:100%;padding:10px 12px;border-radius:6px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;font-weight:800;color:var(--text-primary);outline:none;text-align:center}
+.field-input:focus{border-color:var(--brand-500)}
+.pill-row{display:flex;gap:4px}
+.pill{padding:6px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;flex:1;text-align:center}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.btn-gen{width:100%;padding:14px;border-radius:10px;border:none;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:16px;transition:all 200ms}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.3)}
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.name-grid{grid-template-columns:1fr}}
+.name-card{padding:20px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms;position:relative}
+.name-card:hover{border-color:var(--brand-500);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.name-full{font-size:32px;font-weight:800;margin-bottom:8px;letter-spacing:8px}
+.name-meta{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.meta-tag{padding:3px 8px;border-radius:8px;font-size:9px;font-weight:700}
+.tag-wuxing{background:rgba(245,158,11,0.1);color:#D97706}
+.tag-strokes{background:rgba(99,102,241,0.08);color:#6366F1}
+.tag-gender{background:rgba(16,185,129,0.08);color:#059669}
+.name-meaning{font-size:11px;color:var(--text-secondary);line-height:1.5}
+.name-fav{position:absolute;top:8px;right:8px;font-size:16px;cursor:pointer;opacity:0.3;transition:opacity 150ms;background:none;border:none}
+.name-fav:hover,.name-fav.liked{opacity:1}
+.note{font-size:10px;color:var(--text-caption);text-align:center;margin-top:12px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">取名器 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">取名器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">👶 取名器</div>
+    <div class="config-grid">
+      <div>
+        <div class="field-label">姓氏</div>
+        <input class="field-input" id="surname" value="李" maxlength="2">
+      </div>
+      <div>
+        <div class="field-label">性别偏好</div>
+        <div class="pill-row" id="genderRow">
+          <div class="pill active" data-v="male">👦 男</div>
+          <div class="pill" data-v="female">👧 女</div>
+          <div class="pill" data-v="neutral">🌟 中性</div>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">字数</div>
+        <div class="pill-row" id="lenRow">
+          <div class="pill" data-v="1">单字</div>
+          <div class="pill active" data-v="2">双字</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-gen" id="genBtn">🎲 生成名字</button>
+  </div>
+  <div class="panel">
+    <div class="section-title">✨ 推荐名字 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400">点击 ❤️ 收藏</span></div>
+    <div class="name-grid" id="nameGrid"></div>
+    <div class="note">⚠️ 笔画数参考康熙字典，五行属性仅供参考，不作起名决策依据</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">取名器</span><div class="statusbar-spacer"></div><span>姓名库 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const WX_ICON={'金':'⚙️','木':'🌲','水':'💧','火':'🔥','土':'🌍'};
+const MALE_CHARS=[
+  {c:'明',wx:'火',st:8,m:'光明、聪慧'},{c:'轩',wx:'土',st:10,m:'气宇轩昂'},{c:'泽',wx:'水',st:17,m:'恩泽润物'},
+  {c:'宇',wx:'土',st:6,m:'宇宙广阔'},{c:'博',wx:'水',st:12,m:'博学多才'},{c:'浩',wx:'水',st:11,m:'浩然正气'},
+  {c:'睿',wx:'金',st:14,m:'聪睿通达'},{c:'铭',wx:'金',st:14,m:'铭记于心'},{c:'辰',wx:'土',st:7,m:'星辰北极'},
+  {c:'翰',wx:'水',st:16,m:'翰墨书香'},{c:'瑞',wx:'金',st:14,m:'祥瑞吉兆'},{c:'骏',wx:'金',st:17,m:'骏马奔腾'},
+  {c:'峰',wx:'土',st:10,m:'山峰巍峨'},{c:'昊',wx:'火',st:8,m:'昊天广大'},{c:'逸',wx:'土',st:15,m:'飘逸洒脱'},
+  {c:'煜',wx:'火',st:13,m:'光煜照耀'},{c:'晨',wx:'金',st:11,m:'清晨朝气'},{c:'恒',wx:'水',st:10,m:'恒久不变'},
+  {c:'志',wx:'火',st:7,m:'志存高远'},{c:'杰',wx:'木',st:12,m:'英杰出众'},{c:'鸿',wx:'水',st:17,m:'鸿鹄之志'},
+  {c:'彦',wx:'木',st:9,m:'有才德者'},{c:'楠',wx:'木',st:13,m:'楠木坚韧'},{c:'旭',wx:'火',st:6,m:'旭日东升'},
+  {c:'霆',wx:'水',st:15,m:'雷霆万钧'},{c:'毅',wx:'木',st:15,m:'坚毅果敢'},{c:'磊',wx:'土',st:15,m:'光明磊落'},
+  {c:'承',wx:'金',st:8,m:'承前启后'},{c:'皓',wx:'木',st:12,m:'皓月当空'},{c:'韬',wx:'火',st:19,m:'文韬武略'},
+  {c:'安',wx:'土',st:6,m:'安定祥和'},{c:'然',wx:'金',st:12,m:'怡然自得'},{c:'凯',wx:'木',st:12,m:'凯旋而归'},
+  {c:'文',wx:'水',st:4,m:'文采斐然'},{c:'天',wx:'火',st:4,m:'天资聪颖'},{c:'伟',wx:'土',st:11,m:'伟大宏图'},
+];
+const FEMALE_CHARS=[
+  {c:'语',wx:'木',st:14,m:'言语温柔'},{c:'晗',wx:'火',st:11,m:'天将明、希望'},{c:'诗',wx:'金',st:13,m:'诗情画意'},
+  {c:'涵',wx:'水',st:12,m:'涵养包容'},{c:'萱',wx:'木',st:15,m:'萱草忘忧'},{c:'雨',wx:'水',st:8,m:'润物细雨'},
+  {c:'欣',wx:'木',st:8,m:'欣欣向荣'},{c:'怡',wx:'土',st:9,m:'怡然自乐'},{c:'琳',wx:'木',st:13,m:'美玉琳琅'},
+  {c:'婉',wx:'土',st:11,m:'温婉贤淑'},{c:'瑶',wx:'火',st:15,m:'美玉如瑶'},{c:'梦',wx:'木',st:14,m:'梦想成真'},
+  {c:'若',wx:'木',st:11,m:'若兮淡雅'},{c:'薇',wx:'木',st:19,m:'蔷薇花开'},{c:'颖',wx:'木',st:16,m:'聪颖出众'},
+  {c:'思',wx:'金',st:9,m:'思维敏捷'},{c:'悦',wx:'金',st:11,m:'喜悦心情'},{c:'雪',wx:'水',st:11,m:'冰雪聪明'},
+  {c:'馨',wx:'金',st:20,m:'温馨芬芳'},{c:'静',wx:'金',st:16,m:'宁静致远'},{c:'妍',wx:'水',st:7,m:'美丽妍丽'},
+  {c:'芷',wx:'木',st:10,m:'芷兰之化'},{c:'珺',wx:'木',st:12,m:'美玉珺琪'},{c:'澜',wx:'水',st:21,m:'波澜壮阔'},
+  {c:'曦',wx:'火',st:20,m:'晨曦微光'},{c:'蕊',wx:'木',st:18,m:'花蕊吐芳'},{c:'岚',wx:'土',st:12,m:'山岚缥缈'},
+  {c:'依',wx:'土',st:8,m:'温柔可依'},{c:'舒',wx:'金',st:12,m:'舒心畅快'},{c:'心',wx:'金',st:4,m:'心灵纯净'},
+  {c:'月',wx:'木',st:4,m:'皎月生辉'},{c:'清',wx:'水',st:12,m:'清新脱俗'},{c:'柔',wx:'金',st:9,m:'温柔似水'},
+];
+const NEUTRAL_CHARS=[
+  {c:'安',wx:'土',st:6,m:'安定祥和'},{c:'然',wx:'金',st:12,m:'怡然自得'},{c:'文',wx:'水',st:4,m:'文采斐然'},
+  {c:'思',wx:'金',st:9,m:'思维敏捷'},{c:'宇',wx:'土',st:6,m:'宇宙广阔'},{c:'晨',wx:'金',st:11,m:'清晨朝气'},
+  {c:'乐',wx:'火',st:15,m:'快乐欢欣'},{c:'瑞',wx:'金',st:14,m:'祥瑞吉兆'},{c:'嘉',wx:'木',st:14,m:'嘉言懿行'},
+  {c:'辰',wx:'土',st:7,m:'星辰北极'},{c:'禹',wx:'土',st:9,m:'大禹治水'},{c:'可',wx:'木',st:5,m:'可爱可亲'},
+  {c:'言',wx:'木',st:7,m:'一言九鼎'},{c:'一',wx:'土',st:1,m:'一心一意'},{c:'知',wx:'火',st:8,m:'求知若渴'},
+  {c:'书',wx:'金',st:10,m:'书香门第'},{c:'羽',wx:'土',st:6,m:'羽翼丰满'},{c:'恬',wx:'火',st:10,m:'恬淡自然'},
+];
+
+let gender='male',nameLen=2;
+function getPool(){return gender==='male'?MALE_CHARS:gender==='female'?FEMALE_CHARS:NEUTRAL_CHARS}
+function genderLabel(){return gender==='male'?'👦 男':gender==='female'?'👧 女':'🌟 中性'}
+
+function pickRandom(arr,n){const s=[...arr];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s.slice(0,n)}
+
+function generate(){
+  const surname=document.getElementById('surname').value.trim()||'李';
+  const pool=getPool();
+  const grid=document.getElementById('nameGrid');
+  const cards=[];
+  const count=6;
+  if(nameLen===1){
+    const picks=pickRandom(pool,count);
+    picks.forEach(p=>{
+      const strokes=p.st;
+      cards.push(makeCard(surname,p.c,'',p.wx,'',strokes,p.m,''));
+    });
+  }else{
+    for(let i=0;i<count;i++){
+      const [a,b]=pickRandom(pool,2);
+      const strokes=a.st+b.st;
+      cards.push(makeCard(surname,a.c,b.c,a.wx,b.wx,strokes,a.m+'；'+b.m.split('、')[0],''));
+    }
+  }
+  grid.innerHTML=cards.join('');
+}
+
+function makeCard(surname,c1,c2,wx1,wx2,strokes,meaning){
+  const wxText=wx2?`${WX_ICON[wx1]} ${wx1} + ${WX_ICON[wx2]} ${wx2}`:`${WX_ICON[wx1]} ${wx1}`;
+  const fullName=c2?`${surname} ${c1} ${c2}`:`${surname} ${c1}`;
+  return `<div class="name-card">
+    <button class="name-fav" onclick="this.classList.toggle('liked')">❤️</button>
+    <div class="name-full">${fullName}</div>
+    <div class="name-meta">
+      <span class="meta-tag tag-wuxing">${wxText}</span>
+      <span class="meta-tag tag-strokes">${strokes} 画</span>
+      <span class="meta-tag tag-gender">${genderLabel()}</span>
+    </div>
+    <div class="name-meaning">${meaning}</div>
+  </div>`;
+}
+
+// pill click handlers
+document.getElementById('genderRow').addEventListener('click',e=>{
+  const p=e.target.closest('.pill');if(!p)return;
+  gender=p.dataset.v;
+  document.querySelectorAll('#genderRow .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
+});
+document.getElementById('lenRow').addEventListener('click',e=>{
+  const p=e.target.closest('.pill');if(!p)return;
+  nameLen=parseInt(p.dataset.v);
+  document.querySelectorAll('#lenRow .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
+});
+document.getElementById('genBtn').addEventListener('click',generate);
+generate();
+</script>
+<noscript><p>取名器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
