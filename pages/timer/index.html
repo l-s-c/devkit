@@ -302,7 +302,7 @@ function resetTimer() {
   document.getElementById('fsTime').classList.remove('finished');
   document.getElementById('startBtn').innerHTML = '▶️ 开始';
   document.getElementById('startBtn').className = 'ctrl-btn btn-start';
-  document.getElementById('timeLabel').textContent = '设定时间后点击开始';
+  document.getElementById('timeLabel').textContent = mode === 'countdown' ? '设定时间后点击开始' : '点击开始计时';
   document.getElementById('statusInfo').textContent = '在线计时器';
 }
 
