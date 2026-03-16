@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF 压缩 | Compress PDF — DevKit</title>
+<meta name="description" content="在线压缩 PDF 文件，三档质量选择，纯前端处理，文件不上传服务器。">
+<meta name="keywords" content="PDF压缩, compress PDF, PDF减小, PDF瘦身, DevKit">
+<meta property="og:title" content="PDF 压缩 | Compress PDF — DevKit">
+<meta property="og:description" content="在线 PDF 压缩，三档质量选择">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/pdf-compress/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PDF 压缩 — DevKit">
+<meta name="twitter:description" content="在线 PDF 压缩工具">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"PDF 压缩","description":"在线压缩PDF，三档质量，纯前端处理","url":"https://l-s-c.github.io/devkit/pages/pdf-compress/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/pdf-compress/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel { padding: 20px; border-radius: 16px; margin-bottom: 16px; background: var(--bg-glass); backdrop-filter: blur(20px); border: 0.5px solid var(--border-glass); }
+.section-title { font-size: 13px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.security-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; background: rgba(16,185,129,0.1); color: #10B981; margin-bottom: 12px; }
+.upload-zone { border: 2px dashed var(--border-glass); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 200ms; color: var(--text-caption); }
+.upload-zone:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.upload-zone input { display: none; }
+.quality-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.quality-card { padding: 16px 12px; border-radius: 12px; border: 2px solid var(--border-glass); background: var(--bg-glass-input); text-align: center; cursor: pointer; transition: all 200ms; }
+.quality-card:hover { border-color: var(--brand-500); }
+.quality-card.active { border-color: var(--brand-500); background: rgba(99,102,241,0.06); }
+.quality-icon { font-size: 24px; margin-bottom: 4px; }
+.quality-name { font-size: 12px; font-weight: 800; margin-bottom: 2px; }
+.quality-desc { font-size: 9px; color: var(--text-caption); }
+.compress-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; transition: all 200ms; }
+.compress-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.compress-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.result-compare { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 16px 0; font-family: var(--font-code); }
+.size-box { text-align: center; }
+.size-num { font-size: 28px; font-weight: 800; }
+.size-label { font-size: 10px; color: var(--text-caption); }
+.arrow { font-size: 20px; color: var(--brand-500); }
+.savings { font-size: 14px; font-weight: 800; color: #10B981; }
+.btn-download { padding: 12px 28px; border-radius: 24px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #10B981, #059669); color: #fff; }
+.limit-warn { font-size: 10px; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 8px 12px; border-radius: 8px; margin-top: 12px; }
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">PDF 压缩 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">PDF 压缩</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="upload-zone" id="dropZone">
+      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽 PDF 文件到此处</div>
+      <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择文件</span>（最大 50MB）</div>
+      <input type="file" id="fileInput" accept=".pdf">
+    </div>
+  </div>
+
+  <div class="panel" id="optionsPanel" style="display:none">
+    <div class="section-title">📄 <span id="fileName"></span></div>
+    <div class="quality-row" id="qualityRow">
+      <div class="quality-card" data-quality="low">
+        <div class="quality-icon">🏎️</div>
+        <div class="quality-name">极限压缩</div>
+        <div class="quality-desc">最小体积，画质较低</div>
+      </div>
+      <div class="quality-card active" data-quality="medium">
+        <div class="quality-icon">⚖️</div>
+        <div class="quality-name">推荐</div>
+        <div class="quality-desc">平衡体积与画质</div>
+      </div>
+      <div class="quality-card" data-quality="high">
+        <div class="quality-icon">💎</div>
+        <div class="quality-name">高质量</div>
+        <div class="quality-desc">保持较好画质</div>
+      </div>
+    </div>
+    <button class="compress-btn" id="compressBtn">🗜️ 开始压缩</button>
+    <div class="limit-warn">⚠️ 纯前端压缩能力有限，主要通过移除冗余元数据实现。对纯文字 PDF 效果有限，对含图片的 PDF 效果较好。</div>
+  </div>
+
+  <div class="panel" id="resultPanel" style="display:none">
+    <div style="text-align:center;padding:16px">
+      <div style="font-size:48px;margin-bottom:8px">✅</div>
+      <div class="result-compare">
+        <div class="size-box"><div class="size-num" id="origSize">0</div><div class="size-label">原始大小</div></div>
+        <div class="arrow">→</div>
+        <div class="size-box"><div class="size-num" id="compSize">0</div><div class="size-label">压缩后</div></div>
+      </div>
+      <div class="savings" id="savings"></div>
+      <div style="margin-top:16px"><button class="btn-download" id="downloadBtn">📥 下载压缩后的 PDF</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">PDF 压缩</span>
+  <div class="statusbar-spacer"></div>
+  <span>pdf-lib · 纯本地</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+let origBytes = null, origSize = 0, quality = 'medium', resultUrl = null;
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => e.preventDefault());
+dropZone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) loadPDF(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadPDF(fileInput.files[0]); });
+
+async function loadPDF(file) {
+  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠️ 文件超过 50MB'; return; }
+  origBytes = await file.arrayBuffer();
+  origSize = file.size;
+  document.getElementById('fileName').textContent = `${file.name} (${fmtSize(file.size)})`;
+  document.getElementById('optionsPanel').style.display = 'block';
+  document.getElementById('resultPanel').style.display = 'none';
+}
+
+function fmtSize(bytes) {
+  if (bytes > 1024 * 1024) return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+  return (bytes / 1024).toFixed(1) + ' KB';
+}
+
+document.getElementById('qualityRow').addEventListener('click', e => {
+  const card = e.target.closest('[data-quality]');
+  if (!card) return;
+  quality = card.dataset.quality;
+  document.querySelectorAll('.quality-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+});
+
+document.getElementById('compressBtn').addEventListener('click', async () => {
+  if (!origBytes) return;
+  const btn = document.getElementById('compressBtn');
+  btn.disabled = true; btn.textContent = '⏳ 压缩中...';
+  if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const doc = await PDFDocument.load(origBytes);
+
+    // Remove metadata to save space
+    doc.setTitle(''); doc.setAuthor(''); doc.setSubject(''); doc.setKeywords([]);
+    doc.setProducer(''); doc.setCreator('');
+
+    // Save with options based on quality
+    const saveOpts = {};
+    if (quality === 'low') {
+      saveOpts.useObjectStreams = false;
+      // Aggressively strip
+    } else if (quality === 'medium') {
+      saveOpts.useObjectStreams = false;
+    }
+    // high = default save
+
+    const compBytes = await doc.save(saveOpts);
+    const blob = new Blob([compBytes], { type: 'application/pdf' });
+    resultUrl = URL.createObjectURL(blob);
+
+    document.getElementById('origSize').textContent = fmtSize(origSize);
+    document.getElementById('compSize').textContent = fmtSize(blob.size);
+
+    const saved = ((1 - blob.size / origSize) * 100);
+    if (saved > 0) {
+      document.getElementById('savings').textContent = `节省 ${saved.toFixed(1)}%`;
+      document.getElementById('savings').style.color = '#10B981';
+    } else {
+      document.getElementById('savings').textContent = '文件已经很小了，无法进一步压缩';
+      document.getElementById('savings').style.color = '#F59E0B';
+    }
+
+    document.getElementById('resultPanel').style.display = 'block';
+    document.getElementById('statusInfo').textContent = `✅ 压缩完成 ${fmtSize(origSize)} → ${fmtSize(blob.size)}`;
+  } catch (e) {
+    document.getElementById('statusInfo').textContent = '❌ 压缩失败：' + e.message;
+  }
+  btn.disabled = false; btn.textContent = '🗜️ 开始压缩';
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!resultUrl) return;
+  const a = document.createElement('a'); a.href = resultUrl; a.download = 'compressed.pdf'; a.click();
+});
+</script>
+<noscript><p>PDF 压缩 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoji 搜索 | Emoji Search — DevKit</title>
+<meta name="description" content="在线 Emoji 表情符号搜索复制工具，中英文搜索，分类浏览，点击一键复制。1500+ Emoji 大全。">
+<meta name="keywords" content="emoji搜索, emoji复制, 表情符号, emoji copy, emoji search, DevKit">
+<meta property="og:title" content="Emoji 搜索 | Emoji Search — DevKit">
+<meta property="og:description" content="1500+ Emoji 表情搜索复制工具">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/emoji-search/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Emoji 搜索 — DevKit">
+<meta name="twitter:description" content="在线 Emoji 搜索复制工具">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Emoji 搜索","description":"在线 Emoji 表情搜索复制，1500+ Emoji 大全","url":"https://l-s-c.github.io/devkit/pages/emoji-search/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/emoji-search/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel { padding: 20px; border-radius: 16px; margin-bottom: 16px; background: var(--bg-glass); backdrop-filter: blur(20px); border: 0.5px solid var(--border-glass); }
+.section-title { font-size: 13px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+.search-wrap { position: relative; margin-bottom: 16px; }
+.search-input { width: 100%; padding: 12px 16px 12px 40px; border-radius: 24px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-size: 14px; color: var(--text-primary); outline: none; transition: border-color 200ms; }
+.search-input:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-caption); }
+.search-count { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--text-caption); font-family: var(--font-code); }
+
+.cat-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; }
+.cat-pill { padding: 6px 12px; border-radius: 16px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-size: 11px; font-weight: 700; cursor: pointer; transition: all 150ms; white-space: nowrap; }
+.cat-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.cat-pill.active { background: var(--brand-500); color: #fff; border-color: var(--brand-500); }
+
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 4px; }
+.emoji-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 4px; border-radius: 6px; cursor: pointer; transition: all 150ms; user-select: none; }
+.emoji-cell:hover { background: rgba(99,102,241,0.08); transform: scale(1.1); }
+.emoji-cell:active { transform: scale(0.95); }
+.emoji-char { font-size: 28px; line-height: 1.2; }
+.emoji-name { font-size: 7px; color: var(--text-caption); margin-top: 2px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52px; }
+
+.recent-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.recent-item { font-size: 24px; padding: 4px 6px; border-radius: 6px; cursor: pointer; transition: all 150ms; }
+.recent-item:hover { background: rgba(99,102,241,0.08); transform: scale(1.15); }
+
+.empty-state { text-align: center; padding: 40px; color: var(--text-caption); font-size: 13px; }
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Emoji 搜索 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">Emoji 搜索</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel" id="recentArea" style="display:none">
+    <div class="section-title">🕐 最近使用</div>
+    <div class="recent-row" id="recentList"></div>
+  </div>
+
+  <div class="panel">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="搜索 Emoji... 试试「笑」「心」「cat」「火」">
+      <span class="search-count" id="searchCount"></span>
+    </div>
+    <div class="cat-row" id="catRow">
+      <div class="cat-pill active" data-cat="all">全部</div>
+      <div class="cat-pill" data-cat="smileys">😀 表情</div>
+      <div class="cat-pill" data-cat="people">👋 手势</div>
+      <div class="cat-pill" data-cat="animals">🐱 动物</div>
+      <div class="cat-pill" data-cat="food">🍔 食物</div>
+      <div class="cat-pill" data-cat="travel">🚗 旅行</div>
+      <div class="cat-pill" data-cat="activities">⚽ 活动</div>
+      <div class="cat-pill" data-cat="objects">💡 物品</div>
+      <div class="cat-pill" data-cat="symbols">❤️ 符号</div>
+      <div class="cat-pill" data-cat="flags">🏁 旗帜</div>
+    </div>
+    <div class="emoji-grid" id="emojiGrid"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">Emoji 搜索</span>
+  <div class="statusbar-spacer"></div>
+  <span>纯本地 · 零 API</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+/* Emoji dataset — comprehensive list with Chinese + English keywords */
+const EMOJIS = [
+  // Smileys
+  {e:'😀',n:'笑脸 grinning',c:'smileys'},{e:'😃',n:'大笑 smiley',c:'smileys'},{e:'😄',n:'开心 smile',c:'smileys'},
+  {e:'😁',n:'嘻嘻 beaming',c:'smileys'},{e:'😆',n:'眯眼笑 squinting',c:'smileys'},{e:'😅',n:'苦笑 sweat',c:'smileys'},
+  {e:'🤣',n:'地上笑 rofl',c:'smileys'},{e:'😂',n:'笑哭 joy tears',c:'smileys'},{e:'🙂',n:'微笑 slightly',c:'smileys'},
+  {e:'🙃',n:'倒脸 upside down',c:'smileys'},{e:'😉',n:'眨眼 wink',c:'smileys'},{e:'😊',n:'害羞 blush',c:'smileys'},
+  {e:'😇',n:'天使 halo angel',c:'smileys'},{e:'🥰',n:'被爱 hearts face',c:'smileys'},{e:'😍',n:'花痴 heart eyes',c:'smileys'},
+  {e:'🤩',n:'好棒 star struck',c:'smileys'},{e:'😘',n:'飞吻 kiss',c:'smileys'},{e:'😗',n:'亲亲 kissing',c:'smileys'},
+  {e:'😚',n:'闭眼亲 kissing closed',c:'smileys'},{e:'😙',n:'微笑亲 kissing smiling',c:'smileys'},
+  {e:'🥲',n:'含泪微笑 smiling tear',c:'smileys'},{e:'😋',n:'好吃 yummy savoring',c:'smileys'},
+  {e:'😛',n:'吐舌 tongue',c:'smileys'},{e:'😜',n:'眨眼吐舌 wink tongue',c:'smileys'},
+  {e:'🤪',n:'疯狂 zany crazy',c:'smileys'},{e:'😝',n:'眯眼吐舌 squinting tongue',c:'smileys'},
+  {e:'🤑',n:'发财 money mouth',c:'smileys'},{e:'🤗',n:'拥抱 hugging',c:'smileys'},
+  {e:'🤭',n:'偷笑 hand over mouth',c:'smileys'},{e:'🤫',n:'嘘 shushing quiet',c:'smileys'},
+  {e:'🤔',n:'思考 thinking',c:'smileys'},{e:'🤐',n:'闭嘴 zipper mouth',c:'smileys'},
+  {e:'🤨',n:'质疑 raised eyebrow',c:'smileys'},{e:'😐',n:'无表情 neutral',c:'smileys'},
+  {e:'😑',n:'冷漠 expressionless',c:'smileys'},{e:'😶',n:'沉默 no mouth',c:'smileys'},
+  {e:'😏',n:'得意 smirk',c:'smileys'},{e:'😒',n:'不高兴 unamused',c:'smileys'},
+  {e:'🙄',n:'翻白眼 rolling eyes',c:'smileys'},{e:'😬',n:'尴尬 grimacing',c:'smileys'},
+  {e:'🤥',n:'说谎 lying pinocchio',c:'smileys'},{e:'😌',n:'安详 relieved',c:'smileys'},
+  {e:'😔',n:'沮丧 pensive sad',c:'smileys'},{e:'😪',n:'困 sleepy',c:'smileys'},
+  {e:'🤤',n:'流口水 drooling',c:'smileys'},{e:'😴',n:'睡觉 sleeping zzz',c:'smileys'},
+  {e:'😷',n:'口罩 mask',c:'smileys'},{e:'🤒',n:'发烧 thermometer sick',c:'smileys'},
+  {e:'🤕',n:'受伤 bandage',c:'smileys'},{e:'🤢',n:'恶心 nauseated',c:'smileys'},
+  {e:'🤮',n:'呕吐 vomiting',c:'smileys'},{e:'🥵',n:'热 hot',c:'smileys'},
+  {e:'🥶',n:'冷 cold freezing',c:'smileys'},{e:'🥴',n:'醉 woozy drunk',c:'smileys'},
+  {e:'😵',n:'晕 dizzy',c:'smileys'},{e:'🤯',n:'爆炸 mind blown',c:'smileys'},
+  {e:'🤠',n:'牛仔 cowboy',c:'smileys'},{e:'🥳',n:'派对 party celebrate',c:'smileys'},
+  {e:'🥸',n:'伪装 disguised',c:'smileys'},{e:'😎',n:'墨镜 cool sunglasses',c:'smileys'},
+  {e:'🤓',n:'书呆子 nerd glasses',c:'smileys'},{e:'🧐',n:'单片眼镜 monocle',c:'smileys'},
+  {e:'😕',n:'困惑 confused',c:'smileys'},{e:'😟',n:'担心 worried',c:'smileys'},
+  {e:'🙁',n:'微微不开心 frowning',c:'smileys'},{e:'😮',n:'惊讶 open mouth',c:'smileys'},
+  {e:'😯',n:'沉默惊讶 hushed',c:'smileys'},{e:'😲',n:'震惊 astonished',c:'smileys'},
+  {e:'😳',n:'脸红 flushed embarrassed',c:'smileys'},{e:'🥺',n:'可怜 pleading puppy',c:'smileys'},
+  {e:'😦',n:'皱眉 frowning open',c:'smileys'},{e:'😧',n:'痛苦 anguished',c:'smileys'},
+  {e:'😨',n:'害怕 fearful scared',c:'smileys'},{e:'😰',n:'焦虑 anxious sweat',c:'smileys'},
+  {e:'😥',n:'失望 disappointed relieved',c:'smileys'},{e:'😢',n:'哭 crying',c:'smileys'},
+  {e:'😭',n:'大哭 loudly crying',c:'smileys'},{e:'😱',n:'吓到 screaming fear',c:'smileys'},
+  {e:'😖',n:'困扰 confounded',c:'smileys'},{e:'😣',n:'忍耐 persevering',c:'smileys'},
+  {e:'😞',n:'失望 disappointed',c:'smileys'},{e:'😓',n:'冷汗 downcast sweat',c:'smileys'},
+  {e:'😩',n:'疲惫 weary tired',c:'smileys'},{e:'😫',n:'累 tired',c:'smileys'},
+  {e:'🥱',n:'打哈欠 yawning',c:'smileys'},{e:'😤',n:'生气 triumph angry steam',c:'smileys'},
+  {e:'😡',n:'愤怒 pouting angry red',c:'smileys'},{e:'😠',n:'怒 angry',c:'smileys'},
+  {e:'🤬',n:'骂人 cursing swearing',c:'smileys'},{e:'😈',n:'小恶魔 imp devil',c:'smileys'},
+  {e:'👿',n:'恶魔 angry devil',c:'smileys'},{e:'💀',n:'骷髅 skull dead',c:'smileys'},
+  {e:'☠️',n:'骷髅旗 skull crossbones',c:'smileys'},{e:'💩',n:'便便 poop poo',c:'smileys'},
+  {e:'🤡',n:'小丑 clown',c:'smileys'},{e:'👹',n:'鬼 ogre',c:'smileys'},
+  {e:'👻',n:'幽灵 ghost',c:'smileys'},{e:'👽',n:'外星人 alien',c:'smileys'},
+  {e:'🤖',n:'机器人 robot',c:'smileys'},{e:'🎃',n:'南瓜灯 jack o lantern',c:'smileys'},
+  {e:'🥹',n:'感动 holding tears',c:'smileys'},
+  // People & Gestures
+  {e:'👍',n:'点赞 thumbs up good',c:'people'},{e:'👎',n:'踩 thumbs down bad',c:'people'},
+  {e:'👏',n:'鼓掌 clap',c:'people'},{e:'🙏',n:'祈祷 合十 pray please',c:'people'},
+  {e:'✌️',n:'胜利 victory peace',c:'people'},{e:'🤝',n:'握手 handshake deal',c:'people'},
+  {e:'💪',n:'加油 muscle strong',c:'people'},{e:'👋',n:'挥手 wave hello bye',c:'people'},
+  {e:'🫶',n:'比心 heart hands love',c:'people'},{e:'🤞',n:'祝好运 crossed fingers',c:'people'},
+  {e:'✊',n:'拳头 fist bump',c:'people'},{e:'👊',n:'出拳 punch',c:'people'},
+  {e:'🤛',n:'左拳 left fist',c:'people'},{e:'🤜',n:'右拳 right fist',c:'people'},
+  {e:'👌',n:'OK perfect',c:'people'},{e:'🤌',n:'意大利手势 pinched',c:'people'},
+  {e:'🤏',n:'一点点 pinching small',c:'people'},{e:'👈',n:'左 pointing left',c:'people'},
+  {e:'👉',n:'右 pointing right',c:'people'},{e:'👆',n:'上 pointing up',c:'people'},
+  {e:'👇',n:'下 pointing down',c:'people'},{e:'☝️',n:'指上 index up',c:'people'},
+  {e:'🖐️',n:'手掌 hand splayed',c:'people'},{e:'✋',n:'举手 raised hand stop',c:'people'},
+  {e:'🤚',n:'手背 back hand',c:'people'},{e:'🖖',n:'Vulcan 手势',c:'people'},
+  {e:'🫰',n:'爱心手势 index thumb',c:'people'},{e:'🤙',n:'打电话 call me',c:'people'},
+  {e:'🖕',n:'中指 middle finger',c:'people'},{e:'✍️',n:'写字 writing',c:'people'},
+  {e:'🤳',n:'自拍 selfie',c:'people'},{e:'💅',n:'涂指甲 nail polish',c:'people'},
+  {e:'🧑‍💻',n:'程序员 coder developer',c:'people'},{e:'👩‍💻',n:'女程序员 woman coder',c:'people'},
+  {e:'👨‍💻',n:'男程序员 man coder',c:'people'},{e:'🧑‍🎨',n:'艺术家 artist',c:'people'},
+  {e:'👩‍🍳',n:'厨师 chef cook',c:'people'},{e:'🧑‍🚀',n:'宇航员 astronaut',c:'people'},
+  {e:'🧑‍🏫',n:'老师 teacher',c:'people'},{e:'🧑‍⚕️',n:'医生 doctor health',c:'people'},
+  // Animals
+  {e:'🐱',n:'猫 cat',c:'animals'},{e:'🐶',n:'狗 dog',c:'animals'},{e:'🐼',n:'熊猫 panda',c:'animals'},
+  {e:'🦊',n:'狐狸 fox',c:'animals'},{e:'🐰',n:'兔子 rabbit bunny',c:'animals'},{e:'🐻',n:'熊 bear',c:'animals'},
+  {e:'🐨',n:'考拉 koala',c:'animals'},{e:'🐯',n:'老虎 tiger',c:'animals'},{e:'🦁',n:'狮子 lion',c:'animals'},
+  {e:'🐮',n:'牛 cow',c:'animals'},{e:'🐷',n:'猪 pig',c:'animals'},{e:'🐸',n:'青蛙 frog',c:'animals'},
+  {e:'🐵',n:'猴子 monkey',c:'animals'},{e:'🐔',n:'鸡 chicken',c:'animals'},{e:'🐧',n:'企鹅 penguin',c:'animals'},
+  {e:'🐦',n:'鸟 bird',c:'animals'},{e:'🦅',n:'鹰 eagle',c:'animals'},{e:'🦆',n:'鸭子 duck',c:'animals'},
+  {e:'🦉',n:'猫头鹰 owl',c:'animals'},{e:'🐴',n:'马 horse',c:'animals'},{e:'🦄',n:'独角兽 unicorn',c:'animals'},
+  {e:'🐝',n:'蜜蜂 bee',c:'animals'},{e:'🐛',n:'毛毛虫 bug caterpillar',c:'animals'},{e:'🦋',n:'蝴蝶 butterfly',c:'animals'},
+  {e:'🐌',n:'蜗牛 snail',c:'animals'},{e:'🐢',n:'乌龟 turtle',c:'animals'},{e:'🐍',n:'蛇 snake',c:'animals'},
+  {e:'🐙',n:'章鱼 octopus',c:'animals'},{e:'🦀',n:'螃蟹 crab',c:'animals'},{e:'🐠',n:'热带鱼 tropical fish',c:'animals'},
+  {e:'🐬',n:'海豚 dolphin',c:'animals'},{e:'🐳',n:'鲸鱼 whale',c:'animals'},{e:'🦈',n:'鲨鱼 shark',c:'animals'},
+  {e:'🐊',n:'鳄鱼 crocodile',c:'animals'},{e:'🦩',n:'火烈鸟 flamingo',c:'animals'},{e:'🐲',n:'龙 dragon',c:'animals'},
+  {e:'🐉',n:'中国龙 dragon',c:'animals'},
+  // Food
+  {e:'🍎',n:'苹果 apple red',c:'food'},{e:'🍊',n:'橘子 orange tangerine',c:'food'},{e:'🍋',n:'柠檬 lemon',c:'food'},
+  {e:'🍌',n:'香蕉 banana',c:'food'},{e:'🍉',n:'西瓜 watermelon',c:'food'},{e:'🍇',n:'葡萄 grapes',c:'food'},
+  {e:'🍓',n:'草莓 strawberry',c:'food'},{e:'🫐',n:'蓝莓 blueberries',c:'food'},{e:'🍑',n:'桃子 peach',c:'food'},
+  {e:'🍒',n:'樱桃 cherry',c:'food'},{e:'🥭',n:'芒果 mango',c:'food'},{e:'🍍',n:'菠萝 pineapple',c:'food'},
+  {e:'🥝',n:'猕猴桃 kiwi',c:'food'},{e:'🍔',n:'汉堡 burger hamburger',c:'food'},{e:'🍕',n:'披萨 pizza',c:'food'},
+  {e:'🍜',n:'拉面 noodles ramen',c:'food'},{e:'🍣',n:'寿司 sushi',c:'food'},{e:'🍱',n:'便当 bento',c:'food'},
+  {e:'🍛',n:'咖喱 curry rice',c:'food'},{e:'🍝',n:'意面 spaghetti pasta',c:'food'},{e:'🍩',n:'甜甜圈 donut',c:'food'},
+  {e:'🍰',n:'蛋糕 cake shortcake',c:'food'},{e:'🎂',n:'生日蛋糕 birthday cake',c:'food'},{e:'🍫',n:'巧克力 chocolate',c:'food'},
+  {e:'🍿',n:'爆米花 popcorn',c:'food'},{e:'🥤',n:'杯饮 cup straw drink',c:'food'},{e:'☕',n:'咖啡 coffee',c:'food'},
+  {e:'🍵',n:'茶 tea matcha',c:'food'},{e:'🍺',n:'啤酒 beer',c:'food'},{e:'🍷',n:'红酒 wine',c:'food'},
+  {e:'🥂',n:'干杯 cheers champagne',c:'food'},{e:'🧋',n:'奶茶 bubble tea boba',c:'food'},{e:'🧃',n:'果汁 juice box',c:'food'},
+  {e:'🥐',n:'可颂 croissant',c:'food'},{e:'🍞',n:'面包 bread',c:'food'},{e:'🥚',n:'鸡蛋 egg',c:'food'},
+  {e:'🍳',n:'煎蛋 cooking frying',c:'food'},
+  // Travel
+  {e:'🚗',n:'汽车 car automobile',c:'travel'},{e:'🚕',n:'出租车 taxi',c:'travel'},{e:'🚌',n:'巴士 bus',c:'travel'},
+  {e:'🚀',n:'火箭 rocket launch',c:'travel'},{e:'✈️',n:'飞机 airplane plane',c:'travel'},{e:'🚂',n:'火车 train locomotive',c:'travel'},
+  {e:'🚢',n:'轮船 ship',c:'travel'},{e:'🚲',n:'自行车 bicycle bike',c:'travel'},{e:'🏍️',n:'摩托 motorcycle',c:'travel'},
+  {e:'🏠',n:'房子 house home',c:'travel'},{e:'🏢',n:'办公楼 office building',c:'travel'},{e:'🏖️',n:'沙滩 beach',c:'travel'},
+  {e:'🏔️',n:'雪山 mountain snow',c:'travel'},{e:'🌍',n:'地球 earth globe',c:'travel'},{e:'🗺️',n:'地图 world map',c:'travel'},
+  {e:'🏝️',n:'岛 island desert',c:'travel'},{e:'🌋',n:'火山 volcano',c:'travel'},{e:'🗽',n:'自由女神 statue liberty',c:'travel'},
+  {e:'🗼',n:'东京塔 tower',c:'travel'},{e:'🎡',n:'摩天轮 ferris wheel',c:'travel'},{e:'🎢',n:'过山车 roller coaster',c:'travel'},
+  {e:'🌅',n:'日出 sunrise',c:'travel'},{e:'🌄',n:'山上日出 sunrise mountains',c:'travel'},{e:'🌇',n:'日落 sunset cityscape',c:'travel'},
+  {e:'🌆',n:'城市黄昏 cityscape dusk',c:'travel'},{e:'🌃',n:'夜景 night stars',c:'travel'},
+  // Activities
+  {e:'⚽',n:'足球 soccer football',c:'activities'},{e:'🏀',n:'篮球 basketball',c:'activities'},{e:'🏈',n:'橄榄球 american football',c:'activities'},
+  {e:'⚾',n:'棒球 baseball',c:'activities'},{e:'🎾',n:'网球 tennis',c:'activities'},{e:'🏐',n:'排球 volleyball',c:'activities'},
+  {e:'🏓',n:'乒乓球 ping pong',c:'activities'},{e:'🎮',n:'游戏 game controller',c:'activities'},{e:'🎯',n:'靶心 dart target',c:'activities'},
+  {e:'🏆',n:'奖杯 trophy champion',c:'activities'},{e:'🥇',n:'金牌 gold medal first',c:'activities'},{e:'🥈',n:'银牌 silver medal second',c:'activities'},
+  {e:'🎵',n:'音乐 music note',c:'activities'},{e:'🎶',n:'音符 musical notes',c:'activities'},{e:'🎤',n:'麦克风 microphone karaoke',c:'activities'},
+  {e:'🎸',n:'吉他 guitar',c:'activities'},{e:'🎹',n:'钢琴 piano keyboard',c:'activities'},{e:'🎨',n:'调色板 art palette paint',c:'activities'},
+  {e:'🎬',n:'电影 clapper movie film',c:'activities'},{e:'📸',n:'闪光相机 camera flash photo',c:'activities'},
+  {e:'🎲',n:'骰子 dice game',c:'activities'},{e:'🧩',n:'拼图 puzzle jigsaw',c:'activities'},
+  {e:'🎪',n:'马戏团 circus tent',c:'activities'},{e:'🎭',n:'表演 performing arts drama',c:'activities'},
+  {e:'🏊',n:'游泳 swimming swimmer',c:'activities'},{e:'🚴',n:'骑车 cycling biking',c:'activities'},
+  {e:'🧘',n:'瑜伽 yoga meditation',c:'activities'},{e:'🏋️',n:'举重 weight lifting gym',c:'activities'},
+  // Objects
+  {e:'💡',n:'灯泡 idea light bulb',c:'objects'},{e:'📱',n:'手机 phone mobile',c:'objects'},{e:'💻',n:'电脑 laptop computer',c:'objects'},
+  {e:'🖥️',n:'台式机 desktop computer',c:'objects'},{e:'⌨️',n:'键盘 keyboard',c:'objects'},{e:'🖱️',n:'鼠标 mouse',c:'objects'},
+  {e:'📷',n:'相机 camera',c:'objects'},{e:'🔑',n:'钥匙 key',c:'objects'},{e:'📦',n:'包裹 package box',c:'objects'},
+  {e:'📧',n:'邮件 email envelope',c:'objects'},{e:'📝',n:'备忘录 memo note write',c:'objects'},{e:'📖',n:'书 book open',c:'objects'},
+  {e:'📚',n:'书堆 books stack',c:'objects'},{e:'🔔',n:'铃铛 bell notification',c:'objects'},{e:'🔕',n:'静音 bell mute',c:'objects'},
+  {e:'💰',n:'钱袋 money bag',c:'objects'},{e:'💵',n:'美元 dollar bill',c:'objects'},{e:'💳',n:'信用卡 credit card',c:'objects'},
+  {e:'🔒',n:'锁 lock locked secure',c:'objects'},{e:'🔓',n:'开锁 unlock unlocked',c:'objects'},
+  {e:'🔧',n:'扳手 wrench tool fix',c:'objects'},{e:'🔨',n:'锤子 hammer',c:'objects'},{e:'⚙️',n:'齿轮 gear settings',c:'objects'},
+  {e:'💎',n:'钻石 gem diamond',c:'objects'},{e:'🧲',n:'磁铁 magnet',c:'objects'},{e:'🔋',n:'电池 battery',c:'objects'},
+  {e:'💊',n:'药丸 pill medicine',c:'objects'},{e:'🩹',n:'创可贴 bandage',c:'objects'},{e:'🧪',n:'试管 test tube lab',c:'objects'},
+  {e:'🛒',n:'购物车 shopping cart',c:'objects'},{e:'🎁',n:'礼物 gift present',c:'objects'},{e:'🏷️',n:'标签 label tag',c:'objects'},
+  // Symbols
+  {e:'❤️',n:'红心 red heart love',c:'symbols'},{e:'🧡',n:'橙心 orange heart',c:'symbols'},{e:'💛',n:'黄心 yellow heart',c:'symbols'},
+  {e:'💚',n:'绿心 green heart',c:'symbols'},{e:'💙',n:'蓝心 blue heart',c:'symbols'},{e:'💜',n:'紫心 purple heart',c:'symbols'},
+  {e:'🖤',n:'黑心 black heart',c:'symbols'},{e:'🤍',n:'白心 white heart',c:'symbols'},{e:'💔',n:'心碎 broken heart',c:'symbols'},
+  {e:'💕',n:'两颗心 two hearts',c:'symbols'},{e:'💞',n:'旋转心 revolving hearts',c:'symbols'},{e:'💓',n:'心跳 beating heart',c:'symbols'},
+  {e:'💗',n:'成长心 growing heart',c:'symbols'},{e:'💖',n:'闪耀心 sparkling heart',c:'symbols'},{e:'💘',n:'丘比特 cupid arrow heart',c:'symbols'},
+  {e:'⭐',n:'星星 star',c:'symbols'},{e:'🌟',n:'闪烁星 glowing star',c:'symbols'},{e:'✨',n:'闪光 sparkles magic',c:'symbols'},
+  {e:'⚡',n:'闪电 lightning zap',c:'symbols'},{e:'🔥',n:'火 fire hot trending',c:'symbols'},{e:'💯',n:'满分 hundred perfect',c:'symbols'},
+  {e:'✅',n:'对号 check mark done',c:'symbols'},{e:'❌',n:'叉号 cross mark wrong',c:'symbols'},{e:'❓',n:'问号 question',c:'symbols'},
+  {e:'❗',n:'感叹号 exclamation',c:'symbols'},{e:'‼️',n:'双感叹号 double exclamation',c:'symbols'},{e:'⁉️',n:'感叹问号 exclamation question',c:'symbols'},
+  {e:'🔴',n:'红圈 red circle',c:'symbols'},{e:'🟢',n:'绿圈 green circle',c:'symbols'},{e:'🔵',n:'蓝圈 blue circle',c:'symbols'},
+  {e:'⬛',n:'黑方 black square',c:'symbols'},{e:'⬜',n:'白方 white square',c:'symbols'},
+  {e:'🔺',n:'红三角 red triangle up',c:'symbols'},{e:'🔻',n:'红倒三角 red triangle down',c:'symbols'},
+  {e:'♻️',n:'回收 recycling',c:'symbols'},{e:'☮️',n:'和平 peace',c:'symbols'},{e:'☯️',n:'阴阳 yin yang',c:'symbols'},
+  {e:'♾️',n:'无限 infinity',c:'symbols'},{e:'🏳️‍🌈',n:'彩虹旗 rainbow flag pride',c:'symbols'},
+  {e:'⚠️',n:'警告 warning',c:'symbols'},{e:'🚫',n:'禁止 prohibited no',c:'symbols'},
+  {e:'💤',n:'睡觉 zzz sleep',c:'symbols'},{e:'💬',n:'对话 speech bubble chat',c:'symbols'},
+  {e:'💭',n:'想法 thought bubble think',c:'symbols'},{e:'👁️‍🗨️',n:'关注 eye speech',c:'symbols'},
+  // Flags
+  {e:'🏁',n:'格子旗 checkered flag finish',c:'flags'},{e:'🚩',n:'三角旗 triangular flag',c:'flags'},
+  {e:'🏳️',n:'白旗 white flag surrender',c:'flags'},{e:'🏴',n:'黑旗 black flag',c:'flags'},
+  {e:'🇨🇳',n:'中国 China',c:'flags'},{e:'🇺🇸',n:'美国 US USA America',c:'flags'},{e:'🇯🇵',n:'日本 Japan',c:'flags'},
+  {e:'🇰🇷',n:'韩国 Korea',c:'flags'},{e:'🇬🇧',n:'英国 UK Britain',c:'flags'},{e:'🇫🇷',n:'法国 France',c:'flags'},
+  {e:'🇩🇪',n:'德国 Germany',c:'flags'},{e:'🇮🇹',n:'意大利 Italy',c:'flags'},{e:'🇪🇸',n:'西班牙 Spain',c:'flags'},
+  {e:'🇷🇺',n:'俄罗斯 Russia',c:'flags'},{e:'🇧🇷',n:'巴西 Brazil',c:'flags'},{e:'🇮🇳',n:'印度 India',c:'flags'},
+  {e:'🇦🇺',n:'澳大利亚 Australia',c:'flags'},{e:'🇨🇦',n:'加拿大 Canada',c:'flags'},{e:'🇲🇽',n:'墨西哥 Mexico',c:'flags'},
+  {e:'🇹🇭',n:'泰国 Thailand',c:'flags'},{e:'🇻🇳',n:'越南 Vietnam',c:'flags'},{e:'🇸🇬',n:'新加坡 Singapore',c:'flags'},
+  {e:'🇭🇰',n:'香港 Hong Kong',c:'flags'},{e:'🇹🇼',n:'台湾 Taiwan',c:'flags'},{e:'🇲🇴',n:'澳门 Macau',c:'flags'},
+];
+
+let currentCat = 'all';
+let recent = JSON.parse(localStorage.getItem('devkit-emoji-recent') || '[]');
+
+function renderGrid(list) {
+  const grid = document.getElementById('emojiGrid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state">😕 没有找到匹配的 Emoji</div>';
+    document.getElementById('searchCount').textContent = '0';
+    return;
+  }
+  grid.innerHTML = list.map(em => `
+    <div class="emoji-cell" data-emoji="${em.e}" title="${em.n}">
+      <span class="emoji-char">${em.e}</span>
+      <span class="emoji-name">${em.n.split(' ')[0]}</span>
+    </div>`).join('');
+  document.getElementById('searchCount').textContent = `${list.length} 个`;
+}
+
+function filterEmoji() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let list = EMOJIS;
+  if (currentCat !== 'all') list = list.filter(e => e.c === currentCat);
+  if (q) list = list.filter(e => e.n.toLowerCase().includes(q));
+  renderGrid(list);
+}
+
+/* Category pills */
+document.getElementById('catRow').addEventListener('click', e => {
+  const pill = e.target.closest('[data-cat]');
+  if (!pill) return;
+  currentCat = pill.dataset.cat;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  filterEmoji();
+});
+
+document.getElementById('searchInput').addEventListener('input', filterEmoji);
+
+/* Click to copy */
+document.getElementById('emojiGrid').addEventListener('click', e => {
+  const cell = e.target.closest('.emoji-cell');
+  if (!cell) return;
+  const emoji = cell.dataset.emoji;
+  navigator.clipboard.writeText(emoji);
+  recent = recent.filter(r => r !== emoji);
+  recent.unshift(emoji);
+  if (recent.length > 20) recent.pop();
+  localStorage.setItem('devkit-emoji-recent', JSON.stringify(recent));
+  renderRecent();
+  document.getElementById('statusInfo').textContent = `✅ ${emoji} 已复制`;
+  setTimeout(() => { document.getElementById('statusInfo').textContent = 'Emoji 搜索'; }, 1500);
+});
+
+function renderRecent() {
+  const area = document.getElementById('recentArea');
+  if (!recent.length) { area.style.display = 'none'; return; }
+  area.style.display = 'block';
+  document.getElementById('recentList').innerHTML = recent.slice(0, 16).map(e =>
+    `<span class="recent-item" data-emoji="${e}">${e}</span>`).join('');
+}
+
+document.getElementById('recentList').addEventListener('click', e => {
+  const item = e.target.closest('[data-emoji]');
+  if (!item) return;
+  navigator.clipboard.writeText(item.dataset.emoji);
+  document.getElementById('statusInfo').textContent = `✅ ${item.dataset.emoji} 已复制`;
+  setTimeout(() => { document.getElementById('statusInfo').textContent = 'Emoji 搜索'; }, 1500);
+});
+
+renderGrid(EMOJIS);
+renderRecent();
+</script>
+<noscript><p>Emoji 搜索 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

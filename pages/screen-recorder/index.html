@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线录屏 | Screen Recorder — DevKit</title>
+<meta name="description" content="在线屏幕录制工具，浏览器录屏，无需安装软件，录制完成即可下载 WebM 视频。纯前端，数据不上传。">
+<meta name="keywords" content="在线录屏, screen recorder, 屏幕录制, 网页录屏, DevKit">
+<meta property="og:title" content="在线录屏 | Screen Recorder — DevKit">
+<meta property="og:description" content="浏览器在线屏幕录制，零安装即可录屏">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/screen-recorder/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在线录屏 — DevKit">
+<meta name="twitter:description" content="浏览器在线屏幕录制工具">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"在线录屏","description":"浏览器在线屏幕录制，零安装即可录屏下载","url":"https://l-s-c.github.io/devkit/pages/screen-recorder/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/screen-recorder/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.panel { padding: 24px; border-radius: 16px; background: var(--bg-glass); backdrop-filter: blur(20px); border: 0.5px solid var(--border-glass); width: 100%; text-align: center; }
+
+.record-btn { width: 120px; height: 120px; border-radius: 50%; border: none; font-size: 48px; cursor: pointer; transition: all 300ms; display: flex; align-items: center; justify-content: center; margin: 20px auto; }
+.record-btn.idle { background: linear-gradient(135deg, #EF4444, #DC2626); color: #fff; box-shadow: 0 8px 32px rgba(239,68,68,0.3); }
+.record-btn.idle:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(239,68,68,0.4); }
+.record-btn.recording { background: #EF4444; color: #fff; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 50% { box-shadow: 0 0 0 20px rgba(239,68,68,0); } }
+.record-btn.paused { background: #F59E0B; color: #fff; }
+
+.timer { font-family: var(--font-code); font-size: 36px; font-weight: 800; color: var(--text-primary); margin: 10px 0; }
+.status-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+
+.controls { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+.ctrl-btn { padding: 10px 20px; border-radius: 20px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 200ms; display: flex; align-items: center; gap: 5px; }
+.ctrl-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.ctrl-btn.danger { border-color: #EF4444; color: #EF4444; }
+.ctrl-btn.danger:hover { background: #EF4444; color: #fff; }
+
+.preview-area { width: 100%; }
+.preview-area video { width: 100%; border-radius: 12px; background: #000; }
+
+.download-row { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+.btn-download { padding: 10px 24px; border-radius: 20px; border: none; font-size: 12px; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; transition: all 200ms; }
+.btn-download:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+
+.compat-warn { font-size: 11px; color: var(--text-caption); margin-top: 12px; }
+.security-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; background: rgba(16,185,129,0.1); color: #10B981; margin-bottom: 12px; }
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">在线录屏 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">在线录屏</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel" id="recordPanel">
+    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div id="idleState">
+      <button class="record-btn idle" id="startBtn">⏺</button>
+      <div class="status-text">点击开始录制屏幕</div>
+      <div class="compat-warn" id="compatWarn" style="display:none">⚠️ 当前浏览器不支持屏幕录制，请使用 Chrome / Edge / Firefox</div>
+    </div>
+    <div id="recordingState" style="display:none">
+      <button class="record-btn recording" id="recordingBtn">⏺</button>
+      <div class="timer" id="timer">00:00</div>
+      <div class="status-text" id="recordStatus">🔴 录制中...</div>
+      <div class="controls">
+        <button class="ctrl-btn" id="pauseBtn">⏸️ 暂停</button>
+        <button class="ctrl-btn danger" id="stopBtn">⏹️ 停止录制</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="previewPanel" style="display:none">
+    <div style="font-size:13px;font-weight:800;margin-bottom:12px">👁️ 录制预览</div>
+    <div class="preview-area">
+      <video id="previewVideo" controls></video>
+    </div>
+    <div class="download-row">
+      <button class="btn-download" id="downloadBtn">📥 下载 WebM</button>
+      <button class="ctrl-btn" id="newBtn">🔄 重新录制</button>
+    </div>
+    <div style="font-size:10px;color:var(--text-caption);margin-top:8px" id="fileInfo"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">在线录屏</span>
+  <div class="statusbar-spacer"></div>
+  <span>MediaRecorder · 纯本地</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+let mediaRecorder = null, stream = null, chunks = [], blobUrl = null;
+let startTime = 0, timerInterval = null, pausedDuration = 0, pauseStart = 0;
+
+// Check support
+if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+  document.getElementById('compatWarn').style.display = 'block';
+  document.getElementById('startBtn').style.opacity = '0.5';
+  document.getElementById('startBtn').style.cursor = 'not-allowed';
+}
+
+function fmt(sec) {
+  const m = Math.floor(sec / 60), s = sec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startTime - pausedDuration) / 1000);
+  document.getElementById('timer').textContent = fmt(elapsed);
+}
+
+document.getElementById('startBtn').addEventListener('click', async () => {
+  if (!navigator.mediaDevices?.getDisplayMedia) return;
+  try {
+    stream = await navigator.mediaDevices.getDisplayMedia({
+      video: { cursor: 'always' },
+      audio: true
+    });
+  } catch (e) {
+    document.getElementById('statusInfo').textContent = '❌ 用户取消了屏幕共享';
+    return;
+  }
+
+  chunks = [];
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  mediaRecorder.onstop = onRecordingStop;
+
+  // User might stop sharing via browser UI
+  stream.getVideoTracks()[0].onended = () => { if (mediaRecorder.state !== 'inactive') mediaRecorder.stop(); };
+
+  mediaRecorder.start(1000);
+  startTime = Date.now(); pausedDuration = 0;
+  timerInterval = setInterval(updateTimer, 500);
+
+  document.getElementById('idleState').style.display = 'none';
+  document.getElementById('recordingState').style.display = 'block';
+  document.getElementById('previewPanel').style.display = 'none';
+  document.getElementById('statusInfo').textContent = '🔴 录制中';
+  document.getElementById('pauseBtn').innerHTML = '⏸️ 暂停';
+});
+
+document.getElementById('pauseBtn').addEventListener('click', () => {
+  if (!mediaRecorder) return;
+  if (mediaRecorder.state === 'recording') {
+    mediaRecorder.pause();
+    pauseStart = Date.now();
+    clearInterval(timerInterval);
+    document.getElementById('recordingBtn').className = 'record-btn paused';
+    document.getElementById('recordStatus').textContent = '⏸️ 已暂停';
+    document.getElementById('pauseBtn').innerHTML = '▶️ 继续';
+    document.getElementById('statusInfo').textContent = '⏸️ 已暂停';
+  } else if (mediaRecorder.state === 'paused') {
+    mediaRecorder.resume();
+    pausedDuration += Date.now() - pauseStart;
+    timerInterval = setInterval(updateTimer, 500);
+    document.getElementById('recordingBtn').className = 'record-btn recording';
+    document.getElementById('recordStatus').textContent = '🔴 录制中...';
+    document.getElementById('pauseBtn').innerHTML = '⏸️ 暂停';
+    document.getElementById('statusInfo').textContent = '🔴 录制中';
+  }
+});
+
+document.getElementById('stopBtn').addEventListener('click', () => {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+});
+
+function onRecordingStop() {
+  clearInterval(timerInterval);
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+
+  const blob = new Blob(chunks, { type: 'video/webm' });
+  if (blobUrl) URL.revokeObjectURL(blobUrl);
+  blobUrl = URL.createObjectURL(blob);
+
+  const video = document.getElementById('previewVideo');
+  video.src = blobUrl;
+
+  const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
+  const duration = document.getElementById('timer').textContent;
+  document.getElementById('fileInfo').textContent = `📁 ${sizeMB} MB · ${duration} · WebM`;
+
+  document.getElementById('idleState').style.display = 'none';
+  document.getElementById('recordingState').style.display = 'none';
+  document.getElementById('previewPanel').style.display = 'block';
+  document.getElementById('statusInfo').textContent = `✅ 录制完成 ${duration}`;
+}
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!blobUrl) return;
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = `screen-recording-${Date.now()}.webm`;
+  a.click();
+});
+
+document.getElementById('newBtn').addEventListener('click', () => {
+  if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
+  chunks = [];
+  document.getElementById('timer').textContent = '00:00';
+  document.getElementById('idleState').style.display = 'block';
+  document.getElementById('recordingState').style.display = 'none';
+  document.getElementById('previewPanel').style.display = 'none';
+  document.getElementById('statusInfo').textContent = '在线录屏';
+});
+</script>
+<noscript><p>在线录屏 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

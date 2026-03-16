@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF 拆分 | Split PDF — DevKit</title>
+<meta name="description" content="在线拆分 PDF 文件，按页提取、按范围分割，纯前端处理，文件不上传服务器。">
+<meta name="keywords" content="PDF拆分, split PDF, PDF分页, 提取PDF页面, DevKit">
+<meta property="og:title" content="PDF 拆分 | Split PDF — DevKit">
+<meta property="og:description" content="在线 PDF 拆分，按页提取或按范围分割">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/pdf-split/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PDF 拆分 — DevKit">
+<meta name="twitter:description" content="在线 PDF 拆分工具">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"PDF 拆分","description":"在线拆分PDF，按页提取或按范围分割","url":"https://l-s-c.github.io/devkit/pages/pdf-split/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/pdf-split/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel { padding: 20px; border-radius: 16px; margin-bottom: 16px; background: var(--bg-glass); backdrop-filter: blur(20px); border: 0.5px solid var(--border-glass); }
+.section-title { font-size: 13px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.security-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; background: rgba(16,185,129,0.1); color: #10B981; margin-bottom: 12px; }
+.upload-zone { border: 2px dashed var(--border-glass); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 200ms; color: var(--text-caption); }
+.upload-zone:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.upload-zone input { display: none; }
+.mode-tabs { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--border-glass); margin-bottom: 14px; }
+.mode-tab { flex: 1; padding: 10px 8px; text-align: center; font-size: 11px; font-weight: 700; cursor: pointer; background: var(--bg-glass-input); color: var(--text-caption); transition: all 150ms; }
+.mode-tab.active { background: var(--brand-500); color: #fff; }
+.page-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 6px; margin-bottom: 14px; }
+.page-cell { text-align: center; padding: 12px 4px; border-radius: 6px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); cursor: pointer; font-size: 12px; font-weight: 700; transition: all 150ms; user-select: none; }
+.page-cell:hover { border-color: var(--brand-500); }
+.page-cell.selected { background: var(--brand-500); color: #fff; border-color: var(--brand-500); }
+.quick-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.quick-btn { padding: 5px 12px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-glass-input); font-size: 10px; font-weight: 600; cursor: pointer; transition: all 150ms; }
+.quick-btn:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.range-input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-family: var(--font-code); font-size: 13px; color: var(--text-primary); outline: none; margin-bottom: 8px; }
+.range-input:focus { border-color: var(--brand-500); }
+.split-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; transition: all 200ms; }
+.split-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.split-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-download { padding: 12px 28px; border-radius: 24px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #10B981, #059669); color: #fff; }
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">PDF 拆分 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">PDF 拆分</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <div class="panel" id="uploadPanel">
+    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="upload-zone" id="dropZone">
+      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽 PDF 文件到此处</div>
+      <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择文件</span>（最大 50MB）</div>
+      <input type="file" id="fileInput" accept=".pdf">
+    </div>
+  </div>
+
+  <div class="panel" id="splitPanel" style="display:none">
+    <div class="section-title">📄 <span id="fileName"></span> <span style="font-weight:400;font-size:11px;color:var(--text-caption)" id="pageInfo"></span></div>
+
+    <div class="mode-tabs" id="modeTabs">
+      <div class="mode-tab active" data-mode="select">🖱️ 点选页面</div>
+      <div class="mode-tab" data-mode="range">📐 输入范围</div>
+      <div class="mode-tab" data-mode="each">📑 逐页拆分</div>
+    </div>
+
+    <!-- Select mode -->
+    <div id="selectMode">
+      <div class="quick-row">
+        <button class="quick-btn" id="selectAll">全选</button>
+        <button class="quick-btn" id="selectOdd">奇数页</button>
+        <button class="quick-btn" id="selectEven">偶数页</button>
+        <button class="quick-btn" id="selectNone">清空</button>
+      </div>
+      <div class="page-grid" id="pageGrid"></div>
+    </div>
+
+    <!-- Range mode -->
+    <div id="rangeMode" style="display:none">
+      <input class="range-input" id="rangeInput" placeholder="输入页码范围，如：1-3, 5, 7-10">
+      <div style="font-size:10px;color:var(--text-caption)">支持格式：1-3, 5, 7-10（逗号分隔）</div>
+    </div>
+
+    <!-- Each mode -->
+    <div id="eachMode" style="display:none">
+      <div style="font-size:12px;color:var(--text-secondary);padding:16px;text-align:center">
+        📑 将每一页拆分为独立的 PDF 文件并打包下载
+      </div>
+    </div>
+
+    <button class="split-btn" id="splitBtn">✂️ 拆分 PDF</button>
+  </div>
+
+  <div class="panel" id="resultPanel" style="display:none">
+    <div style="text-align:center;padding:16px">
+      <div style="font-size:48px;margin-bottom:8px">✅</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:4px">拆分完成！</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:16px" id="resultInfo"></div>
+      <button class="btn-download" id="downloadBtn">📥 下载</button>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">PDF 拆分</span>
+  <div class="statusbar-spacer"></div>
+  <span>pdf-lib · 纯本地</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+
+let pdfDoc = null, pdfBytes = null, totalPages = 0;
+let selectedPages = new Set();
+let mode = 'select';
+let resultUrl = null;
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => e.preventDefault());
+dropZone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) loadPDF(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadPDF(fileInput.files[0]); });
+
+async function loadPDF(file) {
+  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠️ 文件超过 50MB'; return; }
+  pdfBytes = await file.arrayBuffer();
+  const { PDFDocument } = PDFLib;
+  pdfDoc = await PDFDocument.load(pdfBytes);
+  totalPages = pdfDoc.getPageCount();
+
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('pageInfo').textContent = `${totalPages} 页 · ${(file.size / 1024).toFixed(1)} KB`;
+
+  const grid = document.getElementById('pageGrid');
+  grid.innerHTML = Array.from({ length: totalPages }, (_, i) =>
+    `<div class="page-cell" data-page="${i + 1}">${i + 1}</div>`).join('');
+
+  selectedPages.clear();
+  document.getElementById('uploadPanel').style.display = 'none';
+  document.getElementById('splitPanel').style.display = 'block';
+  document.getElementById('resultPanel').style.display = 'none';
+}
+
+/* Page grid click */
+document.getElementById('pageGrid').addEventListener('click', e => {
+  const cell = e.target.closest('.page-cell');
+  if (!cell) return;
+  const p = parseInt(cell.dataset.page);
+  if (selectedPages.has(p)) { selectedPages.delete(p); cell.classList.remove('selected'); }
+  else { selectedPages.add(p); cell.classList.add('selected'); }
+});
+
+/* Quick select */
+document.getElementById('selectAll').addEventListener('click', () => { for (let i = 1; i <= totalPages; i++) selectedPages.add(i); updateGrid(); });
+document.getElementById('selectNone').addEventListener('click', () => { selectedPages.clear(); updateGrid(); });
+document.getElementById('selectOdd').addEventListener('click', () => { selectedPages.clear(); for (let i = 1; i <= totalPages; i += 2) selectedPages.add(i); updateGrid(); });
+document.getElementById('selectEven').addEventListener('click', () => { selectedPages.clear(); for (let i = 2; i <= totalPages; i += 2) selectedPages.add(i); updateGrid(); });
+
+function updateGrid() {
+  document.querySelectorAll('.page-cell').forEach(c => c.classList.toggle('selected', selectedPages.has(parseInt(c.dataset.page))));
+}
+
+/* Mode tabs */
+document.getElementById('modeTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.mode-tab');
+  if (!tab) return;
+  mode = tab.dataset.mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('selectMode').style.display = mode === 'select' ? 'block' : 'none';
+  document.getElementById('rangeMode').style.display = mode === 'range' ? 'block' : 'none';
+  document.getElementById('eachMode').style.display = mode === 'each' ? 'block' : 'none';
+});
+
+/* Parse range string */
+function parseRange(str) {
+  const pages = new Set();
+  str.split(',').forEach(part => {
+    part = part.trim();
+    const m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (m) { for (let i = parseInt(m[1]); i <= Math.min(parseInt(m[2]), totalPages); i++) pages.add(i); }
+    else { const n = parseInt(part); if (n >= 1 && n <= totalPages) pages.add(n); }
+  });
+  return Array.from(pages).sort((a, b) => a - b);
+}
+
+/* Split */
+document.getElementById('splitBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('splitBtn');
+  btn.disabled = true; btn.textContent = '⏳ 拆分中...';
+  if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    let pages;
+
+    if (mode === 'select') {
+      pages = Array.from(selectedPages).sort((a, b) => a - b);
+      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠️ 请选择至少一页'; btn.disabled = false; btn.textContent = '✂️ 拆分 PDF'; return; }
+    } else if (mode === 'range') {
+      pages = parseRange(document.getElementById('rangeInput').value);
+      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠️ 请输入有效页码范围'; btn.disabled = false; btn.textContent = '✂️ 拆分 PDF'; return; }
+    } else {
+      // Each page → download multiple
+      for (let i = 0; i < totalPages; i++) {
+        const newDoc = await PDFDocument.create();
+        const [page] = await newDoc.copyPages(pdfDoc, [i]);
+        newDoc.addPage(page);
+        const bytes = await newDoc.save();
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `page-${i + 1}.pdf`; a.click();
+        URL.revokeObjectURL(url);
+      }
+      document.getElementById('resultInfo').textContent = `${totalPages} 个 PDF 文件已下载`;
+      document.getElementById('resultPanel').style.display = 'block';
+      document.getElementById('downloadBtn').style.display = 'none';
+      btn.disabled = false; btn.textContent = '✂️ 拆分 PDF';
+      document.getElementById('statusInfo').textContent = `✅ 逐页拆分完成 ${totalPages} 页`;
+      return;
+    }
+
+    // Extract selected pages into one PDF
+    const newDoc = await PDFDocument.create();
+    const indices = pages.map(p => p - 1);
+    const copiedPages = await newDoc.copyPages(pdfDoc, indices);
+    copiedPages.forEach(p => newDoc.addPage(p));
+    const bytes = await newDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    resultUrl = URL.createObjectURL(blob);
+    document.getElementById('resultInfo').textContent = `提取 ${pages.length} 页 · ${(blob.size / 1024).toFixed(1)} KB`;
+    document.getElementById('resultPanel').style.display = 'block';
+    document.getElementById('downloadBtn').style.display = 'inline-flex';
+    document.getElementById('statusInfo').textContent = `✅ 拆分完成 ${pages.length} 页`;
+  } catch (e) {
+    document.getElementById('statusInfo').textContent = '❌ 拆分失败：' + e.message;
+  }
+  btn.disabled = false; btn.textContent = '✂️ 拆分 PDF';
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!resultUrl) return;
+  const a = document.createElement('a'); a.href = resultUrl; a.download = 'split.pdf'; a.click();
+});
+</script>
+<noscript><p>PDF 拆分 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
