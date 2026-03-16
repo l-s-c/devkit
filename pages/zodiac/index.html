@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生肖查询 | Chinese Zodiac — DevKit</title>
+<meta name="description" content="在线十二生肖查询工具，输入年份或日期查询对应生肖、天干地支、性格特征、幸运数字等。">
+<meta name="keywords" content="生肖查询, 十二生肖, 属相查询, Chinese zodiac, DevKit">
+<meta property="og:title" content="生肖查询 — DevKit">
+<meta property="og:description" content="在线十二生肖查询，天干地支+性格">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/zodiac/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"生肖查询","url":"https://l-s-c.github.io/devkit/pages/zodiac/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/zodiac/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.input-row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.year-input{width:120px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-family:var(--font-code);font-size:18px;font-weight:800;text-align:center;color:var(--text-primary);outline:none}
+.year-input:focus{border-color:var(--brand-500)}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;transition:all 200ms}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.hero{text-align:center;padding:24px}
+.hero-emoji{font-size:80px;margin-bottom:8px}
+.hero-name{font-size:24px;font-weight:800;margin-bottom:4px}
+.hero-ganZhi{font-size:14px;color:var(--text-secondary);margin-bottom:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+@media(max-width:640px){.info-grid{grid-template-columns:1fr}}
+.info-card{padding:14px 16px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.info-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.info-value{font-size:13px;font-weight:700}
+.zodiac-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:12px}
+@media(max-width:640px){.zodiac-grid{grid-template-columns:repeat(4,1fr)}}
+.zodiac-cell{text-align:center;padding:10px 4px;border-radius:8px;border:1px solid var(--border-glass);cursor:pointer;transition:all 150ms}
+.zodiac-cell:hover{border-color:var(--brand-500);background:rgba(99,102,241,0.04)}
+.zodiac-cell.active{border-color:var(--brand-500);background:rgba(99,102,241,0.08)}
+.zodiac-emoji{font-size:24px}
+.zodiac-name{font-size:10px;font-weight:700;margin-top:2px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">生肖查询 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">生肖查询</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🐲 输入年份查询生肖</div>
+    <div class="input-row">
+      <input class="year-input" id="yearInput" type="number" min="1900" max="2100" value="2024">
+      <button class="btn" id="queryBtn">查询</button>
+    </div>
+  </div>
+  <div class="panel" id="resultPanel">
+    <div class="hero">
+      <div class="hero-emoji" id="heroEmoji">🐲</div>
+      <div class="hero-name" id="heroName">龙</div>
+      <div class="hero-ganZhi" id="heroGanZhi"></div>
+    </div>
+    <div class="info-grid" id="infoGrid"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title">🐾 十二生肖</div>
+    <div class="zodiac-grid" id="zodiacGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">生肖查询</span><div class="statusbar-spacer"></div><span>纯算法 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const ZODIAC=[
+  {name:'鼠',emoji:'🐀',wuXing:'水',lucky:'2,3',color:'蓝/金',trait:'机灵聪慧、灵活敏捷'},
+  {name:'牛',emoji:'🐂',wuXing:'土',lucky:'1,4',color:'白/黄',trait:'勤劳踏实、坚韧不拔'},
+  {name:'虎',emoji:'🐅',wuXing:'木',lucky:'1,3,4',color:'蓝/灰',trait:'勇敢果断、充满活力'},
+  {name:'兔',emoji:'🐇',wuXing:'木',lucky:'3,4,6',color:'红/粉',trait:'温柔善良、心思细腻'},
+  {name:'龙',emoji:'🐲',wuXing:'土',lucky:'1,6,7',color:'金/银',trait:'志向远大、气度不凡'},
+  {name:'蛇',emoji:'🐍',wuXing:'火',lucky:'2,8,9',color:'红/浅黄',trait:'深沉稳重、智慧过人'},
+  {name:'马',emoji:'🐴',wuXing:'火',lucky:'2,3,7',color:'黄/绿',trait:'热情奔放、自由洒脱'},
+  {name:'羊',emoji:'🐏',wuXing:'土',lucky:'2,7',color:'绿/红',trait:'温和善良、富有同情心'},
+  {name:'猴',emoji:'🐒',wuXing:'金',lucky:'4,9',color:'白/蓝',trait:'聪明机智、活泼好动'},
+  {name:'鸡',emoji:'🐓',wuXing:'金',lucky:'5,7,8',color:'金/棕',trait:'勤勉守信、果断干练'},
+  {name:'狗',emoji:'🐕',wuXing:'土',lucky:'3,4,9',color:'红/绿',trait:'忠诚正直、善解人意'},
+  {name:'猪',emoji:'🐖',wuXing:'水',lucky:'2,5,8',color:'黄/灰',trait:'真诚豁达、心地善良'}
+];
+const TIAN_GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const DI_ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+function getZodiacIdx(year){return(year-4)%12<0?(year-4)%12+12:(year-4)%12}
+function getGanZhi(year){return TIAN_GAN[(year-4)%10]+DI_ZHI[(year-4)%12]+'年'}
+
+function query(year){
+  const idx=getZodiacIdx(year);
+  const z=ZODIAC[idx];
+  document.getElementById('heroEmoji').textContent=z.emoji;
+  document.getElementById('heroName').textContent=z.name;
+  document.getElementById('heroGanZhi').textContent=getGanZhi(year)+' · '+year+'年';
+  document.getElementById('infoGrid').innerHTML=[
+    ['🌟','性格特征',z.trait],['🔥','五行属性',z.wuXing],
+    ['🍀','幸运数字',z.lucky],['🎨','幸运颜色',z.color]
+  ].map(([icon,label,value])=>
+    `<div class="info-card"><div class="info-label">${icon} ${label}</div><div class="info-value">${value}</div></div>`).join('');
+  renderGrid(idx);
+}
+
+function renderGrid(activeIdx){
+  document.getElementById('zodiacGrid').innerHTML=ZODIAC.map((z,i)=>
+    `<div class="zodiac-cell${i===activeIdx?' active':''}" data-idx="${i}"><div class="zodiac-emoji">${z.emoji}</div><div class="zodiac-name">${z.name}</div></div>`).join('');
+}
+
+document.getElementById('queryBtn').addEventListener('click',()=>query(parseInt(document.getElementById('yearInput').value)));
+document.getElementById('yearInput').addEventListener('keydown',e=>{if(e.key==='Enter')query(parseInt(document.getElementById('yearInput').value))});
+document.getElementById('zodiacGrid').addEventListener('click',e=>{
+  const cell=e.target.closest('[data-idx]');if(!cell)return;
+  const idx=parseInt(cell.dataset.idx);
+  // Find a recent year matching this zodiac
+  const now=new Date().getFullYear();
+  for(let y=now;y>=now-12;y--)if(getZodiacIdx(y)===idx){document.getElementById('yearInput').value=y;query(y);break}
+});
+query(parseInt(document.getElementById('yearInput').value));
+</script>
+<noscript><p>生肖查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

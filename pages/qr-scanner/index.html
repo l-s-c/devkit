@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码识别 | QR Scanner — DevKit</title>
+<meta name="description" content="在线二维码识别工具，上传图片或使用摄像头扫码，纯前端处理。">
+<meta name="keywords" content="二维码识别, QR scanner, 扫码, 二维码扫描, DevKit">
+<meta property="og:title" content="二维码识别 | QR Scanner — DevKit">
+<meta property="og:description" content="在线二维码识别，上传图片或摄像头扫码">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/qr-scanner/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"二维码识别","url":"https://l-s-c.github.io/devkit/pages/qr-scanner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/qr-scanner/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.security-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:rgba(16,185,129,0.1);color:#10B981;margin-bottom:12px}
+.upload-zone{border:2px dashed var(--border-glass);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all 200ms;color:var(--text-caption)}
+.upload-zone:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.upload-zone input{display:none}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px;margin-top:12px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.result-card{padding:16px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);margin-top:12px}
+.result-text{font-family:var(--font-code);font-size:13px;word-break:break-all;margin-bottom:8px}
+.result-actions{display:flex;gap:8px}
+.result-actions button{padding:6px 14px;border-radius:12px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.result-actions button:hover{border-color:var(--brand-500);color:var(--brand-500)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">二维码识别 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">二维码识别</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="upload-zone" id="dropZone">
+      <div style="font-size:32px;margin-bottom:8px">📷</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽二维码图片到此处</div>
+      <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择图片</span></div>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
+    <div id="compatWarn" style="display:none;font-size:10px;color:#F59E0B;margin-top:8px">⚠️ 当前浏览器不支持 BarcodeDetector，已使用 jsQR 替代方案</div>
+  </div>
+  <div class="panel" id="resultPanel" style="display:none">
+    <div class="section-title">✅ 识别结果</div>
+    <div class="result-card">
+      <div class="result-text" id="resultText"></div>
+      <div class="result-actions">
+        <button id="copyResult">📋 复制</button>
+        <button id="openLink" style="display:none">🔗 打开链接</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">二维码识别</span><div class="statusbar-spacer"></div><span>BarcodeDetector + jsQR</span></div>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+const hasBD=typeof BarcodeDetector!=='undefined';
+if(!hasBD)document.getElementById('compatWarn').style.display='block';
+
+const dropZone=document.getElementById('dropZone'),fileInput=document.getElementById('fileInput');
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>e.preventDefault());
+dropZone.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])scanFile(e.dataTransfer.files[0])});
+fileInput.addEventListener('change',()=>{if(fileInput.files[0])scanFile(fileInput.files[0]);fileInput.value=''});
+
+async function scanFile(file){
+  document.getElementById('statusInfo').textContent='🔍 识别中...';
+  const img=new Image();const url=URL.createObjectURL(file);
+  img.onload=async()=>{
+    URL.revokeObjectURL(url);
+    let result=null;
+    if(hasBD){
+      try{const bd=new BarcodeDetector({formats:['qr_code']});const r=await bd.detect(img);if(r.length)result=r[0].rawValue}catch(e){}
+    }
+    if(!result&&typeof jsQR!=='undefined'){
+      const cvs=document.createElement('canvas');cvs.width=img.width;cvs.height=img.height;
+      const ctx=cvs.getContext('2d');ctx.drawImage(img,0,0);
+      const data=ctx.getImageData(0,0,cvs.width,cvs.height);
+      const qr=jsQR(data.data,data.width,data.height);
+      if(qr)result=qr.data;
+      cvs.width=0;
+    }
+    if(result){
+      document.getElementById('resultText').textContent=result;
+      document.getElementById('resultPanel').style.display='block';
+      const isUrl=/^https?:\/\//i.test(result);
+      document.getElementById('openLink').style.display=isUrl?'inline-flex':'none';
+      if(isUrl)document.getElementById('openLink').onclick=()=>window.open(result,'_blank');
+      document.getElementById('statusInfo').textContent='✅ 识别成功';
+    }else{
+      document.getElementById('statusInfo').textContent='❌ 未识别到二维码';
+      document.getElementById('resultPanel').style.display='none';
+    }
+  };
+  img.src=url;
+}
+document.getElementById('copyResult').addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById('resultText').textContent);
+  document.getElementById('statusInfo').textContent='✅ 已复制';
+});
+</script>
+<noscript><p>二维码识别 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

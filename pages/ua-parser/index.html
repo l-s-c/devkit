@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UA 分析 | User-Agent Parser — DevKit</title>
+<meta name="description" content="在线 User-Agent 解析工具，解析浏览器、操作系统、设备类型、渲染引擎等信息。">
+<meta name="keywords" content="User-Agent分析, UA解析, UA parser, 浏览器识别, DevKit">
+<meta property="og:title" content="UA 分析 | User-Agent Parser — DevKit">
+<meta property="og:description" content="在线 User-Agent 解析工具">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/ua-parser/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UA 分析","url":"https://l-s-c.github.io/devkit/pages/ua-parser/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/ua-parser/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+textarea{width:100%;min-height:80px;border:1.5px solid var(--border-glass);border-radius:10px;background:var(--bg-glass-input);padding:12px;font-family:var(--font-code);font-size:12px;line-height:1.6;color:var(--text-primary);outline:none;resize:vertical}
+textarea:focus{border-color:var(--brand-500)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media(max-width:640px){.info-grid{grid-template-columns:1fr}}
+.info-card{padding:14px 16px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.info-icon{font-size:16px;margin-bottom:4px}
+.info-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.info-value{font-size:13px;font-weight:700}
+.btn{padding:8px 16px;border-radius:16px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:800;cursor:pointer;color:var(--text-secondary);transition:all 150ms;margin-top:8px}
+.btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">UA 分析 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">UA 分析</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔍 User-Agent 字符串</div>
+    <textarea id="uaInput" placeholder="粘贴 UA 字符串..."></textarea>
+    <button class="btn" id="fillBtn">📱 填充当前浏览器 UA</button>
+  </div>
+  <div class="panel">
+    <div class="section-title">📊 解析结果</div>
+    <div class="info-grid" id="resultGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">UA 分析</span><div class="statusbar-spacer"></div><span>正则解析 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const uaIn=document.getElementById('uaInput');
+uaIn.value=navigator.userAgent;
+
+function parse(ua){
+  let browser='Unknown',version='',os='Unknown',device='Desktop',engine='Unknown',isBot=false;
+  // Bot
+  if(/bot|crawl|spider|slurp|teoma/i.test(ua)){isBot=true;browser='Bot';const m=ua.match(/(Googlebot|Bingbot|Baiduspider|YandexBot|DuckDuckBot)[\/\s]?([\d.]*)/i);if(m){browser=m[1];version=m[2]}}
+  // Browser
+  if(!isBot){
+    if(/Edg[e\/]([\d.]+)/i.test(ua)){browser='Edge';version=RegExp.$1}
+    else if(/OPR\/([\d.]+)/i.test(ua)){browser='Opera';version=RegExp.$1}
+    else if(/Chrome\/([\d.]+)/i.test(ua)){browser='Chrome';version=RegExp.$1}
+    else if(/Firefox\/([\d.]+)/i.test(ua)){browser='Firefox';version=RegExp.$1}
+    else if(/Safari\/([\d.]+)/i.test(ua)&&/Version\/([\d.]+)/i.test(ua)){browser='Safari';version=RegExp.$1}
+  }
+  // OS
+  if(/Windows NT ([\d.]+)/i.test(ua)){const v=RegExp.$1;os='Windows '+({'10.0':'10/11','6.3':'8.1','6.2':'8','6.1':'7'}[v]||v)}
+  else if(/Mac OS X ([\d_.]+)/i.test(ua))os='macOS '+RegExp.$1.replace(/_/g,'.');
+  else if(/Android ([\d.]+)/i.test(ua)){os='Android '+RegExp.$1;device='Mobile'}
+  else if(/iPhone|iPad/i.test(ua)){os='iOS';if(/OS ([\d_]+)/i.test(ua))os+=' '+RegExp.$1.replace(/_/g,'.');device=/iPad/i.test(ua)?'Tablet':'Mobile'}
+  else if(/Linux/i.test(ua))os='Linux';
+  // Engine
+  if(/AppleWebKit\/([\d.]+)/i.test(ua))engine='WebKit '+RegExp.$1;
+  else if(/Gecko\/([\d.]+)/i.test(ua))engine='Gecko '+RegExp.$1;
+  // Device
+  if(/Mobile|Android/i.test(ua)&&!/iPad/i.test(ua))device='Mobile';
+  else if(/iPad|Tablet/i.test(ua))device='Tablet';
+  return[
+    ['🌐','浏览器',browser+(version?' '+version:'')],
+    ['🖥️','操作系统',os],
+    ['📱','设备类型',device],
+    ['⚙️','渲染引擎',engine],
+    ['🤖','爬虫',isBot?'是':'否'],
+    ['📏','UA 长度',ua.length+' 字符']
+  ];
+}
+
+function render(){
+  const items=parse(uaIn.value);
+  document.getElementById('resultGrid').innerHTML=items.map(([icon,label,value])=>
+    `<div class="info-card"><div class="info-icon">${icon}</div><div class="info-label">${label}</div><div class="info-value">${value}</div></div>`).join('');
+}
+
+uaIn.addEventListener('input',render);
+document.getElementById('fillBtn').addEventListener('click',()=>{uaIn.value=navigator.userAgent;render()});
+render();
+</script>
+<noscript><p>UA 分析 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

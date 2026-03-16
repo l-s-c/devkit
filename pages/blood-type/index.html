@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>血型遗传查询 — DevKit</title>
+<meta name="description" content="在线血型遗传查询工具，根据父母血型查询子女可能的血型及概率。ABO 血型遗传规律科学计算。">
+<meta name="keywords" content="血型遗传, 血型查询, ABO血型, 遗传规律, DevKit">
+<meta property="og:title" content="血型遗传查询 — DevKit">
+<meta property="og:description" content="根据父母血型查询子女可能的血型">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/blood-type/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"血型遗传查询","url":"https://l-s-c.github.io/devkit/pages/blood-type/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/blood-type/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:24px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.select-row{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap}
+.parent-group{text-align:center}
+.parent-label{font-size:12px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:4px;justify-content:center}
+.blood-pills{display:flex;gap:4px}
+.blood-pill{width:48px;height:48px;border-radius:50%;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 200ms}
+.blood-pill:hover{border-color:#EF4444;color:#EF4444}
+.blood-pill.active{background:#EF4444;color:#fff;border-color:#EF4444;box-shadow:0 2px 12px rgba(239,68,68,0.3)}
+.plus-icon{font-size:28px;color:var(--text-caption);align-self:center;margin-top:20px}
+.result-area{text-align:center;padding:20px}
+.result-title{font-size:14px;font-weight:800;margin-bottom:16px}
+.result-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.result-item{text-align:center}
+.result-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;margin-bottom:4px}
+.result-circle.possible{background:rgba(239,68,68,0.1);color:#EF4444;border:2px solid #EF4444}
+.result-circle.impossible{background:var(--bg-glass-input);color:var(--text-caption);border:2px solid var(--border-glass);opacity:0.4}
+.result-prob{font-size:10px;font-weight:700;color:var(--text-secondary)}
+.result-label-sm{font-size:10px;color:var(--text-caption)}
+.note{font-size:10px;color:var(--text-caption);text-align:center;margin-top:16px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">血型遗传查询 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">血型遗传查询</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🩸 选择父母血型</div>
+    <div class="select-row">
+      <div class="parent-group">
+        <div class="parent-label">👨 父亲血型</div>
+        <div class="blood-pills" id="fatherPills"></div>
+      </div>
+      <div class="plus-icon">×</div>
+      <div class="parent-group">
+        <div class="parent-label">👩 母亲血型</div>
+        <div class="blood-pills" id="motherPills"></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="result-area">
+      <div class="result-title">👶 子女可能的血型</div>
+      <div class="result-pills" id="resultPills"></div>
+    </div>
+    <div class="note">⚠️ 仅基于 ABO 血型遗传规律计算，实际情况可能因罕见基因型（如 Bombay 型）而异。仅供参考，不作医学诊断依据。</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">血型遗传查询</span><div class="statusbar-spacer"></div><span>ABO 遗传规律 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+/* ABO inheritance: genotype-based accurate calculation
+   A: AA or AO, B: BB or BO, AB: AB, O: OO
+   Each phenotype parent can be multiple genotypes with assumed equal probability */
+const GENO={A:['AA','AO'],B:['BB','BO'],AB:['AB'],O:['OO']};
+function cross(g1,g2){
+  const results={A:0,B:0,AB:0,O:0};
+  let total=0;
+  for(const p1 of g1)for(const p2 of g2){
+    for(const a1 of p1)for(const a2 of p2){
+      const pair=[a1,a2].sort().join('');
+      let pheno;
+      if(pair==='AA'||pair==='AO')pheno='A';
+      else if(pair==='BB'||pair==='BO')pheno='B';
+      else if(pair==='AB')pheno='AB';
+      else pheno='O';
+      results[pheno]++;total++;
+    }
+  }
+  const out={};for(const k in results)if(results[k])out[k]=Math.round(results[k]/total*100);
+  return out;
+}
+
+let father='A',mother='A';
+const types=['A','B','AB','O'];
+
+function renderPills(id,selected,parent){
+  document.getElementById(id).innerHTML=types.map(t=>
+    `<div class="blood-pill${t===selected?' active':''}" data-type="${t}">${t}</div>`).join('');
+}
+
+function render(){
+  const result=cross(GENO[father],GENO[mother]);
+  document.getElementById('resultPills').innerHTML=types.map(t=>{
+    const prob=result[t]||0;
+    return `<div class="result-item"><div class="result-circle ${prob?'possible':'impossible'}">${t}</div><div class="result-prob">${prob?prob+'%':'-'}</div><div class="result-label-sm">${prob?'可能':'不可能'}</div></div>`;
+  }).join('');
+}
+
+renderPills('fatherPills',father);renderPills('motherPills',mother);
+
+document.getElementById('fatherPills').addEventListener('click',e=>{
+  const p=e.target.closest('[data-type]');if(!p)return;father=p.dataset.type;renderPills('fatherPills',father);render()});
+document.getElementById('motherPills').addEventListener('click',e=>{
+  const p=e.target.closest('[data-type]');if(!p)return;mother=p.dataset.type;renderPills('motherPills',mother);render()});
+render();
+</script>
+<noscript><p>血型遗传查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

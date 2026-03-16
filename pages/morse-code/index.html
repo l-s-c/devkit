@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>摩斯密码 | Morse Code — DevKit</title>
+<meta name="description" content="在线摩斯密码转换器，文本与摩斯密码双向互转，支持声音播放和灯光闪烁动画。">
+<meta name="keywords" content="摩斯密码, morse code, 摩尔斯电码, 摩斯密码翻译, DevKit">
+<meta property="og:title" content="摩斯密码 | Morse Code — DevKit">
+<meta property="og:description" content="在线摩斯密码转换，声音播放+灯光闪烁">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/morse-code/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"摩斯密码","url":"https://l-s-c.github.io/devkit/pages/morse-code/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/morse-code/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.dual{grid-template-columns:1fr}}
+.pane-title{font-size:12px;font-weight:800;margin-bottom:8px}
+textarea{width:100%;min-height:160px;border:1.5px solid var(--border-glass);border-radius:10px;background:var(--bg-glass-input);padding:12px;font-family:var(--font-code);font-size:13px;line-height:1.7;color:var(--text-primary);outline:none;resize:vertical}
+textarea:focus{border-color:var(--brand-500)}
+.action-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{padding:8px 16px;border-radius:16px;border:none;font-size:11px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:4px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.light-area{text-align:center;padding:20px}
+.light-bulb{width:60px;height:60px;border-radius:50%;background:var(--border-glass);margin:0 auto 8px;transition:background 100ms,box-shadow 100ms}
+.light-bulb.on{background:#FBBF24;box-shadow:0 0 40px rgba(251,191,36,0.6)}
+.light-label{font-size:10px;color:var(--text-caption)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">摩斯密码 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">摩斯密码</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="dual">
+      <div><div class="pane-title">📝 文本</div><textarea id="textInput" placeholder="输入文本...">HELLO DEVKIT</textarea></div>
+      <div><div class="pane-title">📡 摩斯密码</div><textarea id="morseInput" placeholder="输入摩斯密码（用 . 和 -）..."></textarea></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="playBtn">🔊 播放声音</button>
+      <button class="btn btn-secondary" id="flashBtn">💡 灯光闪烁</button>
+      <button class="btn btn-secondary" id="copyBtn">📋 复制摩斯</button>
+      <button class="btn btn-secondary" id="clearBtn">🗑️ 清空</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">💡 灯光信号</div>
+    <div class="light-area"><div class="light-bulb" id="bulb"></div><div class="light-label">播放时灯光同步闪烁</div></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">摩斯密码</span><div class="statusbar-spacer"></div><span>AudioContext · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const MORSE={'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.','?':'..--..','!':'-.-.--','.':'.-.-.-',',':'--..--'};
+const REV=Object.fromEntries(Object.entries(MORSE).map(([k,v])=>[v,k]));
+
+const textIn=document.getElementById('textInput'),morseIn=document.getElementById('morseInput'),bulb=document.getElementById('bulb');
+
+function t2m(){morseIn.value=textIn.value.toUpperCase().split('').map(c=>c===' '?'/':(MORSE[c]||'')).join(' ')}
+function m2t(){textIn.value=morseIn.value.trim().split(' ').map(c=>c==='/'?' ':(REV[c]||'')).join('')}
+textIn.addEventListener('input',t2m);
+morseIn.addEventListener('input',m2t);
+
+let audioCtx=null;
+async function playMorse(){
+  const morse=morseIn.value;if(!morse)return;
+  if(!audioCtx)audioCtx=new AudioContext();
+  const dot=80,dash=240,gap=80,charGap=240,wordGap=560;
+  let t=audioCtx.currentTime+0.05;
+  const schedules=[];
+  for(const ch of morse){
+    if(ch==='.'){
+      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.frequency.value=800;o.connect(g);g.connect(audioCtx.destination);
+      o.start(t);o.stop(t+dot/1000);schedules.push([t*1000,dot]);t+=dot/1000+gap/1000;
+    }else if(ch==='-'){
+      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.frequency.value=800;o.connect(g);g.connect(audioCtx.destination);
+      o.start(t);o.stop(t+dash/1000);schedules.push([t*1000,dash]);t+=dash/1000+gap/1000;
+    }else if(ch==='/'){t+=wordGap/1000;}
+    else if(ch===' '){t+=charGap/1000;}
+  }
+  // Sync bulb
+  const base=performance.now();
+  for(const [ms,dur] of schedules){
+    const delay=(ms-audioCtx.currentTime*1000)+(audioCtx.currentTime*1000-base);
+    setTimeout(()=>{bulb.classList.add('on');setTimeout(()=>bulb.classList.remove('on'),dur)},ms*1000>0?ms-audioCtx.currentTime*1000+50:0);
+  }
+  document.getElementById('statusInfo').textContent='🔊 播放中...';
+  setTimeout(()=>{document.getElementById('statusInfo').textContent='摩斯密码'},(t-audioCtx.currentTime)*1000+200);
+}
+
+document.getElementById('playBtn').addEventListener('click',playMorse);
+document.getElementById('flashBtn').addEventListener('click',()=>{
+  const morse=morseIn.value;if(!morse)return;
+  let delay=0;const dot=100,dash=300,gap=100,charGap=300,wordGap=700;
+  for(const ch of morse){
+    if(ch==='.'||ch==='-'){
+      const d=ch==='.'?dot:dash;
+      setTimeout(()=>{bulb.classList.add('on');setTimeout(()=>bulb.classList.remove('on'),d)},delay);
+      delay+=d+gap;
+    }else if(ch==='/'){delay+=wordGap;}
+    else if(ch===' '){delay+=charGap;}
+  }
+});
+document.getElementById('copyBtn').addEventListener('click',()=>navigator.clipboard.writeText(morseIn.value));
+document.getElementById('clearBtn').addEventListener('click',()=>{textIn.value='';morseIn.value=''});
+t2m();
+</script>
+<noscript><p>摩斯密码 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

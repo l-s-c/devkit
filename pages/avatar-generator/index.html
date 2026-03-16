@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机头像生成 | Avatar Generator — DevKit</title>
+<meta name="description" content="在线随机头像生成器，像素风对称头像，Canvas 程序化生成，批量下载 PNG。">
+<meta name="keywords" content="随机头像, avatar generator, 头像生成, 像素头像, DevKit">
+<meta property="og:title" content="随机头像生成 — DevKit">
+<meta property="og:description" content="在线随机头像生成，像素风对称设计">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/avatar-generator/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"随机头像生成","url":"https://l-s-c.github.io/devkit/pages/avatar-generator/","applicationCategory":"DesignApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/avatar-generator/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.hero{text-align:center;margin-bottom:16px}
+.hero canvas{border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.1);cursor:pointer}
+.action-row{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.batch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.batch-grid canvas{width:100%;border-radius:10px;cursor:pointer;transition:transform 150ms}
+.batch-grid canvas:hover{transform:scale(1.05)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">随机头像生成 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">随机头像</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="hero">
+      <canvas id="mainAvatar" width="200" height="200"></canvas>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="refreshBtn">🎲 重新生成</button>
+      <button class="btn btn-secondary" id="downloadBtn">📥 下载 PNG</button>
+      <button class="btn btn-secondary" id="batchBtn">🔄 批量生成</button>
+    </div>
+  </div>
+  <div class="panel" id="batchPanel" style="display:none">
+    <div class="section-title">📦 批量生成（点击下载）</div>
+    <div class="batch-grid" id="batchGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">随机头像</span><div class="statusbar-spacer"></div><span>Canvas · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+function genAvatar(cvs,size=200){
+  cvs.width=size;cvs.height=size;
+  const ctx=cvs.getContext('2d');
+  const grid=5,cell=size/grid;
+  const hue=Math.random()*360,sat=60+Math.random()*30,light=45+Math.random()*20;
+  const bg=`hsl(${hue},${sat}%,${light+35}%)`,fg=`hsl(${hue},${sat}%,${light}%)`;
+  ctx.fillStyle=bg;ctx.fillRect(0,0,size,size);
+  ctx.fillStyle=fg;
+  const half=Math.ceil(grid/2);
+  const pattern=[];
+  for(let y=0;y<grid;y++){pattern[y]=[];for(let x=0;x<half;x++)pattern[y][x]=Math.random()>0.5}
+  for(let y=0;y<grid;y++)for(let x=0;x<grid;x++){
+    const sx=x<half?x:grid-1-x;
+    if(pattern[y][sx])ctx.fillRect(x*cell,y*cell,cell,cell);
+  }
+}
+function download(cvs,name='avatar.png'){
+  cvs.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href)},'image/png');
+}
+const main=document.getElementById('mainAvatar');
+genAvatar(main);
+document.getElementById('refreshBtn').addEventListener('click',()=>genAvatar(main));
+document.getElementById('downloadBtn').addEventListener('click',()=>download(main));
+document.getElementById('batchBtn').addEventListener('click',()=>{
+  const panel=document.getElementById('batchPanel');panel.style.display='block';
+  const grid=document.getElementById('batchGrid');grid.innerHTML='';
+  for(let i=0;i<9;i++){
+    const c=document.createElement('canvas');
+    genAvatar(c,200);
+    c.addEventListener('click',()=>download(c,`avatar-${i+1}.png`));
+    grid.appendChild(c);
+  }
+});
+main.addEventListener('click',()=>genAvatar(main));
+</script>
+<noscript><p>随机头像生成 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

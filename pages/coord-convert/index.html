@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地图坐标系转换 | Coord Convert — DevKit</title>
+<meta name="description" content="在线地图坐标系转换工具，WGS84、GCJ02（火星坐标）、BD09（百度坐标）三系互转。">
+<meta name="keywords" content="坐标转换, GCJ02, 火星坐标, BD09, WGS84, 坐标系转换, DevKit">
+<meta property="og:title" content="地图坐标系转换 — DevKit">
+<meta property="og:description" content="WGS84/GCJ02/BD09 三系互转">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/coord-convert/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"地图坐标系转换","url":"https://l-s-c.github.io/devkit/pages/coord-convert/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/coord-convert/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.coord-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:768px){.coord-grid{grid-template-columns:1fr}}
+.coord-card{padding:16px;border-radius:12px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input)}
+.coord-label{font-size:11px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.coord-desc{font-size:9px;color:var(--text-caption);margin-bottom:8px}
+.coord-input{width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--border-glass);background:transparent;font-family:var(--font-code);font-size:12px;color:var(--text-primary);outline:none;margin-bottom:4px}
+.coord-input:focus{border-color:var(--brand-500)}
+.coord-input-label{font-size:9px;color:var(--text-caption);margin-bottom:2px}
+.info-table{width:100%;font-size:11px;border-collapse:collapse}
+.info-table th,.info-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-glass)}
+.info-table th{font-weight:800;color:var(--text-caption);font-size:10px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">地图坐标系转换 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">坐标系转换</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📍 输入任一坐标系，自动计算其他两种</div>
+    <div class="coord-grid">
+      <div class="coord-card">
+        <div class="coord-label">🌍 WGS84</div>
+        <div class="coord-desc">GPS / 国际标准</div>
+        <div class="coord-input-label">纬度 Lat</div>
+        <input class="coord-input" id="wgs84Lat" value="39.908722" data-sys="wgs84">
+        <div class="coord-input-label">经度 Lng</div>
+        <input class="coord-input" id="wgs84Lng" value="116.397499" data-sys="wgs84">
+      </div>
+      <div class="coord-card">
+        <div class="coord-label">🔥 GCJ02</div>
+        <div class="coord-desc">高德 / 腾讯 / 火星坐标</div>
+        <div class="coord-input-label">纬度 Lat</div>
+        <input class="coord-input" id="gcj02Lat" data-sys="gcj02">
+        <div class="coord-input-label">经度 Lng</div>
+        <input class="coord-input" id="gcj02Lng" data-sys="gcj02">
+      </div>
+      <div class="coord-card">
+        <div class="coord-label">📍 BD09</div>
+        <div class="coord-desc">百度坐标</div>
+        <div class="coord-input-label">纬度 Lat</div>
+        <input class="coord-input" id="bd09Lat" data-sys="bd09">
+        <div class="coord-input-label">经度 Lng</div>
+        <input class="coord-input" id="bd09Lng" data-sys="bd09">
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📖 坐标系说明</div>
+    <table class="info-table">
+      <tr><th>坐标系</th><th>使用场景</th><th>说明</th></tr>
+      <tr><td>WGS84</td><td>GPS 设备、Google 地图（海外）</td><td>国际标准坐标系</td></tr>
+      <tr><td>GCJ02</td><td>高德、腾讯、Google 地图（中国）</td><td>国测局加密坐标（火星坐标）</td></tr>
+      <tr><td>BD09</td><td>百度地图</td><td>百度在 GCJ02 基础上二次加密</td></tr>
+    </table>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">坐标系转换</span><div class="statusbar-spacer"></div><span>纯算法 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const PI=Math.PI,a=6378245.0,ee=0.00669342162296594323,x_pi=PI*3000.0/180.0;
+function transformLat(x,y){let r=-100+2*x+3*y+0.2*y*y+0.1*x*y+0.2*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3;r+=(20*Math.sin(y*PI)+40*Math.sin(y/3*PI))*2/3;r+=(160*Math.sin(y/12*PI)+320*Math.sin(y*PI/30))*2/3;return r}
+function transformLng(x,y){let r=300+x+2*y+0.1*x*x+0.1*x*y+0.1*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3;r+=(20*Math.sin(x*PI)+40*Math.sin(x/3*PI))*2/3;r+=(150*Math.sin(x/12*PI)+300*Math.sin(x/30*PI))*2/3;return r}
+function outOfChina(lat,lng){return lng<72.004||lng>137.8347||lat<0.8293||lat>55.8271}
+
+function wgs84ToGcj02(lat,lng){
+  if(outOfChina(lat,lng))return[lat,lng];
+  let dLat=transformLat(lng-105,lat-35),dLng=transformLng(lng-105,lat-35);
+  const radLat=lat/180*PI,magic=Math.sin(radLat);
+  const sqrtMagic=Math.sqrt(1-ee*magic*magic);
+  dLat=(dLat*180)/(a*(1-ee)/(sqrtMagic*sqrtMagic*sqrtMagic)*PI);
+  dLng=(dLng*180)/(a/sqrtMagic*Math.cos(radLat)*PI);
+  return[lat+dLat,lng+dLng];
+}
+function gcj02ToWgs84(lat,lng){
+  const [gLat,gLng]=wgs84ToGcj02(lat,lng);
+  return[lat*2-gLat,lng*2-gLng];
+}
+function gcj02ToBd09(lat,lng){
+  const z=Math.sqrt(lng*lng+lat*lat)+0.00002*Math.sin(lat*x_pi);
+  const theta=Math.atan2(lat,lng)+0.000003*Math.cos(lng*x_pi);
+  return[z*Math.sin(theta)+0.006,z*Math.cos(theta)+0.0065];
+}
+function bd09ToGcj02(lat,lng){
+  const x=lng-0.0065,y=lat-0.006;
+  const z=Math.sqrt(x*x+y*y)-0.00002*Math.sin(y*x_pi);
+  const theta=Math.atan2(y,x)-0.000003*Math.cos(x*x_pi);
+  return[z*Math.sin(theta),z*Math.cos(theta)];
+}
+
+function updateFrom(sys){
+  const lat=parseFloat(document.getElementById(sys+'Lat').value);
+  const lng=parseFloat(document.getElementById(sys+'Lng').value);
+  if(isNaN(lat)||isNaN(lng))return;
+  let wLat,wLng,gLat,gLng,bLat,bLng;
+  if(sys==='wgs84'){
+    [wLat,wLng]=[lat,lng];
+    [gLat,gLng]=wgs84ToGcj02(lat,lng);
+    [bLat,bLng]=gcj02ToBd09(gLat,gLng);
+  }else if(sys==='gcj02'){
+    [gLat,gLng]=[lat,lng];
+    [wLat,wLng]=gcj02ToWgs84(lat,lng);
+    [bLat,bLng]=gcj02ToBd09(lat,lng);
+  }else{
+    [bLat,bLng]=[lat,lng];
+    [gLat,gLng]=bd09ToGcj02(lat,lng);
+    [wLat,wLng]=gcj02ToWgs84(gLat,gLng);
+  }
+  if(sys!=='wgs84'){document.getElementById('wgs84Lat').value=wLat.toFixed(6);document.getElementById('wgs84Lng').value=wLng.toFixed(6)}
+  if(sys!=='gcj02'){document.getElementById('gcj02Lat').value=gLat.toFixed(6);document.getElementById('gcj02Lng').value=gLng.toFixed(6)}
+  if(sys!=='bd09'){document.getElementById('bd09Lat').value=bLat.toFixed(6);document.getElementById('bd09Lng').value=bLng.toFixed(6)}
+}
+
+document.querySelectorAll('.coord-input').forEach(input=>{
+  input.addEventListener('input',()=>updateFrom(input.dataset.sys));
+});
+updateFrom('wgs84');
+</script>
+<noscript><p>坐标系转换 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
