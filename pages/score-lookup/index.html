@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高考分数线查询 | Score Lookup — DevKit</title>
+<meta name="description" content="历年各省高考录取分数线查询，按省份、年份、科类筛选，含趋势对比。">
+<meta name="keywords" content="高考分数线, 录取分数线, 高考, 分数线查询, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/score-lookup/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"高考分数线查询","url":"https://l-s-c.github.io/devkit/pages/score-lookup/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#EF4444}[data-theme=dark]{--brand-500:#F87171}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(239,68,68,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.filter-row{display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.filter-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:40px}
+.filter-select{padding:6px 12px;border-radius:8px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:12px;color:var(--text-primary);outline:none}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.score-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:10px;overflow:hidden;border:1px solid var(--border-glass)}
+.score-table th{padding:10px 12px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.06);color:var(--brand-500);text-align:left;border-bottom:1px solid var(--border-glass)}
+.score-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border-glass)}
+.score-table tr:last-child td{border-bottom:none}
+.score-table tr:hover td{background:rgba(239,68,68,0.02)}
+.score-num{font-family:var(--font-code);font-weight:800}
+.batch-tag{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700}
+.b1{background:rgba(239,68,68,0.1);color:#DC2626}
+.b2{background:rgba(59,130,246,0.1);color:#2563EB}
+.bs{background:rgba(139,92,246,0.1);color:#7C3AED}
+.bp{background:rgba(245,158,11,0.1);color:#D97706}
+.trend-up{color:#10B981;font-size:10px}.trend-down{color:#EF4444;font-size:10px}.trend-flat{color:var(--text-caption);font-size:10px}
+.notice{padding:12px;border-radius:10px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:11px;color:var(--text-secondary);line-height:1.6;margin-top:12px}
+.notice strong{color:#D97706}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">高考分数线查询 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">高考分数线查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📊 高考分数线查询</div>
+    <div class="filter-row"><span class="filter-label">省份</span><select class="filter-select" id="provSelect"></select></div>
+    <div class="filter-row"><span class="filter-label">年份</span><div id="yearPills"></div></div>
+    <div class="filter-row"><span class="filter-label">科类</span><div class="pill active" data-sub="理科" id="subSci">理科/物理</div><div class="pill" data-sub="文科" id="subArt">文科/历史</div></div>
+  </div>
+  <div class="panel">
+    <div class="section-title" id="tableTitle">📋 分数线</div>
+    <table class="score-table"><thead><tr><th>批次</th><th>分数线</th><th>较上年</th></tr></thead><tbody id="tableBody"></tbody></table>
+    <div class="notice"><strong>⚠️ 数据说明：</strong>分数线数据为精选参考值，实际以各省教育考试院官方公布为准。部分省份已合并一二批次。</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">高考分数线查询</span><div class="statusbar-spacer"></div><span>仅供参考</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Curated score data: province → year → subject → [{batch,score,prevScore}]
+const D={
+'北京':{2025:{理科:[{b:'特殊类型',s:527,p:525},{b:'本科',s:448,p:445},{b:'专科',s:120,p:120}],文科:[{b:'特殊类型',s:527,p:525},{b:'本科',s:448,p:445},{b:'专科',s:120,p:120}]},2024:{理科:[{b:'特殊类型',s:525,p:520},{b:'本科',s:445,p:440},{b:'专科',s:120,p:120}],文科:[{b:'特殊类型',s:525,p:520},{b:'本科',s:445,p:440},{b:'专科',s:120,p:120}]},2023:{理科:[{b:'特殊类型',s:520,p:518},{b:'本科',s:440,p:436},{b:'专科',s:120,p:120}],文科:[{b:'特殊类型',s:520,p:518},{b:'本科',s:440,p:436},{b:'专科',s:120,p:120}]}},
+'广东':{2025:{理科:[{b:'特殊类型',s:539,p:535},{b:'本科',s:445,p:442},{b:'专科',s:180,p:180}],文科:[{b:'特殊类型',s:540,p:536},{b:'本科',s:437,p:433},{b:'专科',s:180,p:180}]},2024:{理科:[{b:'特殊类型',s:535,p:530},{b:'本科',s:442,p:439},{b:'专科',s:180,p:180}],文科:[{b:'特殊类型',s:536,p:532},{b:'本科',s:433,p:430},{b:'专科',s:180,p:180}]},2023:{理科:[{b:'特殊类型',s:530,p:525},{b:'本科',s:439,p:432},{b:'专科',s:180,p:180}],文科:[{b:'特殊类型',s:532,p:528},{b:'本科',s:430,p:425},{b:'专科',s:180,p:180}]}},
+'山东':{2025:{理科:[{b:'特殊类型',s:520,p:518},{b:'一段',s:443,p:440},{b:'二段',s:150,p:150}],文科:[{b:'特殊类型',s:520,p:518},{b:'一段',s:443,p:440},{b:'二段',s:150,p:150}]},2024:{理科:[{b:'特殊类型',s:518,p:513},{b:'一段',s:440,p:437},{b:'二段',s:150,p:150}],文科:[{b:'特殊类型',s:518,p:513},{b:'一段',s:440,p:437},{b:'二段',s:150,p:150}]}},
+'河南':{2025:{理科:[{b:'一本',s:514,p:509},{b:'二本',s:418,p:415},{b:'专科',s:190,p:190}],文科:[{b:'一本',s:547,p:542},{b:'二本',s:465,p:460},{b:'专科',s:190,p:190}]},2024:{理科:[{b:'一本',s:509,p:505},{b:'二本',s:415,p:410},{b:'专科',s:190,p:190}],文科:[{b:'一本',s:542,p:538},{b:'二本',s:460,p:455},{b:'专科',s:190,p:190}]}},
+'四川':{2025:{理科:[{b:'一本',s:520,p:515},{b:'二本',s:433,p:430},{b:'专科',s:150,p:150}],文科:[{b:'一本',s:538,p:533},{b:'二本',s:458,p:453},{b:'专科',s:150,p:150}]},2024:{理科:[{b:'一本',s:515,p:510},{b:'二本',s:430,p:426},{b:'专科',s:150,p:150}],文科:[{b:'一本',s:533,p:527},{b:'二本',s:453,p:448},{b:'专科',s:150,p:150}]}},
+'湖北':{2025:{理科:[{b:'特殊类型',s:525,p:522},{b:'本科',s:424,p:420},{b:'专科',s:200,p:200}],文科:[{b:'特殊类型',s:531,p:527},{b:'本科',s:432,p:428},{b:'专科',s:200,p:200}]},2024:{理科:[{b:'特殊类型',s:522,p:518},{b:'本科',s:420,p:416},{b:'专科',s:200,p:200}],文科:[{b:'特殊类型',s:527,p:523},{b:'本科',s:428,p:424},{b:'专科',s:200,p:200}]}},
+};
+const PROVS=Object.keys(D);const YEARS=[2025,2024,2023];
+let prov=PROVS[0],year=2025,sub='理科';
+// init
+const provSel=document.getElementById('provSelect');
+PROVS.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;provSel.appendChild(o)});
+document.getElementById('yearPills').innerHTML=YEARS.map(y=>`<div class="pill${y===year?' active':''}" data-year="${y}" style="display:inline-block;margin-right:4px">${y}</div>`).join('');
+function render(){
+  const data=D[prov]?.[year]?.[sub];
+  document.getElementById('tableTitle').textContent=`📋 ${prov} ${year} 年高考录取分数线（${sub}）`;
+  if(!data){document.getElementById('tableBody').innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--text-caption)">暂无该年份数据</td></tr>';return}
+  const batchClass={特殊类型:'bs',一本:'b1',本科:'b1',一段:'b1',二本:'b2',二段:'b2',专科:'bp'};
+  document.getElementById('tableBody').innerHTML=data.map(r=>{
+    const diff=r.s-r.p;
+    const trend=diff>0?`<span class="trend-up">↑ ${diff}</span>`:diff<0?`<span class="trend-down">↓ ${Math.abs(diff)}</span>`:`<span class="trend-flat">持平</span>`;
+    return `<tr><td><span class="batch-tag ${batchClass[r.b]||'b1'}">${r.b}</span></td><td class="score-num">${r.s}</td><td>${trend}</td></tr>`;
+  }).join('');
+}
+provSel.addEventListener('change',()=>{prov=provSel.value;render()});
+document.getElementById('yearPills').addEventListener('click',e=>{if(!e.target.classList.contains('pill'))return;year=+e.target.dataset.year;document.querySelectorAll('#yearPills .pill').forEach(p=>p.classList.remove('active'));e.target.classList.add('active');render()});
+document.getElementById('subSci').addEventListener('click',()=>{sub='理科';document.getElementById('subSci').classList.add('active');document.getElementById('subArt').classList.remove('active');render()});
+document.getElementById('subArt').addEventListener('click',()=>{sub='文科';document.getElementById('subArt').classList.add('active');document.getElementById('subSci').classList.remove('active');render()});
+render();
+</script>
+<noscript><p>高考分数线查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

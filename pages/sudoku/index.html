@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数独生成器 | Sudoku — DevKit</title>
+<meta name="description" content="在线数独游戏，自动生成题目，简单/中等/困难/地狱四种难度，计时器+提示+验证。">
+<meta name="keywords" content="数独, 数独生成器, sudoku, 数独游戏, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/sudoku/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"数独生成器","url":"https://l-s-c.github.io/devkit/pages/sudoku/","applicationCategory":"GameApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#6366F1}[data-theme=dark]{--brand-500:#818CF8}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.timer{text-align:center;font-size:20px;font-weight:800;font-family:var(--font-code);color:var(--text-secondary);margin-bottom:12px}
+.sudoku-wrap{display:flex;justify-content:center}
+.sudoku-grid{display:grid;grid-template-columns:repeat(9,1fr);width:min(360px,100%);border:3px solid var(--text-primary);border-radius:4px;overflow:hidden}
+.sudoku-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;font-family:var(--font-code);border:0.5px solid var(--border-glass);cursor:pointer;transition:all 150ms;background:var(--bg-glass-input)}
+.sudoku-cell:hover{background:rgba(99,102,241,0.06)}
+.sudoku-cell.given{font-weight:900;color:var(--text-primary)}
+.sudoku-cell.user{color:var(--brand-500)}
+.sudoku-cell.selected{background:rgba(99,102,241,0.12);box-shadow:inset 0 0 0 2px var(--brand-500)}
+.sudoku-cell.error{color:#EF4444;background:rgba(239,68,68,0.06)}
+.sudoku-cell:nth-child(3n){border-right:2px solid var(--text-primary)}
+.sudoku-cell:nth-child(9n+1){border-left:none}
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54){border-bottom:2px solid var(--text-primary)}
+.numpad{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.numpad-btn{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-weight:800;font-family:var(--font-code);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms}
+.numpad-btn:hover{border-color:var(--brand-500);background:rgba(99,102,241,0.06);color:var(--brand-500)}
+.msg{text-align:center;margin-top:8px;font-size:12px;font-weight:700}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">数独生成器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">数独生成器</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🧩 数独生成器</div>
+    <div class="config-row"><span class="config-label">难度</span><div class="pill active" data-diff="easy">😊 简单</div><div class="pill" data-diff="medium">🤔 中等</div><div class="pill" data-diff="hard">🧠 困难</div><div class="pill" data-diff="hell">💀 地狱</div></div>
+    <div class="btn-row"><button class="btn btn-primary" id="newBtn">🎲 新游戏</button><button class="btn btn-secondary" id="hintBtn">💡 提示</button><button class="btn btn-secondary" id="checkBtn">✅ 检查</button><button class="btn btn-secondary" id="solveBtn">📖 显示答案</button></div>
+  </div>
+  <div class="panel">
+    <div class="timer" id="timer">00:00</div>
+    <div class="sudoku-wrap"><div class="sudoku-grid" id="grid"></div></div>
+    <div class="numpad" id="numpad"></div>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">数独生成器</span><div class="statusbar-spacer"></div><span>益智训练 🧩</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const DIFFS={easy:38,medium:30,hard:25,hell:20};
+let board=[],solution=[],given=[],selected=-1,diff='easy',seconds=0,timerInterval;
+// Generate solved board using backtracking
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function isValid(b,r,c,n){
+  for(let i=0;i<9;i++){if(b[r*9+i]===n||b[i*9+c]===n)return false}
+  const br=Math.floor(r/3)*3,bc=Math.floor(c/3)*3;
+  for(let i=br;i<br+3;i++)for(let j=bc;j<bc+3;j++)if(b[i*9+j]===n)return false;
+  return true;
+}
+function solve(b){
+  for(let i=0;i<81;i++){
+    if(b[i]===0){
+      const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+      for(const n of nums){if(isValid(b,Math.floor(i/9),i%9,n)){b[i]=n;if(solve(b))return true;b[i]=0}}
+      return false;
+    }
+  }
+  return true;
+}
+function generate(){
+  solution=new Array(81).fill(0);solve(solution);
+  board=[...solution];
+  given=new Array(81).fill(false);
+  const remove=81-DIFFS[diff];
+  const indices=shuffle([...Array(81).keys()]);
+  for(let i=0;i<remove;i++)board[indices[i]]=0;
+  for(let i=0;i<81;i++)given[i]=board[i]!==0;
+  selected=-1;
+}
+function render(){
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  for(let i=0;i<81;i++){
+    const c=document.createElement('div');
+    c.className='sudoku-cell'+(given[i]?' given':'')+(board[i]&&!given[i]?' user':'')+(i===selected?' selected':'');
+    c.textContent=board[i]||'';c.dataset.idx=i;
+    g.appendChild(c);
+  }
+}
+document.getElementById('grid').addEventListener('click',e=>{
+  const cell=e.target.closest('.sudoku-cell');if(!cell)return;
+  const idx=+cell.dataset.idx;if(given[idx])return;
+  selected=idx;render();
+});
+// numpad
+const np=document.getElementById('numpad');
+for(let i=1;i<=9;i++){const b=document.createElement('div');b.className='numpad-btn';b.textContent=i;b.addEventListener('click',()=>placeNum(i));np.appendChild(b)}
+const del=document.createElement('div');del.className='numpad-btn';del.textContent='⌫';del.addEventListener('click',()=>placeNum(0));np.appendChild(del);
+function placeNum(n){if(selected<0||given[selected])return;board[selected]=n;render();checkWin()}
+document.addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='9')placeNum(+e.key);
+  if(e.key==='Backspace'||e.key==='Delete')placeNum(0);
+});
+function checkWin(){
+  if(board.some(v=>v===0))return;
+  for(let i=0;i<81;i++)if(board[i]!==solution[i])return;
+  clearInterval(timerInterval);
+  document.getElementById('msg').innerHTML='<span style="color:#10B981">🎉 恭喜完成！用时 '+formatTime(seconds)+'</span>';
+}
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function startTimer(){clearInterval(timerInterval);seconds=0;timerInterval=setInterval(()=>{seconds++;document.getElementById('timer').textContent=formatTime(seconds)},1000)}
+document.getElementById('newBtn').addEventListener('click',()=>{generate();render();startTimer();document.getElementById('msg').textContent=''});
+document.getElementById('hintBtn').addEventListener('click',()=>{if(selected<0||given[selected])return;board[selected]=solution[selected];render()});
+document.getElementById('checkBtn').addEventListener('click',()=>{
+  const g=document.getElementById('grid');
+  g.querySelectorAll('.sudoku-cell').forEach((c,i)=>{if(!given[i]&&board[i]&&board[i]!==solution[i])c.classList.add('error')});
+});
+document.getElementById('solveBtn').addEventListener('click',()=>{board=[...solution];render();clearInterval(timerInterval)});
+document.querySelectorAll('[data-diff]').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('[data-diff]').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active');diff=this.dataset.diff;
+}));
+generate();render();startTimer();
+</script>
+<noscript><p>数独生成器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

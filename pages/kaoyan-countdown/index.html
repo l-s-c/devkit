@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考研倒计时 | Kaoyan Countdown — DevKit</title>
+<meta name="description" content="考研倒计时器，实时显示距离考研天数，每日名言激励，目标院校设置。">
+<meta name="keywords" content="考研倒计时, 距离考研还有多少天, 考研, 倒计时, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/kaoyan-countdown/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"考研倒计时","url":"https://l-s-c.github.io/devkit/pages/kaoyan-countdown/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#8B5CF6}[data-theme=dark]{--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(139,92,246,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.hero{text-align:center;padding:40px 20px}
+.hero-label{font-size:14px;color:var(--text-secondary);margin-bottom:4px}
+.hero-year{font-size:16px;font-weight:700;color:var(--brand-500);margin-bottom:24px}
+.cd-days{font-size:96px;font-weight:900;font-family:var(--font-code);background:linear-gradient(135deg,#8B5CF6,#6366F1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.cd-unit{font-size:18px;font-weight:700;color:var(--text-caption);margin-top:4px}
+.cd-hms{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.hms-box{padding:8px 14px;border-radius:10px;background:var(--bg-glass-input);border:1px solid var(--border-glass);text-align:center;min-width:56px}
+.hms-num{font-size:22px;font-weight:800;font-family:var(--font-code)}
+.hms-label{font-size:9px;color:var(--text-caption)}
+.quote-card{padding:20px;border-radius:10px;background:rgba(139,92,246,0.04);border-left:4px solid var(--brand-500);text-align:center}
+.quote-text{font-size:16px;font-weight:600;line-height:1.8;margin-bottom:8px}
+.quote-author{font-size:11px;color:var(--text-caption)}
+.quote-btn{margin-top:8px;font-size:11px;color:var(--brand-500);cursor:pointer;font-weight:700;border:none;background:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">考研倒计时 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">考研倒计时</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel"><div class="hero">
+    <div class="hero-label">距离</div>
+    <div class="hero-year" id="yearLabel"></div>
+    <div class="cd-days" id="daysNum">--</div>
+    <div class="cd-unit">天</div>
+    <div class="cd-hms">
+      <div class="hms-box"><div class="hms-num" id="hH">--</div><div class="hms-label">时</div></div>
+      <div class="hms-box"><div class="hms-num" id="hM">--</div><div class="hms-label">分</div></div>
+      <div class="hms-box"><div class="hms-num" id="hS">--</div><div class="hms-label">秒</div></div>
+    </div>
+  </div></div>
+  <div class="panel"><div class="quote-card">
+    <div class="quote-text" id="quoteText"></div>
+    <div class="quote-author" id="quoteAuthor"></div>
+    <button class="quote-btn" id="quoteBtn">🔄 换一句</button>
+  </div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">考研倒计时</span><div class="statusbar-spacer"></div><span>加油！🔥</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const QUOTES=[
+['"一个人可以被毁灭，但不能被打败。"','海明威《老人与海》'],
+['"生活不可能像你想象的那么好，但也不会像你想象的那么糟。"','莫泊桑'],
+['"世界上只有一种英雄主义，就是认清生活的真相后依然热爱生活。"','罗曼·罗兰'],
+['"宝剑锋从磨砺出，梅花香自苦寒来。"','《警世贤文》'],
+['"不积跬步，无以至千里。"','荀子'],
+['"天行健，君子以自强不息。"','《周易》'],
+['"路漫漫其修远兮，吾将上下而求索。"','屈原'],
+['"锲而不舍，金石可镂。"','荀子'],
+['"业精于勤荒于嬉，行成于思毁于随。"','韩愈'],
+['"吾生也有涯，而知也无涯。"','庄子'],
+['"纸上得来终觉浅，绝知此事要躬行。"','陆游'],
+['"博学之，审问之，慎思之，明辨之，笃行之。"','《中庸》'],
+['"千淘万漉虽辛苦，吹尽狂沙始到金。"','刘禹锡'],
+['"读书破万卷，下笔如有神。"','杜甫'],
+['"黑夜给了我黑色的眼睛，我却用它寻找光明。"','顾城'],
+];
+// 考研：每年12月最后一个周六
+function getKaoyanDate(){
+  const now=new Date();let y=now.getFullYear();
+  function lastSatDec(year){
+    const d=new Date(year,11,31);
+    while(d.getDay()!==6)d.setDate(d.getDate()-1);
+    d.setHours(8,30,0,0);return d;
+  }
+  let ky=lastSatDec(y);
+  if(now>ky)ky=lastSatDec(y+1);
+  return ky;
+}
+function update(){
+  const ky=getKaoyanDate();const now=new Date();const diff=ky-now;
+  const days=Math.floor(diff/864e5);
+  document.getElementById('daysNum').textContent=days;
+  document.getElementById('hH').textContent=String(Math.floor((diff%864e5)/36e5)).padStart(2,'0');
+  document.getElementById('hM').textContent=String(Math.floor((diff%36e5)/6e4)).padStart(2,'0');
+  document.getElementById('hS').textContent=String(Math.floor((diff%6e4)/1e3)).padStart(2,'0');
+  document.getElementById('yearLabel').textContent=ky.getFullYear()+' 年全国硕士研究生考试';
+  document.getElementById('statusInfo').textContent='距考研 '+days+' 天';
+}
+function showQuote(){
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('quoteText').textContent=q[0];
+  document.getElementById('quoteAuthor').textContent='—— '+q[1];
+}
+document.getElementById('quoteBtn').addEventListener('click',showQuote);
+update();showQuote();setInterval(update,1000);
+</script>
+<noscript><p>考研倒计时 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

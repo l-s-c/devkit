@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视力表 | Eye Chart — DevKit</title>
+<meta name="description" content="标准对数视力表，E字表在线测试，建议5米距离观看。仅供参考，不替代专业检查。">
+<meta name="keywords" content="视力表, E字表, 视力测试, 标准视力表, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/eye-chart/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"视力表","url":"https://l-s-c.github.io/devkit/pages/eye-chart/","applicationCategory":"HealthApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.chart-area{background:#fff;border-radius:8px;padding:32px 24px;text-align:center;border:1px solid var(--border-glass)}
+.chart-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
+.chart-label{width:32px;font-size:11px;font-weight:700;color:var(--text-caption);font-family:var(--font-code);text-align:right}
+.chart-es{display:flex;gap:8px;justify-content:center}
+.e-symbol{font-weight:900;color:#1A1A2E;line-height:1;display:inline-block}
+.chart-decimal{width:32px;font-size:10px;color:var(--text-caption);font-family:var(--font-code);text-align:left}
+.notice{padding:12px;border-radius:10px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:11px;color:var(--text-secondary);line-height:1.6;margin-top:12px}
+.notice strong{color:#D97706}
+@media print{.topbar,.panel:first-of-type,.statusbar,.notice{display:none!important}.panel{box-shadow:none;border:none;backdrop-filter:none;background:transparent}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">视力表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">视力表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel"><div class="section-title">👁️ 标准对数视力表</div><p style="font-size:11px;color:var(--text-secondary)">建议观看距离 5 米。点击 🖨️ 打印后可贴在墙上使用。</p><button style="margin-top:8px;padding:8px 16px;border-radius:10px;border:none;background:var(--brand-500);color:#fff;font-weight:700;cursor:pointer;font-size:11px" onclick="window.print()">🖨️ 打印</button></div>
+  <div class="panel">
+    <div class="chart-area" id="chartArea"></div>
+    <div class="notice"><strong>⚠️ 温馨提示：</strong>本视力表仅供参考，不能替代专业视力检查。屏幕显示的 E 字大小受设备分辨率和观看距离影响。如需准确检测，请前往正规医疗机构。</div>
+  </div>
+</div>
+<div class="statusbar"><span>标准对数视力表</span><div class="statusbar-spacer"></div><span>仅供参考 · 建议5米</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const ROWS=[
+  {log:'4.0',dec:'0.1',size:72,count:1},
+  {log:'4.1',dec:'0.12',size:60,count:2},
+  {log:'4.2',dec:'0.15',size:48,count:3},
+  {log:'4.3',dec:'0.2',size:40,count:4},
+  {log:'4.4',dec:'0.25',size:34,count:4},
+  {log:'4.5',dec:'0.3',size:30,count:5},
+  {log:'4.6',dec:'0.4',size:26,count:5},
+  {log:'4.7',dec:'0.5',size:22,count:6},
+  {log:'4.8',dec:'0.6',size:18,count:6},
+  {log:'4.9',dec:'0.8',size:16,count:7},
+  {log:'5.0',dec:'1.0',size:14,count:7},
+  {log:'5.1',dec:'1.2',size:12,count:8},
+  {log:'5.2',dec:'1.5',size:10,count:8},
+];
+const DIRS=['up','right','down','left'];
+const ROTS={up:'rotate(90deg)',right:'rotate(0deg)',down:'rotate(270deg)',left:'rotate(180deg)'};
+const area=document.getElementById('chartArea');
+ROWS.forEach(r=>{
+  const row=document.createElement('div');row.className='chart-row';
+  row.innerHTML=`<div class="chart-label">${r.log}</div><div class="chart-es">${
+    Array.from({length:r.count},()=>{
+      const d=DIRS[Math.floor(Math.random()*4)];
+      return `<span class="e-symbol" style="font-size:${r.size}px;transform:${ROTS[d]}">E</span>`;
+    }).join('')
+  }</div><div class="chart-decimal">${r.dec}</div>`;
+  area.appendChild(row);
+});
+</script>
+<noscript><p>视力表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

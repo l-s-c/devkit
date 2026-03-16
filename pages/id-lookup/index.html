@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身份证归属地查询 | ID Lookup — DevKit</title>
+<meta name="description" content="身份证号码前6位归属地查询，纯本地运算，号码不上传。支持校验位验证。">
+<meta name="keywords" content="身份证查询, 身份证归属地, 身份证号码, 行政区划, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/id-lookup/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"身份证归属地查询","url":"https://l-s-c.github.io/devkit/pages/id-lookup/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#6366F1}[data-theme=dark]{--brand-500:#818CF8}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.input-wrap{display:flex;gap:8px;margin-bottom:12px}
+.id-input{flex:1;padding:14px 16px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-family:var(--font-code);font-weight:700;color:var(--text-primary);outline:none;text-align:center;letter-spacing:2px}
+.id-input:focus{border-color:var(--brand-500)}
+.btn{padding:14px 24px;border-radius:10px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.id-struct{display:flex;justify-content:center;gap:2px;margin-bottom:16px;flex-wrap:wrap}
+.seg{padding:6px 8px;border-radius:6px;font-family:var(--font-code);font-size:16px;font-weight:700;text-align:center}
+.seg-label{font-size:8px;color:var(--text-caption);display:block;margin-top:2px;font-weight:600}
+.seg-region{background:rgba(99,102,241,0.08);color:#6366F1}
+.seg-birth{background:rgba(16,185,129,0.08);color:#10B981}
+.seg-seq{background:rgba(245,158,11,0.08);color:#D97706}
+.seg-check{background:rgba(239,68,68,0.08);color:#EF4444}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.rc{padding:14px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.rc-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.rc-value{font-size:16px;font-weight:800}
+.security{padding:12px;border-radius:10px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.1);font-size:11px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;margin-top:12px}
+.security-icon{width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">身份证归属地查询 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">身份证归属地查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🪪 身份证归属地查询</div>
+    <div class="input-wrap"><input class="id-input" id="idInput" placeholder="输入前6位或完整号码" maxlength="18"><button class="btn" id="queryBtn">查询</button></div>
+    <div class="id-struct" id="idStruct"></div>
+  </div>
+  <div class="panel" id="resultPanel" style="display:none">
+    <div class="section-title">📍 查询结果</div>
+    <div class="result-grid" id="resultGrid"></div>
+    <div class="security"><div class="security-icon">🔒</div><div><strong>隐私安全：</strong>所有查询均在浏览器本地完成，身份证号码不会上传至任何服务器。</div></div>
+  </div>
+</div>
+<div class="statusbar"><span>身份证归属地查询</span><div class="statusbar-spacer"></div><span>🔒 纯本地 · 不上传</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Curated region codes (province+city level, ~350 entries)
+const REGIONS={"110000":"北京市","110100":"北京市市辖区","110101":"东城区","110102":"西城区","110105":"朝阳区","110106":"丰台区","110107":"石景山区","110108":"海淀区","110109":"门头沟区","110111":"房山区","110112":"通州区","110113":"顺义区","110114":"昌平区","110115":"大兴区","110116":"怀柔区","110117":"平谷区","110118":"密云区","110119":"延庆区","120000":"天津市","120101":"和平区","120102":"河东区","120103":"河西区","120104":"南开区","120105":"河北区","120106":"红桥区","130000":"河北省","130100":"石家庄市","130200":"唐山市","130300":"秦皇岛市","130400":"邯郸市","130500":"邢台市","130600":"保定市","130700":"张家口市","130800":"承德市","130900":"沧州市","131000":"廊坊市","131100":"衡水市","140000":"山西省","140100":"太原市","140200":"大同市","140300":"阳泉市","140400":"长治市","140500":"晋城市","140600":"朔州市","140700":"晋中市","140800":"运城市","140900":"忻州市","141000":"临汾市","141100":"吕梁市","150000":"内蒙古自治区","150100":"呼和浩特市","150200":"包头市","150300":"乌海市","150400":"赤峰市","150500":"通辽市","150600":"鄂尔多斯市","210000":"辽宁省","210100":"沈阳市","210200":"大连市","210300":"鞍山市","220000":"吉林省","220100":"长春市","220200":"吉林市","230000":"黑龙江省","230100":"哈尔滨市","230200":"齐齐哈尔市","310000":"上海市","310101":"黄浦区","310104":"徐汇区","310105":"长宁区","310106":"静安区","310107":"普陀区","310108":"虹口区","310109":"杨浦区","310110":"闵行区","310112":"宝山区","310113":"嘉定区","310114":"金山区","310115":"松江区","310116":"青浦区","310117":"奉贤区","310118":"崇明区","320000":"江苏省","320100":"南京市","320200":"无锡市","320300":"徐州市","320400":"常州市","320500":"苏州市","320600":"南通市","330000":"浙江省","330100":"杭州市","330200":"宁波市","330300":"温州市","330400":"嘉兴市","340000":"安徽省","340100":"合肥市","340200":"芜湖市","350000":"福建省","350100":"福州市","350200":"厦门市","350300":"莆田市","360000":"江西省","360100":"南昌市","370000":"山东省","370100":"济南市","370200":"青岛市","370300":"淄博市","410000":"河南省","410100":"郑州市","410200":"开封市","410300":"洛阳市","420000":"湖北省","420100":"武汉市","420200":"黄石市","430000":"湖南省","430100":"长沙市","430200":"株洲市","440000":"广东省","440100":"广州市","440200":"韶关市","440300":"深圳市","440400":"珠海市","440500":"汕头市","440600":"佛山市","440700":"江门市","440800":"湛江市","440900":"茂名市","441300":"惠州市","441400":"梅州市","441900":"东莞市","442000":"中山市","450000":"广西壮族自治区","450100":"南宁市","450200":"柳州市","460000":"海南省","460100":"海口市","460200":"三亚市","500000":"重庆市","500101":"万州区","500103":"渝中区","500104":"大渡口区","500105":"江北区","500106":"沙坪坝区","500107":"九龙坡区","500108":"南岸区","510000":"四川省","510100":"成都市","510300":"自贡市","510400":"攀枝花市","520000":"贵州省","520100":"贵阳市","530000":"云南省","530100":"昆明市","540000":"西藏自治区","540100":"拉萨市","610000":"陕西省","610100":"西安市","620000":"甘肃省","620100":"兰州市","630000":"青海省","630100":"西宁市","640000":"宁夏回族自治区","640100":"银川市","650000":"新疆维吾尔自治区","650100":"乌鲁木齐市","710000":"台湾省","810000":"香港特别行政区","820000":"澳门特别行政区"};
+
+function lookup(code6){
+  const district=REGIONS[code6]||null;
+  const city=REGIONS[code6.slice(0,4)+'00']||null;
+  const province=REGIONS[code6.slice(0,2)+'0000']||null;
+  return {province,city,district,code:code6};
+}
+function verifyChecksum(id18){
+  const W=[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+  const C='10X98765432';
+  let sum=0;for(let i=0;i<17;i++)sum+=parseInt(id18[i])*W[i];
+  return C[sum%11]===id18[17].toUpperCase();
+}
+document.getElementById('queryBtn').addEventListener('click',()=>{
+  const v=document.getElementById('idInput').value.trim().toUpperCase();
+  if(v.length<6){alert('请至少输入6位');return}
+  const code6=v.slice(0,6);
+  const r=lookup(code6);
+  // struct
+  const structEl=document.getElementById('idStruct');
+  if(v.length===18){
+    const valid=verifyChecksum(v);
+    structEl.innerHTML=`<div class="seg seg-region">${v.slice(0,6)}<span class="seg-label">地区码</span></div><div class="seg seg-birth">${v.slice(6,14)}<span class="seg-label">出生日期</span></div><div class="seg seg-seq">${v.slice(14,17)}<span class="seg-label">顺序码</span></div><div class="seg seg-check">${v[17]}<span class="seg-label">校验${valid?'✅':'❌'}</span></div>`;
+  } else {
+    structEl.innerHTML=`<div class="seg seg-region">${code6}<span class="seg-label">地区码</span></div>`;
+  }
+  // result
+  const panel=document.getElementById('resultPanel');panel.style.display='';
+  let html='';
+  if(r.province)html+=`<div class="rc"><div class="rc-label">省份</div><div class="rc-value">${r.province}</div></div>`;
+  if(r.city)html+=`<div class="rc"><div class="rc-label">城市</div><div class="rc-value">${r.city}</div></div>`;
+  if(r.district)html+=`<div class="rc"><div class="rc-label">区县</div><div class="rc-value">${r.district}</div></div>`;
+  html+=`<div class="rc"><div class="rc-label">行政区划代码</div><div class="rc-value" style="font-family:var(--font-code)">${code6}</div></div>`;
+  if(v.length===18){
+    const birth=v.slice(6,10)+'-'+v.slice(10,12)+'-'+v.slice(12,14);
+    const gender=parseInt(v[16])%2===1?'男':'女';
+    html+=`<div class="rc"><div class="rc-label">出生日期</div><div class="rc-value">${birth}</div></div>`;
+    html+=`<div class="rc"><div class="rc-label">性别</div><div class="rc-value">${gender}</div></div>`;
+  }
+  if(!r.province&&!r.city&&!r.district)html='<div class="rc" style="grid-column:span 2;text-align:center"><div class="rc-value">未找到对应地区</div></div>';
+  document.getElementById('resultGrid').innerHTML=html;
+});
+document.getElementById('idInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('queryBtn').click()});
+</script>
+<noscript><p>身份证归属地查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

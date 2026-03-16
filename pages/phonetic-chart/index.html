@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语音标表 | Phonetic Chart — DevKit</title>
+<meta name="description" content="48个国际音标表，元音辅音分类，点击发音，含中文谐音和例词。">
+<meta name="keywords" content="英语音标, 国际音标, 48个音标, 音标表, 音标发音, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/phonetic-chart/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语音标表","url":"https://l-s-c.github.io/devkit/pages/phonetic-chart/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981;--vowel:#EC4899;--consonant:#3B82F6}[data-theme=dark]{--brand-500:#34D399;--vowel:#F472B6;--consonant:#60A5FA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.legend{display:flex;gap:12px;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.ph{padding:12px 8px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms}
+.ph:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.ph.v{border-color:rgba(236,72,153,0.2)}.ph.v:hover{border-color:var(--vowel);background:rgba(236,72,153,0.04)}
+.ph.c{border-color:rgba(59,130,246,0.2)}.ph.c:hover{border-color:var(--consonant);background:rgba(59,130,246,0.04)}
+.ph-sym{font-size:28px;font-weight:800;font-family:var(--font-code);margin-bottom:2px}
+.ph.v .ph-sym{color:var(--vowel)}.ph.c .ph-sym{color:var(--consonant)}
+.ph-ex{font-size:10px;color:var(--text-secondary)}.ph-ex b{font-weight:800}
+.ph-cn{font-size:9px;color:var(--text-caption);margin-top:2px}
+.ph-play{display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--brand-500);color:#fff;font-size:8px;line-height:16px;text-align:center;margin-top:4px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">英语音标表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">英语音标表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔊 英语音标表 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto">48 个国际音标 · 点击发音</span></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--vowel)"></div>元音 (20)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--consonant)"></div>辅音 (28)</div>
+    </div>
+  </div>
+  <div class="panel"><div class="section-title">🔴 元音 Vowels</div><div class="ph-grid" id="vowels"></div></div>
+  <div class="panel"><div class="section-title">🔵 辅音 Consonants</div><div class="ph-grid" id="consonants"></div></div>
+</div>
+<div class="statusbar"><span>48个国际音标</span><div class="statusbar-spacer"></div><span>点击发音 🔊</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// s=symbol, w=example word, h=highlighted part, cn=Chinese hint, speak=word to speak
+const VOWELS=[
+{s:'/iː/',w:'eat',h:'ea',cn:'衣（长音）',speak:'eat'},{s:'/ɪ/',w:'it',h:'i',cn:'衣（短音）',speak:'it'},
+{s:'/e/',w:'bed',h:'e',cn:'哎',speak:'bed'},{s:'/æ/',w:'cat',h:'a',cn:'哎（开口）',speak:'cat'},
+{s:'/ɑː/',w:'car',h:'ar',cn:'啊（长音）',speak:'car'},{s:'/ɒ/',w:'hot',h:'o',cn:'哦（短音）',speak:'hot'},
+{s:'/ɔː/',w:'door',h:'oor',cn:'哦（长音）',speak:'door'},{s:'/ʊ/',w:'book',h:'oo',cn:'乌（短音）',speak:'book'},
+{s:'/uː/',w:'food',h:'oo',cn:'乌（长音）',speak:'food'},{s:'/ʌ/',w:'cup',h:'u',cn:'阿',speak:'cup'},
+{s:'/ɜː/',w:'bird',h:'ir',cn:'额（长音）',speak:'bird'},{s:'/ə/',w:'about',h:'a',cn:'额（轻声）',speak:'about'},
+{s:'/eɪ/',w:'day',h:'ay',cn:'诶',speak:'day'},{s:'/aɪ/',w:'my',h:'y',cn:'爱',speak:'my'},
+{s:'/ɔɪ/',w:'boy',h:'oy',cn:'哦一',speak:'boy'},{s:'/aʊ/',w:'how',h:'ow',cn:'奥',speak:'how'},
+{s:'/əʊ/',w:'go',h:'o',cn:'欧',speak:'go'},{s:'/ɪə/',w:'ear',h:'ear',cn:'衣额',speak:'ear'},
+{s:'/eə/',w:'air',h:'air',cn:'哎额',speak:'air'},{s:'/ʊə/',w:'tour',h:'our',cn:'乌额',speak:'tour'},
+];
+const CONSONANTS=[
+{s:'/p/',w:'pen',h:'p',cn:'泼',speak:'pen'},{s:'/b/',w:'book',h:'b',cn:'波',speak:'book'},
+{s:'/t/',w:'ten',h:'t',cn:'特',speak:'ten'},{s:'/d/',w:'dog',h:'d',cn:'的',speak:'dog'},
+{s:'/k/',w:'cat',h:'c',cn:'克',speak:'cat'},{s:'/g/',w:'go',h:'g',cn:'哥',speak:'go'},
+{s:'/f/',w:'fish',h:'f',cn:'佛',speak:'fish'},{s:'/v/',w:'very',h:'v',cn:'唯',speak:'very'},
+{s:'/θ/',w:'think',h:'th',cn:'斯（咬舌）',speak:'think'},{s:'/ð/',w:'this',h:'th',cn:'则（咬舌）',speak:'this'},
+{s:'/s/',w:'sun',h:'s',cn:'丝',speak:'sun'},{s:'/z/',w:'zoo',h:'z',cn:'兹',speak:'zoo'},
+{s:'/ʃ/',w:'she',h:'sh',cn:'嘘',speak:'she'},{s:'/ʒ/',w:'vision',h:'si',cn:'日',speak:'vision'},
+{s:'/tʃ/',w:'chair',h:'ch',cn:'吃',speak:'chair'},{s:'/dʒ/',w:'job',h:'j',cn:'知',speak:'job'},
+{s:'/h/',w:'hat',h:'h',cn:'哈',speak:'hat'},{s:'/m/',w:'man',h:'m',cn:'摸',speak:'man'},
+{s:'/n/',w:'no',h:'n',cn:'呢',speak:'no'},{s:'/ŋ/',w:'sing',h:'ng',cn:'嗯（鼻音）',speak:'sing'},
+{s:'/l/',w:'leg',h:'l',cn:'了',speak:'leg'},{s:'/r/',w:'red',h:'r',cn:'若',speak:'red'},
+{s:'/w/',w:'we',h:'w',cn:'喔',speak:'we'},{s:'/j/',w:'yes',h:'y',cn:'也',speak:'yes'},
+{s:'/ts/',w:'cats',h:'ts',cn:'次',speak:'cats'},{s:'/dz/',w:'beds',h:'ds',cn:'子',speak:'beds'},
+{s:'/tr/',w:'tree',h:'tr',cn:'戳',speak:'tree'},{s:'/dr/',w:'dream',h:'dr',cn:'拽',speak:'dream'},
+];
+function renderGrid(arr,id,cls){
+  document.getElementById(id).innerHTML=arr.map(p=>{
+    const ex=p.w.replace(new RegExp(`(${p.h})`,'i'),'<b>$1</b>');
+    return `<div class="ph ${cls}" data-speak="${p.speak}"><div class="ph-sym">${p.s}</div><div class="ph-ex">${ex}</div><div class="ph-cn">${p.cn}</div><div class="ph-play">▶</div></div>`;
+  }).join('');
+}
+renderGrid(VOWELS,'vowels','v');
+renderGrid(CONSONANTS,'consonants','c');
+document.querySelectorAll('.ph').forEach(el=>el.addEventListener('click',function(){
+  const word=this.dataset.speak;
+  if('speechSynthesis' in window){
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(word);
+    u.lang='en-US';u.rate=0.8;speechSynthesis.speak(u);
+  }
+}));
+</script>
+<noscript><p>英语音标表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

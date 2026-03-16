@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学方程式配平 | Chemical Balance — DevKit</title>
+<meta name="description" content="输入化学方程式，自动配平系数，显示原子守恒验证。纯前端计算。">
+<meta name="keywords" content="化学方程式配平, 化学方程式, 配平, 化学, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/chem-balance/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"化学方程式配平","url":"https://l-s-c.github.io/devkit/pages/chem-balance/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.eq-input{width:100%;padding:14px 16px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-family:var(--font-code);color:var(--text-primary);outline:none;text-align:center}
+.eq-input:focus{border-color:var(--brand-500)}
+.eq-hint{font-size:10px;color:var(--text-caption);text-align:center;margin-top:4px}
+.btn-row{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#10B981,#34D399);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.examples{display:flex;gap:4px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+.ex-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-family:var(--font-code);cursor:pointer}
+.ex-pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.result-box{padding:20px;border-radius:10px;border:2px solid var(--brand-500);background:rgba(16,185,129,0.04);text-align:center;margin-top:16px}
+.result-eq{font-size:24px;font-weight:800;font-family:var(--font-code);letter-spacing:1px}
+.result-eq .coeff{color:var(--brand-500);font-weight:900}
+.atom-table{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.atom-item{padding:6px 12px;border-radius:8px;background:var(--bg-glass-input);border:1px solid var(--border-glass);text-align:center}
+.atom-sym{font-size:16px;font-weight:800;font-family:var(--font-code)}
+.atom-cnt{font-size:9px;color:var(--text-caption)}
+.err-msg{color:#EF4444;margin-top:8px;font-size:12px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">化学方程式配平 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">化学方程式配平</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">⚗️ 化学方程式配平</div>
+    <input class="eq-input" id="eqInput" value="Fe + O2 → Fe2O3" placeholder="输入化学方程式">
+    <div class="eq-hint">使用 → 或 = 分隔反应物和生成物，+ 分隔各物质</div>
+    <div class="btn-row"><button class="btn btn-primary" id="balanceBtn">⚖️ 自动配平</button><button class="btn btn-secondary" id="clearBtn">🔄 清空</button></div>
+    <div class="examples">
+      <span style="font-size:10px;color:var(--text-caption)">常用：</span>
+      <div class="ex-pill" data-eq="H2 + O2 → H2O">H2+O2→H2O</div>
+      <div class="ex-pill" data-eq="Fe + O2 → Fe2O3">Fe+O2→Fe2O3</div>
+      <div class="ex-pill" data-eq="CH4 + O2 → CO2 + H2O">CH4+O2→CO2+H2O</div>
+      <div class="ex-pill" data-eq="C2H6 + O2 → CO2 + H2O">C2H6+O2→CO2+H2O</div>
+      <div class="ex-pill" data-eq="Al + HCl → AlCl3 + H2">Al+HCl→AlCl3+H2</div>
+    </div>
+  </div>
+  <div class="panel" id="resultPanel" style="display:none">
+    <div class="section-title">✅ 配平结果</div>
+    <div class="result-box"><div class="result-eq" id="resultEq"></div><div class="atom-table" id="atomTable"></div></div>
+    <div class="err-msg" id="errMsg"></div>
+  </div>
+</div>
+<div class="statusbar"><span>化学方程式配平</span><div class="statusbar-spacer"></div><span>纯前端计算 ⚗️</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Parse formula like Fe2O3 → {Fe:2,O:3}
+function parseFormula(s){
+  const atoms={};const re=/([A-Z][a-z]?)(\d*)/g;let m;
+  while((m=re.exec(s))!==null){if(!m[1])continue;atoms[m[1]]=(atoms[m[1]]||0)+(parseInt(m[2])||1)}
+  return atoms;
+}
+// Brute force balance (try coefficients 1-10 for up to 5 compounds)
+function balance(compounds,splitIdx){
+  const n=compounds.length;const max=10;
+  function check(coeffs){
+    const totals={};
+    compounds.forEach((atoms,i)=>{
+      const sign=i<splitIdx?1:-1;
+      for(const[el,cnt]of Object.entries(atoms)){
+        totals[el]=(totals[el]||0)+sign*coeffs[i]*cnt;
+      }
+    });
+    return Object.values(totals).every(v=>v===0);
+  }
+  function tryCoeffs(idx,coeffs){
+    if(idx===n)return check(coeffs)?[...coeffs]:null;
+    for(let c=1;c<=max;c++){coeffs[idx]=c;const r=tryCoeffs(idx+1,coeffs);if(r)return r}
+    return null;
+  }
+  return tryCoeffs(0,new Array(n).fill(1));
+}
+function doBalance(){
+  const input=document.getElementById('eqInput').value.trim();
+  const parts=input.split(/[→=]/);
+  if(parts.length!==2){document.getElementById('errMsg').textContent='请使用 → 或 = 分隔反应物和生成物';document.getElementById('resultPanel').style.display='';return}
+  const left=parts[0].split('+').map(s=>s.trim()).filter(Boolean);
+  const right=parts[1].split('+').map(s=>s.trim()).filter(Boolean);
+  if(!left.length||!right.length){document.getElementById('errMsg').textContent='请输入完整的方程式';document.getElementById('resultPanel').style.display='';return}
+  const allRaw=[...left,...right];
+  const compounds=allRaw.map(parseFormula);
+  const coeffs=balance(compounds,left.length);
+  const panel=document.getElementById('resultPanel');panel.style.display='';
+  const errEl=document.getElementById('errMsg');
+  if(!coeffs){errEl.textContent='无法自动配平此方程式（系数过大或方程式有误）';document.getElementById('resultEq').textContent='';document.getElementById('atomTable').innerHTML='';return}
+  errEl.textContent='';
+  // Display
+  const leftStr=left.map((f,i)=>(coeffs[i]>1?`<span class="coeff">${coeffs[i]}</span>`:'')+f).join(' + ');
+  const rightStr=right.map((f,i)=>(coeffs[left.length+i]>1?`<span class="coeff">${coeffs[left.length+i]}</span>`:'')+f).join(' + ');
+  document.getElementById('resultEq').innerHTML=leftStr+' → '+rightStr;
+  // Atom verification
+  const elements=new Set();compounds.forEach(a=>Object.keys(a).forEach(e=>elements.add(e)));
+  document.getElementById('atomTable').innerHTML=[...elements].map(el=>{
+    let l=0,r=0;
+    compounds.forEach((a,i)=>{const c=coeffs[i]*(a[el]||0);if(i<left.length)l+=c;else r+=c});
+    return `<div class="atom-item"><div class="atom-sym">${el}</div><div class="atom-cnt">左 ${l} = 右 ${r} ✅</div></div>`;
+  }).join('');
+}
+document.getElementById('balanceBtn').addEventListener('click',doBalance);
+document.getElementById('clearBtn').addEventListener('click',()=>{document.getElementById('eqInput').value='';document.getElementById('resultPanel').style.display='none'});
+document.querySelectorAll('.ex-pill').forEach(p=>p.addEventListener('click',function(){document.getElementById('eqInput').value=this.dataset.eq;doBalance()}));
+document.getElementById('eqInput').addEventListener('keydown',e=>{if(e.key==='Enter')doBalance()});
+</script>
+<noscript><p>化学方程式配平 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

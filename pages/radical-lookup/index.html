@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汉字偏旁部首查询 | Radical Lookup — DevKit</title>
+<meta name="description" content="常用汉字偏旁部首速查，按笔画分类，含例字和拼音。">
+<meta name="keywords" content="偏旁部首, 汉字部首, 部首查询, 偏旁, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/radical-lookup/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"汉字偏旁部首查询","url":"https://l-s-c.github.io/devkit/pages/radical-lookup/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.stroke-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.stroke-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.stroke-pill.active{background:rgba(245,158,11,0.08);border-color:var(--brand-500);color:var(--brand-500)}
+.radical-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px;margin-bottom:16px}
+.ri{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 200ms}
+.ri:hover,.ri.active{border-color:var(--brand-500);background:rgba(245,158,11,0.06);transform:scale(1.05)}
+.ri-char{font-size:24px;font-weight:800}
+.ri-name{font-size:8px;color:var(--text-caption);margin-top:2px}
+.result-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.result-radical{width:64px;height:64px;border-radius:12px;background:rgba(245,158,11,0.08);border:2px solid var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;flex-shrink:0}
+.result-info{flex:1}
+.result-name{font-size:16px;font-weight:800}
+.result-meta{font-size:11px;color:var(--text-secondary)}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:4px}
+.ci{padding:8px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;font-size:18px;font-weight:700}
+.ci:hover{border-color:var(--brand-500)}
+.ci-py{font-size:8px;color:var(--text-caption);font-family:var(--font-code)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">汉字偏旁部首查询 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">汉字偏旁部首查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔍 汉字偏旁部首查询</div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="输入部首名称搜索..."></div>
+    <div class="stroke-row" id="strokeRow"></div>
+    <div class="radical-grid" id="radicalGrid"></div>
+  </div>
+  <div class="panel" id="detailPanel" style="display:none">
+    <div class="result-header"><div class="result-radical" id="detailChar"></div><div class="result-info"><div class="result-name" id="detailName"></div><div class="result-meta" id="detailMeta"></div></div></div>
+    <div class="section-title">📝 常用例字</div>
+    <div class="char-grid" id="charGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">偏旁部首查询</span><div class="statusbar-spacer"></div><span>小学语文 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// r=radical, n=name, s=strokes, chars=[[char,pinyin],...]
+const DATA=[
+{r:'氵',n:'三点水',s:3,chars:[['河','hé'],['海','hǎi'],['湖','hú'],['江','jiāng'],['泪','lèi'],['洗','xǐ'],['游','yóu'],['汤','tāng'],['池','chí'],['沙','shā'],['波','bō'],['浪','làng'],['深','shēn'],['清','qīng']]},
+{r:'亻',n:'单人旁',s:2,chars:[['他','tā'],['你','nǐ'],['们','men'],['什','shén'],['作','zuò'],['住','zhù'],['体','tǐ'],['位','wèi'],['做','zuò'],['件','jiàn'],['伙','huǒ'],['伴','bàn']]},
+{r:'扌',n:'提手旁',s:3,chars:[['打','dǎ'],['把','bǎ'],['找','zhǎo'],['拉','lā'],['拍','pāi'],['挂','guà'],['推','tuī'],['提','tí'],['换','huàn'],['搬','bān'],['抱','bào'],['摸','mō']]},
+{r:'口',n:'口字旁',s:3,chars:[['吃','chī'],['叫','jiào'],['听','tīng'],['吗','ma'],['呢','ne'],['唱','chàng'],['喝','hē'],['吹','chuī'],['咬','yǎo'],['哭','kū']]},
+{r:'木',n:'木字旁',s:4,chars:[['树','shù'],['林','lín'],['森','sēn'],['板','bǎn'],['桌','zhuō'],['椅','yǐ'],['桥','qiáo'],['根','gēn'],['枝','zhī'],['梅','méi'],['柳','liǔ'],['松','sōng']]},
+{r:'火',n:'火字旁',s:4,chars:[['灯','dēng'],['炒','chǎo'],['烧','shāo'],['烟','yān'],['烤','kǎo'],['炮','pào'],['灭','miè'],['炸','zhà'],['煮','zhǔ'],['焰','yàn']]},
+{r:'艹',n:'草字头',s:3,chars:[['花','huā'],['草','cǎo'],['苹','píng'],['茶','chá'],['菜','cài'],['药','yào'],['蓝','lán'],['莲','lián'],['荷','hé'],['葡','pú'],['蘑','mó'],['芳','fāng']]},
+{r:'讠',n:'言字旁',s:2,chars:[['说','shuō'],['话','huà'],['读','dú'],['认','rèn'],['让','ràng'],['记','jì'],['诗','shī'],['请','qǐng'],['课','kè'],['语','yǔ'],['谢','xiè'],['许','xǔ']]},
+{r:'女',n:'女字旁',s:3,chars:[['妈','mā'],['她','tā'],['姐','jiě'],['妹','mèi'],['姑','gū'],['奶','nǎi'],['好','hǎo'],['如','rú'],['始','shǐ'],['婆','pó']]},
+{r:'钅',n:'金字旁',s:5,chars:[['铁','tiě'],['银','yín'],['铜','tóng'],['钟','zhōng'],['针','zhēn'],['锅','guō'],['镜','jìng'],['链','liàn'],['钢','gāng'],['锋','fēng']]},
+{r:'土',n:'土字旁',s:3,chars:[['地','dì'],['场','chǎng'],['城','chéng'],['块','kuài'],['坐','zuò'],['坡','pō'],['堆','duī'],['墙','qiáng'],['填','tián'],['均','jūn']]},
+{r:'月',n:'月字旁',s:4,chars:[['朋','péng'],['服','fú'],['胖','pàng'],['脸','liǎn'],['脚','jiǎo'],['腿','tuǐ'],['肚','dù'],['肩','jiān'],['背','bèi'],['腰','yāo']]},
+{r:'日',n:'日字旁',s:4,chars:[['明','míng'],['时','shí'],['早','zǎo'],['晚','wǎn'],['晴','qíng'],['暖','nuǎn'],['星','xīng'],['春','chūn'],['映','yìng'],['昨','zuó']]},
+{r:'禾',n:'禾字旁',s:5,chars:[['种','zhǒng'],['秋','qiū'],['秀','xiù'],['和','hé'],['科','kē'],['稻','dào'],['积','jī'],['程','chéng'],['秤','chèng'],['税','shuì']]},
+{r:'目',n:'目字旁',s:5,chars:[['看','kàn'],['眼','yǎn'],['睛','jīng'],['睡','shuì'],['盯','dīng'],['眉','méi'],['瞧','qiáo'],['瞪','dèng'],['盲','máng'],['相','xiāng']]},
+{r:'心',n:'心字底',s:4,chars:[['想','xiǎng'],['思','sī'],['意','yì'],['感','gǎn'],['忘','wàng'],['急','jí'],['怕','pà'],['您','nín'],['忙','máng'],['愿','yuàn']]},
+{r:'纟',n:'绞丝旁',s:3,chars:[['红','hóng'],['绿','lǜ'],['线','xiàn'],['给','gěi'],['细','xì'],['结','jié'],['组','zǔ'],['织','zhī'],['纸','zhǐ'],['练','liàn']]},
+{r:'犭',n:'反犬旁',s:3,chars:[['狗','gǒu'],['猫','māo'],['狐','hú'],['狼','láng'],['猪','zhū'],['猴','hóu'],['狮','shī'],['独','dú'],['猜','cāi'],['猛','měng']]},
+{r:'石',n:'石字旁',s:5,chars:[['矿','kuàng'],['砖','zhuān'],['破','pò'],['碗','wǎn'],['磨','mó'],['碎','suì'],['确','què'],['硬','yìng'],['研','yán'],['砂','shā']]},
+{r:'衤',n:'衣字旁',s:5,chars:[['衬','chèn'],['衫','shān'],['被','bèi'],['裙','qún'],['裤','kù'],['袜','wà'],['袖','xiù'],['补','bǔ'],['初','chū'],['裸','luǒ']]},
+{r:'足',n:'足字旁',s:7,chars:[['跑','pǎo'],['跳','tiào'],['路','lù'],['踢','tī'],['跟','gēn'],['踩','cǎi'],['蹲','dūn'],['跪','guì'],['距','jù'],['趟','tàng']]},
+{r:'雨',n:'雨字头',s:8,chars:[['雪','xuě'],['雷','léi'],['电','diàn'],['零','líng'],['雾','wù'],['霜','shuāng'],['露','lù'],['霞','xiá'],['需','xū'],['震','zhèn']]},
+{r:'页',n:'页字旁',s:6,chars:[['领','lǐng'],['顶','dǐng'],['顺','shùn'],['须','xū'],['预','yù'],['颗','kē'],['题','tí'],['额','é'],['颜','yán'],['频','pín']]},
+{r:'虫',n:'虫字旁',s:6,chars:[['蛇','shé'],['蚂','mǎ'],['蜜','mì'],['蝴','hú'],['蝶','dié'],['蜻','qīng'],['蚊','wén'],['蜡','là'],['蛙','wā'],['蚕','cán']]},
+{r:'竹',n:'竹字头',s:6,chars:[['笔','bǐ'],['篮','lán'],['筷','kuài'],['笑','xiào'],['答','dá'],['等','děng'],['简','jiǎn'],['算','suàn'],['管','guǎn'],['箱','xiāng']]},
+];
+let currentStroke='全部',currentIdx=0;
+const STROKES=['全部','1画','2画','3画','4画','5画','6画','7+画'];
+function renderStrokes(){
+  document.getElementById('strokeRow').innerHTML=STROKES.map(s=>`<div class="stroke-pill${s===currentStroke?' active':''}" data-stroke="${s}">${s}</div>`).join('');
+}
+function renderRadicals(q=''){
+  const filtered=DATA.filter(d=>{
+    if(currentStroke!=='全部'){const sn=parseInt(currentStroke);if(currentStroke.includes('+'))return d.s>=sn;return d.s===sn}
+    if(q)return d.n.includes(q)||d.r.includes(q);
+    return true;
+  });
+  document.getElementById('radicalGrid').innerHTML=filtered.map((d,i)=>`<div class="ri${DATA.indexOf(d)===currentIdx?' active':''}" data-idx="${DATA.indexOf(d)}"><div class="ri-char">${d.r}</div><div class="ri-name">${d.n}</div></div>`).join('');
+  document.getElementById('statusInfo').textContent=`${filtered.length} 个部首`;
+  showDetail();
+}
+function showDetail(){
+  const d=DATA[currentIdx];if(!d)return;
+  document.getElementById('detailPanel').style.display='';
+  document.getElementById('detailChar').textContent=d.r;
+  document.getElementById('detailName').textContent=d.n;
+  document.getElementById('detailMeta').textContent=`笔画：${d.s} | 例字：${d.chars.length} 个`;
+  document.getElementById('charGrid').innerHTML=d.chars.map(([c,p])=>`<div class="ci">${c}<div class="ci-py">${p}</div></div>`).join('');
+}
+document.getElementById('strokeRow').addEventListener('click',e=>{if(!e.target.classList.contains('stroke-pill'))return;currentStroke=e.target.dataset.stroke;renderStrokes();renderRadicals(document.getElementById('searchInput').value.trim())});
+document.getElementById('radicalGrid').addEventListener('click',e=>{const ri=e.target.closest('.ri');if(!ri)return;currentIdx=+ri.dataset.idx;renderRadicals(document.getElementById('searchInput').value.trim())});
+document.getElementById('searchInput').addEventListener('input',function(){renderRadicals(this.value.trim())});
+renderStrokes();renderRadicals();
+</script>
+<noscript><p>汉字偏旁部首查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

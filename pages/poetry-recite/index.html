@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古诗词朗诵 | Poetry Recite — DevKit</title>
+<meta name="description" content="小学必背古诗词朗诵，逐字拼音注音，speechSynthesis朗读，按年级分类。">
+<meta name="keywords" content="古诗朗诵, 古诗词朗读, 拼音注音, 小学古诗, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/poetry-recite/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"古诗词朗诵","url":"https://l-s-c.github.io/devkit/pages/poetry-recite/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.pill-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.toggle-row{display:flex;gap:16px;justify-content:center;margin-bottom:16px}
+.toggle-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);cursor:pointer}
+.toggle-cb{width:16px;height:16px;border-radius:4px;border:2px solid var(--border-glass);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 150ms}
+.toggle-cb.on{background:var(--brand-500);border-color:var(--brand-500);color:#fff}
+.poem-display{text-align:center;padding:32px 20px}
+.poem-title{font-size:24px;font-weight:800;margin-bottom:4px}
+.poem-author{font-size:12px;color:var(--text-caption);margin-bottom:20px}
+.poem-line{font-size:22px;font-weight:600;line-height:2.8;letter-spacing:3px}
+.poem-char{display:inline-block;position:relative;margin:0 1px}
+.poem-pinyin{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--brand-500);font-weight:600;font-family:var(--font-code);white-space:nowrap;letter-spacing:0;display:none}
+.show-pinyin .poem-pinyin{display:block}
+.poem-char.highlight{color:var(--brand-500);font-weight:900}
+.btn-row{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">古诗词朗诵 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">古诗词朗诵</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📖 古诗词朗诵</div>
+    <div class="pill-row" id="gradePills"></div>
+    <div class="toggle-row">
+      <div class="toggle-item" id="togglePinyin"><div class="toggle-cb on" id="pinyinCb">✓</div>拼音注音</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="poem-display" id="poemDisplay"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="readBtn">🔊 朗读全文</button>
+      <button class="btn btn-secondary" id="nextBtn">🎲 换一首</button>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">古诗词朗诵</span><div class="statusbar-spacer"></div><span>拼音注音 · 朗读</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// t=title, a=author, g=grade, lines=[[char,pinyin],...]  per line
+const POEMS=[
+{t:'静夜思',a:'李白',g:1,lines:[
+  [['床','chuáng'],['前','qián'],['明','míng'],['月','yuè'],['光','guāng']],
+  [['疑','yí'],['是','shì'],['地','dì'],['上','shàng'],['霜','shuāng']],
+  [['举','jǔ'],['头','tóu'],['望','wàng'],['明','míng'],['月','yuè']],
+  [['低','dī'],['头','tóu'],['思','sī'],['故','gù'],['乡','xiāng']],
+]},
+{t:'春晓',a:'孟浩然',g:1,lines:[
+  [['春','chūn'],['眠','mián'],['不','bù'],['觉','jué'],['晓','xiǎo']],
+  [['处','chù'],['处','chù'],['闻','wén'],['啼','tí'],['鸟','niǎo']],
+  [['夜','yè'],['来','lái'],['风','fēng'],['雨','yǔ'],['声','shēng']],
+  [['花','huā'],['落','luò'],['知','zhī'],['多','duō'],['少','shǎo']],
+]},
+{t:'咏鹅',a:'骆宾王',g:1,lines:[
+  [['鹅','é'],['鹅','é'],['鹅','é']],
+  [['曲','qū'],['项','xiàng'],['向','xiàng'],['天','tiān'],['歌','gē']],
+  [['白','bái'],['毛','máo'],['浮','fú'],['绿','lǜ'],['水','shuǐ']],
+  [['红','hóng'],['掌','zhǎng'],['拨','bō'],['清','qīng'],['波','bō']],
+]},
+{t:'悯农',a:'李绅',g:1,lines:[
+  [['锄','chú'],['禾','hé'],['日','rì'],['当','dāng'],['午','wǔ']],
+  [['汗','hàn'],['滴','dī'],['禾','hé'],['下','xià'],['土','tǔ']],
+  [['谁','shuí'],['知','zhī'],['盘','pán'],['中','zhōng'],['餐','cān']],
+  [['粒','lì'],['粒','lì'],['皆','jiē'],['辛','xīn'],['苦','kǔ']],
+]},
+{t:'登鹳雀楼',a:'王之涣',g:2,lines:[
+  [['白','bái'],['日','rì'],['依','yī'],['山','shān'],['尽','jìn']],
+  [['黄','huáng'],['河','hé'],['入','rù'],['海','hǎi'],['流','liú']],
+  [['欲','yù'],['穷','qióng'],['千','qiān'],['里','lǐ'],['目','mù']],
+  [['更','gèng'],['上','shàng'],['一','yī'],['层','céng'],['楼','lóu']],
+]},
+{t:'望庐山瀑布',a:'李白',g:2,lines:[
+  [['日','rì'],['照','zhào'],['香','xiāng'],['炉','lú'],['生','shēng'],['紫','zǐ'],['烟','yān']],
+  [['遥','yáo'],['看','kàn'],['瀑','pù'],['布','bù'],['挂','guà'],['前','qián'],['川','chuān']],
+  [['飞','fēi'],['流','liú'],['直','zhí'],['下','xià'],['三','sān'],['千','qiān'],['尺','chǐ']],
+  [['疑','yí'],['是','shì'],['银','yín'],['河','hé'],['落','luò'],['九','jiǔ'],['天','tiān']],
+]},
+{t:'绝句',a:'杜甫',g:3,lines:[
+  [['两','liǎng'],['个','gè'],['黄','huáng'],['鹂','lí'],['鸣','míng'],['翠','cuì'],['柳','liǔ']],
+  [['一','yī'],['行','háng'],['白','bái'],['鹭','lù'],['上','shàng'],['青','qīng'],['天','tiān']],
+  [['窗','chuāng'],['含','hán'],['西','xī'],['岭','lǐng'],['千','qiān'],['秋','qiū'],['雪','xuě']],
+  [['门','mén'],['泊','bó'],['东','dōng'],['吴','wú'],['万','wàn'],['里','lǐ'],['船','chuán']],
+]},
+{t:'游子吟',a:'孟郊',g:3,lines:[
+  [['慈','cí'],['母','mǔ'],['手','shǒu'],['中','zhōng'],['线','xiàn']],
+  [['游','yóu'],['子','zǐ'],['身','shēn'],['上','shàng'],['衣','yī']],
+  [['临','lín'],['行','xíng'],['密','mì'],['密','mì'],['缝','féng']],
+  [['意','yì'],['恐','kǒng'],['迟','chí'],['迟','chí'],['归','guī']],
+  [['谁','shuí'],['言','yán'],['寸','cùn'],['草','cǎo'],['心','xīn']],
+  [['报','bào'],['得','dé'],['三','sān'],['春','chūn'],['晖','huī']],
+]},
+{t:'望天门山',a:'李白',g:4,lines:[
+  [['天','tiān'],['门','mén'],['中','zhōng'],['断','duàn'],['楚','chǔ'],['江','jiāng'],['开','kāi']],
+  [['碧','bì'],['水','shuǐ'],['东','dōng'],['流','liú'],['至','zhì'],['此','cǐ'],['回','huí']],
+  [['两','liǎng'],['岸','àn'],['青','qīng'],['山','shān'],['相','xiāng'],['对','duì'],['出','chū']],
+  [['孤','gū'],['帆','fān'],['一','yī'],['片','piàn'],['日','rì'],['边','biān'],['来','lái']],
+]},
+{t:'出塞',a:'王昌龄',g:5,lines:[
+  [['秦','qín'],['时','shí'],['明','míng'],['月','yuè'],['汉','hàn'],['时','shí'],['关','guān']],
+  [['万','wàn'],['里','lǐ'],['长','cháng'],['征','zhēng'],['人','rén'],['未','wèi'],['还','huán']],
+  [['但','dàn'],['使','shǐ'],['龙','lóng'],['城','chéng'],['飞','fēi'],['将','jiàng'],['在','zài']],
+  [['不','bù'],['教','jiào'],['胡','hú'],['马','mǎ'],['度','dù'],['阴','yīn'],['山','shān']],
+]},
+{t:'泊船瓜洲',a:'王安石',g:6,lines:[
+  [['京','jīng'],['口','kǒu'],['瓜','guā'],['洲','zhōu'],['一','yī'],['水','shuǐ'],['间','jiān']],
+  [['钟','zhōng'],['山','shān'],['只','zhǐ'],['隔','gé'],['数','shù'],['重','chóng'],['山','shān']],
+  [['春','chūn'],['风','fēng'],['又','yòu'],['绿','lǜ'],['江','jiāng'],['南','nán'],['岸','àn']],
+  [['明','míng'],['月','yuè'],['何','hé'],['时','shí'],['照','zhào'],['我','wǒ'],['还','huán']],
+]},
+];
+const GRADES=[1,2,3,4,5,6];
+let currentGrade=0,currentIdx=0,showPinyin=true;
+function renderGrades(){
+  document.getElementById('gradePills').innerHTML=[{g:0,l:'全部'},...GRADES.map(g=>({g,l:g+'年级'}))].map(
+    ({g,l})=>`<div class="pill${g===currentGrade?' active':''}" data-grade="${g}">${l}</div>`
+  ).join('');
+}
+function getFiltered(){return currentGrade===0?POEMS:POEMS.filter(p=>p.g===currentGrade)}
+function renderPoem(){
+  const list=getFiltered();if(!list.length)return;
+  if(currentIdx>=list.length)currentIdx=0;
+  const p=list[currentIdx];
+  const el=document.getElementById('poemDisplay');
+  el.className='poem-display'+(showPinyin?' show-pinyin':'');
+  el.innerHTML=`<div class="poem-title">${p.t}</div><div class="poem-author">${p.a}</div>`+
+    p.lines.map((line,li)=>`<div class="poem-line">${line.map(([c,py])=>`<span class="poem-char"><span class="poem-pinyin">${py}</span>${c}</span>`).join('')}${li%2===0?'，':'。'}</div>`).join('');
+  document.getElementById('statusInfo').textContent=`${p.t} · ${p.a}`;
+}
+document.getElementById('gradePills').addEventListener('click',e=>{if(!e.target.classList.contains('pill'))return;currentGrade=+e.target.dataset.grade;currentIdx=0;renderGrades();renderPoem()});
+document.getElementById('togglePinyin').addEventListener('click',()=>{
+  showPinyin=!showPinyin;
+  document.getElementById('pinyinCb').className='toggle-cb'+(showPinyin?' on':'');
+  document.getElementById('pinyinCb').textContent=showPinyin?'✓':'';
+  renderPoem();
+});
+document.getElementById('nextBtn').addEventListener('click',()=>{currentIdx++;renderPoem()});
+document.getElementById('readBtn').addEventListener('click',()=>{
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const list=getFiltered();const p=list[currentIdx];
+  const text=p.t+'。'+p.a+'。'+p.lines.map(l=>l.map(([c])=>c).join('')).join('，');
+  const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=0.7;speechSynthesis.speak(u);
+});
+renderGrades();renderPoem();
+</script>
+<noscript><p>古诗词朗诵 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

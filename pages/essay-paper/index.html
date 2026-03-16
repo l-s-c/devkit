@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作文纸生成器 | Essay Paper — DevKit</title>
+<meta name="description" content="在线作文纸生成器，400格/600格/800格自由切换，支持标题栏、格线颜色选择，直接打印。">
+<meta name="keywords" content="作文纸, 作文格子纸, 作文纸模板, 作文纸打印, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/essay-paper/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"作文纸生成器","url":"https://l-s-c.github.io/devkit/pages/essay-paper/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B;--grid-color:#10B981}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.form-input{padding:8px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none;width:200px}
+.form-input:focus{border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px;margin-top:14px}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F}
+.paper-preview{background:#fff;border:1px solid #ddd;border-radius:4px;padding:24px;max-width:600px;margin:0 auto}
+.paper-title-box{border:2px solid #DC2626;border-radius:2px;padding:8px 16px;text-align:center;margin-bottom:16px}
+.paper-title-input{font-size:18px;font-weight:700;border:none;outline:none;text-align:center;width:100%;color:#1A1A2E;background:transparent}
+.paper-grid{display:grid;grid-template-columns:repeat(20,1fr)}
+.paper-cell{aspect-ratio:1;border:0.5px solid var(--grid-color)}
+.paper-cell:nth-child(20n){border-right:1.5px solid var(--grid-color)}
+.paper-cell:nth-child(-n+20){border-top:1.5px solid var(--grid-color)}
+.paper-count{text-align:right;font-size:10px;color:var(--text-caption);margin-top:4px;font-family:var(--font-code)}
+@media print{.topbar,.panel:first-of-type,.statusbar{display:none!important}.panel{box-shadow:none;border:none;backdrop-filter:none;background:transparent;padding:0}.paper-preview{border:none;padding:0}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">作文纸生成器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">作文纸生成器</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📝 作文纸生成器</div>
+    <div class="config-row"><span class="config-label">格数</span><div class="pill active" data-count="400">400格</div><div class="pill" data-count="600">600格</div><div class="pill" data-count="800">800格</div></div>
+    <div class="config-row"><span class="config-label">标题</span><input class="form-input" id="titleInput" placeholder="输入作文标题（可选）"></div>
+    <div class="config-row"><span class="config-label">格线色</span><div class="pill active" data-color="#10B981" style="color:#10B981">绿色</div><div class="pill" data-color="#3B82F6" style="color:#3B82F6">蓝色</div><div class="pill" data-color="#EF4444" style="color:#EF4444">红色</div></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="window.print()">🖨️ 打印</button></div>
+  </div>
+  <div class="panel">
+    <div class="paper-preview">
+      <div class="paper-title-box"><input class="paper-title-input" id="paperTitle" placeholder="作文题目"></div>
+      <div class="paper-grid" id="grid"></div>
+      <div class="paper-count" id="countLabel">0 / 400</div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span>作文纸生成器</span><div class="statusbar-spacer"></div><span>打印友好 🖨️</span></div>
+<script type="module">
+import '../../shared/theme.js';
+let count=400,color='#10B981';
+function renderGrid(){
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  for(let i=0;i<count;i++){const c=document.createElement('div');c.className='paper-cell';g.appendChild(c)}
+  document.getElementById('countLabel').textContent=`0 / ${count}`;
+  applyColor();
+}
+function applyColor(){
+  document.documentElement.style.setProperty('--grid-color',color);
+}
+// count pills
+document.querySelectorAll('[data-count]').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('[data-count]').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active');count=+this.dataset.count;renderGrid();
+}));
+// color pills
+document.querySelectorAll('[data-color]').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('[data-color]').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active');color=this.dataset.color;applyColor();
+}));
+// sync title
+document.getElementById('titleInput').addEventListener('input',function(){document.getElementById('paperTitle').value=this.value});
+renderGrid();
+</script>
+<noscript><p>作文纸生成器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
