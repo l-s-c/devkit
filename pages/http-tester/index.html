@@ -211,8 +211,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- Request config -->
   <div class="panel">
     <div class="tab-row" id="reqTabRow">
+      <div class="tab" data-tab="query">🔗 Query 参数</div>
       <div class="tab active" data-tab="headers">📋 请求头</div>
       <div class="tab" data-tab="body">📦 请求体</div>
+    </div>
+    <div id="reqQuery" style="display:none">
+      <div class="kv-list" id="queryList"></div>
+      <button class="kv-add" id="addQueryBtn">+ 添加参数</button>
     </div>
     <div id="reqHeaders">
       <div class="kv-list" id="headerList">
@@ -300,6 +305,7 @@ document.getElementById('reqTabRow').addEventListener('click', e => {
   document.querySelectorAll('#reqTabRow .tab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active');
   const t = tab.dataset.tab;
+  document.getElementById('reqQuery').style.display = t === 'query' ? 'block' : 'none';
   document.getElementById('reqHeaders').style.display = t === 'headers' ? 'block' : 'none';
   document.getElementById('reqBody').style.display = t === 'body' ? 'block' : 'none';
 });
@@ -315,15 +321,35 @@ document.getElementById('resTabRow').addEventListener('click', e => {
   document.getElementById('resHeadersWrap').style.display = t === 'headers' ? 'block' : 'none';
 });
 
-/* Add/remove headers */
-document.getElementById('addHeaderBtn').addEventListener('click', () => {
+/* Add/remove query params */
+function addKvRow(listId) {
   const row = document.createElement('div'); row.className = 'kv-row';
   row.innerHTML = '<input class="kv-input" placeholder="Key"><input class="kv-input" placeholder="Value"><button class="kv-del">✕</button>';
-  document.getElementById('headerList').appendChild(row);
+  document.getElementById(listId).appendChild(row);
+}
+document.getElementById('addQueryBtn').addEventListener('click', () => addKvRow('queryList'));
+document.getElementById('queryList').addEventListener('click', e => {
+  if (e.target.classList.contains('kv-del')) e.target.parentElement.remove();
 });
+
+/* Add/remove headers */
+document.getElementById('addHeaderBtn').addEventListener('click', () => addKvRow('headerList'));
 document.getElementById('headerList').addEventListener('click', e => {
   if (e.target.classList.contains('kv-del')) e.target.parentElement.remove();
 });
+
+/* Build URL with query params */
+function buildUrl(baseUrl) {
+  const params = [];
+  document.querySelectorAll('#queryList .kv-row').forEach(r => {
+    const inputs = r.querySelectorAll('.kv-input');
+    const k = inputs[0].value.trim(), v = inputs[1].value.trim();
+    if (k) params.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  });
+  if (!params.length) return baseUrl;
+  const sep = baseUrl.includes('?') ? '&' : '?';
+  return baseUrl + sep + params.join('&');
+}
 
 /* Send request */
 document.getElementById('sendBtn').addEventListener('click', sendRequest);
@@ -331,8 +357,9 @@ document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key
 
 async function sendRequest() {
   const method = document.getElementById('methodSelect').value;
-  const url = document.getElementById('urlInput').value.trim();
-  if (!url) return;
+  const rawUrl = document.getElementById('urlInput').value.trim();
+  if (!rawUrl) return;
+  const url = buildUrl(rawUrl);
 
   const headers = {};
   document.querySelectorAll('#headerList .kv-row').forEach(r => {
@@ -425,6 +452,9 @@ document.getElementById('historyList').addEventListener('click', e => {
 document.getElementById('clearHistoryBtn').addEventListener('click', () => {
   history = []; localStorage.removeItem('devkit-http-history'); renderHistory();
 });
+
+/* Init: add one empty query row */
+addKvRow('queryList');
 
 renderHistory();
 </script>
