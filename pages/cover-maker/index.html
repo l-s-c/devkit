@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>封面图生成器 | Cover Image Maker — DevKit</title>
+<meta name="description" content="在线封面图生成器，公众号/小红书/博客/YouTube封面一键生成，渐变背景、文字拖拽、Canvas实时预览，导出PNG/JPG。">
+<meta name="keywords" content="封面图生成器, cover image maker, 公众号封面, 小红书封面, 博客封面, YouTube缩略图, 封面模板, DevKit">
+<meta property="og:title" content="封面图生成器 | Cover Image Maker — DevKit">
+<meta property="og:description" content="公众号/小红书/博客/YouTube 封面图在线生成">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/cover-maker/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="封面图生成器 — DevKit">
+<meta name="twitter:description" content="在线封面图生成器，公众号/小红书/博客/YouTube封面一键生成">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"封面图生成器","description":"在线封面图生成器，公众号/小红书/博客/YouTube封面一键生成，渐变背景、文字拖拽","url":"https://l-s-c.github.io/devkit/pages/cover-maker/","applicationCategory":"DesignApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/cover-maker/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
+.panel { padding: 20px; border-radius: 16px; margin-bottom: 16px; background: var(--bg-glass); backdrop-filter: blur(20px); border: 0.5px solid var(--border-glass); }
+.section-title { font-size: 13px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+/* Template pills */
+.tpl-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tpl-pill { padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-size: 11px; font-weight: 700; cursor: pointer; transition: all 150ms; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.tpl-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.tpl-pill.active { background: var(--brand-500); color: #fff; border-color: var(--brand-500); }
+.tpl-size { font-family: var(--font-code); font-size: 9px; opacity: .7; }
+
+/* Config */
+.config-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.config-group { margin-bottom: 12px; }
+.config-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.config-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.input { padding: 7px 10px; border-radius: 6px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); font-family: var(--font-ui); font-size: 12px; color: var(--text-primary); outline: none; flex: 1; min-width: 0; }
+.input:focus { border-color: var(--brand-500); }
+.input-sm { width: 64px; flex: none; font-family: var(--font-code); text-align: center; }
+.color-input { width: 32px; height: 32px; border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 2px; cursor: pointer; background: var(--bg-glass-input); }
+
+/* Radio pills */
+.radio-row { display: flex; gap: 0; border-radius: 6px; overflow: hidden; border: 1.5px solid var(--border-glass); margin-bottom: 10px; }
+.radio-pill { flex: 1; padding: 7px 6px; text-align: center; font-size: 10px; font-weight: 700; cursor: pointer; background: var(--bg-glass-input); color: var(--text-caption); transition: all 150ms; }
+.radio-pill.active { background: var(--brand-500); color: #fff; }
+
+/* Gradient presets */
+.grad-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.grad-swatch { width: 28px; height: 28px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 150ms; }
+.grad-swatch:hover, .grad-swatch.active { border-color: var(--brand-500); transform: scale(1.1); }
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 8px; }
+.slider { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--border-glass); outline: none; }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--brand-500); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.slider-val { font-family: var(--font-code); font-size: 11px; font-weight: 700; width: 32px; text-align: right; }
+
+/* Align */
+.align-row { display: flex; gap: 4px; }
+.align-btn { width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 150ms; }
+.align-btn:hover, .align-btn.active { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Canvas */
+.canvas-wrap { position: relative; background: var(--bg-glass-input); border-radius: 12px; border: 1px dashed var(--border-glass); display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 200px; }
+.canvas-wrap canvas { display: block; max-width: 100%; cursor: grab; }
+.canvas-wrap canvas:active { cursor: grabbing; }
+.canvas-hint { position: absolute; bottom: 8px; right: 12px; font-size: 9px; color: var(--text-caption); background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; }
+
+/* Export */
+.export-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-export { padding: 10px 20px; border-radius: 20px; border: none; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 200ms; display: flex; align-items: center; gap: 5px; }
+.btn-export-primary { background: linear-gradient(135deg, #6366F1, #818CF8); color: #fff; }
+.btn-export-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
+.btn-export-secondary { border: 1.5px solid var(--border-glass); background: var(--bg-glass-input); color: var(--text-secondary); }
+.btn-export-secondary:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+/* Upload */
+.upload-zone { border: 1.5px dashed var(--border-glass); border-radius: 6px; padding: 12px; text-align: center; cursor: pointer; transition: all 150ms; font-size: 11px; color: var(--text-caption); }
+.upload-zone:hover { border-color: var(--brand-500); color: var(--brand-500); }
+
+@media (max-width: 640px) { .config-dual { grid-template-columns: 1fr; } }
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">封面图生成器 — DevKit 在线开发者工具箱</h1>
+
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">封面图生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<div class="main">
+  <!-- 模板选择 -->
+  <div class="panel">
+    <div class="section-title">📐 选择模板</div>
+    <div class="tpl-row" id="tplRow">
+      <div class="tpl-pill active" data-tpl="0">📱 公众号封面 <span class="tpl-size">900×383</span></div>
+      <div class="tpl-pill" data-tpl="1">📕 小红书封面 <span class="tpl-size">1242×1660</span></div>
+      <div class="tpl-pill" data-tpl="2">🌐 博客 Banner <span class="tpl-size">1200×630</span></div>
+      <div class="tpl-pill" data-tpl="3">▶️ YouTube <span class="tpl-size">1280×720</span></div>
+      <div class="tpl-pill" data-tpl="4">📐 自定义</div>
+    </div>
+    <div id="customSize" style="display:none" class="config-row">
+      <span style="font-size:11px;font-weight:700">宽</span>
+      <input class="input input-sm" id="cW" value="1200" type="number" min="100" max="4000">
+      <span style="font-size:11px;color:var(--text-caption)">×</span>
+      <span style="font-size:11px;font-weight:700">高</span>
+      <input class="input input-sm" id="cH" value="630" type="number" min="100" max="4000">
+      <span style="font-size:10px;color:var(--text-caption)">px</span>
+      <button class="btn-export btn-export-secondary" style="padding:6px 12px;font-size:10px" id="applyCustom">应用</button>
+    </div>
+  </div>
+
+  <!-- 背景 + 文字 -->
+  <div class="panel">
+    <div class="config-dual">
+      <!-- 左：背景 -->
+      <div>
+        <div class="section-title">🖼️ 背景</div>
+        <div class="radio-row">
+          <div class="radio-pill active" data-bg="solid">纯色</div>
+          <div class="radio-pill" data-bg="gradient">渐变</div>
+          <div class="radio-pill" data-bg="image">图片</div>
+        </div>
+        <!-- 纯色 -->
+        <div id="bgSolidConf" class="config-group">
+          <div class="config-row">
+            <input type="color" class="color-input" id="solidColor" value="#6366F1">
+            <span style="font-size:10px;color:var(--text-caption)">点击选择背景色</span>
+          </div>
+        </div>
+        <!-- 渐变 -->
+        <div id="bgGradConf" class="config-group" style="display:none">
+          <div class="config-label">预设渐变</div>
+          <div class="grad-row" id="gradRow">
+            <div class="grad-swatch active" style="background:linear-gradient(135deg,#6366F1,#A855F7)" data-g1="#6366F1" data-g2="#A855F7"></div>
+            <div class="grad-swatch" style="background:linear-gradient(135deg,#F97316,#EF4444)" data-g1="#F97316" data-g2="#EF4444"></div>
+            <div class="grad-swatch" style="background:linear-gradient(135deg,#10B981,#06B6D4)" data-g1="#10B981" data-g2="#06B6D4"></div>
+            <div class="grad-swatch" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)" data-g1="#3B82F6" data-g2="#1D4ED8"></div>
+            <div class="grad-swatch" style="background:linear-gradient(135deg,#F472B6,#A855F7)" data-g1="#F472B6" data-g2="#A855F7"></div>
+            <div class="grad-swatch" style="background:linear-gradient(135deg,#1A1A2E,#374151)" data-g1="#1A1A2E" data-g2="#374151"></div>
+          </div>
+          <div class="config-row">
+            <input type="color" class="color-input" id="gradC1" value="#6366F1">
+            <span style="font-size:10px;color:var(--text-caption)">→</span>
+            <input type="color" class="color-input" id="gradC2" value="#A855F7">
+          </div>
+        </div>
+        <!-- 图片 -->
+        <div id="bgImgConf" class="config-group" style="display:none">
+          <div class="upload-zone" id="bgUpload">
+            📷 点击或拖入背景图片
+            <input type="file" id="bgFile" accept="image/*" style="display:none">
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：文字 -->
+      <div>
+        <div class="section-title">📝 文字</div>
+        <div class="config-group">
+          <div class="config-label">标题</div>
+          <input class="input" id="titleText" value="输入你的标题" placeholder="主标题">
+        </div>
+        <div class="config-group">
+          <div class="config-label">副标题</div>
+          <input class="input" id="subText" value="" placeholder="副标题（可选）">
+        </div>
+        <div class="config-group">
+          <div class="config-label">标题字号</div>
+          <div class="slider-row">
+            <input type="range" class="slider" id="titleSize" min="16" max="120" value="48">
+            <span class="slider-val" id="titleSizeVal">48</span>
+          </div>
+        </div>
+        <div class="config-group">
+          <div class="config-label">文字颜色 + 对齐</div>
+          <div class="config-row">
+            <input type="color" class="color-input" id="textColor" value="#FFFFFF">
+            <div class="align-row" id="alignRow">
+              <div class="align-btn active" data-align="center" title="居中">⊙</div>
+              <div class="align-btn" data-align="left" title="左对齐">⫷</div>
+              <div class="align-btn" data-align="right" title="右对齐">⫸</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas 预览 -->
+  <div class="panel">
+    <div class="section-title">👁️ 预览 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto" id="sizeLabel">900 × 383</span></div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="cvs" width="900" height="383"></canvas>
+      <div class="canvas-hint">💡 拖拽文字调整位置</div>
+    </div>
+    <div class="export-row">
+      <button class="btn-export btn-export-primary" id="exportPng">📥 导出 PNG</button>
+      <button class="btn-export btn-export-secondary" id="exportJpg">📥 导出 JPG</button>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="statusInfo">封面图生成器</span>
+  <div class="statusbar-spacer"></div>
+  <span>Canvas · 纯本地</span>
+</div>
+
+<script type="module">
+import '../../shared/theme.js';
+
+const TEMPLATES = [
+  { name: '公众号封面', w: 900, h: 383 },
+  { name: '小红书封面', w: 1242, h: 1660 },
+  { name: '博客 Banner', w: 1200, h: 630 },
+  { name: 'YouTube', w: 1280, h: 720 },
+  { name: '自定义', w: 1200, h: 630 }
+];
+
+const FONT = "bold %spx -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+
+let bgMode = 'solid', bgImg = null, bgImgUrl = null;
+let textAlign = 'center';
+let titlePos = null, subPos = null;
+let dragging = null, dragOff = { x: 0, y: 0 };
+
+/* === Template === */
+document.getElementById('tplRow').addEventListener('click', e => {
+  const pill = e.target.closest('[data-tpl]');
+  if (!pill) return;
+  const i = parseInt(pill.dataset.tpl);
+  document.querySelectorAll('.tpl-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  document.getElementById('customSize').style.display = i === 4 ? 'flex' : 'none';
+  if (i < 4) { cvs.width = TEMPLATES[i].w; cvs.height = TEMPLATES[i].h; }
+  document.getElementById('sizeLabel').textContent = `${cvs.width} × ${cvs.height}`;
+  titlePos = null; subPos = null; render();
+});
+
+document.getElementById('applyCustom').addEventListener('click', () => {
+  cvs.width = parseInt(document.getElementById('cW').value) || 1200;
+  cvs.height = parseInt(document.getElementById('cH').value) || 630;
+  document.getElementById('sizeLabel').textContent = `${cvs.width} × ${cvs.height}`;
+  titlePos = null; subPos = null; render();
+});
+
+/* === Background mode === */
+document.querySelector('.radio-row').addEventListener('click', e => {
+  const pill = e.target.closest('[data-bg]');
+  if (!pill) return;
+  bgMode = pill.dataset.bg;
+  document.querySelectorAll('[data-bg]').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  document.getElementById('bgSolidConf').style.display = bgMode === 'solid' ? 'block' : 'none';
+  document.getElementById('bgGradConf').style.display = bgMode === 'gradient' ? 'block' : 'none';
+  document.getElementById('bgImgConf').style.display = bgMode === 'image' ? 'block' : 'none';
+  render();
+});
+
+/* === Gradient presets === */
+document.getElementById('gradRow').addEventListener('click', e => {
+  const sw = e.target.closest('.grad-swatch');
+  if (!sw) return;
+  document.querySelectorAll('.grad-swatch').forEach(s => s.classList.remove('active'));
+  sw.classList.add('active');
+  document.getElementById('gradC1').value = sw.dataset.g1;
+  document.getElementById('gradC2').value = sw.dataset.g2;
+  render();
+});
+
+/* === Text align === */
+document.getElementById('alignRow').addEventListener('click', e => {
+  const btn = e.target.closest('[data-align]');
+  if (!btn) return;
+  textAlign = btn.dataset.align;
+  document.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+});
+
+/* === Background image upload === */
+const bgUpload = document.getElementById('bgUpload');
+const bgFile = document.getElementById('bgFile');
+bgUpload.addEventListener('click', () => bgFile.click());
+bgUpload.addEventListener('dragover', e => { e.preventDefault(); bgUpload.style.borderColor = 'var(--brand-500)'; });
+bgUpload.addEventListener('dragleave', () => { bgUpload.style.borderColor = 'var(--border-glass)'; });
+bgUpload.addEventListener('drop', e => {
+  e.preventDefault(); bgUpload.style.borderColor = 'var(--border-glass)';
+  if (e.dataTransfer.files[0]) loadBgImage(e.dataTransfer.files[0]);
+});
+bgFile.addEventListener('change', () => { if (bgFile.files[0]) loadBgImage(bgFile.files[0]); });
+
+function loadBgImage(file) {
+  if (bgImgUrl) URL.revokeObjectURL(bgImgUrl);
+  bgImgUrl = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => { bgImg = img; URL.revokeObjectURL(bgImgUrl); bgImgUrl = null; render(); };
+  img.src = bgImgUrl;
+  bgUpload.innerHTML = `✅ ${file.name}<input type="file" id="bgFile" accept="image/*" style="display:none">`;
+}
+
+/* === Live re-render on input === */
+['solidColor', 'gradC1', 'gradC2', 'textColor'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+});
+['titleText', 'subText'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+});
+document.getElementById('titleSize').addEventListener('input', e => {
+  document.getElementById('titleSizeVal').textContent = e.target.value;
+  render();
+});
+
+/* === Render === */
+function render() {
+  const W = cvs.width, H = cvs.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  if (bgMode === 'solid') {
+    ctx.fillStyle = document.getElementById('solidColor').value;
+    ctx.fillRect(0, 0, W, H);
+  } else if (bgMode === 'gradient') {
+    const c1 = document.getElementById('gradC1').value;
+    const c2 = document.getElementById('gradC2').value;
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, c1); g.addColorStop(1, c2);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  } else if (bgMode === 'image' && bgImg) {
+    // center-crop
+    const ir = bgImg.width / bgImg.height, cr = W / H;
+    let sw, sh, sx, sy;
+    if (ir > cr) { sh = bgImg.height; sw = sh * cr; sx = (bgImg.width - sw) / 2; sy = 0; }
+    else { sw = bgImg.width; sh = sw / cr; sx = 0; sy = (bgImg.height - sh) / 2; }
+    ctx.drawImage(bgImg, sx, sy, sw, sh, 0, 0, W, H);
+  } else {
+    ctx.fillStyle = '#374151'; ctx.fillRect(0, 0, W, H);
+  }
+
+  // Title
+  const title = document.getElementById('titleText').value;
+  const fontSize = parseInt(document.getElementById('titleSize').value) || 48;
+  const color = document.getElementById('textColor').value;
+  if (title) {
+    ctx.fillStyle = color;
+    ctx.font = FONT.replace('%s', fontSize);
+    ctx.textAlign = textAlign; ctx.textBaseline = 'middle';
+    if (!titlePos) titlePos = { x: W / 2, y: H * 0.42 };
+    const tx = textAlign === 'center' ? titlePos.x : textAlign === 'left' ? 40 : W - 40;
+    ctx.fillText(title, tx, titlePos.y);
+  }
+
+  // Subtitle
+  const sub = document.getElementById('subText').value;
+  if (sub) {
+    const subSize = Math.max(14, Math.round(fontSize * 0.45));
+    ctx.fillStyle = color; ctx.globalAlpha = 0.8;
+    ctx.font = FONT.replace('%s', subSize).replace('bold ', '');
+    ctx.textAlign = textAlign;
+    if (!subPos) subPos = { x: W / 2, y: (titlePos ? titlePos.y : H * 0.42) + fontSize * 0.8 };
+    const sx = textAlign === 'center' ? subPos.x : textAlign === 'left' ? 40 : W - 40;
+    ctx.fillText(sub, sx, subPos.y);
+    ctx.globalAlpha = 1;
+  }
+}
+
+/* === Drag text === */
+function getPos(e) {
+  const rect = cvs.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left) * (cvs.width / rect.width),
+    y: (e.clientY - rect.top) * (cvs.height / rect.height)
+  };
+}
+
+cvs.addEventListener('mousedown', e => {
+  const { x: mx, y: my } = getPos(e);
+  const fontSize = parseInt(document.getElementById('titleSize').value) || 48;
+  if (titlePos && Math.abs(my - titlePos.y) < fontSize * 0.6) {
+    dragging = 'title'; dragOff = { x: mx - titlePos.x, y: my - titlePos.y }; return;
+  }
+  if (subPos && Math.abs(my - subPos.y) < fontSize * 0.4) {
+    dragging = 'sub'; dragOff = { x: mx - subPos.x, y: my - subPos.y }; return;
+  }
+});
+
+cvs.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const { x: mx, y: my } = getPos(e);
+  const x = Math.max(20, Math.min(cvs.width - 20, mx - dragOff.x));
+  const y = Math.max(20, Math.min(cvs.height - 20, my - dragOff.y));
+  if (dragging === 'title') titlePos = { x, y }; else subPos = { x, y };
+  render();
+});
+
+window.addEventListener('mouseup', () => { dragging = null; });
+
+// Touch support
+cvs.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  const { x: mx, y: my } = getPos(t);
+  const fontSize = parseInt(document.getElementById('titleSize').value) || 48;
+  if (titlePos && Math.abs(my - titlePos.y) < fontSize * 0.6) {
+    dragging = 'title'; dragOff = { x: mx - titlePos.x, y: my - titlePos.y }; return;
+  }
+  if (subPos && Math.abs(my - subPos.y) < fontSize * 0.4) {
+    dragging = 'sub'; dragOff = { x: mx - subPos.x, y: my - subPos.y }; return;
+  }
+}, { passive: false });
+
+cvs.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  const { x: mx, y: my } = getPos(t);
+  const x = Math.max(20, Math.min(cvs.width - 20, mx - dragOff.x));
+  const y = Math.max(20, Math.min(cvs.height - 20, my - dragOff.y));
+  if (dragging === 'title') titlePos = { x, y }; else subPos = { x, y };
+  render();
+}, { passive: false });
+
+window.addEventListener('touchend', () => { dragging = null; });
+
+/* === Export === */
+document.getElementById('exportPng').addEventListener('click', () => exportImg('png'));
+document.getElementById('exportJpg').addEventListener('click', () => exportImg('jpeg'));
+
+function exportImg(fmt) {
+  render();
+  const link = document.createElement('a');
+  link.download = `cover-${cvs.width}x${cvs.height}.${fmt === 'jpeg' ? 'jpg' : 'png'}`;
+  link.href = cvs.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined);
+  link.click();
+  document.getElementById('statusInfo').textContent = `✅ 已导出 ${fmt.toUpperCase()} ${cvs.width}×${cvs.height}`;
+}
+
+render();
+</script>
+<noscript><p>封面图生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

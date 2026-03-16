@@ -71,6 +71,7 @@ export default defineConfig({
         'random-picker': resolve(__dirname, 'pages/random-picker/index.html'),
         'box-shadow': resolve(__dirname, 'pages/box-shadow/index.html'),
         'spin-wheel': resolve(__dirname, 'pages/spin-wheel/index.html'),
+        'cover-maker': resolve(__dirname, 'pages/cover-maker/index.html'),
       },
     },
   },
