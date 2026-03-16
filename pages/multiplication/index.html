@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乘法口诀表 | Multiplication Table — DevKit</title>
+<meta name="description" content="在线乘法口诀表，九九乘法表展示+语音朗读+随机练习模式，支持打印。">
+<meta name="keywords" content="乘法口诀表, 九九乘法表, 乘法练习, 小学数学, DevKit">
+<meta property="og:title" content="乘法口诀表 — DevKit">
+<meta property="og:description" content="九九乘法表+语音朗读+练习模式">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/multiplication/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"乘法口诀表","url":"https://l-s-c.github.io/devkit/pages/multiplication/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/multiplication/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:8px 16px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms}
+.tab:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:16px;border:none;font-size:11px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:4px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.table-area{overflow-x:auto}
+.mul-row{display:flex;gap:4px;margin-bottom:4px}
+.mul-cell{padding:8px 6px;border-radius:6px;background:var(--bg-glass-input);border:1px solid var(--border-glass);font-size:11px;font-weight:600;text-align:center;min-width:88px;transition:all 150ms;cursor:pointer;font-family:var(--font-code)}
+.mul-cell:hover{background:rgba(99,102,241,0.06);border-color:var(--brand-500);transform:scale(1.03)}
+.mul-cell .expr{font-weight:800}
+.mul-cell .eq{color:var(--brand-500);font-weight:800}
+.practice-area{display:none}
+.practice-card{text-align:center;padding:32px}
+.practice-expr{font-size:48px;font-weight:800;margin-bottom:16px;font-family:var(--font-code)}
+.practice-input{width:100px;padding:12px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:32px;font-weight:800;text-align:center;font-family:var(--font-code);color:var(--text-primary);outline:none}
+.practice-input:focus{border-color:var(--brand-500)}
+.practice-input.correct{border-color:#10B981;background:rgba(16,185,129,0.05)}
+.practice-input.wrong{border-color:#EF4444;background:rgba(239,68,68,0.05)}
+.practice-score{display:flex;gap:16px;justify-content:center;margin-top:16px}
+.score-item{text-align:center}
+.score-num{font-size:24px;font-weight:800;font-family:var(--font-code)}
+.score-label{font-size:9px;color:var(--text-caption)}
+@media print{
+  .topbar,.statusbar,.tab-row,.btn-row,.practice-area,.mesh-bg{display:none!important}
+  .panel{box-shadow:none;border:1px solid #ddd;backdrop-filter:none;background:#fff}
+  body{background:#fff}
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">乘法口诀表 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">乘法口诀表</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">✖️ 乘法口诀表</div>
+    <div class="tab-row" id="modeTab">
+      <div class="tab active" data-v="table">📋 口诀表</div>
+      <div class="tab" data-v="practice">🎯 练习模式</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="speakBtn">🔊 语音朗读</button>
+      <button class="btn btn-secondary" id="stopBtn" style="display:none">⏹️ 停止</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+    </div>
+  </div>
+  <div class="panel" id="tableArea">
+    <div class="section-title">📖 九九乘法表</div>
+    <div class="table-area" id="mulTable"></div>
+  </div>
+  <div class="panel practice-area" id="practiceArea">
+    <div class="section-title">🎯 随机练习</div>
+    <div class="practice-card">
+      <div class="practice-expr" id="practiceExpr">7 × 8 =</div>
+      <input class="practice-input" id="practiceInput" type="number">
+      <div class="practice-score">
+        <div class="score-item"><div class="score-num" id="scoreCorrect" style="color:#10B981">0</div><div class="score-label">正确</div></div>
+        <div class="score-item"><div class="score-num" id="scoreWrong" style="color:#EF4444">0</div><div class="score-label">错误</div></div>
+        <div class="score-item"><div class="score-num" id="scoreTotal">0</div><div class="score-label">总计</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">乘法口诀表</span><div class="statusbar-spacer"></div><span>语音朗读 · 可打印 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Render table
+const table=document.getElementById('mulTable');
+for(let i=1;i<=9;i++){
+  const row=document.createElement('div');row.className='mul-row';
+  for(let j=1;j<=i;j++){
+    const cell=document.createElement('div');cell.className='mul-cell';
+    cell.innerHTML=`<span class="expr">${j}×${i}</span><span class="eq">=${j*i}</span>`;
+    cell.addEventListener('click',()=>{
+      if('speechSynthesis' in window){
+        speechSynthesis.cancel();
+        const u=new SpeechSynthesisUtterance(`${j}乘${i}等于${j*i}`);u.lang='zh-CN';speechSynthesis.speak(u);
+      }
+    });
+    row.appendChild(cell);
+  }
+  table.appendChild(row);
+}
+
+// Mode tabs
+document.getElementById('modeTab').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(!t)return;
+  document.querySelectorAll('#modeTab .tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  const mode=t.dataset.v;
+  document.getElementById('tableArea').style.display=mode==='table'?'block':'none';
+  document.getElementById('practiceArea').style.display=mode==='practice'?'block':'none';
+  if(mode==='practice')nextQ();
+});
+
+// Speech
+let speaking=false;
+document.getElementById('speakBtn').addEventListener('click',()=>{
+  if(!('speechSynthesis' in window)){document.getElementById('statusInfo').textContent='⚠️ 浏览器不支持语音';return}
+  speechSynthesis.cancel();speaking=true;
+  document.getElementById('speakBtn').style.display='none';
+  document.getElementById('stopBtn').style.display='flex';
+  let queue=[];
+  for(let i=1;i<=9;i++)for(let j=1;j<=i;j++)queue.push([j,i]);
+  let idx=0;
+  function speakNext(){
+    if(!speaking||idx>=queue.length){speaking=false;document.getElementById('speakBtn').style.display='flex';document.getElementById('stopBtn').style.display='none';return}
+    const [a,b]=queue[idx++];
+    const u=new SpeechSynthesisUtterance(`${a}乘${b}等于${a*b}`);u.lang='zh-CN';u.rate=1.1;u.onend=speakNext;speechSynthesis.speak(u);
+  }
+  speakNext();
+});
+document.getElementById('stopBtn').addEventListener('click',()=>{
+  speaking=false;speechSynthesis.cancel();
+  document.getElementById('speakBtn').style.display='flex';document.getElementById('stopBtn').style.display='none';
+});
+
+// Practice
+let curA,curB,correct=0,wrong=0,total=0;
+function nextQ(){
+  curA=Math.floor(Math.random()*9)+1;curB=Math.floor(Math.random()*9)+1;
+  document.getElementById('practiceExpr').textContent=`${curA} × ${curB} =`;
+  const inp=document.getElementById('practiceInput');inp.value='';inp.className='practice-input';inp.focus();
+}
+document.getElementById('practiceInput').addEventListener('input',function(){
+  const val=parseInt(this.value);if(isNaN(val))return;
+  total++;
+  const ans=curA*curB;
+  if(val===ans){correct++;this.classList.add('correct');setTimeout(nextQ,500)}
+  else if(this.value.length>=String(ans).length){wrong++;this.classList.add('wrong');setTimeout(nextQ,800)}
+  document.getElementById('scoreCorrect').textContent=correct;
+  document.getElementById('scoreWrong').textContent=wrong;
+  document.getElementById('scoreTotal').textContent=total;
+});
+</script>
+<noscript><p>乘法口诀表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

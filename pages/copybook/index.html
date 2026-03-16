@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字帖生成器 | Copybook Generator — DevKit</title>
+<meta name="description" content="在线字帖生成器，田字格/米字格/回宫格，渐淡描红，支持打印A4和导出PNG。">
+<meta name="keywords" content="字帖生成器, 字帖打印, 田字格, 描红字帖, 练字, DevKit">
+<meta property="og:title" content="字帖生成器 — DevKit">
+<meta property="og:description" content="在线字帖生成，田字格描红+打印">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/copybook/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"字帖生成器","url":"https://l-s-c.github.io/devkit/pages/copybook/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/copybook/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.text-input{flex:1;padding:10px 12px;border-radius:6px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.text-input:focus{border-color:var(--brand-500)}
+.slider-wrap{display:flex;align-items:center;gap:8px;flex:1}
+.slider{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border-glass);outline:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--brand-500);cursor:pointer}
+.slider-val{font-family:var(--font-code);font-size:11px;font-weight:700;min-width:24px;text-align:center}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.preview-area{background:#fff;border-radius:10px;padding:24px;border:1px solid var(--border-glass);overflow-x:auto}
+.grid-row{display:flex;gap:0;margin-bottom:0}
+.grid-cell{width:72px;height:72px;border:2px solid #333;position:relative;display:flex;align-items:center;justify-content:center;margin:-1px 0 0 -1px}
+.grid-cell::before{content:'';position:absolute;width:100%;height:0;top:50%;left:0;border-top:1px dashed #ccc}
+.grid-cell::after{content:'';position:absolute;width:0;height:100%;left:50%;top:0;border-left:1px dashed #ccc}
+.grid-cell.mi .diag{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.grid-cell.mi .diag::before,.grid-cell.mi .diag::after{content:'';position:absolute;width:141%;height:0;top:50%;left:-20%;border-top:1px dashed #ddd}
+.grid-cell.mi .diag::before{transform:rotate(45deg)}
+.grid-cell.mi .diag::after{transform:rotate(-45deg)}
+.grid-cell.hui::before{border-top:none}
+.grid-cell.hui::after{border-left:none}
+.grid-cell.hui .inner{position:absolute;width:50%;height:50%;border:1px dashed #ccc;pointer-events:none}
+.char{font-family:'KaiTi','STKaiti','楷体',serif;font-size:48px;position:relative;z-index:1;user-select:none}
+.grade-desc{font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400}
+@media print{
+  .topbar,.statusbar,.panel:first-of-type,.btn-row,.mesh-bg{display:none!important}
+  .panel{box-shadow:none;border:none;backdrop-filter:none;background:#fff;padding:0}
+  .preview-area{border:none;padding:0}
+  .grid-cell{border:1.5px solid #000}
+  body{background:#fff}
+}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">字帖生成器 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">字帖生成器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">✍️ 字帖生成器</div>
+    <div class="config-row">
+      <span class="config-label">输入文字</span>
+      <input class="text-input" id="charInput" value="人大山水日月天地" placeholder="输入要练习的汉字...">
+    </div>
+    <div class="config-row" id="gridRow">
+      <span class="config-label">格式</span>
+      <div class="pill active" data-v="tian">田字格</div>
+      <div class="pill" data-v="mi">米字格</div>
+      <div class="pill" data-v="hui">回宫格</div>
+    </div>
+    <div class="config-row" id="colsRow">
+      <span class="config-label">每行</span>
+      <div class="pill active" data-v="8">8 格</div>
+      <div class="pill" data-v="10">10 格</div>
+      <div class="pill" data-v="12">12 格</div>
+    </div>
+    <div class="config-row" id="fadeRow">
+      <span class="config-label">描红</span>
+      <div class="pill active" data-v="fade">渐淡模式</div>
+      <div class="pill" data-v="full">全描红</div>
+      <div class="pill" data-v="empty">全空格</div>
+    </div>
+    <div class="config-row">
+      <span class="config-label">重复</span>
+      <div class="slider-wrap">
+        <input type="range" class="slider" id="repeatSlider" min="2" max="8" value="4">
+        <span class="slider-val" id="repeatVal">4</span>
+        <span style="font-size:10px;color:var(--text-caption)">次/字</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="renderBtn">🔄 重新生成</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+      <button class="btn btn-secondary" id="exportBtn">📥 导出 PNG</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📄 字帖预览 <span class="grade-desc" id="previewDesc">田字格 · 渐淡描红</span></div>
+    <div class="preview-area" id="preview"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">字帖生成器</span><div class="statusbar-spacer"></div><span>楷体 · 可打印 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+let gridType='tian',cols=8,fadeMode='fade';
+
+function setupPills(id,setter){
+  document.getElementById(id).addEventListener('click',e=>{
+    const p=e.target.closest('.pill');if(!p)return;
+    document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');setter(p.dataset.v);render();
+  });
+}
+setupPills('gridRow',v=>gridType=v);
+setupPills('colsRow',v=>cols=parseInt(v));
+setupPills('fadeRow',v=>fadeMode=v);
+document.getElementById('repeatSlider').addEventListener('input',function(){
+  document.getElementById('repeatVal').textContent=this.value;render();
+});
+document.getElementById('charInput').addEventListener('input',render);
+document.getElementById('renderBtn').addEventListener('click',render);
+
+function getOpacity(i){
+  if(fadeMode==='full')return 0.85;
+  if(fadeMode==='empty')return 0;
+  if(i===0)return 0.85;
+  if(i===1)return 0.35;
+  if(i===2)return 0.15;
+  return 0;
+}
+
+function render(){
+  const chars=[...document.getElementById('charInput').value.replace(/\s/g,'')];
+  if(!chars.length)return;
+  const repeat=parseInt(document.getElementById('repeatSlider').value)||4;
+  const preview=document.getElementById('preview');
+  const gridClass=gridType==='mi'?' mi':gridType==='hui'?' hui':'';
+  const innerEl=gridType==='hui'?'<div class="inner"></div>':'';
+  const diagEl=gridType==='mi'?'<div class="diag"></div>':'';
+
+  let html='';
+  for(const ch of chars){
+    // Each char gets ceil(repeat/cols) rows
+    const cells=[];
+    for(let i=0;i<repeat;i++){
+      const op=getOpacity(i);
+      const color=op>0?`rgba(220,38,38,${op})`:'transparent';
+      cells.push(`<div class="grid-cell${gridClass}">${diagEl}${innerEl}<span class="char" style="color:${color}">${ch}</span></div>`);
+    }
+    // Fill remaining cols with empty cells
+    const remaining=cols-(repeat%cols);
+    if(remaining<cols){
+      for(let i=0;i<remaining;i++){
+        cells.push(`<div class="grid-cell${gridClass}">${diagEl}${innerEl}<span class="char" style="color:transparent">${ch}</span></div>`);
+      }
+    }
+    // Split into rows of `cols`
+    for(let r=0;r<cells.length;r+=cols){
+      html+=`<div class="grid-row">${cells.slice(r,r+cols).join('')}</div>`;
+    }
+  }
+  preview.innerHTML=html;
+  const gridNames={tian:'田字格',mi:'米字格',hui:'回宫格'};
+  const fadeNames={fade:'渐淡描红',full:'全描红',empty:'全空格'};
+  document.getElementById('previewDesc').textContent=`${gridNames[gridType]} · ${fadeNames[fadeMode]}`;
+}
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  // Use Canvas to render the preview as PNG
+  const el=document.getElementById('preview');
+  const cellSize=72;const border=2;
+  const chars=[...document.getElementById('charInput').value.replace(/\s/g,'')];
+  const repeat=parseInt(document.getElementById('repeatSlider').value)||4;
+  const totalCols=cols;
+  const totalRows=chars.length;
+  const w=totalCols*cellSize;const h=totalRows*cellSize;
+  const cvs=document.createElement('canvas');
+  const dpr=window.devicePixelRatio||1;
+  cvs.width=w*dpr;cvs.height=h*dpr;
+  const ctx=cvs.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+
+  // Wait for font then draw
+  document.fonts.ready.then(()=>{
+    for(let row=0;row<chars.length;row++){
+      for(let col=0;col<totalCols;col++){
+        const x=col*cellSize,y=row*cellSize;
+        // Cell border
+        ctx.strokeStyle='#333';ctx.lineWidth=1.5;ctx.setLineDash([]);
+        ctx.strokeRect(x,y,cellSize,cellSize);
+        // Dashed cross
+        ctx.strokeStyle='#ccc';ctx.lineWidth=0.5;ctx.setLineDash([4,4]);
+        ctx.beginPath();ctx.moveTo(x,y+cellSize/2);ctx.lineTo(x+cellSize,y+cellSize/2);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x+cellSize/2,y);ctx.lineTo(x+cellSize/2,y+cellSize);ctx.stroke();
+        ctx.setLineDash([]);
+        // Char
+        if(col<repeat){
+          const op=getOpacity(col);
+          if(op>0){
+            ctx.fillStyle=`rgba(220,38,38,${op})`;
+            ctx.font='48px KaiTi, STKaiti, 楷体, serif';
+            ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillText(chars[row],x+cellSize/2,y+cellSize/2+2);
+          }
+        }
+      }
+    }
+    cvs.toBlob(b=>{
+      const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='copybook.png';a.click();URL.revokeObjectURL(a.href);
+    },'image/png');
+    cvs.width=0;
+  });
+});
+
+render();
+</script>
+<noscript><p>字帖生成器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
