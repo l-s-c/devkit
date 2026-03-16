@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方程求解器 | Equation Solver — DevKit</title>
+<meta name="description" content="一元一次、一元二次、二元一次方程求解，显示判别式和解题步骤。">
+<meta name="keywords" content="方程求解, 一元二次方程, 二元一次方程, 数学工具, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/equation-solver/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"方程求解器","url":"https://l-s-c.github.io/devkit/pages/equation-solver/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#8B5CF6}[data-theme=dark]{--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(139,92,246,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.tab-row{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.eq-label{font-size:11px;font-weight:700;color:var(--text-caption);margin-bottom:8px}
+.eq-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.coeff-input{width:56px;padding:10px 8px;border-radius:8px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-weight:800;text-align:center;font-family:var(--font-code);outline:none;color:var(--text-primary)}
+.coeff-input:focus{border-color:var(--brand-500)}
+.eq-text{font-size:18px;font-weight:700;font-family:var(--font-code);color:var(--text-secondary)}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff;margin-top:8px}
+.result-box{padding:24px;border-radius:10px;border:2px solid var(--brand-500);background:rgba(139,92,246,0.04);text-align:center}
+.result-value{font-size:28px;font-weight:900;font-family:var(--font-code);color:var(--brand-500)}
+.result-note{font-size:11px;color:var(--text-caption);margin-top:4px}
+.steps{margin-top:12px;padding:14px;border-radius:8px;background:rgba(139,92,246,0.04);font-size:12px;line-height:2;color:var(--text-secondary)}
+.step-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--brand-500);color:#fff;font-size:10px;font-weight:800;align-items:center;justify-content:center;margin-right:4px}
+.err{color:#EF4444;font-size:12px;margin-top:8px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">方程求解器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">方程求解器</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📐 方程求解器</div>
+    <div class="tab-row"><div class="tab active" data-type="linear1">一元一次</div><div class="tab" data-type="quadratic">一元二次</div><div class="tab" data-type="linear2">二元一次</div></div>
+    <div id="formArea"></div>
+    <button class="btn" id="solveBtn">🧮 求解</button>
+    <div class="err" id="errMsg"></div>
+  </div>
+  <div class="panel" id="resultPanel" style="display:none">
+    <div class="section-title">✅ 解</div>
+    <div class="result-box"><div class="result-value" id="resultValue"></div><div class="result-note" id="resultNote"></div></div>
+    <div class="steps" id="stepsContent"></div>
+  </div>
+</div>
+<div class="statusbar"><span>方程求解器</span><div class="statusbar-spacer"></div><span>数学紫 · 判别式</span></div>
+<script type="module">
+import '../../shared/theme.js';
+let type='linear1';
+const FORMS={
+  linear1:`<div class="eq-label">一元一次方程：ax + b = 0</div><div class="eq-row"><input class="coeff-input" id="a" value="3"><span class="eq-text">x +</span><input class="coeff-input" id="b" value="-6"><span class="eq-text">= 0</span></div>`,
+  quadratic:`<div class="eq-label">一元二次方程：ax² + bx + c = 0</div><div class="eq-row"><input class="coeff-input" id="a" value="1"><span class="eq-text">x² +</span><input class="coeff-input" id="b" value="-5"><span class="eq-text">x +</span><input class="coeff-input" id="c" value="6"><span class="eq-text">= 0</span></div>`,
+  linear2:`<div class="eq-label">二元一次方程组</div><div class="eq-row"><input class="coeff-input" id="a1" value="2"><span class="eq-text">x +</span><input class="coeff-input" id="b1" value="3"><span class="eq-text">y =</span><input class="coeff-input" id="c1" value="7"></div><div class="eq-row"><input class="coeff-input" id="a2" value="1"><span class="eq-text">x −</span><input class="coeff-input" id="b2" value="1"><span class="eq-text">y =</span><input class="coeff-input" id="c2" value="1"></div>`
+};
+function renderForm(){document.getElementById('formArea').innerHTML=FORMS[type];document.getElementById('resultPanel').style.display='none';document.getElementById('errMsg').textContent=''}
+document.querySelector('.tab-row').addEventListener('click',e=>{if(!e.target.classList.contains('tab'))return;type=e.target.dataset.type;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));e.target.classList.add('active');renderForm()});
+function fmt(n){return Number.isInteger(n)?n:parseFloat(n.toFixed(4))}
+function solve(){
+  const err=document.getElementById('errMsg');err.textContent='';
+  const steps=[];let result='',note='';
+  if(type==='linear1'){
+    const a=parseFloat(document.getElementById('a').value),b=parseFloat(document.getElementById('b').value);
+    if(isNaN(a)||isNaN(b)){err.textContent='请输入系数';return}
+    if(a===0){err.textContent='a 不能为 0（否则不是方程）';return}
+    steps.push(`方程：${a}x + ${b} = 0`);
+    steps.push(`移项：${a}x = ${-b}`);
+    const x=-b/a;
+    steps.push(`x = ${-b} / ${a} = ${fmt(x)} ✅`);
+    result=`x = ${fmt(x)}`;
+  } else if(type==='quadratic'){
+    const a=parseFloat(document.getElementById('a').value),b=parseFloat(document.getElementById('b').value),c=parseFloat(document.getElementById('c').value);
+    if(isNaN(a)||isNaN(b)||isNaN(c)){err.textContent='请输入系数';return}
+    if(a===0){err.textContent='a 不能为 0（否则不是二次方程）';return}
+    const delta=b*b-4*a*c;
+    steps.push(`方程：${a}x² + (${b})x + (${c}) = 0`);
+    steps.push(`判别式 Δ = b²−4ac = (${b})² − 4×${a}×(${c}) = ${fmt(delta)}`);
+    if(delta<0){result='无实数解';note=`Δ = ${fmt(delta)} < 0`;steps.push('Δ < 0，方程无实数解')}
+    else if(delta===0){const x=-b/(2*a);result=`x = ${fmt(x)}`;note='Δ = 0，两个相等实根';steps.push(`x = −b/2a = ${fmt(x)} ✅`)}
+    else{const sq=Math.sqrt(delta);const x1=(-b+sq)/(2*a),x2=(-b-sq)/(2*a);result=`x₁ = ${fmt(x1)}，x₂ = ${fmt(x2)}`;note=`Δ = ${fmt(delta)} > 0，两个不等实根`;steps.push(`x = (${-b} ± √${fmt(delta)}) / ${2*a}`);steps.push(`x₁ = ${fmt(x1)}，x₂ = ${fmt(x2)} ✅`)}
+  } else {
+    const a1=parseFloat(document.getElementById('a1').value),b1=parseFloat(document.getElementById('b1').value),c1=parseFloat(document.getElementById('c1').value);
+    const a2=parseFloat(document.getElementById('a2').value),b2=-parseFloat(document.getElementById('b2').value),c2=parseFloat(document.getElementById('c2').value);
+    if([a1,b1,c1,a2,b2,c2].some(isNaN)){err.textContent='请输入系数';return}
+    const det=a1*b2-a2*b1;
+    steps.push(`方程组：${a1}x + ${b1}y = ${c1}，${a2}x + (${b2})y = ${c2}`);
+    steps.push(`行列式 D = ${a1}×(${b2}) − ${a2}×${b1} = ${det}`);
+    if(det===0){result='无唯一解';note='行列式 D = 0';steps.push('D = 0，方程组无唯一解')}
+    else{const x=(c1*b2-c2*b1)/det,y=(a1*c2-a2*c1)/det;result=`x = ${fmt(x)}，y = ${fmt(y)}`;note=`克莱默法则 D = ${det}`;steps.push(`x = (${c1}×${b2} − ${c2}×${b1}) / ${det} = ${fmt(x)}`);steps.push(`y = (${a1}×${c2} − ${a2}×${c1}) / ${det} = ${fmt(y)} ✅`)}
+  }
+  document.getElementById('resultPanel').style.display='';
+  document.getElementById('resultValue').textContent=result;
+  document.getElementById('resultNote').textContent=note;
+  document.getElementById('stepsContent').innerHTML=steps.map((s,i)=>`<span class="step-num">${i+1}</span> ${s}<br>`).join('');
+}
+document.getElementById('solveBtn').addEventListener('click',solve);
+renderForm();
+</script>
+<noscript><p>方程求解器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

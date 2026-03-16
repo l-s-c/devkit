@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作文素材库 | Writing Material — DevKit</title>
+<meta name="description" content="小学作文素材库，名人名言、好词好句按主题分类，一键复制。">
+<meta name="keywords" content="作文素材, 名人名言, 好词好句, 小学作文, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/writing-material/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"作文素材库","url":"https://l-s-c.github.io/devkit/pages/writing-material/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;outline:none;color:var(--text-primary);margin-bottom:12px}
+.search-wrap{position:relative}.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.cat-pills{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.cat-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:9px;font-weight:700;cursor:pointer}
+.cat-pill.active{background:rgba(245,158,11,0.08);border-color:var(--brand-500);color:var(--brand-500)}
+.quote-list{display:flex;flex-direction:column;gap:8px}
+.quote-card{padding:14px 16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms;cursor:pointer;position:relative}
+.quote-card:hover{border-color:var(--brand-500);transform:translateY(-1px)}
+.quote-text{font-size:14px;font-weight:600;line-height:1.8;margin-bottom:6px}
+.quote-author{font-size:10px;color:var(--text-caption);font-style:italic}
+.quote-tags{display:flex;gap:4px;margin-top:4px}
+.quote-tag{padding:2px 6px;border-radius:4px;font-size:8px;font-weight:700;background:rgba(245,158,11,0.08);color:var(--brand-500)}
+.copy-btn{position:absolute;top:10px;right:10px;font-size:10px;color:var(--brand-500);cursor:pointer;font-weight:700;border:none;background:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">作文素材库 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">作文素材库</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📚 作文素材库</div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="🔍 搜索名言、好词好句..."></div>
+    <div class="tab-row" id="tabRow"></div>
+    <div class="cat-pills" id="catPills"></div>
+  </div>
+  <div class="panel"><div class="quote-list" id="quoteList"></div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">作文素材库</span><div class="statusbar-spacer"></div><span>一键复制</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const TABS=['💬 名人名言','✨ 好词','📝 好句','📖 开头结尾'];
+const CATS=['全部','📖 读书学习','⏰ 时间珍惜','💪 励志奋斗','🤝 友情','🌸 自然','❤️ 亲情','🇨🇳 爱国'];
+// t=tab(0-3), c=cat, text, author
+const DATA=[
+{t:0,c:'📖 读书学习',text:'读书破万卷，下笔如有神。',author:'杜甫《奉赠韦左丞丈二十二韵》'},
+{t:0,c:'📖 读书学习',text:'书山有路勤为径，学海无涯苦作舟。',author:'韩愈'},
+{t:0,c:'📖 读书学习',text:'学而不思则罔，思而不学则殆。',author:'孔子《论语》'},
+{t:0,c:'📖 读书学习',text:'书到用时方恨少，事非经过不知难。',author:'陆游'},
+{t:0,c:'📖 读书学习',text:'黑发不知勤学早，白首方悔读书迟。',author:'颜真卿'},
+{t:0,c:'⏰ 时间珍惜',text:'少壮不努力，老大徒伤悲。',author:'汉乐府《长歌行》'},
+{t:0,c:'⏰ 时间珍惜',text:'一寸光阴一寸金，寸金难买寸光阴。',author:'谚语'},
+{t:0,c:'⏰ 时间珍惜',text:'莫等闲，白了少年头，空悲切。',author:'岳飞《满江红》'},
+{t:0,c:'💪 励志奋斗',text:'天行健，君子以自强不息。',author:'《周易》'},
+{t:0,c:'💪 励志奋斗',text:'千里之行，始于足下。',author:'老子《道德经》'},
+{t:0,c:'💪 励志奋斗',text:'世上无难事，只怕有心人。',author:'谚语'},
+{t:0,c:'💪 励志奋斗',text:'宝剑锋从磨砺出，梅花香自苦寒来。',author:'《警世贤文》'},
+{t:0,c:'🤝 友情',text:'海内存知己，天涯若比邻。',author:'王勃《送杜少府之任蜀州》'},
+{t:0,c:'🤝 友情',text:'桃花潭水深千尺，不及汪伦送我情。',author:'李白'},
+{t:0,c:'🌸 自然',text:'落红不是无情物，化作春泥更护花。',author:'龚自珍'},
+{t:0,c:'🌸 自然',text:'接天莲叶无穷碧，映日荷花别样红。',author:'杨万里'},
+{t:0,c:'❤️ 亲情',text:'慈母手中线，游子身上衣。',author:'孟郊《游子吟》'},
+{t:0,c:'❤️ 亲情',text:'独在异乡为异客，每逢佳节倍思亲。',author:'王维'},
+{t:0,c:'🇨🇳 爱国',text:'先天下之忧而忧，后天下之乐而乐。',author:'范仲淹《岳阳楼记》'},
+{t:0,c:'🇨🇳 爱国',text:'人生自古谁无死，留取丹心照汗青。',author:'文天祥'},
+{t:1,c:'🌸 自然',text:'春暖花开 · 万紫千红 · 鸟语花香 · 春意盎然 · 风和日丽 · 百花齐放',author:'春天'},
+{t:1,c:'🌸 自然',text:'骄阳似火 · 绿树成荫 · 烈日炎炎 · 热火朝天 · 汗流浃背',author:'夏天'},
+{t:1,c:'🌸 自然',text:'秋高气爽 · 金风送爽 · 硕果累累 · 天高云淡 · 五谷丰登',author:'秋天'},
+{t:1,c:'🌸 自然',text:'冰天雪地 · 银装素裹 · 鹅毛大雪 · 寒风刺骨 · 白雪皑皑',author:'冬天'},
+{t:1,c:'💪 励志奋斗',text:'坚持不懈 · 持之以恒 · 废寝忘食 · 孜孜不倦 · 锲而不舍',author:'学习态度'},
+{t:2,c:'🌸 自然',text:'湖面上波光粼粼，像铺了一层碎金子，在阳光下闪闪发光。',author:'写景'},
+{t:2,c:'🌸 自然',text:'春天来了，小草从泥土里探出了嫩绿的脑袋，好奇地张望着这个世界。',author:'写景'},
+{t:2,c:'❤️ 亲情',text:'妈妈的手虽然粗糙，却是世界上最温暖的手。',author:'写人'},
+{t:3,c:'💪 励志奋斗',text:'有人说："失败是成功之母。"在那次比赛中，我深深体会到了这句话的含义。',author:'开头 · 引用式'},
+{t:3,c:'🌸 自然',text:'夕阳西下，天边燃起了一片橘红色的晚霞。我站在窗前，回想起今天发生的一切，嘴角不禁露出了微笑。',author:'结尾 · 抒情式'},
+{t:3,c:'💪 励志奋斗',text:'这件事虽然已经过去很久了，但它教会了我一个道理：只要坚持，就一定能成功。',author:'结尾 · 感悟式'},
+];
+let activeTab=0,activeCat='全部';
+function renderTabs(){document.getElementById('tabRow').innerHTML=TABS.map((t,i)=>`<div class="tab${i===activeTab?' active':''}" data-tab="${i}">${t}</div>`).join('')}
+function renderCats(){document.getElementById('catPills').innerHTML=CATS.map(c=>`<div class="cat-pill${c===activeCat?' active':''}" data-cat="${c}">${c}</div>`).join('')}
+function renderList(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const filtered=DATA.filter(d=>{
+    if(d.t!==activeTab)return false;
+    if(activeCat!=='全部'&&d.c!==activeCat)return false;
+    if(q&&!d.text.toLowerCase().includes(q)&&!d.author.toLowerCase().includes(q))return false;
+    return true;
+  });
+  document.getElementById('quoteList').innerHTML=filtered.length?filtered.map(d=>`<div class="quote-card">
+    <button class="copy-btn" data-text="${d.text.replace(/"/g,'&quot;')}">📋 复制</button>
+    <div class="quote-text">"${d.text}"</div>
+    <div class="quote-author">—— ${d.author}</div>
+    <div class="quote-tags"><span class="quote-tag">${d.c}</span></div>
+  </div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--text-caption)">暂无匹配素材</div>';
+  document.getElementById('statusInfo').textContent=`${filtered.length} 条素材`;
+}
+document.getElementById('tabRow').addEventListener('click',e=>{if(!e.target.classList.contains('tab'))return;activeTab=+e.target.dataset.tab;renderTabs();renderList()});
+document.getElementById('catPills').addEventListener('click',e=>{if(!e.target.classList.contains('cat-pill'))return;activeCat=e.target.dataset.cat;renderCats();renderList()});
+document.getElementById('searchInput').addEventListener('input',renderList);
+document.getElementById('quoteList').addEventListener('click',e=>{const btn=e.target.closest('.copy-btn');if(!btn)return;navigator.clipboard?.writeText(btn.dataset.text);btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 复制',1500)});
+renderTabs();renderCats();renderList();
+</script>
+<noscript><p>作文素材库 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

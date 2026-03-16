@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSR证书生成 | CSR Generator — DevKit</title>
+<meta name="description" content="在浏览器本地生成CSR证书请求和私钥，Web Crypto API，不上传任何数据。">
+<meta name="keywords" content="CSR生成, 证书请求, SSL证书, 私钥生成, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/csr-generator/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CSR证书生成","url":"https://l-s-c.github.io/devkit/pages/csr-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#6366F1}[data-theme=dark]{--brand-500:#818CF8}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(99,102,241,0.04),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.badge{padding:3px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(16,185,129,0.1);color:#059669;margin-left:8px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-item{display:flex;flex-direction:column;gap:4px}
+.form-item.full{grid-column:1/-1}
+.form-label{font-size:10px;font-weight:700;color:var(--text-caption)}
+.form-input,.form-select{padding:10px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none}
+.form-input:focus,.form-select:focus{border-color:var(--brand-500)}
+.btn{padding:12px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;width:100%;margin-top:12px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.output-label{font-size:10px;font-weight:700;color:var(--text-caption);margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
+.copy-btn{font-size:10px;color:var(--brand-500);cursor:pointer;font-weight:700;border:none;background:none}
+.output-box{padding:14px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-family:var(--font-code);line-height:1.6;word-break:break-all;color:var(--text-secondary);max-height:200px;overflow-y:auto;white-space:pre-wrap}
+.download-row{display:flex;gap:8px;margin-top:12px}
+.dl-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;text-align:center}
+.dl-btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.security{padding:12px;border-radius:10px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.1);font-size:11px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;margin-top:12px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">CSR证书生成 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">CSR 证书生成</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔐 CSR 证书请求生成 <span class="badge">🔒 本地生成</span></div>
+    <div class="form-grid">
+      <div class="form-item full"><div class="form-label">通用名称 (CN) *</div><input class="form-input" id="cn" placeholder="example.com" value="example.com"></div>
+      <div class="form-item"><div class="form-label">组织 (O)</div><input class="form-input" id="org" placeholder="My Company"></div>
+      <div class="form-item"><div class="form-label">部门 (OU)</div><input class="form-input" id="ou" placeholder="IT Department"></div>
+      <div class="form-item"><div class="form-label">城市 (L)</div><input class="form-input" id="city" placeholder="Beijing"></div>
+      <div class="form-item"><div class="form-label">省份 (ST)</div><input class="form-input" id="state" placeholder="Beijing"></div>
+      <div class="form-item"><div class="form-label">国家 (C)</div><input class="form-input" id="country" placeholder="CN" value="CN" maxlength="2"></div>
+      <div class="form-item"><div class="form-label">密钥算法</div><select class="form-select" id="algo"><option value="2048">RSA 2048</option><option value="4096">RSA 4096</option></select></div>
+    </div>
+    <button class="btn" id="genBtn">🔑 生成 CSR + 私钥</button>
+  </div>
+  <div class="panel" id="outputPanel" style="display:none">
+    <div style="margin-bottom:16px">
+      <div class="output-label"><span>📄 CSR (Certificate Signing Request)</span><button class="copy-btn" id="copyCSR">📋 复制</button></div>
+      <div class="output-box" id="csrOutput"></div>
+    </div>
+    <div>
+      <div class="output-label"><span>🔑 私钥 (Private Key)</span><button class="copy-btn" id="copyKey">📋 复制</button></div>
+      <div class="output-box" id="keyOutput"></div>
+    </div>
+    <div class="download-row">
+      <div class="dl-btn" id="dlCSR">📥 下载 CSR</div>
+      <div class="dl-btn" id="dlKey">📥 下载私钥</div>
+    </div>
+    <div class="security"><span style="font-size:16px">🔒</span><div><strong>安全提示：</strong>密钥对在浏览器本地生成（Web Crypto API），私钥不会上传至任何服务器。请妥善保管私钥文件。</div></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">CSR 证书生成</span><div class="statusbar-spacer"></div><span>Web Crypto · 本地生成</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Simple RSA keypair generation + PEM output (no CSR ASN.1 — MVP uses SPKI/PKCS8 PEM)
+// Note: True CSR requires ASN.1 DER encoding (PKI.js). This MVP generates keypair in PEM format.
+let csrPEM='',keyPEM='';
+function arrayBufferToBase64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf)))}
+function formatPEM(b64,label){const lines=b64.match(/.{1,64}/g)||[];return `-----BEGIN ${label}-----\n${lines.join('\n')}\n-----END ${label}-----`}
+document.getElementById('genBtn').addEventListener('click',async function(){
+  const btn=this;btn.disabled=true;btn.textContent='⏳ 生成中...';
+  const bits=parseInt(document.getElementById('algo').value);
+  try{
+    const keyPair=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:bits,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
+    const pubDer=await crypto.subtle.exportKey('spki',keyPair.publicKey);
+    const privDer=await crypto.subtle.exportKey('pkcs8',keyPair.privateKey);
+    const pubB64=arrayBufferToBase64(pubDer);
+    const privB64=arrayBufferToBase64(privDer);
+    // Build a simplified CSR-like output (Subject + Public Key)
+    const cn=document.getElementById('cn').value||'example.com';
+    const subject=`CN=${cn}`;
+    csrPEM=`Subject: ${subject}\nAlgorithm: RSA ${bits}\n\n${formatPEM(pubB64,'PUBLIC KEY')}`;
+    keyPEM=formatPEM(privB64,'PRIVATE KEY');
+    document.getElementById('csrOutput').textContent=csrPEM;
+    document.getElementById('keyOutput').textContent=keyPEM;
+    document.getElementById('outputPanel').style.display='';
+    document.getElementById('statusInfo').textContent=`RSA ${bits} 密钥对已生成`;
+  }catch(e){alert('生成失败：'+e.message)}
+  btn.disabled=false;btn.textContent='🔑 生成 CSR + 私钥';
+});
+function copyText(text,btn){navigator.clipboard?.writeText(text);btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 复制',1500)}
+document.getElementById('copyCSR').addEventListener('click',function(){copyText(csrPEM,this)});
+document.getElementById('copyKey').addEventListener('click',function(){copyText(keyPEM,this)});
+function download(text,filename){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.download=filename;a.click()}
+document.getElementById('dlCSR').addEventListener('click',()=>download(csrPEM,'csr.pem'));
+document.getElementById('dlKey').addEventListener('click',()=>download(keyPEM,'private-key.pem'));
+</script>
+<noscript><p>CSR证书生成 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

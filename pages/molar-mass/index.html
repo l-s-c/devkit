@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学分子量计算 | Molar Mass — DevKit</title>
+<meta name="description" content="输入化学分子式，自动计算摩尔质量，显示元素组成和质量占比。支持括号。">
+<meta name="keywords" content="分子量计算, 摩尔质量, 化学分子式, 化学工具, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/molar-mass/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"化学分子量计算","url":"https://l-s-c.github.io/devkit/pages/molar-mass/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.mol-input{width:100%;padding:16px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:24px;font-weight:800;text-align:center;font-family:var(--font-code);color:var(--text-primary);outline:none;letter-spacing:2px}
+.mol-input:focus{border-color:var(--brand-500)}
+.hint{font-size:10px;color:var(--text-caption);text-align:center;margin-top:4px}
+.quick-pills{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;justify-content:center}
+.quick-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-family:var(--font-code);cursor:pointer;font-weight:600}
+.quick-pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#10B981,#34D399);color:#fff;margin-top:12px;width:100%}
+.result-hero{text-align:center;padding:20px;margin-bottom:12px}
+.result-formula{font-size:28px;font-weight:800;font-family:var(--font-code);margin-bottom:4px}
+.result-mass{font-size:40px;font-weight:900;color:var(--brand-500);font-family:var(--font-code)}
+.result-unit{font-size:14px;color:var(--text-caption)}
+.breakdown{display:flex;flex-direction:column;gap:6px}
+.break-item{display:flex;align-items:center;padding:10px 12px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.break-symbol{width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;font-family:var(--font-code);color:var(--brand-500);margin-right:10px;flex-shrink:0}
+.break-name{flex:1;font-size:12px;color:var(--text-secondary)}
+.break-calc{font-size:12px;font-family:var(--font-code);color:var(--text-caption);text-align:right}
+.break-result{font-size:14px;font-weight:800;font-family:var(--font-code);margin-left:8px;min-width:60px;text-align:right}
+.err{color:#EF4444;font-size:12px;margin-top:8px;text-align:center}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">化学分子量计算 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">化学分子量计算</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">⚗️ 化学分子量计算</div>
+    <input class="mol-input" id="molInput" value="H2SO4" placeholder="输入分子式">
+    <div class="hint">支持括号，如 Ca(OH)2、Al2(SO4)3</div>
+    <div class="quick-pills">
+      <div class="quick-pill" data-f="H2O">H₂O</div><div class="quick-pill" data-f="NaCl">NaCl</div>
+      <div class="quick-pill" data-f="H2SO4">H₂SO₄</div><div class="quick-pill" data-f="CaCO3">CaCO₃</div>
+      <div class="quick-pill" data-f="C6H12O6">C₆H₁₂O₆</div><div class="quick-pill" data-f="NaOH">NaOH</div>
+      <div class="quick-pill" data-f="Ca(OH)2">Ca(OH)₂</div>
+    </div>
+    <button class="btn" id="calcBtn">🧮 计算分子量</button>
+    <div class="err" id="errMsg"></div>
+  </div>
+  <div class="panel" id="resultPanel" style="display:none">
+    <div class="result-hero"><div class="result-formula" id="resultFormula"></div><div class="result-mass" id="resultMass"></div><div class="result-unit">g/mol</div></div>
+    <div class="section-title">📊 元素组成</div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+</div>
+<div class="statusbar"><span>分子量计算</span><div class="statusbar-spacer"></div><span>化学绿 · 精确到小数</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const ELEMENTS={H:{m:1.008,n:'氢 Hydrogen'},He:{m:4.003,n:'氦 Helium'},Li:{m:6.941,n:'锂 Lithium'},Be:{m:9.012,n:'铍 Beryllium'},B:{m:10.81,n:'硼 Boron'},C:{m:12.011,n:'碳 Carbon'},N:{m:14.007,n:'氮 Nitrogen'},O:{m:15.999,n:'氧 Oxygen'},F:{m:18.998,n:'氟 Fluorine'},Ne:{m:20.180,n:'氖 Neon'},Na:{m:22.990,n:'钠 Sodium'},Mg:{m:24.305,n:'镁 Magnesium'},Al:{m:26.982,n:'铝 Aluminium'},Si:{m:28.086,n:'硅 Silicon'},P:{m:30.974,n:'磷 Phosphorus'},S:{m:32.065,n:'硫 Sulfur'},Cl:{m:35.453,n:'氯 Chlorine'},Ar:{m:39.948,n:'氩 Argon'},K:{m:39.098,n:'钾 Potassium'},Ca:{m:40.078,n:'钙 Calcium'},Fe:{m:55.845,n:'铁 Iron'},Cu:{m:63.546,n:'铜 Copper'},Zn:{m:65.38,n:'锌 Zinc'},Ag:{m:107.868,n:'银 Silver'},Ba:{m:137.327,n:'钡 Barium'},Mn:{m:54.938,n:'锰 Manganese'},Cr:{m:51.996,n:'铬 Chromium'},I:{m:126.904,n:'碘 Iodine'},Br:{m:79.904,n:'溴 Bromine'}};
+// Parse formula with brackets support
+function parseFormula(s){
+  const atoms={};let i=0;
+  function parse(mult){
+    while(i<s.length){
+      if(s[i]==='('){i++;parse(1);const n=readNum();for(const k in sub)atoms[k]=(atoms[k]||0)+sub[k]*n*mult;continue}
+      if(s[i]===')'){i++;return}
+      if(s[i]>='A'&&s[i]<='Z'){
+        let el=s[i++];
+        if(i<s.length&&s[i]>='a'&&s[i]<='z')el+=s[i++];
+        const n=readNum();
+        atoms[el]=(atoms[el]||0)+n*mult;
+      } else i++;
+    }
+  }
+  var sub={};
+  // Simplified: direct recursive parse
+  function parseR(mult){
+    while(i<s.length){
+      if(s[i]==='('){i++;const inner={};const save=i;parseInner(inner,1);const n=readNum();for(const k in inner)atoms[k]=(atoms[k]||0)+inner[k]*n*mult;continue}
+      if(s[i]===')'){i++;return}
+      if(s[i]>='A'&&s[i]<='Z'){let el=s[i++];if(i<s.length&&s[i]>='a'&&s[i]<='z')el+=s[i++];const n=readNum();atoms[el]=(atoms[el]||0)+n*mult}else i++
+    }
+  }
+  function parseInner(at,mult){
+    while(i<s.length){
+      if(s[i]==='('){i++;const inner={};parseInner(inner,1);const n=readNum();for(const k in inner)at[k]=(at[k]||0)+inner[k]*n*mult;continue}
+      if(s[i]===')'){i++;return}
+      if(s[i]>='A'&&s[i]<='Z'){let el=s[i++];if(i<s.length&&s[i]>='a'&&s[i]<='z')el+=s[i++];const n=readNum();at[el]=(at[el]||0)+n*mult}else i++
+    }
+  }
+  function readNum(){let n='';while(i<s.length&&s[i]>='0'&&s[i]<='9')n+=s[i++];return n?parseInt(n):1}
+  parseR(1);return atoms;
+}
+function calc(){
+  const formula=document.getElementById('molInput').value.trim();
+  const err=document.getElementById('errMsg');err.textContent='';
+  if(!formula){err.textContent='请输入分子式';return}
+  const atoms=parseFormula(formula);
+  if(!Object.keys(atoms).length){err.textContent='无法解析分子式';return}
+  let total=0;const items=[];
+  for(const[el,cnt]of Object.entries(atoms)){
+    const info=ELEMENTS[el];
+    if(!info){err.textContent=`未知元素：${el}`;return}
+    const mass=info.m*cnt;total+=mass;
+    items.push({el,cnt,mass,name:info.n,unitMass:info.m});
+  }
+  document.getElementById('resultPanel').style.display='';
+  const display=formula.replace(/(\d+)/g,'<sub>$1</sub>');
+  document.getElementById('resultFormula').innerHTML=display;
+  document.getElementById('resultMass').textContent=total.toFixed(3);
+  document.getElementById('breakdown').innerHTML=items.map(it=>`<div class="break-item"><div class="break-symbol">${it.el}</div><div class="break-name">${it.name}</div><div class="break-calc">${it.unitMass} × ${it.cnt}</div><div class="break-result">${it.mass.toFixed(3)}</div></div>`).join('');
+}
+document.getElementById('calcBtn').addEventListener('click',calc);
+document.querySelectorAll('.quick-pill').forEach(p=>p.addEventListener('click',function(){document.getElementById('molInput').value=this.dataset.f;calc()}));
+document.getElementById('molInput').addEventListener('keydown',e=>{if(e.key==='Enter')calc()});
+calc();
+</script>
+<noscript><p>化学分子量计算 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拼音声母韵母表 | Pinyin Table — DevKit</title>
+<meta name="description" content="23个声母+24个韵母+16个整体认读音节，三色系统，点击发音。">
+<meta name="keywords" content="拼音, 声母, 韵母, 整体认读, 拼音表, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/pinyin-table/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"拼音声母韵母表","url":"https://l-s-c.github.io/devkit/pages/pinyin-table/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B;--sm:#3B82F6;--ym:#EC4899;--zt:#10B981}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.legend{display:flex;gap:12px;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.py-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+.py-card{padding:10px 6px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms}
+.py-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.py-card:active{transform:scale(0.95)}
+.py-card.sm{border-color:rgba(59,130,246,0.2)}.py-card.sm:hover{border-color:var(--sm);background:rgba(59,130,246,0.04)}
+.py-card.ym{border-color:rgba(236,72,153,0.2)}.py-card.ym:hover{border-color:var(--ym);background:rgba(236,72,153,0.04)}
+.py-card.zt{border-color:rgba(16,185,129,0.2)}.py-card.zt:hover{border-color:var(--zt);background:rgba(16,185,129,0.04)}
+.py-letter{font-size:24px;font-weight:900;margin-bottom:2px}
+.sm .py-letter{color:var(--sm)}.ym .py-letter{color:var(--ym)}.zt .py-letter{color:var(--zt)}
+.py-example{font-size:9px;color:var(--text-caption)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">拼音声母韵母表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">拼音声母韵母表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔤 拼音声母韵母表 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto">点击发音</span></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--sm)"></div>声母 (23)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ym)"></div>韵母 (24)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--zt)"></div>整体认读 (16)</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title" style="color:var(--sm)">🔵 声母 Initials (23个)</div>
+    <div class="py-grid" id="smGrid"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title" style="color:var(--ym)">🔴 韵母 Finals (24个)</div>
+    <div class="py-grid" id="ymGrid"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title" style="color:var(--zt)">🟢 整体认读音节 (16个)</div>
+    <div class="py-grid" id="ztGrid"></div>
+  </div>
+</div>
+<div class="statusbar"><span>拼音声母韵母表</span><div class="statusbar-spacer"></div><span>63 个音节 · 点击发音</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const SM=[['b','玻 bō'],['p','坡 pō'],['m','摸 mō'],['f','佛 fó'],['d','得 dé'],['t','特 tè'],['n','讷 nè'],['l','勒 lè'],['g','哥 gē'],['k','科 kē'],['h','喝 hē'],['j','鸡 jī'],['q','七 qī'],['x','西 xī'],['zh','知 zhī'],['ch','吃 chī'],['sh','狮 shī'],['r','日 rì'],['z','字 zì'],['c','刺 cì'],['s','丝 sī'],['y','衣 yī'],['w','乌 wū']];
+const YM=[['a','啊 ā'],['o','喔 ō'],['e','鹅 é'],['i','衣 yī'],['u','乌 wū'],['ü','迂 yū'],['ai','爱 ài'],['ei','诶 éi'],['ui','归 guī'],['ao','凹 āo'],['ou','欧 ōu'],['iu','优 yōu'],['an','安 ān'],['en','恩 ēn'],['in','因 yīn'],['un','温 wēn'],['ün','晕 yūn'],['ang','昂 áng'],['eng','鹰 yīng'],['ing','英 yīng'],['ong','翁 wēng'],['er','耳 ěr'],['ie','耶 yē'],['üe','约 yuē']];
+const ZT=[['zhi','知 zhī'],['chi','吃 chī'],['shi','狮 shī'],['ri','日 rì'],['zi','字 zì'],['ci','刺 cì'],['si','丝 sī'],['yi','一 yī'],['wu','五 wǔ'],['yu','鱼 yú'],['ye','夜 yè'],['yue','月 yuè'],['yuan','圆 yuán'],['yin','因 yīn'],['yun','云 yún'],['ying','鹰 yīng']];
+function renderGrid(data,cls,elId){
+  document.getElementById(elId).innerHTML=data.map(([letter,ex])=>`<div class="py-card ${cls}" data-py="${ex.split(' ')[1]||letter}"><div class="py-letter">${letter}</div><div class="py-example">${ex}</div></div>`).join('');
+}
+renderGrid(SM,'sm','smGrid');renderGrid(YM,'ym','ymGrid');renderGrid(ZT,'zt','ztGrid');
+// Click to speak using speechSynthesis (best effort for Chinese pinyin)
+document.querySelectorAll('.py-card').forEach(card=>card.addEventListener('click',function(){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const py=this.querySelector('.py-example').textContent.split(' ')[0];// get the Chinese char
+  const u=new SpeechSynthesisUtterance(py);u.lang='zh-CN';u.rate=0.6;speechSynthesis.speak(u);
+}));
+</script>
+<noscript><p>拼音声母韵母表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

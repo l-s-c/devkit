@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分数计算器 | Fraction Calculator — DevKit</title>
+<meta name="description" content="分数四则运算、约分、通分、分数小数互转，显示计算过程。">
+<meta name="keywords" content="分数计算器, 分数约分, 通分, 分数运算, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/fraction-calc/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"分数计算器","url":"https://l-s-c.github.io/devkit/pages/fraction-calc/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#8B5CF6}[data-theme=dark]{--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(139,92,246,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.calc-area{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;padding:20px 0}
+.frac-box{display:flex;flex-direction:column;align-items:center}
+.frac-input{width:60px;padding:8px;border-radius:8px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:20px;font-weight:800;text-align:center;font-family:var(--font-code);color:var(--text-primary);outline:none}
+.frac-input:focus{border-color:var(--brand-500)}
+.frac-line{width:60px;height:2px;background:var(--text-primary);margin:4px 0}
+.op-btns{display:flex;gap:4px}
+.op-btn{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--brand-500)}
+.op-btn.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.eq-sign{font-size:24px;font-weight:800;color:var(--text-caption)}
+.result-box{padding:24px;border-radius:10px;border:2px solid var(--brand-500);background:rgba(139,92,246,0.04);text-align:center}
+.result-frac{display:inline-flex;flex-direction:column;align-items:center}
+.result-num,.result-den{font-size:32px;font-weight:900;font-family:var(--font-code);color:var(--brand-500)}
+.result-line{width:48px;height:3px;background:var(--brand-500);margin:4px 0}
+.result-decimal{font-size:14px;color:var(--text-caption);margin-top:8px;font-family:var(--font-code)}
+.steps{margin-top:16px;padding:14px;border-radius:8px;background:rgba(139,92,246,0.04);font-size:12px;line-height:2;color:var(--text-secondary)}
+.step-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--brand-500);color:#fff;font-size:10px;font-weight:800;align-items:center;justify-content:center;margin-right:4px}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff;margin-top:8px}
+.err{color:#EF4444;font-size:12px;margin-top:8px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">分数计算器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">分数计算器</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔢 分数计算器</div>
+    <div class="calc-area">
+      <div class="frac-box"><input class="frac-input" id="n1" value="2" placeholder="分子"><div class="frac-line"></div><input class="frac-input" id="d1" value="3" placeholder="分母"></div>
+      <div class="op-btns"><div class="op-btn active" data-op="+">+</div><div class="op-btn" data-op="-">−</div><div class="op-btn" data-op="*">×</div><div class="op-btn" data-op="/">÷</div></div>
+      <div class="frac-box"><input class="frac-input" id="n2" value="1" placeholder="分子"><div class="frac-line"></div><input class="frac-input" id="d2" value="4" placeholder="分母"></div>
+      <div class="eq-sign">=</div>
+      <div class="result-box" id="resultBox"><div class="result-frac"><div class="result-num" id="rn">—</div><div class="result-line"></div><div class="result-den" id="rd">—</div></div><div class="result-decimal" id="rDec"></div></div>
+    </div>
+    <div style="text-align:center"><button class="btn" id="calcBtn">🧮 计算</button></div>
+    <div class="err" id="errMsg"></div>
+  </div>
+  <div class="panel" id="stepsPanel" style="display:none">
+    <div class="section-title">📝 计算过程</div>
+    <div class="steps" id="stepsContent"></div>
+  </div>
+</div>
+<div class="statusbar"><span>分数计算器</span><div class="statusbar-spacer"></div><span>数学紫 · 约分通分</span></div>
+<script type="module">
+import '../../shared/theme.js';
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+let op='+';
+document.querySelectorAll('.op-btn').forEach(btn=>btn.addEventListener('click',function(){document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');op=this.dataset.op}));
+function calc(){
+  const n1=parseInt(document.getElementById('n1').value),d1=parseInt(document.getElementById('d1').value);
+  const n2=parseInt(document.getElementById('n2').value),d2=parseInt(document.getElementById('d2').value);
+  const err=document.getElementById('errMsg');err.textContent='';
+  if(isNaN(n1)||isNaN(d1)||isNaN(n2)||isNaN(d2)){err.textContent='请输入完整的分数';return}
+  if(d1===0||d2===0){err.textContent='分母不能为 0';return}
+  if(op==='/'&&n2===0){err.textContent='除数不能为 0';return}
+  let rn,rd;const steps=[];
+  if(op==='+'||op==='-'){
+    const l=lcm(d1,d2);const m1=l/d1,m2=l/d2;
+    steps.push(`通分：LCD(${d1}, ${d2}) = ${l}`);
+    steps.push(`${n1}/${d1} = ${n1*m1}/${l}，${n2}/${d2} = ${n2*m2}/${l}`);
+    rn=op==='+'?n1*m1+n2*m2:n1*m1-n2*m2;rd=l;
+    steps.push(`${n1*m1}/${l} ${op} ${n2*m2}/${l} = ${rn}/${rd}`);
+  } else if(op==='*'){
+    rn=n1*n2;rd=d1*d2;
+    steps.push(`${n1}/${d1} × ${n2}/${d2} = ${n1}×${n2} / ${d1}×${d2} = ${rn}/${rd}`);
+  } else {
+    rn=n1*d2;rd=d1*n2;
+    steps.push(`${n1}/${d1} ÷ ${n2}/${d2} = ${n1}×${d2} / ${d1}×${n2} = ${rn}/${rd}`);
+  }
+  const g=gcd(rn,rd);
+  if(g>1){steps.push(`约分：GCD(${rn}, ${rd}) = ${g}`);rn/=g;rd/=g;steps.push(`最简分数：${rn}/${rd} ✅`)}
+  else steps.push(`GCD(${Math.abs(rn)}, ${Math.abs(rd)}) = 1，已是最简分数 ✅`);
+  if(rd<0){rn=-rn;rd=-rd}
+  document.getElementById('rn').textContent=rn;
+  document.getElementById('rd').textContent=rd;
+  document.getElementById('rDec').textContent=`≈ ${(rn/rd).toFixed(4)}`;
+  document.getElementById('stepsPanel').style.display='';
+  document.getElementById('stepsContent').innerHTML=steps.map((s,i)=>`<span class="step-num">${i+1}</span> ${s}<br>`).join('');
+}
+document.getElementById('calcBtn').addEventListener('click',calc);
+calc();
+</script>
+<noscript><p>分数计算器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

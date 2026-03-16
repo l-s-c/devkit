@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汉字笔画数查询 | Stroke Count — DevKit</title>
+<meta name="description" content="输入汉字查询笔画数、拼音、部首，支持多字同时查询，统计总笔画和平均笔画。">
+<meta name="keywords" content="笔画数, 汉字笔画, 笔画查询, 小学语文, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/stroke-count/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"汉字笔画数查询","url":"https://l-s-c.github.io/devkit/pages/stroke-count/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.input-area{display:flex;gap:8px;margin-bottom:16px}
+.char-textarea{flex:1;padding:14px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:24px;font-weight:700;color:var(--text-primary);outline:none;resize:none;height:64px;letter-spacing:8px}
+.char-textarea:focus{border-color:var(--brand-500)}
+.btn{padding:14px 24px;border-radius:10px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F;align-self:stretch}
+.stats-bar{display:flex;gap:16px;padding:14px;border-radius:10px;background:rgba(245,158,11,0.06);justify-content:center}
+.stat-item{text-align:center}
+.stat-num{font-size:20px;font-weight:900;font-family:var(--font-code);color:var(--brand-500)}
+.stat-label{font-size:9px;color:var(--text-caption)}
+.char-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.char-card{padding:16px 10px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;transition:all 200ms}
+.char-card:hover{border-color:var(--brand-500);transform:translateY(-2px)}
+.char-big{font-size:36px;font-weight:900;margin-bottom:4px}
+.char-count{font-size:24px;font-weight:900;color:var(--brand-500);font-family:var(--font-code)}
+.char-count-label{font-size:9px;color:var(--text-caption)}
+.char-pinyin{font-size:10px;color:var(--text-caption);font-family:var(--font-code);margin-top:2px}
+.char-radical{font-size:10px;color:var(--text-secondary);margin-top:2px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">汉字笔画数查询 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">汉字笔画数查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">✏️ 汉字笔画数查询</div>
+    <div class="input-area">
+      <textarea class="char-textarea" id="charInput" placeholder="输入汉字（支持多字）">你好世界</textarea>
+      <button class="btn" id="queryBtn">查询</button>
+    </div>
+    <div class="stats-bar" id="statsBar" style="display:none">
+      <div class="stat-item"><div class="stat-num" id="statCount">0</div><div class="stat-label">字数</div></div>
+      <div class="stat-item"><div class="stat-num" id="statTotal">0</div><div class="stat-label">总笔画</div></div>
+      <div class="stat-item"><div class="stat-num" id="statAvg">0</div><div class="stat-label">平均笔画</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📊 查询结果</div>
+    <div class="char-results" id="results"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">笔画数查询</span><div class="statusbar-spacer"></div><span>小学语文 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// char → [strokes, pinyin, radical]
+const DB={
+'一':[1,'yī','一'],'二':[2,'èr','二'],'三':[3,'sān','一'],'四':[5,'sì','囗'],'五':[4,'wǔ','一'],
+'六':[4,'liù','八'],'七':[2,'qī','一'],'八':[2,'bā','八'],'九':[2,'jiǔ','丿'],'十':[2,'shí','十'],
+'人':[2,'rén','人'],'大':[3,'dà','大'],'小':[3,'xiǎo','小'],'上':[3,'shàng','一'],'下':[3,'xià','一'],
+'口':[3,'kǒu','口'],'目':[5,'mù','目'],'耳':[6,'ěr','耳'],'手':[4,'shǒu','手'],'足':[7,'zú','足'],
+'日':[4,'rì','日'],'月':[4,'yuè','月'],'水':[4,'shuǐ','水'],'火':[4,'huǒ','火'],'山':[3,'shān','山'],
+'石':[5,'shí','石'],'田':[5,'tián','田'],'土':[3,'tǔ','土'],'金':[8,'jīn','金'],'木':[4,'mù','木'],
+'天':[4,'tiān','大'],'地':[6,'dì','土'],'花':[7,'huā','艹'],'草':[9,'cǎo','艹'],'鸟':[5,'niǎo','鸟'],
+'鱼':[8,'yú','鱼'],'马':[3,'mǎ','马'],'牛':[4,'niú','牛'],'羊':[6,'yáng','羊'],'虫':[6,'chóng','虫'],
+'风':[4,'fēng','风'],'雨':[8,'yǔ','雨'],'云':[4,'yún','二'],'雪':[11,'xuě','雨'],'电':[5,'diàn','田'],
+'你':[7,'nǐ','亻'],'好':[6,'hǎo','女'],'我':[7,'wǒ','戈'],'他':[5,'tā','亻'],'她':[6,'tā','女'],
+'的':[8,'de','白'],'了':[2,'le','乛'],'不':[4,'bù','一'],'在':[6,'zài','土'],'有':[6,'yǒu','月'],
+'是':[9,'shì','日'],'这':[7,'zhè','辶'],'那':[6,'nà','阝'],'个':[3,'gè','人'],'中':[4,'zhōng','丨'],
+'来':[7,'lái','木'],'去':[5,'qù','厶'],'出':[5,'chū','凵'],'到':[8,'dào','刂'],'说':[9,'shuō','讠'],
+'看':[9,'kàn','目'],'听':[7,'tīng','口'],'写':[5,'xiě','冖'],'读':[10,'dú','讠'],'学':[8,'xué','子'],
+'生':[5,'shēng','生'],'气':[4,'qì','气'],'心':[4,'xīn','心'],'想':[13,'xiǎng','心'],'爱':[10,'ài','爫'],
+'春':[9,'chūn','日'],'夏':[10,'xià','夂'],'秋':[9,'qiū','禾'],'冬':[5,'dōng','冫'],
+'东':[5,'dōng','一'],'南':[9,'nán','十'],'西':[6,'xī','覀'],'北':[5,'běi','匕'],
+'明':[8,'míng','日'],'白':[5,'bái','白'],'红':[6,'hóng','纟'],'绿':[11,'lǜ','纟'],'蓝':[13,'lán','艹'],
+'家':[10,'jiā','宀'],'国':[8,'guó','囗'],'年':[6,'nián','干'],'时':[7,'shí','日'],'长':[4,'cháng','长'],
+'开':[4,'kāi','廾'],'关':[6,'guān','八'],'门':[3,'mén','门'],'王':[4,'wáng','王'],'子':[3,'zǐ','子'],
+'女':[3,'nǚ','女'],'父':[4,'fù','父'],'母':[5,'mǔ','母'],'头':[5,'tóu','大'],'身':[7,'shēn','身'],
+'世':[5,'shì','一'],'界':[9,'jiè','田'],'里':[7,'lǐ','里'],'外':[5,'wài','夕'],'前':[9,'qián','八'],
+'后':[6,'hòu','口'],'左':[5,'zuǒ','工'],'右':[5,'yòu','口'],'多':[6,'duō','夕'],'少':[4,'shǎo','小'],
+'老':[6,'lǎo','耂'],'师':[6,'shī','巾'],'友':[4,'yǒu','又'],'同':[6,'tóng','冂'],'名':[6,'míng','口'],
+'书':[4,'shū','乛'],'笔':[10,'bǐ','竹'],'纸':[7,'zhǐ','纟'],'字':[6,'zì','宀'],'文':[4,'wén','文'],
+'太':[4,'tài','大'],'阳':[6,'yáng','阝'],'星':[9,'xīng','日'],'光':[6,'guāng','儿'],'色':[6,'sè','色'],
+'力':[2,'lì','力'],'车':[4,'chē','车'],'路':[13,'lù','足'],'飞':[3,'fēi','飞'],'走':[7,'zǒu','走'],
+'跑':[12,'pǎo','足'],'站':[10,'zhàn','立'],'坐':[7,'zuò','土'],'吃':[6,'chī','口'],'喝':[12,'hē','口'],
+'话':[8,'huà','讠'],'问':[6,'wèn','门'],'答':[12,'dá','竹'],'对':[5,'duì','寸'],'错':[13,'cuò','钅'],
+};
+function query(){
+  const input=document.getElementById('charInput').value.trim();
+  const chars=[...input].filter(c=>/[\u4e00-\u9fff]/.test(c));
+  if(!chars.length){document.getElementById('results').innerHTML='<div style="text-align:center;color:var(--text-caption);padding:20px">请输入汉字</div>';document.getElementById('statsBar').style.display='none';return}
+  let total=0,found=0;
+  const html=chars.map(c=>{
+    const d=DB[c];
+    if(d){total+=d[0];found++;return `<div class="char-card"><div class="char-big">${c}</div><div class="char-count">${d[0]}</div><div class="char-count-label">画</div><div class="char-pinyin">${d[1]}</div><div class="char-radical">部首：${d[2]}</div></div>`}
+    return `<div class="char-card"><div class="char-big">${c}</div><div class="char-count">?</div><div class="char-count-label">未收录</div></div>`;
+  }).join('');
+  document.getElementById('results').innerHTML=html;
+  document.getElementById('statsBar').style.display='flex';
+  document.getElementById('statCount').textContent=chars.length;
+  document.getElementById('statTotal').textContent=total;
+  document.getElementById('statAvg').textContent=found?(total/found).toFixed(1):'—';
+  document.getElementById('statusInfo').textContent=`${chars.length} 个字 · ${total} 总笔画`;
+}
+document.getElementById('queryBtn').addEventListener('click',query);
+document.getElementById('charInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();query()}});
+query();
+</script>
+<noscript><p>汉字笔画数查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

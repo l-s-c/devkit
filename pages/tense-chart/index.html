@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语时态表 | Tense Chart — DevKit</title>
+<meta name="description" content="12种英语时态4×4矩阵可视化，点击查看结构公式、例句和信号词。">
+<meta name="keywords" content="英语时态, 时态表, 英语语法, 时态对比, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/tense-chart/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语时态表","url":"https://l-s-c.github.io/devkit/pages/tense-chart/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.tense-grid{display:grid;grid-template-columns:80px repeat(4,1fr);gap:1px;background:var(--border-glass);border-radius:10px;overflow:hidden}
+.tense-header{padding:10px 8px;background:var(--brand-500);color:#fff;font-size:10px;font-weight:800;text-align:center}
+.tense-row-header{padding:10px 8px;background:rgba(16,185,129,0.08);font-size:10px;font-weight:800;color:var(--brand-500);display:flex;align-items:center;justify-content:center}
+.tense-cell{padding:12px 8px;background:var(--bg-glass-input);cursor:pointer;transition:all 200ms;text-align:center}
+.tense-cell:hover{background:rgba(16,185,129,0.06)}
+.tense-cell.active{background:rgba(16,185,129,0.1);outline:2px solid var(--brand-500);outline-offset:-2px}
+.tense-name-cn{font-size:11px;font-weight:700;margin-bottom:2px}
+.tense-name-en{font-size:8px;color:var(--text-caption)}
+.detail-card{padding:20px;border-radius:10px;border:2px solid var(--brand-500);background:rgba(16,185,129,0.04)}
+.detail-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.detail-en{font-size:12px;color:var(--text-caption);font-family:var(--font-code);margin-bottom:12px}
+.detail-struct{padding:12px;border-radius:8px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.1);font-size:16px;font-weight:700;font-family:var(--font-code);text-align:center;margin-bottom:12px}
+.detail-struct em{color:var(--brand-500);font-style:normal;font-weight:900}
+.detail-label{font-size:10px;font-weight:700;color:var(--brand-500);margin-bottom:4px}
+.detail-examples{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.detail-ex{font-size:12px;padding:6px 10px;border-radius:6px;background:rgba(16,185,129,0.06);line-height:1.5}
+.detail-ex b{color:var(--brand-500)}
+.detail-signals{display:flex;gap:4px;flex-wrap:wrap}
+.signal-tag{padding:2px 8px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:600}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">英语时态表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">英语时态表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">⏰ 英语时态表 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto">点击查看详情</span></div>
+    <div class="tense-grid" id="tenseGrid"></div>
+  </div>
+  <div class="panel" id="detailPanel"></div>
+</div>
+<div class="statusbar"><span>英语时态表</span><div class="statusbar-spacer"></div><span>16 种时态 · 4×4 矩阵</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// [cn,en,struct,examples[[text,highlight]],signals[]]
+const TENSES=[
+// row0: 一般
+['一般过去时','Simple Past','主语 + <em>did</em>',[['I <b>went</b> to school yesterday.'],['She <b>watched</b> TV last night.']],['yesterday','last week','ago','in 2020']],
+['一般现在时','Simple Present','主语 + <em>do/does</em>',[['I <b>go</b> to school every day.'],['She <b>likes</b> reading books.'],['The sun <b>rises</b> in the east.']],['always','usually','often','every day','sometimes']],
+['一般将来时','Simple Future','主语 + <em>will do</em>',[['I <b>will go</b> to Beijing tomorrow.'],['It <b>will rain</b> this afternoon.']],['tomorrow','next week','soon','in the future']],
+['过去将来时','Past Future','主语 + <em>would do</em>',[['He said he <b>would come</b>.'],['She told me she <b>would help</b>.']],['would','was going to']],
+// row1: 进行
+['过去进行时','Past Continuous','主语 + <em>was/were doing</em>',[['I <b>was reading</b> when he came.'],['They <b>were playing</b> at 5 PM.']],['at that time','when','while']],
+['现在进行时','Present Continuous','主语 + <em>is/am/are doing</em>',[['I <b>am studying</b> English now.'],['She <b>is cooking</b> dinner.']],['now','right now','at the moment','look','listen']],
+['将来进行时','Future Continuous','主语 + <em>will be doing</em>',[['I <b>will be sleeping</b> at 10 PM.'],['This time tomorrow, I <b>will be flying</b>.']],['this time tomorrow','at 8 PM tomorrow']],
+['过去将来进行时','Past Future Continuous','主语 + <em>would be doing</em>',[['He said he <b>would be waiting</b>.']],['would be']],
+// row2: 完成
+['过去完成时','Past Perfect','主语 + <em>had done</em>',[['I <b>had finished</b> before he arrived.'],['She <b>had left</b> when I called.']],['by the time','before','after','already']],
+['现在完成时','Present Perfect','主语 + <em>have/has done</em>',[['I <b>have lived</b> here for 5 years.'],['She <b>has already finished</b>.']],['already','yet','just','ever','never','since','for']],
+['将来完成时','Future Perfect','主语 + <em>will have done</em>',[['I <b>will have graduated</b> by June.']],['by','by the time','before']],
+['过去将来完成时','Past Future Perfect','主语 + <em>would have done</em>',[['He said he <b>would have finished</b>.']],['would have']],
+// row3: 完成进行
+['过去完成进行时','Past Perfect Continuous','主语 + <em>had been doing</em>',[['I <b>had been waiting</b> for 2 hours.']],['for','since','by']],
+['现在完成进行时','Present Perfect Continuous','主语 + <em>have/has been doing</em>',[['I <b>have been studying</b> all day.']],['for','since','all day']],
+['将来完成进行时','Future Perfect Continuous','主语 + <em>will have been doing</em>',[['By June, I <b>will have been working</b> here for 3 years.']],['by','for']],
+['过去将来完成进行时','Past Future Perfect Continuous','主语 + <em>would have been doing</em>',[['He said he <b>would have been working</b>.']],['would have been']],
+];
+const ROWS=['一般','进行','完成','完成进行'];
+const COLS=['过去','现在','将来','过去将来'];
+let active=1; // default: 一般现在
+function renderGrid(){
+  let html='<div class="tense-header"></div>'+COLS.map(c=>`<div class="tense-header">${c}</div>`).join('');
+  ROWS.forEach((r,ri)=>{
+    html+=`<div class="tense-row-header">${r}</div>`;
+    for(let ci=0;ci<4;ci++){
+      const idx=ri*4+ci;const t=TENSES[idx];
+      html+=`<div class="tense-cell${idx===active?' active':''}" data-idx="${idx}"><div class="tense-name-cn">${t[0].replace(/时$/,'')}</div><div class="tense-name-en">${t[1].split(' ').pop()}</div></div>`;
+    }
+  });
+  document.getElementById('tenseGrid').innerHTML=html;
+}
+function renderDetail(){
+  const t=TENSES[active];
+  document.getElementById('detailPanel').innerHTML=`<div class="detail-card">
+    <div class="detail-title">${t[0]}</div><div class="detail-en">${t[1]}</div>
+    <div class="detail-struct">${t[2]}</div>
+    <div class="detail-label">✅ 例句</div>
+    <div class="detail-examples">${t[3].map(([ex])=>`<div class="detail-ex">${ex}</div>`).join('')}</div>
+    <div class="detail-label">🔔 信号词</div>
+    <div class="detail-signals">${t[4].map(s=>`<span class="signal-tag">${s}</span>`).join('')}</div>
+  </div>`;
+}
+document.getElementById('tenseGrid').addEventListener('click',e=>{const cell=e.target.closest('.tense-cell');if(!cell)return;active=+cell.dataset.idx;renderGrid();renderDetail()});
+renderGrid();renderDetail();
+</script>
+<noscript><p>英语时态表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
