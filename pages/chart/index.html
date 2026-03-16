@@ -139,19 +139,46 @@ Q4, 210</textarea>
 
       <div class="panel">
         <div class="section-title">🎨 样式设置</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:4px">主题色 <input type="color" id="themeColor" value="#6366F1" style="width:28px;height:28px;border:none;background:none;cursor:pointer"></label>
+
+        <!-- 配色方案 -->
+        <div style="font-size:11px;font-weight:700;color:var(--text-caption);margin-bottom:6px">配色方案</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="paletteRow">
+          <span class="tpl-chip palette-chip active" data-palette="default" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+            <span style="display:flex;gap:2px"><span style="width:8px;height:8px;border-radius:50%;background:#6366F1"></span><span style="width:8px;height:8px;border-radius:50%;background:#EC4899"></span><span style="width:8px;height:8px;border-radius:50%;background:#10B981"></span></span> 默认
+          </span>
+          <span class="tpl-chip palette-chip" data-palette="morandi" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+            <span style="display:flex;gap:2px"><span style="width:8px;height:8px;border-radius:50%;background:#B8A9C9"></span><span style="width:8px;height:8px;border-radius:50%;background:#D4A5A5"></span><span style="width:8px;height:8px;border-radius:50%;background:#A5C4D4"></span></span> 莫兰迪
+          </span>
+          <span class="tpl-chip palette-chip" data-palette="business" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+            <span style="display:flex;gap:2px"><span style="width:8px;height:8px;border-radius:50%;background:#1E3A5F"></span><span style="width:8px;height:8px;border-radius:50%;background:#3B82F6"></span><span style="width:8px;height:8px;border-radius:50%;background:#93C5FD"></span></span> 商务蓝
+          </span>
+          <span class="tpl-chip palette-chip" data-palette="warm" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+            <span style="display:flex;gap:2px"><span style="width:8px;height:8px;border-radius:50%;background:#EF4444"></span><span style="width:8px;height:8px;border-radius:50%;background:#F97316"></span><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B"></span></span> 暖色
+          </span>
+          <span class="tpl-chip palette-chip" data-palette="cool" style="cursor:pointer;display:flex;align-items:center;gap:4px">
+            <span style="display:flex;gap:2px"><span style="width:8px;height:8px;border-radius:50%;background:#06B6D4"></span><span style="width:8px;height:8px;border-radius:50%;background:#8B5CF6"></span><span style="width:8px;height:8px;border-radius:50%;background:#3B82F6"></span></span> 冷色
+          </span>
+        </div>
+
+        <!-- 字体大小 -->
+        <div style="font-size:11px;font-weight:700;color:var(--text-caption);margin-bottom:6px">字体大小</div>
+        <div style="display:flex;gap:4px;margin-bottom:14px" id="fontSizeRow">
+          <span class="tpl-chip" data-fsize="12" style="cursor:pointer">小</span>
+          <span class="tpl-chip active" data-fsize="14" style="cursor:pointer">中</span>
+          <span class="tpl-chip" data-fsize="16" style="cursor:pointer">大</span>
+        </div>
+
+        <!-- 背景色 + 圆角 -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:4px">背景色 <input type="color" id="chartBgColor" value="#FFFFFF" style="width:28px;height:28px;border:none;background:none;cursor:pointer"></label>
+          <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:4px">圆角 <input type="range" id="borderRadius" min="0" max="20" value="6" style="width:80px"> <span id="radiusVal" style="font-family:var(--font-code);font-size:10px;width:28px">6px</span></label>
+        </div>
+
+        <!-- 开关 -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showGrid" checked> 网格线</label>
           <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showLegend"> 图例</label>
           <label style="font-size:11px;font-weight:700;color:var(--text-caption);display:flex;align-items:center;gap:6px"><input type="checkbox" id="showValues"> 数值标签</label>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span class="tpl-chip" data-color="#6366F1" style="cursor:pointer">💜 靛蓝</span>
-          <span class="tpl-chip" data-color="#10B981" style="cursor:pointer">💚 翠绿</span>
-          <span class="tpl-chip" data-color="#F59E0B" style="cursor:pointer">🧡 琥珀</span>
-          <span class="tpl-chip" data-color="#EF4444" style="cursor:pointer">❤️ 红色</span>
-          <span class="tpl-chip" data-color="#3B82F6" style="cursor:pointer">💙 蓝色</span>
-          <span class="tpl-chip" data-color="#EC4899" style="cursor:pointer">💗 粉色</span>
         </div>
       </div>
 
@@ -191,8 +218,16 @@ Q4, 210</textarea>
 <script type="module">
 import '../../shared/theme.js';
 
-const PIE_COLORS = ['#6366F1','#EC4899','#10B981','#F59E0B','#3B82F6','#8B5CF6','#EF4444','#14B8A6','#F97316','#06B6D4'];
-let themeColor = '#6366F1';
+const PALETTES = {
+  default:  ['#6366F1','#EC4899','#10B981','#F59E0B','#3B82F6','#8B5CF6','#EF4444','#14B8A6','#F97316','#06B6D4'],
+  morandi:  ['#B8A9C9','#D4A5A5','#A5C4D4','#C9B99A','#9AB8A0','#D4BCA5','#A5A5D4','#C9A5B8','#B8C9A5','#A5D4C9'],
+  business: ['#1E3A5F','#3B82F6','#93C5FD','#1E40AF','#60A5FA','#2563EB','#BFDBFE','#1D4ED8','#3B82F6','#7DD3FC'],
+  warm:     ['#EF4444','#F97316','#F59E0B','#FB7185','#FBBF24','#DC2626','#EA580C','#D97706','#F43F5E','#FCD34D'],
+  cool:     ['#06B6D4','#8B5CF6','#3B82F6','#14B8A6','#A78BFA','#2563EB','#0EA5E9','#7C3AED','#0891B2','#6366F1'],
+};
+let currentPalette = 'default';
+let fontSize = 14;
+let borderRadius = 6;
 const TEMPLATES = [
   { title: '季度销售额', data: 'Q1, 120\nQ2, 180\nQ3, 150\nQ4, 210' },
   { title: '月度支出', data: '房租, 3000\n餐饮, 2000\n交通, 800\n娱乐, 1200\n购物, 1500' },
@@ -230,6 +265,8 @@ function generate() {
 }
 
 function buildConfig(type, title, labels, values, isPie, showGrid, showLegend, showValues) {
+  const colors = PALETTES[currentPalette];
+  const bgColor = document.getElementById('chartBgColor').value;
   return {
     type,
     data: {
@@ -237,25 +274,54 @@ function buildConfig(type, title, labels, values, isPie, showGrid, showLegend, s
       datasets: [{
         label: title || '数据',
         data: values,
-        backgroundColor: isPie ? PIE_COLORS.slice(0, labels.length) : themeColor + 'CC',
-        borderColor: isPie ? '#fff' : themeColor,
+        backgroundColor: isPie ? colors.slice(0, labels.length) : colors[0] + 'CC',
+        borderColor: isPie ? '#fff' : colors[0],
         borderWidth: 2,
-        borderRadius: isPie ? 0 : 6,
+        borderRadius: isPie ? 0 : borderRadius,
         tension: 0.3,
       }]
     },
     options: {
       responsive: true,
       plugins: {
-        title: { display: !!title, text: title, font: { size: 16, weight: 'bold' } },
-        legend: { display: showLegend, position: 'bottom' },
-        datalabels: showValues ? { display: true } : undefined,
+        title: { display: !!title, text: title, font: { size: fontSize + 2, weight: 'bold' } },
+        legend: { display: showLegend, position: 'bottom', labels: { font: { size: fontSize } } },
       },
       scales: isPie ? {} : {
-        y: { beginAtZero: true, grid: { display: showGrid } },
-        x: { grid: { display: showGrid } },
+        y: { beginAtZero: true, grid: { display: showGrid }, ticks: { font: { size: fontSize } } },
+        x: { grid: { display: showGrid }, ticks: { font: { size: fontSize } } },
       },
-    }
+      layout: { padding: 10 },
+    },
+    plugins: [{
+      id: 'customBg',
+      beforeDraw: (chart) => {
+        if (bgColor && bgColor !== '#FFFFFF' && bgColor !== '#ffffff') {
+          const { ctx, width, height } = chart;
+          ctx.save(); ctx.fillStyle = bgColor; ctx.fillRect(0, 0, width, height); ctx.restore();
+        }
+      }
+    }].concat(showValues ? [{
+      id: 'datalabels',
+      afterDatasetsDraw: (chart) => {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, di) => {
+          const meta = chart.getDatasetMeta(di);
+          meta.data.forEach((el, i) => {
+            const val = ds.data[i];
+            ctx.save(); ctx.fillStyle = isPie ? '#fff' : colors[0];
+            ctx.font = `bold ${fontSize - 2}px sans-serif`; ctx.textAlign = 'center';
+            if (isPie) {
+              const { x, y } = el.tooltipPosition();
+              ctx.fillText(val, x, y);
+            } else {
+              ctx.fillText(val, el.x, el.y - 8);
+            }
+            ctx.restore();
+          });
+        });
+      }
+    }] : [])
   };
 }
 
@@ -286,14 +352,31 @@ document.getElementById('fsOverlay').addEventListener('click', e => {
 });
 
 /* ===== Style controls ===== */
-document.getElementById('themeColor').addEventListener('input', e => { themeColor = e.target.value; generate(); });
-document.querySelectorAll('[data-color]').forEach(chip => {
-  chip.addEventListener('click', () => {
-    themeColor = chip.dataset.color;
-    document.getElementById('themeColor').value = themeColor;
-    generate();
-  });
+document.getElementById('paletteRow').addEventListener('click', e => {
+  const chip = e.target.closest('[data-palette]');
+  if (!chip) return;
+  currentPalette = chip.dataset.palette;
+  document.querySelectorAll('.palette-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  generate();
 });
+
+document.getElementById('fontSizeRow').addEventListener('click', e => {
+  const chip = e.target.closest('[data-fsize]');
+  if (!chip) return;
+  fontSize = parseInt(chip.dataset.fsize);
+  document.querySelectorAll('#fontSizeRow .tpl-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  generate();
+});
+
+document.getElementById('borderRadius').addEventListener('input', e => {
+  borderRadius = parseInt(e.target.value);
+  document.getElementById('radiusVal').textContent = borderRadius + 'px';
+  generate();
+});
+
+document.getElementById('chartBgColor').addEventListener('input', generate);
 document.getElementById('showGrid').addEventListener('change', generate);
 document.getElementById('showLegend').addEventListener('change', generate);
 document.getElementById('showValues').addEventListener('change', generate);
