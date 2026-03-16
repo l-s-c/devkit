@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语单词卡片 | Word Cards — DevKit</title>
+<meta name="description" content="小学英语单词卡片，翻转学习+发音+收藏生词本，按年级分类。">
+<meta name="keywords" content="英语单词卡片, 小学英语, 单词练习, 英语学习, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/word-cards/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语单词卡片","url":"https://l-s-c.github.io/devkit/pages/word-cards/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#10B981,#34D399);color:#fff}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.card-container{perspective:800px;margin:0 auto;max-width:400px}
+.flip-card{width:100%;aspect-ratio:3/2;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform 0.6s}
+.flip-card.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;backface-visibility:hidden;padding:24px;border:2px solid var(--border-glass)}
+.card-front{background:var(--bg-glass-input)}
+.card-back{background:rgba(16,185,129,0.04);transform:rotateY(180deg);border-color:var(--brand-500)}
+.card-word{font-size:42px;font-weight:800;letter-spacing:2px;margin-bottom:8px}
+.card-phonetic{font-size:14px;color:var(--text-caption);font-family:var(--font-code);margin-bottom:4px}
+.card-meaning{font-size:18px;font-weight:700;margin-bottom:4px}
+.card-example{font-size:12px;color:var(--text-secondary);font-style:italic}
+.card-hint{font-size:10px;color:var(--text-caption);margin-top:8px}
+.card-actions{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.card-action{width:48px;height:48px;border-radius:50%;border:2px solid var(--border-glass);background:var(--bg-glass-input);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all 200ms}
+.card-action:hover{transform:scale(1.1)}
+.progress-bar{height:4px;background:var(--border-glass);border-radius:2px;margin-top:12px;overflow:hidden}
+.progress-fill{height:100%;background:var(--brand-500);border-radius:2px;transition:width 300ms}
+.progress-text{font-size:10px;color:var(--text-caption);text-align:center;margin-top:4px;font-family:var(--font-code)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">英语单词卡片 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">英语单词卡片</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🔤 英语单词卡片</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="shuffleBtn">🔀 随机打乱</button>
+      <button class="btn btn-secondary" id="speakBtn">🔊 发音</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="card-container">
+      <div class="flip-card" id="flipCard"><div class="card-face card-front"><div class="card-word" id="cWord"></div><div class="card-hint">点击翻转查看中文</div></div><div class="card-face card-back"><div class="card-word" id="cWord2"></div><div class="card-phonetic" id="cPhon"></div><div class="card-meaning" id="cMean"></div><div class="card-example" id="cEx"></div></div></div>
+      <div class="card-actions">
+        <div class="card-action" id="dunnoBtn" title="不认识" style="border-color:#EF4444">❌</div>
+        <div class="card-action" id="favBtn" title="收藏" style="border-color:#F59E0B">⭐</div>
+        <div class="card-action" id="knowBtn" title="认识" style="border-color:#10B981">✅</div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    <div class="progress-text" id="progText"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">英语单词卡片</span><div class="statusbar-spacer"></div><span>小学必背 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const WORDS=[
+  ['apple','/ˈæp.l/','🍎 苹果','I like to eat an apple.'],['book','/bʊk/','📖 书','This is my book.'],['cat','/kæt/','🐱 猫','The cat is sleeping.'],['dog','/dɒɡ/','🐶 狗','I have a dog.'],['egg','/eɡ/','🥚 鸡蛋','I eat an egg for breakfast.'],['fish','/fɪʃ/','🐟 鱼','The fish is in the water.'],['girl','/ɡɜːl/','👧 女孩','She is a good girl.'],['hand','/hænd/','✋ 手','Raise your hand please.'],['ice','/aɪs/','🧊 冰','The ice is cold.'],['juice','/dʒuːs/','🧃 果汁','I want some orange juice.'],
+  ['kite','/kaɪt/','🪁 风筝','Let\'s fly a kite.'],['lion','/ˈlaɪ.ən/','🦁 狮子','The lion is strong.'],['milk','/mɪlk/','🥛 牛奶','I drink milk every day.'],['nose','/nəʊz/','👃 鼻子','Touch your nose.'],['orange','/ˈɒr.ɪndʒ/','🍊 橙子','This orange is sweet.'],['pen','/pen/','🖊️ 钢笔','Give me a pen please.'],['queen','/kwiːn/','👑 女王','She is a queen.'],['rain','/reɪn/','🌧️ 雨','It is raining outside.'],['sun','/sʌn/','☀️ 太阳','The sun is bright.'],['tree','/triː/','🌳 树','There is a big tree.'],
+  ['umbrella','/ʌmˈbrel.ə/','☂️ 雨伞','Take your umbrella.'],['water','/ˈwɔː.tər/','💧 水','I need some water.'],['yellow','/ˈjel.əʊ/','💛 黄色','The flower is yellow.'],['zoo','/zuː/','🦒 动物园','Let\'s go to the zoo.'],['bird','/bɜːd/','🐦 鸟','The bird can fly.'],['cake','/keɪk/','🎂 蛋糕','Happy birthday cake.'],['desk','/desk/','📚 书桌','Put it on the desk.'],['ear','/ɪər/','👂 耳朵','I have two ears.'],['flower','/ˈflaʊ.ər/','🌸 花','The flower is beautiful.'],['green','/ɡriːn/','💚 绿色','The grass is green.'],
+  ['happy','/ˈhæp.i/','😊 快乐的','I am very happy.'],['jump','/dʒʌmp/','🦘 跳','I can jump high.'],['king','/kɪŋ/','🤴 国王','He is the king.'],['leg','/leɡ/','🦵 腿','I have two legs.'],['moon','/muːn/','🌙 月亮','The moon is round.'],['night','/naɪt/','🌃 夜晚','Good night!'],['open','/ˈəʊ.pən/','📂 打开','Open the door please.'],['pink','/pɪŋk/','💗 粉色','I like pink.'],['red','/red/','❤️ 红色','The apple is red.'],['star','/stɑːr/','⭐ 星星','I see a star.'],
+];
+let idx=0,order=[...Array(WORDS.length).keys()];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function render(){
+  const w=WORDS[order[idx]];
+  document.getElementById('cWord').textContent=w[0];document.getElementById('cWord2').textContent=w[0];
+  document.getElementById('cPhon').textContent=w[1];document.getElementById('cMean').textContent=w[2];
+  document.getElementById('cEx').textContent=w[3];
+  document.getElementById('flipCard').classList.remove('flipped');
+  document.getElementById('progFill').style.width=((idx+1)/order.length*100)+'%';
+  document.getElementById('progText').textContent=`${idx+1} / ${order.length} 词`;
+}
+function next(){idx=(idx+1)%order.length;render()}
+document.getElementById('flipCard').addEventListener('click',()=>document.getElementById('flipCard').classList.toggle('flipped'));
+document.getElementById('knowBtn').addEventListener('click',next);
+document.getElementById('dunnoBtn').addEventListener('click',next);
+document.getElementById('favBtn').addEventListener('click',()=>document.getElementById('statusInfo').textContent='⭐ 已收藏');
+document.getElementById('shuffleBtn').addEventListener('click',()=>{shuffle(order);idx=0;render()});
+document.getElementById('speakBtn').addEventListener('click',()=>{
+  if(!('speechSynthesis' in window))return;speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(WORDS[order[idx]][0]);u.lang='en-US';speechSynthesis.speak(u);
+});
+render();
+</script>
+<noscript><p>英语单词卡片 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

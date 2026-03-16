@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古诗词填空 | Poetry Practice — DevKit</title>
+<meta name="description" content="小学必背古诗词填空练习，随机出题即时批改，支持朗读和打印，涵盖一到六年级。">
+<meta name="keywords" content="古诗词填空, 小学古诗, 古诗练习, 必背古诗, DevKit">
+<meta property="og:title" content="古诗词填空 — DevKit"><meta property="og:description" content="小学必背古诗词填空练习"><meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/poetry-practice/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"古诗词填空","url":"https://l-s-c.github.io/devkit/pages/poetry-practice/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.config-row{display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption);min-width:48px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.poem-card{padding:28px;border-radius:16px;background:var(--bg-glass-input);border:1.5px solid var(--border-glass);text-align:center;position:relative}
+.poem-title{font-size:20px;font-weight:800;margin-bottom:4px}
+.poem-author{font-size:12px;color:var(--text-caption);margin-bottom:4px}
+.poem-dynasty{font-size:10px;color:var(--text-caption);margin-bottom:20px}
+.poem-lines{font-size:20px;line-height:2.2;font-weight:600;letter-spacing:2px}
+.poem-blank{display:inline-block;width:44px;border:none;border-bottom:2px solid var(--brand-500);margin:0 2px;text-align:center;font-weight:800;color:var(--brand-500);outline:none;background:transparent;font-size:20px;font-family:inherit;padding:0 2px}
+.poem-blank:focus{background:rgba(245,158,11,0.06)}
+.poem-blank.correct{border-color:#10B981;color:#10B981}
+.poem-blank.wrong{border-color:#EF4444;color:#EF4444}
+.score-bar{display:flex;gap:16px;justify-content:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-glass)}
+.score-item{text-align:center}.score-num{font-size:24px;font-weight:800;font-family:var(--font-code)}.score-label{font-size:9px;color:var(--text-caption)}
+.poem-nav{position:absolute;top:50%;width:32px;height:32px;border-radius:50%;border:1px solid var(--border-glass);background:var(--bg-glass-input);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transform:translateY(-50%)}
+.poem-nav.prev{left:-16px}.poem-nav.next{right:-16px}
+@media print{.topbar,.statusbar,.panel:first-child,.btn-row,.poem-nav,.mesh-bg{display:none!important}.panel{box-shadow:none;border:1px solid #ddd;backdrop-filter:none;background:#fff}body{background:#fff}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">古诗词填空 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">古诗词填空</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📜 古诗词填空</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="nextBtn">🎲 换一首</button>
+      <button class="btn btn-secondary" id="readBtn">🔊 朗读</button>
+      <button class="btn btn-secondary" id="ansBtn">👁️ 显示答案</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="poem-card" id="poemCard">
+      <div class="poem-nav prev" id="prevBtn">‹</div>
+      <div class="poem-nav next" id="nextBtn2">›</div>
+      <div class="poem-title" id="pTitle"></div>
+      <div class="poem-author" id="pAuthor"></div>
+      <div class="poem-dynasty" id="pDynasty"></div>
+      <div class="poem-lines" id="pLines"></div>
+      <div class="score-bar">
+        <div class="score-item"><div class="score-num" id="sCorrect" style="color:#10B981">0</div><div class="score-label">正确</div></div>
+        <div class="score-item"><div class="score-num" id="sWrong" style="color:#EF4444">0</div><div class="score-label">错误</div></div>
+        <div class="score-item"><div class="score-num" id="sProgress">1/30</div><div class="score-label">进度</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">古诗词填空</span><div class="statusbar-spacer"></div><span>小学必背 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const POEMS=[
+  {t:'静夜思',a:'李白',d:'唐',lines:['床前明月光','疑是地上霜','举头望明月','低头思故乡']},
+  {t:'春晓',a:'孟浩然',d:'唐',lines:['春眠不觉晓','处处闻啼鸟','夜来风雨声','花落知多少']},
+  {t:'登鹳雀楼',a:'王之涣',d:'唐',lines:['白日依山尽','黄河入海流','欲穷千里目','更上一层楼']},
+  {t:'咏鹅',a:'骆宾王',d:'唐',lines:['鹅鹅鹅','曲项向天歌','白毛浮绿水','红掌拨清波']},
+  {t:'悯农（其二）',a:'李绅',d:'唐',lines:['锄禾日当午','汗滴禾下土','谁知盘中餐','粒粒皆辛苦']},
+  {t:'望庐山瀑布',a:'李白',d:'唐',lines:['日照香炉生紫烟','遥看瀑布挂前川','飞流直下三千尺','疑是银河落九天']},
+  {t:'绝句',a:'杜甫',d:'唐',lines:['两个黄鹂鸣翠柳','一行白鹭上青天','窗含西岭千秋雪','门泊东吴万里船']},
+  {t:'江南春',a:'杜牧',d:'唐',lines:['千里莺啼绿映红','水村山郭酒旗风','南朝四百八十寺','多少楼台烟雨中']},
+  {t:'出塞',a:'王昌龄',d:'唐',lines:['秦时明月汉时关','万里长征人未还','但使龙城飞将在','不教胡马度阴山']},
+  {t:'回乡偶书',a:'贺知章',d:'唐',lines:['少小离家老大回','乡音无改鬓毛衰','儿童相见不相识','笑问客从何处来']},
+  {t:'望天门山',a:'李白',d:'唐',lines:['天门中断楚江开','碧水东流至此回','两岸青山相对出','孤帆一片日边来']},
+  {t:'赠汪伦',a:'李白',d:'唐',lines:['李白乘舟将欲行','忽闻岸上踏歌声','桃花潭水深千尺','不及汪伦送我情']},
+  {t:'早发白帝城',a:'李白',d:'唐',lines:['朝辞白帝彩云间','千里江陵一日还','两岸猿声啼不住','轻舟已过万重山']},
+  {t:'江雪',a:'柳宗元',d:'唐',lines:['千山鸟飞绝','万径人踪灭','孤舟蓑笠翁','独钓寒江雪']},
+  {t:'游子吟',a:'孟郊',d:'唐',lines:['慈母手中线','游子身上衣','临行密密缝','意恐迟迟归']},
+  {t:'元日',a:'王安石',d:'宋',lines:['爆竹声中一岁除','春风送暖入屠苏','千门万户曈曈日','总把新桃换旧符']},
+  {t:'泊船瓜洲',a:'王安石',d:'宋',lines:['京口瓜洲一水间','钟山只隔数重山','春风又绿江南岸','明月何时照我还']},
+  {t:'题西林壁',a:'苏轼',d:'宋',lines:['横看成岭侧成峰','远近高低各不同','不识庐山真面目','只缘身在此山中']},
+  {t:'示儿',a:'陆游',d:'宋',lines:['死去元知万事空','但悲不见九州同','王师北定中原日','家祭无忘告乃翁']},
+  {t:'小池',a:'杨万里',d:'宋',lines:['泉眼无声惜细流','树阴照水爱晴柔','小荷才露尖尖角','早有蜻蜓立上头']},
+  {t:'晓出净慈寺送林子方',a:'杨万里',d:'宋',lines:['毕竟西湖六月中','风光不与四时同','接天莲叶无穷碧','映日荷花别样红']},
+  {t:'春日',a:'朱熹',d:'宋',lines:['胜日寻芳泗水滨','无边光景一时新','等闲识得东风面','万紫千红总是春']},
+  {t:'村居',a:'高鼎',d:'清',lines:['草长莺飞二月天','拂堤杨柳醉春烟','儿童散学归来早','忙趁东风放纸鸢']},
+  {t:'所见',a:'袁枚',d:'清',lines:['牧童骑黄牛','歌声振林樾','意欲捕鸣蝉','忽然闭口立']},
+  {t:'夜书所见',a:'叶绍翁',d:'宋',lines:['萧萧梧叶送寒声','江上秋风动客情','知有儿童挑促织','夜深篱落一灯明']},
+  {t:'敕勒歌',a:'北朝民歌',d:'南北朝',lines:['敕勒川','阴山下','天似穹庐','笼盖四野']},
+  {t:'鹿柴',a:'王维',d:'唐',lines:['空山不见人','但闻人语响','返景入深林','复照青苔上']},
+  {t:'送元二使安西',a:'王维',d:'唐',lines:['渭城朝雨浥轻尘','客舍青青柳色新','劝君更尽一杯酒','西出阳关无故人']},
+  {t:'九月九日忆山东兄弟',a:'王维',d:'唐',lines:['独在异乡为异客','每逢佳节倍思亲','遥知兄弟登高处','遍插茱萸少一人']},
+  {t:'黄鹤楼送孟浩然之广陵',a:'李白',d:'唐',lines:['故人西辞黄鹤楼','烟花三月下扬州','孤帆远影碧空尽','唯见长江天际流']},
+];
+let idx=0,correct=0,wrong=0,showAns=false;
+function pickBlanks(line){
+  // pick 1-2 positions to blank out (2-char segments from content words)
+  const chars=[...line];if(chars.length<3)return{html:line,answers:[]};
+  const pos=Math.floor(Math.random()*(chars.length-1));
+  const ans=chars[pos]+chars[pos+1];
+  const before=chars.slice(0,pos).join('');
+  const after=chars.slice(pos+2).join('');
+  return{html:`${before}<input class="poem-blank" maxlength="2" data-ans="${ans}" placeholder="__">${after}`,answers:[ans]};
+}
+function render(){
+  const p=POEMS[idx];
+  document.getElementById('pTitle').textContent=p.t;
+  document.getElementById('pAuthor').textContent=p.a;
+  document.getElementById('pDynasty').textContent=p.d;
+  // blank 1-2 lines
+  const blankLine=Math.floor(Math.random()*p.lines.length);
+  document.getElementById('pLines').innerHTML=p.lines.map((l,i)=>{
+    if(i===blankLine){const b=pickBlanks(l);return b.html}
+    return l;
+  }).join('<br>');
+  document.getElementById('sProgress').textContent=`${idx+1}/${POEMS.length}`;
+  showAns=false;
+  // attach check handlers
+  document.querySelectorAll('.poem-blank').forEach(inp=>{
+    inp.addEventListener('blur',function(){
+      const v=this.value.trim();if(!v)return;
+      this.classList.remove('correct','wrong');
+      if(v===this.dataset.ans){this.classList.add('correct');correct++}
+      else{this.classList.add('wrong');wrong++}
+      document.getElementById('sCorrect').textContent=correct;
+      document.getElementById('sWrong').textContent=wrong;
+    });
+  });
+}
+function next(){idx=(idx+1)%POEMS.length;render()}
+function prev(){idx=(idx-1+POEMS.length)%POEMS.length;render()}
+document.getElementById('nextBtn').addEventListener('click',next);
+document.getElementById('nextBtn2').addEventListener('click',next);
+document.getElementById('prevBtn').addEventListener('click',prev);
+document.getElementById('readBtn').addEventListener('click',()=>{
+  if(!('speechSynthesis' in window))return;speechSynthesis.cancel();
+  const p=POEMS[idx];const text=p.t+'，'+p.a+'。'+p.lines.join('，');
+  const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=0.9;speechSynthesis.speak(u);
+});
+document.getElementById('ansBtn').addEventListener('click',()=>{
+  showAns=!showAns;
+  document.querySelectorAll('.poem-blank').forEach(inp=>{
+    if(showAns){inp.value=inp.dataset.ans;inp.classList.add('correct')}
+    else{inp.value='';inp.classList.remove('correct','wrong')}
+  });
+});
+render();
+</script>
+<noscript><p>古诗词填空 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

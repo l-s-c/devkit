@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成语词典 | Idiom Dictionary — DevKit</title>
+<meta name="description" content="小学常用成语词典，含释义、出处、例句、分类。支持成语接龙模式。">
+<meta name="keywords" content="成语词典, 成语大全, 成语接龙, 小学成语, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/idiom-dict/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"成语词典","url":"https://l-s-c.github.io/devkit/pages/idiom-dict/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px}
+.tab{padding:8px 16px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms}
+.tab:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.cat-pills{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.cat-pill{padding:4px 10px;border-radius:12px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:9px;font-weight:700;cursor:pointer;transition:all 150ms}
+.cat-pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.cat-pill.active{background:rgba(245,158,11,0.08);border-color:var(--brand-500);color:var(--brand-500)}
+.idiom-list{display:flex;flex-direction:column;gap:10px}
+.idiom-card{padding:16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms;cursor:pointer}
+.idiom-card:hover{border-color:var(--brand-500);transform:translateY(-1px)}
+.idiom-name{font-size:22px;font-weight:800;letter-spacing:4px;margin-bottom:4px}
+.idiom-pinyin{font-size:11px;color:var(--text-caption);font-family:var(--font-code);margin-bottom:8px}
+.idiom-meaning{font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px}
+.idiom-source{font-size:10px;color:var(--text-caption);font-style:italic}
+.idiom-example{font-size:11px;color:var(--text-secondary);margin-top:4px;padding:8px 10px;background:rgba(245,158,11,0.04);border-radius:6px}
+.idiom-tags{display:flex;gap:4px;margin-top:6px}
+.idiom-tag{padding:2px 6px;border-radius:6px;font-size:8px;font-weight:700;background:rgba(245,158,11,0.1);color:#D97706}
+/* solitaire */
+.solitaire{text-align:center;padding:20px}
+.sol-chain{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px}
+.sol-item{padding:6px 12px;border-radius:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);font-size:14px;font-weight:700}
+.sol-current{font-size:28px;font-weight:800;letter-spacing:4px;margin-bottom:4px}
+.sol-hint{font-size:11px;color:var(--brand-500);margin-bottom:12px}
+.sol-input{width:200px;padding:10px 14px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:18px;font-weight:700;text-align:center;outline:none;color:var(--text-primary)}
+.sol-input:focus{border-color:var(--brand-500)}
+.sol-msg{font-size:12px;margin-top:8px}
+.sol-score{font-size:10px;color:var(--text-caption);margin-top:4px}
+.hidden{display:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">成语词典 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">成语词典</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📚 成语词典</div>
+    <div class="tab-row"><div class="tab active" data-tab="dict">📖 词典</div><div class="tab" data-tab="sol">🔗 接龙</div></div>
+    <div id="dictUI">
+      <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索成语、释义或拼音..."></div>
+      <div class="cat-pills" id="catPills"></div>
+    </div>
+  </div>
+  <div class="panel" id="dictPanel"><div class="idiom-list" id="idiomList"></div></div>
+  <div class="panel hidden" id="solPanel">
+    <div class="solitaire">
+      <div class="sol-chain" id="solChain"></div>
+      <div class="sol-current" id="solCurrent"></div>
+      <div class="sol-hint" id="solHint"></div>
+      <input class="sol-input" id="solInput" placeholder="输入成语..." maxlength="8">
+      <div class="sol-msg" id="solMsg"></div>
+      <div class="sol-score" id="solScore"></div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">成语词典</span><div class="statusbar-spacer"></div><span>常用成语 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// n=name,p=pinyin,m=meaning,s=source,e=example,c=categories
+const IDIOMS=[
+{n:'画龙点睛',p:'huà lóng diǎn jīng',m:'比喻在关键处用几句话点明实质，使文章更加生动传神。',s:'唐·张彦远《历代名画记》',e:'他在文章结尾加了一句总结，真是画龙点睛之笔。',c:['🐾 动物','📖 学习']},
+{n:'守株待兔',p:'shǒu zhū dài tù',m:'比喻不主动努力，而存万一的侥幸心理，希望得到意外的收获。',s:'《韩非子·五蠹》',e:'学习不能守株待兔，要主动思考才能进步。',c:['🐾 动物']},
+{n:'一心一意',p:'yī xīn yī yì',m:'形容做事专心，不分心。',s:'《三国志》',e:'上课时要一心一意听讲。',c:['🔢 数字','📖 学习']},
+{n:'三心二意',p:'sān xīn èr yì',m:'形容犹豫不决或意志不坚定。',s:'元·关汉卿《望江亭》',e:'做作业不能三心二意。',c:['🔢 数字']},
+{n:'亡羊补牢',p:'wáng yáng bǔ láo',m:'比喻出了问题以后想办法补救，可以防止继续受损失。',s:'《战国策·楚策》',e:'虽然犯了错，但亡羊补牢为时未晚。',c:['🐾 动物']},
+{n:'坐井观天',p:'zuò jǐng guān tiān',m:'比喻眼界狭小，见识短浅。',s:'《庄子·秋水》',e:'我们不能坐井观天，要多出去看看。',c:['🐾 动物','🍃 自然']},
+{n:'叶公好龙',p:'yè gōng hào lóng',m:'比喻表面爱好某事物，实际上并不真正喜欢。',s:'汉·刘向《新序》',e:'他说喜欢运动但从不锻炼，真是叶公好龙。',c:['🐾 动物']},
+{n:'对牛弹琴',p:'duì niú tán qín',m:'比喻对不懂道理的人讲道理，白费口舌。',s:'《弘明集》',e:'跟他解释高数就像对牛弹琴。',c:['🐾 动物']},
+{n:'鹤立鸡群',p:'hè lì jī qún',m:'比喻一个人的仪表或才能在周围一群人里显得很突出。',s:'晋·戴逵《竹林七贤论》',e:'她在人群中鹤立鸡群。',c:['🐾 动物']},
+{n:'狐假虎威',p:'hú jiǎ hǔ wēi',m:'比喻依仗别人的势力欺压人。',s:'《战国策·楚策》',e:'他只不过是狐假虎威罢了。',c:['🐾 动物']},
+{n:'杯弓蛇影',p:'bēi gōng shé yǐng',m:'比喻因疑神疑鬼而引起恐惧。',s:'汉·应劭《风俗通义》',e:'别杯弓蛇影了，那只是树枝的影子。',c:['🐾 动物']},
+{n:'春暖花开',p:'chūn nuǎn huā kāi',m:'形容春天温暖的气候和美好的景色。',s:'明·朱国祯《涌幢小品》',e:'春暖花开的季节，我们去郊游吧。',c:['🌸 四季','🍃 自然']},
+{n:'秋高气爽',p:'qiū gāo qì shuǎng',m:'形容秋天天空晴朗高远，气候凉爽宜人。',s:'唐·杜甫《崔氏东山草堂》',e:'秋高气爽，是爬山的好时候。',c:['🌸 四季','🍃 自然']},
+{n:'五颜六色',p:'wǔ yán liù sè',m:'形容颜色繁多，色彩绚丽。',s:'清·李汝珍《镜花缘》',e:'花园里的花五颜六色，非常漂亮。',c:['🔢 数字']},
+{n:'七上八下',p:'qī shàng bā xià',m:'形容心神不定或慌乱不安。',s:'宋·宗杲《大慧普觉禅师语录》',e:'考试前他心里七上八下的。',c:['🔢 数字','😊 心情']},
+{n:'十全十美',p:'shí quán shí měi',m:'各方面都非常完美，毫无缺陷。',s:'清·陈朗《雪月梅传》',e:'世上没有十全十美的事情。',c:['🔢 数字']},
+{n:'百发百中',p:'bǎi fā bǎi zhòng',m:'形容射箭或射击技术非常高明。',s:'《战国策·西周策》',e:'他投篮百发百中。',c:['🔢 数字','⚔️ 战争']},
+{n:'千军万马',p:'qiān jūn wàn mǎ',m:'形容雄壮的队伍或浩大的声势。',s:'唐·李白',e:'操场上呐喊声如千军万马。',c:['🔢 数字','⚔️ 战争']},
+{n:'自强不息',p:'zì qiáng bù xī',m:'自己努力向上，永远不懈怠。',s:'《周易·乾》',e:'我们要自强不息，努力学习。',c:['📖 学习']},
+{n:'勤能补拙',p:'qín néng bǔ zhuō',m:'勤奋能够弥补天资的不足。',s:'宋·邵雍《弄笔吟》',e:'只要勤能补拙，就一定能进步。',c:['📖 学习']},
+{n:'学无止境',p:'xué wú zhǐ jìng',m:'学习是没有尽头的。',s:'清·刘开《问说》',e:'学无止境，我们要活到老学到老。',c:['📖 学习']},
+{n:'废寝忘食',p:'fèi qǐn wàng shí',m:'顾不上睡觉和吃饭，形容学习或工作非常专心。',s:'南朝·王融《三月三日曲水诗序》',e:'他废寝忘食地准备考试。',c:['📖 学习']},
+{n:'开天辟地',p:'kāi tiān pì dì',m:'比喻前所未有，有史以来第一次。',s:'《三五历记》',e:'这是开天辟地的大事。',c:['🍃 自然']},
+{n:'山清水秀',p:'shān qīng shuǐ xiù',m:'形容风景优美。',s:'宋·黄庭坚',e:'这里山清水秀，令人心旷神怡。',c:['🍃 自然']},
+{n:'风和日丽',p:'fēng hé rì lì',m:'和风习习，阳光灿烂，形容天气晴好。',s:'元·李爱山',e:'今天风和日丽，适合出去玩。',c:['🍃 自然','🌸 四季']},
+{n:'兴高采烈',p:'xìng gāo cǎi liè',m:'形容兴致高，精神饱满。',s:'南朝·刘勰《文心雕龙》',e:'孩子们兴高采烈地去春游。',c:['😊 心情']},
+{n:'心花怒放',p:'xīn huā nù fàng',m:'形容内心高兴极了。',s:'清·李宝嘉《文明小史》',e:'听到好消息，她心花怒放。',c:['😊 心情']},
+{n:'愁眉苦脸',p:'chóu méi kǔ liǎn',m:'形容发愁的样子。',s:'元·王实甫《西厢记》',e:'别愁眉苦脸的，笑一笑吧。',c:['😊 心情']},
+{n:'破釜沉舟',p:'pò fǔ chén zhōu',m:'比喻下定决心，不顾一切地干到底。',s:'《史记·项羽本纪》',e:'面对困难，我们要有破釜沉舟的勇气。',c:['⚔️ 战争']},
+{n:'刻舟求剑',p:'kè zhōu qiú jiàn',m:'比喻拘泥不知变通，不懂得根据实际情况处理问题。',s:'《吕氏春秋》',e:'时代变了，不能刻舟求剑。',c:['⚔️ 战争']},
+];
+const CATS=['全部','🐾 动物','🔢 数字','🌸 四季','😊 心情','⚔️ 战争','📖 学习','🍃 自然'];
+let currentCat='全部',mode='dict';
+function renderCats(){
+  document.getElementById('catPills').innerHTML=CATS.map(c=>`<div class="cat-pill${c===currentCat?' active':''}" data-cat="${c}">${c}</div>`).join('');
+}
+function renderList(q=''){
+  const filtered=IDIOMS.filter(i=>{
+    if(currentCat!=='全部'&&!i.c.includes(currentCat))return false;
+    if(q&&!i.n.includes(q)&&!i.m.includes(q)&&!i.p.includes(q))return false;
+    return true;
+  });
+  document.getElementById('idiomList').innerHTML=filtered.length?filtered.map(i=>`<div class="idiom-card"><div class="idiom-name">${i.n}</div><div class="idiom-pinyin">${i.p}</div><div class="idiom-meaning">${i.m}</div><div class="idiom-source">📜 出处：${i.s}</div><div class="idiom-example">💬 ${i.e}</div><div class="idiom-tags">${i.c.map(c=>`<span class="idiom-tag">${c}</span>`).join('')}</div></div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--text-caption)">没有找到匹配的成语</div>';
+  document.getElementById('statusInfo').textContent=`共 ${filtered.length} 条成语`;
+}
+// Tabs
+document.querySelector('.tab-row').addEventListener('click',e=>{
+  if(!e.target.classList.contains('tab'))return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  mode=e.target.dataset.tab;
+  document.getElementById('dictUI').classList.toggle('hidden',mode!=='dict');
+  document.getElementById('dictPanel').classList.toggle('hidden',mode!=='dict');
+  document.getElementById('solPanel').classList.toggle('hidden',mode!=='sol');
+  if(mode==='sol')startSolitaire();
+});
+document.getElementById('catPills').addEventListener('click',e=>{
+  if(!e.target.classList.contains('cat-pill'))return;
+  currentCat=e.target.dataset.cat;renderCats();renderList(document.getElementById('searchInput').value.trim());
+});
+document.getElementById('searchInput').addEventListener('input',function(){renderList(this.value.trim())});
+// Solitaire
+let solChain=[],solUsed=new Set();
+function getLastCharPinyin(name){
+  const last=name[name.length-1];
+  const found=IDIOMS.find(i=>i.n.includes(last));
+  if(!found)return null;
+  // extract last char's pinyin from the full pinyin
+  const parts=found.p.split(' ');
+  const idx=[...found.n].indexOf(last);
+  return parts[idx]||parts[parts.length-1];
+}
+function startSolitaire(){
+  solChain=[];solUsed=new Set();
+  const start=IDIOMS[Math.floor(Math.random()*IDIOMS.length)];
+  solChain.push(start.n);solUsed.add(start.n);
+  renderSolitaire();
+}
+function renderSolitaire(){
+  document.getElementById('solChain').innerHTML=solChain.map(s=>`<div class="sol-item">${s}</div>`).join('');
+  const last=solChain[solChain.length-1];
+  document.getElementById('solCurrent').textContent=last;
+  const lastChar=last[last.length-1];
+  document.getElementById('solHint').textContent=`请输入「${lastChar}」开头的成语`;
+  document.getElementById('solInput').value='';
+  document.getElementById('solInput').focus();
+  document.getElementById('solScore').textContent=`已接 ${solChain.length-1} 个`;
+}
+document.getElementById('solInput').addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  const v=this.value.trim();if(v.length<4){document.getElementById('solMsg').innerHTML='<span style="color:#EF4444">请输入四字成语</span>';return}
+  const last=solChain[solChain.length-1];
+  const lastChar=last[last.length-1];
+  if(v[0]!==lastChar){
+    // check pinyin match
+    document.getElementById('solMsg').innerHTML=`<span style="color:#EF4444">需要「${lastChar}」开头的成语</span>`;return;
+  }
+  if(solUsed.has(v)){document.getElementById('solMsg').innerHTML='<span style="color:#EF4444">这个成语已经用过了</span>';return}
+  // accept it (we don't validate against full dictionary for flexibility)
+  solChain.push(v);solUsed.add(v);
+  document.getElementById('solMsg').innerHTML='<span style="color:#10B981">✅ 接龙成功！</span>';
+  renderSolitaire();
+});
+renderCats();renderList();
+</script>
+<noscript><p>成语词典 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

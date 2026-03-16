@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>笔顺动画 | Stroke Order — DevKit</title>
+<meta name="description" content="汉字笔顺动画查询，支持9000+常用字，逐笔播放、跟写练习，小学生必备工具。">
+<meta name="keywords" content="笔顺查询, 笔画顺序, 汉字笔顺, 笔顺动画, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/stroke-order/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"笔顺动画","url":"https://l-s-c.github.io/devkit/pages/stroke-order/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.2/dist/hanzi-writer.min.js"></script>
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.char-input-wrap{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.char-input{width:80px;padding:12px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:36px;font-weight:800;text-align:center;color:var(--text-primary);outline:none;font-family:inherit}
+.char-input:focus{border-color:var(--brand-500)}
+.char-input-hint{font-size:11px;color:var(--text-caption)}
+.quick-chars{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.quick-char{width:36px;height:36px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 150ms}
+.quick-char:hover{border-color:var(--brand-500);background:rgba(245,158,11,0.06)}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:8px 16px;border-radius:16px;border:none;font-size:11px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:4px}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.anim-area{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:640px){.anim-area{grid-template-columns:1fr}}
+.writer-box{aspect-ratio:1;max-width:300px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);margin:0 auto;position:relative;overflow:hidden}
+#writerTarget{width:100%;height:100%}
+.info-panel{display:flex;flex-direction:column;gap:8px}
+.info-card{padding:12px 14px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.info-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.info-value{font-size:14px;font-weight:800}
+.info-value-sm{font-size:11px;color:var(--text-secondary)}
+.stroke-list{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.stroke-num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 150ms}
+.stroke-num:hover,.stroke-num.active{border-color:var(--brand-500);background:rgba(245,158,11,0.06);color:var(--brand-500)}
+.loading-msg{text-align:center;padding:40px;color:var(--text-caption);font-size:13px}
+.quiz-result{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;display:none}
+.quiz-result.show{display:block}
+.quiz-result.correct{background:rgba(16,185,129,0.1);color:#10B981}
+.quiz-result.wrong{background:rgba(239,68,68,0.1);color:#EF4444}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">笔顺动画 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">笔顺动画</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">✏️ 笔顺动画</div>
+    <div class="char-input-wrap">
+      <input class="char-input" id="charInput" value="人" maxlength="1">
+      <span class="char-input-hint">输入一个汉字，查看笔顺动画</span>
+    </div>
+    <div class="quick-chars" id="quickChars">
+      <div class="quick-char">人</div><div class="quick-char">大</div><div class="quick-char">山</div><div class="quick-char">水</div>
+      <div class="quick-char">火</div><div class="quick-char">木</div><div class="quick-char">日</div><div class="quick-char">月</div>
+      <div class="quick-char">天</div><div class="quick-char">地</div><div class="quick-char">花</div><div class="quick-char">鸟</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="animBtn">▶️ 播放动画</button>
+      <button class="btn btn-secondary" id="stepBtn">⏭️ 逐笔播放</button>
+      <button class="btn btn-secondary" id="quizBtn">✍️ 跟写模式</button>
+      <button class="btn btn-secondary" id="resetBtn">🔄 重置</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="anim-area">
+      <div>
+        <div class="writer-box"><div id="writerTarget"></div></div>
+        <div class="quiz-result" id="quizResult"></div>
+      </div>
+      <div class="info-panel">
+        <div class="info-card"><div class="info-label">汉字</div><div class="info-value" id="infoChar" style="font-size:32px">人</div></div>
+        <div class="info-card"><div class="info-label">笔画数</div><div class="info-value" id="infoStrokes">加载中...</div></div>
+        <div class="info-card"><div class="info-label">逐笔查看</div><div class="stroke-list" id="strokeList"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">笔顺动画</span><div class="statusbar-spacer"></div><span>HanziWriter · 9000+ 汉字</span></div>
+<script type="module">
+import '../../shared/theme.js';
+let writer=null;let currentChar='人';let stepIdx=0;
+const STROKE_NAMES=['横','竖','撇','捺','折','点','提','横折','竖钩','弯钩','横撇','竖折','横折钩','竖弯钩','横折弯钩'];
+function initWriter(char){
+  currentChar=char;stepIdx=0;
+  document.getElementById('infoChar').textContent=char;
+  document.getElementById('charInput').value=char;
+  document.getElementById('writerTarget').innerHTML='';
+  document.getElementById('quizResult').classList.remove('show');
+  document.getElementById('statusInfo').textContent='加载中...';
+  try{
+    const box=document.getElementById('writerTarget');
+    const size=box.parentElement.offsetWidth||300;
+    writer=HanziWriter.create('writerTarget',char,{
+      width:size,height:size,padding:10,
+      showOutline:true,showCharacter:false,
+      strokeAnimationSpeed:1,delayBetweenStrokes:200,
+      strokeColor:'#333',outlineColor:'#DDD',
+      drawingColor:'#F59E0B',drawingWidth:6,
+      showHintAfterMisses:3,
+      charDataLoader:(c,onLoad,onErr)=>{
+        fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${c}.json`)
+          .then(r=>{if(!r.ok)throw new Error();return r.json()})
+          .then(onLoad).catch(onErr);
+      },
+      onLoadCharDataSuccess:(data)=>{
+        const n=data.strokes.length;
+        document.getElementById('infoStrokes').textContent=n+' 画';
+        const sl=document.getElementById('strokeList');
+        sl.innerHTML='';
+        for(let i=0;i<n;i++){
+          const d=document.createElement('div');d.className='stroke-num';d.textContent=i+1;
+          d.addEventListener('click',()=>{writer.showCharacter();highlightStroke(i)});
+          sl.appendChild(d);
+        }
+        document.getElementById('statusInfo').textContent='「'+char+'」加载完成';
+      },
+      onLoadCharDataError:()=>{
+        document.getElementById('infoStrokes').textContent='不支持';
+        document.getElementById('strokeList').innerHTML='';
+        document.getElementById('statusInfo').textContent='该字暂不支持';
+      }
+    });
+  }catch(e){document.getElementById('statusInfo').textContent='加载失败'}
+}
+function highlightStroke(i){
+  if(!writer)return;
+  writer.hideCharacter();writer.showCharacter();
+  // animate up to stroke i
+  writer.animateStroke(i);
+}
+document.getElementById('animBtn').addEventListener('click',()=>{if(writer){writer.hideCharacter();writer.animateCharacter()}});
+document.getElementById('stepBtn').addEventListener('click',()=>{
+  if(!writer)return;
+  writer.animateStroke(stepIdx,()=>{stepIdx++});
+});
+document.getElementById('quizBtn').addEventListener('click',()=>{
+  if(!writer)return;
+  const qr=document.getElementById('quizResult');
+  qr.classList.remove('show');
+  writer.quiz({
+    onMistake:(d)=>{qr.textContent='❌ 第 '+(d.strokeNum+1)+' 笔不对，再试试！';qr.className='quiz-result show wrong'},
+    onCorrectStroke:(d)=>{qr.textContent='✅ 第 '+(d.strokeNum+1)+' 笔正确！';qr.className='quiz-result show correct'},
+    onComplete:(d)=>{qr.textContent='🎉 完美！共 '+d.totalMistakes+' 次错误';qr.className='quiz-result show correct'}
+  });
+});
+document.getElementById('resetBtn').addEventListener('click',()=>initWriter(currentChar));
+document.getElementById('charInput').addEventListener('input',function(){
+  const c=this.value.trim();if(c&&/[\u4e00-\u9fff]/.test(c))initWriter(c);
+});
+document.getElementById('quickChars').addEventListener('click',e=>{
+  if(e.target.classList.contains('quick-char'))initWriter(e.target.textContent);
+});
+initWriter('人');
+</script>
+<noscript><p>笔顺动画 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

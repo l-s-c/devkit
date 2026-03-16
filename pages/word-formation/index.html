@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>组词练习 | Word Formation — DevKit</title>
+<meta name="description" content="小学组词练习工具，输入汉字查看常用组词，按频率排序，附例句。">
+<meta name="keywords" content="组词, 组词练习, 小学组词, 组词大全, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/word-formation/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"组词练习","url":"https://l-s-c.github.io/devkit/pages/word-formation/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.pill-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.pill-label{font-size:10px;color:var(--text-caption);margin-right:4px}
+.pill{padding:5px 12px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.word-hero{text-align:center;padding:20px;margin-bottom:16px}
+.word-char{font-size:72px;font-weight:800;margin-bottom:4px}
+.word-pinyin{font-size:14px;color:var(--text-caption);font-family:var(--font-code)}
+.word-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.word-tag{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;font-weight:700;cursor:pointer;transition:all 200ms}
+.word-tag:hover{border-color:var(--brand-500);background:rgba(245,158,11,0.06);transform:translateY(-1px)}
+.word-tag .hl{color:var(--brand-500);font-weight:800}
+.word-freq{font-size:8px;color:var(--text-caption);margin-left:4px;vertical-align:super}
+.example-area{margin-top:16px;padding:16px;border-radius:6px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.1)}
+.example-label{font-size:9px;font-weight:700;color:var(--brand-500);margin-bottom:4px}
+.example-text{font-size:13px;line-height:1.8}
+.empty-msg{text-align:center;padding:40px;color:var(--text-caption);font-size:13px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">组词练习 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">组词练习</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📝 组词练习</div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="输入一个汉字，查看常用组词..." maxlength="1"></div>
+    <div class="pill-row" id="quickPills">
+      <span class="pill-label">常用字：</span>
+      <div class="pill">大</div><div class="pill">小</div><div class="pill">花</div><div class="pill">天</div>
+      <div class="pill">地</div><div class="pill">水</div><div class="pill">火</div><div class="pill">山</div>
+      <div class="pill">风</div><div class="pill">雨</div><div class="pill">春</div><div class="pill">明</div>
+    </div>
+  </div>
+  <div class="panel" id="resultPanel">
+    <div class="empty-msg" id="emptyMsg">👆 输入汉字开始组词</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">组词练习</span><div class="statusbar-spacer"></div><span>小学常用字 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Inline word formation data: char → {py, words:[[word, freq, example],...]}
+const DATA={
+'大':{py:'dà',words:[['大人','★★★','她已经是大人了。'],['大家','★★★','大家一起来做游戏。'],['大小','★★★','这个苹果大小正好。'],['大地','★★☆','春天来了，大地一片绿色。'],['大门','★★☆','学校大门口有一棵大树。'],['大海','★★☆','我想去看大海。'],['大风','★☆☆','今天刮大风了。'],['大方','★☆☆','她是一个大方的女孩。']]},
+'小':{py:'xiǎo',words:[['小鸟','★★★','小鸟在树上唱歌。'],['小花','★★★','路边开着很多小花。'],['小朋友','★★★','小朋友们一起玩耍。'],['小心','★★☆','过马路要小心。'],['小河','★★☆','村子前面有一条小河。'],['小时','★★☆','一天有24小时。'],['小路','★☆☆','林间有一条小路。'],['小说','★☆☆','他喜欢看小说。']]},
+'花':{py:'huā',words:[['花朵','★★★','花朵开得非常美丽。'],['花园','★★★','我家有一个小花园。'],['开花','★★★','春天桃树开花了。'],['花草','★★☆','不要踩踏花草。'],['鲜花','★★☆','妈妈收到了一束鲜花。'],['花瓣','★★☆','花瓣随风飘落。'],['花瓶','★☆☆','把花插在花瓶里。'],['花费','★☆☆','学习不需要花费太多钱。'],['棉花','★☆☆','棉花白白的。'],['花纹','★☆☆','这件衣服花纹很好看。']]},
+'天':{py:'tiān',words:[['天空','★★★','天空很蓝。'],['今天','★★★','今天天气真好。'],['天气','★★★','明天天气怎么样？'],['每天','★★☆','我每天早上跑步。'],['白天','★★☆','白天要上学。'],['天上','★★☆','天上有很多星星。'],['天真','★☆☆','她笑得很天真。'],['天才','★☆☆','他是一个数学天才。']]},
+'地':{py:'dì',words:[['地上','★★★','地上有一片树叶。'],['地方','★★★','这个地方真漂亮。'],['大地','★★★','春天大地复苏。'],['地球','★★☆','地球是我们的家。'],['地图','★★☆','看地图找路。'],['草地','★★☆','在草地上野餐。'],['土地','★☆☆','农民伯伯在土地上劳动。'],['地面','★☆☆','地面很干净。']]},
+'水':{py:'shuǐ',words:[['水果','★★★','我喜欢吃水果。'],['喝水','★★★','渴了要喝水。'],['河水','★★☆','河水清清的。'],['水池','★★☆','水池里有金鱼。'],['水杯','★★☆','把水倒进水杯里。'],['泉水','★☆☆','山上有清清的泉水。'],['水平','★☆☆','他的水平很高。'],['雨水','★☆☆','雨水从天上落下来。']]},
+'火':{py:'huǒ',words:[['火车','★★★','坐火车去北京。'],['大火','★★☆','森林着大火了。'],['火焰','★★☆','火焰是红色的。'],['火山','★☆☆','火山喷发了。'],['火锅','★☆☆','冬天吃火锅。'],['灭火','★☆☆','消防员在灭火。'],['火花','★☆☆','铁锤打出了火花。']]},
+'山':{py:'shān',words:[['大山','★★★','村子后面有大山。'],['山上','★★★','山上有很多树。'],['上山','★★☆','我们一起上山吧。'],['山水','★★☆','桂林山水甲天下。'],['山顶','★★☆','终于爬到了山顶。'],['山路','★☆☆','山路弯弯曲曲。'],['山洞','★☆☆','山洞里很黑。'],['火山','★☆☆','火山喷发很壮观。']]},
+'风':{py:'fēng',words:[['大风','★★★','今天刮大风了。'],['风景','★★★','这里的风景真美。'],['春风','★★☆','春风吹来很暖和。'],['风雨','★★☆','经历了风雨才能看到彩虹。'],['风筝','★★☆','我们去放风筝吧。'],['微风','★☆☆','微风轻轻吹过。'],['台风','★☆☆','台风要来了。']]},
+'雨':{py:'yǔ',words:[['下雨','★★★','今天下雨了。'],['雨水','★★★','雨水很干净。'],['大雨','★★☆','突然下起了大雨。'],['小雨','★★☆','外面下着小雨。'],['雨伞','★★☆','别忘了带雨伞。'],['雷雨','★☆☆','夏天常有雷雨。'],['雨后','★☆☆','雨后天晴了。']]},
+'春':{py:'chūn',words:[['春天','★★★','春天来了。'],['春风','★★★','春风送暖。'],['春雨','★★☆','春雨细细的。'],['春节','★★☆','春节是中国最重要的节日。'],['春光','★☆☆','春光明媚。'],['春色','★☆☆','满园春色。'],['春游','★☆☆','我们明天去春游。']]},
+'明':{py:'míng',words:[['明天','★★★','明天去上学。'],['明白','★★★','我终于明白了。'],['光明','★★☆','走向光明的未来。'],['明亮','★★☆','教室里很明亮。'],['聪明','★★☆','他是一个聪明的孩子。'],['明星','★☆☆','她是一位明星。'],['说明','★☆☆','请说明理由。']]},
+};
+function render(char){
+  const p=document.getElementById('resultPanel');
+  if(!char||!DATA[char]){p.innerHTML='<div class="empty-msg">'+(char?'暂无「'+char+'」的组词数据':'👆 输入汉字开始组词')+'</div>';return}
+  const d=DATA[char];
+  let html=`<div class="word-hero"><div class="word-char">${char}</div><div class="word-pinyin">${d.py}</div></div>`;
+  html+=`<div class="section-title">💡 常用组词 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400">按使用频率排序</span></div>`;
+  html+='<div class="word-list">';
+  d.words.forEach(w=>{
+    const highlighted=w[0].replace(char,`<span class="hl">${char}</span>`);
+    html+=`<div class="word-tag" data-ex="${w[2]}">${highlighted}<span class="word-freq">${w[1]}</span></div>`;
+  });
+  html+='</div>';
+  html+=`<div class="example-area" id="exArea"><div class="example-label">📖 例句</div><div class="example-text" id="exText">点击上方词语查看例句</div></div>`;
+  p.innerHTML=html;
+  p.querySelectorAll('.word-tag').forEach(t=>t.addEventListener('click',function(){
+    document.getElementById('exText').innerHTML=this.dataset.ex;
+  }));
+  document.getElementById('statusInfo').textContent='「'+char+'」共 '+d.words.length+' 个组词';
+}
+document.getElementById('searchInput').addEventListener('input',function(){render(this.value.trim())});
+document.getElementById('quickPills').addEventListener('click',e=>{
+  if(!e.target.classList.contains('pill'))return;
+  const c=e.target.textContent;
+  document.getElementById('searchInput').value=c;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  e.target.classList.add('active');
+  render(c);
+});
+</script>
+<noscript><p>组词练习 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
