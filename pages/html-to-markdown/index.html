@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 转 Markdown — DevKit</title>
+<meta name="description" content="在线 HTML 转 Markdown 工具，粘贴 HTML 自动转换为 Markdown 格式。支持表格、列表、链接、图片等标签转换。">
+<meta name="keywords" content="HTML转Markdown, html to markdown, HTML转换, markdown转换, DevKit">
+<meta property="og:title" content="HTML 转 Markdown — DevKit">
+<meta property="og:description" content="在线 HTML 转 Markdown 工具">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/html-to-markdown/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"HTML 转 Markdown","description":"在线HTML转Markdown工具","url":"https://l-s-c.github.io/devkit/pages/html-to-markdown/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/html-to-markdown/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.dual{grid-template-columns:1fr}}
+.pane-title{font-size:12px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pane-title .badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(99,102,241,0.08);color:var(--brand-500)}
+.pane textarea{width:100%;min-height:360px;border:1.5px solid var(--border-glass);border-radius:10px;background:var(--bg-glass-input);padding:12px;font-family:var(--font-code);font-size:12px;line-height:1.7;color:var(--text-primary);outline:none;resize:vertical}
+.pane textarea:focus{border-color:var(--brand-500)}
+.action-row{display:flex;gap:8px;margin-top:12px}
+.btn{padding:8px 16px;border-radius:16px;border:none;font-size:11px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:4px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--brand-500);color:var(--brand-500)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">HTML 转 Markdown — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">HTML 转 Markdown</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="dual">
+      <div class="pane">
+        <div class="pane-title">📝 HTML 输入 <span class="badge">粘贴或输入</span></div>
+        <textarea id="htmlInput" placeholder="粘贴 HTML 代码..."><h1>Hello World</h1>
+<p>这是一段<strong>加粗</strong>和<em>斜体</em>文字。</p>
+<ul>
+  <li>列表项 1</li>
+  <li>列表项 2</li>
+</ul>
+<a href="https://devkit.com">链接</a>
+<img src="logo.png" alt="Logo"></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane-title">📄 Markdown 输出 <span class="badge">自动转换</span></div>
+        <textarea id="mdOutput" readonly placeholder="转换结果..."></textarea>
+        <div class="action-row">
+          <button class="btn btn-primary" id="copyBtn">📋 复制</button>
+          <button class="btn btn-secondary" id="exportBtn">📥 .md</button>
+          <button class="btn btn-secondary" id="clearBtn">🗑️ 清空</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">HTML 转 Markdown</span><div class="statusbar-spacer"></div><span>Turndown.js · 纯本地</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/turndown@7.2.0/dist/turndown.min.js"></script>
+<script type="module">
+import '../../shared/theme.js';
+const td=new TurndownService({headingStyle:'atx',codeBlockStyle:'fenced'});
+
+function convert(){
+  const html=document.getElementById('htmlInput').value;
+  if(!html.trim()){document.getElementById('mdOutput').value='';return}
+  try{
+    document.getElementById('mdOutput').value=td.turndown(html);
+  }catch(e){
+    document.getElementById('mdOutput').value='⚠️ 转换出错：'+e.message;
+  }
+}
+
+document.getElementById('htmlInput').addEventListener('input',convert);
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById('mdOutput').value);
+  document.getElementById('statusInfo').textContent='✅ 已复制';
+  setTimeout(()=>{document.getElementById('statusInfo').textContent='HTML 转 Markdown'},1500);
+});
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const blob=new Blob([document.getElementById('mdOutput').value],{type:'text/markdown'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='converted.md';a.click();URL.revokeObjectURL(a.href);
+});
+document.getElementById('clearBtn').addEventListener('click',()=>{
+  document.getElementById('htmlInput').value='';document.getElementById('mdOutput').value='';
+});
+convert();
+</script>
+<noscript><p>HTML 转 Markdown — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

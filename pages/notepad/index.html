@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线记事本 | Notepad — DevKit</title>
+<meta name="description" content="在线记事本，多标签页管理，Markdown 预览，自动保存到本地。无需登录，数据纯本地不上传。">
+<meta name="keywords" content="在线记事本, notepad, 在线便签, 在线笔记, DevKit">
+<meta property="og:title" content="在线记事本 | Notepad — DevKit">
+<meta property="og:description" content="在线记事本，多标签管理，自动保存">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/notepad/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"在线记事本","description":"在线记事本，多标签管理，Markdown预览，自动保存","url":"https://l-s-c.github.io/devkit/pages/notepad/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/notepad/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:0;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);overflow:hidden}
+.notepad{display:grid;grid-template-columns:200px 1fr;min-height:500px}
+@media(max-width:640px){.notepad{grid-template-columns:1fr;min-height:auto}}
+.sidebar{border-right:0.5px solid var(--border-glass);background:rgba(0,0,0,0.02);padding:12px}
+[data-theme=dark] .sidebar{background:rgba(255,255,255,0.02)}
+.sidebar-title{font-size:10px;font-weight:800;color:var(--text-caption);padding:4px 8px;margin-bottom:4px}
+.tab-list{display:flex;flex-direction:column;gap:2px}
+.tab-item{padding:8px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;display:flex;align-items:center;justify-content:space-between;white-space:nowrap;overflow:hidden}
+.tab-item:hover{background:rgba(99,102,241,0.08)}
+.tab-item.active{background:var(--brand-500,#6366F1);color:#fff}
+.tab-name{flex:1;overflow:hidden;text-overflow:ellipsis}
+.tab-close{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;opacity:0;transition:opacity 150ms;cursor:pointer}
+.tab-item:hover .tab-close{opacity:0.5}
+.tab-close:hover{opacity:1!important;background:rgba(239,68,68,0.2);color:#EF4444}
+.tab-add{padding:8px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--text-caption);text-align:center;border:1px dashed var(--border-glass);margin-top:4px;transition:all 150ms}
+.tab-add:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.editor-area{display:flex;flex-direction:column}
+.toolbar{display:flex;align-items:center;gap:6px;padding:8px 16px;border-bottom:0.5px solid var(--border-glass)}
+.tool-btn{padding:4px 10px;border-radius:12px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;color:var(--text-secondary);transition:all 150ms}
+.tool-btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.tool-btn.active{background:var(--brand-500,#6366F1);color:#fff;border-color:var(--brand-500,#6366F1)}
+.save-status{margin-left:auto;font-size:9px;color:var(--text-caption);display:flex;align-items:center;gap:4px}
+.editor-area textarea{flex:1;border:none;outline:none;resize:none;padding:16px;font-family:var(--font-sans);font-size:14px;line-height:1.8;color:var(--text-primary);background:transparent;min-height:400px}
+.editor-area textarea::placeholder{color:var(--text-caption)}
+.md-preview{flex:1;padding:16px;overflow-y:auto;font-size:14px;line-height:1.8;display:none;min-height:400px}
+.md-preview h1,.md-preview h2,.md-preview h3{margin:8px 0 4px;font-weight:800}
+.md-preview h1{font-size:20px}.md-preview h2{font-size:16px}.md-preview h3{font-size:14px}
+.md-preview code{background:rgba(99,102,241,0.08);padding:2px 5px;border-radius:3px;font-family:var(--font-code);font-size:12px}
+.md-preview ul,.md-preview ol{padding-left:20px}
+.md-preview li{margin-bottom:4px}
+.editor-footer{display:flex;align-items:center;gap:12px;padding:6px 16px;border-top:0.5px solid var(--border-glass);font-size:10px;color:var(--text-caption)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">在线记事本 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">在线记事本</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="notepad">
+      <div class="sidebar">
+        <div class="sidebar-title">📝 笔记</div>
+        <div class="tab-list" id="tabList"></div>
+        <div class="tab-add" id="addBtn">+ 新建笔记</div>
+      </div>
+      <div class="editor-area">
+        <div class="toolbar">
+          <button class="tool-btn" id="mdToggle">👁️ 预览</button>
+          <button class="tool-btn" id="exportTxt">📥 .txt</button>
+          <button class="tool-btn" id="exportMd">📥 .md</button>
+          <div class="save-status" id="saveStatus">✅ 已自动保存</div>
+        </div>
+        <textarea id="editor" placeholder="开始写点什么..."></textarea>
+        <div class="md-preview" id="mdPreview"></div>
+        <div class="editor-footer">
+          <span>📝 <span id="charCount">0</span> 字</span>
+          <span>📄 <span id="wordCount">0</span> 词</span>
+          <span>📃 <span id="lineCount">1</span> 行</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">在线记事本</span><div class="statusbar-spacer"></div><span>localStorage · 纯本地</span></div>
+
+<script type="module">
+import '../../shared/theme.js';
+let tabs=[{name:'未命名笔记',content:''}],activeIdx=0,mdMode=false,saveTimer=null;
+const saved=localStorage.getItem('devkit-notepad');
+if(saved){try{tabs=JSON.parse(saved)}catch(e){}}
+
+function renderTabs(){
+  document.getElementById('tabList').innerHTML=tabs.map((t,i)=>
+    `<div class="tab-item${i===activeIdx?' active':''}" data-idx="${i}"><span class="tab-name">${t.name}</span>${tabs.length>1?`<span class="tab-close" data-close="${i}">✕</span>`:''}</div>`).join('');
+}
+function loadTab(i){activeIdx=i;document.getElementById('editor').value=tabs[i].content;renderTabs();updateStats()}
+function updateStats(){
+  const t=document.getElementById('editor').value;
+  document.getElementById('charCount').textContent=t.length;
+  document.getElementById('wordCount').textContent=t.trim()?t.trim().split(/\s+/).length:0;
+  document.getElementById('lineCount').textContent=t.split('\n').length;
+}
+function save(){localStorage.setItem('devkit-notepad',JSON.stringify(tabs))}
+
+document.getElementById('tabList').addEventListener('click',e=>{
+  const close=e.target.closest('[data-close]');
+  if(close){e.stopPropagation();const i=parseInt(close.dataset.close);tabs.splice(i,1);if(activeIdx>=tabs.length)activeIdx=tabs.length-1;loadTab(activeIdx);save();return}
+  const item=e.target.closest('[data-idx]');
+  if(item)loadTab(parseInt(item.dataset.idx));
+});
+document.getElementById('addBtn').addEventListener('click',()=>{tabs.push({name:`笔记 ${tabs.length+1}`,content:''});loadTab(tabs.length-1);save()});
+
+document.getElementById('editor').addEventListener('input',()=>{
+  tabs[activeIdx].content=document.getElementById('editor').value;
+  updateStats();
+  document.getElementById('saveStatus').textContent='💾 保存中...';
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{save();document.getElementById('saveStatus').textContent='✅ 已自动保存'},500);
+});
+
+document.getElementById('mdToggle').addEventListener('click',()=>{
+  mdMode=!mdMode;
+  document.getElementById('mdToggle').classList.toggle('active',mdMode);
+  document.getElementById('editor').style.display=mdMode?'none':'block';
+  document.getElementById('mdPreview').style.display=mdMode?'block':'none';
+  if(mdMode){
+    let md=tabs[activeIdx].content
+      .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+      .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+      .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/`(.+?)`/g,'<code>$1</code>')
+      .replace(/^- (.+)$/gm,'<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g,'<ul>$&</ul>')
+      .replace(/\n/g,'<br>');
+    document.getElementById('mdPreview').innerHTML=md;
+  }
+});
+
+function exportFile(ext){
+  const blob=new Blob([tabs[activeIdx].content],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${tabs[activeIdx].name}.${ext}`;a.click();URL.revokeObjectURL(a.href);
+}
+document.getElementById('exportTxt').addEventListener('click',()=>exportFile('txt'));
+document.getElementById('exportMd').addEventListener('click',()=>exportFile('md'));
+
+renderTabs();loadTab(0);
+</script>
+<noscript><p>在线记事本 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代码截图 | Code Screenshot — DevKit</title>
+<meta name="description" content="在线代码截图工具，输入代码生成精美截图，多种渐变背景和字号可选，导出 PNG。类似 Carbon，免费无需登录。">
+<meta name="keywords" content="代码截图, code screenshot, code to image, carbon, 代码图片, DevKit">
+<meta property="og:title" content="代码截图 | Code Screenshot — DevKit">
+<meta property="og:description" content="在线代码截图，免费无需登录">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/code-screenshot/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"代码截图","description":"在线代码截图，生成精美代码图片","url":"https://l-s-c.github.io/devkit/pages/code-screenshot/","applicationCategory":"DesignApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/code-screenshot/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.config-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.config-label{font-size:10px;font-weight:700;color:var(--text-caption)}
+.pill-row{display:flex;gap:3px}
+.pill{padding:5px 10px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms;white-space:nowrap}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.pill.active{background:var(--brand-500,#6366F1);color:#fff;border-color:var(--brand-500,#6366F1)}
+.grad-swatch{width:24px;height:24px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all 150ms}
+.grad-swatch:hover,.grad-swatch.active{border-color:var(--brand-500);transform:scale(1.1)}
+.code-input{width:100%;min-height:120px;border:1.5px solid var(--border-glass);border-radius:10px;background:var(--bg-glass-input);padding:12px;font-family:var(--font-code);font-size:13px;line-height:1.6;color:var(--text-primary);outline:none;resize:vertical}
+.code-input:focus{border-color:var(--brand-500)}
+.preview-wrap{border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:32px;min-height:200px}
+.action-row{display:flex;gap:8px;margin-top:12px}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-secondary{border:1.5px solid var(--border-glass);background:var(--bg-glass-input);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--brand-500);color:var(--brand-500)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">代码截图 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">代码截图</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📸 代码截图</div>
+    <div class="config-row">
+      <span class="config-label">背景</span>
+      <div class="pill-row" id="bgRow">
+        <div class="grad-swatch active" style="background:linear-gradient(135deg,#6366F1,#A855F7)" data-bg="0"></div>
+        <div class="grad-swatch" style="background:linear-gradient(135deg,#F97316,#EF4444)" data-bg="1"></div>
+        <div class="grad-swatch" style="background:linear-gradient(135deg,#10B981,#06B6D4)" data-bg="2"></div>
+        <div class="grad-swatch" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)" data-bg="3"></div>
+        <div class="grad-swatch" style="background:linear-gradient(135deg,#F472B6,#A855F7)" data-bg="4"></div>
+        <div class="grad-swatch" style="background:#1a1a2e" data-bg="5"></div>
+      </div>
+    </div>
+    <div class="config-row">
+      <span class="config-label">字号</span>
+      <div class="pill-row" id="fontRow">
+        <div class="pill" data-fs="12">12</div>
+        <div class="pill active" data-fs="14">14</div>
+        <div class="pill" data-fs="16">16</div>
+        <div class="pill" data-fs="18">18</div>
+      </div>
+      <span class="config-label" style="margin-left:12px">标题栏</span>
+      <div class="pill-row" id="titleRow">
+        <div class="pill active" data-show="1">显示</div>
+        <div class="pill" data-show="0">隐藏</div>
+      </div>
+    </div>
+    <textarea class="code-input" id="codeInput" placeholder="粘贴代码...">function hello() {
+  console.log('Hello, DevKit! 🚀');
+  return 42;
+}</textarea>
+  </div>
+  <div class="panel">
+    <div class="section-title">👁️ 预览</div>
+    <div class="preview-wrap" id="previewWrap" style="background:linear-gradient(135deg,#6366F1,#A855F7)">
+      <canvas id="cvs"></canvas>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="exportBtn">📥 导出 PNG</button>
+      <button class="btn btn-secondary" id="copyBtn">📋 复制图片</button>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">代码截图</span><div class="statusbar-spacer"></div><span>Canvas · 纯本地</span></div>
+
+<script type="module">
+import '../../shared/theme.js';
+const BG_COLORS=[
+  [[0,'#6366F1'],[1,'#A855F7']],[[0,'#F97316'],[1,'#EF4444']],
+  [[0,'#10B981'],[1,'#06B6D4']],[[0,'#3B82F6'],[1,'#1D4ED8']],
+  [[0,'#F472B6'],[1,'#A855F7']],[[0,'#1a1a2e'],[1,'#1a1a2e']]
+];
+const BG_CSS=['linear-gradient(135deg,#6366F1,#A855F7)','linear-gradient(135deg,#F97316,#EF4444)',
+  'linear-gradient(135deg,#10B981,#06B6D4)','linear-gradient(135deg,#3B82F6,#1D4ED8)',
+  'linear-gradient(135deg,#F472B6,#A855F7)','#1a1a2e'];
+let bgIdx=0,fontSize=14,showTitle=true;
+const cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d');
+const dpr=window.devicePixelRatio||1;
+
+function render(){
+  const code=document.getElementById('codeInput').value||' ';
+  const lines=code.split('\n');
+  const pad=32,cardPadX=20,cardPadY=16,titleH=showTitle?32:0;
+  const font=`${fontSize}px "JetBrains Mono","SF Mono","Fira Code","Courier New",monospace`;
+  ctx.font=font;
+  const maxW=Math.max(...lines.map(l=>ctx.measureText(l).width),200);
+  const lineH=fontSize*1.7;
+  const cardW=maxW+cardPadX*2+20;
+  const cardH=lines.length*lineH+cardPadY*2+titleH;
+  const W=cardW+pad*2,H=cardH+pad*2;
+
+  cvs.width=W*dpr;cvs.height=H*dpr;
+  cvs.style.width=Math.min(W,860)+'px';cvs.style.height=Math.min(W,860)/W*H+'px';
+  ctx.scale(dpr,dpr);
+
+  // BG gradient
+  const grad=ctx.createLinearGradient(0,0,W,H);
+  BG_COLORS[bgIdx].forEach(([s,c])=>grad.addColorStop(s,c));
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+
+  // Card
+  const cx=pad,cy=pad;
+  ctx.fillStyle='rgba(26,26,46,0.95)';
+  ctx.beginPath();ctx.roundRect(cx,cy,cardW,cardH,12);ctx.fill();
+
+  // Title bar dots
+  if(showTitle){
+    [[cx+16,cy+16,'#FF5F57'],[cx+30,cy+16,'#FFBD2E'],[cx+44,cy+16,'#28C840']].forEach(([x,y,c])=>{
+      ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();
+    });
+  }
+
+  // Code
+  ctx.font=font;ctx.fillStyle='#e4e4e7';ctx.textBaseline='top';
+  lines.forEach((line,i)=>{
+    ctx.fillText(line,cx+cardPadX,cy+titleH+cardPadY+i*lineH);
+  });
+}
+
+document.getElementById('codeInput').addEventListener('input',render);
+
+document.getElementById('bgRow').addEventListener('click',e=>{
+  const s=e.target.closest('[data-bg]');if(!s)return;
+  bgIdx=parseInt(s.dataset.bg);
+  document.querySelectorAll('#bgRow .grad-swatch').forEach(el=>el.classList.remove('active'));
+  s.classList.add('active');
+  document.getElementById('previewWrap').style.background=BG_CSS[bgIdx];
+  render();
+});
+document.getElementById('fontRow').addEventListener('click',e=>{
+  const p=e.target.closest('[data-fs]');if(!p)return;
+  fontSize=parseInt(p.dataset.fs);
+  document.querySelectorAll('#fontRow .pill').forEach(el=>el.classList.remove('active'));
+  p.classList.add('active');render();
+});
+document.getElementById('titleRow').addEventListener('click',e=>{
+  const p=e.target.closest('[data-show]');if(!p)return;
+  showTitle=p.dataset.show==='1';
+  document.querySelectorAll('#titleRow .pill').forEach(el=>el.classList.remove('active'));
+  p.classList.add('active');render();
+});
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  cvs.toBlob(blob=>{
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='code-screenshot.png';a.click();URL.revokeObjectURL(a.href);
+  },'image/png');
+});
+document.getElementById('copyBtn').addEventListener('click',async()=>{
+  try{
+    const blob=await new Promise(r=>cvs.toBlob(r,'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    document.getElementById('statusInfo').textContent='✅ 已复制到剪贴板';
+  }catch(e){document.getElementById('statusInfo').textContent='❌ 复制失败，请用导出'}
+});
+
+render();
+</script>
+<noscript><p>代码截图 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

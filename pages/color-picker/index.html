@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>取色器 | Color Picker — DevKit</title>
+<meta name="description" content="在线图片取色器，上传图片点击取色，HEX/RGB/HSL 一键复制。支持 EyeDropper 屏幕取色。纯前端，文件不上传服务器。">
+<meta name="keywords" content="取色器, color picker, 颜色选取, 图片取色, 屏幕取色, DevKit">
+<meta property="og:title" content="取色器 | Color Picker — DevKit">
+<meta property="og:description" content="在线图片取色器，HEX/RGB/HSL 一键复制">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/color-picker/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"取色器","description":"在线图片取色器，支持屏幕取色","url":"https://l-s-c.github.io/devkit/pages/color-picker/","applicationCategory":"DesignApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/color-picker/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.security-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:rgba(16,185,129,0.1);color:#10B981;margin-bottom:12px}
+.canvas-area{position:relative;border-radius:10px;overflow:hidden;background:var(--bg-glass-input);min-height:200px;display:flex;align-items:center;justify-content:center;cursor:crosshair}
+.canvas-area canvas{display:block;max-width:100%;max-height:400px}
+.canvas-placeholder{text-align:center;color:var(--text-caption);font-size:12px}
+.canvas-placeholder .icon{font-size:48px;margin-bottom:8px}
+.upload-row{display:flex;gap:8px;margin-top:12px}
+.btn{padding:10px 20px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms;display:flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.btn-chrome{background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff}
+.btn-chrome:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,158,11,0.3)}
+.color-result{display:grid;grid-template-columns:80px 1fr;gap:16px;align-items:center;margin-top:8px}
+.color-swatch{width:80px;height:80px;border-radius:10px;border:2px solid var(--border-glass);box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.color-values{display:flex;flex-direction:column;gap:6px}
+.color-row{display:flex;align-items:center;gap:8px}
+.color-label{font-size:10px;font-weight:800;color:var(--text-caption);width:28px}
+.color-val{font-family:var(--font-code);font-size:13px;font-weight:700;flex:1}
+.copy-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border-glass);background:var(--bg-glass-input);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all 150ms;flex-shrink:0}
+.copy-btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.history-grid{display:flex;gap:4px;flex-wrap:wrap}
+.history-swatch{width:32px;height:32px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all 150ms}
+.history-swatch:hover{transform:scale(1.15);border-color:var(--brand-500)}
+.empty-hint{color:var(--text-caption);font-size:11px;text-align:center;padding:12px}
+.magnifier{position:absolute;width:100px;height:100px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,0.3);pointer-events:none;display:none;overflow:hidden;z-index:10}
+.crosshair{position:absolute;inset:0;pointer-events:none}
+.crosshair::before,.crosshair::after{content:'';position:absolute;background:rgba(255,255,255,0.6)}
+.crosshair::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-0.5px)}
+.crosshair::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-0.5px)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">取色器 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">取色器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="canvas-area" id="canvasArea">
+      <canvas id="cvs" style="display:none"></canvas>
+      <div class="canvas-placeholder" id="placeholder"><div class="icon">🖼️</div><div>上传图片后，在图片上点击取色</div></div>
+      <div class="magnifier" id="magnifier"><canvas id="magCvs" width="100" height="100"></canvas><div class="crosshair"></div></div>
+    </div>
+    <div class="upload-row">
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">📷 上传图片</button>
+      <button class="btn btn-chrome" id="eyeDropperBtn" style="display:none">💧 屏幕取色</button>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+  </div>
+  <div class="panel" id="resultArea" style="display:none">
+    <div class="section-title">🎨 取色结果</div>
+    <div class="color-result">
+      <div class="color-swatch" id="swatch"></div>
+      <div class="color-values">
+        <div class="color-row"><span class="color-label">HEX</span><span class="color-val" id="hexVal"></span><button class="copy-btn" data-copy="hexVal">📋</button></div>
+        <div class="color-row"><span class="color-label">RGB</span><span class="color-val" id="rgbVal"></span><button class="copy-btn" data-copy="rgbVal">📋</button></div>
+        <div class="color-row"><span class="color-label">HSL</span><span class="color-val" id="hslVal"></span><button class="copy-btn" data-copy="hslVal">📋</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">🕐 取色历史</div>
+    <div class="history-grid" id="historyGrid"><div class="empty-hint">点击图片取色后自动记录</div></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">取色器</span><div class="statusbar-spacer"></div><span>Canvas · 纯本地</span></div>
+
+<script type="module">
+import '../../shared/theme.js';
+const cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d',{willReadFrequently:true});
+const mag=document.getElementById('magnifier'),magCvs=document.getElementById('magCvs'),magCtx=magCvs.getContext('2d');
+let img=null,history=JSON.parse(localStorage.getItem('devkit-picker-history')||'[]');
+
+if(window.EyeDropper)document.getElementById('eyeDropperBtn').style.display='flex';
+
+document.getElementById('fileInput').addEventListener('change',function(){
+  const f=this.files[0];if(!f)return;
+  const i=new Image();const url=URL.createObjectURL(f);
+  i.onload=()=>{img=i;URL.revokeObjectURL(url);cvs.width=i.width;cvs.height=i.height;ctx.drawImage(i,0,0);cvs.style.display='block';document.getElementById('placeholder').style.display='none';};
+  i.src=url;this.value='';
+});
+
+cvs.addEventListener('mousemove',e=>{
+  if(!img)return;
+  const rect=cvs.getBoundingClientRect();
+  const sx=cvs.width/rect.width,sy=cvs.height/rect.height;
+  const x=Math.round((e.clientX-rect.left)*sx),y=Math.round((e.clientY-rect.top)*sy);
+  mag.style.display='block';
+  mag.style.left=(e.clientX-rect.left-50)+'px';
+  mag.style.top=(e.clientY-rect.top-110)+'px';
+  magCtx.imageSmoothingEnabled=false;
+  magCtx.clearRect(0,0,100,100);
+  magCtx.drawImage(cvs,x-5,y-5,10,10,0,0,100,100);
+});
+cvs.addEventListener('mouseleave',()=>{mag.style.display='none'});
+
+cvs.addEventListener('click',e=>{
+  if(!img)return;
+  const rect=cvs.getBoundingClientRect();
+  const sx=cvs.width/rect.width,sy=cvs.height/rect.height;
+  const x=Math.round((e.clientX-rect.left)*sx),y=Math.round((e.clientY-rect.top)*sy);
+  const [r,g,b]=ctx.getImageData(x,y,1,1).data;
+  setColor(r,g,b);
+});
+
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;
+  if(mx===mn)return[0,0,Math.round(l*100)];
+  const d=mx-mn,s=l>0.5?d/(2-mx-mn):d/(mx+mn);
+  let h;
+  if(mx===r)h=((g-b)/d+(g<b?6:0))/6;
+  else if(mx===g)h=((b-r)/d+2)/6;
+  else h=((r-g)/d+4)/6;
+  return[Math.round(h*360),Math.round(s*100),Math.round(l*100)];
+}
+
+function setColor(r,g,b){
+  const hex='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+  document.getElementById('swatch').style.background=hex;
+  document.getElementById('hexVal').textContent=hex;
+  document.getElementById('rgbVal').textContent=`rgb(${r}, ${g}, ${b})`;
+  const [h,s,l]=rgbToHsl(r,g,b);
+  document.getElementById('hslVal').textContent=`hsl(${h}, ${s}%, ${l}%)`;
+  document.getElementById('resultArea').style.display='block';
+  history=history.filter(c=>c!==hex);history.unshift(hex);if(history.length>24)history.pop();
+  localStorage.setItem('devkit-picker-history',JSON.stringify(history));
+  renderHistory();
+  document.getElementById('statusInfo').textContent=`✅ ${hex}`;
+}
+
+function renderHistory(){
+  if(!history.length){document.getElementById('historyGrid').innerHTML='<div class="empty-hint">点击图片取色后自动记录</div>';return;}
+  document.getElementById('historyGrid').innerHTML=history.map(h=>`<div class="history-swatch" style="background:${h}" title="${h}" data-hex="${h}"></div>`).join('');
+}
+
+document.getElementById('historyGrid').addEventListener('click',e=>{
+  const s=e.target.closest('[data-hex]');if(!s)return;
+  navigator.clipboard.writeText(s.dataset.hex);
+  document.getElementById('statusInfo').textContent=`✅ ${s.dataset.hex} 已复制`;
+});
+
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const t=document.getElementById(btn.dataset.copy).textContent;
+    navigator.clipboard.writeText(t);
+    document.getElementById('statusInfo').textContent=`✅ ${t} 已复制`;
+  });
+});
+
+document.getElementById('eyeDropperBtn').addEventListener('click',async()=>{
+  try{const ed=new EyeDropper();const r=await ed.open();
+    const hex=r.sRGBHex;const m=hex.match(/^#(..)(..)(..)$/);
+    if(m)setColor(parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16));
+  }catch(e){}
+});
+
+renderHistory();
+</script>
+<noscript><p>取色器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

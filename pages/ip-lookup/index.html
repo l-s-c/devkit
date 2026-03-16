@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP 查询 | IP Lookup — DevKit</title>
+<meta name="description" content="在线查询你的公网 IP 地址，一键复制。同时显示操作系统、浏览器、屏幕分辨率等设备信息。">
+<meta name="keywords" content="IP查询, 我的IP, what is my IP, IP地址, 公网IP, DevKit">
+<meta property="og:title" content="IP 查询 | IP Lookup — DevKit">
+<meta property="og:description" content="在线查询你的公网 IP 地址">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/ip-lookup/">
+<meta property="og:site_name" content="DevKit">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"IP 查询","description":"在线查询你的公网IP地址","url":"https://l-s-c.github.io/devkit/pages/ip-lookup/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/ip-lookup/">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 80px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.warn-bar{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:8px 12px;font-size:10px;color:#92400E;display:flex;align-items:center;gap:4px;margin-bottom:16px}
+[data-theme=dark] .warn-bar{color:#FCD34D}
+.ip-hero{text-align:center;padding:32px 16px}
+.ip-label{font-size:12px;color:var(--text-caption);margin-bottom:8px}
+.ip-value{font-family:var(--font-code);font-size:40px;font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.ip-copy{padding:8px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;font-size:12px;font-weight:800;cursor:pointer;transition:all 200ms}
+.ip-copy:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.3)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.info-grid{grid-template-columns:1fr}}
+.info-card{padding:14px 16px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.info-icon{font-size:16px;margin-bottom:4px}
+.info-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.info-value{font-size:13px;font-weight:700;font-family:var(--font-code)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">IP 查询 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">IP 查询</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="warn-bar">⚠️ IP 查询需要发送网络请求到 api.ipify.org，其他信息均为浏览器本地获取</div>
+  <div class="panel">
+    <div class="section-title">🌐 你的 IP 地址</div>
+    <div class="ip-hero">
+      <div class="ip-label">IPv4</div>
+      <div class="ip-value" id="ipv4">查询中...</div>
+      <button class="ip-copy" id="copyBtn">📋 复制 IP</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-title">💻 设备信息（本地获取）</div>
+    <div class="info-grid">
+      <div class="info-card"><div class="info-icon">🖥️</div><div class="info-label">操作系统</div><div class="info-value" id="infoOS">-</div></div>
+      <div class="info-card"><div class="info-icon">🌐</div><div class="info-label">浏览器</div><div class="info-value" id="infoBrowser">-</div></div>
+      <div class="info-card"><div class="info-icon">📐</div><div class="info-label">屏幕分辨率</div><div class="info-value" id="infoScreen">-</div></div>
+      <div class="info-card"><div class="info-icon">📱</div><div class="info-label">窗口大小</div><div class="info-value" id="infoWindow">-</div></div>
+      <div class="info-card"><div class="info-icon">🌍</div><div class="info-label">语言</div><div class="info-value" id="infoLang">-</div></div>
+      <div class="info-card"><div class="info-icon">🕐</div><div class="info-label">时区</div><div class="info-value" id="infoTZ">-</div></div>
+      <div class="info-card"><div class="info-icon">🧠</div><div class="info-label">CPU 核心</div><div class="info-value" id="infoCPU">-</div></div>
+      <div class="info-card"><div class="info-icon">💾</div><div class="info-label">内存</div><div class="info-value" id="infoMem">-</div></div>
+    </div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">IP 查询</span><div class="statusbar-spacer"></div><span>api.ipify.org</span></div>
+
+<script type="module">
+import '../../shared/theme.js';
+fetch('https://api.ipify.org?format=json',{signal:AbortSignal.timeout(8000)})
+  .then(r=>r.json()).then(d=>{document.getElementById('ipv4').textContent=d.ip;document.getElementById('statusInfo').textContent=`✅ ${d.ip}`})
+  .catch(()=>{document.getElementById('ipv4').textContent='获取失败（网络不可用）';document.getElementById('statusInfo').textContent='❌ IP 获取失败'});
+
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  const ip=document.getElementById('ipv4').textContent;
+  if(ip&&!ip.includes('失败'))navigator.clipboard.writeText(ip);
+});
+
+const ua=navigator.userAgent;
+document.getElementById('infoOS').textContent=/Mac/.test(ua)?'macOS':/Win/.test(ua)?'Windows':/Linux/.test(ua)?'Linux':/Android/.test(ua)?'Android':/iPhone/.test(ua)?'iOS':'Unknown';
+document.getElementById('infoBrowser').textContent=/Chrome\/(\d+)/.test(ua)?`Chrome ${RegExp.$1}`:/Firefox\/(\d+)/.test(ua)?`Firefox ${RegExp.$1}`:/Safari/.test(ua)?'Safari':'Unknown';
+document.getElementById('infoScreen').textContent=`${screen.width} × ${screen.height}`;
+document.getElementById('infoWindow').textContent=`${window.innerWidth} × ${window.innerHeight}`;
+document.getElementById('infoLang').textContent=navigator.language;
+document.getElementById('infoTZ').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone;
+document.getElementById('infoCPU').textContent=navigator.hardwareConcurrency||'N/A';
+document.getElementById('infoMem').textContent=navigator.deviceMemory?navigator.deviceMemory+' GB':'N/A';
+</script>
+<noscript><p>IP 查询 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
