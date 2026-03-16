@@ -55,6 +55,17 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
   <div class="uuid-list" id="uuidList"></div>
 </div>
 
+<div style="padding:0 16px 16px">
+  <div style="background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:12px;padding:16px">
+    <div style="font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px">🔍 UUID 解析</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input type="text" class="glass-input" id="parseInput" placeholder="粘贴一个 UUID 进行解析…" style="flex:1;height:36px;font-size:13px">
+      <button class="btn-tool" id="btnParse" style="height:36px">解析</button>
+    </div>
+    <div id="parseResult" style="font-size:12px;color:var(--text-secondary);min-height:20px">输入 UUID 查看版本、变体等信息</div>
+  </div>
+</div>
+
 <div class="statusbar">
   <span id="countLabel">0 个 UUID</span>
   <span>v4</span>
@@ -114,6 +125,36 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   if (window._uuids) copyText(window._uuids.join('\n'), '✓ 已复制全部 UUID');
 });
 generate();
+
+/* UUID 解析 */
+document.getElementById('btnParse').addEventListener('click', parseUUID);
+document.getElementById('parseInput').addEventListener('keydown', e => { if (e.key === 'Enter') parseUUID(); });
+function parseUUID() {
+  const raw = document.getElementById('parseInput').value.trim();
+  const el = document.getElementById('parseResult');
+  const hex = raw.replace(/-/g, '');
+  if (!/^[0-9a-f]{32}$/i.test(hex)) { el.innerHTML = '❌ 无效 UUID 格式'; return; }
+  const version = parseInt(hex[12], 16);
+  const variantBits = parseInt(hex[16], 16);
+  let variant = 'Unknown';
+  if ((variantBits & 0x8) === 0) variant = 'NCS (兼容)';
+  else if ((variantBits & 0xC) === 0x8) variant = 'RFC 4122';
+  else if ((variantBits & 0xE) === 0xC) variant = 'Microsoft';
+  else variant = 'Future';
+  const formatted = `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`.toLowerCase();
+  let extra = '';
+  if (version === 1) {
+    const tLow = hex.slice(0,8), tMid = hex.slice(8,12), tHi = hex.slice(13,16);
+    const ticks = BigInt('0x' + tHi + tMid + tLow);
+    const unixMs = Number((ticks - 122192928000000000n) / 10000n);
+    if (unixMs > 0 && unixMs < 4102444800000) extra = `<br>📅 时间: ${new Date(unixMs).toLocaleString('zh-CN')}`;
+  } else if (version === 7) {
+    const tsHex = hex.slice(0,12);
+    const ms = parseInt(tsHex, 16);
+    if (ms > 0 && ms < 4102444800000) extra = `<br>📅 时间: ${new Date(ms).toLocaleString('zh-CN')}`;
+  }
+  el.innerHTML = `✅ <strong>${formatted}</strong><br>版本: v${version} · 变体: ${variant} · 长度: ${hex.length * 4} bit${extra}`;
+}
 </script>
   <noscript><p>UUID 生成器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
 </body>
