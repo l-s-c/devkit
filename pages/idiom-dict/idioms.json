@@ -1,0 +1,4002 @@
+[
+  {
+    "idiom": "一心一意",
+    "pinyin": "yī xīn yī yì",
+    "meaning": "形容做事专心，一点也不分心。",
+    "example": "学习要一心一意，不能三心二意。",
+    "origin": "出自《尚书》",
+    "category": "学习"
+  },
+  {
+    "idiom": "专心致志",
+    "pinyin": "zhuān xīn zhì zhì",
+    "meaning": "把心思全放在上面，形容一心一意，聚精会神。",
+    "example": "上课时要专心致志地听老师讲课。",
+    "origin": "出自《孟子·告子上》",
+    "category": "学习"
+  },
+  {
+    "idiom": "废寝忘食",
+    "pinyin": "fèi qǐn wàng shí",
+    "meaning": "顾不得睡觉，忘记了吃饭，形容非常专心努力。",
+    "example": "他为了准备比赛，废寝忘食地练习。",
+    "origin": "出自《列子·开瑞篇》",
+    "category": "学习"
+  },
+  {
+    "idiom": "孜孜不倦",
+    "pinyin": "zī zī bú juàn",
+    "meaning": "指工作或学习勤奋不知疲倦。",
+    "example": "老师孜孜不倦地教导我们。",
+    "origin": "出自《尚书·君陈》",
+    "category": "学习"
+  },
+  {
+    "idiom": "勤学苦练",
+    "pinyin": "qín xué kǔ liàn",
+    "meaning": "认真学习，刻苦训练。",
+    "example": "想要学好书法，就要勤学苦练。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "学以致用",
+    "pinyin": "xué yǐ zhì yòng",
+    "meaning": "为了实际应用而学习。",
+    "example": "学了知识要学以致用，才有意义。",
+    "origin": "出自《论语》",
+    "category": "学习"
+  },
+  {
+    "idiom": "不耻下问",
+    "pinyin": "bù chǐ xià wèn",
+    "meaning": "不以向学问比自己差的人请教为耻。",
+    "example": "遇到不懂的问题，要不耻下问。",
+    "origin": "出自《论语·公冶长》",
+    "category": "学习"
+  },
+  {
+    "idiom": "温故知新",
+    "pinyin": "wēn gù zhī xīn",
+    "meaning": "温习旧的知识，得到新的理解和体会。",
+    "example": "每天温故知新，考试就不怕了。",
+    "origin": "出自《论语·为政》",
+    "category": "学习"
+  },
+  {
+    "idiom": "举一反三",
+    "pinyin": "jǔ yī fǎn sān",
+    "meaning": "从一件事情类推而知道许多事情。",
+    "example": "聪明的同学能够举一反三。",
+    "origin": "出自《论语·述而》",
+    "category": "学习"
+  },
+  {
+    "idiom": "博览群书",
+    "pinyin": "bó lǎn qún shū",
+    "meaning": "广泛地阅读各种书籍。",
+    "example": "他从小博览群书，知识非常丰富。",
+    "origin": "出自《周书·庾信传》",
+    "category": "学习"
+  },
+  {
+    "idiom": "学富五车",
+    "pinyin": "xué fù wǔ chē",
+    "meaning": "形容读书多，学问大。",
+    "example": "这位教授学富五车，什么问题都能解答。",
+    "origin": "出自《庄子·天下》",
+    "category": "学习"
+  },
+  {
+    "idiom": "悬梁刺股",
+    "pinyin": "xuán liáng cì gǔ",
+    "meaning": "形容刻苦学习。",
+    "example": "古人悬梁刺股的精神值得我们学习。",
+    "origin": "出自《战国策》《汉书》",
+    "category": "学习"
+  },
+  {
+    "idiom": "凿壁偷光",
+    "pinyin": "záo bì tōu guāng",
+    "meaning": "在墙上凿洞借邻居的灯光读书，形容勤学苦读。",
+    "example": "匡衡凿壁偷光的故事激励着我们。",
+    "origin": "出自《西京杂记》",
+    "category": "学习"
+  },
+  {
+    "idiom": "囊萤映雪",
+    "pinyin": "náng yíng yìng xuě",
+    "meaning": "用萤火虫的光和雪的反光来读书，形容刻苦读书。",
+    "example": "古人囊萤映雪的精神令人敬佩。",
+    "origin": "出自《晋书》",
+    "category": "学习"
+  },
+  {
+    "idiom": "手不释卷",
+    "pinyin": "shǒu bù shì juàn",
+    "meaning": "书本不离手，形容勤奋好学。",
+    "example": "爷爷退休后依然手不释卷。",
+    "origin": "出自《三国志·吴书》",
+    "category": "学习"
+  },
+  {
+    "idiom": "如饥似渴",
+    "pinyin": "rú jī sì kě",
+    "meaning": "形容要求很迫切，好像饿了急着要吃饭一样。",
+    "example": "同学们如饥似渴地学习新知识。",
+    "origin": "出自《三国志》",
+    "category": "学习"
+  },
+  {
+    "idiom": "融会贯通",
+    "pinyin": "róng huì guàn tōng",
+    "meaning": "把各方面的知识融合贯穿在一起，从而取得全面透彻的理解。",
+    "example": "学数学要融会贯通，不能死记硬背。",
+    "origin": "出自《朱子全书》",
+    "category": "学习"
+  },
+  {
+    "idiom": "日积月累",
+    "pinyin": "rì jī yuè lěi",
+    "meaning": "一天一天地、一月一月地不断积累。",
+    "example": "知识靠日积月累，不能急于求成。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "循序渐进",
+    "pinyin": "xún xù jiàn jìn",
+    "meaning": "按照一定的步骤逐渐深入或提高。",
+    "example": "学习要循序渐进，不能跳级。",
+    "origin": "出自《论语·宪问》",
+    "category": "学习"
+  },
+  {
+    "idiom": "学无止境",
+    "pinyin": "xué wú zhǐ jìng",
+    "meaning": "学习是没有尽头的，激励人们不断学习。",
+    "example": "学无止境，我们要活到老学到老。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "笨鸟先飞",
+    "pinyin": "bèn niǎo xiān fēi",
+    "meaning": "比喻能力差的人做事要比别人先行动。",
+    "example": "我基础差，就要笨鸟先飞，多花时间学习。",
+    "origin": "出自元代关汉卿作品",
+    "category": "学习"
+  },
+  {
+    "idiom": "开卷有益",
+    "pinyin": "kāi juàn yǒu yì",
+    "meaning": "打开书本阅读就会有好处。",
+    "example": "开卷有益，多读书总是好的。",
+    "origin": "出自《渑水燕谈录》",
+    "category": "学习"
+  },
+  {
+    "idiom": "取长补短",
+    "pinyin": "qǔ cháng bǔ duǎn",
+    "meaning": "吸取别人的长处来弥补自己的不足。",
+    "example": "同学之间要取长补短，共同进步。",
+    "origin": "出自《孟子·滕文公上》",
+    "category": "学习"
+  },
+  {
+    "idiom": "精益求精",
+    "pinyin": "jīng yì qiú jīng",
+    "meaning": "好了还求更好。",
+    "example": "做作业要精益求精，不能马马虎虎。",
+    "origin": "出自《论语·学而》",
+    "category": "学习"
+  },
+  {
+    "idiom": "刻苦钻研",
+    "pinyin": "kè kǔ zuān yán",
+    "meaning": "刻苦认真地深入研究。",
+    "example": "科学家刻苦钻研，终于取得了成果。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "见贤思齐",
+    "pinyin": "jiàn xián sī qí",
+    "meaning": "看到德才兼备的人就想向他学习。",
+    "example": "见贤思齐，我们要向优秀的人学习。",
+    "origin": "出自《论语·里仁》",
+    "category": "学习"
+  },
+  {
+    "idiom": "助人为乐",
+    "pinyin": "zhù rén wéi lè",
+    "meaning": "把帮助别人当作快乐的事。",
+    "example": "小明经常助人为乐，大家都喜欢他。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "拾金不昧",
+    "pinyin": "shí jīn bú mèi",
+    "meaning": "捡到钱财不藏起来据为己有。",
+    "example": "他拾金不昧，把捡到的钱包还给了失主。",
+    "origin": "出自清代吴炽昌《客窗闲话》",
+    "category": "品德"
+  },
+  {
+    "idiom": "见义勇为",
+    "pinyin": "jiàn yì yǒng wéi",
+    "meaning": "看到正义的事就勇敢地去做。",
+    "example": "消防员见义勇为，救出了被困的居民。",
+    "origin": "出自《论语·为政》",
+    "category": "品德"
+  },
+  {
+    "idiom": "舍己为人",
+    "pinyin": "shě jǐ wèi rén",
+    "meaning": "为了他人的利益而牺牲自己。",
+    "example": "英雄们舍己为人的精神值得学习。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "大公无私",
+    "pinyin": "dà gōng wú sī",
+    "meaning": "指办事公正，没有私心。",
+    "example": "包拯大公无私，是有名的好官。",
+    "origin": "出自《汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "光明磊落",
+    "pinyin": "guāng míng lěi luò",
+    "meaning": "形容人心地坦荡，言行正大。",
+    "example": "做人要光明磊落，不做亏心事。",
+    "origin": "出自宋代朱熹《朱子语类》",
+    "category": "品德"
+  },
+  {
+    "idiom": "诚实守信",
+    "pinyin": "chéng shí shǒu xìn",
+    "meaning": "为人诚实，遵守信用。",
+    "example": "我们从小就要做一个诚实守信的人。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "一诺千金",
+    "pinyin": "yī nuò qiān jīn",
+    "meaning": "一个承诺价值千金，形容说话算数。",
+    "example": "爸爸一诺千金，答应的事一定做到。",
+    "origin": "出自《史记·季布传》",
+    "category": "品德"
+  },
+  {
+    "idiom": "言而有信",
+    "pinyin": "yán ér yǒu xìn",
+    "meaning": "说话算数，有信用。",
+    "example": "做人要言而有信，不能说话不算数。",
+    "origin": "出自《论语·学而》",
+    "category": "品德"
+  },
+  {
+    "idiom": "宽宏大量",
+    "pinyin": "kuān hóng dà liàng",
+    "meaning": "形容人度量大，能容人。",
+    "example": "他很宽宏大量，从不跟人斤斤计较。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "知恩图报",
+    "pinyin": "zhī ēn tú bào",
+    "meaning": "知道别人对自己的恩情，想办法报答。",
+    "example": "我们要知恩图报，感谢帮助过自己的人。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "尊老爱幼",
+    "pinyin": "zūn lǎo ài yòu",
+    "meaning": "尊敬老人，爱护小孩。",
+    "example": "尊老爱幼是中华民族的传统美德。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "孝顺父母",
+    "pinyin": "xiào shùn fù mǔ",
+    "meaning": "尊敬顺从父母。",
+    "example": "我们要孝顺父母，让他们开心。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "刚正不阿",
+    "pinyin": "gāng zhèng bú ē",
+    "meaning": "刚强正直，不阿谀奉承。",
+    "example": "他为人刚正不阿，赢得了大家的尊重。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "克己奉公",
+    "pinyin": "kè jǐ fèng gōng",
+    "meaning": "克制自己的私心，一心为公。",
+    "example": "好干部要克己奉公，为人民服务。",
+    "origin": "出自《后汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "两袖清风",
+    "pinyin": "liǎng xiù qīng fēng",
+    "meaning": "形容做官廉洁。",
+    "example": "于谦两袖清风，是有名的清官。",
+    "origin": "出自明代于谦《入京》",
+    "category": "品德"
+  },
+  {
+    "idiom": "高风亮节",
+    "pinyin": "gāo fēng liàng jié",
+    "meaning": "形容道德和行为都很高尚。",
+    "example": "他高风亮节，令人敬佩。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "以身作则",
+    "pinyin": "yǐ shēn zuò zé",
+    "meaning": "用自己的行动做出榜样。",
+    "example": "老师以身作则，从不迟到。",
+    "origin": "出自《论语·子路》",
+    "category": "品德"
+  },
+  {
+    "idiom": "表里如一",
+    "pinyin": "biǎo lǐ rú yī",
+    "meaning": "表面和内心一样，形容言行一致。",
+    "example": "做人要表里如一，不能当面一套背后一套。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "严于律己",
+    "pinyin": "yán yú lǜ jǐ",
+    "meaning": "对自己严格要求。",
+    "example": "班长严于律己，是同学们的榜样。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "虚怀若谷",
+    "pinyin": "xū huái ruò gǔ",
+    "meaning": "胸怀像山谷一样宽广，形容非常谦虚。",
+    "example": "他虽然成绩优秀，却虚怀若谷。",
+    "origin": "出自《老子》",
+    "category": "品德"
+  },
+  {
+    "idiom": "不骄不躁",
+    "pinyin": "bù jiāo bù zào",
+    "meaning": "不骄傲，不急躁。",
+    "example": "取得成绩后要不骄不躁，继续努力。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "谦虚谨慎",
+    "pinyin": "qiān xū jǐn shèn",
+    "meaning": "虚心而且小心谨慎。",
+    "example": "做事要谦虚谨慎，不能骄傲自满。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "乐善好施",
+    "pinyin": "lè shàn hào shī",
+    "meaning": "喜欢做善事，乐于施舍。",
+    "example": "他乐善好施，经常帮助困难的人。",
+    "origin": "出自《史记》",
+    "category": "品德"
+  },
+  {
+    "idiom": "春暖花开",
+    "pinyin": "chūn nuǎn huā kāi",
+    "meaning": "春天天气暖和，百花盛开。",
+    "example": "春暖花开的时候，公园里特别美。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "万紫千红",
+    "pinyin": "wàn zǐ qiān hóng",
+    "meaning": "形容百花齐放，色彩艳丽。",
+    "example": "春天到了，花园里万紫千红。",
+    "origin": "出自宋代朱熹《春日》",
+    "category": "自然"
+  },
+  {
+    "idiom": "鸟语花香",
+    "pinyin": "niǎo yǔ huā xiāng",
+    "meaning": "鸟儿叫声悦耳，花儿散发芳香，形容春天美好的景色。",
+    "example": "春天的公园鸟语花香，令人心旷神怡。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "百花齐放",
+    "pinyin": "bǎi huā qí fàng",
+    "meaning": "各种花同时开放。",
+    "example": "春天来了，百花齐放，好美啊。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "春意盎然",
+    "pinyin": "chūn yì àng rán",
+    "meaning": "春天的意味正浓。",
+    "example": "三月的校园春意盎然。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "烈日炎炎",
+    "pinyin": "liè rì yán yán",
+    "meaning": "形容夏天太阳非常猛烈。",
+    "example": "烈日炎炎的夏天，大家都喜欢吃冰淇淋。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "秋高气爽",
+    "pinyin": "qiū gāo qì shuǎng",
+    "meaning": "秋天天空高远，气候凉爽。",
+    "example": "秋高气爽的日子适合去郊游。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "天寒地冻",
+    "pinyin": "tiān hán dì dòng",
+    "meaning": "形容天气非常寒冷。",
+    "example": "天寒地冻的冬天，大家穿上了厚厚的棉袄。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "冰天雪地",
+    "pinyin": "bīng tiān xuě dì",
+    "meaning": "形容冰雪漫天盖地，非常寒冷。",
+    "example": "东北的冬天冰天雪地，到处白茫茫一片。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "风和日丽",
+    "pinyin": "fēng hé rì lì",
+    "meaning": "和风习习，阳光灿烂，形容天气好。",
+    "example": "今天风和日丽，我们去公园玩吧。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "春风化雨",
+    "pinyin": "chūn fēng huà yǔ",
+    "meaning": "像春风和细雨一样滋润万物，比喻良好的教育。",
+    "example": "老师春风化雨般的教导让我们受益匪浅。",
+    "origin": "出自《孟子·尽心上》",
+    "category": "自然"
+  },
+  {
+    "idiom": "山清水秀",
+    "pinyin": "shān qīng shuǐ xiù",
+    "meaning": "形容风景优美。",
+    "example": "桂林山清水秀，是个旅游的好地方。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "湖光山色",
+    "pinyin": "hú guāng shān sè",
+    "meaning": "湖面的光彩和山中的景色，形容风景优美。",
+    "example": "西湖的湖光山色令人陶醉。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "青山绿水",
+    "pinyin": "qīng shān lǜ shuǐ",
+    "meaning": "泛称美好山河。",
+    "example": "我们要保护青山绿水，爱护环境。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "繁花似锦",
+    "pinyin": "fán huā sì jǐn",
+    "meaning": "许多色彩纷繁的鲜花，好像富丽多彩的锦缎。",
+    "example": "公园里繁花似锦，美不胜收。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "绿树成荫",
+    "pinyin": "lǜ shù chéng yīn",
+    "meaning": "形容树木枝叶茂密，遮住了阳光。",
+    "example": "校园里绿树成荫，走在路上很凉爽。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "花红柳绿",
+    "pinyin": "huā hóng liǔ lǜ",
+    "meaning": "形容春天花木繁茂艳丽的景色。",
+    "example": "春天的江南花红柳绿，美丽极了。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "皓月当空",
+    "pinyin": "hào yuè dāng kōng",
+    "meaning": "明亮的月亮高挂在天空。",
+    "example": "中秋节的夜晚皓月当空，我们一起赏月。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "满天星斗",
+    "pinyin": "mǎn tiān xīng dǒu",
+    "meaning": "星星布满天空，形容星星很多。",
+    "example": "夏天的夜晚满天星斗，非常美丽。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "电闪雷鸣",
+    "pinyin": "diàn shǎn léi míng",
+    "meaning": "闪电飞光，雷声轰鸣。",
+    "example": "暴风雨来的时候电闪雷鸣，很吓人。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "狂风暴雨",
+    "pinyin": "kuáng fēng bào yǔ",
+    "meaning": "大风大雨，形容天气恶劣。",
+    "example": "昨天的狂风暴雨把好多树都刮倒了。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "和风细雨",
+    "pinyin": "hé fēng xì yǔ",
+    "meaning": "和煦的风，细细的雨，比喻方式方法温和。",
+    "example": "春天的和风细雨滋润着大地。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "倾盆大雨",
+    "pinyin": "qīng pén dà yǔ",
+    "meaning": "雨大得像盆里的水直往下倒。",
+    "example": "突然下起了倾盆大雨，大家赶紧跑回教室。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "大雪纷飞",
+    "pinyin": "dà xuě fēn fēi",
+    "meaning": "大雪漫天飘落。",
+    "example": "大雪纷飞的冬天，我们堆了一个大雪人。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "风雨交加",
+    "pinyin": "fēng yǔ jiāo jiā",
+    "meaning": "又刮风又下雨。",
+    "example": "风雨交加的夜晚，爸爸冒雨来接我放学。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "碧空万里",
+    "pinyin": "bì kōng wàn lǐ",
+    "meaning": "万里晴空，天空湛蓝。",
+    "example": "今天碧空万里，是个好天气。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "阳光明媚",
+    "pinyin": "yáng guāng míng mèi",
+    "meaning": "形容天气晴朗，阳光鲜明亮丽。",
+    "example": "阳光明媚的早晨，我们去操场做早操。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "柳暗花明",
+    "pinyin": "liǔ àn huā míng",
+    "meaning": "比喻在困境中出现转机。",
+    "example": "正当我们一筹莫展时，柳暗花明又一村。",
+    "origin": "出自宋代陆游《游山西村》",
+    "category": "自然"
+  },
+  {
+    "idiom": "五彩缤纷",
+    "pinyin": "wǔ cǎi bīn fēn",
+    "meaning": "形容颜色多种多样，非常好看。",
+    "example": "彩虹五彩缤纷，挂在天边真美。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "画龙点睛",
+    "pinyin": "huà lóng diǎn jīng",
+    "meaning": "比喻写文章或说话时，在关键处加上精辟的语句，使内容更加生动。",
+    "example": "他的作文结尾画龙点睛，让整篇文章更出色。",
+    "origin": "出自唐代张彦远《历代名画记》",
+    "category": "动物"
+  },
+  {
+    "idiom": "守株待兔",
+    "pinyin": "shǒu zhū dài tù",
+    "meaning": "比喻不努力而希望得到意外收获。",
+    "example": "不能守株待兔，成功要靠自己努力。",
+    "origin": "出自《韩非子·五蠹》",
+    "category": "动物"
+  },
+  {
+    "idiom": "对牛弹琴",
+    "pinyin": "duì niú tán qín",
+    "meaning": "比喻对不懂道理的人讲道理，白费口舌。",
+    "example": "跟他讲这些道理简直是对牛弹琴。",
+    "origin": "出自《弘明集》",
+    "category": "动物"
+  },
+  {
+    "idiom": "画蛇添足",
+    "pinyin": "huà shé tiān zú",
+    "meaning": "做多余的事，反而弄巧成拙。",
+    "example": "这篇文章已经很好了，再改就是画蛇添足。",
+    "origin": "出自《战国策·齐策》",
+    "category": "动物"
+  },
+  {
+    "idiom": "亡羊补牢",
+    "pinyin": "wáng yáng bǔ láo",
+    "meaning": "丢了羊再修补羊圈，比喻出了问题后及时补救。",
+    "example": "虽然考试没考好，但亡羊补牢，现在开始努力还来得及。",
+    "origin": "出自《战国策·楚策》",
+    "category": "动物"
+  },
+  {
+    "idiom": "杯弓蛇影",
+    "pinyin": "bēi gōng shé yǐng",
+    "meaning": "把弓的影子误以为蛇，比喻因疑神疑鬼而引起恐惧。",
+    "example": "别杯弓蛇影了，那只是树枝的影子。",
+    "origin": "出自《晋书》",
+    "category": "动物"
+  },
+  {
+    "idiom": "狐假虎威",
+    "pinyin": "hú jiǎ hǔ wēi",
+    "meaning": "比喻借别人的威势来吓唬人。",
+    "example": "他仗着哥哥的名号狐假虎威，其实自己没本事。",
+    "origin": "出自《战国策·楚策》",
+    "category": "动物"
+  },
+  {
+    "idiom": "鹤立鸡群",
+    "pinyin": "hè lì jī qún",
+    "meaning": "比喻一个人的才能或外表出众。",
+    "example": "他在班里鹤立鸡群，成绩特别优秀。",
+    "origin": "出自《世说新语》",
+    "category": "动物"
+  },
+  {
+    "idiom": "龙飞凤舞",
+    "pinyin": "lóng fēi fèng wǔ",
+    "meaning": "形容书法笔势有力，灵活奔放。",
+    "example": "爷爷写的毛笔字龙飞凤舞，很漂亮。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "虎头蛇尾",
+    "pinyin": "hǔ tóu shé wěi",
+    "meaning": "比喻开始时声势很大，后来劲头很小，有始无终。",
+    "example": "做事不能虎头蛇尾，要有始有终。",
+    "origin": "出自元曲",
+    "category": "动物"
+  },
+  {
+    "idiom": "马到成功",
+    "pinyin": "mǎ dào chéng gōng",
+    "meaning": "比喻一去就取得成功。",
+    "example": "祝你考试马到成功！",
+    "origin": "出自元代郑廷为作品",
+    "category": "动物"
+  },
+  {
+    "idiom": "鸡飞蛋打",
+    "pinyin": "jī fēi dàn dǎ",
+    "meaning": "比喻两头落空，什么也没得到。",
+    "example": "他投机取巧，结果鸡飞蛋打。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "鸡犬不宁",
+    "pinyin": "jī quǎn bù níng",
+    "meaning": "连鸡和狗都不得安宁，形容非常吵闹。",
+    "example": "隔壁装修搞得鸡犬不宁。",
+    "origin": "出自唐代柳宗元作品",
+    "category": "动物"
+  },
+  {
+    "idiom": "井底之蛙",
+    "pinyin": "jǐng dǐ zhī wā",
+    "meaning": "比喻见识短浅的人。",
+    "example": "不能做井底之蛙，要多出去看看外面的世界。",
+    "origin": "出自《庄子·秋水》",
+    "category": "动物"
+  },
+  {
+    "idiom": "龙腾虎跃",
+    "pinyin": "lóng téng hǔ yuè",
+    "meaning": "形容跑跳时动作矫健有力。",
+    "example": "运动会上同学们龙腾虎跃，非常精彩。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "鱼贯而入",
+    "pinyin": "yú guàn ér rù",
+    "meaning": "像游鱼那样一个接一个地进去。",
+    "example": "同学们鱼贯而入，走进了教室。",
+    "origin": "出自《三国志》",
+    "category": "动物"
+  },
+  {
+    "idiom": "鸦雀无声",
+    "pinyin": "yā què wú shēng",
+    "meaning": "连乌鸦麻雀的声音都没有，形容非常安静。",
+    "example": "老师一进来，教室里顿时鸦雀无声。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "鹏程万里",
+    "pinyin": "péng chéng wàn lǐ",
+    "meaning": "比喻前程远大。",
+    "example": "祝毕业的学长学姐鹏程万里！",
+    "origin": "出自《庄子·逍遥游》",
+    "category": "动物"
+  },
+  {
+    "idiom": "鸡鸣狗盗",
+    "pinyin": "jī míng gǒu dào",
+    "meaning": "比喻微不足道的本领或偷偷摸摸的行为。",
+    "example": "鸡鸣狗盗虽不光彩，但有时也能救急。",
+    "origin": "出自《史记·孟尝君列传》",
+    "category": "动物"
+  },
+  {
+    "idiom": "飞禽走兽",
+    "pinyin": "fēi qín zǒu shòu",
+    "meaning": "飞翔的鸟和奔跑的野兽，泛指各种动物。",
+    "example": "动物园里有各种飞禽走兽。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "如鱼得水",
+    "pinyin": "rú yú dé shuǐ",
+    "meaning": "比喻得到跟自己很投合的人或环境。",
+    "example": "他到了新学校如鱼得水，交了很多朋友。",
+    "origin": "出自《三国志》",
+    "category": "动物"
+  },
+  {
+    "idiom": "指鹿为马",
+    "pinyin": "zhǐ lù wéi mǎ",
+    "meaning": "指着鹿说是马，比喻故意颠倒黑白。",
+    "example": "我们不能指鹿为马，要实事求是。",
+    "origin": "出自《史记·秦始皇本纪》",
+    "category": "动物"
+  },
+  {
+    "idiom": "叶公好龙",
+    "pinyin": "yè gōng hào lóng",
+    "meaning": "比喻口头上说爱好某事物，实际上并不真爱好。",
+    "example": "他说喜欢运动却从不锻炼，真是叶公好龙。",
+    "origin": "出自汉代刘向《新序》",
+    "category": "动物"
+  },
+  {
+    "idiom": "惊弓之鸟",
+    "pinyin": "jīng gōng zhī niǎo",
+    "meaning": "被弓箭吓怕了的鸟，比喻受过惊吓后遇事胆怯的人。",
+    "example": "他被吓过之后像惊弓之鸟一样胆小。",
+    "origin": "出自《战国策》",
+    "category": "动物"
+  },
+  {
+    "idiom": "九牛一毛",
+    "pinyin": "jiǔ niú yī máo",
+    "meaning": "九头牛身上的一根毛，比喻极大数量中微不足道的一点。",
+    "example": "这点钱对他来说不过是九牛一毛。",
+    "origin": "出自汉代司马迁《报任安书》",
+    "category": "动物"
+  },
+  {
+    "idiom": "老马识途",
+    "pinyin": "lǎo mǎ shí tú",
+    "meaning": "老马能认识走过的路，比喻有经验的人能起引导作用。",
+    "example": "爷爷对这一带很熟悉，真是老马识途。",
+    "origin": "出自《韩非子·说林上》",
+    "category": "动物"
+  },
+  {
+    "idiom": "黔驴技穷",
+    "pinyin": "qián lǘ jì qióng",
+    "meaning": "比喻有限的一点本领也已经用完了。",
+    "example": "他的招数用尽，已经黔驴技穷了。",
+    "origin": "出自唐代柳宗元《三戒》",
+    "category": "动物"
+  },
+  {
+    "idiom": "一马当先",
+    "pinyin": "yī mǎ dāng xiān",
+    "meaning": "形容领先，走在最前面。",
+    "example": "赛跑时小刚一马当先冲在最前面。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "万马奔腾",
+    "pinyin": "wàn mǎ bēn téng",
+    "meaning": "成千上万匹马在奔跑，形容声势浩大。",
+    "example": "河水万马奔腾般涌了过来。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "一箭双雕",
+    "pinyin": "yī jiàn shuāng diāo",
+    "meaning": "一箭射中两只雕，比喻一举两得。",
+    "example": "这个方案一箭双雕，既省钱又省时间。",
+    "origin": "出自《北史》",
+    "category": "动物"
+  },
+  {
+    "idiom": "一举两得",
+    "pinyin": "yī jǔ liǎng dé",
+    "meaning": "做一件事得到两方面的好处。",
+    "example": "骑自行车上学一举两得，既锻炼身体又环保。",
+    "origin": "出自《晋书》",
+    "category": "数字"
+  },
+  {
+    "idiom": "三心二意",
+    "pinyin": "sān xīn èr yì",
+    "meaning": "形容犹豫不决或意志不坚定。",
+    "example": "做事不能三心二意，要专心。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "四面八方",
+    "pinyin": "sì miàn bā fāng",
+    "meaning": "指各个方面或各个地方。",
+    "example": "消息传开后，人们从四面八方赶来。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "五湖四海",
+    "pinyin": "wǔ hú sì hǎi",
+    "meaning": "指全国各地，有时也指世界各地。",
+    "example": "同学们来自五湖四海。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "六神无主",
+    "pinyin": "liù shén wú zhǔ",
+    "meaning": "形容惊慌不安，没有主意。",
+    "example": "听到这个消息，他吓得六神无主。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "七上八下",
+    "pinyin": "qī shàng bā xià",
+    "meaning": "形容心里不安定。",
+    "example": "考试前我的心七上八下的。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "八仙过海",
+    "pinyin": "bā xiān guò hǎi",
+    "meaning": "比喻各人有各人的本领。",
+    "example": "八仙过海，各显神通。",
+    "origin": "出自民间传说",
+    "category": "数字"
+  },
+  {
+    "idiom": "九死一生",
+    "pinyin": "jiǔ sǐ yī shēng",
+    "meaning": "形容经历极大的危险而幸存。",
+    "example": "他在地震中九死一生，终于被救了出来。",
+    "origin": "出自屈原《离骚》",
+    "category": "数字"
+  },
+  {
+    "idiom": "十全十美",
+    "pinyin": "shí quán shí měi",
+    "meaning": "各方面都非常完美，毫无缺陷。",
+    "example": "世上没有十全十美的事情。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "百发百中",
+    "pinyin": "bǎi fā bǎi zhòng",
+    "meaning": "每次射击都能命中目标，形容射术高明。",
+    "example": "他投篮百发百中，是校队的主力。",
+    "origin": "出自《战国策》",
+    "category": "数字"
+  },
+  {
+    "idiom": "千方百计",
+    "pinyin": "qiān fāng bǎi jì",
+    "meaning": "想尽各种办法。",
+    "example": "妈妈千方百计地让我吃得营养均衡。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "万众一心",
+    "pinyin": "wàn zhòng yī xīn",
+    "meaning": "千万人一条心，形容团结一致。",
+    "example": "抗洪救灾时大家万众一心。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "千军万马",
+    "pinyin": "qiān jūn wàn mǎ",
+    "meaning": "形容雄壮的队伍或浩大的声势。",
+    "example": "高考时千军万马过独木桥。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "成千上万",
+    "pinyin": "chéng qiān shàng wàn",
+    "meaning": "形容数量非常多。",
+    "example": "广场上聚集了成千上万的人。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "千变万化",
+    "pinyin": "qiān biàn wàn huà",
+    "meaning": "形容变化极多。",
+    "example": "天上的云千变万化，像各种小动物。",
+    "origin": "出自《列子·周穆王》",
+    "category": "数字"
+  },
+  {
+    "idiom": "千辛万苦",
+    "pinyin": "qiān xīn wàn kǔ",
+    "meaning": "各种各样的艰难困苦。",
+    "example": "爸爸千辛万苦把我们养大。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "千言万语",
+    "pinyin": "qiān yán wàn yǔ",
+    "meaning": "形容说的话很多。",
+    "example": "离别时有千言万语想说。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "百折不挠",
+    "pinyin": "bǎi zhé bù náo",
+    "meaning": "无论受到多少挫折都不退缩。",
+    "example": "他百折不挠，终于取得了成功。",
+    "origin": "出自《汉书》",
+    "category": "数字"
+  },
+  {
+    "idiom": "独一无二",
+    "pinyin": "dú yī wú èr",
+    "meaning": "没有相同的或相比的，形容唯一的。",
+    "example": "每个人都是独一无二的。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "三顾茅庐",
+    "pinyin": "sān gù máo lú",
+    "meaning": "比喻真心诚意地邀请或拜访。",
+    "example": "刘备三顾茅庐，请出了诸葛亮。",
+    "origin": "出自《三国志》",
+    "category": "数字"
+  },
+  {
+    "idiom": "五颜六色",
+    "pinyin": "wǔ yán liù sè",
+    "meaning": "形容色彩繁多。",
+    "example": "花园里开满了五颜六色的花。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "七嘴八舌",
+    "pinyin": "qī zuǐ bā shé",
+    "meaning": "形容人多嘴杂，议论纷纷。",
+    "example": "大家七嘴八舌地讨论着。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "千里迢迢",
+    "pinyin": "qiān lǐ tiáo tiáo",
+    "meaning": "形容路途遥远。",
+    "example": "他千里迢迢来看望老朋友。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "千钧一发",
+    "pinyin": "qiān jūn yī fà",
+    "meaning": "比喻极其危险的时刻。",
+    "example": "千钧一发之际，他被救了出来。",
+    "origin": "出自《汉书》",
+    "category": "数字"
+  },
+  {
+    "idiom": "百战百胜",
+    "pinyin": "bǎi zhàn bǎi shèng",
+    "meaning": "每战必胜，形容军队非常善战。",
+    "example": "知己知彼，才能百战百胜。",
+    "origin": "出自《孙子兵法》",
+    "category": "战争"
+  },
+  {
+    "idiom": "兵贵神速",
+    "pinyin": "bīng guì shén sù",
+    "meaning": "用兵贵在行动迅速。",
+    "example": "做事要果断，兵贵神速。",
+    "origin": "出自《三国志》",
+    "category": "战争"
+  },
+  {
+    "idiom": "知己知彼",
+    "pinyin": "zhī jǐ zhī bǐ",
+    "meaning": "既了解自己又了解对方。",
+    "example": "比赛前要知己知彼，做好准备。",
+    "origin": "出自《孙子兵法》",
+    "category": "战争"
+  },
+  {
+    "idiom": "出其不意",
+    "pinyin": "chū qí bù yì",
+    "meaning": "在对方意料不到的时候行动。",
+    "example": "他出其不意地给了妈妈一个惊喜。",
+    "origin": "出自《孙子兵法》",
+    "category": "战争"
+  },
+  {
+    "idiom": "草木皆兵",
+    "pinyin": "cǎo mù jiē bīng",
+    "meaning": "把草木都当成敌兵，形容极度惊恐。",
+    "example": "他太紧张了，简直是草木皆兵。",
+    "origin": "出自《晋书·苻坚传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "破釜沉舟",
+    "pinyin": "pò fǔ chén zhōu",
+    "meaning": "比喻下定决心，不顾一切干到底。",
+    "example": "他破釜沉舟，辞掉工作专心创业。",
+    "origin": "出自《史记·项羽本纪》",
+    "category": "战争"
+  },
+  {
+    "idiom": "四面楚歌",
+    "pinyin": "sì miàn chǔ gē",
+    "meaning": "比喻陷入四面受敌的困境。",
+    "example": "公司经营困难，四面楚歌。",
+    "origin": "出自《史记·项羽本纪》",
+    "category": "战争"
+  },
+  {
+    "idiom": "纸上谈兵",
+    "pinyin": "zhǐ shàng tán bīng",
+    "meaning": "比喻空谈理论，不能解决实际问题。",
+    "example": "学游泳不能纸上谈兵，要下水练习。",
+    "origin": "出自《史记·廉颇蔺相如列传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "围魏救赵",
+    "pinyin": "wéi wèi jiù zhào",
+    "meaning": "原指战国时齐军用围攻魏国的方法迫使魏国撤回攻赵部队，后指用包抄敌人后方的办法来迫使敌人退兵。",
+    "example": "这是围魏救赵的策略。",
+    "origin": "出自《史记·孙子吴起列传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "调虎离山",
+    "pinyin": "diào hǔ lí shān",
+    "meaning": "比喻用计谋调动对方离开原来的地方。",
+    "example": "他用调虎离山之计拿到了胜利。",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "声东击西",
+    "pinyin": "shēng dōng jī xī",
+    "meaning": "声张要攻打东边，实际却攻打西边。",
+    "example": "篮球赛中他声东击西，骗过了对手。",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "以少胜多",
+    "pinyin": "yǐ shǎo shèng duō",
+    "meaning": "以少量兵力战胜强大的敌人。",
+    "example": "赤壁之战是以少胜多的经典战例。",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "背水一战",
+    "pinyin": "bèi shuǐ yī zhàn",
+    "meaning": "比喻在绝境中为求生路而决一死战。",
+    "example": "他背水一战，终于赢得了比赛。",
+    "origin": "出自《史记·淮阴侯列传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "旗开得胜",
+    "pinyin": "qí kāi dé shèng",
+    "meaning": "比喻事情一开始就取得好成绩。",
+    "example": "祝你比赛旗开得胜！",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "所向披靡",
+    "pinyin": "suǒ xiàng pī mǐ",
+    "meaning": "比喻力量所到之处，一切障碍全被扫除。",
+    "example": "他们球队所向披靡，连赢十场。",
+    "origin": "出自《史记·项羽本纪》",
+    "category": "战争"
+  },
+  {
+    "idiom": "兵不厌诈",
+    "pinyin": "bīng bú yàn zhà",
+    "meaning": "用兵作战不排斥使用诡计。",
+    "example": "下棋也是兵不厌诈，要学会虚虚实实。",
+    "origin": "出自《韩非子》",
+    "category": "战争"
+  },
+  {
+    "idiom": "一鼓作气",
+    "pinyin": "yī gǔ zuò qì",
+    "meaning": "比喻趁劲头大的时候一下子把事情做完。",
+    "example": "考试要一鼓作气，不要犹豫不决。",
+    "origin": "出自《左传·庄公十年》",
+    "category": "战争"
+  },
+  {
+    "idiom": "同仇敌忾",
+    "pinyin": "tóng chóu dí kài",
+    "meaning": "全体一致痛恨敌人。",
+    "example": "大家同仇敌忾，共同对抗困难。",
+    "origin": "出自《诗经》",
+    "category": "战争"
+  },
+  {
+    "idiom": "运筹帷幄",
+    "pinyin": "yùn chóu wéi wò",
+    "meaning": "在后方制定作战策略，比喻筹划指挥。",
+    "example": "诸葛亮运筹帷幄，决胜千里之外。",
+    "origin": "出自《史记·高祖本纪》",
+    "category": "战争"
+  },
+  {
+    "idiom": "孤军奋战",
+    "pinyin": "gū jūn fèn zhàn",
+    "meaning": "孤立无助地坚持战斗。",
+    "example": "他一个人孤军奋战完成了任务。",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "丰衣足食",
+    "pinyin": "fēng yī zú shí",
+    "meaning": "穿的吃的都很丰富充足，形容生活富裕。",
+    "example": "现在大家都过上了丰衣足食的生活。",
+    "origin": "出自《五代史》",
+    "category": "生活"
+  },
+  {
+    "idiom": "安居乐业",
+    "pinyin": "ān jū lè yè",
+    "meaning": "安定地生活，愉快地劳动。",
+    "example": "人们安居乐业，社会和谐稳定。",
+    "origin": "出自《老子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "粗茶淡饭",
+    "pinyin": "cū chá dàn fàn",
+    "meaning": "形容饭食简单，生活简朴。",
+    "example": "爷爷喜欢粗茶淡饭的生活。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "津津有味",
+    "pinyin": "jīn jīn yǒu wèi",
+    "meaning": "形容有滋味或有兴趣。",
+    "example": "小明津津有味地吃着妈妈做的菜。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "目不暇接",
+    "pinyin": "mù bù xiá jiē",
+    "meaning": "形容东西多，来不及观看。",
+    "example": "商场里的商品琳琅满目，令人目不暇接。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "应接不暇",
+    "pinyin": "yìng jiē bù xiá",
+    "meaning": "原指景物繁多来不及观赏，后形容事情太多应付不过来。",
+    "example": "过年时客人太多，妈妈应接不暇。",
+    "origin": "出自《世说新语》",
+    "category": "生活"
+  },
+  {
+    "idiom": "川流不息",
+    "pinyin": "chuān liú bù xī",
+    "meaning": "像河水那样流个不停，形容行人、车马等往来不绝。",
+    "example": "马路上车辆川流不息。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "人山人海",
+    "pinyin": "rén shān rén hǎi",
+    "meaning": "形容聚集的人非常多。",
+    "example": "国庆节的天安门广场人山人海。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "欣欣向荣",
+    "pinyin": "xīn xīn xiàng róng",
+    "meaning": "形容草木长得很茂盛，比喻事业蓬勃发展。",
+    "example": "春天来了，大自然一片欣欣向荣。",
+    "origin": "出自晋代陶渊明《桃花源记》",
+    "category": "生活"
+  },
+  {
+    "idiom": "生龙活虎",
+    "pinyin": "shēng lóng huó hǔ",
+    "meaning": "形容很有生气和活力。",
+    "example": "操场上同学们生龙活虎地做游戏。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "络绎不绝",
+    "pinyin": "luò yì bù jué",
+    "meaning": "形容行人、车马等前后相接，连续不断。",
+    "example": "博物馆里参观的人络绎不绝。",
+    "origin": "出自《后汉书》",
+    "category": "生活"
+  },
+  {
+    "idiom": "熙熙攘攘",
+    "pinyin": "xī xī rǎng rǎng",
+    "meaning": "形容人来人往，非常热闹。",
+    "example": "菜市场里熙熙攘攘的。",
+    "origin": "出自《史记》",
+    "category": "生活"
+  },
+  {
+    "idiom": "其乐融融",
+    "pinyin": "qí lè róng róng",
+    "meaning": "形容非常快乐和谐的样子。",
+    "example": "一家人围坐在一起，其乐融融。",
+    "origin": "出自《左传》",
+    "category": "生活"
+  },
+  {
+    "idiom": "自食其力",
+    "pinyin": "zì shí qí lì",
+    "meaning": "依靠自己的劳动来生活。",
+    "example": "长大后要自食其力，不能依靠父母。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "衣食住行",
+    "pinyin": "yī shí zhù xíng",
+    "meaning": "指穿衣、吃饭、住房、出行，泛指日常生活。",
+    "example": "科技改善了我们的衣食住行。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "日新月异",
+    "pinyin": "rì xīn yuè yì",
+    "meaning": "每天每月都有新的变化，形容进步、发展很快。",
+    "example": "科技日新月异，生活越来越方便。",
+    "origin": "出自《礼记·大学》",
+    "category": "生活"
+  },
+  {
+    "idiom": "焕然一新",
+    "pinyin": "huàn rán yī xīn",
+    "meaning": "形容出现崭新的面貌。",
+    "example": "教室打扫完后焕然一新。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "井井有条",
+    "pinyin": "jǐng jǐng yǒu tiáo",
+    "meaning": "形容条理分明，整齐有序。",
+    "example": "她把房间收拾得井井有条。",
+    "origin": "出自《荀子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "忙忙碌碌",
+    "pinyin": "máng máng lù lù",
+    "meaning": "形容事情很多，不停地忙着。",
+    "example": "妈妈每天忙忙碌碌地照顾家里。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "称心如意",
+    "pinyin": "chèn xīn rú yì",
+    "meaning": "完全合乎心意。",
+    "example": "他终于买到了称心如意的书包。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "左邻右舍",
+    "pinyin": "zuǒ lín yòu shè",
+    "meaning": "泛指邻居。",
+    "example": "我们和左邻右舍相处得很好。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "耳目一新",
+    "pinyin": "ěr mù yī xīn",
+    "meaning": "听到的看到的都换了样子，感觉很新鲜。",
+    "example": "新学期的教室布置让人耳目一新。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "赏心悦目",
+    "pinyin": "shǎng xīn yuè mù",
+    "meaning": "看到美好的景色而心情愉快。",
+    "example": "这幅画色彩鲜艳，令人赏心悦目。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "丰富多彩",
+    "pinyin": "fēng fù duō cǎi",
+    "meaning": "内容丰富，花色繁多。",
+    "example": "学校的课外活动丰富多彩。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "兴高采烈",
+    "pinyin": "xìng gāo cǎi liè",
+    "meaning": "形容兴致高，精神饱满。",
+    "example": "听到放假的消息，同学们兴高采烈。",
+    "origin": "出自南朝刘勰《文心雕龙》",
+    "category": "情感"
+  },
+  {
+    "idiom": "喜出望外",
+    "pinyin": "xǐ chū wàng wài",
+    "meaning": "遇到出乎意料的好事而特别高兴。",
+    "example": "收到礼物时，她喜出望外。",
+    "origin": "出自宋代苏轼作品",
+    "category": "情感"
+  },
+  {
+    "idiom": "欢天喜地",
+    "pinyin": "huān tiān xǐ dì",
+    "meaning": "形容非常高兴。",
+    "example": "过年了，大家欢天喜地地庆祝。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "喜笑颜开",
+    "pinyin": "xǐ xiào yán kāi",
+    "meaning": "形容心情愉快，满面笑容。",
+    "example": "拿到奖状后，他喜笑颜开。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "心花怒放",
+    "pinyin": "xīn huā nù fàng",
+    "meaning": "心里高兴得像花儿盛开一样。",
+    "example": "听到被录取的消息，她心花怒放。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "眉开眼笑",
+    "pinyin": "méi kāi yǎn xiào",
+    "meaning": "形容高兴愉快的样子。",
+    "example": "爷爷看到孙子，眉开眼笑。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "笑逐颜开",
+    "pinyin": "xiào zhú yán kāi",
+    "meaning": "笑容在脸上展开，形容非常高兴。",
+    "example": "听了这个好消息，大家笑逐颜开。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "心旷神怡",
+    "pinyin": "xīn kuàng shén yí",
+    "meaning": "心情舒畅，精神愉快。",
+    "example": "站在山顶看风景，令人心旷神怡。",
+    "origin": "出自宋代范仲淹《岳阳楼记》",
+    "category": "情感"
+  },
+  {
+    "idiom": "愁眉苦脸",
+    "pinyin": "chóu méi kǔ liǎn",
+    "meaning": "形容愁苦的神色。",
+    "example": "他考试没考好，愁眉苦脸的。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "垂头丧气",
+    "pinyin": "chuí tóu sàng qì",
+    "meaning": "形容因失败或不顺利而情绪低落。",
+    "example": "比赛输了，他垂头丧气地走了。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "泪如雨下",
+    "pinyin": "lèi rú yǔ xià",
+    "meaning": "眼泪像雨水一样往下流，形容非常伤心。",
+    "example": "看到感人的电影，她泪如雨下。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "悲痛欲绝",
+    "pinyin": "bēi tòng yù jué",
+    "meaning": "悲伤得要死，形容极度悲伤。",
+    "example": "失去亲人后，他悲痛欲绝。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "怒发冲冠",
+    "pinyin": "nù fà chōng guān",
+    "meaning": "气得头发直竖把帽子都顶起来了，形容非常愤怒。",
+    "example": "听到这个消息他怒发冲冠。",
+    "origin": "出自《史记·廉颇蔺相如列传》",
+    "category": "情感"
+  },
+  {
+    "idiom": "怒气冲冲",
+    "pinyin": "nù qì chōng chōng",
+    "meaning": "形容非常愤怒的样子。",
+    "example": "他怒气冲冲地走出了房间。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "心急如焚",
+    "pinyin": "xīn jí rú fén",
+    "meaning": "心里急得像火烧一样。",
+    "example": "找不到妈妈，小女孩心急如焚。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "忐忑不安",
+    "pinyin": "tǎn tè bù ān",
+    "meaning": "心神极为不安。",
+    "example": "第一次上台演讲，他忐忑不安。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "心惊胆战",
+    "pinyin": "xīn jīng dǎn zhàn",
+    "meaning": "形容非常害怕。",
+    "example": "走过悬崖边的小路，他心惊胆战。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "提心吊胆",
+    "pinyin": "tí xīn diào dǎn",
+    "meaning": "形容十分担心或害怕。",
+    "example": "妈妈提心吊胆地等着爸爸回来。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "胆战心惊",
+    "pinyin": "dǎn zhàn xīn jīng",
+    "meaning": "形容非常恐惧。",
+    "example": "听到雷声，弟弟吓得胆战心惊。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "感激涕零",
+    "pinyin": "gǎn jī tì líng",
+    "meaning": "感激得流下了眼泪，形容非常感动。",
+    "example": "受到帮助后，他感激涕零。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "依依不舍",
+    "pinyin": "yī yī bù shě",
+    "meaning": "形容舍不得离开。",
+    "example": "毕业时同学们依依不舍。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "恋恋不舍",
+    "pinyin": "liàn liàn bù shě",
+    "meaning": "形容非常留恋，舍不得离开。",
+    "example": "假期结束了，大家恋恋不舍地离开了海边。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "百感交集",
+    "pinyin": "bǎi gǎn jiāo jí",
+    "meaning": "各种感触交织在一起。",
+    "example": "回到家乡，他百感交集。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "喜怒哀乐",
+    "pinyin": "xǐ nù āi lè",
+    "meaning": "高兴、愤怒、悲哀、快乐，泛指各种感情。",
+    "example": "每个人都有喜怒哀乐。",
+    "origin": "出自《中庸》",
+    "category": "情感"
+  },
+  {
+    "idiom": "心满意足",
+    "pinyin": "xīn mǎn yì zú",
+    "meaning": "心愿得到满足，非常满意。",
+    "example": "得到了心爱的玩具，他心满意足。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "乐不思蜀",
+    "pinyin": "lè bù sī shǔ",
+    "meaning": "比喻乐而忘本或乐而忘返。",
+    "example": "在游乐园玩得乐不思蜀。",
+    "origin": "出自《三国志》",
+    "category": "情感"
+  },
+  {
+    "idiom": "喜气洋洋",
+    "pinyin": "xǐ qì yáng yáng",
+    "meaning": "形容非常高兴的样子。",
+    "example": "过年了，家家户户喜气洋洋。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "怡然自得",
+    "pinyin": "yí rán zì dé",
+    "meaning": "形容安适愉快而满足的样子。",
+    "example": "爷爷坐在院子里怡然自得地品茶。",
+    "origin": "出自《列子》",
+    "category": "情感"
+  },
+  {
+    "idiom": "精神抖擞",
+    "pinyin": "jīng shén dǒu sǒu",
+    "meaning": "形容精神振奋，饱满。",
+    "example": "早操时同学们个个精神抖擞。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "手忙脚乱",
+    "pinyin": "shǒu máng jiǎo luàn",
+    "meaning": "形容做事慌张没有条理。",
+    "example": "第一次做饭，他手忙脚乱的。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "胸有成竹",
+    "pinyin": "xiōng yǒu chéng zhú",
+    "meaning": "比喻做事之前已经有了主意。",
+    "example": "考试前他复习充分，胸有成竹。",
+    "origin": "出自宋代苏轼作品",
+    "category": "生活"
+  },
+  {
+    "idiom": "得心应手",
+    "pinyin": "dé xīn yìng shǒu",
+    "meaning": "心里怎么想，手就怎么做，形容技艺纯熟。",
+    "example": "他弹钢琴已经得心应手了。",
+    "origin": "出自《庄子·天道》",
+    "category": "生活"
+  },
+  {
+    "idiom": "滴水穿石",
+    "pinyin": "dī shuǐ chuān shí",
+    "meaning": "水滴不断地滴可以把石头穿透，比喻坚持不懈的力量。",
+    "example": "只要坚持，就能滴水穿石。",
+    "origin": "出自宋代罗大经《鹤林玉露》",
+    "category": "学习"
+  },
+  {
+    "idiom": "铁杵成针",
+    "pinyin": "tiě chǔ chéng zhēn",
+    "meaning": "比喻只要有恒心有毅力，做任何事情都能成功。",
+    "example": "只要功夫深，铁杵磨成针。",
+    "origin": "出自明代郑之珍作品",
+    "category": "学习"
+  },
+  {
+    "idiom": "坚持不懈",
+    "pinyin": "jiān chí bú xiè",
+    "meaning": "坚持到底，一点不松懈。",
+    "example": "他坚持不懈地练习跑步，终于获得了冠军。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "持之以恒",
+    "pinyin": "chí zhī yǐ héng",
+    "meaning": "长久地坚持下去。",
+    "example": "学英语要持之以恒，每天都要练。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "锲而不舍",
+    "pinyin": "qiè ér bù shě",
+    "meaning": "不断地刻下去，比喻有恒心有毅力。",
+    "example": "锲而不舍，金石可镂。",
+    "origin": "出自《荀子·劝学》",
+    "category": "品德"
+  },
+  {
+    "idiom": "愚公移山",
+    "pinyin": "yú gōng yí shān",
+    "meaning": "比喻做事有毅力，不怕困难。",
+    "example": "只要有愚公移山的精神，就没有克服不了的困难。",
+    "origin": "出自《列子·汤问》",
+    "category": "品德"
+  },
+  {
+    "idiom": "水滴石穿",
+    "pinyin": "shuǐ dī shí chuān",
+    "meaning": "水不停地滴，石头也能被滴穿，比喻坚持力量大。",
+    "example": "学习要有水滴石穿的精神。",
+    "origin": "出自宋代罗大经《鹤林玉露》",
+    "category": "品德"
+  },
+  {
+    "idiom": "绳锯木断",
+    "pinyin": "shéng jù mù duàn",
+    "meaning": "用绳当锯子也能把木头锯断，比喻力量虽小只要坚持就能成功。",
+    "example": "绳锯木断，只要努力一定能成功。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "自强不息",
+    "pinyin": "zì qiáng bù xī",
+    "meaning": "自己努力向上，永远不懈怠。",
+    "example": "我们要自强不息，不断进步。",
+    "origin": "出自《周易》",
+    "category": "品德"
+  },
+  {
+    "idiom": "勇往直前",
+    "pinyin": "yǒng wǎng zhí qián",
+    "meaning": "勇敢地一直向前进。",
+    "example": "遇到困难要勇往直前，不能退缩。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "披荆斩棘",
+    "pinyin": "pī jīng zhǎn jí",
+    "meaning": "比喻在前进路上清除障碍，克服困难。",
+    "example": "创业的道路上他披荆斩棘。",
+    "origin": "出自《后汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "迎难而上",
+    "pinyin": "yíng nán ér shàng",
+    "meaning": "面对困难勇敢地向前。",
+    "example": "遇到难题要迎难而上，不能逃避。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "知难而进",
+    "pinyin": "zhī nán ér jìn",
+    "meaning": "知道有困难仍然勇往直前。",
+    "example": "他知难而进的精神值得学习。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "奋发图强",
+    "pinyin": "fèn fā tú qiáng",
+    "meaning": "振作精神，努力使自己强盛起来。",
+    "example": "我们要奋发图强，建设祖国。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "急中生智",
+    "pinyin": "jí zhōng shēng zhì",
+    "meaning": "在紧急中想出好办法。",
+    "example": "他急中生智，想到了一个好主意。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "异想天开",
+    "pinyin": "yì xiǎng tiān kāi",
+    "meaning": "形容想法离奇，不切实际。",
+    "example": "你别异想天开了，要脚踏实地。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "半途而废",
+    "pinyin": "bàn tú ér fèi",
+    "meaning": "中途停止，比喻做事不能坚持到底。",
+    "example": "做事不能半途而废，要坚持到底。",
+    "origin": "出自《礼记》",
+    "category": "生活"
+  },
+  {
+    "idiom": "功亏一篑",
+    "pinyin": "gōng kuī yī kuì",
+    "meaning": "比喻事情只差最后一点没完成。",
+    "example": "千万不能功亏一篑，最后关头要坚持。",
+    "origin": "出自《尚书》",
+    "category": "生活"
+  },
+  {
+    "idiom": "事半功倍",
+    "pinyin": "shì bàn gōng bèi",
+    "meaning": "花一半力气收到成倍的效果。",
+    "example": "找到好方法可以事半功倍。",
+    "origin": "出自《孟子》",
+    "category": "学习"
+  },
+  {
+    "idiom": "事倍功半",
+    "pinyin": "shì bèi gōng bàn",
+    "meaning": "花成倍的力气只收到一半的效果。",
+    "example": "方法不对就会事倍功半。",
+    "origin": "出自《孟子》",
+    "category": "学习"
+  },
+  {
+    "idiom": "熟能生巧",
+    "pinyin": "shú néng shēng qiǎo",
+    "meaning": "做事熟练了就能想出巧办法。",
+    "example": "写字要多练，熟能生巧。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "眼疾手快",
+    "pinyin": "yǎn jí shǒu kuài",
+    "meaning": "形容做事反应快，动作敏捷。",
+    "example": "他眼疾手快地接住了掉落的花瓶。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "大材小用",
+    "pinyin": "dà cái xiǎo yòng",
+    "meaning": "把大的材料用在小处，比喻使用不当。",
+    "example": "让博士去做这么简单的工作，太大材小用了。",
+    "origin": "出自宋代陆游作品",
+    "category": "生活"
+  },
+  {
+    "idiom": "小题大做",
+    "pinyin": "xiǎo tí dà zuò",
+    "meaning": "比喻把小事当作大事来处理。",
+    "example": "不就是迟到几分钟嘛，别小题大做了。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "自以为是",
+    "pinyin": "zì yǐ wéi shì",
+    "meaning": "总以为自己是对的。",
+    "example": "不要自以为是，要虚心听取别人的意见。",
+    "origin": "出自《孟子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "画饼充饥",
+    "pinyin": "huà bǐng chōng jī",
+    "meaning": "比喻用空想来安慰自己。",
+    "example": "光说不做就是画饼充饥。",
+    "origin": "出自《三国志》",
+    "category": "生活"
+  },
+  {
+    "idiom": "掩耳盗铃",
+    "pinyin": "yǎn ěr dào líng",
+    "meaning": "捂住耳朵去偷铃铛，比喻自己骗自己。",
+    "example": "考试作弊就是掩耳盗铃。",
+    "origin": "出自《吕氏春秋》",
+    "category": "生活"
+  },
+  {
+    "idiom": "自相矛盾",
+    "pinyin": "zì xiāng máo dùn",
+    "meaning": "自己的言行前后互相抵触。",
+    "example": "他说的话自相矛盾，让人不知道该信哪个。",
+    "origin": "出自《韩非子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "刻舟求剑",
+    "pinyin": "kè zhōu qiú jiàn",
+    "meaning": "比喻不会灵活变通。",
+    "example": "时代变了，不能刻舟求剑。",
+    "origin": "出自《吕氏春秋》",
+    "category": "生活"
+  },
+  {
+    "idiom": "买椟还珠",
+    "pinyin": "mǎi dú huán zhū",
+    "meaning": "比喻没有眼力，取舍不当。",
+    "example": "只看外表不看内容，就是买椟还珠。",
+    "origin": "出自《韩非子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "南辕北辙",
+    "pinyin": "nán yuán běi zhé",
+    "meaning": "比喻行动和目的相反。",
+    "example": "你这样做和你的目标南辕北辙。",
+    "origin": "出自《战国策》",
+    "category": "生活"
+  },
+  {
+    "idiom": "杞人忧天",
+    "pinyin": "qǐ rén yōu tiān",
+    "meaning": "比喻不必要的或缺乏根据的忧虑和担心。",
+    "example": "别杞人忧天了，事情没那么严重。",
+    "origin": "出自《列子·天瑞》",
+    "category": "生活"
+  },
+  {
+    "idiom": "揠苗助长",
+    "pinyin": "yà miáo zhù zhǎng",
+    "meaning": "比喻违反事物发展规律，急于求成。",
+    "example": "教育孩子不能揠苗助长。",
+    "origin": "出自《孟子·公孙丑上》",
+    "category": "生活"
+  },
+  {
+    "idiom": "守口如瓶",
+    "pinyin": "shǒu kǒu rú píng",
+    "meaning": "嘴巴像瓶口一样紧，形容说话谨慎。",
+    "example": "这件事要守口如瓶，不能告诉别人。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "滥竽充数",
+    "pinyin": "làn yú chōng shù",
+    "meaning": "比喻没有本领的冒充有本领，次货冒充好货。",
+    "example": "做事要认真，不能滥竽充数。",
+    "origin": "出自《韩非子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "班门弄斧",
+    "pinyin": "bān mén nòng fǔ",
+    "meaning": "在鲁班门前舞弄斧子，比喻在行家面前卖弄本领。",
+    "example": "在专家面前谈这个，不是班门弄斧吗？",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "东施效颦",
+    "pinyin": "dōng shī xiào pín",
+    "meaning": "比喻盲目模仿，效果适得其反。",
+    "example": "学别人要学精髓，不能东施效颦。",
+    "origin": "出自《庄子·天运》",
+    "category": "生活"
+  },
+  {
+    "idiom": "邯郸学步",
+    "pinyin": "hán dān xué bù",
+    "meaning": "比喻生搬硬套，机械模仿，最后反而失去自己的东西。",
+    "example": "学习要灵活变通，不能邯郸学步。",
+    "origin": "出自《庄子·秋水》",
+    "category": "生活"
+  },
+  {
+    "idiom": "雪中送炭",
+    "pinyin": "xuě zhōng sòng tàn",
+    "meaning": "在下雪天送炭给人，比喻在困难中给人帮助。",
+    "example": "他生病时同学们来看望他，真是雪中送炭。",
+    "origin": "出自宋代范成大作品",
+    "category": "品德"
+  },
+  {
+    "idiom": "锦上添花",
+    "pinyin": "jǐn shàng tiān huā",
+    "meaning": "在锦上再绣花，比喻好上加好。",
+    "example": "这个结尾真是锦上添花。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "火上浇油",
+    "pinyin": "huǒ shàng jiāo yóu",
+    "meaning": "比喻使事态更加严重。",
+    "example": "他已经很生气了，你别火上浇油。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "落井下石",
+    "pinyin": "luò jǐng xià shí",
+    "meaning": "看见人掉进井里还往下扔石头，比喻乘人之危加以陷害。",
+    "example": "做人不能落井下石。",
+    "origin": "出自唐代韩愈作品",
+    "category": "生活"
+  },
+  {
+    "idiom": "同舟共济",
+    "pinyin": "tóng zhōu gòng jì",
+    "meaning": "坐一条船过河，比喻团结互助共同渡过困难。",
+    "example": "遇到困难时大家要同舟共济。",
+    "origin": "出自《孙子兵法》",
+    "category": "品德"
+  },
+  {
+    "idiom": "齐心协力",
+    "pinyin": "qí xīn xié lì",
+    "meaning": "思想认识一致，共同努力。",
+    "example": "大家齐心协力完成了任务。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "众志成城",
+    "pinyin": "zhòng zhì chéng chéng",
+    "meaning": "大家同心合力就像坚不可摧的城堡。",
+    "example": "众志成城，我们一定能战胜困难。",
+    "origin": "出自《国语》",
+    "category": "品德"
+  },
+  {
+    "idiom": "团结一心",
+    "pinyin": "tuán jié yī xīn",
+    "meaning": "大家团结在一起，一条心。",
+    "example": "全班同学团结一心，赢得了比赛。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "风雨同舟",
+    "pinyin": "fēng yǔ tóng zhōu",
+    "meaning": "在大风大雨中同乘一条船，比喻共同经历困难。",
+    "example": "好朋友就是要风雨同舟。",
+    "origin": "出自《孙子兵法》",
+    "category": "品德"
+  },
+  {
+    "idiom": "肝胆相照",
+    "pinyin": "gān dǎn xiāng zhào",
+    "meaning": "以真心相见，比喻真诚相待。",
+    "example": "真正的朋友应该肝胆相照。",
+    "origin": "出自《史记》",
+    "category": "品德"
+  },
+  {
+    "idiom": "情同手足",
+    "pinyin": "qíng tóng shǒu zú",
+    "meaning": "交情深厚如同兄弟一样。",
+    "example": "他们两个情同手足，关系非常好。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "形影不离",
+    "pinyin": "xíng yǐng bù lí",
+    "meaning": "像形体和影子那样分不开，形容关系密切。",
+    "example": "他们是好朋友，总是形影不离。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "志同道合",
+    "pinyin": "zhì tóng dào hé",
+    "meaning": "志向相同，观点一致。",
+    "example": "他们志同道合，一起创办了公司。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "心心相印",
+    "pinyin": "xīn xīn xiāng yìn",
+    "meaning": "彼此的心意不用说出来就可以互相了解。",
+    "example": "好朋友之间心心相印。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "刮目相看",
+    "pinyin": "guā mù xiāng kàn",
+    "meaning": "用新的眼光来看待。",
+    "example": "他进步很大，让人刮目相看。",
+    "origin": "出自《三国志·吕蒙传》",
+    "category": "生活"
+  },
+  {
+    "idiom": "脱胎换骨",
+    "pinyin": "tuō tāi huàn gǔ",
+    "meaning": "比喻彻底改变。",
+    "example": "经过锻炼，他像脱胎换骨一样。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "改过自新",
+    "pinyin": "gǎi guò zì xīn",
+    "meaning": "改正错误，重新做人。",
+    "example": "他认识到错误后改过自新。",
+    "origin": "出自《史记》",
+    "category": "品德"
+  },
+  {
+    "idiom": "痛改前非",
+    "pinyin": "tòng gǎi qián fēi",
+    "meaning": "彻底改正以前的错误。",
+    "example": "他下定决心痛改前非。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "目瞪口呆",
+    "pinyin": "mù dèng kǒu dāi",
+    "meaning": "形容因吃惊而发愣的样子。",
+    "example": "看到魔术表演，观众们目瞪口呆。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "大吃一惊",
+    "pinyin": "dà chī yī jīng",
+    "meaning": "形容对发生的事感到十分意外。",
+    "example": "听到这个消息他大吃一惊。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "惊天动地",
+    "pinyin": "jīng tiān dòng dì",
+    "meaning": "形容声音很大或事业伟大。",
+    "example": "他做出了惊天动地的大事。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "叹为观止",
+    "pinyin": "tàn wéi guān zhǐ",
+    "meaning": "赞美看到的事物好到了极点。",
+    "example": "他的表演令人叹为观止。",
+    "origin": "出自《左传》",
+    "category": "情感"
+  },
+  {
+    "idiom": "无与伦比",
+    "pinyin": "wú yǔ lún bǐ",
+    "meaning": "没有能比得上的。",
+    "example": "这件艺术品的精美无与伦比。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "美不胜收",
+    "pinyin": "měi bù shèng shōu",
+    "meaning": "美好的东西太多，看不过来。",
+    "example": "花展上的花美不胜收。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "栩栩如生",
+    "pinyin": "xǔ xǔ rú shēng",
+    "meaning": "形容画作、雕塑等艺术品生动逼真。",
+    "example": "他画的小鸟栩栩如生。",
+    "origin": "出自《庄子·齐物论》",
+    "category": "生活"
+  },
+  {
+    "idiom": "惟妙惟肖",
+    "pinyin": "wéi miào wéi xiào",
+    "meaning": "形容描写或模仿得非常好，非常逼真。",
+    "example": "她模仿老师说话惟妙惟肖。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "活灵活现",
+    "pinyin": "huó líng huó xiàn",
+    "meaning": "形容描写或模仿得很生动。",
+    "example": "他把故事讲得活灵活现的。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "绘声绘色",
+    "pinyin": "huì shēng huì sè",
+    "meaning": "形容叙述、描写生动逼真。",
+    "example": "他绘声绘色地讲述了旅行的经历。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "别出心裁",
+    "pinyin": "bié chū xīn cái",
+    "meaning": "另有一种巧妙的心思，形容想出了与众不同的办法。",
+    "example": "她的手工作品总是别出心裁。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "别具一格",
+    "pinyin": "bié jù yī gé",
+    "meaning": "另有一种独特的风格。",
+    "example": "这幅画别具一格，非常有创意。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "独具匠心",
+    "pinyin": "dú jù jiàng xīn",
+    "meaning": "具有独到的灵巧的心思，指在技巧和艺术方面有独创性。",
+    "example": "这座建筑独具匠心。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "巧夺天工",
+    "pinyin": "qiǎo duó tiān gōng",
+    "meaning": "形容技艺精巧，胜过天然。",
+    "example": "这件玉雕巧夺天工。",
+    "origin": "出自元代赵孟頫作品",
+    "category": "生活"
+  },
+  {
+    "idiom": "天衣无缝",
+    "pinyin": "tiān yī wú fèng",
+    "meaning": "比喻事物完美自然，没有破绽。",
+    "example": "他的计划天衣无缝。",
+    "origin": "出自《灵怪录》",
+    "category": "生活"
+  },
+  {
+    "idiom": "无懈可击",
+    "pintml": "wú xiè kě jī",
+    "meaning": "没有漏洞可以被攻击，形容非常严密。",
+    "example": "他的论述无懈可击。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "完美无缺",
+    "pinyin": "wán měi wú quē",
+    "meaning": "完善美好，没有缺点。",
+    "example": "这篇文章写得完美无缺。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "妙笔生花",
+    "pinyin": "miào bǐ shēng huā",
+    "meaning": "比喻写文章写得好。",
+    "example": "他妙笔生花，写出了精彩的作文。",
+    "origin": "出自五代王仁裕《开元天宝遗事》",
+    "category": "学习"
+  },
+  {
+    "idiom": "出口成章",
+    "pinyin": "chū kǒu chéng zhāng",
+    "meaning": "说出话来就成文章，形容文思敏捷。",
+    "example": "他出口成章，口才非常好。",
+    "origin": "出自《诗经》",
+    "category": "学习"
+  },
+  {
+    "idiom": "才华横溢",
+    "pinyin": "cái huá héng yì",
+    "meaning": "才华充分显露出来。",
+    "example": "他才华横溢，多才多艺。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "满腹经纶",
+    "pinyin": "mǎn fù jīng lún",
+    "meaning": "形容人有才学有治理国家的才能。",
+    "example": "诸葛亮满腹经纶，是一代名相。",
+    "origin": "出自《周易》",
+    "category": "学习"
+  },
+  {
+    "idiom": "出类拔萃",
+    "pinyin": "chū lèi bá cuì",
+    "meaning": "超出同类之上，形容品德才能特别优秀。",
+    "example": "她的成绩出类拔萃。",
+    "origin": "出自《孟子》",
+    "category": "学习"
+  },
+  {
+    "idiom": "名列前茅",
+    "pinyin": "míng liè qián máo",
+    "meaning": "指名次排在前面。",
+    "example": "她每次考试都名列前茅。",
+    "origin": "出自《左传》",
+    "category": "学习"
+  },
+  {
+    "idiom": "青出于蓝",
+    "pinyin": "qīng chū yú lán",
+    "meaning": "比喻学生超过老师或后人超过前人。",
+    "example": "青出于蓝而胜于蓝。",
+    "origin": "出自《荀子·劝学》",
+    "category": "学习"
+  },
+  {
+    "idiom": "后来居上",
+    "pinyin": "hòu lái jū shàng",
+    "meaning": "后来的超过先前的。",
+    "example": "他虽然起步晚但后来居上。",
+    "origin": "出自《史记》",
+    "category": "学习"
+  },
+  {
+    "idiom": "厚积薄发",
+    "pinyin": "hòu jī bó fā",
+    "meaning": "长期积累，到时机成熟时一下子表现出来。",
+    "example": "他厚积薄发，一鸣惊人。",
+    "origin": "出自宋代苏轼作品",
+    "category": "学习"
+  },
+  {
+    "idiom": "一鸣惊人",
+    "pinyin": "yī míng jīng rén",
+    "meaning": "比喻平时没有突出表现，一下子做出惊人的成绩。",
+    "example": "他在比赛中一鸣惊人，获得了冠军。",
+    "origin": "出自《史记·滑稽列传》",
+    "category": "生活"
+  },
+  {
+    "idiom": "脚踏实地",
+    "pinyin": "jiǎo tà shí dì",
+    "meaning": "比喻做事认真踏实。",
+    "example": "做事要脚踏实地，不能好高骛远。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "实事求是",
+    "pinyin": "shí shì qiú shì",
+    "meaning": "从实际出发，探求事物的真相。",
+    "example": "做学问要实事求是。",
+    "origin": "出自《汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "言行一致",
+    "pinyin": "yán xíng yī zhì",
+    "meaning": "说的和做的一样。",
+    "example": "做人要言行一致。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "身体力行",
+    "pinyin": "shēn tǐ lì xíng",
+    "meaning": "亲身体验，努力实行。",
+    "example": "老师身体力行地示范给我们看。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "任劳任怨",
+    "pinyin": "rèn láo rèn yuàn",
+    "meaning": "做事不辞辛劳，不怕别人埋怨。",
+    "example": "妈妈任劳任怨地照顾家庭。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "兢兢业业",
+    "pinyin": "jīng jīng yè yè",
+    "meaning": "形容做事谨慎、勤恳。",
+    "example": "他兢兢业业地工作了三十年。",
+    "origin": "出自《诗经》",
+    "category": "品德"
+  },
+  {
+    "idiom": "鞠躬尽瘁",
+    "pinyin": "jū gōng jìn cuì",
+    "meaning": "指恭敬谨慎，竭尽心力。",
+    "example": "诸葛亮鞠躬尽瘁，死而后已。",
+    "origin": "出自《后出师表》",
+    "category": "品德"
+  },
+  {
+    "idiom": "一丝不苟",
+    "pinyin": "yī sī bù gǒu",
+    "meaning": "形容办事认真，连最细微的地方也不马虎。",
+    "example": "他做作业一丝不苟。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "精打细算",
+    "pinyin": "jīng dǎ xì suàn",
+    "meaning": "仔细计算，精密筹划。",
+    "example": "妈妈精打细算地管理家庭开支。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "未雨绸缪",
+    "pinyin": "wèi yǔ chóu móu",
+    "meaning": "趁着天没下雨先修缮门窗，比喻事先做好准备。",
+    "example": "凡事要未雨绸缪，提前做好准备。",
+    "origin": "出自《诗经》",
+    "category": "生活"
+  },
+  {
+    "idiom": "防患未然",
+    "pinyin": "fáng huàn wèi rán",
+    "meaning": "在事故或灾害发生之前就加以预防。",
+    "example": "消防安全要防患未然。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "居安思危",
+    "pinyin": "jū ān sī wēi",
+    "meaning": "处在安定的环境中要想到可能出现的危险。",
+    "example": "我们要居安思危，不能麻痹大意。",
+    "origin": "出自《左传》",
+    "category": "生活"
+  },
+  {
+    "idiom": "深思熟虑",
+    "pinyin": "shēn sī shú lǜ",
+    "meaning": "反复深入地考虑。",
+    "example": "做重要决定前要深思熟虑。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "集思广益",
+    "pinyin": "jí sī guǎng yì",
+    "meaning": "集中大家的智慧，广泛吸取有益的意见。",
+    "example": "遇到难题要集思广益。",
+    "origin": "出自《三国志》",
+    "category": "生活"
+  },
+  {
+    "idiom": "群策群力",
+    "pinyin": "qún cè qún lì",
+    "meaning": "大家出主意，一起出力。",
+    "example": "大家群策群力，活动办得很成功。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "各抒己见",
+    "pinyin": "gè shū jǐ jiàn",
+    "meaning": "各人充分发表自己的意见。",
+    "example": "讨论会上大家各抒己见。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "畅所欲言",
+    "pinyin": "chàng suǒ yù yán",
+    "meaning": "尽情地说出想说的话。",
+    "example": "在班会上同学们畅所欲言。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "随机应变",
+    "pinyin": "suí jī yìng biàn",
+    "meaning": "随着情况的变化灵活应对。",
+    "example": "遇到突发状况要随机应变。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "灵机一动",
+    "pinyin": "líng jī yī dòng",
+    "meaning": "急忙中转了一下念头。",
+    "example": "他灵机一动，想到了一个好办法。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "左右逢源",
+    "pinyin": "zuǒ yòu féng yuán",
+    "meaning": "比喻做事得心应手，顺利无阻。",
+    "example": "他交际能力强，在公司左右逢源。",
+    "origin": "出自《孟子》",
+    "category": "生活"
+  },
+  {
+    "idiom": "游刃有余",
+    "pinyin": "yóu rèn yǒu yú",
+    "meaning": "比喻做事熟练，轻而易举。",
+    "example": "他处理这些事情游刃有余。",
+    "origin": "出自《庄子·养生主》",
+    "category": "生活"
+  },
+  {
+    "idiom": "驾轻就熟",
+    "pinyin": "jià qīng jiù shú",
+    "meaning": "比喻做事从容不迫，轻车熟路。",
+    "example": "这种工作他已经驾轻就熟了。",
+    "origin": "出自唐代韩愈作品",
+    "category": "生活"
+  },
+  {
+    "idiom": "轻车熟路",
+    "pinyin": "qīng chē shú lù",
+    "meaning": "比喻对事情很熟悉，做起来容易。",
+    "example": "去奶奶家的路他轻车熟路。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "炉火纯青",
+    "pinyin": "lú huǒ chún qīng",
+    "meaning": "比喻学问或技术达到了纯熟完美的境界。",
+    "example": "他的书法已经到了炉火纯青的地步。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "登峰造极",
+    "pinyin": "dēng fēng zào jí",
+    "meaning": "比喻达到最高峰。",
+    "example": "他的棋艺已经登峰造极。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "炯炯有神",
+    "pinyin": "jiǒng jiǒng yǒu shén",
+    "meaning": "形容眼睛明亮有神。",
+    "example": "他的眼睛炯炯有神。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "容光焕发",
+    "pinyin": "róng guāng huàn fā",
+    "meaning": "形容脸上光彩四射，精神饱满。",
+    "example": "她今天容光焕发，特别漂亮。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "神采奕奕",
+    "pinyin": "shén cǎi yì yì",
+    "meaning": "形容精神饱满，容光焕发。",
+    "example": "爷爷虽然年纪大了，但还是神采奕奕。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "眉清目秀",
+    "pinyin": "méi qīng mù xiù",
+    "meaning": "形容容貌清秀端正。",
+    "example": "这个小女孩眉清目秀的。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "亭亭玉立",
+    "pinyin": "tíng tíng yù lì",
+    "meaning": "形容女子身材细长秀美或花木形体挺拔。",
+    "example": "荷花亭亭玉立在水面上。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "心灵手巧",
+    "pinyin": "xīn líng shǒu qiǎo",
+    "meaning": "心思灵敏，手艺巧妙。",
+    "example": "她心灵手巧，做的手工特别好看。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "能说会道",
+    "pinyin": "néng shuō huì dào",
+    "meaning": "形容很会说话。",
+    "example": "他能说会道，大家都喜欢听他讲故事。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "能工巧匠",
+    "pinyin": "néng gōng qiǎo jiàng",
+    "meaning": "手艺高超的工匠。",
+    "example": "这个花瓶是能工巧匠制作的。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "博学多才",
+    "pinyin": "bó xué duō cái",
+    "meaning": "学识广博，有多方面的才能。",
+    "example": "他博学多才，令人佩服。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "多才多艺",
+    "pinyin": "duō cái duō yì",
+    "meaning": "具有多方面的才能和技艺。",
+    "example": "她多才多艺，会唱歌、跳舞、画画。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "风驰电掣",
+    "pinyin": "fēng chí diàn chè",
+    "meaning": "形容速度极快。",
+    "example": "赛车风驰电掣般冲过终点。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "健步如飞",
+    "pinyin": "jiàn bù rú fēi",
+    "meaning": "形容步伐矫健，走得很快。",
+    "example": "爷爷虽然老了但还是健步如飞。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "雷厉风行",
+    "pinyin": "léi lì fēng xíng",
+    "meaning": "像雷那样猛烈，像风那样快，形容做事果断迅速。",
+    "example": "新校长雷厉风行，很快改善了校风。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "立竿见影",
+    "pinyin": "lì gān jiàn yǐng",
+    "meaning": "比喻立刻见到效果。",
+    "example": "吃了药后立竿见影，病好了很多。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "异口同声",
+    "pinyin": "yì kǒu tóng shēng",
+    "meaning": "不同的嘴说出相同的话，形容大家意见一致。",
+    "example": "同学们异口同声地说好。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "不约而同",
+    "pinyin": "bù yuē ér tóng",
+    "meaning": "没有事先约定而彼此的看法或行动一致。",
+    "example": "大家不约而同地鼓起掌来。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "聚精会神",
+    "pinyin": "jù jīng huì shén",
+    "meaning": "集中精神，注意力高度集中。",
+    "example": "同学们聚精会神地听老师讲课。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "全神贯注",
+    "pinyin": "quán shén guàn zhù",
+    "meaning": "全部精神集中在一点上，形容注意力高度集中。",
+    "example": "他全神贯注地做实验。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "目不转睛",
+    "pinyin": "mù bù zhuǎn jīng",
+    "meaning": "眼珠一动不动地盯着看，形容注意力集中。",
+    "example": "同学们目不转睛地看着大屏幕。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "坚定不移",
+    "pinyin": "jiān dìng bù yí",
+    "meaning": "立场、主张稳定坚定，毫不动摇。",
+    "example": "他坚定不移地朝着目标前进。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "矢志不渝",
+    "pinyin": "shǐ zhì bù yú",
+    "meaning": "立下志愿绝不改变。",
+    "example": "他矢志不渝地追求梦想。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "义不容辞",
+    "pinyin": "yì bù róng cí",
+    "meaning": "道义上不允许推辞。",
+    "example": "帮助有困难的同学，我们义不容辞。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "当仁不让",
+    "pinyin": "dāng rén bú ràng",
+    "meaning": "遇到应该做的事就要主动去做，不推让。",
+    "example": "面对这个任务，他当仁不让。",
+    "origin": "出自《论语·卫灵公》",
+    "category": "品德"
+  },
+  {
+    "idiom": "挺身而出",
+    "pinyin": "tǐng shēn ér chū",
+    "meaning": "勇敢地站出来。",
+    "example": "看到有人欺负小同学，他挺身而出。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "义无反顾",
+    "pinyin": "yì wú fǎn gù",
+    "meaning": "从道义上只有勇往直前，不能犹豫回顾。",
+    "example": "他义无反顾地投入到抢险工作中。",
+    "origin": "出自《史记》",
+    "category": "品德"
+  },
+  {
+    "idiom": "赴汤蹈火",
+    "pinyin": "fù tāng dǎo huǒ",
+    "meaning": "比喻不避艰险，奋勇向前。",
+    "example": "为了国家，他赴汤蹈火在所不惜。",
+    "origin": "出自《汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "临危不惧",
+    "pinyin": "lín wēi bú jù",
+    "meaning": "面对危险毫不害怕。",
+    "example": "消防员临危不惧，勇敢地冲进火场。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "视死如归",
+    "pinyin": "shì sǐ rú guī",
+    "meaning": "把死看得像回家一样平常，形容不怕死。",
+    "example": "革命先烈视死如归的精神令人敬佩。",
+    "origin": "出自《管子》",
+    "category": "品德"
+  },
+  {
+    "idiom": "大义凛然",
+    "pinyin": "dà yì lǐn rán",
+    "meaning": "由于胸怀正义而神态庄严，令人敬畏。",
+    "example": "面对敌人他大义凛然。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "浩然正气",
+    "pinyin": "hào rán zhèng qì",
+    "meaning": "正大刚直的精神气概。",
+    "example": "文天祥的浩然正气令后人敬仰。",
+    "origin": "出自《孟子》",
+    "category": "品德"
+  },
+  {
+    "idiom": "光明正大",
+    "pinyin": "guāng míng zhèng dà",
+    "meaning": "心怀坦白，言行正派。",
+    "example": "做事要光明正大，不要偷偷摸摸。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "堂堂正正",
+    "pinyin": "táng táng zhèng zhèng",
+    "meaning": "形容光明正大。",
+    "example": "做人要堂堂正正。",
+    "origin": "出自《孙子兵法》",
+    "category": "品德"
+  },
+  {
+    "idiom": "大智若愚",
+    "pinyin": "dà zhì ruò yú",
+    "meaning": "有大智慧的人表面上看起来好像很愚笨。",
+    "example": "他平时不爱表现，其实大智若愚。",
+    "origin": "出自宋代苏轼作品",
+    "category": "品德"
+  },
+  {
+    "idiom": "卧薪尝胆",
+    "pinyin": "wò xīn cháng dǎn",
+    "meaning": "形容人刻苦自励，发愤图强。",
+    "example": "越王勾践卧薪尝胆，最终复国成功。",
+    "origin": "出自《史记·越王勾践世家》",
+    "category": "战争"
+  },
+  {
+    "idiom": "闻鸡起舞",
+    "pinyin": "wén jī qǐ wǔ",
+    "meaning": "听到鸡叫就起来练剑，比喻有志之人及时奋发。",
+    "example": "我们要学习闻鸡起舞的精神，早起锻炼。",
+    "origin": "出自《晋书·祖逖传》",
+    "category": "学习"
+  },
+  {
+    "idiom": "程门立雪",
+    "pinyin": "chéng mén lì xuě",
+    "meaning": "在老师门前站着等候，表示尊师重教。",
+    "example": "程门立雪的故事告诉我们要尊敬老师。",
+    "origin": "出自《宋史》",
+    "category": "学习"
+  },
+  {
+    "idiom": "孟母三迁",
+    "pinyin": "mèng mǔ sān qiān",
+    "meaning": "比喻选择好的环境对教育的重要性。",
+    "example": "孟母三迁的故事说明环境对成长很重要。",
+    "origin": "出自《列女传》",
+    "category": "学习"
+  },
+  {
+    "idiom": "入木三分",
+    "pinyin": "rù mù sān fēn",
+    "meaning": "形容书法笔力遒劲，也比喻见解深刻。",
+    "example": "他的评论入木三分。",
+    "origin": "出自唐代张怀瓘《书断》",
+    "category": "学习"
+  },
+  {
+    "idiom": "力透纸背",
+    "pinyin": "lì tòu zhǐ bèi",
+    "meaning": "形容书法遒劲有力或文章深刻。",
+    "example": "他写的字力透纸背。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "妙趣横生",
+    "pinyin": "miào qù héng shēng",
+    "meaning": "美妙的情趣充分表现出来。",
+    "example": "他讲的故事妙趣横生。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "引人入胜",
+    "pinyin": "yǐn rén rù shèng",
+    "meaning": "引人进入美妙的境地，形容非常吸引人。",
+    "example": "这本小说的情节引人入胜。",
+    "origin": "出自南朝宋代刘义庆《世说新语》",
+    "category": "生活"
+  },
+  {
+    "idiom": "耐人寻味",
+    "pinyin": "nài rén xún wèi",
+    "meaning": "形容意味深长，值得仔细体会。",
+    "example": "这首诗耐人寻味。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "回味无穷",
+    "pinyin": "huí wèi wú qióng",
+    "meaning": "回想起来觉得趣味无穷。",
+    "example": "这本书读完后回味无穷。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "意味深长",
+    "pinyin": "yì wèi shēn cháng",
+    "meaning": "含蓄深远，耐人寻味。",
+    "example": "老师的话意味深长。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "言简意赅",
+    "pinyin": "yán jiǎn yì gāi",
+    "meaning": "言语简练而意思完备。",
+    "example": "写总结要言简意赅。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "一针见血",
+    "pinyin": "yī zhēn jiàn xiě",
+    "meaning": "比喻说话直截了当，切中要害。",
+    "example": "他的批评一针见血。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "恰如其分",
+    "pinyin": "qià rú qí fèn",
+    "meaning": "说话办事恰当适度。",
+    "example": "他的评价恰如其分。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "名副其实",
+    "pinyin": "míng fù qí shí",
+    "meaning": "名称或名声与实际相符合。",
+    "example": "这家餐厅名副其实，果然好吃。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "名不虚传",
+    "pinyin": "míng bù xū chuán",
+    "meaning": "传出的名声不是虚假的，确实很好。",
+    "example": "桂林山水名不虚传，真的很美。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "首屈一指",
+    "pinyin": "shǒu qū yī zhǐ",
+    "meaning": "弯下手指头计数时首先弯下大拇指，表示第一。",
+    "example": "他的数学成绩在全班首屈一指。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "遥遥领先",
+    "pinyin": "yáo yáo lǐng xiān",
+    "meaning": "远远地走在最前面。",
+    "example": "他在比赛中遥遥领先。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "势不可挡",
+    "pinyin": "shì bù kě dǎng",
+    "meaning": "来势迅猛，不可阻挡。",
+    "example": "洪水势不可挡地冲了下来。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "排山倒海",
+    "pinyin": "pái shān dǎo hǎi",
+    "meaning": "比喻力量强盛，声势浩大。",
+    "example": "观众的欢呼声排山倒海。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "波澜壮阔",
+    "pinyin": "bō lán zhuàng kuò",
+    "meaning": "形容声势雄壮浩大。",
+    "example": "大海波澜壮阔，令人震撼。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "气势磅礴",
+    "pinyin": "qì shì páng bó",
+    "meaning": "形容气势雄伟壮大。",
+    "example": "长城气势磅礴，令人叹服。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "一望无际",
+    "pinyin": "yī wàng wú jì",
+    "meaning": "一眼望不到边，形容非常辽阔。",
+    "example": "一望无际的草原上牛羊成群。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "浩浩荡荡",
+    "pinyin": "hào hào dàng dàng",
+    "meaning": "形容水势广大或声势壮大。",
+    "example": "长江浩浩荡荡地流向大海。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "翻山越岭",
+    "pinyin": "fān shān yuè lǐng",
+    "meaning": "翻越一座座山岭。",
+    "example": "红军翻山越岭，走完了长征路。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "跋山涉水",
+    "pinyin": "bá shān shè shuǐ",
+    "meaning": "翻越山岭，蹚过水流，形容旅途艰辛。",
+    "example": "他跋山涉水来到了这个小山村。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "风平浪静",
+    "pinyin": "fēng píng làng jìng",
+    "meaning": "没有风浪，比喻平安无事。",
+    "example": "大海风平浪静，适合出海。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "波光粼粼",
+    "pinyin": "bō guāng lín lín",
+    "meaning": "形容水面明净，波光闪动。",
+    "example": "阳光下湖面波光粼粼。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "瓜熟蒂落",
+    "pinyin": "guā shú dì luò",
+    "meaning": "瓜熟了自然会落下来，比喻条件成熟事情自然成功。",
+    "example": "不用着急，瓜熟蒂落。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "根深蒂固",
+    "pinyin": "gēn shēn dì gù",
+    "meaning": "比喻基础深厚，不容易动摇。",
+    "example": "这种观念已经根深蒂固了。",
+    "origin": "出自《老子》",
+    "category": "自然"
+  },
+  {
+    "idiom": "枝繁叶茂",
+    "pinyin": "zhī fán yè mào",
+    "meaning": "枝叶繁密茂盛，形容树木长得很好。",
+    "example": "校园里的大榕树枝繁叶茂。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "落叶归根",
+    "pinyin": "luò yè guī gēn",
+    "meaning": "比喻漂泊在外的人终究要回到故乡。",
+    "example": "爷爷退休后落叶归根，回到了老家。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "望梅止渴",
+    "pinyin": "wàng méi zhǐ kě",
+    "meaning": "比喻用空想来安慰自己。",
+    "example": "光想不做就是望梅止渴。",
+    "origin": "出自《世说新语》",
+    "category": "生活"
+  },
+  {
+    "idiom": "朝三暮四",
+    "pinyin": "zhāo sān mù sì",
+    "meaning": "比喻反复无常或用诡计欺骗人。",
+    "example": "做事不能朝三暮四，要坚定。",
+    "origin": "出自《庄子·齐物论》",
+    "category": "生活"
+  },
+  {
+    "idiom": "一叶知秋",
+    "pinyin": "yī yè zhī qiū",
+    "meaning": "从一片树叶的凋落知道秋天的到来，比喻通过个别细微的迹象可以看出事物发展的趋势。",
+    "example": "经验丰富的人能一叶知秋。",
+    "origin": "出自《淮南子》",
+    "category": "自然"
+  },
+  {
+    "idiom": "春华秋实",
+    "pinyin": "chūn huá qiū shí",
+    "meaning": "春天开花，秋天结果，比喻学习有成果。",
+    "example": "经过一学期的努力，终于春华秋实。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "落花流水",
+    "pinyin": "luò huā liú shuǐ",
+    "meaning": "形容残败零落，也比喻被打得大败。",
+    "example": "敌人被打得落花流水。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "水落石出",
+    "pinyin": "shuǐ luò shí chū",
+    "meaning": "水落下去石头就显露出来，比喻事情真相大白。",
+    "example": "真相终会水落石出。",
+    "origin": "出自宋代苏轼《后赤壁赋》",
+    "category": "自然"
+  },
+  {
+    "idiom": "刮目相待",
+    "pinyin": "guā mù xiāng dài",
+    "meaning": "用新的眼光来看待。",
+    "example": "他的进步让人刮目相待。",
+    "origin": "出自《三国志》",
+    "category": "生活"
+  },
+  {
+    "idiom": "卸磨杀驴",
+    "pinyin": "xiè mò shā lǘ",
+    "meaning": "磨完东西就把驴杀了，比喻用完就抛弃。",
+    "example": "不能卸磨杀驴，要懂得感恩。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "鱼目混珠",
+    "pinyin": "yú mù hùn zhū",
+    "meaning": "拿鱼眼睛冒充珍珠，比喻以假乱真。",
+    "example": "市场上有人鱼目混珠，卖假货。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "顺藤摸瓜",
+    "pinyin": "shùn téng mō guā",
+    "meaning": "比喻沿着线索追究。",
+    "example": "警察顺藤摸瓜找到了罪犯。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "有的放矢",
+    "pinyin": "yǒu dì fàng shǐ",
+    "meaning": "对准靶子射箭，比喻说话做事有针对性。",
+    "example": "学习要有的放矢，找到重点。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "对症下药",
+    "pinyin": "duì zhèng xià yào",
+    "meaning": "针对病症开药方，比喻针对问题采取措施。",
+    "example": "要对症下药，才能解决问题。",
+    "origin": "出自《三国志》",
+    "category": "生活"
+  },
+  {
+    "idiom": "量体裁衣",
+    "pinyin": "liàng tǐ cái yī",
+    "meaning": "按照身材裁剪衣服，比喻根据实际情况办事。",
+    "example": "教学要量体裁衣，因材施教。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "因材施教",
+    "pinyin": "yīn cái shī jiào",
+    "meaning": "根据学生的不同情况进行不同的教育。",
+    "example": "好老师懂得因材施教。",
+    "origin": "出自《论语》",
+    "category": "学习"
+  },
+  {
+    "idiom": "相得益彰",
+    "pinyin": "xiāng dé yì zhāng",
+    "meaning": "互相配合，更加显出各自的长处。",
+    "example": "图文配合相得益彰。",
+    "origin": "出自《史记》",
+    "category": "生活"
+  },
+  {
+    "idiom": "珠联璧合",
+    "pinyin": "zhū lián bì hé",
+    "meaning": "珍珠联串，美玉结合，比喻优美的事物凑在一起。",
+    "example": "他们的合作珠联璧合。",
+    "origin": "出自《汉书》",
+    "category": "生活"
+  },
+  {
+    "idiom": "天长地久",
+    "pinyin": "tiān cháng dì jiǔ",
+    "meaning": "跟天和地存在的时间一样长，形容时间悠久。",
+    "example": "祝爷爷奶奶的幸福天长地久。",
+    "origin": "出自《老子》",
+    "category": "情感"
+  },
+  {
+    "idiom": "海枯石烂",
+    "pinyin": "hǎi kū shí làn",
+    "meaning": "海水干涸石头腐烂，形容经历极长时间。",
+    "example": "他们的友谊海枯石烂也不会变。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "坚如磐石",
+    "pinyin": "jiān rú pán shí",
+    "meaning": "像大石头一样坚固，比喻不可动摇。",
+    "example": "他的决心坚如磐石。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "固若金汤",
+    "pinyin": "gù ruò jīn tāng",
+    "meaning": "形容防守坚固。",
+    "example": "这座城堡固若金汤。",
+    "origin": "出自《汉书》",
+    "category": "战争"
+  },
+  {
+    "idiom": "铜墙铁壁",
+    "pinyin": "tóng qiáng tiě bì",
+    "meaning": "比喻防御非常坚固。",
+    "example": "战士们筑起了铜墙铁壁。",
+    "origin": "",
+    "category": "战争"
+  },
+  {
+    "idiom": "不可思议",
+    "pinyin": "bù kě sī yì",
+    "meaning": "原有神秘奥妙的意思，现多指不可想象，难以理解。",
+    "example": "这个魔术太不可思议了。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "匪夷所思",
+    "pinyin": "fěi yí suǒ sī",
+    "meaning": "指言谈行动超出常情，不是一般人所能想象的。",
+    "example": "他做出了匪夷所思的举动。",
+    "origin": "出自《周易》",
+    "category": "情感"
+  },
+  {
+    "idiom": "出人意料",
+    "pinyin": "chū rén yì liào",
+    "meaning": "超出人们的意料。",
+    "example": "比赛结果出人意料。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "突如其来",
+    "pinyin": "tū rú qí lái",
+    "meaning": "突然发生。",
+    "example": "突如其来的大雨把大家都淋湿了。",
+    "origin": "出自《周易》",
+    "category": "生活"
+  },
+  {
+    "idiom": "猝不及防",
+    "pinyin": "cù bù jí fáng",
+    "meaning": "事情来得突然，来不及防备。",
+    "example": "他猝不及防地被球砸中了。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "措手不及",
+    "pinyin": "cuò shǒu bù jí",
+    "meaning": "来不及动手应付。",
+    "example": "突然的变化让他措手不及。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "从容不迫",
+    "pinyin": "cóng róng bú pò",
+    "meaning": "不慌不忙，沉着镇定。",
+    "example": "他从容不迫地回答了所有问题。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "泰然自若",
+    "pinyin": "tài rán zì ruò",
+    "meaning": "形容镇定自如，毫不在意。",
+    "example": "面对困难他泰然自若。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "处变不惊",
+    "pinyin": "chǔ biàn bù jīng",
+    "meaning": "面对变乱不惊慌。",
+    "example": "他处变不惊，冷静地处理了事故。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "镇定自若",
+    "pinyin": "zhèn dìng zì ruò",
+    "meaning": "遇到紧急情况不慌不乱。",
+    "example": "她镇定自若地完成了演讲。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "鸡毛蒜皮",
+    "pinyin": "jī máo suàn pí",
+    "meaning": "比喻无关紧要的小事。",
+    "example": "不要为鸡毛蒜皮的小事吵架。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "无微不至",
+    "pinyin": "wú wēi bú zhì",
+    "meaning": "没有一处细微的地方不照顾到，形容关怀备至。",
+    "example": "妈妈对我的照顾无微不至。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "嘘寒问暖",
+    "pinyin": "xū hán wèn nuǎn",
+    "meaning": "问冷问热，形容对人非常关心。",
+    "example": "奶奶总是嘘寒问暖地关心我。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "望子成龙",
+    "pinyin": "wàng zǐ chéng lóng",
+    "meaning": "希望自己的孩子能成才。",
+    "example": "父母都望子成龙。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "望女成凤",
+    "pinyin": "wàng nǚ chéng fèng",
+    "meaning": "希望自己的女儿能成才。",
+    "example": "妈妈望女成凤，给我报了很多兴趣班。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "骄阳似火",
+    "pinyin": "jiāo yáng sì huǒ",
+    "meaning": "强烈的阳光好像烈火一样。",
+    "example": "骄阳似火的夏天，我们在树荫下乘凉。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "秋风瑟瑟",
+    "pinyin": "qiū fēng sè sè",
+    "meaning": "秋风吹动树木发出的声音。",
+    "example": "秋风瑟瑟，树叶纷纷飘落。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "白雪皑皑",
+    "pinyin": "bái xuě ái ái",
+    "meaning": "洁白的积雪银光闪闪。",
+    "example": "冬天的山上白雪皑皑。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "春回大地",
+    "pinyin": "chūn huí dà dì",
+    "meaning": "春天又来到了大地。",
+    "example": "春回大地，万物复苏。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "万物复苏",
+    "pinyin": "wàn wù fù sū",
+    "meaning": "一切生物重新恢复生机。",
+    "example": "春天来了，万物复苏。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "含辛茹苦",
+    "pinyin": "hán xīn rú kǔ",
+    "meaning": "忍受辛苦，形容生活艰苦。",
+    "example": "父母含辛茹苦把我们养大。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "风餐露宿",
+    "pinyin": "fēng cān lù sù",
+    "meaning": "在风中吃饭露天睡觉，形容旅途艰辛。",
+    "example": "探险家风餐露宿地穿越沙漠。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "患难与共",
+    "pinyin": "huàn nàn yǔ gòng",
+    "meaning": "在困难中共同承担。",
+    "example": "真正的朋友患难与共。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "同甘共苦",
+    "pinyin": "tóng gān gòng kǔ",
+    "meaning": "共同享受幸福，共同担当艰苦。",
+    "example": "好朋友要同甘共苦。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "推心置腹",
+    "pinyin": "tuī xīn zhì fù",
+    "meaning": "把赤诚的心交给别人，比喻真心待人。",
+    "example": "他们推心置腹地谈了一次。",
+    "origin": "出自《后汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "开诚布公",
+    "pinyin": "kāi chéng bù gōng",
+    "meaning": "指以诚心待人，坦白无私。",
+    "example": "我们开诚布公地讨论这个问题。",
+    "origin": "出自《三国志》",
+    "category": "品德"
+  },
+  {
+    "idiom": "赤胆忠心",
+    "pinyin": "chì dǎn zhōng xīn",
+    "meaning": "形容十分忠诚。",
+    "example": "岳飞赤胆忠心，精忠报国。",
+    "origin": "",
+    "category": "品德"
+  },
+  {
+    "idiom": "精忠报国",
+    "pinyin": "jīng zhōng bào guó",
+    "meaning": "为国家竭尽忠诚，牺牲一切。",
+    "example": "岳飞精忠报国的故事感动了无数人。",
+    "origin": "出自《宋史·岳飞传》",
+    "category": "品德"
+  },
+  {
+    "idiom": "满载而归",
+    "pinyin": "mǎn zài ér guī",
+    "meaning": "装满了东西回来，形容收获很多。",
+    "example": "秋天果园里满载而归。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "硕果累累",
+    "pinyin": "shuò guǒ léi léi",
+    "meaning": "大的果实很多，比喻收获丰富。",
+    "example": "秋天的果园硕果累累。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "丰收在望",
+    "pinyin": "fēng shōu zài wàng",
+    "meaning": "丰收的景象看得见，形容庄稼长势好。",
+    "example": "稻田一片金黄，丰收在望。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "五谷丰登",
+    "pinyin": "wǔ gǔ fēng dēng",
+    "meaning": "各种农作物丰收。",
+    "example": "今年风调雨顺，五谷丰登。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "风调雨顺",
+    "pinyin": "fēng tiáo yǔ shùn",
+    "meaning": "风雨及时适宜，形容年景好。",
+    "example": "今年风调雨顺，庄稼长势很好。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "国泰民安",
+    "pinyin": "guó tài mín ān",
+    "meaning": "国家太平，人民安乐。",
+    "example": "我们生活在国泰民安的时代。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "繁荣昌盛",
+    "pinyin": "fán róng chāng shèng",
+    "meaning": "形容国家或事业兴旺发达。",
+    "example": "祝愿祖国繁荣昌盛。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "蒸蒸日上",
+    "pinyin": "zhēng zhēng rì shàng",
+    "meaning": "形容事业天天向上发展。",
+    "example": "我们的祖国蒸蒸日上。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "一帆风顺",
+    "pinyin": "yī fān fēng shùn",
+    "meaning": "船挂满帆顺风行驶，比喻非常顺利。",
+    "example": "祝你一帆风顺！",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "万事如意",
+    "pinyin": "wàn shì rú yì",
+    "meaning": "一切事情都如自己的心意。",
+    "example": "祝大家新年万事如意！",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "心想事成",
+    "pinyin": "xīn xiǎng shì chéng",
+    "meaning": "心里想的事都能成功。",
+    "example": "祝你心想事成！",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "前程似锦",
+    "pinyin": "qián chéng sì jǐn",
+    "meaning": "前途像锦绣那样美好。",
+    "example": "祝毕业生前程似锦！",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "步步高升",
+    "pinyin": "bù bù gāo shēng",
+    "meaning": "比喻职位不断上升。",
+    "example": "祝你工作步步高升！",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "平安无事",
+    "pinyin": "píng ān wú shì",
+    "meaning": "平平安安，没有发生什么事故。",
+    "example": "一路平安无事地到达了目的地。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "安然无恙",
+    "pinyin": "ān rán wú yàng",
+    "meaning": "平安无事，没有受到什么损害。",
+    "example": "地震过后，大家安然无恙。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "完璧归赵",
+    "pinyin": "wán bì guī zhào",
+    "meaning": "比喻把物品完好无损地归还原主。",
+    "example": "蔺相如完璧归赵的故事很精彩。",
+    "origin": "出自《史记·廉颇蔺相如列传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "负荆请罪",
+    "pinyin": "fù jīng qǐng zuì",
+    "meaning": "背着荆条请罪，表示诚心认错。",
+    "example": "廉颇负荆请罪，两人成为好朋友。",
+    "origin": "出自《史记·廉颇蔺相如列传》",
+    "category": "品德"
+  },
+  {
+    "idiom": "毛遂自荐",
+    "pinyin": "máo suì zì jiàn",
+    "meaning": "比喻自告奋勇推荐自己。",
+    "example": "他毛遂自荐当了班长。",
+    "origin": "出自《史记》",
+    "category": "品德"
+  },
+  {
+    "idiom": "初出茅庐",
+    "pinyin": "chū chū máo lú",
+    "meaning": "比喻刚进入社会或开始工作，缺乏经验。",
+    "example": "他初出茅庐，还需要多学习。",
+    "origin": "出自《三国演义》",
+    "category": "生活"
+  },
+  {
+    "idiom": "过五关斩六将",
+    "pinyin": "guò wǔ guān zhǎn liù jiàng",
+    "meaning": "比喻克服重重困难。",
+    "example": "他过五关斩六将终于通过了面试。",
+    "origin": "出自《三国演义》",
+    "category": "战争"
+  },
+  {
+    "idiom": "三令五申",
+    "pinyin": "sān lìng wǔ shēn",
+    "meaning": "再三命令和告诫。",
+    "example": "老师三令五申不许在走廊里奔跑。",
+    "origin": "出自《史记·孙子吴起列传》",
+    "category": "战争"
+  },
+  {
+    "idiom": "草船借箭",
+    "pinyin": "cǎo chuán jiè jiàn",
+    "meaning": "利用对方的力量为自己所用。",
+    "example": "诸葛亮草船借箭的故事很有智慧。",
+    "origin": "出自《三国演义》",
+    "category": "战争"
+  },
+  {
+    "idiom": "望洋兴叹",
+    "pinyin": "wàng yáng xīng tàn",
+    "meaning": "比喻做事力量不够或没有条件而感到无奈。",
+    "example": "面对难题，他只能望洋兴叹。",
+    "origin": "出自《庄子·秋水》",
+    "category": "情感"
+  },
+  {
+    "idiom": "心悦诚服",
+    "pinyin": "xīn yuè chéng fú",
+    "meaning": "由衷地高兴并且心服口服。",
+    "example": "他的表现让对手心悦诚服。",
+    "origin": "出自《孟子》",
+    "category": "情感"
+  },
+  {
+    "idiom": "刻不容缓",
+    "pinyin": "kè bù róng huǎn",
+    "meaning": "片刻也不允许拖延，形容形势紧迫。",
+    "example": "救人刻不容缓。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "迫在眉睫",
+    "pinyin": "pò zài méi jié",
+    "meaning": "比喻事情非常紧迫。",
+    "example": "考试迫在眉睫，要抓紧复习。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "分秒必争",
+    "pinyin": "fēn miǎo bì zhēng",
+    "meaning": "一分一秒也要争取，形容非常珍惜时间。",
+    "example": "考试时要分秒必争。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "争分夺秒",
+    "pinyin": "zhēng fēn duó miǎo",
+    "meaning": "不放过一分一秒，形容充分利用时间。",
+    "example": "医生争分夺秒地抢救病人。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "光阴似箭",
+    "pinyin": "guāng yīn sì jiàn",
+    "meaning": "时间像箭一样飞快地过去。",
+    "example": "光阴似箭，转眼就要毕业了。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "日月如梭",
+    "pinyin": "rì yuè rú suō",
+    "meaning": "太阳和月亮像穿梭一样飞快，比喻时间过得很快。",
+    "example": "日月如梭，要珍惜时间。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "白驹过隙",
+    "pinyin": "bái jū guò xì",
+    "meaning": "白马在缝隙前飞快地越过，比喻时间过得很快。",
+    "example": "时光如白驹过隙，一晃就过了一年。",
+    "origin": "出自《庄子·知北游》",
+    "category": "学习"
+  },
+  {
+    "idiom": "稍纵即逝",
+    "pinyin": "shāo zòng jí shì",
+    "meaning": "稍微一放松就消失了，形容机会难得。",
+    "example": "机会稍纵即逝，要好好把握。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "转瞬即逝",
+    "pinyin": "zhuǎn shùn jí shì",
+    "meaning": "一转眼就消失了，形容时间过得极快。",
+    "example": "美好的时光转瞬即逝。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "朝气蓬勃",
+    "pinyin": "zhāo qì péng bó",
+    "meaning": "形容充满了生命和活力。",
+    "example": "年轻人要朝气蓬勃。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "意气风发",
+    "pinyin": "yì qì fēng fā",
+    "meaning": "形容精神振奋，气概豪迈。",
+    "example": "毕业典礼上同学们个个意气风发。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "斗志昂扬",
+    "pinyin": "dòu zhì áng yáng",
+    "meaning": "战斗的意志旺盛。",
+    "example": "运动员们斗志昂扬地走上赛场。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "奋不顾身",
+    "pinyin": "fèn bù gù shēn",
+    "meaning": "奋勇向前不顾生命。",
+    "example": "他奋不顾身地跳进河里救人。",
+    "origin": "出自《汉书》",
+    "category": "品德"
+  },
+  {
+    "idiom": "两全其美",
+    "pinyin": "liǎng quán qí měi",
+    "meaning": "做一件事顾全到双方，使两方面都得到好处。",
+    "example": "这个方案两全其美，大家都满意。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "面面俱到",
+    "pinyin": "miàn miàn jù dào",
+    "meaning": "各方面都照顾到。",
+    "example": "她考虑问题面面俱到。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "包罗万象",
+    "pinyin": "bāo luó wàn xiàng",
+    "meaning": "内容丰富，应有尽有。",
+    "example": "这本百科全书包罗万象。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "无所不能",
+    "pinyin": "wú suǒ bù néng",
+    "meaning": "什么都能做，形容本领高强。",
+    "example": "在孩子眼里，爸爸无所不能。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "口若悬河",
+    "pinyin": "kǒu ruò xuán hé",
+    "meaning": "说起话来滔滔不绝像河水下泄。",
+    "example": "他口若悬河地演讲了一个小时。",
+    "origin": "出自《世说新语》",
+    "category": "生活"
+  },
+  {
+    "idiom": "妙语连珠",
+    "pinyin": "miào yǔ lián zhū",
+    "meaning": "巧妙风趣的话一个接一个。",
+    "example": "他的演讲妙语连珠，引得大家哈哈大笑。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "侃侃而谈",
+    "pinyin": "kǎn kǎn ér tán",
+    "meaning": "形容说话理直气壮，从容不迫。",
+    "example": "他侃侃而谈，讲得头头是道。",
+    "origin": "出自《论语》",
+    "category": "生活"
+  },
+  {
+    "idiom": "头头是道",
+    "pinyin": "tóu tóu shì dào",
+    "meaning": "说话做事很有条理。",
+    "example": "他分析问题头头是道。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "有条不紊",
+    "pinyin": "yǒu tiáo bù wěn",
+    "meaning": "形容有条理，一点不乱。",
+    "example": "她做事有条不紊。",
+    "origin": "出自《尚书》",
+    "category": "生活"
+  },
+  {
+    "idiom": "成竹在胸",
+    "pinyin": "chéng zhú zài xiōng",
+    "meaning": "比喻处理事情心中早有主意。",
+    "example": "他成竹在胸地回答了问题。",
+    "origin": "出自宋代苏轼作品",
+    "category": "学习"
+  },
+  {
+    "idiom": "心照不宣",
+    "pinyin": "xīn zhào bù xuān",
+    "meaning": "彼此心里明白而不公开说出来。",
+    "example": "他们心照不宣地交换了一个眼神。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "潜移默化",
+    "pinyin": "qián yí mò huà",
+    "meaning": "指人的思想或品格不知不觉受到感染影响而发生变化。",
+    "example": "父母的言行会潜移默化地影响孩子。",
+    "origin": "",
+    "category": "学习"
+  },
+  {
+    "idiom": "耳濡目染",
+    "pinyin": "ěr rú mù rǎn",
+    "meaning": "形容经常听到看到，无形之中受到影响。",
+    "example": "在音乐家庭长大，他耳濡目染也爱上了音乐。",
+    "origin": "出自唐代韩愈作品",
+    "category": "学习"
+  },
+  {
+    "idiom": "触类旁通",
+    "pinyin": "chù lèi páng tōng",
+    "meaning": "掌握了某一事物的知识或规律就能推知同类事物。",
+    "example": "学会了一种方法就能触类旁通。",
+    "origin": "出自《周易》",
+    "category": "学习"
+  },
+  {
+    "idiom": "豁然开朗",
+    "pinyin": "huò rán kāi lǎng",
+    "meaning": "形容由狭窄幽暗突然变得开阔明亮，也比喻突然领悟。",
+    "example": "听了老师的讲解，我豁然开朗。",
+    "origin": "出自晋代陶渊明《桃花源记》",
+    "category": "情感"
+  },
+  {
+    "idiom": "恍然大悟",
+    "pinyin": "huǎng rán dà wù",
+    "meaning": "形容一下子明白过来。",
+    "example": "他听了解释后恍然大悟。",
+    "origin": "",
+    "category": "情感"
+  },
+  {
+    "idiom": "茅塞顿开",
+    "pinyin": "máo sè dùn kāi",
+    "meaning": "形容忽然理解领会。",
+    "example": "经过老师点拨，他茅塞顿开。",
+    "origin": "出自《孟子》",
+    "category": "情感"
+  },
+  {
+    "idiom": "拨云见日",
+    "pinyin": "bō yún jiàn rì",
+    "meaning": "拨开乌云见到太阳，比喻冲破黑暗见到光明。",
+    "example": "真相大白后有一种拨云见日的感觉。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "雨后春笋",
+    "pinyin": "yǔ hòu chūn sǔn",
+    "meaning": "春天下雨后竹笋长得很快，比喻新事物大量涌现。",
+    "example": "新学校像雨后春笋般出现。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "鹤发童颜",
+    "pinyin": "hè fà tóng yán",
+    "meaning": "白发如鹤羽，面容像孩子，形容老人气色好。",
+    "example": "这位老人鹤发童颜，精神很好。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "龙马精神",
+    "pinyin": "lóng mǎ jīng shén",
+    "meaning": "比喻精神旺盛。",
+    "example": "祝爷爷龙马精神！",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "虎虎生威",
+    "pinyin": "hǔ hǔ shēng wēi",
+    "meaning": "形容勇猛威武。",
+    "example": "他练起武术来虎虎生威。",
+    "origin": "",
+    "category": "动物"
+  },
+  {
+    "idiom": "笨手笨脚",
+    "pinyin": "bèn shǒu bèn jiǎo",
+    "meaning": "形容动作不灵活。",
+    "example": "他笨手笨脚地包饺子，弄得到处都是面粉。",
+    "origin": "",
+    "category": "生活"
+  },
+  {
+    "idiom": "七手八脚",
+    "pinyin": "qī shǒu bā jiǎo",
+    "meaning": "形容人多手杂，动作纷乱。",
+    "example": "大家七手八脚地收拾教室。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "三五成群",
+    "pinyin": "sān wǔ chéng qún",
+    "meaning": "几个人几个人聚在一起。",
+    "example": "同学们三五成群地讨论问题。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "五花八门",
+    "pinyin": "wǔ huā bā mén",
+    "meaning": "形容花样繁多或变幻多端。",
+    "example": "商店里的商品五花八门。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "横七竖八",
+    "pinyin": "héng qī shù bā",
+    "meaning": "形容纵横杂乱。",
+    "example": "书桌上的书横七竖八地放着。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "二话不说",
+    "pinyin": "èr huà bù shuō",
+    "meaning": "不说别的，立即行动。",
+    "example": "看到有人需要帮助，他二话不说就冲了上去。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "一目了然",
+    "pinyin": "yī mù liǎo rán",
+    "meaning": "一眼就能看清楚。",
+    "example": "这张图表一目了然。",
+    "origin": "",
+    "category": "数字"
+  },
+  {
+    "idiom": "走马观花",
+    "pinyin": "zǒu mǎ guān huā",
+    "meaning": "骑在奔跑的马上看花，比喻粗略地观察。",
+    "example": "参观博物馆不能走马观花，要认真看。",
+    "origin": "出自唐代孟郊《登科后》",
+    "category": "动物"
+  },
+  {
+    "idiom": "天高云淡",
+    "pinyin": "tiān gāo yún dàn",
+    "meaning": "天气晴朗，天空高远，白云淡薄。",
+    "example": "秋天天高云淡，非常舒服。",
+    "origin": "",
+    "category": "自然"
+  },
+  {
+    "idiom": "四季如春",
+    "pinyin": "sì jì rú chūn",
+    "meaning": "一年四季都像春天一样温暖。",
+    "example": "昆明四季如春，是个宜居的城市。",
+    "origin": "",
+    "category": "自然"
+  }
+]
