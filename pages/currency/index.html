@@ -243,10 +243,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <div class="multi-grid" id="multiGrid"></div>
       </div>
 
-      <!-- 交叉汇率表 -->
+      <!-- 交叉汇率表（默认折叠） -->
       <div class="panel">
-        <div class="section-title">📊 交叉汇率</div>
-        <div style="overflow-x:auto">
+        <div class="section-title" style="cursor:pointer" id="crossToggle">📊 高级：交叉汇率表 <span style="font-size:11px;color:var(--text-caption);margin-left:auto" id="crossArrow">▶</span></div>
+        <div id="crossWrap" style="display:none;overflow-x:auto">
           <table class="cross-table">
             <thead>
               <tr><th></th><th>USD</th><th>EUR</th><th>JPY</th><th>GBP</th></tr>
@@ -455,6 +455,15 @@ document.getElementById('multiGrid').addEventListener('click', e => {
   if (!item) return;
   document.getElementById('toCurrency').value = item.dataset.curr;
   convert(); updateMulti();
+});
+
+/* Cross table toggle */
+document.getElementById('crossToggle').addEventListener('click', () => {
+  const wrap = document.getElementById('crossWrap');
+  const arrow = document.getElementById('crossArrow');
+  const open = wrap.style.display === 'none';
+  wrap.style.display = open ? 'block' : 'none';
+  arrow.textContent = open ? '▼' : '▶';
 });
 
 /* Init */

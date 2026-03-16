@@ -211,10 +211,14 @@ import '../../shared/theme.js';
 let images = [], mode = 'horizontal', gridCols = 2;
 
 /* ===== 渲染图片列表 ===== */
+let listExpanded = false;
+
 function renderList() {
   const list = document.getElementById('imgList');
   list.innerHTML = '';
-  images.forEach((im, i) => {
+  const showAll = listExpanded || images.length <= 3;
+  const visible = showAll ? images : images.slice(0, 3);
+  visible.forEach((im, i) => {
     const item = document.createElement('div');
     item.className = 'img-item';
     item.innerHTML = `
@@ -240,6 +244,20 @@ function renderList() {
     item.appendChild(delBtn);
     list.appendChild(item);
   });
+
+  if (!showAll && images.length > 3) {
+    const expandBtn = document.createElement('button');
+    expandBtn.style.cssText = 'width:100%;padding:8px;border:1.5px dashed var(--border-glass);border-radius:6px;background:transparent;font-size:11px;font-weight:700;color:var(--text-caption);cursor:pointer;margin-top:6px';
+    expandBtn.textContent = `展开全部（${images.length} 张）`;
+    expandBtn.addEventListener('click', () => { listExpanded = true; renderList(); });
+    list.appendChild(expandBtn);
+  } else if (showAll && images.length > 3) {
+    const collapseBtn = document.createElement('button');
+    collapseBtn.style.cssText = 'width:100%;padding:8px;border:1.5px dashed var(--border-glass);border-radius:6px;background:transparent;font-size:11px;font-weight:700;color:var(--text-caption);cursor:pointer;margin-top:6px';
+    collapseBtn.textContent = '收起';
+    collapseBtn.addEventListener('click', () => { listExpanded = false; renderList(); });
+    list.appendChild(collapseBtn);
+  }
 
   const sw = document.getElementById('statsWrap');
   sw.style.display = images.length ? 'block' : 'none';
