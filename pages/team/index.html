@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于团队 | Our Team — DevKit</title>
+<meta name="description" content="认识构建 DevKit 的团队 — 从 14 个 JSON 工具到 100 个万能工具箱的旅程。">
+<meta name="keywords" content="DevKit, 团队, 关于我们, 在线工具箱">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/team/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"关于团队 — DevKit","url":"https://l-s-c.github.io/devkit/pages/team/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.hero{text-align:center;padding:48px 20px 40px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(245,158,11,0.1));border:1px solid rgba(99,102,241,0.15);font-size:12px;font-weight:700;color:var(--brand-500,#6366F1);margin-bottom:16px}
+.hero-badge-num{font-family:var(--font-code);font-weight:900;font-size:14px}
+.hero-title{font-size:36px;font-weight:900;line-height:1.2;margin-bottom:8px;background:linear-gradient(135deg,#6366F1,#F59E0B,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:var(--text-secondary);line-height:1.6;max-width:500px;margin:0 auto}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:32px}
+.mc{background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.04);padding:24px;transition:all 300ms;position:relative;overflow:hidden}
+.mc:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.08);border-color:var(--ca)}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cg);border-radius:20px 20px 0 0}
+.mc-avatar{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;background:var(--cb)}
+.mc-role{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--ca);margin-bottom:2px}
+.mc-name{font-size:18px;font-weight:800;margin-bottom:4px}
+.mc-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px}
+.mc-quote{font-size:12px;color:var(--text-caption);font-style:italic;line-height:1.6;padding:10px 12px;border-radius:8px;background:var(--cb);border-left:3px solid var(--ca)}
+.mc-quote::before{content:'\201C'}.mc-quote::after{content:'\201D'}
+.c-pm{--ca:#6366F1;--cb:rgba(99,102,241,0.06);--cg:linear-gradient(90deg,#6366F1,#818CF8)}
+.c-arch{--ca:#3B82F6;--cb:rgba(59,130,246,0.06);--cg:linear-gradient(90deg,#3B82F6,#60A5FA)}
+.c-dev{--ca:#10B981;--cb:rgba(16,185,129,0.06);--cg:linear-gradient(90deg,#10B981,#34D399)}
+.c-qa{--ca:#F59E0B;--cb:rgba(245,158,11,0.06);--cg:linear-gradient(90deg,#F59E0B,#FBBF24)}
+.c-des{--ca:#EC4899;--cb:rgba(236,72,153,0.06);--cg:linear-gradient(90deg,#EC4899,#F472B6)}
+.c-ed{--ca:#8B5CF6;--cb:rgba(139,92,246,0.06);--cg:linear-gradient(90deg,#8B5CF6,#A78BFA)}
+.c-biz{--ca:#D97706;--cb:rgba(217,119,6,0.06);--cg:linear-gradient(90deg,#D97706,#F59E0B)}
+.tl-section{margin-top:48px;text-align:center}
+.tl-title{font-size:14px;font-weight:800;margin-bottom:24px;color:var(--text-secondary)}
+.tl-row{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.tl-node{display:flex;flex-direction:column;align-items:center;z-index:1}
+.tl-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;font-family:var(--font-code);border:2.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 300ms}
+.tl-node:last-child .tl-num{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;border-color:transparent;width:56px;height:56px;font-size:20px;box-shadow:0 4px 20px rgba(99,102,241,0.3)}
+.tl-label{font-size:9px;color:var(--text-caption);margin-top:6px;white-space:nowrap}
+.tl-line{width:40px;height:2px;background:linear-gradient(90deg,var(--border-glass),#6366F1);flex-shrink:0;margin:0 -2px;margin-bottom:20px}
+.footer-note{text-align:center;margin-top:40px;padding:20px;font-size:12px;color:var(--text-caption);line-height:1.8}
+.footer-heart{color:#EF4444;font-size:14px}
+@media(max-width:640px){.hero-title{font-size:28px}.team-grid{grid-template-columns:1fr}.tl-line{width:24px}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">关于团队 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">关于团队</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="hero">
+    <div class="hero-badge">🏆 Tool #<span class="hero-badge-num">100</span></div>
+    <div class="hero-title">构建 DevKit 的人</div>
+    <div class="hero-sub">从 14 个 JSON 工具到 100 个万能工具箱。<br>这不是一个人的故事，是一个团队的旅程。</div>
+  </div>
+
+  <div class="team-grid">
+    <div class="mc c-pm"><div class="mc-avatar">📋</div><div class="mc-role">Product Manager</div><div class="mc-name">PM</div><div class="mc-desc">需求的源头，用户的代言人。每一个工具背后，都有一份被认真打磨的需求文档。</div><div class="mc-quote">今天目标不变：上线！🚀</div></div>
+    <div class="mc c-arch"><div class="mc-avatar">🏗️</div><div class="mc-role">Architect</div><div class="mc-name">Architect</div><div class="mc-desc">技术的守护者，架构的决策者。从 MPA 到 Liquid Glass，每个技术选型都经过深思熟虑。</div><div class="mc-quote">Review 通过 ✅ 架构没问题。</div></div>
+    <div class="mc c-dev"><div class="mc-avatar">💻</div><div class="mc-role">Developer</div><div class="mc-name">Developer</div><div class="mc-desc">代码的工匠，把设计稿变成活的页面。99 个工具，每一行代码都是他的手笔。</div><div class="mc-quote">做完了，commit 已 push 💻</div></div>
+    <div class="mc c-qa"><div class="mc-avatar">🧪</div><div class="mc-role">QA Engineer</div><div class="mc-name">QA</div><div class="mc-desc">质量的底线，bug 的噩梦。10 轮测试不是任务，是对用户的承诺。</div><div class="mc-quote">10 轮测试零 bug ✅</div></div>
+    <div class="mc c-des"><div class="mc-avatar">🎨</div><div class="mc-role">Designer</div><div class="mc-name">Designer</div><div class="mc-desc">像素级强迫症，Liquid Glass 的缔造者。每个 1px 的差别，都是业余和专业的分界线。</div><div class="mc-quote">还原度 95%+，设计验收通过 🎨</div></div>
+    <div class="mc c-ed"><div class="mc-avatar">✍️</div><div class="mc-role">Editor</div><div class="mc-name">Editor</div><div class="mc-desc">文字的雕刻师，传播的策划者。让每个工具被看见，被分享，被记住。</div><div class="mc-quote">好的内容 = 好的故事 + 不正经的表达</div></div>
+    <div class="mc c-biz"><div class="mc-avatar">💼</div><div class="mc-role">Business Lead</div><div class="mc-name">Business Lead</div><div class="mc-desc">商业的嗅觉，增长的引擎。教育赛道、SEO 策略、变现路径，每一步都踩在点上。</div><div class="mc-quote">老板，ROI 我算过了 💼</div></div>
+  </div>
+
+  <div class="tl-section">
+    <div class="tl-title">🛤️ DevKit 成长轨迹</div>
+    <div class="tl-row">
+      <div class="tl-node"><div class="tl-num">14</div><div class="tl-label">起点</div></div>
+      <div class="tl-line"></div>
+      <div class="tl-node"><div class="tl-num">59</div><div class="tl-label">第一阶段</div></div>
+      <div class="tl-line"></div>
+      <div class="tl-node"><div class="tl-num">70</div><div class="tl-label">扩展期</div></div>
+      <div class="tl-line"></div>
+      <div class="tl-node"><div class="tl-num">87</div><div class="tl-label">教育转型</div></div>
+      <div class="tl-line"></div>
+      <div class="tl-node"><div class="tl-num">💯</div><div class="tl-label">里程碑</div></div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Built with <span class="footer-heart">❤️</span> by an AI team, guided by a human dreamer.<br>
+    每一个工具，都是对"让开发者生活更简单"这句话的践行。
+  </div>
+</div>
+<div class="statusbar"><span>Tool #100</span><div class="statusbar-spacer"></div><span>DevKit 💯</span></div>
+<script type="module">import '../../shared/theme.js';</script>
+<noscript><p>关于团队 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

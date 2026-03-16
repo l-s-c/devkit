@@ -110,6 +110,7 @@ export default defineConfig({
         'math-formulas': resolve(__dirname, 'pages/math-formulas/index.html'),
         'history-timeline': resolve(__dirname, 'pages/history-timeline/index.html'),
         'vaccine-schedule': resolve(__dirname, 'pages/vaccine-schedule/index.html'),
+        'team': resolve(__dirname, 'pages/team/index.html'),
       },
     },
   },
