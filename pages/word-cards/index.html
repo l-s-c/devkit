@@ -74,13 +74,13 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">英语单词卡片</span><div class="statusbar-spacer"></div><span>小学必背 · 纯本地</span></div>
 <script type="module">
 import '../../shared/theme.js';
-const WORDS=[
-  ['apple','/ˈæp.l/','🍎 苹果','I like to eat an apple.'],['book','/bʊk/','📖 书','This is my book.'],['cat','/kæt/','🐱 猫','The cat is sleeping.'],['dog','/dɒɡ/','🐶 狗','I have a dog.'],['egg','/eɡ/','🥚 鸡蛋','I eat an egg for breakfast.'],['fish','/fɪʃ/','🐟 鱼','The fish is in the water.'],['girl','/ɡɜːl/','👧 女孩','She is a good girl.'],['hand','/hænd/','✋ 手','Raise your hand please.'],['ice','/aɪs/','🧊 冰','The ice is cold.'],['juice','/dʒuːs/','🧃 果汁','I want some orange juice.'],
-  ['kite','/kaɪt/','🪁 风筝','Let\'s fly a kite.'],['lion','/ˈlaɪ.ən/','🦁 狮子','The lion is strong.'],['milk','/mɪlk/','🥛 牛奶','I drink milk every day.'],['nose','/nəʊz/','👃 鼻子','Touch your nose.'],['orange','/ˈɒr.ɪndʒ/','🍊 橙子','This orange is sweet.'],['pen','/pen/','🖊️ 钢笔','Give me a pen please.'],['queen','/kwiːn/','👑 女王','She is a queen.'],['rain','/reɪn/','🌧️ 雨','It is raining outside.'],['sun','/sʌn/','☀️ 太阳','The sun is bright.'],['tree','/triː/','🌳 树','There is a big tree.'],
-  ['umbrella','/ʌmˈbrel.ə/','☂️ 雨伞','Take your umbrella.'],['water','/ˈwɔː.tər/','💧 水','I need some water.'],['yellow','/ˈjel.əʊ/','💛 黄色','The flower is yellow.'],['zoo','/zuː/','🦒 动物园','Let\'s go to the zoo.'],['bird','/bɜːd/','🐦 鸟','The bird can fly.'],['cake','/keɪk/','🎂 蛋糕','Happy birthday cake.'],['desk','/desk/','📚 书桌','Put it on the desk.'],['ear','/ɪər/','👂 耳朵','I have two ears.'],['flower','/ˈflaʊ.ər/','🌸 花','The flower is beautiful.'],['green','/ɡriːn/','💚 绿色','The grass is green.'],
-  ['happy','/ˈhæp.i/','😊 快乐的','I am very happy.'],['jump','/dʒʌmp/','🦘 跳','I can jump high.'],['king','/kɪŋ/','🤴 国王','He is the king.'],['leg','/leɡ/','🦵 腿','I have two legs.'],['moon','/muːn/','🌙 月亮','The moon is round.'],['night','/naɪt/','🌃 夜晚','Good night!'],['open','/ˈəʊ.pən/','📂 打开','Open the door please.'],['pink','/pɪŋk/','💗 粉色','I like pink.'],['red','/red/','❤️ 红色','The apple is red.'],['star','/stɑːr/','⭐ 星星','I see a star.'],
-];
-let idx=0,order=[...Array(WORDS.length).keys()];
+let WORDS=[];
+let idx=0,order=[];
+async function loadWords(){
+  try{const r=await fetch('./words.json');WORDS=await r.json();order=[...Array(WORDS.length).keys()];render();
+  document.getElementById('statusInfo').textContent=`共 ${WORDS.length} 词`}catch(e){document.getElementById('statusInfo').textContent='数据加载失败'}
+}
+loadWords();
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function render(){
   const w=WORDS[order[idx]];
