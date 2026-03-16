@@ -79,7 +79,7 @@ body {
 .topbar::before { display:none; }
 .topbar-logo {
   display: flex; align-items: center; gap: 6px;
-  text-decoration: none; color: inherit;
+  text-decoration: none; color: inherit; flex-shrink: 0;
   padding-right: 12px; border-right: 0.5px solid var(--border-glass-outer); margin-right: 12px;
 }
 .topbar-logo-icon {
