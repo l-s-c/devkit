@@ -82,8 +82,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 .stat-value { font-family: var(--font-code); font-weight: 700; color: var(--brand-500); }
 
 /* 表格 */
-.table-wrap { overflow: auto; max-height: 520px; border: 1px solid var(--border-glass); border-radius: 10px; }
-.csv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.table-wrap { overflow: auto; max-height: 520px; max-width: 100%; border: 1px solid var(--border-glass); border-radius: 10px; }
+.csv-table { min-width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
 .csv-table th {
   position: sticky; top: 0; z-index: 1;
   padding: 10px 12px; text-align: left; font-weight: 700; font-size: 11px;
