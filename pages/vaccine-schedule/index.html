@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>疫苗接种时间表 | Vaccine Schedule — DevKit</title>
+<meta name="description" content="0-6岁儿童疫苗接种时间表，依据国家免疫规划，按月龄显示应接种疫苗，支持标记已接种。">
+<meta name="keywords" content="疫苗接种时间表, 儿童疫苗, 国家免疫规划, 疫苗时间, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/vaccine-schedule/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"疫苗接种时间表","url":"https://l-s-c.github.io/devkit/pages/vaccine-schedule/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981;--blue:#3B82F6}[data-theme=dark]{--brand-500:#34D399;--blue:#60A5FA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.input-row{display:flex;gap:8px;align-items:end;margin-bottom:12px;flex-wrap:wrap}
+.form-item{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:10px;font-weight:700;color:var(--text-caption)}
+.form-input{padding:10px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.form-input:focus{border-color:var(--brand-500)}
+.btn{padding:10px 20px;border-radius:10px;border:none;font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#10B981,#34D399);color:#fff}
+.legend-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)}
+.legend-badge{width:10px;height:10px;border-radius:3px}
+.age-group{margin-bottom:16px}
+.age-header{font-size:14px;font-weight:800;padding:8px 12px;border-radius:8px;background:rgba(16,185,129,0.06);margin-bottom:8px}
+.vaccine-list{display:flex;flex-direction:column;gap:6px;padding-left:8px}
+.vc{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms}
+.vc:hover{border-color:var(--brand-500)}
+.vc-dose{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.dose-free{background:var(--brand-500)}.dose-paid{background:var(--blue)}
+.vc-info{flex:1}.vc-name{font-size:13px;font-weight:700}.vc-dis{font-size:10px;color:var(--text-caption);margin-top:1px}
+.vc-type{padding:2px 6px;border-radius:4px;font-size:8px;font-weight:700;flex-shrink:0}
+.type-free{background:rgba(16,185,129,0.1);color:#059669}
+.type-paid{background:rgba(59,130,246,0.1);color:#2563EB}
+.vc-chk{width:20px;height:20px;border-radius:6px;border:2px solid var(--border-glass);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 200ms;font-size:11px}
+.vc-chk.done{background:var(--brand-500);border-color:var(--brand-500);color:#fff}
+.notice{padding:12px;border-radius:10px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:11px;color:var(--text-secondary);line-height:1.6}
+.notice strong{color:#D97706}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">疫苗接种时间表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">疫苗接种时间表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">💉 疫苗接种时间表</div>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-badge" style="background:#10B981"></div>免费（一类）</div>
+      <div class="legend-item"><div class="legend-badge" style="background:#3B82F6"></div>自费（二类）</div>
+      <div class="legend-item"><div class="legend-badge" style="background:var(--border-glass)"></div>未接种</div>
+      <div class="legend-item"><div class="legend-badge" style="background:#10B981"></div>✓ 已接种</div>
+    </div>
+  </div>
+  <div class="panel" id="schedulePanel"></div>
+  <div class="panel">
+    <div class="notice"><strong>⚠️ 温馨提示：</strong>本表依据《国家免疫规划疫苗儿童免疫程序表（2021版）》整理，仅供参考。具体接种时间请咨询当地社区卫生服务中心。接种前请告知医生宝宝健康状况。</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">疫苗接种时间表</span><div class="statusbar-spacer"></div><span>国家免疫规划 · 仅供参考</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// age: display label; vaccines: [name, disease, dose#, free(true)/paid(false)]
+const SCHEDULE=[
+{age:'出生时',emoji:'👶',vaccines:[
+  ['乙肝疫苗','乙型肝炎',1,true],
+  ['卡介苗','结核病',1,true],
+]},
+{age:'1 月龄',emoji:'👶',vaccines:[
+  ['乙肝疫苗','乙型肝炎',2,true],
+]},
+{age:'2 月龄',emoji:'👶',vaccines:[
+  ['脊灰灭活疫苗','脊髓灰质炎',1,true],
+  ['13价肺炎疫苗','肺炎球菌感染',1,false],
+]},
+{age:'3 月龄',emoji:'👶',vaccines:[
+  ['脊灰减毒疫苗','脊髓灰质炎',2,true],
+  ['百白破疫苗','百日咳/白喉/破伤风',1,true],
+]},
+{age:'4 月龄',emoji:'👶',vaccines:[
+  ['脊灰减毒疫苗','脊髓灰质炎',3,true],
+  ['百白破疫苗','百日咳/白喉/破伤风',2,true],
+  ['13价肺炎疫苗','肺炎球菌感染',2,false],
+]},
+{age:'5 月龄',emoji:'👶',vaccines:[
+  ['百白破疫苗','百日咳/白喉/破伤风',3,true],
+]},
+{age:'6 月龄',emoji:'🧒',vaccines:[
+  ['乙肝疫苗','乙型肝炎',3,true],
+  ['A群流脑疫苗','流行性脑膜炎',1,true],
+  ['13价肺炎疫苗','肺炎球菌感染',3,false],
+  ['流感疫苗','流行性感冒',1,false],
+]},
+{age:'8 月龄',emoji:'🧒',vaccines:[
+  ['麻腮风疫苗','麻疹/腮腺炎/风疹',1,true],
+  ['乙脑减毒疫苗','流行性乙型脑炎',1,true],
+]},
+{age:'9 月龄',emoji:'🧒',vaccines:[
+  ['A群流脑疫苗','流行性脑膜炎',2,true],
+]},
+{age:'12 月龄',emoji:'🧒',vaccines:[
+  ['13价肺炎疫苗','肺炎球菌感染',4,false],
+  ['水痘疫苗','水痘',1,false],
+]},
+{age:'18 月龄',emoji:'🧒',vaccines:[
+  ['百白破疫苗','百日咳/白喉/破伤风',4,true],
+  ['麻腮风疫苗','麻疹/腮腺炎/风疹',2,true],
+  ['甲肝减毒疫苗','甲型肝炎',1,true],
+]},
+{age:'2 岁',emoji:'👧',vaccines:[
+  ['乙脑减毒疫苗','流行性乙型脑炎',2,true],
+  ['A+C群流脑疫苗','流行性脑膜炎',1,true],
+]},
+{age:'3 岁',emoji:'👧',vaccines:[
+  ['A+C群流脑疫苗','流行性脑膜炎',2,true],
+]},
+{age:'4 岁',emoji:'👦',vaccines:[
+  ['脊灰减毒疫苗','脊髓灰质炎',4,true],
+]},
+{age:'6 岁',emoji:'🎒',vaccines:[
+  ['白破疫苗','白喉/破伤风',1,true],
+  ['水痘疫苗','水痘',2,false],
+]},
+];
+let checked=JSON.parse(localStorage.getItem('devkit_vaccine_checked')||'{}');
+function render(){
+  const el=document.getElementById('schedulePanel');
+  el.innerHTML=SCHEDULE.map((g,gi)=>{
+    const vhtml=g.vaccines.map((v,vi)=>{
+      const key=gi+'-'+vi;const done=checked[key];
+      return `<div class="vc"><div class="vc-dose ${v[3]?'dose-free':'dose-paid'}">${v[2]}</div><div class="vc-info"><div class="vc-name">${v[0]}</div><div class="vc-dis">预防：${v[1]}</div></div><span class="vc-type ${v[3]?'type-free':'type-paid'}">${v[3]?'免费':'自费'}</span><div class="vc-chk${done?' done':''}" data-key="${key}">${done?'✓':''}</div></div>`;
+    }).join('');
+    return `<div class="age-group"><div class="age-header">${g.emoji} ${g.age}</div><div class="vaccine-list">${vhtml}</div></div>`;
+  }).join('');
+  // count
+  let total=0,doneCount=0;SCHEDULE.forEach((g,gi)=>g.vaccines.forEach((_,vi)=>{total++;if(checked[gi+'-'+vi])doneCount++}));
+  document.getElementById('statusInfo').textContent=`已接种 ${doneCount}/${total}`;
+}
+document.getElementById('schedulePanel').addEventListener('click',e=>{
+  const chk=e.target.closest('.vc-chk');if(!chk)return;
+  const key=chk.dataset.key;
+  if(checked[key]){delete checked[key]}else{checked[key]=true}
+  localStorage.setItem('devkit_vaccine_checked',JSON.stringify(checked));
+  render();
+});
+render();
+</script>
+<noscript><p>疫苗接种时间表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

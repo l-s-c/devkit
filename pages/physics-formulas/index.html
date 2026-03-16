@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理公式大全 | Physics Formulas — DevKit</title>
+<meta name="description" content="初中高中物理公式速查，力学、电学、光学、热学分类，KaTeX数学排版，搜索快速定位。">
+<meta name="keywords" content="物理公式, 初中物理公式, 高中物理公式, 物理公式大全, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/physics-formulas/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"物理公式大全","url":"https://l-s-c.github.io/devkit/pages/physics-formulas/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+:root{--brand-500:#3B82F6}[data-theme=dark]{--brand-500:#60A5FA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(59,130,246,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.level-switch{display:flex;gap:4px;margin-bottom:10px}
+.lvl{padding:5px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.lvl.active{background:rgba(59,130,246,0.06);border-color:var(--brand-500);color:var(--brand-500)}
+.tab-row{display:flex;gap:4px;overflow-x:auto;margin-bottom:12px}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.formula-list{display:flex;flex-direction:column;gap:10px}
+.fc{padding:16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms}
+.fc:hover{border-color:var(--brand-500)}
+.fc-name{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fc-tag{padding:2px 6px;border-radius:6px;font-size:8px;font-weight:700;background:rgba(59,130,246,0.06);color:var(--brand-500)}
+.fc-expr{padding:12px 16px;border-radius:8px;background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.1);margin-bottom:8px;text-align:center;font-size:20px}
+.fc-desc{font-size:11px;color:var(--text-secondary);line-height:1.6}
+.fc-vars{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.fc-var{padding:3px 8px;border-radius:6px;font-size:10px;background:var(--bg-glass);border:1px solid var(--border-glass);font-family:var(--font-code)}
+.fc-var b{color:var(--brand-500);font-weight:800}
+.hidden{display:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">物理公式大全 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">物理公式大全</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">⚛️ 物理公式大全</div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索公式名称或关键词..."></div>
+    <div class="tab-row" id="tabRow"></div>
+  </div>
+  <div class="panel"><div class="formula-list" id="fList"></div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">物理公式大全</span><div class="statusbar-spacer"></div><span>初中+高中 · KaTeX 排版</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// n=name, f=formula(KaTeX), cat=category, d=description, v=variables[[symbol,name,unit],...]
+const FORMULAS=[
+// 力学
+{n:'速度公式',f:'v = \\dfrac{s}{t}',cat:'力学',d:'物体在单位时间内通过的路程',v:[['v','速度','m/s'],['s','路程','m'],['t','时间','s']]},
+{n:'牛顿第二定律',f:'F = ma',cat:'力学',d:'物体加速度与作用力成正比，与质量成反比',v:[['F','力','N'],['m','质量','kg'],['a','加速度','m/s²']]},
+{n:'重力公式',f:'G = mg',cat:'力学',d:'物体所受重力与质量成正比，g ≈ 9.8 N/kg',v:[['G','重力','N'],['m','质量','kg'],['g','重力加速度','N/kg']]},
+{n:'密度公式',f:'\\rho = \\dfrac{m}{V}',cat:'力学',d:'单位体积的质量',v:[['ρ','密度','kg/m³'],['m','质量','kg'],['V','体积','m³']]},
+{n:'压强公式',f:'p = \\dfrac{F}{S}',cat:'力学',d:'单位面积上受到的压力',v:[['p','压强','Pa'],['F','压力','N'],['S','受力面积','m²']]},
+{n:'液体压强',f:'p = \\rho g h',cat:'力学',d:'液体内部某深度处的压强',v:[['p','压强','Pa'],['ρ','密度','kg/m³'],['h','深度','m']]},
+{n:'浮力公式',f:'F_{浮} = \\rho_{液} g V_{排}',cat:'力学',d:'阿基米德原理：浮力等于排开液体的重力',v:[['F浮','浮力','N'],['ρ液','液体密度','kg/m³'],['V排','排开体积','m³']]},
+{n:'功',f:'W = Fs',cat:'力学',d:'力在力的方向上的位移之积',v:[['W','功','J'],['F','力','N'],['s','位移','m']]},
+{n:'功率',f:'P = \\dfrac{W}{t}',cat:'力学',d:'单位时间完成的功',v:[['P','功率','W'],['W','功','J'],['t','时间','s']]},
+{n:'动能',f:'E_k = \\dfrac{1}{2}mv^2',cat:'力学',d:'物体因运动而具有的能量',v:[['Ek','动能','J'],['m','质量','kg'],['v','速度','m/s']]},
+{n:'势能',f:'E_p = mgh',cat:'力学',d:'物体因高度而具有的重力势能',v:[['Ep','势能','J'],['m','质量','kg'],['h','高度','m']]},
+// 电学
+{n:'欧姆定律',f:'I = \\dfrac{U}{R}',cat:'电学',d:'通过导体的电流与两端电压成正比，与电阻成反比',v:[['I','电流','A'],['U','电压','V'],['R','电阻','Ω']]},
+{n:'电功',f:'W = UIt',cat:'电学',d:'电流做的功',v:[['W','电功','J'],['U','电压','V'],['I','电流','A'],['t','时间','s']]},
+{n:'电功率',f:'P = UI',cat:'电学',d:'电流单位时间做的功',v:[['P','电功率','W'],['U','电压','V'],['I','电流','A']]},
+{n:'焦耳定律',f:'Q = I^2 R t',cat:'电学',d:'电流通过电阻产生的热量',v:[['Q','热量','J'],['I','电流','A'],['R','电阻','Ω'],['t','时间','s']]},
+{n:'串联电阻',f:'R = R_1 + R_2 + \\cdots',cat:'电学',d:'串联电路总电阻等于各电阻之和',v:[['R','总电阻','Ω']]},
+{n:'并联电阻',f:'\\dfrac{1}{R} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}',cat:'电学',d:'并联电路总电阻的倒数等于各电阻倒数之和',v:[['R','总电阻','Ω']]},
+// 热学
+{n:'热量公式',f:'Q = cm\\Delta t',cat:'热学',d:'物体吸收（放出）的热量',v:[['Q','热量','J'],['c','比热容','J/(kg·℃)'],['m','质量','kg'],['Δt','温度变化','℃']]},
+{n:'热值公式',f:'Q = mq',cat:'热学',d:'燃料完全燃烧放出的热量',v:[['Q','热量','J'],['m','燃料质量','kg'],['q','热值','J/kg']]},
+// 光学
+{n:'光的反射定律',f:'\\theta_i = \\theta_r',cat:'光学',d:'入射角等于反射角',v:[['θi','入射角','°'],['θr','反射角','°']]},
+{n:'折射定律',f:'n = \\dfrac{\\sin\\theta_1}{\\sin\\theta_2}',cat:'光学',d:'入射角正弦与折射角正弦之比为折射率',v:[['n','折射率',''],['θ1','入射角','°'],['θ2','折射角','°']]},
+// 波动
+{n:'波速公式',f:'v = \\lambda f',cat:'波动',d:'波速等于波长乘以频率',v:[['v','波速','m/s'],['λ','波长','m'],['f','频率','Hz']]},
+// 高中补充
+{n:'万有引力',f:'F = G\\dfrac{m_1 m_2}{r^2}',cat:'力学',d:'两物体间引力与质量乘积成正比，与距离平方成反比',v:[['F','引力','N'],['G','引力常量',''],['m','质量','kg'],['r','距离','m']]},
+{n:'库仑定律',f:'F = k\\dfrac{q_1 q_2}{r^2}',cat:'电学',d:'两点电荷间的作用力',v:[['F','电力','N'],['k','静电常量',''],['q','电荷量','C'],['r','距离','m']]},
+{n:'电磁感应',f:'\\varepsilon = -\\dfrac{\\Delta\\Phi}{\\Delta t}',cat:'磁学',d:'感应电动势等于磁通量变化率',v:[['ε','感应电动势','V'],['ΔΦ','磁通量变化','Wb'],['Δt','时间','s']]},
+{n:'质能方程',f:'E = mc^2',cat:'原子',d:'质量和能量的等价关系',v:[['E','能量','J'],['m','质量','kg'],['c','光速','m/s']]},
+];
+const CATS=['全部','力学','电学','热学','光学','波动','磁学','原子'];
+let currentCat='全部';
+function renderTabs(){
+  document.getElementById('tabRow').innerHTML=CATS.map(c=>`<div class="tab${c===currentCat?' active':''}" data-cat="${c}">${c}</div>`).join('');
+}
+function renderFormulas(q=''){
+  const filtered=FORMULAS.filter(f=>{
+    if(currentCat!=='全部'&&f.cat!==currentCat)return false;
+    if(q)return f.n.includes(q)||f.d.includes(q)||f.cat.includes(q);
+    return true;
+  });
+  const el=document.getElementById('fList');
+  el.innerHTML=filtered.map(f=>`<div class="fc"><div class="fc-name">${f.n} <span class="fc-tag">${f.cat}</span></div><div class="fc-expr" data-tex="${f.f.replace(/"/g,'&quot;')}">${f.f}</div><div class="fc-desc">${f.d}</div><div class="fc-vars">${f.v.map(v=>`<span class="fc-var"><b>${v[0]}</b> ${v[1]}${v[2]?' ('+v[2]+')':''}</span>`).join('')}</div></div>`).join('');
+  document.getElementById('statusInfo').textContent=`共 ${filtered.length} 个公式`;
+  // render KaTeX
+  if(typeof katex!=='undefined'){
+    el.querySelectorAll('.fc-expr[data-tex]').forEach(e=>{
+      try{katex.render(e.dataset.tex,e,{throwOnError:false,displayMode:true})}catch(_){}
+    });
+  }
+}
+document.getElementById('tabRow').addEventListener('click',e=>{
+  if(!e.target.classList.contains('tab'))return;
+  currentCat=e.target.dataset.cat;renderTabs();renderFormulas(document.getElementById('searchInput').value.trim());
+});
+document.getElementById('searchInput').addEventListener('input',function(){renderFormulas(this.value.trim())});
+// wait for KaTeX to load
+function init(){renderTabs();renderFormulas()}
+if(typeof katex!=='undefined')init();
+else{const check=setInterval(()=>{if(typeof katex!=='undefined'){clearInterval(check);init()}},100);setTimeout(()=>clearInterval(check),5000);init()}
+</script>
+<noscript><p>物理公式大全 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国历史年表 | History Timeline — DevKit</title>
+<meta name="description" content="中国历史朝代时间轴，从夏朝到现代，含关键事件、持续年数、搜索和快速跳转。">
+<meta name="keywords" content="中国历史年表, 朝代顺序表, 历史朝代, 中国历史, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/history-timeline/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"中国历史年表","url":"https://l-s-c.github.io/devkit/pages/history-timeline/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#D97706}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(217,119,6,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.quick-nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.qn-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:9px;font-weight:700;cursor:pointer;transition:all 150ms}
+.qn-pill:hover,.qn-pill.active{border-color:var(--brand-500);color:var(--brand-500);background:rgba(217,119,6,0.06)}
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--brand-500),rgba(217,119,6,0.1))}
+.tl-item{position:relative;margin-bottom:16px}
+.tl-dot{position:absolute;left:-25px;top:6px;width:12px;height:12px;border-radius:50%;border:2.5px solid var(--brand-500);background:var(--bg-glass-input);z-index:1}
+.tl-card{padding:14px 16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms}
+.tl-card:hover{border-color:var(--brand-500)}
+.tl-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.tl-dynasty{font-size:18px;font-weight:800}
+.tl-period{font-size:11px;color:var(--text-caption);font-family:var(--font-code)}
+.tl-dur{padding:2px 6px;border-radius:6px;font-size:8px;font-weight:700;background:rgba(217,119,6,0.08);color:var(--brand-500)}
+.tl-desc{font-size:11px;color:var(--text-secondary);line-height:1.6;margin-top:4px}
+.tl-events{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tl-ev{padding:2px 8px;border-radius:6px;font-size:9px;background:var(--bg-glass);border:1px solid var(--border-glass);font-weight:600}
+.hidden{display:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">中国历史年表 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">中国历史年表</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📜 中国历史年表</div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索朝代、人物或事件..."></div>
+    <div class="quick-nav" id="quickNav"></div>
+  </div>
+  <div class="panel"><div class="timeline" id="timeline"></div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">中国历史年表</span><div class="statusbar-spacer"></div><span>五千年历史 · 纯本地</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const ERAS=['上古','先秦','秦汉','三国两晋南北朝','隋唐','宋元','明清','近现代'];
+const DATA=[
+{n:'夏',p:'约前2070—前1600',d:'~470年',era:'上古',desc:'中国第一个王朝。大禹治水，建立国家。',ev:['大禹治水','启建夏朝','少康中兴']},
+{n:'商',p:'约前1600—前1046',d:'~554年',era:'上古',desc:'青铜文明鼎盛，甲骨文出现。',ev:['甲骨文','武丁中兴','牧野之战']},
+{n:'西周',p:'前1046—前771',d:'275年',era:'先秦',desc:'分封制、井田制、礼乐制度确立。',ev:['周公制礼','国人暴动','烽火戏诸侯']},
+{n:'春秋',p:'前770—前476',d:'294年',era:'先秦',desc:'诸侯争霸，孔子创立儒学。',ev:['齐桓公称霸','孔子创儒','城濮之战']},
+{n:'战国',p:'前475—前221',d:'254年',era:'先秦',desc:'百家争鸣，七雄争霸，商鞅变法。',ev:['百家争鸣','商鞅变法','长平之战','荆轲刺秦']},
+{n:'秦',p:'前221—前207',d:'14年',era:'秦汉',desc:'第一个统一的封建王朝。统一文字、货币、度量衡。',ev:['秦始皇统一','焚书坑儒','修长城','大泽乡起义']},
+{n:'西汉',p:'前202—公元8',d:'210年',era:'秦汉',desc:'文景之治，汉武帝北击匈奴，张骞通西域。',ev:['文景之治','张骞出使','罢黜百家','司马迁著《史记》']},
+{n:'东汉',p:'25—220',d:'195年',era:'秦汉',desc:'光武中兴，造纸术改进，佛教传入。',ev:['光武中兴','蔡伦造纸','班超通西域','黄巾起义']},
+{n:'三国',p:'220—280',d:'60年',era:'三国两晋南北朝',desc:'魏蜀吴三国鼎立。',ev:['赤壁之战','诸葛亮北伐','司马氏篡魏']},
+{n:'西晋',p:'265—316',d:'51年',era:'三国两晋南北朝',desc:'短暂统一后八王之乱，五胡乱华。',ev:['三国归晋','八王之乱','永嘉之乱']},
+{n:'东晋',p:'317—420',d:'103年',era:'三国两晋南北朝',desc:'衣冠南渡，王羲之书法。',ev:['淝水之战','王羲之《兰亭序》']},
+{n:'南北朝',p:'420—589',d:'169年',era:'三国两晋南北朝',desc:'南朝四代更迭，北朝北魏孝文帝改革。',ev:['孝文帝改革','祖冲之圆周率','陶渊明']},
+{n:'隋',p:'581—618',d:'37年',era:'隋唐',desc:'隋文帝统一，开凿大运河，隋炀帝暴政亡国。',ev:['隋统一','开凿大运河','科举制','隋炀帝亡国']},
+{n:'唐',p:'618—907',d:'289年',era:'隋唐',desc:'贞观之治、开元盛世，诗歌鼎盛。',ev:['贞观之治','武则天称帝','开元盛世','安史之乱','李白杜甫']},
+{n:'五代十国',p:'907—979',d:'72年',era:'宋元',desc:'藩镇割据，政权更迭频繁。',ev:['后梁建立','后周世宗改革']},
+{n:'北宋',p:'960—1127',d:'167年',era:'宋元',desc:'经济文化繁荣，活字印刷、指南针。',ev:['陈桥兵变','王安石变法','靖康之耻','毕昇活字印刷']},
+{n:'南宋',p:'1127—1279',d:'152年',era:'宋元',desc:'偏安江南，岳飞抗金，理学发展。',ev:['岳飞抗金','朱熹理学','文天祥抗元']},
+{n:'元',p:'1271—1368',d:'97年',era:'宋元',desc:'蒙古帝国入主中原，疆域空前辽阔。',ev:['忽必烈建元','马可波罗来华','红巾军起义']},
+{n:'明',p:'1368—1644',d:'276年',era:'明清',desc:'朱元璋建国，郑和下西洋，资本主义萌芽。',ev:['朱元璋建明','郑和下西洋','戚继光抗倭','李自成起义']},
+{n:'清',p:'1636—1912',d:'276年',era:'明清',desc:'康雍乾盛世后渐衰，鸦片战争后沦为半殖民地。',ev:['康乾盛世','鸦片战争','太平天国','洋务运动','戊戌变法','辛亥革命']},
+{n:'中华民国',p:'1912—1949',d:'37年',era:'近现代',desc:'推翻帝制，建立共和。抗日战争，解放战争。',ev:['辛亥革命','五四运动','北伐战争','抗日战争','解放战争']},
+{n:'中华人民共和国',p:'1949—至今',d:'76年+',era:'近现代',desc:'新中国成立，改革开放，走向复兴。',ev:['开国大典','改革开放','港澳回归','加入WTO','全面小康']},
+];
+let currentEra='全部';
+function render(q=''){
+  const tl=document.getElementById('timeline');
+  const filtered=DATA.filter(d=>{
+    if(currentEra!=='全部'&&d.era!==currentEra)return false;
+    if(q){const s=q.toLowerCase();return d.n.includes(s)||d.desc.includes(s)||d.ev.some(e=>e.includes(s))}
+    return true;
+  });
+  tl.innerHTML=filtered.map(d=>`<div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-header"><div class="tl-dynasty">${d.n}</div><div class="tl-period">${d.p}</div><div class="tl-dur">${d.d}</div></div><div class="tl-desc">${d.desc}</div><div class="tl-events">${d.ev.map(e=>`<span class="tl-ev">${e}</span>`).join('')}</div></div></div>`).join('');
+  document.getElementById('statusInfo').textContent=`共 ${filtered.length} 个朝代`;
+}
+function renderNav(){
+  document.getElementById('quickNav').innerHTML=['全部',...ERAS].map(e=>`<div class="qn-pill${e===currentEra?' active':''}" data-era="${e}">${e}</div>`).join('');
+}
+document.getElementById('quickNav').addEventListener('click',e=>{
+  if(!e.target.classList.contains('qn-pill'))return;
+  currentEra=e.target.dataset.era;renderNav();render(document.getElementById('searchInput').value.trim());
+});
+document.getElementById('searchInput').addEventListener('input',function(){render(this.value.trim())});
+renderNav();render();
+</script>
+<noscript><p>中国历史年表 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

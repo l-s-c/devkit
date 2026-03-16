@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身高体重生长曲线 | Growth Chart — DevKit</title>
+<meta name="description" content="儿童身高体重生长曲线，基于WHO标准，输入年龄性别即可对比P3-P97百分位。">
+<meta name="keywords" content="儿童身高体重标准, 生长曲线, WHO标准, 身高体重, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/growth-chart/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"身高体重生长曲线","url":"https://l-s-c.github.io/devkit/pages/growth-chart/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--brand-500:#F59E0B;--blue:#3B82F6;--pink:#EC4899}[data-theme=dark]{--brand-500:#FBBF24}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(245,158,11,0.08),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-item{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:10px;font-weight:700;color:var(--text-caption)}
+.form-input{padding:10px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.form-input:focus{border-color:var(--brand-500)}
+.gender-row{display:flex;gap:6px}
+.gender-btn{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;font-weight:700;cursor:pointer;text-align:center}
+.gender-btn.boy{color:var(--blue)}.gender-btn.boy.active{border-color:var(--blue);background:rgba(59,130,246,0.06)}
+.gender-btn.girl{color:var(--pink)}.gender-btn.girl.active{border-color:var(--pink);background:rgba(236,72,153,0.06)}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;width:100%;margin-top:8px}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F}
+.chart-box{width:100%;aspect-ratio:16/9;position:relative}
+.chart-box canvas{width:100%!important;height:100%!important}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)}
+.legend-dot{width:12px;height:3px;border-radius:2px}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.rc{padding:14px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);text-align:center}
+.rc-val{font-size:24px;font-weight:800;font-family:var(--font-code)}
+.rc-label{font-size:9px;color:var(--text-caption);margin-top:2px}
+.rc-status{font-size:10px;font-weight:700;margin-top:4px;padding:2px 8px;border-radius:8px;display:inline-block}
+.s-ok{background:rgba(16,185,129,0.1);color:#059669}
+.s-low{background:rgba(245,158,11,0.1);color:#D97706}
+.s-high{background:rgba(239,68,68,0.1);color:#DC2626}
+.notice{padding:12px;border-radius:10px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:11px;color:var(--text-secondary);line-height:1.6;margin-top:12px}
+.notice strong{color:#D97706}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">身高体重生长曲线 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">身高体重生长曲线</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📏 身高体重生长曲线</div>
+    <div class="form-grid">
+      <div class="form-item"><div class="form-label">性别</div><div class="gender-row"><div class="gender-btn boy active" id="gBoy">👦 男孩</div><div class="gender-btn girl" id="gGirl">👧 女孩</div></div></div>
+      <div class="form-item"><div class="form-label">年龄</div><div style="display:flex;gap:6px"><input class="form-input" id="ageY" placeholder="岁" style="flex:1" value="3"><input class="form-input" id="ageM" placeholder="月" style="flex:1" value="0"></div></div>
+      <div class="form-item"><div class="form-label">身高 (cm)</div><input class="form-input" id="heightIn" placeholder="输入身高" value="96"></div>
+      <div class="form-item"><div class="form-label">体重 (kg)</div><input class="form-input" id="weightIn" placeholder="输入体重" value="14.5"></div>
+    </div>
+    <button class="btn btn-primary" id="calcBtn">📊 查看生长曲线</button>
+  </div>
+  <div class="panel">
+    <div class="section-title">📈 身高生长曲线 (WHO标准)</div>
+    <div class="chart-box"><canvas id="chartCanvas"></canvas></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>P97</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>P75</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>P50</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>P25</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8B5CF6"></div>P3</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1A1A2E;width:8px;height:8px;border-radius:50%"></div>宝宝</div>
+    </div>
+    <div class="result-grid" id="results"></div>
+    <div class="notice"><strong>⚠️ 温馨提示：</strong>本工具数据基于 WHO 儿童生长标准（2006年版），仅供参考。每个孩子发育节奏不同，如有疑虑请咨询儿科医生。</div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">身高体重生长曲线</span><div class="statusbar-spacer"></div><span>WHO标准 · 仅供参考</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// Simplified WHO height-for-age data (boys, 0-5y, monthly P3/P25/P50/P75/P97 in cm)
+// ages in months: 0,6,12,18,24,30,36,42,48,54,60
+const AGES=[0,6,12,18,24,30,36,42,48,54,60];
+const BOY_H={P3:[46.1,63.3,71.0,77.1,82.5,87.1,91.2,95.0,98.5,101.8,105.0],P25:[48.5,66.0,73.8,80.0,85.6,90.4,94.6,98.5,102.1,105.5,108.8],P50:[49.9,67.6,75.7,82.3,87.8,92.8,96.5,100.6,104.1,107.5,110.6],P75:[51.3,69.3,77.7,84.2,90.0,94.6,98.8,102.8,106.3,109.7,113.0],P97:[53.4,71.6,80.2,86.7,92.8,97.6,101.8,105.8,109.3,112.8,116.0]};
+const GIRL_H={P3:[45.4,61.2,68.9,74.7,80.0,84.6,88.5,92.2,95.8,99.0,102.2],P25:[47.5,63.8,71.5,77.6,83.0,87.8,91.8,95.6,99.2,102.5,105.8],P50:[49.1,65.7,73.7,79.9,85.0,89.9,93.9,97.7,101.3,104.7,108.0],P75:[50.4,67.3,75.7,82.0,87.2,92.0,96.1,99.9,103.6,107.0,110.3],P97:[52.2,69.5,78.0,84.6,89.8,94.8,99.0,102.8,106.5,110.0,113.5]};
+let chart=null,gender='boy';
+document.getElementById('gBoy').addEventListener('click',()=>{gender='boy';document.getElementById('gBoy').classList.add('active');document.getElementById('gGirl').classList.remove('active')});
+document.getElementById('gGirl').addEventListener('click',()=>{gender='girl';document.getElementById('gGirl').classList.add('active');document.getElementById('gBoy').classList.remove('active')});
+function getStatus(val,p3,p25,p50,p75,p97){
+  if(val<p3)return['偏低 <P3','s-low'];if(val<p25)return['偏低 P3-P25','s-low'];
+  if(val<=p75)return['正常 P25-P75','s-ok'];if(val<=p97)return['偏高 P75-P97','s-ok'];
+  return['偏高 >P97','s-high'];
+}
+function interp(data,monthAge){
+  const idx=AGES.findIndex(a=>a>=monthAge);
+  if(idx===0)return data[0];if(idx===-1)return data[data.length-1];
+  const a0=AGES[idx-1],a1=AGES[idx];const t=(monthAge-a0)/(a1-a0);
+  return data[idx-1]+(data[idx]-data[idx-1])*t;
+}
+document.getElementById('calcBtn').addEventListener('click',()=>{
+  const ageYears=+document.getElementById('ageY').value||0;
+  const ageMonths=+document.getElementById('ageM').value||0;
+  const monthAge=ageYears*12+ageMonths;
+  const h=+document.getElementById('heightIn').value||0;
+  const w=+document.getElementById('weightIn').value||0;
+  const D=gender==='boy'?BOY_H:GIRL_H;
+  // draw chart
+  if(chart)chart.destroy();
+  const ctx=document.getElementById('chartCanvas').getContext('2d');
+  const datasets=[
+    {label:'P97',data:D.P97,borderColor:'#EF4444',borderWidth:1.5,fill:false,pointRadius:0},
+    {label:'P75',data:D.P75,borderColor:'#F59E0B',borderWidth:1.5,fill:false,pointRadius:0},
+    {label:'P50',data:D.P50,borderColor:'#10B981',borderWidth:2,fill:false,pointRadius:0},
+    {label:'P25',data:D.P25,borderColor:'#3B82F6',borderWidth:1.5,fill:false,pointRadius:0},
+    {label:'P3',data:D.P3,borderColor:'#8B5CF6',borderWidth:1.5,fill:false,pointRadius:0},
+  ];
+  if(h>0&&monthAge>=0&&monthAge<=60){
+    const ptData=new Array(AGES.length).fill(null);
+    const closestIdx=AGES.reduce((best,a,i)=>Math.abs(a-monthAge)<Math.abs(AGES[best]-monthAge)?i:best,0);
+    ptData[closestIdx]=h;
+    datasets.push({label:'宝宝',data:ptData,borderColor:'#1A1A2E',backgroundColor:'#1A1A2E',pointRadius:6,pointStyle:'circle',showLine:false});
+  }
+  chart=new Chart(ctx,{type:'line',data:{labels:AGES.map(a=>a+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'月龄'}},y:{title:{display:true,text:'身高 (cm)'}}}}});
+  // results
+  const p3=interp(D.P3,monthAge),p25=interp(D.P25,monthAge),p50=interp(D.P50,monthAge),p75=interp(D.P75,monthAge),p97=interp(D.P97,monthAge);
+  const [hStatus,hClass]=h>0?getStatus(h,p3,p25,p50,p75,p97):['--',''];
+  const bmi=h>0&&w>0?(w/((h/100)**2)).toFixed(1):'--';
+  document.getElementById('results').innerHTML=`
+    <div class="rc"><div class="rc-val" style="color:#10B981">${h||'--'}</div><div class="rc-label">身高 (cm)</div>${hStatus!=='--'?`<div class="rc-status ${hClass}">${hStatus}</div>`:''}</div>
+    <div class="rc"><div class="rc-val" style="color:#F59E0B">${w||'--'}</div><div class="rc-label">体重 (kg)</div></div>
+    <div class="rc"><div class="rc-val">${bmi}</div><div class="rc-label">BMI</div></div>`;
+  document.getElementById('statusInfo').textContent=`${gender==='boy'?'👦':'👧'} ${ageYears}岁${ageMonths}月 — ${hStatus}`;
+});
+// auto-calc on load
+document.getElementById('calcBtn').click();
+</script>
+<noscript><p>身高体重生长曲线 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
