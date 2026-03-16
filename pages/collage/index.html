@@ -22,6 +22,7 @@
 body { min-height: 100vh; display: flex; flex-direction: column; }
 .main { flex: 1; position: relative; z-index: 1; padding: 24px 24px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
 .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.dual > div:last-child { position: sticky; top: 72px; }
 .panel {
   padding: 24px; border-radius: 16px; margin-bottom: 16px;
   background: var(--bg-glass); backdrop-filter: blur(20px);
@@ -114,6 +115,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 @media (max-width: 768px) {
   .main { padding: 16px 16px 60px; }
   .dual { grid-template-columns: 1fr; }
+  .dual > div:last-child { position: static; }
 }
 </style>
 <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
@@ -132,7 +134,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="dual">
-    <!-- 左：上传 + 列表 + 预览 -->
+    <!-- 左：上传 + 列表 -->
     <div>
       <div class="panel">
         <div class="upload-area">
@@ -145,13 +147,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         </div>
         <div class="img-list" id="imgList"></div>
       </div>
-      <div class="panel" id="previewPanel" style="display:none">
-        <div class="section-title">👁️ 预览</div>
-        <div class="preview-wrap"><canvas id="previewCanvas"></canvas></div>
-      </div>
     </div>
 
-    <!-- 右：控件 -->
+    <!-- 右：控件 + 预览（sticky） -->
     <div>
       <div class="panel">
         <div class="section-title">📐 拼接模式</div>
@@ -191,6 +189,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             <option value="jpeg">JPG</option>
           </select>
         </div>
+      </div>
+
+      <div class="panel" id="previewPanel" style="display:none">
+        <div class="section-title">👁️ 预览</div>
+        <div class="preview-wrap"><canvas id="previewCanvas"></canvas></div>
       </div>
     </div>
   </div>
