@@ -46,6 +46,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   font-size: 11px; font-weight: 700; cursor: pointer; transition: all 150ms;
 }
 .today-btn:hover { background: var(--brand-500); color: #fff; }
+.jump-select {
+  padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 13px; font-weight: 700;
+  color: var(--text-primary); cursor: pointer; outline: none;
+}
+.jump-select:focus { border-color: var(--brand-500); }
+.jump-row { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
 
 /* Calendar grid */
 .cal-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 4px; }
@@ -125,6 +132,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div>
             <div class="month-label" id="monthLabel"></div>
             <div class="month-sub" id="monthSub"></div>
+            <div class="jump-row">
+              <select class="jump-select" id="jumpYear"></select>
+              <select class="jump-select" id="jumpMonth"></select>
+            </div>
           </div>
           <div class="month-btns">
             <button class="today-btn" id="todayBtn">今天</button>
@@ -201,11 +212,31 @@ const { Solar, Lunar, SolarUtil } = window;
 
 let curYear, curMonth, selDay;
 
+function initJumpSelects() {
+  const ySel = document.getElementById('jumpYear');
+  const mSel = document.getElementById('jumpMonth');
+  let yHtml = '';
+  for (let y = 1900; y <= 2100; y++) yHtml += `<option value="${y}">${y}年</option>`;
+  ySel.innerHTML = yHtml;
+  let mHtml = '';
+  for (let m = 1; m <= 12; m++) mHtml += `<option value="${m}">${m}月</option>`;
+  mSel.innerHTML = mHtml;
+
+  ySel.addEventListener('change', () => { curYear = parseInt(ySel.value); selDay = 1; renderCal(); selectDay(1); });
+  mSel.addEventListener('change', () => { curMonth = parseInt(mSel.value); selDay = 1; renderCal(); selectDay(1); });
+}
+
+function syncJumpSelects() {
+  document.getElementById('jumpYear').value = curYear;
+  document.getElementById('jumpMonth').value = curMonth;
+}
+
 function init() {
   const t = new Date();
   curYear = t.getFullYear();
   curMonth = t.getMonth() + 1;
   selDay = t.getDate();
+  initJumpSelects();
   renderCal();
   selectDay(selDay);
 }
@@ -216,6 +247,7 @@ function renderCal() {
   const lunar = solar.getLunar();
   document.getElementById('monthLabel').textContent = `${curYear}年${curMonth}月`;
   document.getElementById('monthSub').textContent = `${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月`;
+  syncJumpSelects();
 
   const firstDay = new Date(curYear, curMonth - 1, 1).getDay();
   const daysInMonth = SolarUtil.getDaysOfMonth(curYear, curMonth);
