@@ -246,3 +246,11 @@ body {
   .work-area { grid-template-columns: 1fr; }
   .work-pane:first-child { border-right: none; border-bottom: 0.5px solid var(--border-glass-outer); }
 }
+
+/* ── Short viewport (13/14" laptops ~800px) ── */
+@media (max-height: 800px) {
+  .topbar { height: 40px; }
+  .main, .container { padding-top: 16px; padding-bottom: 16px; }
+  .panel, .glass { padding: 16px; }
+  .section-title { margin-bottom: 8px; }
+}
