@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>汇率换算 | Currency Converter — DevKit</title>
-<meta name="description" content="在线汇率换算，实时汇率，多币种同时显示，CNY/USD/EUR/JPY/GBP等11种货币，离线缓存。Currency converter online.">
-<meta name="keywords" content="currency converter, 汇率换算, exchange rate, 汇率计算器, DevKit">
+<meta name="description" content="在线汇率换算，实时汇率，多币种同时显示，交叉汇率表，换算历史，CNY/USD/EUR/JPY/GBP等15种货币，离线缓存。">
+<meta name="keywords" content="currency converter, 汇率换算, exchange rate, 汇率计算器, 交叉汇率, DevKit">
 <meta property="og:title" content="汇率换算 | Currency Converter — DevKit">
-<meta property="og:description" content="实时汇率换算，多币种同时显示">
+<meta property="og:description" content="实时汇率换算，多币种对比，交叉汇率表">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://l-s-c.github.io/devkit/pages/currency/">
 <meta property="og:site_name" content="DevKit">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="汇率换算 — DevKit">
-<meta name="twitter:description" content="实时汇率换算在线工具">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"汇率换算","description":"在线汇率换算，实时汇率，多币种同时显示","url":"https://l-s-c.github.io/devkit/pages/currency/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<meta name="twitter:description" content="实时汇率换算，交叉汇率表">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"汇率换算","description":"在线汇率换算，实时汇率，多币种同时显示，交叉汇率表","url":"https://l-s-c.github.io/devkit/pages/currency/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/currency/">
 <link rel="stylesheet" href="../../shared/liquid-glass.css">
@@ -29,37 +29,60 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 }
 .section-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
 
-/* Converter cards */
-.convert-card {
-  padding: 20px; border-radius: 10px; border: 1.5px solid var(--border-glass);
-  background: var(--bg-glass); margin-bottom: 12px;
+/* Quick pair pills */
+.pair-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.pair-pill {
+  padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 11px; font-weight: 700;
+  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+  display: flex; align-items: center; gap: 4px;
 }
-.convert-label { font-size: 11px; font-weight: 700; color: var(--text-caption); margin-bottom: 8px; }
-.convert-row { display: flex; gap: 8px; align-items: center; }
-.convert-input {
-  flex: 1; padding: 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
-  background: var(--bg-glass); font-size: 24px; font-weight: 800;
-  font-family: var(--font-code); color: var(--text-primary); outline: none; transition: border-color 150ms;
+.pair-pill:hover { border-color: var(--brand-500); color: var(--brand-500); }
+.pair-pill.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+
+/* Hero converter */
+.hero-convert {
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(16,185,129,0.04));
+  border: 1.5px solid rgba(99,102,241,0.12); border-radius: 16px; padding: 28px;
 }
-.convert-input:focus { border-color: var(--brand-500); }
-.convert-select {
-  padding: 14px 12px; border-radius: 6px; border: 1.5px solid var(--border-glass);
-  background: var(--bg-glass); font-size: 14px; font-weight: 700;
+.currency-row { display: flex; align-items: center; gap: 12px; }
+.curr-flag { font-size: 32px; flex-shrink: 0; }
+.curr-body { flex: 1; }
+.curr-label { font-size: 11px; font-weight: 700; color: var(--text-caption); margin-bottom: 4px; }
+.curr-input {
+  width: 100%; padding: 0; border: none; background: none;
+  font-size: 32px; font-weight: 800; font-family: var(--font-code);
+  color: var(--text-primary); outline: none; letter-spacing: -1px;
+}
+.curr-input::placeholder { color: var(--text-caption); }
+.curr-dropdown {
+  padding: 10px 14px; border-radius: 6px; border: 1.5px solid var(--border-glass);
+  background: var(--bg-glass-input); font-size: 14px; font-weight: 700;
   color: var(--text-primary); cursor: pointer; min-width: 110px;
 }
+.curr-name { font-size: 11px; color: var(--text-caption); margin-top: 2px; }
 
 /* Swap */
-.swap-wrap { display: flex; justify-content: center; margin: -4px 0; }
+.swap-line { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+.swap-line-bar { flex: 1; height: 1px; background: var(--border-glass); }
 .swap-btn {
-  width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--border-glass);
-  background: var(--bg-glass); cursor: pointer; font-size: 20px;
-  display: flex; align-items: center; justify-content: center; transition: all 200ms; z-index: 1;
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-glass);
+  background: var(--bg-glass-input); cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 200ms; flex-shrink: 0;
 }
 .swap-btn:hover { border-color: var(--brand-500); background: rgba(99,102,241,0.08); transform: rotate(180deg); }
 
-/* Result */
-.result-amount { font-size: 32px; font-weight: 800; font-family: var(--font-code); color: var(--brand-500); letter-spacing: -1px; }
-.result-rate { font-size: 12px; color: var(--text-caption); font-family: var(--font-code); margin-top: 4px; }
+/* Rate display */
+.rate-display {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: 6px; background: var(--bg-glass-input);
+  border: 1px solid var(--border-glass); margin-top: 16px;
+}
+.rate-text { font-family: var(--font-code); font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+.rate-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.rate-live { background: rgba(16,185,129,0.08); color: #10B981; }
+.rate-cached { background: rgba(245,158,11,0.08); color: #F59E0B; }
 
 /* Status */
 .status-bar {
@@ -69,36 +92,54 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 .status-ok { background: rgba(16,185,129,0.08); color: #10B981; }
 .status-cache { background: rgba(245,158,11,0.08); color: #F59E0B; }
 .status-err { background: rgba(239,68,68,0.08); color: #EF4444; }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; display: inline-block; }
-.status-ok .status-dot { background: #10B981; }
-.status-cache .status-dot { background: #F59E0B; }
-.status-err .status-dot { background: #EF4444; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; display: inline-block; }
 
-/* Multi currency */
-.quick-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-.quick-chip {
-  padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--border-glass);
-  background: var(--bg-glass); font-size: 11px; font-weight: 700;
-  color: var(--text-secondary); cursor: pointer; transition: all 150ms;
+/* History */
+.history-item {
+  display: flex; align-items: center; gap: 8px; padding: 10px 0;
+  border-bottom: 1px solid var(--border-glass); font-size: 12px;
 }
-.quick-chip:hover { border-color: var(--brand-500); color: var(--brand-500); }
-.quick-chip.active { border-color: var(--brand-500); background: rgba(99,102,241,0.08); color: var(--brand-500); }
+.history-item:last-child { border-bottom: none; }
+.history-pair { font-weight: 700; min-width: 80px; }
+.history-val { font-family: var(--font-code); font-weight: 700; color: var(--brand-500); flex: 1; }
+.history-time { font-family: var(--font-code); font-size: 10px; color: var(--text-caption); }
+.history-empty { text-align: center; padding: 20px; color: var(--text-caption); font-size: 12px; }
 
+/* Category tabs */
+.cat-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.cat-tab {
+  padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 700;
+  color: var(--text-caption); cursor: pointer; transition: all 150ms; border: 1.5px solid transparent;
+}
+.cat-tab:hover { color: var(--text-secondary); }
+.cat-tab.active { background: rgba(99,102,241,0.08); color: var(--brand-500); border-color: rgba(99,102,241,0.15); }
+
+/* Multi currency grid */
 .multi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .multi-item {
-  padding: 12px; border-radius: 6px; border: 1px solid var(--border-glass);
-  background: var(--bg-glass); display: flex; align-items: center; gap: 8px; transition: all 150ms;
+  padding: 14px; border-radius: 6px; border: 1px solid var(--border-glass);
+  background: var(--bg-glass-input); display: flex; align-items: center; gap: 10px;
+  transition: all 150ms; cursor: pointer;
 }
-.multi-item:hover { border-color: var(--brand-500); }
-.multi-flag { font-size: 20px; }
+.multi-item:hover { border-color: var(--brand-500); transform: translateY(-1px); }
+.multi-flag { font-size: 24px; }
 .multi-info { flex: 1; }
-.multi-code { font-size: 11px; font-weight: 700; color: var(--text-caption); }
-.multi-val { font-size: 15px; font-weight: 800; font-family: var(--font-code); color: var(--text-primary); }
+.multi-code { font-size: 10px; font-weight: 700; color: var(--text-caption); }
+.multi-val { font-size: 16px; font-weight: 800; font-family: var(--font-code); color: var(--text-primary); margin-top: 1px; }
+.multi-rate { font-size: 9px; font-family: var(--font-code); color: var(--text-caption); margin-top: 1px; }
+
+/* Cross rates table */
+.cross-table { width: 100%; border-collapse: collapse; font-size: 10px; font-family: var(--font-code); }
+.cross-table th { padding: 8px 4px; text-align: right; color: var(--text-caption); font-weight: 700; }
+.cross-table th:first-child { text-align: left; }
+.cross-table td { padding: 6px 4px; text-align: right; color: var(--text-primary); font-weight: 600; }
+.cross-table td:first-child { text-align: left; font-weight: 700; color: var(--text-secondary); }
+.cross-table td.dash { color: var(--text-caption); }
 
 @media (max-width: 768px) {
   .main { padding: 16px 16px 60px; }
   .dual { grid-template-columns: 1fr; }
-  .result-amount { font-size: 24px; }
+  .curr-input { font-size: 24px; }
   .multi-grid { grid-template-columns: 1fr; }
 }
 </style>
@@ -120,45 +161,99 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <div class="dual">
     <!-- 左：换算 -->
     <div>
+      <!-- 常用货币对 -->
       <div class="panel">
-        <div class="section-title">💰 金额换算</div>
-        <div class="convert-card">
-          <div class="convert-label">从</div>
-          <div class="convert-row">
-            <input type="number" class="convert-input" id="fromAmount" value="100">
-            <select class="convert-select" id="fromCurrency"></select>
-          </div>
-        </div>
-        <div class="swap-wrap"><button class="swap-btn" id="swapBtn">⇅</button></div>
-        <div class="convert-card">
-          <div class="convert-label">到</div>
-          <div class="convert-row">
-            <div style="flex:1">
-              <div class="result-amount" id="resultAmount">—</div>
-              <div class="result-rate" id="resultRate"></div>
-            </div>
-            <select class="convert-select" id="toCurrency"></select>
-          </div>
+        <div class="section-title">⚡ 常用货币对</div>
+        <div class="pair-row" id="pairRow">
+          <span class="pair-pill active" data-from="CNY" data-to="USD">🇨🇳→🇺🇸 CNY/USD</span>
+          <span class="pair-pill" data-from="CNY" data-to="JPY">🇨🇳→🇯🇵 CNY/JPY</span>
+          <span class="pair-pill" data-from="CNY" data-to="EUR">🇨🇳→🇪🇺 CNY/EUR</span>
+          <span class="pair-pill" data-from="CNY" data-to="GBP">🇨🇳→🇬🇧 CNY/GBP</span>
+          <span class="pair-pill" data-from="CNY" data-to="HKD">🇨🇳→🇭🇰 CNY/HKD</span>
+          <span class="pair-pill" data-from="USD" data-to="JPY">🇺🇸→🇯🇵 USD/JPY</span>
+          <span class="pair-pill" data-from="EUR" data-to="USD">🇪🇺→🇺🇸 EUR/USD</span>
         </div>
       </div>
-      <div class="panel">
+
+      <!-- 换算卡 -->
+      <div class="hero-convert" id="heroConvert">
+        <div class="currency-row">
+          <span class="curr-flag" id="fromFlag">🇨🇳</span>
+          <div class="curr-body">
+            <div class="curr-label">从</div>
+            <input type="number" class="curr-input" id="fromAmount" value="1000" placeholder="输入金额">
+          </div>
+          <div style="text-align:right">
+            <select class="curr-dropdown" id="fromCurrency"></select>
+            <div class="curr-name" id="fromName">人民币</div>
+          </div>
+        </div>
+
+        <div class="swap-line">
+          <div class="swap-line-bar"></div>
+          <button class="swap-btn" id="swapBtn">⇅</button>
+          <div class="swap-line-bar"></div>
+        </div>
+
+        <div class="currency-row">
+          <span class="curr-flag" id="toFlag">🇺🇸</span>
+          <div class="curr-body">
+            <div class="curr-label">到</div>
+            <div class="curr-input" id="resultAmount" style="cursor:default">—</div>
+          </div>
+          <div style="text-align:right">
+            <select class="curr-dropdown" id="toCurrency"></select>
+            <div class="curr-name" id="toName">美元</div>
+          </div>
+        </div>
+
+        <div class="rate-display">
+          <span class="rate-text" id="rateText">1 CNY = — USD</span>
+          <span class="rate-badge rate-live" id="rateBadge">● 实时</span>
+        </div>
+      </div>
+
+      <!-- 状态 -->
+      <div class="panel" style="padding:14px 20px">
         <div class="status-bar status-ok" id="statusBar">
           <span><span class="status-dot"></span>正在获取汇率…</span>
           <span id="updateTime">—</span>
         </div>
       </div>
+
+      <!-- 换算历史 -->
+      <div class="panel">
+        <div class="section-title">🕐 换算历史</div>
+        <div id="historyList">
+          <div class="history-empty">换算后自动记录</div>
+        </div>
+      </div>
     </div>
 
-    <!-- 右：多币种 -->
+    <!-- 右：多币种 + 交叉汇率 -->
     <div>
       <div class="panel">
-        <div class="section-title">🌍 多币种一览</div>
-        <div class="quick-row" id="quickTabs">
-          <span class="quick-chip active" data-tab="common">常用</span>
-          <span class="quick-chip" data-tab="asia">亚洲</span>
-          <span class="quick-chip" data-tab="west">欧美</span>
+        <div class="section-title">🌍 多币种一览 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto">基于左侧金额</span></div>
+        <div class="cat-tabs" id="catTabs">
+          <span class="cat-tab active" data-cat="common">常用</span>
+          <span class="cat-tab" data-cat="asia">亚洲</span>
+          <span class="cat-tab" data-cat="west">欧美</span>
+          <span class="cat-tab" data-cat="all">全部</span>
         </div>
         <div class="multi-grid" id="multiGrid"></div>
+      </div>
+
+      <!-- 交叉汇率表 -->
+      <div class="panel">
+        <div class="section-title">📊 交叉汇率</div>
+        <div style="overflow-x:auto">
+          <table class="cross-table">
+            <thead>
+              <tr><th></th><th>USD</th><th>EUR</th><th>JPY</th><th>GBP</th></tr>
+            </thead>
+            <tbody id="crossTable"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -173,32 +268,35 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <script type="module">
 import '../../shared/theme.js';
 
-const FLAGS = { CNY:'🇨🇳',USD:'🇺🇸',EUR:'🇪🇺',JPY:'🇯🇵',GBP:'🇬🇧',HKD:'🇭🇰',KRW:'🇰🇷',AUD:'🇦🇺',CAD:'🇨🇦',SGD:'🇸🇬',THB:'🇹🇭' };
-const NAMES = { CNY:'人民币',USD:'美元',EUR:'欧元',JPY:'日元',GBP:'英镑',HKD:'港币',KRW:'韩元',AUD:'澳元',CAD:'加元',SGD:'新元',THB:'泰铢' };
-const ALL_CURRENCIES = Object.keys(FLAGS);
-const TABS = {
+const FLAGS = { CNY:'🇨🇳',USD:'🇺🇸',EUR:'🇪🇺',JPY:'🇯🇵',GBP:'🇬🇧',HKD:'🇭🇰',KRW:'🇰🇷',AUD:'🇦🇺',CAD:'🇨🇦',SGD:'🇸🇬',THB:'🇹🇭',TWD:'🇹🇼',MYR:'🇲🇾',INR:'🇮🇳',CHF:'🇨🇭' };
+const NAMES = { CNY:'人民币',USD:'美元',EUR:'欧元',JPY:'日元',GBP:'英镑',HKD:'港币',KRW:'韩元',AUD:'澳元',CAD:'加元',SGD:'新元',THB:'泰铢',TWD:'台币',MYR:'林吉特',INR:'卢比',CHF:'瑞郎' };
+const ALL = Object.keys(FLAGS);
+const CATS = {
   common: ['USD','EUR','JPY','GBP','HKD','KRW','AUD','SGD'],
-  asia:   ['JPY','HKD','KRW','SGD','THB','CNY'],
-  west:   ['USD','EUR','GBP','AUD','CAD'],
+  asia:   ['JPY','HKD','KRW','SGD','THB','TWD','MYR','INR'],
+  west:   ['USD','EUR','GBP','CHF','CAD','AUD'],
+  all:    ['USD','EUR','JPY','GBP','HKD','KRW','AUD','CAD','SGD','THB','TWD','MYR','INR','CHF']
 };
+const CROSS_ROWS = ['CNY','USD','EUR','JPY','GBP'];
+const CROSS_COLS = ['USD','EUR','JPY','GBP'];
 
-let rates = null, currentTab = 'common';
+let rates = null, currentCat = 'common';
+let history = JSON.parse(localStorage.getItem('devkit-currency-hist') || '[]');
 
-/* ===== 初始化下拉 ===== */
+/* Init selects */
 function initSelects() {
-  const opts = ALL_CURRENCIES.map(c => `<option value="${c}">${FLAGS[c]} ${c}</option>`).join('');
+  const opts = ALL.map(c => `<option value="${c}">${FLAGS[c]} ${c}</option>`).join('');
   document.getElementById('fromCurrency').innerHTML = opts;
   document.getElementById('toCurrency').innerHTML = opts;
   document.getElementById('fromCurrency').value = 'CNY';
   document.getElementById('toCurrency').value = 'USD';
 }
 
-/* ===== 获取汇率 ===== */
+/* Fetch rates */
 async function fetchRates() {
   const CACHE_KEY = 'devkit-currency-rates';
-  const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+  const CACHE_TTL = 24 * 60 * 60 * 1000;
 
-  // 先查缓存
   const cached = localStorage.getItem(CACHE_KEY);
   if (cached) {
     try {
@@ -206,13 +304,12 @@ async function fetchRates() {
       if (Date.now() - d.timestamp < CACHE_TTL) {
         rates = d.rates;
         showStatus('ok', d.timestamp);
-        convert(); updateMulti();
+        convert(); updateMulti(); updateCross();
         return;
       }
     } catch(e) {}
   }
 
-  // 请求 API
   try {
     const res = await fetch('https://open.er-api.com/v6/latest/CNY');
     if (!res.ok) throw new Error('API error');
@@ -223,40 +320,31 @@ async function fetchRates() {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ rates, timestamp: ts }));
     showStatus('ok', ts);
   } catch(e) {
-    // API 失败，用缓存
     if (cached) {
-      try {
-        const d = JSON.parse(cached);
-        rates = d.rates;
-        showStatus('cache', d.timestamp);
-      } catch(e2) {
-        showStatus('err', null);
-        return;
-      }
-    } else {
-      showStatus('err', null);
-      return;
-    }
+      try { const d = JSON.parse(cached); rates = d.rates; showStatus('cache', d.timestamp); }
+      catch(e2) { showStatus('err', null); return; }
+    } else { showStatus('err', null); return; }
   }
-  convert();
-  updateMulti();
+  convert(); updateMulti(); updateCross();
 }
 
-/* ===== 状态栏 ===== */
 function showStatus(type, ts) {
   const bar = document.getElementById('statusBar');
+  const badge = document.getElementById('rateBadge');
   const time = ts ? new Date(ts).toLocaleString('zh-CN') : '—';
   const map = {
-    ok:    ['status-ok', '🟢', '汇率已更新'],
-    cache: ['status-cache', '🟡', '使用缓存汇率'],
-    err:   ['status-err', '🔴', 'API 请求失败'],
+    ok:    ['status-ok', '汇率已更新', '● 实时', 'rate-live'],
+    cache: ['status-cache', '使用缓存汇率', '● 缓存', 'rate-cached'],
+    err:   ['status-err', 'API 请求失败', '● 离线', 'rate-cached'],
   };
-  const [cls, , label] = map[type];
+  const [cls, label, badgeText, badgeCls] = map[type];
   bar.className = 'status-bar ' + cls;
   bar.innerHTML = `<span><span class="status-dot"></span>${label}</span><span>${time}</span>`;
+  badge.textContent = badgeText;
+  badge.className = 'rate-badge ' + badgeCls;
 }
 
-/* ===== 换算 ===== */
+/* Convert */
 function convert() {
   if (!rates) return;
   const amt = parseFloat(document.getElementById('fromAmount').value) || 0;
@@ -264,27 +352,75 @@ function convert() {
   const to = document.getElementById('toCurrency').value;
   const rate = rates[to] / rates[from];
   const result = amt * rate;
+
   document.getElementById('resultAmount').textContent = result.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-  document.getElementById('resultRate').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+  document.getElementById('rateText').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+  document.getElementById('fromFlag').textContent = FLAGS[from] || '';
+  document.getElementById('toFlag').textContent = FLAGS[to] || '';
+  document.getElementById('fromName').textContent = NAMES[from] || from;
+  document.getElementById('toName').textContent = NAMES[to] || to;
   document.getElementById('statusInfo').textContent = `${amt} ${from} → ${result.toFixed(2)} ${to}`;
+
+  // Save history
+  if (amt > 0) {
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    if (!history.length || history[0].from !== from || history[0].to !== to || history[0].amt !== amt) {
+      history.unshift({ from, to, amt, result: result.toFixed(2), time });
+      if (history.length > 10) history.pop();
+      localStorage.setItem('devkit-currency-hist', JSON.stringify(history));
+    }
+    renderHistory();
+  }
 }
 
-/* ===== 多币种 ===== */
+/* Multi currency */
 function updateMulti() {
   if (!rates) return;
   const amt = parseFloat(document.getElementById('fromAmount').value) || 0;
   const from = document.getElementById('fromCurrency').value;
-  const list = TABS[currentTab];
-  const grid = document.getElementById('multiGrid');
-  grid.innerHTML = list.map(c => {
+  const list = CATS[currentCat].filter(c => c !== from);
+  document.getElementById('multiGrid').innerHTML = list.map(c => {
     const val = amt * rates[c] / rates[from];
-    return `<div class="multi-item"><span class="multi-flag">${FLAGS[c] || ''}</span><div class="multi-info"><div class="multi-code">${c} ${NAMES[c] || c}</div><div class="multi-val">${val.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div></div></div>`;
+    const unitRate = (rates[c] / rates[from]).toFixed(4);
+    return `<div class="multi-item" data-curr="${c}">
+      <span class="multi-flag">${FLAGS[c]}</span>
+      <div class="multi-info">
+        <div class="multi-code">${c} ${NAMES[c]}</div>
+        <div class="multi-val">${val.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+        <div class="multi-rate">1 ${from} = ${unitRate}</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
-/* ===== 事件 ===== */
+/* Cross rates table */
+function updateCross() {
+  if (!rates) return;
+  document.getElementById('crossTable').innerHTML = CROSS_ROWS.map(r =>
+    `<tr><td>${FLAGS[r]} ${r}</td>${CROSS_COLS.map(c =>
+      r === c ? '<td class="dash">—</td>' : `<td>${(rates[c] / rates[r]).toFixed(4)}</td>`
+    ).join('')}</tr>`
+  ).join('');
+}
+
+/* History */
+function renderHistory() {
+  if (!history.length) {
+    document.getElementById('historyList').innerHTML = '<div class="history-empty">换算后自动记录</div>';
+    return;
+  }
+  document.getElementById('historyList').innerHTML = history.slice(0, 8).map(h => `
+    <div class="history-item">
+      <span class="history-pair">${FLAGS[h.from] || ''}→${FLAGS[h.to] || ''}</span>
+      <span class="history-val">${Number(h.amt).toLocaleString()} → ${Number(h.result).toLocaleString()}</span>
+      <span class="history-time">${h.time}</span>
+    </div>`).join('');
+}
+
+/* Events */
 document.getElementById('fromAmount').addEventListener('input', () => { convert(); updateMulti(); });
-document.getElementById('fromCurrency').addEventListener('change', () => { convert(); updateMulti(); });
+document.getElementById('fromCurrency').addEventListener('change', () => { convert(); updateMulti(); updateCross(); });
 document.getElementById('toCurrency').addEventListener('change', () => { convert(); updateMulti(); });
 
 document.getElementById('swapBtn').addEventListener('click', () => {
@@ -293,16 +429,37 @@ document.getElementById('swapBtn').addEventListener('click', () => {
   convert(); updateMulti();
 });
 
-document.getElementById('quickTabs').addEventListener('click', e => {
-  const chip = e.target.closest('.quick-chip');
-  if (!chip) return;
-  currentTab = chip.dataset.tab;
-  document.querySelectorAll('.quick-chip').forEach(c => c.classList.toggle('active', c.dataset.tab === currentTab));
+/* Pair pills */
+document.getElementById('pairRow').addEventListener('click', e => {
+  const pill = e.target.closest('.pair-pill');
+  if (!pill) return;
+  document.getElementById('fromCurrency').value = pill.dataset.from;
+  document.getElementById('toCurrency').value = pill.dataset.to;
+  document.querySelectorAll('.pair-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  convert(); updateMulti(); updateCross();
+});
+
+/* Category tabs */
+document.getElementById('catTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.cat-tab');
+  if (!tab) return;
+  currentCat = tab.dataset.cat;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === currentCat));
   updateMulti();
 });
 
-/* ===== Init ===== */
+/* Click multi-currency card to switch target */
+document.getElementById('multiGrid').addEventListener('click', e => {
+  const item = e.target.closest('.multi-item');
+  if (!item) return;
+  document.getElementById('toCurrency').value = item.dataset.curr;
+  convert(); updateMulti();
+});
+
+/* Init */
 initSelects();
+renderHistory();
 fetchRates();
 </script>
 <noscript><p>汇率换算 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
