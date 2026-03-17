@@ -92,7 +92,6 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
 <script type="module">
 import '../../shared/theme.js';
-import '../../shared/sidebar.js';
 let tabs=[{name:'未命名笔记',content:''}],activeIdx=0,mdMode=false,saveTimer=null;
 const saved=localStorage.getItem('devkit-notepad');
 if(saved){try{tabs=JSON.parse(saved)}catch(e){}}
