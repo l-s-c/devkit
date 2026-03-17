@@ -69,9 +69,7 @@
         <a class="dk-hot-item" href="${base}color/"><div class="dk-hot-icon" style="background:rgba(236,72,153,0.1)">🎨</div><div><div class="dk-hot-name">颜色转换器</div><div class="dk-hot-desc">HEX / RGB / HSL</div></div></a>
         <a class="dk-hot-item" href="${base}hash/"><div class="dk-hot-icon" style="background:rgba(16,185,129,0.1)">#</div><div><div class="dk-hot-name">Hash 计算</div><div class="dk-hot-desc">MD5 / SHA1 / SHA256</div></div></a>
       </div>
-      <div class="dk-sb-section" style="padding:0;overflow:hidden">
-        <div class="dk-ad-slot s2"><span class="dk-ad-label">📢 广告 · 300×250</span></div>
-      </div>
+
   `;
   document.body.appendChild(aside);
 
