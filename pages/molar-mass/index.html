@@ -65,6 +65,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span>分子量计算</span><div class="statusbar-spacer"></div><span>化学绿 · 精确到小数</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 const ELEMENTS={H:{m:1.008,n:'氢 Hydrogen'},He:{m:4.003,n:'氦 Helium'},Li:{m:6.941,n:'锂 Lithium'},Be:{m:9.012,n:'铍 Beryllium'},B:{m:10.81,n:'硼 Boron'},C:{m:12.011,n:'碳 Carbon'},N:{m:14.007,n:'氮 Nitrogen'},O:{m:15.999,n:'氧 Oxygen'},F:{m:18.998,n:'氟 Fluorine'},Ne:{m:20.180,n:'氖 Neon'},Na:{m:22.990,n:'钠 Sodium'},Mg:{m:24.305,n:'镁 Magnesium'},Al:{m:26.982,n:'铝 Aluminium'},Si:{m:28.086,n:'硅 Silicon'},P:{m:30.974,n:'磷 Phosphorus'},S:{m:32.065,n:'硫 Sulfur'},Cl:{m:35.453,n:'氯 Chlorine'},Ar:{m:39.948,n:'氩 Argon'},K:{m:39.098,n:'钾 Potassium'},Ca:{m:40.078,n:'钙 Calcium'},Fe:{m:55.845,n:'铁 Iron'},Cu:{m:63.546,n:'铜 Copper'},Zn:{m:65.38,n:'锌 Zinc'},Ag:{m:107.868,n:'银 Silver'},Ba:{m:137.327,n:'钡 Barium'},Mn:{m:54.938,n:'锰 Manganese'},Cr:{m:51.996,n:'铬 Chromium'},I:{m:126.904,n:'碘 Iodine'},Br:{m:79.904,n:'溴 Bromine'}};
 // Parse formula with brackets support
 function parseFormula(s){

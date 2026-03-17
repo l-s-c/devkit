@@ -72,6 +72,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">CSR 证书生成</span><div class="statusbar-spacer"></div><span>🔒 本地生成 · 不上传</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 function arrayBufferToBase64(buf){const bytes=new Uint8Array(buf);let s='';for(let i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s)}
 function formatPEM(b64,type){const lines=b64.match(/.{1,64}/g)||[];return `-----BEGIN ${type}-----\n${lines.join('\n')}\n-----END ${type}-----`}
 function download(text,filename){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.download=filename;a.click()}
