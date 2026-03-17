@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学离子方程式 | Ion Equation — DevKit</title>
+<meta name="description" content="化学离子方程式转化工具，强弱电解质判断，20条常见反应预设，四步转化流程详解。Ion equation converter.">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/ion-equation/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"化学离子方程式","description":"离子方程式转化，强弱电解质判断，四步转化流程","url":"https://l-s-c.github.io/devkit/pages/ion-equation/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+h1.seo-only{position:absolute;left:-9999px;font-size:1px}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:saturate(var(--glass-saturate)) blur(var(--glass-blur));border:0.5px solid var(--border-glass);border-radius:16px;box-shadow:var(--glass-shadow);padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
+.tab:active{transform:scale(0.96)}.tab.active{background:#10B981;color:#fff;border-color:#10B981}
+.legend-row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.reaction-list{display:flex;flex-direction:column;gap:6px}
+.reaction-item{padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);cursor:pointer;transition:all 150ms;font-family:var(--font-code);font-size:12px;font-weight:600}
+.reaction-item:hover{border-color:#10B981}
+.reaction-item.active{border-color:#10B981;border-width:2px;background:rgba(16,185,129,0.04)}
+.reaction-name{font-size:10px;color:var(--text-caption);font-family:var(--font-ui);margin-top:4px}
+.step-card{padding:16px;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);margin-bottom:8px}
+.step-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.step-num{width:24px;height:24px;border-radius:50%;background:#10B981;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-title{font-size:12px;font-weight:800;color:var(--text-primary)}
+.step-content{font-size:14px;font-family:var(--font-code);font-weight:700;padding:12px;border-radius:8px;background:rgba(16,185,129,0.04);text-align:center;line-height:1.8;color:var(--text-primary)}
+.step-content.final{border:2px solid #10B981;font-size:16px}
+.strong{color:#10B981;font-weight:900}
+.weak{color:#EF4444;font-weight:900}
+.step-note{font-size:10px;color:var(--text-caption);margin-top:6px;line-height:1.5}
+.electrolyte-table{width:100%;border-collapse:separate;border-spacing:0 4px;margin-top:12px}
+.electrolyte-table th{padding:8px;font-size:10px;font-weight:700;text-align:center;background:#10B981;color:#fff}
+.electrolyte-table th:first-child{border-radius:6px 0 0 6px}
+.electrolyte-table th:last-child{border-radius:0 6px 6px 0}
+.electrolyte-table td{padding:8px;font-size:11px;text-align:center;background:var(--bg-glass-input);font-weight:600;color:var(--text-primary)}
+.electrolyte-table td:first-child{border-radius:6px 0 0 6px}
+.electrolyte-table td:last-child{border-radius:0 6px 6px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<h1 class="seo-only">化学离子方程式 - 四步转化流程</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a href="../index.html" class="topbar-logo"><div class="topbar-logo-icon">D</div><div class="topbar-logo-text">DevKit</div></a>
+  <span class="topbar-tool-name">化学离子方程式</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">⚗️ 化学离子方程式</div>
+    <div class="tab-row">
+      <div class="tab active" data-view="reactions">🧪 反应示例</div>
+      <div class="tab" data-view="table">📋 强弱电解质判断表</div>
+    </div>
+  </div>
+  <div id="reactionsView">
+    <div class="glass">
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>强电解质（拆）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>弱电解质/沉淀/气体（不拆）</div>
+      </div>
+      <div class="section-title">📖 常见反应 <span style="font-size:11px;color:var(--text-caption);margin-left:auto" id="rxnCount"></span></div>
+      <div class="reaction-list" id="reactionList"></div>
+    </div>
+    <div class="glass" id="stepsSection" style="display:none"></div>
+  </div>
+  <div id="tableView" class="hidden">
+    <div class="glass">
+      <div class="section-title">📋 强弱电解质判断规则</div>
+      <table class="electrolyte-table">
+        <thead><tr><th>类型</th><th>强电解质（拆）</th><th>弱电解质（不拆）</th></tr></thead>
+        <tbody>
+          <tr><td>酸</td><td class="strong">强酸：HCl, H₂SO₄, HNO₃, HBr, HI, HClO₄</td><td class="weak">弱酸：CH₃COOH, H₂CO₃, H₂S, HF, H₂SiO₃, HClO</td></tr>
+          <tr><td>碱</td><td class="strong">强碱：NaOH, KOH, Ca(OH)₂, Ba(OH)₂</td><td class="weak">弱碱：NH₃·H₂O, Fe(OH)₃, Cu(OH)₂, Al(OH)₃, Mg(OH)₂</td></tr>
+          <tr><td>盐</td><td class="strong">可溶盐：NaCl, KNO₃, Na₂SO₄, CaCl₂ 等</td><td class="weak">微溶/难溶盐：BaSO₄, AgCl, CaCO₃, Fe(OH)₃</td></tr>
+          <tr><td>氧化物</td><td colspan="2" style="text-align:center">氧化物不是电解质，不拆（H₂O, CO₂, SO₂ 等分子写整体）</td></tr>
+          <tr><td>单质</td><td colspan="2" style="text-align:center">单质不是电解质，不拆（Fe, Cu, Zn 等直接写）</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(16,185,129,0.04);font-size:12px;color:var(--text-secondary);line-height:1.8">
+        <strong>🔑 核心口诀：</strong><br>
+        ✅ <strong>拆：</strong>强酸、强碱、可溶性盐 → 拆成离子<br>
+        ❌ <strong>不拆：</strong>弱酸、弱碱、难溶盐、沉淀↓、气体↑、水、氧化物、单质 → 保留分子式<br>
+        📌 <strong>特别注意：</strong>微溶物作反应物（稀溶液）时拆，作生成物时不拆
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module" src="../../shared/theme.js"></script>
+<script>
+const REACTIONS=[
+{name:'酸碱中和（强酸+强碱）',eq:'NaOH + HCl → NaCl + H₂O',
+ judge:[{s:'NaOH',type:'强碱',strong:true},{s:'HCl',type:'强酸',strong:true},{s:'NaCl',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false}],
+ full:'Na⁺ + OH⁻ + H⁺ + Cl⁻ → Na⁺ + Cl⁻ + H₂O',
+ net:'OH⁻ + H⁺ = H₂O',
+ note:'消去两边相同的 Na⁺ 和 Cl⁻（旁观离子），这是所有强酸强碱中和的通式。'},
+{name:'碳酸钠与盐酸',eq:'Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂↑',
+ judge:[{s:'Na₂CO₃',type:'可溶盐',strong:true},{s:'HCl',type:'强酸',strong:true},{s:'NaCl',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false},{s:'CO₂↑',type:'气体',strong:false}],
+ full:'2Na⁺ + CO₃²⁻ + 2H⁺ + 2Cl⁻ → 2Na⁺ + 2Cl⁻ + H₂O + CO₂↑',
+ net:'CO₃²⁻ + 2H⁺ = H₂O + CO₂↑',
+ note:'CO₂是气体不拆，H₂O是弱电解质不拆。消去 Na⁺ 和 Cl⁻。'},
+{name:'氯化钡与硫酸钠',eq:'BaCl₂ + Na₂SO₄ → BaSO₄↓ + 2NaCl',
+ judge:[{s:'BaCl₂',type:'可溶盐',strong:true},{s:'Na₂SO₄',type:'可溶盐',strong:true},{s:'BaSO₄↓',type:'沉淀',strong:false},{s:'NaCl',type:'可溶盐',strong:true}],
+ full:'Ba²⁺ + 2Cl⁻ + 2Na⁺ + SO₄²⁻ → BaSO₄↓ + 2Na⁺ + 2Cl⁻',
+ net:'Ba²⁺ + SO₄²⁻ = BaSO₄↓',
+ note:'BaSO₄是难溶盐（沉淀）不拆。消去 Na⁺ 和 Cl⁻。'},
+{name:'铁与硫酸铜（置换）',eq:'Fe + CuSO₄ → FeSO₄ + Cu',
+ judge:[{s:'Fe',type:'单质',strong:false},{s:'CuSO₄',type:'可溶盐',strong:true},{s:'FeSO₄',type:'可溶盐',strong:true},{s:'Cu',type:'单质',strong:false}],
+ full:'Fe + Cu²⁺ + SO₄²⁻ → Fe²⁺ + SO₄²⁻ + Cu',
+ net:'Fe + Cu²⁺ = Fe²⁺ + Cu',
+ note:'单质不拆。Fe是比Cu活泼的金属，置换出Cu。'},
+{name:'碳酸钙与盐酸',eq:'CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑',
+ judge:[{s:'CaCO₃',type:'难溶盐',strong:false},{s:'HCl',type:'强酸',strong:true},{s:'CaCl₂',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false},{s:'CO₂↑',type:'气体',strong:false}],
+ full:'CaCO₃ + 2H⁺ + 2Cl⁻ → Ca²⁺ + 2Cl⁻ + H₂O + CO₂↑',
+ net:'CaCO₃ + 2H⁺ = Ca²⁺ + H₂O + CO₂↑',
+ note:'CaCO₃是难溶盐不拆，作为反应物也不拆。'},
+{name:'氢氧化钠与硫酸',eq:'2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O',
+ judge:[{s:'NaOH',type:'强碱',strong:true},{s:'H₂SO₄',type:'强酸',strong:true},{s:'Na₂SO₄',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false}],
+ full:'2Na⁺ + 2OH⁻ + 2H⁺ + SO₄²⁻ → 2Na⁺ + SO₄²⁻ + 2H₂O',
+ net:'OH⁻ + H⁺ = H₂O',
+ note:'和NaOH+HCl结果一样，强酸强碱中和的净离子方程式都是 OH⁻+H⁺=H₂O。'},
+{name:'硝酸银与盐酸',eq:'AgNO₃ + HCl → AgCl↓ + HNO₃',
+ judge:[{s:'AgNO₃',type:'可溶盐',strong:true},{s:'HCl',type:'强酸',strong:true},{s:'AgCl↓',type:'沉淀',strong:false},{s:'HNO₃',type:'强酸',strong:true}],
+ full:'Ag⁺ + NO₃⁻ + H⁺ + Cl⁻ → AgCl↓ + H⁺ + NO₃⁻',
+ net:'Ag⁺ + Cl⁻ = AgCl↓',
+ note:'AgCl是沉淀不拆。这是检验Cl⁻的经典反应。'},
+{name:'氢氧化钙与碳酸钠',eq:'Ca(OH)₂ + Na₂CO₃ → CaCO₃↓ + 2NaOH',
+ judge:[{s:'Ca(OH)₂',type:'强碱',strong:true},{s:'Na₂CO₃',type:'可溶盐',strong:true},{s:'CaCO₃↓',type:'沉淀',strong:false},{s:'NaOH',type:'强碱',strong:true}],
+ full:'Ca²⁺ + 2OH⁻ + 2Na⁺ + CO₃²⁻ → CaCO₃↓ + 2Na⁺ + 2OH⁻',
+ net:'Ca²⁺ + CO₃²⁻ = CaCO₃↓',
+ note:'CaCO₃是沉淀不拆。消去 Na⁺ 和 OH⁻。'},
+{name:'锌与稀硫酸',eq:'Zn + H₂SO₄ → ZnSO₄ + H₂↑',
+ judge:[{s:'Zn',type:'单质',strong:false},{s:'H₂SO₄',type:'强酸',strong:true},{s:'ZnSO₄',type:'可溶盐',strong:true},{s:'H₂↑',type:'气体',strong:false}],
+ full:'Zn + 2H⁺ + SO₄²⁻ → Zn²⁺ + SO₄²⁻ + H₂↑',
+ net:'Zn + 2H⁺ = Zn²⁺ + H₂↑',
+ note:'Zn是单质不拆，H₂是气体不拆。活泼金属与酸反应的通式。'},
+{name:'醋酸与氢氧化钠',eq:'CH₃COOH + NaOH → CH₃COONa + H₂O',
+ judge:[{s:'CH₃COOH',type:'弱酸',strong:false},{s:'NaOH',type:'强碱',strong:true},{s:'CH₃COONa',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false}],
+ full:'CH₃COOH + Na⁺ + OH⁻ → CH₃COO⁻ + Na⁺ + H₂O',
+ net:'CH₃COOH + OH⁻ = CH₃COO⁻ + H₂O',
+ note:'CH₃COOH是弱酸不拆！弱酸与强碱中和不能简写为 H⁺+OH⁻=H₂O。'},
+{name:'氨水与盐酸',eq:'NH₃·H₂O + HCl → NH₄Cl + H₂O',
+ judge:[{s:'NH₃·H₂O',type:'弱碱',strong:false},{s:'HCl',type:'强酸',strong:true},{s:'NH₄Cl',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false}],
+ full:'NH₃·H₂O + H⁺ + Cl⁻ → NH₄⁺ + Cl⁻ + H₂O',
+ net:'NH₃·H₂O + H⁺ = NH₄⁺ + H₂O',
+ note:'NH₃·H₂O是弱碱不拆。弱碱+强酸的离子方程式要保留弱碱分子式。'},
+{name:'氯化铁与氢氧化钠',eq:'FeCl₃ + 3NaOH → Fe(OH)₃↓ + 3NaCl',
+ judge:[{s:'FeCl₃',type:'可溶盐',strong:true},{s:'NaOH',type:'强碱',strong:true},{s:'Fe(OH)₃↓',type:'沉淀',strong:false},{s:'NaCl',type:'可溶盐',strong:true}],
+ full:'Fe³⁺ + 3Cl⁻ + 3Na⁺ + 3OH⁻ → Fe(OH)₃↓ + 3Na⁺ + 3Cl⁻',
+ net:'Fe³⁺ + 3OH⁻ = Fe(OH)₃↓',
+ note:'Fe(OH)₃是沉淀不拆。这是检验Fe³⁺的经典反应（红褐色沉淀）。'},
+{name:'碳酸氢钠与盐酸',eq:'NaHCO₃ + HCl → NaCl + H₂O + CO₂↑',
+ judge:[{s:'NaHCO₃',type:'可溶盐',strong:true},{s:'HCl',type:'强酸',strong:true},{s:'NaCl',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false},{s:'CO₂↑',type:'气体',strong:false}],
+ full:'Na⁺ + HCO₃⁻ + H⁺ + Cl⁻ → Na⁺ + Cl⁻ + H₂O + CO₂↑',
+ net:'HCO₃⁻ + H⁺ = H₂O + CO₂↑',
+ note:'NaHCO₃是可溶盐要拆，HCO₃⁻是一个整体离子。'},
+{name:'硫酸铜与氢氧化钠',eq:'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄',
+ judge:[{s:'CuSO₄',type:'可溶盐',strong:true},{s:'NaOH',type:'强碱',strong:true},{s:'Cu(OH)₂↓',type:'沉淀',strong:false},{s:'Na₂SO₄',type:'可溶盐',strong:true}],
+ full:'Cu²⁺ + SO₄²⁻ + 2Na⁺ + 2OH⁻ → Cu(OH)₂↓ + 2Na⁺ + SO₄²⁻',
+ net:'Cu²⁺ + 2OH⁻ = Cu(OH)₂↓',
+ note:'Cu(OH)₂是蓝色沉淀不拆。'},
+{name:'氯化钡与硫酸',eq:'BaCl₂ + H₂SO₄ → BaSO₄↓ + 2HCl',
+ judge:[{s:'BaCl₂',type:'可溶盐',strong:true},{s:'H₂SO₄',type:'强酸',strong:true},{s:'BaSO₄↓',type:'沉淀',strong:false},{s:'HCl',type:'强酸',strong:true}],
+ full:'Ba²⁺ + 2Cl⁻ + 2H⁺ + SO₄²⁻ → BaSO₄↓ + 2H⁺ + 2Cl⁻',
+ net:'Ba²⁺ + SO₄²⁻ = BaSO₄↓',
+ note:'BaSO₄是最难溶的沉淀之一。用于检验SO₄²⁻。'},
+{name:'铜与硝酸银',eq:'Cu + 2AgNO₃ → Cu(NO₃)₂ + 2Ag',
+ judge:[{s:'Cu',type:'单质',strong:false},{s:'AgNO₃',type:'可溶盐',strong:true},{s:'Cu(NO₃)₂',type:'可溶盐',strong:true},{s:'Ag',type:'单质',strong:false}],
+ full:'Cu + 2Ag⁺ + 2NO₃⁻ → Cu²⁺ + 2NO₃⁻ + 2Ag',
+ net:'Cu + 2Ag⁺ = Cu²⁺ + 2Ag',
+ note:'Cu置换Ag，因为Cu比Ag活泼。'},
+{name:'氢氧化钡与硫酸',eq:'Ba(OH)₂ + H₂SO₄ → BaSO₄↓ + 2H₂O',
+ judge:[{s:'Ba(OH)₂',type:'强碱',strong:true},{s:'H₂SO₄',type:'强酸',strong:true},{s:'BaSO₄↓',type:'沉淀',strong:false},{s:'H₂O',type:'水',strong:false}],
+ full:'Ba²⁺ + 2OH⁻ + 2H⁺ + SO₄²⁻ → BaSO₄↓ + 2H₂O',
+ net:'Ba²⁺ + 2OH⁻ + 2H⁺ + SO₄²⁻ = BaSO₄↓ + 2H₂O',
+ note:'特殊！没有旁观离子，净离子方程式和完全离子方程式相同。'},
+{name:'碳酸钠与氯化钙',eq:'Na₂CO₃ + CaCl₂ → CaCO₃↓ + 2NaCl',
+ judge:[{s:'Na₂CO₃',type:'可溶盐',strong:true},{s:'CaCl₂',type:'可溶盐',strong:true},{s:'CaCO₃↓',type:'沉淀',strong:false},{s:'NaCl',type:'可溶盐',strong:true}],
+ full:'2Na⁺ + CO₃²⁻ + Ca²⁺ + 2Cl⁻ → CaCO₃↓ + 2Na⁺ + 2Cl⁻',
+ net:'Ca²⁺ + CO₃²⁻ = CaCO₃↓',
+ note:'CaCO₃是难溶盐作生成物不拆。'},
+{name:'氢氧化铝与盐酸',eq:'Al(OH)₃ + 3HCl → AlCl₃ + 3H₂O',
+ judge:[{s:'Al(OH)₃',type:'弱碱',strong:false},{s:'HCl',type:'强酸',strong:true},{s:'AlCl₃',type:'可溶盐',strong:true},{s:'H₂O',type:'水',strong:false}],
+ full:'Al(OH)₃ + 3H⁺ + 3Cl⁻ → Al³⁺ + 3Cl⁻ + 3H₂O',
+ net:'Al(OH)₃ + 3H⁺ = Al³⁺ + 3H₂O',
+ note:'Al(OH)₃是弱碱（两性氢氧化物）不拆。它也能与NaOH反应。'},
+];
+
+const reactionList=document.getElementById('reactionList');
+const stepsSection=document.getElementById('stepsSection');
+const rxnCount=document.getElementById('rxnCount');
+
+function renderList(){
+  rxnCount.textContent=`共 ${REACTIONS.length} 条`;
+  reactionList.innerHTML=REACTIONS.map((r,i)=>`<div class="reaction-item" data-idx="${i}">${r.eq}<div class="reaction-name">${r.name}</div></div>`).join('');
+  reactionList.querySelectorAll('.reaction-item').forEach(el=>el.addEventListener('click',()=>{
+    reactionList.querySelectorAll('.reaction-item').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    showSteps(REACTIONS[+el.dataset.idx]);
+  }));
+}
+
+function showSteps(r){
+  stepsSection.style.display='block';
+  const judgeHtml=r.judge.map(j=>`<span class="${j.strong?'strong':'weak'}">${j.s}</span> ${j.type}（${j.strong?'拆':'不拆'}）`).join(' + ');
+  stepsSection.innerHTML=`
+    <div class="step-card"><div class="step-header"><div class="step-num">1</div><div class="step-title">化学方程式</div></div><div class="step-content">${r.eq}</div></div>
+    <div class="step-card"><div class="step-header"><div class="step-num">2</div><div class="step-title">判断强弱电解质</div></div><div class="step-content">${judgeHtml}</div></div>
+    <div class="step-card"><div class="step-header"><div class="step-num">3</div><div class="step-title">完全离子方程式</div></div><div class="step-content">${r.full}</div></div>
+    <div class="step-card"><div class="step-header"><div class="step-num">4</div><div class="step-title">✅ 净离子方程式</div></div><div class="step-content final">${r.net}</div><div class="step-note">💡 ${r.note}</div></div>`;
+  stepsSection.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  const v=tab.dataset.view;
+  document.getElementById('reactionsView').classList.toggle('hidden',v!=='reactions');
+  document.getElementById('tableView').classList.toggle('hidden',v!=='table');
+}));
+
+renderList();
+// Auto show first
+showSteps(REACTIONS[0]);
+reactionList.querySelector('.reaction-item').classList.add('active');
+</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+<noscript><p>ion-equation — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

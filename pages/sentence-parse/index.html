@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语句子成分分析 | Sentence Parse — DevKit</title>
+<meta name="description" content="50个经典英语句子成分分析，五色标注主语谓语宾语定语状语，简单句并列句复合句分类。English sentence parsing.">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/sentence-parse/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语句子成分分析","description":"50个经典英语句子五色成分标注分析","url":"https://l-s-c.github.io/devkit/pages/sentence-parse/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+h1.seo-only{position:absolute;left:-9999px;font-size:1px}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:saturate(var(--glass-saturate)) blur(var(--glass-blur));border:0.5px solid var(--border-glass);border-radius:16px;box-shadow:var(--glass-shadow);padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
+.tab:active{transform:scale(0.96)}.tab.active{background:#10B981;color:#fff;border-color:#10B981}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.sentence-list{display:flex;flex-direction:column;gap:8px}
+.sentence-card{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);cursor:pointer;transition:all 150ms}
+.sentence-card:hover{border-color:#10B981}
+.sentence-card.active{border-color:#10B981;border-width:2px;background:rgba(16,185,129,0.04)}
+.sentence-text{font-size:13px;font-weight:600;font-family:var(--font-code);color:var(--text-primary)}
+.sentence-type{font-size:10px;color:var(--text-caption);margin-top:4px}
+.parsed{padding:24px;line-height:3;font-size:18px;font-weight:700;font-family:var(--font-code);text-align:center}
+.word-wrap{display:inline-flex;flex-direction:column;align-items:center;margin:0 3px;position:relative}
+.word-text{padding:4px 8px;border-radius:6px;font-size:16px}
+.word-label{font-size:8px;font-weight:800;white-space:nowrap;margin-top:2px}
+.w-s .word-text{background:rgba(239,68,68,0.1);color:#EF4444;border-bottom:3px solid #EF4444}
+.w-s .word-label{color:#EF4444}
+.w-v .word-text{background:rgba(59,130,246,0.1);color:#3B82F6;border-bottom:3px solid #3B82F6}
+.w-v .word-label{color:#3B82F6}
+.w-o .word-text{background:rgba(245,158,11,0.1);color:#F59E0B;border-bottom:3px solid #F59E0B}
+.w-o .word-label{color:#F59E0B}
+.w-a .word-text{background:rgba(139,92,246,0.1);color:#8B5CF6;border-bottom:3px solid #8B5CF6}
+.w-a .word-label{color:#8B5CF6}
+.w-d .word-text{background:rgba(236,72,153,0.1);color:#EC4899;border-bottom:3px solid #EC4899}
+.w-d .word-label{color:#EC4899}
+.pattern-box{padding:14px;border-radius:10px;border:2px solid #10B981;background:rgba(16,185,129,0.04);text-align:center;margin-top:16px}
+.pattern-label{font-size:10px;color:var(--text-caption);margin-bottom:4px}
+.pattern-text{font-size:16px;font-weight:800;font-family:var(--font-code)}
+.grammar-note{margin-top:12px;padding:12px;border-radius:8px;background:var(--bg-glass-input);font-size:12px;color:var(--text-secondary);line-height:1.6}
+.count-info{font-size:11px;color:var(--text-caption);margin-left:auto}
+</style>
+</head>
+<body>
+<h1 class="seo-only">英语句子成分分析 - 五色标注系统</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a href="../index.html" class="topbar-logo"><div class="topbar-logo-icon">D</div><div class="topbar-logo-text">DevKit</div></a>
+  <span class="topbar-tool-name">英语句子成分分析</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">🔍 英语句子成分分析</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>主语 Subject</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>谓语 Predicate</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>宾语 Object</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8B5CF6"></div>定语 Attributive</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#EC4899"></div>状语 Adverbial</div>
+    </div>
+    <div class="tab-row">
+      <div class="tab active" data-cat="all">📋 全部</div>
+      <div class="tab" data-cat="simple">简单句</div>
+      <div class="tab" data-cat="compound">并列句</div>
+      <div class="tab" data-cat="complex">复合句</div>
+    </div>
+  </div>
+  <div class="glass" id="parseResult" style="display:none"></div>
+  <div class="glass">
+    <div class="section-title">📖 例句列表 <span class="count-info" id="countInfo"></span></div>
+    <div class="sentence-list" id="sentenceList"></div>
+  </div>
+</div>
+<script type="module" src="../../shared/theme.js"></script>
+<script>
+// s=subject,v=verb/predicate,o=object,a=attributive,d=adverbial
+const SENTENCES=[
+// 简单句 SV
+{text:'Birds fly.',parts:[{w:'Birds',r:'s',l:'主语'},{w:'fly',r:'v',l:'谓语'}],pattern:'S + V（主谓）',type:'simple',note:'最简单的主谓结构，Birds是主语，fly是不及物动词作谓语。'},
+{text:'The sun rises.',parts:[{w:'The',r:'a',l:'定语'},{w:'sun',r:'s',l:'主语'},{w:'rises',r:'v',l:'谓语'}],pattern:'S + V（主谓）',type:'simple',note:'The是定冠词作定语修饰sun。rises是不及物动词。'},
+{text:'She smiled happily.',parts:[{w:'She',r:'s',l:'主语'},{w:'smiled',r:'v',l:'谓语'},{w:'happily',r:'d',l:'状语'}],pattern:'S + V + Adv（主谓+状语）',type:'simple',note:'happily是副词作方式状语，修饰smiled。'},
+// SVO
+{text:'I love you.',parts:[{w:'I',r:'s',l:'主语'},{w:'love',r:'v',l:'谓语'},{w:'you',r:'o',l:'宾语'}],pattern:'S + V + O（主谓宾）',type:'simple',note:'最经典的SVO结构。love是及物动词，you是宾语。'},
+{text:'Tom reads books.',parts:[{w:'Tom',r:'s',l:'主语'},{w:'reads',r:'v',l:'谓语'},{w:'books',r:'o',l:'宾语'}],pattern:'S + V + O（主谓宾）',type:'simple',note:'reads是及物动词，books是宾语。'},
+{text:'She plays the piano.',parts:[{w:'She',r:'s',l:'主语'},{w:'plays',r:'v',l:'谓语'},{w:'the',r:'a',l:'定语'},{w:'piano',r:'o',l:'宾语'}],pattern:'S + V + O（主谓宾）',type:'simple',note:'the是定语修饰piano，piano是宾语。'},
+{text:'We study English every day.',parts:[{w:'We',r:'s',l:'主语'},{w:'study',r:'v',l:'谓语'},{w:'English',r:'o',l:'宾语'},{w:'every day',r:'d',l:'状语'}],pattern:'S + V + O + Adv（主谓宾+状语）',type:'simple',note:'every day是时间状语。'},
+{text:'He finished his homework quickly.',parts:[{w:'He',r:'s',l:'主语'},{w:'finished',r:'v',l:'谓语'},{w:'his',r:'a',l:'定语'},{w:'homework',r:'o',l:'宾语'},{w:'quickly',r:'d',l:'状语'}],pattern:'S + V + O + Adv',type:'simple',note:'his是物主代词作定语，quickly是方式状语。'},
+// SVC
+{text:'She is beautiful.',parts:[{w:'She',r:'s',l:'主语'},{w:'is',r:'v',l:'系动词'},{w:'beautiful',r:'o',l:'表语'}],pattern:'S + V + C（主系表）',type:'simple',note:'is是系动词，beautiful是形容词作表语。'},
+{text:'The food tastes delicious.',parts:[{w:'The',r:'a',l:'定语'},{w:'food',r:'s',l:'主语'},{w:'tastes',r:'v',l:'系动词'},{w:'delicious',r:'o',l:'表语'}],pattern:'S + V + C（主系表）',type:'simple',note:'taste是感官系动词，delicious是表语。'},
+{text:'He became a doctor.',parts:[{w:'He',r:'s',l:'主语'},{w:'became',r:'v',l:'系动词'},{w:'a',r:'a',l:'定语'},{w:'doctor',r:'o',l:'表语'}],pattern:'S + V + C（主系表）',type:'simple',note:'became是变化系动词，a doctor是名词作表语。'},
+// SVOO
+{text:'He gave me a book.',parts:[{w:'He',r:'s',l:'主语'},{w:'gave',r:'v',l:'谓语'},{w:'me',r:'o',l:'间接宾语'},{w:'a',r:'a',l:'定语'},{w:'book',r:'o',l:'直接宾语'}],pattern:'S + V + IO + DO（主谓双宾）',type:'simple',note:'gave后接双宾语，me是间接宾语（人），book是直接宾语（物）。'},
+{text:'She told us a story.',parts:[{w:'She',r:'s',l:'主语'},{w:'told',r:'v',l:'谓语'},{w:'us',r:'o',l:'间接宾语'},{w:'a',r:'a',l:'定语'},{w:'story',r:'o',l:'直接宾语'}],pattern:'S + V + IO + DO（主谓双宾）',type:'simple',note:'told接双宾语，us是间接宾语，story是直接宾语。'},
+{text:'Mom bought me a new dress.',parts:[{w:'Mom',r:'s',l:'主语'},{w:'bought',r:'v',l:'谓语'},{w:'me',r:'o',l:'间接宾语'},{w:'a new',r:'a',l:'定语'},{w:'dress',r:'o',l:'直接宾语'}],pattern:'S + V + IO + DO',type:'simple',note:'a new是定语修饰dress。'},
+{text:'The teacher asked us a question.',parts:[{w:'The',r:'a',l:'定语'},{w:'teacher',r:'s',l:'主语'},{w:'asked',r:'v',l:'谓语'},{w:'us',r:'o',l:'间接宾语'},{w:'a',r:'a',l:'定语'},{w:'question',r:'o',l:'直接宾语'}],pattern:'S + V + IO + DO',type:'simple',note:'asked接双宾语结构。'},
+// SVOC
+{text:'They made him happy.',parts:[{w:'They',r:'s',l:'主语'},{w:'made',r:'v',l:'谓语'},{w:'him',r:'o',l:'宾语'},{w:'happy',r:'o',l:'宾补'}],pattern:'S + V + O + C（主谓宾补）',type:'simple',note:'happy是宾语补足语，补充说明him的状态。make sb. adj.是常见宾补结构。'},
+{text:'We elected him monitor.',parts:[{w:'We',r:'s',l:'主语'},{w:'elected',r:'v',l:'谓语'},{w:'him',r:'o',l:'宾语'},{w:'monitor',r:'o',l:'宾补'}],pattern:'S + V + O + C（主谓宾补）',type:'simple',note:'monitor是名词作宾补，说明him的身份。'},
+{text:'I saw her dancing.',parts:[{w:'I',r:'s',l:'主语'},{w:'saw',r:'v',l:'谓语'},{w:'her',r:'o',l:'宾语'},{w:'dancing',r:'o',l:'宾补'}],pattern:'S + V + O + C',type:'simple',note:'dancing是现在分词作宾补，表示正在进行的动作。'},
+{text:'The news made everyone excited.',parts:[{w:'The',r:'a',l:'定语'},{w:'news',r:'s',l:'主语'},{w:'made',r:'v',l:'谓语'},{w:'everyone',r:'o',l:'宾语'},{w:'excited',r:'o',l:'宾补'}],pattern:'S + V + O + C',type:'simple',note:'excited是过去分词作宾补。'},
+{text:'Please keep the door open.',parts:[{w:'Please',r:'d',l:'状语'},{w:'keep',r:'v',l:'谓语'},{w:'the',r:'a',l:'定语'},{w:'door',r:'o',l:'宾语'},{w:'open',r:'o',l:'宾补'}],pattern:'V + O + C（祈使句）',type:'simple',note:'祈使句省略主语you。keep sth. adj.是宾补结构。'},
+// 带各种状语
+{text:'In the morning, I go to school.',parts:[{w:'In the morning',r:'d',l:'时间状语'},{w:'I',r:'s',l:'主语'},{w:'go',r:'v',l:'谓语'},{w:'to school',r:'d',l:'地点状语'}],pattern:'Adv + S + V + Adv',type:'simple',note:'In the morning是时间状语前置，to school是地点状语。'},
+{text:'He runs very fast.',parts:[{w:'He',r:'s',l:'主语'},{w:'runs',r:'v',l:'谓语'},{w:'very fast',r:'d',l:'状语'}],pattern:'S + V + Adv',type:'simple',note:'very fast是程度+方式状语。'},
+{text:'Because of the rain, we stayed home.',parts:[{w:'Because of the rain',r:'d',l:'原因状语'},{w:'we',r:'s',l:'主语'},{w:'stayed',r:'v',l:'谓语'},{w:'home',r:'d',l:'地点状语'}],pattern:'Adv + S + V + Adv',type:'simple',note:'Because of the rain是介词短语作原因状语。'},
+// 带定语
+{text:'The tall boy is my brother.',parts:[{w:'The',r:'a',l:'定语'},{w:'tall',r:'a',l:'定语'},{w:'boy',r:'s',l:'主语'},{w:'is',r:'v',l:'系动词'},{w:'my',r:'a',l:'定语'},{w:'brother',r:'o',l:'表语'}],pattern:'S + V + C（带定语）',type:'simple',note:'The和tall都是定语修饰boy，my是定语修饰brother。'},
+{text:'A girl in red dress came in.',parts:[{w:'A',r:'a',l:'定语'},{w:'girl',r:'s',l:'主语'},{w:'in red dress',r:'a',l:'后置定语'},{w:'came in',r:'v',l:'谓语'}],pattern:'S + V',type:'simple',note:'in red dress是介词短语作后置定语修饰girl。'},
+// 被动语态
+{text:'The window was broken by Tom.',parts:[{w:'The',r:'a',l:'定语'},{w:'window',r:'s',l:'主语'},{w:'was broken',r:'v',l:'谓语(被动)'},{w:'by Tom',r:'d',l:'施动者状语'}],pattern:'S + V(passive) + by…',type:'simple',note:'被动语态结构，by Tom表示施动者。'},
+{text:'English is spoken worldwide.',parts:[{w:'English',r:'s',l:'主语'},{w:'is spoken',r:'v',l:'谓语(被动)'},{w:'worldwide',r:'d',l:'状语'}],pattern:'S + V(passive) + Adv',type:'simple',note:'被动语态，worldwide是范围状语。'},
+// There be
+{text:'There is a book on the desk.',parts:[{w:'There',r:'d',l:'引导词'},{w:'is',r:'v',l:'谓语'},{w:'a',r:'a',l:'定语'},{w:'book',r:'s',l:'主语'},{w:'on the desk',r:'d',l:'地点状语'}],pattern:'There be + S + Adv',type:'simple',note:'There be句型，真正主语是book，on the desk是地点状语。'},
+
+// 并列句
+{text:'I like tea, but she likes coffee.',parts:[{w:'I',r:'s',l:'主语₁'},{w:'like',r:'v',l:'谓语₁'},{w:'tea',r:'o',l:'宾语₁'},{w:', but',r:'d',l:'并列连词'},{w:'she',r:'s',l:'主语₂'},{w:'likes',r:'v',l:'谓语₂'},{w:'coffee',r:'o',l:'宾语₂'}],pattern:'S₁V₁O₁ + but + S₂V₂O₂',type:'compound',note:'but连接两个对比关系的简单句，表示转折。'},
+{text:'He studied hard, and he passed the exam.',parts:[{w:'He',r:'s',l:'主语₁'},{w:'studied',r:'v',l:'谓语₁'},{w:'hard',r:'d',l:'状语'},{w:', and',r:'d',l:'并列连词'},{w:'he',r:'s',l:'主语₂'},{w:'passed',r:'v',l:'谓语₂'},{w:'the',r:'a',l:'定语'},{w:'exam',r:'o',l:'宾语₂'}],pattern:'S₁V₁ + and + S₂V₂O₂',type:'compound',note:'and连接两个递进关系的简单句。'},
+{text:'Hurry up, or you will be late.',parts:[{w:'Hurry up',r:'v',l:'谓语₁'},{w:', or',r:'d',l:'并列连词'},{w:'you',r:'s',l:'主语₂'},{w:'will be',r:'v',l:'谓语₂'},{w:'late',r:'o',l:'表语₂'}],pattern:'V₁ + or + S₂V₂C₂',type:'compound',note:'or表示选择/否则，前句是祈使句。'},
+{text:'It was raining, so we stayed inside.',parts:[{w:'It',r:'s',l:'主语₁'},{w:'was raining',r:'v',l:'谓语₁'},{w:', so',r:'d',l:'并列连词'},{w:'we',r:'s',l:'主语₂'},{w:'stayed',r:'v',l:'谓语₂'},{w:'inside',r:'d',l:'状语₂'}],pattern:'S₁V₁ + so + S₂V₂',type:'compound',note:'so表示因果关系。'},
+{text:'She sang and he danced.',parts:[{w:'She',r:'s',l:'主语₁'},{w:'sang',r:'v',l:'谓语₁'},{w:'and',r:'d',l:'并列连词'},{w:'he',r:'s',l:'主语₂'},{w:'danced',r:'v',l:'谓语₂'}],pattern:'S₁V₁ + and + S₂V₂',type:'compound',note:'and连接两个并列的主谓结构。'},
+{text:'Not only did he come, but he also helped.',parts:[{w:'Not only',r:'d',l:'关联连词'},{w:'did',r:'v',l:'助动词'},{w:'he',r:'s',l:'主语₁'},{w:'come',r:'v',l:'谓语₁'},{w:', but',r:'d',l:'关联连词'},{w:'he',r:'s',l:'主语₂'},{w:'also helped',r:'v',l:'谓语₂'}],pattern:'Not only…but also…',type:'compound',note:'not only…but also…关联并列结构，not only部分倒装。'},
+
+// 复合句 - 定语从句
+{text:'The man who is standing there is my father.',parts:[{w:'The',r:'a',l:'定语'},{w:'man',r:'s',l:'主语'},{w:'who is standing there',r:'a',l:'定语从句'},{w:'is',r:'v',l:'系动词'},{w:'my',r:'a',l:'定语'},{w:'father',r:'o',l:'表语'}],pattern:'S + 定语从句 + V + C',type:'complex',note:'who引导定语从句修饰the man，who在从句中作主语。'},
+{text:'I like the book that you gave me.',parts:[{w:'I',r:'s',l:'主语'},{w:'like',r:'v',l:'谓语'},{w:'the',r:'a',l:'定语'},{w:'book',r:'o',l:'宾语'},{w:'that you gave me',r:'a',l:'定语从句'}],pattern:'S + V + O + 定语从句',type:'complex',note:'that引导定语从句修饰book，that在从句中作宾语。'},
+{text:'This is the place where I was born.',parts:[{w:'This',r:'s',l:'主语'},{w:'is',r:'v',l:'系动词'},{w:'the',r:'a',l:'定语'},{w:'place',r:'o',l:'表语'},{w:'where I was born',r:'a',l:'定语从句'}],pattern:'S + V + C + 定语从句',type:'complex',note:'where引导定语从句修饰place，where在从句中作地点状语。'},
+// 宾语从句
+{text:'I think that he is right.',parts:[{w:'I',r:'s',l:'主语'},{w:'think',r:'v',l:'谓语'},{w:'that he is right',r:'o',l:'宾语从句'}],pattern:'S + V + 宾语从句',type:'complex',note:'that引导宾语从句作think的宾语。that可省略。'},
+{text:'She asked me where I lived.',parts:[{w:'She',r:'s',l:'主语'},{w:'asked',r:'v',l:'谓语'},{w:'me',r:'o',l:'间接宾语'},{w:'where I lived',r:'o',l:'宾语从句'}],pattern:'S + V + IO + 宾语从句',type:'complex',note:'where引导宾语从句，注意从句用陈述语序。'},
+{text:'I don\'t know whether he will come.',parts:[{w:'I',r:'s',l:'主语'},{w:'don\'t know',r:'v',l:'谓语'},{w:'whether he will come',r:'o',l:'宾语从句'}],pattern:'S + V + 宾语从句',type:'complex',note:'whether引导宾语从句，表示"是否"。'},
+// 状语从句
+{text:'If it rains, we will stay home.',parts:[{w:'If it rains',r:'d',l:'条件状语从句'},{w:'we',r:'s',l:'主语'},{w:'will stay',r:'v',l:'谓语'},{w:'home',r:'d',l:'地点状语'}],pattern:'条件状语从句 + S + V',type:'complex',note:'if引导条件状语从句，主将从现（主句将来时，从句现在时）。'},
+{text:'When I got home, my mother was cooking.',parts:[{w:'When I got home',r:'d',l:'时间状语从句'},{w:'my',r:'a',l:'定语'},{w:'mother',r:'s',l:'主语'},{w:'was cooking',r:'v',l:'谓语'}],pattern:'时间状语从句 + S + V',type:'complex',note:'when引导时间状语从句，主句用过去进行时表示当时正在进行。'},
+{text:'Although he is young, he is very clever.',parts:[{w:'Although he is young',r:'d',l:'让步状语从句'},{w:'he',r:'s',l:'主语'},{w:'is',r:'v',l:'系动词'},{w:'very',r:'d',l:'程度状语'},{w:'clever',r:'o',l:'表语'}],pattern:'让步状语从句 + S + V + C',type:'complex',note:'although引导让步状语从句，注意不能和but同时使用。'},
+{text:'Because he was ill, he didn\'t go to school.',parts:[{w:'Because he was ill',r:'d',l:'原因状语从句'},{w:'he',r:'s',l:'主语'},{w:'didn\'t go',r:'v',l:'谓语'},{w:'to school',r:'d',l:'地点状语'}],pattern:'原因状语从句 + S + V',type:'complex',note:'because引导原因状语从句。'},
+{text:'He works so hard that he always gets good grades.',parts:[{w:'He',r:'s',l:'主语'},{w:'works',r:'v',l:'谓语'},{w:'so hard',r:'d',l:'状语'},{w:'that he always gets good grades',r:'d',l:'结果状语从句'}],pattern:'S + V + so…that…',type:'complex',note:'so…that…引导结果状语从句，表示"如此…以至于…"。'},
+// 主语从句
+{text:'What he said is true.',parts:[{w:'What he said',r:'s',l:'主语从句'},{w:'is',r:'v',l:'系动词'},{w:'true',r:'o',l:'表语'}],pattern:'主语从句 + V + C',type:'complex',note:'what引导主语从句，what在从句中作宾语。'},
+{text:'It is important that we protect the environment.',parts:[{w:'It',r:'s',l:'形式主语'},{w:'is',r:'v',l:'系动词'},{w:'important',r:'o',l:'表语'},{w:'that we protect the environment',r:'s',l:'真正主语(从句)'}],pattern:'It + V + C + 主语从句',type:'complex',note:'It是形式主语，that从句是真正的主语，避免头重脚轻。'},
+];
+
+let currentCat='all';
+const sentenceList=document.getElementById('sentenceList');
+const parseResult=document.getElementById('parseResult');
+const countInfo=document.getElementById('countInfo');
+
+function renderList(){
+  const list=currentCat==='all'?SENTENCES:SENTENCES.filter(s=>s.type===currentCat);
+  countInfo.textContent=`共 ${list.length} 句`;
+  sentenceList.innerHTML=list.map((s,i)=>{
+    const idx=SENTENCES.indexOf(s);
+    const typeMap={simple:'简单句',compound:'并列句',complex:'复合句'};
+    return `<div class="sentence-card" data-idx="${idx}"><div class="sentence-text">${s.text}</div><div class="sentence-type">${typeMap[s.type]} · ${s.pattern}</div></div>`;
+  }).join('');
+  sentenceList.querySelectorAll('.sentence-card').forEach(c=>c.addEventListener('click',()=>{
+    sentenceList.querySelectorAll('.sentence-card').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    showParse(SENTENCES[+c.dataset.idx]);
+  }));
+}
+
+function showParse(s){
+  const roleMap={s:'w-s',v:'w-v',o:'w-o',a:'w-a',d:'w-d'};
+  parseResult.style.display='block';
+  parseResult.innerHTML=`<div class="parsed">${s.parts.map(p=>`<span class="word-wrap ${roleMap[p.r]}"><span class="word-text">${p.w}</span><span class="word-label">${p.l}</span></span>`).join(' ')}</div>
+  <div class="pattern-box"><div class="pattern-label">句型结构</div><div class="pattern-text">${s.pattern}</div></div>
+  <div class="grammar-note">💡 ${s.note}</div>`;
+  parseResult.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCat=tab.dataset.cat;
+    parseResult.style.display='none';
+    renderList();
+  });
+});
+
+renderList();
+// Auto-show first
+if(SENTENCES.length)showParse(SENTENCES[0]);
+</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+<noscript><p>sentence-parse — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

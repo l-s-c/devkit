@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语自然拼读 | Phonics Rules — DevKit</title>
+<meta name="description" content="50+英语自然拼读规则，辅音组合、元音组合、不发音字母、r控元音等分类，配例词发音。Phonics rules with pronunciation.">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/phonics/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语自然拼读","description":"50+自然拼读规则，分类学习，例词发音","url":"https://l-s-c.github.io/devkit/pages/phonics/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+h1.seo-only{position:absolute;left:-9999px;font-size:1px}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:saturate(var(--glass-saturate)) blur(var(--glass-blur));border:0.5px solid var(--border-glass);border-radius:16px;box-shadow:var(--glass-shadow);padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all 150ms;color:var(--text-secondary)}
+.tab:active{transform:scale(0.96)}.tab.active{background:#10B981;color:#fff;border-color:#10B981}
+.rule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.rule-card{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);cursor:pointer;transition:all 150ms}
+.rule-card:hover{border-color:#10B981;transform:translateY(-2px)}
+.rule-card.active{border-color:#10B981;border-width:2px;background:rgba(16,185,129,0.04)}
+.rule-combo{font-size:24px;font-weight:900;font-family:var(--font-code);color:#10B981;margin-bottom:4px}
+.rule-sound{font-size:14px;font-weight:700;color:#EC4899;font-family:var(--font-code);margin-bottom:4px}
+.rule-desc{font-size:10px;color:var(--text-caption);margin-bottom:6px}
+.rule-examples{display:flex;gap:4px;flex-wrap:wrap}
+.rule-word{padding:2px 6px;border-radius:4px;font-size:10px;font-family:var(--font-code);background:rgba(16,185,129,0.06);font-weight:600;color:var(--text-primary)}
+.rule-word b{color:#10B981}
+.detail-overlay{display:none;padding:20px;border-radius:16px;border:2px solid #10B981;background:rgba(16,185,129,0.04);margin-bottom:16px}
+.detail-overlay.show{display:block}
+.detail-combo{font-size:36px;font-weight:900;font-family:var(--font-code);color:#10B981;text-align:center;margin-bottom:4px}
+.detail-sound{font-size:18px;font-weight:700;color:#EC4899;text-align:center;font-family:var(--font-code);margin-bottom:8px}
+.detail-desc{font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:16px}
+.example-list{display:flex;flex-direction:column;gap:6px}
+.example-item{padding:10px 14px;border-radius:8px;border:1px solid var(--border-glass-outer);background:var(--bg-glass-input);display:flex;align-items:center;gap:10px}
+.example-info{flex:1}
+.example-word{font-size:16px;font-weight:800;font-family:var(--font-code);color:var(--text-primary)}
+.example-word b{color:#10B981}
+.example-ipa{font-size:12px;color:#EC4899;font-family:var(--font-code)}
+.example-cn{font-size:11px;color:var(--text-caption)}
+.play-btn{width:28px;height:28px;border-radius:50%;background:#10B981;color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.play-btn:active{transform:scale(0.9)}
+.close-detail{background:none;border:none;font-size:18px;cursor:pointer;float:right;color:var(--text-caption)}
+</style>
+</head>
+<body>
+<h1 class="seo-only">英语自然拼读规则 - Phonics Rules</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a href="../index.html" class="topbar-logo"><div class="topbar-logo-icon">D</div><div class="topbar-logo-text">DevKit</div></a>
+  <span class="topbar-tool-name">英语自然拼读</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">🔊 英语自然拼读 Phonics</div>
+    <div class="tab-row" id="tabs"></div>
+  </div>
+  <div class="detail-overlay" id="detail"></div>
+  <div class="glass">
+    <div class="section-title" id="catTitle">辅音组合</div>
+    <div class="rule-grid" id="ruleGrid"></div>
+  </div>
+</div>
+<script type="module" src="../../shared/theme.js"></script>
+<script>
+const RULES={
+'辅音组合':[
+{combo:'ph',sound:'/f/',desc:'发 f 的音，源自希腊语',words:[{w:'<b>ph</b>one',ipa:'/foʊn/',cn:'电话'},{w:'<b>ph</b>oto',ipa:'/ˈfoʊtoʊ/',cn:'照片'},{w:'ele<b>ph</b>ant',ipa:'/ˈelɪfənt/',cn:'大象'},{w:'<b>ph</b>armacy',ipa:'/ˈfɑːrməsi/',cn:'药房'}]},
+{combo:'sh',sound:'/ʃ/',desc:'发"嘘"的音',words:[{w:'<b>sh</b>ip',ipa:'/ʃɪp/',cn:'船'},{w:'<b>sh</b>op',ipa:'/ʃɒp/',cn:'商店'},{w:'fi<b>sh</b>',ipa:'/fɪʃ/',cn:'鱼'},{w:'<b>sh</b>oe',ipa:'/ʃuː/',cn:'鞋'}]},
+{combo:'ch',sound:'/tʃ/',desc:'发"吃"的音',words:[{w:'<b>ch</b>air',ipa:'/tʃer/',cn:'椅子'},{w:'<b>ch</b>ild',ipa:'/tʃaɪld/',cn:'孩子'},{w:'tea<b>ch</b>er',ipa:'/ˈtiːtʃər/',cn:'老师'},{w:'<b>ch</b>eese',ipa:'/tʃiːz/',cn:'奶酪'}]},
+{combo:'th',sound:'/θ/ /ð/',desc:'咬舌音，清浊两种',words:[{w:'<b>th</b>ink',ipa:'/θɪŋk/',cn:'想'},{w:'<b>th</b>is',ipa:'/ðɪs/',cn:'这个'},{w:'<b>th</b>ank',ipa:'/θæŋk/',cn:'感谢'},{w:'<b>th</b>at',ipa:'/ðæt/',cn:'那个'}]},
+{combo:'wh',sound:'/w/',desc:'w 的音（部分方言 /hw/）',words:[{w:'<b>wh</b>at',ipa:'/wɒt/',cn:'什么'},{w:'<b>wh</b>en',ipa:'/wen/',cn:'何时'},{w:'<b>wh</b>ite',ipa:'/waɪt/',cn:'白色'},{w:'<b>wh</b>ale',ipa:'/weɪl/',cn:'鲸鱼'}]},
+{combo:'ck',sound:'/k/',desc:'短元音后的 k 音',words:[{w:'ba<b>ck</b>',ipa:'/bæk/',cn:'后面'},{w:'du<b>ck</b>',ipa:'/dʌk/',cn:'鸭子'},{w:'clo<b>ck</b>',ipa:'/klɒk/',cn:'钟'},{w:'ro<b>ck</b>',ipa:'/rɒk/',cn:'岩石'}]},
+{combo:'ng',sound:'/ŋ/',desc:'鼻音',words:[{w:'si<b>ng</b>',ipa:'/sɪŋ/',cn:'唱歌'},{w:'ri<b>ng</b>',ipa:'/rɪŋ/',cn:'戒指'},{w:'lo<b>ng</b>',ipa:'/lɒŋ/',cn:'长'},{w:'ki<b>ng</b>',ipa:'/kɪŋ/',cn:'国王'}]},
+{combo:'wr',sound:'/r/',desc:'w 不发音',words:[{w:'<b>wr</b>ite',ipa:'/raɪt/',cn:'写'},{w:'<b>wr</b>ong',ipa:'/rɒŋ/',cn:'错误'},{w:'<b>wr</b>ist',ipa:'/rɪst/',cn:'手腕'}]},
+{combo:'kn',sound:'/n/',desc:'k 不发音',words:[{w:'<b>kn</b>ife',ipa:'/naɪf/',cn:'刀'},{w:'<b>kn</b>ow',ipa:'/noʊ/',cn:'知道'},{w:'<b>kn</b>ee',ipa:'/niː/',cn:'膝盖'},{w:'<b>kn</b>ock',ipa:'/nɒk/',cn:'敲'}]},
+{combo:'gh',sound:'/ɡ/ 或不发音',desc:'词首发 /ɡ/，其他常不发音',words:[{w:'<b>gh</b>ost',ipa:'/ɡoʊst/',cn:'鬼'},{w:'ni<b>gh</b>t',ipa:'/naɪt/',cn:'夜晚'},{w:'li<b>gh</b>t',ipa:'/laɪt/',cn:'光'}]},
+{combo:'tch',sound:'/tʃ/',desc:'短元音后的 ch 音',words:[{w:'wa<b>tch</b>',ipa:'/wɒtʃ/',cn:'手表'},{w:'ca<b>tch</b>',ipa:'/kætʃ/',cn:'抓住'},{w:'ki<b>tch</b>en',ipa:'/ˈkɪtʃɪn/',cn:'厨房'}]},
+{combo:'dg',sound:'/dʒ/',desc:'短元音后的 j 音',words:[{w:'bri<b>dg</b>e',ipa:'/brɪdʒ/',cn:'桥'},{w:'ju<b>dg</b>e',ipa:'/dʒʌdʒ/',cn:'法官'},{w:'e<b>dg</b>e',ipa:'/edʒ/',cn:'边缘'}]}
+],
+'元音组合':[
+{combo:'ee',sound:'/iː/',desc:'长 i 音',words:[{w:'tr<b>ee</b>',ipa:'/triː/',cn:'树'},{w:'s<b>ee</b>',ipa:'/siː/',cn:'看见'},{w:'b<b>ee</b>',ipa:'/biː/',cn:'蜜蜂'},{w:'fr<b>ee</b>',ipa:'/friː/',cn:'自由'}]},
+{combo:'ea',sound:'/iː/',desc:'长 i 音（多数情况）',words:[{w:'t<b>ea</b>',ipa:'/tiː/',cn:'茶'},{w:'r<b>ea</b>d',ipa:'/riːd/',cn:'读'},{w:'s<b>ea</b>',ipa:'/siː/',cn:'海'},{w:'m<b>ea</b>t',ipa:'/miːt/',cn:'肉'}]},
+{combo:'ai',sound:'/eɪ/',desc:'长 a 音',words:[{w:'r<b>ai</b>n',ipa:'/reɪn/',cn:'雨'},{w:'tr<b>ai</b>n',ipa:'/treɪn/',cn:'火车'},{w:'p<b>ai</b>nt',ipa:'/peɪnt/',cn:'画'},{w:'w<b>ai</b>t',ipa:'/weɪt/',cn:'等'}]},
+{combo:'oa',sound:'/oʊ/',desc:'长 o 音',words:[{w:'b<b>oa</b>t',ipa:'/boʊt/',cn:'船'},{w:'c<b>oa</b>t',ipa:'/koʊt/',cn:'外套'},{w:'r<b>oa</b>d',ipa:'/roʊd/',cn:'路'}]},
+{combo:'oo',sound:'/uː/ /ʊ/',desc:'长 u 或短 u',words:[{w:'m<b>oo</b>n',ipa:'/muːn/',cn:'月亮'},{w:'f<b>oo</b>d',ipa:'/fuːd/',cn:'食物'},{w:'b<b>oo</b>k',ipa:'/bʊk/',cn:'书'},{w:'g<b>oo</b>d',ipa:'/ɡʊd/',cn:'好'}]},
+{combo:'ou',sound:'/aʊ/',desc:'类似"凹"的音',words:[{w:'h<b>ou</b>se',ipa:'/haʊs/',cn:'房子'},{w:'m<b>ou</b>se',ipa:'/maʊs/',cn:'老鼠'},{w:'l<b>ou</b>d',ipa:'/laʊd/',cn:'大声'}]},
+{combo:'ow',sound:'/aʊ/ /oʊ/',desc:'两种发音',words:[{w:'c<b>ow</b>',ipa:'/kaʊ/',cn:'牛'},{w:'h<b>ow</b>',ipa:'/haʊ/',cn:'如何'},{w:'sn<b>ow</b>',ipa:'/snoʊ/',cn:'雪'},{w:'gr<b>ow</b>',ipa:'/ɡroʊ/',cn:'生长'}]},
+{combo:'oi/oy',sound:'/ɔɪ/',desc:'类似"哦伊"',words:[{w:'b<b>oi</b>l',ipa:'/bɔɪl/',cn:'煮'},{w:'b<b>oy</b>',ipa:'/bɔɪ/',cn:'男孩'},{w:'t<b>oy</b>',ipa:'/tɔɪ/',cn:'玩具'}]},
+{combo:'igh',sound:'/aɪ/',desc:'长 i 音，gh 不发音',words:[{w:'n<b>igh</b>t',ipa:'/naɪt/',cn:'夜晚'},{w:'l<b>igh</b>t',ipa:'/laɪt/',cn:'光'},{w:'r<b>igh</b>t',ipa:'/raɪt/',cn:'对'},{w:'fl<b>igh</b>t',ipa:'/flaɪt/',cn:'飞行'}]},
+{combo:'aw/au',sound:'/ɔː/',desc:'类似"奥"的音',words:[{w:'dr<b>aw</b>',ipa:'/drɔː/',cn:'画'},{w:'l<b>aw</b>',ipa:'/lɔː/',cn:'法律'},{w:'<b>au</b>tumn',ipa:'/ˈɔːtəm/',cn:'秋天'},{w:'c<b>au</b>se',ipa:'/kɔːz/',cn:'原因'}]},
+{combo:'ew',sound:'/juː/ /uː/',desc:'类似"优"或"乌"',words:[{w:'n<b>ew</b>',ipa:'/njuː/',cn:'新的'},{w:'f<b>ew</b>',ipa:'/fjuː/',cn:'少数'},{w:'bl<b>ew</b>',ipa:'/bluː/',cn:'吹(过去式)'}]}
+],
+'不发音字母':[
+{combo:'silent e',sound:'—',desc:'词尾 e 不发音，使前面元音变长音',words:[{w:'mak<b>e</b>',ipa:'/meɪk/',cn:'做'},{w:'tim<b>e</b>',ipa:'/taɪm/',cn:'时间'},{w:'hom<b>e</b>',ipa:'/hoʊm/',cn:'家'},{w:'nic<b>e</b>',ipa:'/naɪs/',cn:'好的'}]},
+{combo:'silent k',sound:'—',desc:'kn 中 k 不发音',words:[{w:'<b>k</b>nife',ipa:'/naɪf/',cn:'刀'},{w:'<b>k</b>now',ipa:'/noʊ/',cn:'知道'},{w:'<b>k</b>nee',ipa:'/niː/',cn:'膝盖'},{w:'<b>k</b>night',ipa:'/naɪt/',cn:'骑士'}]},
+{combo:'silent w',sound:'—',desc:'wr 中 w 不发音',words:[{w:'<b>w</b>rite',ipa:'/raɪt/',cn:'写'},{w:'<b>w</b>rong',ipa:'/rɒŋ/',cn:'错误'},{w:'<b>w</b>rap',ipa:'/ræp/',cn:'包裹'}]},
+{combo:'silent b',sound:'—',desc:'mb/bt 中 b 不发音',words:[{w:'clim<b>b</b>',ipa:'/klaɪm/',cn:'爬'},{w:'lam<b>b</b>',ipa:'/læm/',cn:'羊羔'},{w:'dou<b>b</b>t',ipa:'/daʊt/',cn:'怀疑'},{w:'de<b>b</b>t',ipa:'/det/',cn:'债务'}]},
+{combo:'silent g',sound:'—',desc:'gn 中 g 不发音',words:[{w:'si<b>g</b>n',ipa:'/saɪn/',cn:'标志'},{w:'desi<b>g</b>n',ipa:'/dɪˈzaɪn/',cn:'设计'},{w:'<b>g</b>nat',ipa:'/næt/',cn:'蚊'}]},
+{combo:'silent h',sound:'—',desc:'部分词中 h 不发音',words:[{w:'<b>h</b>our',ipa:'/aʊər/',cn:'小时'},{w:'<b>h</b>onest',ipa:'/ˈɒnɪst/',cn:'诚实'},{w:'g<b>h</b>ost',ipa:'/ɡoʊst/',cn:'鬼'}]},
+{combo:'silent l',sound:'—',desc:'部分词中 l 不发音',words:[{w:'wa<b>l</b>k',ipa:'/wɔːk/',cn:'走'},{w:'ta<b>l</b>k',ipa:'/tɔːk/',cn:'谈话'},{w:'ha<b>l</b>f',ipa:'/hæf/',cn:'一半'},{w:'ca<b>l</b>m',ipa:'/kɑːm/',cn:'平静'}]},
+{combo:'silent t',sound:'—',desc:'部分词中 t 不发音',words:[{w:'lis<b>t</b>en',ipa:'/ˈlɪsən/',cn:'听'},{w:'cas<b>t</b>le',ipa:'/ˈkæsəl/',cn:'城堡'},{w:'whis<b>t</b>le',ipa:'/ˈwɪsəl/',cn:'口哨'}]}
+],
+'r控元音':[
+{combo:'ar',sound:'/ɑːr/',desc:'类似"啊r"的音',words:[{w:'c<b>ar</b>',ipa:'/kɑːr/',cn:'车'},{w:'st<b>ar</b>',ipa:'/stɑːr/',cn:'星星'},{w:'g<b>ar</b>den',ipa:'/ˈɡɑːrdən/',cn:'花园'},{w:'f<b>ar</b>m',ipa:'/fɑːrm/',cn:'农场'}]},
+{combo:'er',sound:'/ɜːr/',desc:'轻声"额r"',words:[{w:'h<b>er</b>',ipa:'/hɜːr/',cn:'她'},{w:'wat<b>er</b>',ipa:'/ˈwɔːtər/',cn:'水'},{w:'teach<b>er</b>',ipa:'/ˈtiːtʃər/',cn:'老师'}]},
+{combo:'ir',sound:'/ɜːr/',desc:'同 er 发音',words:[{w:'b<b>ir</b>d',ipa:'/bɜːrd/',cn:'鸟'},{w:'g<b>ir</b>l',ipa:'/ɡɜːrl/',cn:'女孩'},{w:'f<b>ir</b>st',ipa:'/fɜːrst/',cn:'第一'}]},
+{combo:'or',sound:'/ɔːr/',desc:'类似"奥r"',words:[{w:'f<b>or</b>',ipa:'/fɔːr/',cn:'为了'},{w:'st<b>or</b>y',ipa:'/ˈstɔːri/',cn:'故事'},{w:'h<b>or</b>se',ipa:'/hɔːrs/',cn:'马'}]},
+{combo:'ur',sound:'/ɜːr/',desc:'同 er/ir 发音',words:[{w:'t<b>ur</b>n',ipa:'/tɜːrn/',cn:'转'},{w:'b<b>ur</b>n',ipa:'/bɜːrn/',cn:'燃烧'},{w:'n<b>ur</b>se',ipa:'/nɜːrs/',cn:'护士'}]}
+],
+'特殊规则':[
+{combo:'c → /s/',sound:'/s/',desc:'c 在 e/i/y 前发 /s/',words:[{w:'<b>c</b>ity',ipa:'/ˈsɪti/',cn:'城市'},{w:'i<b>c</b>e',ipa:'/aɪs/',cn:'冰'},{w:'<b>c</b>ircle',ipa:'/ˈsɜːrkl/',cn:'圆'}]},
+{combo:'c → /k/',sound:'/k/',desc:'c 在 a/o/u 前发 /k/',words:[{w:'<b>c</b>at',ipa:'/kæt/',cn:'猫'},{w:'<b>c</b>up',ipa:'/kʌp/',cn:'杯子'},{w:'<b>c</b>old',ipa:'/koʊld/',cn:'冷'}]},
+{combo:'g → /dʒ/',sound:'/dʒ/',desc:'g 在 e/i/y 前常发 /dʒ/',words:[{w:'<b>g</b>iant',ipa:'/ˈdʒaɪənt/',cn:'巨人'},{w:'pa<b>g</b>e',ipa:'/peɪdʒ/',cn:'页'},{w:'<b>g</b>ym',ipa:'/dʒɪm/',cn:'体育馆'}]},
+{combo:'qu',sound:'/kw/',desc:'q 总与 u 搭配发 /kw/',words:[{w:'<b>qu</b>een',ipa:'/kwiːn/',cn:'女王'},{w:'<b>qu</b>ick',ipa:'/kwɪk/',cn:'快的'},{w:'<b>qu</b>iet',ipa:'/ˈkwaɪət/',cn:'安静'}]},
+{combo:'x',sound:'/ks/',desc:'通常发 /ks/',words:[{w:'bo<b>x</b>',ipa:'/bɒks/',cn:'盒子'},{w:'fo<b>x</b>',ipa:'/fɒks/',cn:'狐狸'},{w:'si<b>x</b>',ipa:'/sɪks/',cn:'六'}]},
+{combo:'y → /aɪ/',sound:'/aɪ/',desc:'词尾 y 在单音节词中发长 i',words:[{w:'fl<b>y</b>',ipa:'/flaɪ/',cn:'飞'},{w:'cr<b>y</b>',ipa:'/kraɪ/',cn:'哭'},{w:'tr<b>y</b>',ipa:'/traɪ/',cn:'尝试'}]},
+{combo:'y → /i/',sound:'/i/',desc:'词尾 y 在多音节词中发短 i',words:[{w:'happ<b>y</b>',ipa:'/ˈhæpi/',cn:'快乐'},{w:'cit<b>y</b>',ipa:'/ˈsɪti/',cn:'城市'},{w:'bab<b>y</b>',ipa:'/ˈbeɪbi/',cn:'宝宝'}]},
+{combo:'-tion',sound:'/ʃən/',desc:'常见后缀',words:[{w:'na<b>tion</b>',ipa:'/ˈneɪʃən/',cn:'国家'},{w:'sta<b>tion</b>',ipa:'/ˈsteɪʃən/',cn:'车站'},{w:'ques<b>tion</b>',ipa:'/ˈkwestʃən/',cn:'问题'}]},
+{combo:'-sion',sound:'/ʒən/',desc:'常见后缀',words:[{w:'vi<b>sion</b>',ipa:'/ˈvɪʒən/',cn:'视觉'},{w:'deci<b>sion</b>',ipa:'/dɪˈsɪʒən/',cn:'决定'}]}
+]
+};
+
+const categories=Object.keys(RULES);
+const tabsEl=document.getElementById('tabs');
+const ruleGrid=document.getElementById('ruleGrid');
+const catTitle=document.getElementById('catTitle');
+const detail=document.getElementById('detail');
+let currentCat=categories[0];
+
+function speak(word){
+  const u=new SpeechSynthesisUtterance(word.replace(/<[^>]*>/g,''));
+  u.lang='en-US';u.rate=0.8;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+
+function renderTabs(){
+  const icons=['🔤','🅰️','🔇','📏','⭐'];
+  tabsEl.innerHTML=categories.map((c,i)=>`<div class="tab${c===currentCat?' active':''}" data-cat="${c}">${icons[i]||'📌'} ${c}</div>`).join('');
+  tabsEl.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    currentCat=t.dataset.cat;renderTabs();renderGrid();detail.classList.remove('show');
+  }));
+}
+
+function renderGrid(){
+  catTitle.textContent=currentCat;
+  const rules=RULES[currentCat];
+  ruleGrid.innerHTML=rules.map((r,i)=>`<div class="rule-card" data-idx="${i}">
+    <div class="rule-combo">${r.combo}</div>
+    <div class="rule-sound">${r.sound}</div>
+    <div class="rule-desc">${r.desc}</div>
+    <div class="rule-examples">${r.words.slice(0,3).map(w=>`<span class="rule-word">${w.w}</span>`).join('')}</div>
+  </div>`).join('');
+  ruleGrid.querySelectorAll('.rule-card').forEach(c=>c.addEventListener('click',()=>{
+    ruleGrid.querySelectorAll('.rule-card').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    showDetail(RULES[currentCat][+c.dataset.idx]);
+  }));
+}
+
+function showDetail(r){
+  detail.classList.add('show');
+  detail.innerHTML=`<button class="close-detail" onclick="document.getElementById('detail').classList.remove('show')">✕</button>
+    <div class="detail-combo">${r.combo} → ${r.sound}</div>
+    <div class="detail-desc">${r.desc}</div>
+    <div class="example-list">${r.words.map(w=>`<div class="example-item">
+      <div class="example-info"><div class="example-word">${w.w}</div><div class="example-ipa">${w.ipa}</div><div class="example-cn">${w.cn}</div></div>
+      <button class="play-btn" onclick="speak('${w.w.replace(/<[^>]*>/g,'')}')">▶</button>
+    </div>`).join('')}</div>`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+renderTabs();renderGrid();
+</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+<noscript><p>phonics — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

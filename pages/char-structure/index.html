@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汉字结构分析 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线汉字结构分析工具，识别左右、上下、半包围、全包围、穿插、独体六种结构类型，展示部件拆分。">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/char-structure/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"汉字结构分析","description":"在线汉字结构分析，识别六种结构类型","url":"https://l-s-c.github.io/devkit/pages/char-structure/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:16px;padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.input-row{display:flex;gap:8px;margin-bottom:16px}
+.char-input{flex:1;padding:14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-size:20px;font-weight:700;text-align:center;letter-spacing:8px;outline:none;color:var(--text-primary)}
+.char-input:focus{border-color:#F59E0B}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F;transition:all 150ms}
+.btn:hover{transform:translateY(-1px)}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.char-card{padding:20px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass);text-align:center;transition:all 200ms}
+.char-card:hover{border-color:#F59E0B;transform:translateY(-2px)}
+.char-big{font-size:48px;font-weight:900;line-height:1.2}
+.struct-type{display:inline-block;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;background:rgba(245,158,11,0.1);color:#F59E0B;margin:8px 0}
+.parts{font-size:16px;color:var(--text-secondary);font-weight:600;letter-spacing:4px}
+.struct-icon{font-size:20px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.legend-item{padding:6px 12px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid var(--border-glass);background:var(--bg-glass);color:var(--text-secondary)}
+@media(max-width:768px){.main{padding:16px}.result-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">汉字结构分析 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">汉字结构分析</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">🔍 汉字结构分析</div>
+    <div class="legend">
+      <span class="legend-item">⿰ 左右结构</span>
+      <span class="legend-item">⿱ 上下结构</span>
+      <span class="legend-item">⿺ 半包围</span>
+      <span class="legend-item">⿴ 全包围</span>
+      <span class="legend-item">⿻ 穿插结构</span>
+      <span class="legend-item">独体字</span>
+    </div>
+    <div class="input-row">
+      <input class="char-input" id="charInput" placeholder="输入汉字，如：明天好" maxlength="20">
+      <button class="btn" onclick="analyze()">分析</button>
+    </div>
+  </div>
+  <div class="result-grid" id="results"></div>
+</div>
+<script src="../../shared/theme.js"></script>
+<script>
+const DB={
+"明":["⿰","左右","日月"],"好":["⿰","左右","女子"],"他":["⿰","左右","亻也"],"们":["⿰","左右","亻门"],
+"你":["⿰","左右","亻尔"],"什":["⿰","左右","亻十"],"仁":["⿰","左右","亻二"],"休":["⿰","左右","亻木"],
+"体":["⿰","左右","亻本"],"住":["⿰","左右","亻主"],"作":["⿰","左右","亻乍"],"伙":["⿰","左右","亻火"],
+"林":["⿰","左右","木木"],"相":["⿰","左右","木目"],"村":["⿰","左右","木寸"],"打":["⿰","左右","扌丁"],
+"把":["⿰","左右","扌巴"],"地":["⿰","左右","土也"],"城":["⿰","左右","土成"],"场":["⿰","左右","土扬"],
+"说":["⿰","左右","讠兑"],"话":["⿰","左右","讠舌"],"语":["⿰","左右","讠吾"],"读":["⿰","左右","讠卖"],
+"时":["⿰","左右","日寸"],"晴":["⿰","左右","日青"],"眼":["⿰","左右","目艮"],"睛":["⿰","左右","目青"],
+"跑":["⿰","左右","足包"],"跳":["⿰","左右","足兆"],"路":["⿰","左右","足各"],"吃":["⿰","左右","口乞"],
+"花":["⿱","上下","艹化"],"草":["⿱","上下","艹早"],"苗":["⿱","上下","艹田"],"茶":["⿱","上下","艹余"],
+"字":["⿱","上下","宀子"],"家":["⿱","上下","宀豕"],"安":["⿱","上下","宀女"],"宝":["⿱","上下","宀玉"],
+"笔":["⿱","上下","⺮毛"],"笑":["⿱","上下","⺮夭"],"星":["⿱","上下","日生"],"早":["⿱","上下","日十"],
+"思":["⿱","上下","田心"],"想":["⿱","上下","相心"],"意":["⿱","上下","音心"],"忘":["⿱","上下","亡心"],
+"雪":["⿱","上下","雨彐"],"雷":["⿱","上下","雨田"],"霜":["⿱","上下","雨相"],"露":["⿱","上下","雨路"],
+"尖":["⿱","上下","小大"],"尘":["⿱","上下","小土"],"歪":["⿱","上下","不正"],
+"远":["⿺","半包围","辶元"],"近":["⿺","半包围","辶斤"],"还":["⿺","半包围","辶不"],
+"过":["⿺","半包围","辶寸"],"边":["⿺","半包围","辶力"],"连":["⿺","半包围","辶车"],
+"送":["⿺","半包围","辶关"],"起":["⿺","半包围","走己"],"超":["⿺","半包围","走召"],
+"建":["⿺","半包围","廴聿"],"延":["⿺","半包围","廴丿止"],
+"国":["⿴","全包围","囗玉"],"园":["⿴","全包围","囗元"],"团":["⿴","全包围","囗才"],
+"围":["⿴","全包围","囗韦"],"困":["⿴","全包围","囗木"],"回":["⿴","全包围","囗口"],
+"因":["⿴","全包围","囗大"],"图":["⿴","全包围","囗冬"],
+"坐":["⿻","穿插","土从"],"爽":["⿻","穿插","大爻"],"乘":["⿻","穿插","禾北"],
+"巫":["⿻","穿插","工从"],"兆":["⿻","穿插","儿⺀⺀"],
+"大":["独","独体","大"],"人":["独","独体","人"],"山":["独","独体","山"],"水":["独","独体","水"],
+"火":["独","独体","火"],"土":["独","独体","土"],"木":["独","独体","木"],"日":["独","独体","日"],
+"月":["独","独体","月"],"口":["独","独体","口"],"手":["独","独体","手"],"目":["独","独体","目"],
+"田":["独","独体","田"],"心":["独","独体","心"],"马":["独","独体","马"],"鸟":["独","独体","鸟"],
+"中":["独","独体","中"],"天":["独","独体","天"],"上":["独","独体","上"],"下":["独","独体","下"]
+};
+
+function analyze(){
+  const input=document.getElementById('charInput').value.trim();
+  if(!input)return;
+  const res=document.getElementById('results');
+  res.innerHTML='';
+  const icons={"左右":"⿰","上下":"⿱","半包围":"⿺","全包围":"⿴","穿插":"⿻","独体":"◇"};
+  const colors={"左右":"#3B82F6","上下":"#10B981","半包围":"#F59E0B","全包围":"#EF4444","穿插":"#8B5CF6","独体":"#6B7280"};
+  [...input].forEach(ch=>{
+    const d=DB[ch];
+    if(!d){
+      res.innerHTML+=`<div class="char-card"><div class="char-big">${ch}</div><div class="struct-type" style="background:rgba(107,114,128,0.1);color:#6B7280">暂无数据</div></div>`;
+      return;
+    }
+    const [icon,type,parts]=d;
+    const c=colors[type]||'#F59E0B';
+    res.innerHTML+=`<div class="char-card"><div class="char-big">${ch}</div><div class="struct-type" style="background:${c}15;color:${c}"><span class="struct-icon">${icons[type]||icon}</span> ${type}结构</div><div class="parts">${[...parts].join(' + ')}</div></div>`;
+  });
+}
+
+document.getElementById('charInput').addEventListener('keydown',e=>{if(e.key==='Enter')analyze()});
+</script>
+<noscript><p>汉字结构分析 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

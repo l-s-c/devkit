@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国省会城市 | China Provinces — DevKit</title>
+<meta name="description" content="中国34个省级行政区完整列表，包含省会、简称、面积、人口、GDP、特产、旅游景点等详细信息。按区域分类浏览，支持搜索。">
+<meta name="keywords" content="中国省份,省会城市,行政区划,省份查询,中国地理,DevKit">
+<meta property="og:title" content="中国省会城市 — DevKit">
+<meta property="og:description" content="34个省级行政区完整列表，省会、面积、人口、GDP、特产、景点一览">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/china-provinces/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"中国省会城市","url":"https://l-s-c.github.io/devkit/pages/china-provinces/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/china-provinces/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:16px 16px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:16px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.count-badge{font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:600}
+.search-input{width:100%;padding:10px 14px 10px 36px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none;margin-bottom:12px}
+.search-input:focus{border-color:#EF4444}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px}
+.region-pills{display:flex;gap:4px;flex-wrap:wrap}
+.region-pill{padding:5px 12px;border-radius:12px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
+.region-pill:hover{border-color:#EF4444;color:#EF4444}
+.region-pill.active{background:#EF4444;color:#fff;border-color:#EF4444}
+.prov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.prov-card{padding:12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);cursor:pointer;transition:all 200ms}
+.prov-card:hover{border-color:#EF4444;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.prov-card.active{border-color:#EF4444;background:rgba(239,68,68,0.04)}
+.prov-name{font-size:16px;font-weight:800;margin-bottom:2px}
+.prov-abbr{font-size:10px;color:#EF4444;font-weight:700}
+.prov-capital{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.prov-card.hidden{display:none}
+.detail-card{display:none;padding:20px;border-radius:16px;border:2px solid #EF4444;background:rgba(239,68,68,0.04);margin-bottom:16px}
+.detail-card.show{display:block}
+.detail-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-secondary)}
+.detail-name{font-size:24px;font-weight:900;margin-bottom:2px}
+.detail-abbr{font-size:14px;color:#EF4444;font-weight:700;margin-bottom:16px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.detail-grid{grid-template-columns:1fr}}
+.detail-item{padding:10px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.detail-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.detail-value{font-size:13px;font-weight:700;color:var(--text-primary)}
+.detail-spots{display:flex;gap:4px;flex-wrap:wrap;margin-top:12px}
+.spot-tag{padding:3px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(239,68,68,0.06);color:#EF4444}
+.no-result{text-align:center;padding:40px;color:var(--text-caption);font-size:13px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">中国省会城市 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">中国省会城市</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🇨🇳 中国省会城市 <span class="count-badge" id="countBadge">34 省级行政区</span></div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索省份、省会、简称..."></div>
+    <div class="region-pills" id="regionPills">
+      <div class="region-pill active" data-region="全部">全部</div>
+      <div class="region-pill" data-region="华北">华北</div>
+      <div class="region-pill" data-region="东北">东北</div>
+      <div class="region-pill" data-region="华东">华东</div>
+      <div class="region-pill" data-region="华中">华中</div>
+      <div class="region-pill" data-region="华南">华南</div>
+      <div class="region-pill" data-region="西南">西南</div>
+      <div class="region-pill" data-region="西北">西北</div>
+      <div class="region-pill" data-region="港澳台">港澳台</div>
+    </div>
+  </div>
+  <div class="detail-card" id="detailCard"></div>
+  <div class="panel">
+    <div class="prov-grid" id="provGrid"></div>
+    <div class="no-result" id="noResult" style="display:none">未找到匹配的省份</div>
+  </div>
+</div>
+<noscript><p>中国省会城市 — DevKit。请启用 JavaScript。</p></noscript>
+<script type="module">
+import '../../shared/theme.js';
+
+const provinces = [
+  {name:"北京市",abbr:"京",type:"直辖市",capital:"北京",region:"华北",area:"16,410 km²",pop:"2,189 万",gdp:"4.16 万亿元",specialties:["北京烤鸭","果脯","豆汁","稻香村糕点","景泰蓝"],spots:["故宫","长城","天坛","颐和园","天安门"],history:"3000年建城史，元明清三代首都，中华人民共和国首都。"},
+  {name:"天津市",abbr:"津",type:"直辖市",capital:"天津",region:"华北",area:"11,917 km²",pop:"1,373 万",gdp:"1.59 万亿元",specialties:["狗不理包子","十八街麻花","耳朵眼炸糕"],spots:["五大道","古文化街","天津之眼","盘山","瓷房子"],history:"明永乐二年设天津卫，近代北方最大工商业城市。"},
+  {name:"河北省",abbr:"冀",type:"省",capital:"石家庄",region:"华北",area:"188,800 km²",pop:"7,448 万",gdp:"4.23 万亿元",specialties:["板栗","驴肉火烧","衡水老白干","赵县雪花梨"],spots:["承德避暑山庄","秦皇岛","白洋淀","崇礼滑雪场","赵州桥"],history:"古称冀州，是中华文明重要发祥地之一。"},
+  {name:"山西省",abbr:"晋",type:"省",capital:"太原",region:"华北",area:"156,700 km²",pop:"3,480 万",gdp:"2.57 万亿元",specialties:["老陈醋","刀削面","汾酒","平遥牛肉"],spots:["平遥古城","云冈石窟","五台山","壶口瀑布","乔家大院"],history:"古称三晋，春秋时为晋国，煤炭资源丰富。"},
+  {name:"内蒙古自治区",abbr:"蒙",type:"自治区",capital:"呼和浩特",region:"华北",area:"1,183,000 km²",pop:"2,405 万",gdp:"2.31 万亿元",specialties:["牛肉干","奶酪","马奶酒","手扒肉"],spots:["呼伦贝尔草原","额济纳胡杨林","响沙湾","成吉思汗陵","阿尔山"],history:"蒙古族聚居地，1947年成立第一个省级自治区。"},
+  {name:"辽宁省",abbr:"辽",type:"省",capital:"沈阳",region:"东北",area:"148,000 km²",pop:"4,259 万",gdp:"2.89 万亿元",specialties:["大连海鲜","锦州烧烤","老雪花啤酒","沟帮子熏鸡"],spots:["沈阳故宫","大连金石滩","千山","本溪水洞","盘锦红海滩"],history:"清朝发祥地，近代东北工业基地。"},
+  {name:"吉林省",abbr:"吉",type:"省",capital:"长春",region:"东北",area:"187,400 km²",pop:"2,375 万",gdp:"1.32 万亿元",specialties:["人参","鹿茸","松子","延吉冷面","查干湖鱼"],spots:["长白山","吉林雾凇","净月潭","伪满皇宫","查干湖"],history:"因吉林乌拉城得名，满语意为'沿江的城池'。"},
+  {name:"黑龙江省",abbr:"黑",type:"省",capital:"哈尔滨",region:"东北",area:"473,000 km²",pop:"3,125 万",gdp:"1.58 万亿元",specialties:["红肠","大列巴","五常大米","蓝莓","木耳"],spots:["哈尔滨冰雪大世界","太阳岛","镜泊湖","漠河北极村","扎龙自然保护区"],history:"以黑龙江得名，中国最北省份，北大荒变北大仓。"},
+  {name:"上海市",abbr:"沪",type:"直辖市",capital:"上海",region:"华东",area:"6,341 km²",pop:"2,489 万",gdp:"4.72 万亿元",specialties:["小笼包","生煎","蟹壳黄","大白兔奶糖","老酒"],spots:["外滩","东方明珠","豫园","迪士尼乐园","朱家角"],history:"近代开埠后迅速发展，有'东方巴黎'之称。"},
+  {name:"江苏省",abbr:"苏",type:"省",capital:"南京",region:"华东",area:"107,200 km²",pop:"8,475 万",gdp:"12.82 万亿元",specialties:["阳澄湖大闸蟹","盐水鸭","碧螺春","无锡排骨"],spots:["中山陵","拙政园","周庄","瘦西湖","夫子庙"],history:"古称江南，鱼米之乡，GDP全国前列。"},
+  {name:"浙江省",abbr:"浙",type:"省",capital:"杭州",region:"华东",area:"105,500 km²",pop:"6,577 万",gdp:"8.26 万亿元",specialties:["龙井茶","金华火腿","绍兴黄酒","东坡肉"],spots:["西湖","乌镇","千岛湖","普陀山","横店影视城"],history:"古越之地，丝绸之府，民营经济发达省份。"},
+  {name:"安徽省",abbr:"皖",type:"省",capital:"合肥",region:"华东",area:"140,100 km²",pop:"6,113 万",gdp:"4.71 万亿元",specialties:["黄山毛峰","臭鳜鱼","符离集烧鸡","怀远石榴"],spots:["黄山","西递宏村","九华山","天柱山","三河古镇"],history:"取安庆、徽州首字得名，徽文化发源地。"},
+  {name:"福建省",abbr:"闽",type:"省",capital:"福州",region:"华东",area:"124,000 km²",pop:"4,188 万",gdp:"5.31 万亿元",specialties:["铁观音","武夷岩茶","沙县小吃","佛跳墙","荔枝"],spots:["鼓浪屿","武夷山","土楼","三坊七巷","泰宁大金湖"],history:"闽越故地，海上丝绸之路起点，侨乡。"},
+  {name:"江西省",abbr:"赣",type:"省",capital:"南昌",region:"华东",area:"166,900 km²",pop:"4,528 万",gdp:"3.27 万亿元",specialties:["景德镇瓷器","庐山云雾茶","南昌拌粉","赣南脐橙"],spots:["庐山","婺源","井冈山","龙虎山","滕王阁"],history:"唐设江南西道，景德镇为千年瓷都，红色革命摇篮。"},
+  {name:"山东省",abbr:"鲁",type:"省",capital:"济南",region:"华东",area:"158,000 km²",pop:"10,153 万",gdp:"9.21 万亿元",specialties:["煎饼卷大葱","德州扒鸡","青岛啤酒","烟台苹果","阿胶"],spots:["泰山","曲阜三孔","崂山","蓬莱阁","趵突泉"],history:"齐鲁大地，孔孟之乡，儒家文化发源地。"},
+  {name:"河南省",abbr:"豫",type:"省",capital:"郑州",region:"华中",area:"167,000 km²",pop:"9,872 万",gdp:"6.13 万亿元",specialties:["烩面","胡辣汤","道口烧鸡","信阳毛尖","新郑红枣"],spots:["少林寺","龙门石窟","清明上河园","云台山","殷墟"],history:"中原腹地，华夏文明发祥地，多个王朝建都于此。"},
+  {name:"湖北省",abbr:"鄂",type:"省",capital:"武汉",region:"华中",area:"185,900 km²",pop:"5,775 万",gdp:"5.58 万亿元",specialties:["热干面","武昌鱼","孝感麻糖","恩施玉露茶"],spots:["黄鹤楼","武当山","三峡大坝","神农架","东湖"],history:"楚文化发祥地，九省通衢，辛亥革命首义之地。"},
+  {name:"湖南省",abbr:"湘",type:"省",capital:"长沙",region:"华中",area:"211,800 km²",pop:"6,604 万",gdp:"4.95 万亿元",specialties:["臭豆腐","剁椒鱼头","槟榔","湘绣","安化黑茶"],spots:["张家界","凤凰古城","岳麓山","衡山","橘子洲"],history:"湖湘文化深厚，'惟楚有才，于斯为盛'。"},
+  {name:"广东省",abbr:"粤",type:"省",capital:"广州",region:"华南",area:"179,800 km²",pop:"12,684 万",gdp:"13.57 万亿元",specialties:["广式早茶","烧鹅","潮汕牛肉丸","凉茶","荔枝"],spots:["广州塔","丹霞山","开平碉楼","长隆","珠海渔女"],history:"岭南文化中心，改革开放前沿，GDP连续多年全国第一。"},
+  {name:"广西壮族自治区",abbr:"桂",type:"自治区",capital:"南宁",region:"华南",area:"237,600 km²",pop:"5,037 万",gdp:"2.72 万亿元",specialties:["螺蛳粉","桂林米粉","罗汉果","芒果","沙田柚"],spots:["桂林山水","漓江","北海银滩","德天瀑布","龙脊梯田"],history:"古称百越之地，壮族聚居，'桂林山水甲天下'。"},
+  {name:"海南省",abbr:"琼",type:"省",capital:"海口",region:"华南",area:"35,400 km²",pop:"1,027 万",gdp:"0.71 万亿元",specialties:["文昌鸡","椰子","黄灯笼辣椒","和乐蟹","海南咖啡"],spots:["三亚亚龙湾","天涯海角","分界洲岛","呀诺达","骑楼老街"],history:"中国最大经济特区和自由贸易港。"},
+  {name:"重庆市",abbr:"渝",type:"直辖市",capital:"重庆",region:"西南",area:"82,400 km²",pop:"3,212 万",gdp:"2.91 万亿元",specialties:["火锅","小面","磁器口麻花","合川桃片","涪陵榨菜"],spots:["洪崖洞","磁器口","武隆天生三桥","大足石刻","长江三峡"],history:"1997年设直辖市，'山城''雾都'之称。"},
+  {name:"四川省",abbr:"川/蜀",type:"省",capital:"成都",region:"西南",area:"486,000 km²",pop:"8,372 万",gdp:"5.67 万亿元",specialties:["火锅","麻婆豆腐","四川泡菜","郫县豆瓣","蜀绣"],spots:["九寨沟","峨眉山","都江堰","稻城亚丁","大熊猫基地"],history:"天府之国，三国蜀汉之地，自然资源丰富。"},
+  {name:"贵州省",abbr:"贵/黔",type:"省",capital:"贵阳",region:"西南",area:"176,200 km²",pop:"3,856 万",gdp:"2.08 万亿元",specialties:["茅台酒","酸汤鱼","老干妈","折耳根","刺梨"],spots:["黄果树瀑布","荔波小七孔","西江苗寨","梵净山","镇远古镇"],history:"多民族聚居，喀斯特地貌典型，大数据产业新兴。"},
+  {name:"云南省",abbr:"滇/云",type:"省",capital:"昆明",region:"西南",area:"394,000 km²",pop:"4,690 万",gdp:"2.90 万亿元",specialties:["普洱茶","过桥米线","鲜花饼","宣威火腿","松茸"],spots:["丽江古城","大理洱海","石林","玉龙雪山","西双版纳"],history:"古滇国所在地，26个民族聚居，'彩云之南'。"},
+  {name:"西藏自治区",abbr:"藏",type:"自治区",capital:"拉萨",region:"西南",area:"1,228,400 km²",pop:"365 万",gdp:"0.21 万亿元",specialties:["青稞酒","酥油茶","牦牛肉干","藏红花"],spots:["布达拉宫","纳木措","珠穆朗玛峰","大昭寺","林芝桃花"],history:"吐蕃王朝故地，1965年成立自治区，世界屋脊。"},
+  {name:"陕西省",abbr:"陕/秦",type:"省",capital:"西安",region:"西北",area:"205,600 km²",pop:"3,954 万",gdp:"3.27 万亿元",specialties:["肉夹馍","凉皮","羊肉泡馍","biangbiang面","柿饼"],spots:["兵马俑","华山","大雁塔","华清宫","壶口瀑布"],history:"十三朝古都，秦汉唐盛世发源地。"},
+  {name:"甘肃省",abbr:"甘/陇",type:"省",capital:"兰州",region:"西北",area:"425,800 km²",pop:"2,490 万",gdp:"1.13 万亿元",specialties:["兰州拉面","百合","白兰瓜","苦水玫瑰"],spots:["莫高窟","鸣沙山月牙泉","张掖丹霞","嘉峪关","麦积山"],history:"丝绸之路黄金段，河西走廊东西文化交汇。"},
+  {name:"青海省",abbr:"青",type:"省",capital:"西宁",region:"西北",area:"722,300 km²",pop:"595 万",gdp:"0.37 万亿元",specialties:["青稞","牦牛酸奶","冬虫夏草","枸杞"],spots:["青海湖","茶卡盐湖","塔尔寺","可可西里","祁连山"],history:"青海湖得名，三江源头，中华水塔。"},
+  {name:"宁夏回族自治区",abbr:"宁",type:"自治区",capital:"银川",region:"西北",area:"66,400 km²",pop:"725 万",gdp:"0.51 万亿元",specialties:["枸杞","滩羊肉","贺兰山葡萄酒","八宝茶"],spots:["沙坡头","西夏王陵","镇北堡影视城","沙湖","贺兰山岩画"],history:"古西夏国所在地，塞上江南，回族聚居区。"},
+  {name:"新疆维吾尔自治区",abbr:"新",type:"自治区",capital:"乌鲁木齐",region:"西北",area:"1,664,900 km²",pop:"2,587 万",gdp:"1.77 万亿元",specialties:["哈密瓜","葡萄干","大盘鸡","馕","和田玉"],spots:["天山天池","喀纳斯","那拉提草原","交河故城","塔克拉玛干沙漠"],history:"古称西域，丝绸之路核心区，中国面积最大省区。"},
+  {name:"中国台湾",abbr:"台",type:"省",capital:"台北",region:"港澳台",area:"36,000 km²",pop:"2,342 万",gdp:"—",specialties:["凤梨酥","珍珠奶茶","太阳饼","牛肉面","担仔面"],spots:["日月潭","阿里山","台北101","故宫博物院","太鲁阁"],history:"宝岛台湾，自古以来就是中国领土不可分割的一部分。"},
+  {name:"香港特别行政区",abbr:"港",type:"特别行政区",capital:"香港",region:"港澳台",area:"1,107 km²",pop:"750 万",gdp:"—",specialties:["港式奶茶","蛋挞","菠萝包","鱼蛋","叉烧"],spots:["维多利亚港","太平山顶","迪士尼","星光大道","庙街"],history:"1997年回归祖国，实行'一国两制'。"},
+  {name:"澳门特别行政区",abbr:"澳",type:"特别行政区",capital:"澳门",region:"港澳台",area:"33 km²",pop:"68 万",gdp:"—",specialties:["葡式蛋挞","猪扒包","杏仁饼","花生糖"],spots:["大三巴牌坊","妈阁庙","威尼斯人","澳门塔","官也街"],history:"1999年回归祖国，东西方文化交融之城。"}
+];
+
+let activeRegion = '全部';
+let searchQuery = '';
+let activeProvince = null;
+
+const grid = document.getElementById('provGrid');
+const detailCard = document.getElementById('detailCard');
+const countBadge = document.getElementById('countBadge');
+const noResult = document.getElementById('noResult');
+
+function render() {
+  const filtered = provinces.filter(p => {
+    const regionMatch = activeRegion === '全部' || p.region === activeRegion;
+    const q = searchQuery.toLowerCase();
+    const searchMatch = !q || p.name.toLowerCase().includes(q) || p.abbr.toLowerCase().includes(q) || p.capital.toLowerCase().includes(q);
+    return regionMatch && searchMatch;
+  });
+  countBadge.textContent = filtered.length + ' 省级行政区';
+  grid.innerHTML = '';
+  noResult.style.display = filtered.length === 0 ? 'block' : 'none';
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'prov-card' + (activeProvince === p.name ? ' active' : '');
+    card.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-abbr">${p.abbr} · ${p.type}</div><div class="prov-capital">📍 ${p.capital}</div>`;
+    card.onclick = () => showDetail(p);
+    grid.appendChild(card);
+  });
+}
+
+function showDetail(p) {
+  activeProvince = p.name;
+  detailCard.className = 'detail-card show';
+  detailCard.innerHTML = `<button class="detail-close" onclick="closeDetail()">✕</button>
+    <div class="detail-name">${p.name}</div>
+    <div class="detail-abbr">${p.abbr} · ${p.type}</div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-label">🏛️ 省会/首府</div><div class="detail-value">${p.capital}</div></div>
+      <div class="detail-item"><div class="detail-label">📐 面积</div><div class="detail-value">${p.area}</div></div>
+      <div class="detail-item"><div class="detail-label">👥 人口</div><div class="detail-value">${p.pop}</div></div>
+      <div class="detail-item"><div class="detail-label">💰 GDP</div><div class="detail-value">${p.gdp}</div></div>
+      <div class="detail-item"><div class="detail-label">🍜 特产</div><div class="detail-value">${p.specialties.join('、')}</div></div>
+      <div class="detail-item"><div class="detail-label">📜 历史</div><div class="detail-value">${p.history}</div></div>
+    </div>
+    <div class="detail-spots"><span style="font-size:10px;font-weight:700;color:var(--text-caption)">🏔️ 景点：</span>${p.spots.map(s=>'<span class="spot-tag">'+s+'</span>').join('')}</div>`;
+  render();
+  detailCard.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+window.closeDetail = function() {
+  activeProvince = null;
+  detailCard.className = 'detail-card';
+  render();
+};
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  render();
+});
+
+document.getElementById('regionPills').addEventListener('click', e => {
+  const pill = e.target.closest('.region-pill');
+  if (!pill) return;
+  document.querySelectorAll('.region-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  activeRegion = pill.dataset.region;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

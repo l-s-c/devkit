@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语不规则动词表 | Irregular Verbs — DevKit</title>
+<meta name="description" content="100+英语不规则动词表，按AAA/ABB/ABC/ABA分类，支持搜索、发音、练习模式即时批改。Irregular verbs table with practice mode.">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/irregular-verbs/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语不规则动词表","description":"100+英语不规则动词，按变化类型分类，搜索、发音、练习模式","url":"https://l-s-c.github.io/devkit/pages/irregular-verbs/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+h1.seo-only{position:absolute;left:-9999px;font-size:1px}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:saturate(var(--glass-saturate)) blur(var(--glass-blur));border:0.5px solid var(--border-glass);border-radius:16px;box-shadow:var(--glass-shadow);padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.search-input{width:100%;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border-input);background:var(--bg-glass-input);font-size:14px;outline:none;color:var(--text-primary);font-family:var(--font-ui)}
+.search-input:focus{border-color:#10B981}
+.search-input::placeholder{color:var(--text-caption)}
+.tab-row{display:flex;gap:4px;margin:12px 0;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
+.tab:active{transform:scale(0.96)}
+.tab.active{background:#10B981;color:#fff;border-color:#10B981}
+.verb-table{width:100%;border-collapse:separate;border-spacing:0 4px}
+.verb-table th{padding:10px;background:#10B981;color:#fff;font-size:10px;font-weight:800;text-align:center}
+.verb-table th:first-child{border-radius:8px 0 0 8px}
+.verb-table th:last-child{border-radius:0 8px 8px 0}
+.verb-table td{padding:10px 8px;background:var(--bg-glass-input);font-size:13px;font-weight:700;text-align:center;font-family:var(--font-code);cursor:pointer;transition:background 150ms}
+.verb-table td:hover{background:rgba(16,185,129,0.08)}
+.verb-table td:first-child{border-radius:8px 0 0 8px}
+.verb-table td:last-child{border-radius:0 8px 8px 0}
+.verb-cn{font-size:11px;color:var(--text-secondary);font-family:var(--font-ui);font-weight:600}
+.pattern-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:8px;font-weight:700;margin-left:4px}
+.pat-AAA{background:rgba(16,185,129,0.1);color:#10B981}
+.pat-ABB{background:rgba(59,130,246,0.1);color:#3B82F6}
+.pat-ABC{background:rgba(139,92,246,0.1);color:#8B5CF6}
+.pat-ABA{background:rgba(239,68,68,0.1);color:#EF4444}
+.practice-card{padding:20px;border-radius:10px;border:2px dashed #10B981;background:rgba(16,185,129,0.04);text-align:center}
+.practice-word{font-size:24px;font-weight:800;font-family:var(--font-code);margin-bottom:4px}
+.practice-cn{font-size:13px;color:var(--text-secondary);margin-bottom:12px}
+.practice-inputs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.practice-field{display:flex;flex-direction:column;align-items:center;gap:4px}
+.practice-input{width:120px;padding:10px;border-radius:8px;border:1.5px solid var(--border-input);background:var(--bg-glass-input);font-size:14px;font-weight:700;text-align:center;font-family:var(--font-code);outline:none;color:var(--text-primary)}
+.practice-input:focus{border-color:#10B981}
+.practice-input.correct{border-color:#10B981;background:rgba(16,185,129,0.08)}
+.practice-input.wrong{border-color:#EF4444;background:rgba(239,68,68,0.08)}
+.practice-label{font-size:9px;color:var(--text-caption)}
+.btn-sm{padding:10px 24px;border-radius:14px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:#10B981;color:#fff;margin-top:12px;transition:all 150ms}
+.btn-sm:active{transform:scale(0.96)}
+.btn-outline{padding:8px 16px;border-radius:14px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);font-size:11px;font-weight:600;cursor:pointer;color:var(--text-secondary);margin-top:12px;margin-left:8px}
+.result-msg{margin-top:10px;font-size:13px;font-weight:700}
+.count-info{font-size:11px;color:var(--text-caption);margin-left:auto}
+.speak-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:2px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<h1 class="seo-only">英语不规则动词表 - 在线查询与练习</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a href="../index.html" class="topbar-logo"><div class="topbar-logo-icon">D</div><div class="topbar-logo-text">DevKit</div></a>
+  <span class="topbar-tool-name">英语不规则动词表</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">📖 英语不规则动词表 <span class="count-info" id="countInfo"></span></div>
+    <input class="search-input" id="searchInput" placeholder="🔍 搜索动词（英文或中文均可）...">
+    <div class="tab-row">
+      <div class="tab active" data-filter="all">📋 全部</div>
+      <div class="tab" data-filter="AAA">AAA 型</div>
+      <div class="tab" data-filter="ABB">ABB 型</div>
+      <div class="tab" data-filter="ABC">ABC 型</div>
+      <div class="tab" data-filter="ABA">ABA 型</div>
+      <div class="tab" data-filter="practice">🎯 练习</div>
+    </div>
+  </div>
+  <div id="tableSection" class="glass">
+    <table class="verb-table">
+      <thead><tr><th>原形</th><th>过去式</th><th>过去分词</th><th>中文释义</th></tr></thead>
+      <tbody id="verbBody"></tbody>
+    </table>
+  </div>
+  <div id="practiceSection" class="glass hidden">
+    <div class="section-title">🎯 填空练习</div>
+    <div class="practice-card">
+      <div class="practice-word" id="practiceWord">—</div>
+      <div class="practice-cn" id="practiceCn"></div>
+      <div class="practice-inputs">
+        <div class="practice-field"><input class="practice-input" id="pastInput" placeholder="过去式"><div class="practice-label">Past Tense</div></div>
+        <div class="practice-field"><input class="practice-input" id="ppInput" placeholder="过去分词"><div class="practice-label">Past Participle</div></div>
+      </div>
+      <div><button class="btn-sm" id="checkBtn">✅ 检查</button><button class="btn-outline" id="nextBtn">下一题 →</button><button class="btn-outline speak-btn" id="practiceSpeak">🔊</button></div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-caption)">
+      得分：<strong id="scoreDisplay">0/0</strong>
+    </div>
+  </div>
+</div>
+<script type="module" src="../../shared/theme.js"></script>
+<script>
+const VERBS=[
+// AAA
+{b:'cut',p:'cut',pp:'cut',cn:'切/割',t:'AAA'},{b:'put',p:'put',pp:'put',cn:'放',t:'AAA'},{b:'let',p:'let',pp:'let',cn:'让',t:'AAA'},{b:'set',p:'set',pp:'set',cn:'设置',t:'AAA'},{b:'shut',p:'shut',pp:'shut',cn:'关闭',t:'AAA'},{b:'hit',p:'hit',pp:'hit',cn:'打/击',t:'AAA'},{b:'hurt',p:'hurt',pp:'hurt',cn:'伤害',t:'AAA'},{b:'cost',p:'cost',pp:'cost',cn:'花费',t:'AAA'},{b:'quit',p:'quit',pp:'quit',cn:'放弃',t:'AAA'},{b:'split',p:'split',pp:'split',cn:'分裂',t:'AAA'},{b:'spread',p:'spread',pp:'spread',cn:'传播',t:'AAA'},{b:'burst',p:'burst',pp:'burst',cn:'爆裂',t:'AAA'},{b:'cast',p:'cast',pp:'cast',cn:'投/抛',t:'AAA'},{b:'rid',p:'rid',pp:'rid',cn:'使摆脱',t:'AAA'},
+// ABB
+{b:'buy',p:'bought',pp:'bought',cn:'买',t:'ABB'},{b:'bring',p:'brought',pp:'brought',cn:'带来',t:'ABB'},{b:'think',p:'thought',pp:'thought',cn:'想/认为',t:'ABB'},{b:'teach',p:'taught',pp:'taught',cn:'教',t:'ABB'},{b:'catch',p:'caught',pp:'caught',cn:'抓住',t:'ABB'},{b:'fight',p:'fought',pp:'fought',cn:'打架',t:'ABB'},{b:'seek',p:'sought',pp:'sought',cn:'寻找',t:'ABB'},{b:'have',p:'had',pp:'had',cn:'有',t:'ABB'},{b:'make',p:'made',pp:'made',cn:'做/制造',t:'ABB'},{b:'say',p:'said',pp:'said',cn:'说',t:'ABB'},{b:'pay',p:'paid',pp:'paid',cn:'付款',t:'ABB'},{b:'lay',p:'laid',pp:'laid',cn:'放置/下蛋',t:'ABB'},{b:'tell',p:'told',pp:'told',cn:'告诉',t:'ABB'},{b:'sell',p:'sold',pp:'sold',cn:'卖',t:'ABB'},{b:'hold',p:'held',pp:'held',cn:'握/举行',t:'ABB'},{b:'stand',p:'stood',pp:'stood',cn:'站',t:'ABB'},{b:'understand',p:'understood',pp:'understood',cn:'理解',t:'ABB'},{b:'win',p:'won',pp:'won',cn:'赢',t:'ABB'},{b:'hang',p:'hung',pp:'hung',cn:'悬挂',t:'ABB'},{b:'dig',p:'dug',pp:'dug',cn:'挖',t:'ABB'},{b:'stick',p:'stuck',pp:'stuck',cn:'粘/刺',t:'ABB'},{b:'spin',p:'spun',pp:'spun',cn:'旋转',t:'ABB'},{b:'sit',p:'sat',pp:'sat',cn:'坐',t:'ABB'},{b:'lead',p:'led',pp:'led',cn:'领导',t:'ABB'},{b:'read',p:'read',pp:'read',cn:'读',t:'ABB'},{b:'feed',p:'fed',pp:'fed',cn:'喂',t:'ABB'},{b:'meet',p:'met',pp:'met',cn:'遇见',t:'ABB'},{b:'keep',p:'kept',pp:'kept',cn:'保持',t:'ABB'},{b:'sleep',p:'slept',pp:'slept',cn:'睡',t:'ABB'},{b:'sweep',p:'swept',pp:'swept',cn:'扫',t:'ABB'},{b:'feel',p:'felt',pp:'felt',cn:'感觉',t:'ABB'},{b:'leave',p:'left',pp:'left',cn:'离开',t:'ABB'},{b:'mean',p:'meant',pp:'meant',cn:'意味着',t:'ABB'},{b:'deal',p:'dealt',pp:'dealt',cn:'处理',t:'ABB'},{b:'dream',p:'dreamt',pp:'dreamt',cn:'做梦',t:'ABB'},{b:'learn',p:'learnt',pp:'learnt',cn:'学习',t:'ABB'},{b:'build',p:'built',pp:'built',cn:'建造',t:'ABB'},{b:'spend',p:'spent',pp:'spent',cn:'花费/度过',t:'ABB'},{b:'send',p:'sent',pp:'sent',cn:'发送',t:'ABB'},{b:'lend',p:'lent',pp:'lent',cn:'借出',t:'ABB'},{b:'bend',p:'bent',pp:'bent',cn:'弯曲',t:'ABB'},{b:'lose',p:'lost',pp:'lost',cn:'丢失/输',t:'ABB'},{b:'shoot',p:'shot',pp:'shot',cn:'射击',t:'ABB'},{b:'get',p:'got',pp:'got',cn:'得到',t:'ABB'},{b:'find',p:'found',pp:'found',cn:'找到',t:'ABB'},{b:'hear',p:'heard',pp:'heard',cn:'听到',t:'ABB'},{b:'shine',p:'shone',pp:'shone',cn:'发光',t:'ABB'},{b:'light',p:'lit',pp:'lit',cn:'点亮',t:'ABB'},
+// ABC
+{b:'go',p:'went',pp:'gone',cn:'去',t:'ABC'},{b:'do',p:'did',pp:'done',cn:'做',t:'ABC'},{b:'see',p:'saw',pp:'seen',cn:'看见',t:'ABC'},{b:'take',p:'took',pp:'taken',cn:'拿/带',t:'ABC'},{b:'give',p:'gave',pp:'given',cn:'给',t:'ABC'},{b:'know',p:'knew',pp:'known',cn:'知道',t:'ABC'},{b:'grow',p:'grew',pp:'grown',cn:'生长',t:'ABC'},{b:'show',p:'showed',pp:'shown',cn:'展示',t:'ABC'},{b:'blow',p:'blew',pp:'blown',cn:'吹',t:'ABC'},{b:'throw',p:'threw',pp:'thrown',cn:'扔',t:'ABC'},{b:'draw',p:'drew',pp:'drawn',cn:'画/拉',t:'ABC'},{b:'fly',p:'flew',pp:'flown',cn:'飞',t:'ABC'},{b:'write',p:'wrote',pp:'written',cn:'写',t:'ABC'},{b:'ride',p:'rode',pp:'ridden',cn:'骑',t:'ABC'},{b:'drive',p:'drove',pp:'driven',cn:'驾驶',t:'ABC'},{b:'rise',p:'rose',pp:'risen',cn:'升起',t:'ABC'},{b:'speak',p:'spoke',pp:'spoken',cn:'说/讲',t:'ABC'},{b:'break',p:'broke',pp:'broken',cn:'打破',t:'ABC'},{b:'choose',p:'chose',pp:'chosen',cn:'选择',t:'ABC'},{b:'freeze',p:'froze',pp:'frozen',cn:'冷冻',t:'ABC'},{b:'steal',p:'stole',pp:'stolen',cn:'偷',t:'ABC'},{b:'wake',p:'woke',pp:'woken',cn:'醒来',t:'ABC'},{b:'wear',p:'wore',pp:'worn',cn:'穿',t:'ABC'},{b:'tear',p:'tore',pp:'torn',cn:'撕',t:'ABC'},{b:'bear',p:'bore',pp:'born',cn:'忍受/生育',t:'ABC'},{b:'swear',p:'swore',pp:'sworn',cn:'发誓',t:'ABC'},{b:'begin',p:'began',pp:'begun',cn:'开始',t:'ABC'},{b:'drink',p:'drank',pp:'drunk',cn:'喝',t:'ABC'},{b:'swim',p:'swam',pp:'swum',cn:'游泳',t:'ABC'},{b:'ring',p:'rang',pp:'rung',cn:'响/打电话',t:'ABC'},{b:'sing',p:'sang',pp:'sung',cn:'唱',t:'ABC'},{b:'sink',p:'sank',pp:'sunk',cn:'下沉',t:'ABC'},{b:'eat',p:'ate',pp:'eaten',cn:'吃',t:'ABC'},{b:'fall',p:'fell',pp:'fallen',cn:'落下',t:'ABC'},{b:'forget',p:'forgot',pp:'forgotten',cn:'忘记',t:'ABC'},{b:'hide',p:'hid',pp:'hidden',cn:'藏',t:'ABC'},{b:'bite',p:'bit',pp:'bitten',cn:'咬',t:'ABC'},{b:'lie',p:'lay',pp:'lain',cn:'躺/位于',t:'ABC'},{b:'shake',p:'shook',pp:'shaken',cn:'摇/震动',t:'ABC'},{b:'mistake',p:'mistook',pp:'mistaken',cn:'弄错',t:'ABC'},
+// ABA
+{b:'come',p:'came',pp:'come',cn:'来',t:'ABA'},{b:'become',p:'became',pp:'become',cn:'变成',t:'ABA'},{b:'run',p:'ran',pp:'run',cn:'跑',t:'ABA'},{b:'overcome',p:'overcame',pp:'overcome',cn:'克服',t:'ABA'}
+];
+
+let currentFilter='all';
+const body=document.getElementById('verbBody');
+const searchInput=document.getElementById('searchInput');
+const tableSection=document.getElementById('tableSection');
+const practiceSection=document.getElementById('practiceSection');
+const countInfo=document.getElementById('countInfo');
+
+function speak(word){
+  const u=new SpeechSynthesisUtterance(word);
+  u.lang='en-US';u.rate=0.85;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+
+function render(filter,query=''){
+  const q=query.toLowerCase().trim();
+  let list=VERBS;
+  if(filter!=='all')list=list.filter(v=>v.t===filter);
+  if(q)list=list.filter(v=>v.b.includes(q)||v.p.includes(q)||v.pp.includes(q)||v.cn.includes(q));
+  body.innerHTML=list.map(v=>`<tr>
+    <td onclick="speak('${v.b}')">${v.b} <button class="speak-btn">🔊</button></td>
+    <td onclick="speak('${v.p}')">${v.p}</td>
+    <td onclick="speak('${v.pp}')">${v.pp}</td>
+    <td><span class="verb-cn">${v.cn}</span><span class="pattern-badge pat-${v.t}">${v.t}</span></td>
+  </tr>`).join('');
+  countInfo.textContent=`共 ${list.length} 个`;
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const f=tab.dataset.filter;
+    if(f==='practice'){
+      tableSection.classList.add('hidden');practiceSection.classList.remove('hidden');
+      nextQuestion();
+    }else{
+      currentFilter=f;
+      tableSection.classList.remove('hidden');practiceSection.classList.add('hidden');
+      render(f,searchInput.value);
+    }
+  });
+});
+
+searchInput.addEventListener('input',()=>render(currentFilter,searchInput.value));
+
+// Practice
+let currentVerb=null,score=0,total=0;
+const practiceWord=document.getElementById('practiceWord');
+const practiceCn=document.getElementById('practiceCn');
+const pastInput=document.getElementById('pastInput');
+const ppInput=document.getElementById('ppInput');
+const resultMsg=document.getElementById('resultMsg');
+const scoreDisplay=document.getElementById('scoreDisplay');
+
+function nextQuestion(){
+  currentVerb=VERBS[Math.floor(Math.random()*VERBS.length)];
+  practiceWord.textContent=currentVerb.b;
+  practiceCn.textContent=currentVerb.cn;
+  pastInput.value='';ppInput.value='';
+  pastInput.className='practice-input';ppInput.className='practice-input';
+  resultMsg.textContent='';pastInput.focus();
+}
+
+document.getElementById('checkBtn').addEventListener('click',()=>{
+  if(!currentVerb)return;
+  const pOk=pastInput.value.trim().toLowerCase()===currentVerb.p.toLowerCase();
+  const ppOk=ppInput.value.trim().toLowerCase()===currentVerb.pp.toLowerCase();
+  pastInput.className='practice-input '+(pOk?'correct':'wrong');
+  ppInput.className='practice-input '+(ppOk?'correct':'wrong');
+  total++;
+  if(pOk&&ppOk){score++;resultMsg.innerHTML='<span style="color:#10B981">✅ 正确！</span>';}
+  else resultMsg.innerHTML=`<span style="color:#EF4444">❌ 答案：${currentVerb.p} / ${currentVerb.pp}</span>`;
+  scoreDisplay.textContent=`${score}/${total}`;
+});
+
+document.getElementById('nextBtn').addEventListener('click',nextQuestion);
+document.getElementById('practiceSpeak').addEventListener('click',()=>{if(currentVerb)speak(currentVerb.b)});
+pastInput.addEventListener('keydown',e=>{if(e.key==='Enter')ppInput.focus()});
+ppInput.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('checkBtn').click()});
+
+render('all');
+</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+<noscript><p>irregular-verbs — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

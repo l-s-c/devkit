@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世界之最百科 | World Records — DevKit</title>
+<meta name="description" content="60+条世界之最百科，涵盖地理、人文、动物、植物、建筑、科技六大分类。点击展开详情，随机展示趣味知识。">
+<meta name="keywords" content="世界之最,世界纪录,地理之最,动物之最,建筑之最,百科,DevKit">
+<meta property="og:title" content="世界之最百科 — DevKit">
+<meta property="og:description" content="60+条世界之最，6大分类，趣味事实一网打尽">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/world-records/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"世界之最百科","url":"https://l-s-c.github.io/devkit/pages/world-records/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/world-records/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:16px 16px 24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:16px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px}
+.search-input{width:100%;padding:10px 14px 10px 36px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:#3B82F6}
+.cat-pills{display:flex;gap:4px;flex-wrap:wrap}
+.cat-pill{padding:5px 12px;border-radius:12px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
+.cat-pill:hover{border-color:#3B82F6;color:#3B82F6}
+.cat-pill.active{background:#3B82F6;color:#fff;border-color:#3B82F6}
+.random-box{padding:16px;border-radius:12px;background:rgba(59,130,246,0.06);border:1.5px solid rgba(59,130,246,0.15);margin-bottom:16px;cursor:pointer;transition:all 200ms}
+.random-box:hover{border-color:#3B82F6}
+.random-label{font-size:10px;font-weight:800;color:#3B82F6;margin-bottom:6px}
+.random-title{font-size:15px;font-weight:800;margin-bottom:2px}
+.random-answer{font-size:18px;font-weight:900;color:#3B82F6}
+.random-btn{display:inline-block;margin-top:8px;font-size:10px;font-weight:700;color:#3B82F6;background:rgba(59,130,246,0.1);border:none;padding:4px 10px;border-radius:6px;cursor:pointer}
+.record-list{display:flex;flex-direction:column;gap:8px}
+.record-card{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);cursor:pointer;transition:all 200ms}
+.record-card:hover{border-color:#3B82F6;transform:translateY(-1px)}
+.record-card.expanded{border-color:#3B82F6;background:rgba(59,130,246,0.03)}
+.record-header{display:flex;align-items:center;gap:10px}
+.record-emoji{font-size:28px}
+.record-title{font-size:14px;font-weight:800;flex:1}
+.record-badge{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(59,130,246,0.06);color:#3B82F6}
+.record-answer{font-size:18px;font-weight:900;color:#3B82F6;margin:6px 0 2px}
+.record-data{font-size:11px;color:var(--text-secondary);font-family:var(--font-code)}
+.record-detail{padding:12px;border-radius:8px;background:rgba(59,130,246,0.04);font-size:12px;line-height:1.8;color:var(--text-secondary);margin-top:8px;border-left:3px solid #3B82F6;display:none}
+.record-card.expanded .record-detail{display:block}
+.record-fun{font-size:11px;color:#3B82F6;font-weight:700;margin-top:4px}
+.record-loc{font-size:10px;color:var(--text-caption);margin-top:4px}
+.count-badge{font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:600}
+.no-result{text-align:center;padding:40px;color:var(--text-caption);font-size:13px;display:none}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">世界之最百科 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">世界之最百科</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🏆 世界之最百科 <span class="count-badge" id="countBadge"></span></div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索世界之最..."></div>
+    <div class="cat-pills" id="catPills">
+      <div class="cat-pill active" data-cat="全部">🌍 全部</div>
+      <div class="cat-pill" data-cat="地理">🌍 地理</div>
+      <div class="cat-pill" data-cat="人文">🏛️ 人文</div>
+      <div class="cat-pill" data-cat="动物">🐾 动物</div>
+      <div class="cat-pill" data-cat="植物">🌿 植物</div>
+      <div class="cat-pill" data-cat="建筑">🏗️ 建筑</div>
+      <div class="cat-pill" data-cat="科技">🔬 科技</div>
+    </div>
+  </div>
+  <div class="random-box" id="randomBox" onclick="refreshRandom()"></div>
+  <div class="panel">
+    <div class="record-list" id="recordList"></div>
+    <div class="no-result" id="noResult">未找到匹配的记录</div>
+  </div>
+</div>
+<noscript><p>世界之最百科 — DevKit。请启用 JavaScript。</p></noscript>
+<script type="module">
+import '../../shared/theme.js';
+
+const records=[
+  {emoji:"🏔️",title:"最高的山峰",answer:"珠穆朗玛峰",cat:"地理",data:"海拔 8,848.86 米",loc:"中国/尼泊尔边境",detail:"藏语意为'大地之母'，1953年首次被人类登顶。",fun:["珠峰每年以约4mm的速度在长高！","山顶温度可低至-60°C","已有超过6000人成功登顶"]},
+  {emoji:"🌊",title:"最大的海洋",answer:"太平洋",cat:"地理",data:"面积 1.66 亿 km²，占地球表面 32.5%",loc:"亚洲、大洋洲与美洲之间",detail:"葡萄牙航海家麦哲伦因航行时海面平静而命名。",fun:["太平洋比所有陆地面积加起来还大","最深处马里亚纳海沟深达11,034米","包含约25,000个岛屿"]},
+  {emoji:"🏜️",title:"最大的沙漠",answer:"撒哈拉沙漠",cat:"地理",data:"面积约 906 万 km²",loc:"非洲北部",detail:"撒哈拉在阿拉伯语中意为'大荒漠'。",fun:["面积几乎等于中国","每年在扩大","6000年前曾是绿洲"]},
+  {emoji:"🏞️",title:"最深的湖泊",answer:"贝加尔湖",cat:"地理",data:"最深 1,642 米，蓄水量占全球淡水 20%",loc:"俄罗斯西伯利亚",detail:"形成于2500万年前，是世界上最古老的湖泊。",fun:["湖水清澈可见40米深","有超过1700种动植物","冬季冰层厚达1米"]},
+  {emoji:"🌋",title:"最高的活火山",answer:"奥霍斯德尔萨拉多",cat:"地理",data:"海拔 6,893 米",loc:"阿根廷/智利边境",detail:"位于安第斯山脉，是世界上海拔最高的活火山。",fun:["山顶有永久积雪","最后一次喷发约1,000-1,500年前"]},
+  {emoji:"🏝️",title:"最大的岛屿",answer:"格陵兰岛",cat:"地理",data:"面积 216.6 万 km²",loc:"北大西洋",detail:"属于丹麦自治领地，约81%被冰盖覆盖。",fun:["名字意为'绿色的土地'，但实际满是冰雪","人口仅约5.6万","是世界上人口密度最低的地区之一"]},
+  {emoji:"💧",title:"最长的河流",answer:"尼罗河",cat:"地理",data:"全长约 6,650 km",loc:"非洲东北部",detail:"流经11个国家，是古埃及文明的摇篮。",fun:["尼罗河是世界上唯一南北走向的大河之一","每年泛滥带来肥沃泥土","亚马逊河水量更大但长度略短"]},
+  {emoji:"⛰️",title:"最大的峡谷",answer:"雅鲁藏布大峡谷",cat:"地理",data:"长 504.6 km，最深 6,009 米",loc:"中国西藏",detail:"是地球上最深最长的峡谷，比科罗拉多大峡谷深得多。",fun:["峡谷内有从热带到寒带的完整垂直植被带","是世界上降水最多的地区之一"]},
+  {emoji:"🌍",title:"最大的大陆",answer:"亚欧大陆",cat:"地理",data:"面积约 5,071 万 km²",loc:"亚洲与欧洲",detail:"亚欧大陆是地球上面积最大的大陆，拥有世界约70%的人口。",fun:["横跨11个时区","包含世界最高峰和最低洼地"]},
+  {emoji:"🏔️",title:"最高的高原",answer:"青藏高原",cat:"地理",data:"平均海拔 4,500 米以上，面积 250 万 km²",loc:"中国西部",detail:"被称为'世界屋脊'和'第三极'。",fun:["是亚洲多条大河的发源地","约5000万年前由板块碰撞形成"]},
+  {emoji:"🏛️",title:"人口最多的国家",answer:"印度",cat:"人文",data:"人口约 14.4 亿（2024年）",loc:"南亚",detail:"2023年超过中国成为世界第一人口大国。",fun:["拥有超过2000种语言和方言","中位年龄仅28岁","预计2050年达17亿"]},
+  {emoji:"📖",title:"使用最广泛的语言",answer:"英语",cat:"人文",data:"约 15 亿使用者（含非母语）",loc:"全球",detail:"作为官方语言或通用语言在67个国家使用。",fun:["英语词汇量超过100万","每98分钟就有一个新英语单词诞生","中文母语者更多但英语使用者总数最多"]},
+  {emoji:"🕌",title:"信徒最多的宗教",answer:"基督教",cat:"人文",data:"约 24 亿信徒",loc:"全球",detail:"包括天主教、东正教、新教等主要分支。",fun:["占世界人口约31%","《圣经》是历史上翻译语种最多的书","伊斯兰教是增长最快的宗教"]},
+  {emoji:"📚",title:"最古老的大学",answer:"博洛尼亚大学",cat:"人文",data:"创建于 1088 年",loc:"意大利博洛尼亚",detail:"是西方世界最古老的大学，被称为'大学之母'。",fun:["但丁和哥白尼都曾在此学习","至今仍在运营","开创了现代大学制度"]},
+  {emoji:"🎨",title:"最贵的画作",answer:"《救世主》(达·芬奇)",cat:"人文",data:"4.503 亿美元（2017年拍卖）",loc:"沙特阿拉伯王储收藏",detail:"描绘基督手持水晶球的半身像。",fun:["曾以45英镑被拍卖","被称为'男版蒙娜丽莎'","真伪至今仍有争议"]},
+  {emoji:"🗣️",title:"最难学的语言",answer:"中文（普通话）",cat:"人文",data:"需约 2,200 小时学习（英语母语者）",loc:"中国",detail:"联合国六种官方语言之一，声调和汉字是最大挑战。",fun:["常用汉字约3500个","是世界上母语者最多的语言","每个汉字都是一幅画"]},
+  {emoji:"🎵",title:"销量最高的专辑",answer:"《Thriller》(迈克尔·杰克逊)",cat:"人文",data:"全球销量超 7,000 万张",loc:"美国",detail:"1982年发行，包含多首经典单曲。",fun:["专辑中有7首单曲进入Billboard Top 10","'Thriller'MV被认为是史上最佳音乐录影带"]},
+  {emoji:"⚽",title:"观看人数最多的体育赛事",answer:"FIFA 世界杯决赛",cat:"人文",data:"2022年决赛全球约 15 亿观众",loc:"全球",detail:"每四年举办一次的足球盛事。",fun:["2022年阿根廷vs法国被认为是史上最精彩决赛","世界杯首届于1930年在乌拉圭举办"]},
+  {emoji:"🏛️",title:"最古老的文明",answer:"苏美尔文明",cat:"人文",data:"约公元前 4500 年",loc:"美索不达米亚（今伊拉克）",detail:"发明了楔形文字，建立了最早的城市国家。",fun:["发明了车轮和60进制","60进制至今影响我们的时间计算","创造了最早的文学作品《吉尔伽美什史诗》"]},
+  {emoji:"💰",title:"GDP最高的国家",answer:"美国",cat:"人文",data:"GDP 约 27.36 万亿美元（2024年）",loc:"北美洲",detail:"自19世纪末以来一直是世界最大经济体。",fun:["约占全球GDP的25%","中国GDP紧随其后","美元是全球最主要的储备货币"]},
+  {emoji:"🐋",title:"最大的动物",answer:"蓝鲸",cat:"动物",data:"体长可达 33 米，体重约 190 吨",loc:"全球海洋",detail:"蓝鲸是地球历史上已知最大的动物。",fun:["心脏如小汽车大小","舌头上可以站50个人","叫声可传播1600公里"]},
+  {emoji:"🐆",title:"跑得最快的动物",answer:"猎豹",cat:"动物",data:"最高时速 120 km/h",loc:"非洲",detail:"从0加速到100km/h仅需3秒，堪比超跑。",fun:["但只能维持高速约30秒","爪子不能完全缩回，类似跑鞋钉","是大型猫科动物中唯一不会吼叫的"]},
+  {emoji:"🐘",title:"最大的陆地动物",answer:"非洲象",cat:"动物",data:"体重可达 7 吨，肩高 4 米",loc:"非洲",detail:"非洲象是现存最大的陆地哺乳动物。",fun:["大脑重约5公斤，是陆地动物中最大的","怀孕期长达22个月","能记住数十年前的事"]},
+  {emoji:"🐢",title:"寿命最长的动物",answer:"格陵兰鲨",cat:"动物",data:"可活 400+ 年",loc:"北大西洋和北冰洋",detail:"2016年科学家发现一条约400岁的格陵兰鲨。",fun:["性成熟要到150岁左右","游速极慢，约1km/h","比莎士比亚还年长"]},
+  {emoji:"🦅",title:"飞得最高的鸟",answer:"黑白兀鹫",cat:"动物",data:"飞行高度可达 11,300 米",loc:"非洲",detail:"曾在11,300米高空与飞机相撞的记录。",fun:["这个高度已接近民航客机巡航高度","翼展可达2.6米","以腐肉为食"]},
+  {emoji:"🐜",title:"数量最多的昆虫",answer:"蚂蚁",cat:"动物",data:"全球约 20 万亿只",loc:"全球（除南极洲）",detail:"蚂蚁的总生物量与人类相当。",fun:["蚂蚁能举起自身50倍重量的物体","有些蚁群可延续数百年","蚂蚁存在已超过1亿年"]},
+  {emoji:"🐍",title:"最毒的蛇",answer:"内陆太攀蛇",cat:"动物",data:"一次释放毒液可杀死 100 个成年人",loc:"澳大利亚",detail:"也叫细鳞太攀蛇，毒性是眼镜王蛇的20倍。",fun:["性格其实很温顺，很少主动攻击人","被咬后不到45分钟即可致命","生活在人迹罕至的干旱内陆"]},
+  {emoji:"🦈",title:"最大的鱼类",answer:"鲸鲨",cat:"动物",data:"体长可达 18 米，体重约 21 吨",loc:"热带和温带海域",detail:"虽然叫鲨鱼但性情温和，以浮游生物为食。",fun:["嘴巴宽达1.5米","寿命可达70-100年","每条鲸鲨的斑点图案都是独一无二的"]},
+  {emoji:"🐧",title:"游泳最快的鸟",answer:"巴布亚企鹅",cat:"动物",data:"游速可达 36 km/h",loc:"南极及亚南极岛屿",detail:"是企鹅家族中游泳速度最快的成员。",fun:["尾巴是所有企鹅中最突出的","求偶时雄性会送石头给雌性"]},
+  {emoji:"🐝",title:"对人类最重要的昆虫",answer:"蜜蜂",cat:"动物",data:"为全球约 75% 的农作物授粉",loc:"全球",detail:"爱因斯坦曾说：'蜜蜂消失后人类只能存活4年'。",fun:["蜜蜂一生只能产约1/12茶匙蜂蜜","飞行时翅膀每秒扇动200次","能通过舞蹈告诉同伴食物位置"]},
+  {emoji:"🌳",title:"最高的树",answer:"亥伯龙神（海岸红杉）",cat:"植物",data:"高 115.92 米",loc:"美国加利福尼亚州红杉国家公园",detail:"2006年被发现，以希腊神话泰坦巨人命名。",fun:["相当于35层楼高","确切位置保密以防游客破坏","树龄约600-800年"]},
+  {emoji:"🌵",title:"最大的花",answer:"大王花",cat:"植物",data:"直径可达 1 米，重约 11 公斤",loc:"东南亚热带雨林",detail:"又称尸花，因散发腐肉般臭味吸引昆虫授粉。",fun:["没有根、茎、叶，是寄生植物","花朵只能存活5-7天","是全世界最稀有的植物之一"]},
+  {emoji:"🌲",title:"最古老的树",answer:"玛士撒拉（刺果松）",cat:"植物",data:"树龄约 4,855 年",loc:"美国加利福尼亚州白山",detail:"以圣经中最长寿的人物命名，具体位置保密。",fun:["在金字塔建造时就已存在","仍在生长","有另一棵无名树更老，约5,068年"]},
+  {emoji:"🎋",title:"生长最快的植物",answer:"毛竹",cat:"植物",data:"最快每天生长 91 厘米",loc:"中国及东亚",detail:"竹子是草本植物而非树木，属于禾本科。",fun:["竹子开花是罕见现象，可能几十年才一次","竹子释放的氧气比同面积树木多35%","全球有1500多种竹子"]},
+  {emoji:"🍀",title:"最小的开花植物",answer:"无根萍（Wolffia）",cat:"植物",data:"直径仅 0.1-0.2 毫米",loc:"全球温暖水域",detail:"比针头还小，可能是世界上最小的开花植物。",fun:["可食用且富含蛋白质","一粒盐大小可放两株","繁殖速度极快，30小时可翻一倍"]},
+  {emoji:"🌻",title:"最大的种子",answer:"海椰子",cat:"植物",data:"重可达 25 公斤",loc:"塞舌尔群岛",detail:"海椰子是棕榈科植物，果实需6-7年才能成熟。",fun:["外形独特，常被称为'世界上最性感的水果'","种子在海上漂流的传说是其名字由来","被列为濒危物种"]},
+  {emoji:"🌺",title:"最大的叶子",answer:"大王莲",cat:"植物",data:"叶片直径可达 3 米",loc:"南美洲亚马逊河流域",detail:"叶片边缘上翘，可以承受一个小孩的重量。",fun:["叶片底部有尖刺防止鱼类啃食","花朵第一天白色第二天变粉红","维多利亚时代水晶宫的设计灵感来源"]},
+  {emoji:"🌴",title:"果实最大的树",answer:"菠萝蜜",cat:"植物",data:"果实重可达 50 公斤",loc:"东南亚",detail:"世界上最重的水果，长在树干上而非树枝。",fun:["一棵树一年可结200多个果实","果肉和种子都可食用","木材也很有价值"]},
+  {emoji:"🍄",title:"最大的生物体",answer:"蜜环菌",cat:"植物",data:"覆盖约 9.6 km²",loc:"美国俄勒冈州",detail:"一株蜜环菌的菌丝体网络覆盖了整座山，是已知最大的单一生物体。",fun:["估计已有2400-8650年历史","重约6000吨","大部分隐藏在地下"]},
+  {emoji:"🌿",title:"最耐旱的植物",answer:"复活草（卷柏）",cat:"植物",data:"可在完全脱水状态下存活数年",loc:"全球干旱地区",detail:"失水后卷缩成球，遇水后几小时内'复活'展开。",fun:["可在失去97%水分后复活","在沙漠中随风滚动寻找水源","已在地球上存在超过3亿年"]},
+  {emoji:"🏗️",title:"最高的建筑",answer:"哈利法塔（迪拜塔）",cat:"建筑",data:"高 828 米，163 层",loc:"阿联酋迪拜",detail:"2010年竣工，耗时6年建造。",fun:["电梯速度达10m/s","顶部与底部温差可达10°C","灵感来源于沙漠之花蜘蛛兰"]},
+  {emoji:"🧱",title:"最长的城墙",answer:"中国万里长城",cat:"建筑",data:"总长 21,196.18 公里",loc:"中国",detail:"始建于公元前7世纪，是人类建筑史上的奇迹。",fun:["用的砖头可以绕地球一圈","在太空中肉眼看不到长城（这是误解）","修建历时2000多年"]},
+  {emoji:"🕌",title:"最大的宫殿",answer:"故宫（紫禁城）",cat:"建筑",data:"占地 72 万 m²，房间 9,999.5 间",loc:"中国北京",detail:"明清两代皇宫，世界上现存最大的宫殿建筑群。",fun:["每年接待约1900万游客","建造动用了百万工匠","是世界五大宫殿之首"]},
+  {emoji:"🌉",title:"最长的跨海大桥",answer:"港珠澳大桥",cat:"建筑",data:"全长 55 公里",loc:"中国广东",detail:"连接香港、珠海和澳门，包含海底隧道。",fun:["使用钢材足以建60座埃菲尔铁塔","设计使用寿命120年","2018年通车"]},
+  {emoji:"🚇",title:"最长的铁路",answer:"西伯利亚大铁路",cat:"建筑",data:"全长 9,288 公里",loc:"俄罗斯（莫斯科至符拉迪沃斯托克）",detail:"横跨8个时区，全程需约6天。",fun:["经过87座城市","建设历时25年","穿越乌拉尔山脉"]},
+  {emoji:"⛩️",title:"最大的宗教建筑",answer:"吴哥窟",cat:"建筑",data:"占地约 162.6 公顷",loc:"柬埔寨暹粒",detail:"12世纪建造的印度教-佛教寺庙建筑群。",fun:["出现在柬埔寨国旗上","每年吸引超200万游客","护城河宽190米"]},
+  {emoji:"🏟️",title:"最大的体育场",answer:"五一体育场",cat:"建筑",data:"可容纳 11.4 万人",loc:"朝鲜平壤",detail:"1989年建成，以其巨大的规模闻名。",fun:["占地面积约20.7万平方米","屋顶由16个拱形结构组成","主要用于大型团体操表演"]},
+  {emoji:"🗽",title:"最高的雕像",answer:"团结雕像",cat:"建筑",data:"高 182 米（含基座 240 米）",loc:"印度古吉拉特邦",detail:"2018年揭幕，纪念印度独立运动领袖帕特尔。",fun:["是自由女神像的两倍高","使用了1700吨青铜","建造耗时33个月"]},
+  {emoji:"🏰",title:"最大的城堡",answer:"布拉格城堡",cat:"建筑",data:"占地约 7 万 m²，长 570 米",loc:"捷克布拉格",detail:"始建于9世纪，吉尼斯世界纪录认证最大的古城堡。",fun:["仍是捷克总统的官邸","城堡内有大教堂、宫殿和花园","每天正午有换岗仪式"]},
+  {emoji:"🚀",title:"最快的人造物体",answer:"帕克太阳探测器",cat:"科技",data:"最高速度约 635,266 km/h",loc:"太阳系内（靠近太阳）",detail:"NASA于2018年发射，用于研究太阳。",fun:["以这个速度从北京到上海只需0.01秒","能承受约1400°C的高温","将在2025年最接近太阳表面"]},
+  {emoji:"💻",title:"最快的超级计算机",answer:"Frontier",cat:"科技",data:"算力 1.194 ExaFlops",loc:"美国橡树岭国家实验室",detail:"2022年成为首台突破百亿亿次浮点运算的超算。",fun:["全球所有人同时用计算器算，速度也追不上它","占地面积相当于两个网球场","耗电量约21兆瓦"]},
+  {emoji:"🛰️",title:"最远的人造物体",answer:"旅行者1号",cat:"科技",data:"距地球超过 240 亿公里",loc:"星际空间",detail:"1977年发射，2012年飞出太阳系进入星际空间。",fun:["携带了一张'金唱片'包含地球的声音和图像","信号传回地球需要超过22小时","核电池预计2025年后耗尽"]},
+  {emoji:"🔬",title:"最大的粒子加速器",answer:"大型强子对撞机（LHC）",cat:"科技",data:"周长 27 公里",loc:"瑞士/法国边境 CERN",detail:"2008年启用，2012年发现希格斯玻色子。",fun:["隧道深在地下100米","粒子速度可达光速的99.9999991%","温度比外太空还冷"]},
+  {emoji:"🌐",title:"最大的互联网公司",answer:"谷歌（Alphabet）",cat:"科技",data:"每天处理约 85 亿次搜索",loc:"美国加利福尼亚",detail:"1998年创立，现已成为全球最大的搜索引擎。",fun:["'Google'来自数学术语'Googol'（10的100次方）","YouTube每分钟上传500小时视频","数据中心用电量相当于一座城市"]},
+  {emoji:"📱",title:"销量最高的手机",answer:"iPhone",cat:"科技",data:"累计销量超 24 亿部",loc:"美国（苹果公司）",detail:"2007年乔布斯发布首款iPhone，彻底改变了手机行业。",fun:["初代iPhone存储仅4GB","现代iPhone的算力超过阿波罗登月计算机百万倍","每秒全球售出约6部iPhone"]},
+  {emoji:"🧬",title:"最大的科学工程",answer:"人类基因组计划",cat:"科技",data:"耗资约 30 亿美元，历时 13 年",loc:"全球多国合作",detail:"1990年启动，2003年完成人类DNA全序列测定。",fun:["人类DNA链展开约2米长","人类基因99.9%相同","人类与香蕉共享约60%的DNA"]},
+  {emoji:"🔭",title:"最大的望远镜",answer:"中国天眼（FAST）",cat:"科技",data:"口径 500 米",loc:"中国贵州",detail:"2016年落成，是世界上最大的单口径射电望远镜。",fun:["面积相当于30个足球场","能接收137亿光年外的信号","选址在天然喀斯特洼地中"]},
+  {emoji:"⚡",title:"最大的发电站",answer:"三峡水电站",cat:"科技",data:"装机容量 22,500 兆瓦",loc:"中国湖北宜昌",detail:"2006年大坝主体完工，是世界上最大的水力发电站。",fun:["大坝长2335米，高185米","年发电量约1000亿度","水库蓄水使地球自转略微变慢"]},
+  {emoji:"🚄",title:"最快的列车",answer:"上海磁浮列车",cat:"科技",data:"最高运营时速 431 km/h",loc:"中国上海",detail:"连接上海浦东机场与市区，全程仅需7分20秒。",fun:["使用德国磁悬浮技术","列车不接触轨道，悬浮约10毫米","日本实验型磁浮列车曾达603km/h"]},
+  {emoji:"🏔️",title:"最低的陆地",answer:"死海",cat:"地理",data:"海拔 -430.5 米",loc:"以色列/约旦边境",detail:"盐度是普通海水的10倍，人可以轻松漂浮。",fun:["每年水位下降约1米","是地球上最咸的水体之一","古罗马人称其为'沥青湖'"]},
+  {emoji:"🌧️",title:"降雨最多的地方",answer:"乞拉朋齐",cat:"地理",data:"年均降雨量约 11,871 毫米",loc:"印度梅加拉亚邦",detail:"曾创下一年26,461毫米的降雨纪录。",fun:["当地居民用树根编织'活桥'","潮湿到连金属都会快速生锈","旁边的毛辛拉姆实际更湿"]},
+];
+
+let activeCat='全部',searchQuery='',expandedIdx=null;
+const recordList=document.getElementById('recordList');
+const countBadge=document.getElementById('countBadge');
+const noResult=document.getElementById('noResult');
+const randomBox=document.getElementById('randomBox');
+
+function getFiltered(){
+  return records.filter(r=>{
+    const catMatch=activeCat==='全部'||r.cat===activeCat;
+    const q=searchQuery.toLowerCase();
+    const sMatch=!q||r.title.toLowerCase().includes(q)||r.answer.toLowerCase().includes(q)||r.cat.includes(q);
+    return catMatch&&sMatch;
+  });
+}
+
+function render(){
+  const filtered=getFiltered();
+  countBadge.textContent=filtered.length+' 条记录';
+  noResult.style.display=filtered.length?'none':'block';
+  recordList.innerHTML='';
+  filtered.forEach((r,i)=>{
+    const globalIdx=records.indexOf(r);
+    const expanded=expandedIdx===globalIdx;
+    const card=document.createElement('div');
+    card.className='record-card'+(expanded?' expanded':'');
+    card.innerHTML=`<div class="record-header"><span class="record-emoji">${r.emoji}</span><span class="record-title">${r.title}</span><span class="record-badge">${r.emoji} ${r.cat}</span></div>
+      <div class="record-answer">${r.answer}</div>
+      <div class="record-data">${r.data}</div>
+      <div class="record-detail">
+        ${r.detail}
+        ${r.fun.map(f=>'<div class="record-fun">💡 '+f+'</div>').join('')}
+        <div class="record-loc">📍 ${r.loc}</div>
+      </div>`;
+    card.onclick=()=>{expandedIdx=expanded?null:globalIdx;render();};
+    recordList.appendChild(card);
+  });
+}
+
+function showRandom(){
+  const r=records[Math.floor(Math.random()*records.length)];
+  randomBox.innerHTML=`<div class="random-label">💡 你知道吗？</div><div class="random-title">${r.emoji} ${r.title}</div><div class="random-answer">${r.answer}</div><div style="font-size:11px;color:var(--text-secondary);margin-top:4px">${r.data}</div><button class="random-btn" onclick="event.stopPropagation();refreshRandom()">🔄 换一条</button>`;
+}
+window.refreshRandom=showRandom;
+
+document.getElementById('searchInput').addEventListener('input',e=>{searchQuery=e.target.value;render();});
+document.getElementById('catPills').addEventListener('click',e=>{
+  const pill=e.target.closest('.cat-pill');
+  if(!pill)return;
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+  activeCat=pill.dataset.cat;
+  render();
+});
+
+showRandom();
+render();
+</script>
+</body>
+</html>

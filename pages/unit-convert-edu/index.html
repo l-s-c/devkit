@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单位换算教育版 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="小学单位换算学习工具，涵盖长度、面积、体积、重量四大类，含进率表可视化、转换计算和随机练习模式。">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/unit-convert-edu/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"单位换算教育版","description":"小学单位换算学习工具，四类单位+练习模式","url":"https://l-s-c.github.io/devkit/pages/unit-convert-edu/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:16px;padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-size:11px;font-weight:700;cursor:pointer;color:var(--text-primary);transition:all 150ms}
+.tab.active{background:#F59E0B;color:#fff;border-color:#F59E0B}
+.mode-tabs{margin-bottom:16px}
+.mode-tab{padding:6px 12px;border-radius:12px;border:1px solid var(--border-glass);background:var(--bg-glass);font-size:11px;font-weight:700;cursor:pointer;color:var(--text-primary);margin-right:4px}
+.mode-tab.active{background:#F59E0B;color:#fff;border-color:#F59E0B}
+/* Rate table */
+.rate-chain{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:16px;margin-bottom:16px}
+.rate-unit{padding:8px 14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-weight:800;font-size:13px;color:var(--text-primary)}
+.rate-arrow{font-size:11px;font-weight:800;color:#F59E0B;display:flex;flex-direction:column;align-items:center}
+.rate-arrow span{font-size:9px;color:var(--text-caption)}
+/* Convert */
+.convert-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.convert-input{padding:12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-size:18px;font-weight:700;width:120px;text-align:center;outline:none;font-family:var(--font-code);color:var(--text-primary)}
+.convert-input:focus{border-color:#F59E0B}
+.unit-select{padding:10px 14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-size:14px;font-weight:700;outline:none;color:var(--text-primary);cursor:pointer}
+.convert-eq{font-size:24px;font-weight:900;color:#F59E0B}
+.convert-result{font-size:24px;font-weight:900;font-family:var(--font-code);color:#8B5CF6}
+.convert-result-unit{font-size:14px;font-weight:700;color:var(--text-secondary)}
+/* Practice */
+.practice-card{padding:24px;border-radius:16px;border:2px solid #F59E0B;background:rgba(245,158,11,0.04);text-align:center;margin-bottom:16px}
+.practice-q{font-size:28px;font-weight:900;margin-bottom:16px;color:var(--text-primary)}
+.practice-input{padding:12px;border-radius:10px;border:2px dashed var(--border-glass);background:var(--bg-glass);font-size:24px;font-weight:700;width:120px;text-align:center;outline:none;font-family:var(--font-code);color:var(--text-primary)}
+.practice-input:focus{border-color:#F59E0B;border-style:solid}
+.practice-input.correct{border-color:#10B981;color:#10B981;background:rgba(16,185,129,0.04)}
+.practice-input.wrong{border-color:#EF4444;color:#EF4444;background:rgba(239,68,68,0.04)}
+.practice-unit{font-size:18px;font-weight:700;margin-left:8px;color:var(--text-secondary)}
+.practice-feedback{font-size:16px;font-weight:700;margin-top:12px;min-height:24px}
+.score-bar{display:flex;gap:16px;justify-content:center;padding:14px;border-radius:10px;background:rgba(245,158,11,0.08);margin-bottom:16px;flex-wrap:wrap}
+.score-item{text-align:center}
+.score-num{font-size:20px;font-weight:900;font-family:var(--font-code)}
+.score-label{font-size:9px;color:var(--text-caption)}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F;transition:all 150ms}
+.btn:hover{transform:translateY(-1px)}
+@media(max-width:768px){.main{padding:16px}.convert-row{flex-direction:column;align-items:stretch}.convert-input{width:100%}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">单位换算教育版 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">单位换算教育版</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">📏 单位换算教育版</div>
+    <div class="tab-row" id="catTabs">
+      <div class="tab active" onclick="setCat(0)">📏 长度</div>
+      <div class="tab" onclick="setCat(1)">📐 面积</div>
+      <div class="tab" onclick="setCat(2)">📦 体积</div>
+      <div class="tab" onclick="setCat(3)">⚖️ 重量</div>
+    </div>
+    <div class="mode-tabs">
+      <span class="mode-tab active" onclick="setMode(0)">📊 进率表</span>
+      <span class="mode-tab" onclick="setMode(1)">🔄 转换计算</span>
+      <span class="mode-tab" onclick="setMode(2)">✏️ 练习模式</span>
+    </div>
+  </div>
+
+  <div id="ratePanel" class="glass">
+    <div class="section-title">📊 进率关系</div>
+    <div class="rate-chain" id="rateChain"></div>
+  </div>
+
+  <div id="convertPanel" class="glass" style="display:none">
+    <div class="section-title">🔄 转换计算</div>
+    <div class="convert-row">
+      <input class="convert-input" id="convertVal" type="number" value="1" oninput="doConvert()">
+      <select class="unit-select" id="fromUnit" onchange="doConvert()"></select>
+      <span class="convert-eq">=</span>
+      <span class="convert-result" id="convertResult">-</span>
+      <select class="unit-select" id="toUnit" onchange="doConvert()"></select>
+    </div>
+  </div>
+
+  <div id="practicePanel" style="display:none">
+    <div class="glass">
+      <div class="score-bar">
+        <div class="score-item"><div class="score-num" id="pCorrect" style="color:#10B981">0</div><div class="score-label">✅ 正确</div></div>
+        <div class="score-item"><div class="score-num" id="pWrong" style="color:#EF4444">0</div><div class="score-label">❌ 错误</div></div>
+        <div class="score-item"><div class="score-num" id="pTotal" style="color:#F59E0B">0</div><div class="score-label">总题数</div></div>
+      </div>
+      <div class="practice-card" id="practiceCard">
+        <div class="practice-q" id="practiceQ">3 m = <input class="practice-input" id="practiceInput"> <span class="practice-unit" id="practiceUnit">cm</span></div>
+        <div class="practice-feedback" id="practiceFb"></div>
+      </div>
+      <div style="text-align:center"><button class="btn" onclick="nextPractice()">下一题 →</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../shared/theme.js"></script>
+<script>
+const CATS=[
+  {name:'长度',units:['mm','cm','dm','m','km'],rates:{mm:1,cm:10,dm:100,m:1000,km:1000000},
+   chains:[['mm','×10','cm'],['cm','×10','dm'],['dm','×10','m'],['m','×1000','km']]},
+  {name:'面积',units:['mm²','cm²','dm²','m²','km²'],rates:{'mm²':1,'cm²':100,'dm²':10000,'m²':1000000,'km²':1e12},
+   chains:[['mm²','×100','cm²'],['cm²','×100','dm²'],['dm²','×100','m²'],['m²','×10⁶','km²']]},
+  {name:'体积',units:['mm³','cm³','dm³','m³'],rates:{'mm³':1,'cm³':1000,'dm³':1000000,'m³':1e9},
+   chains:[['mm³','×1000','cm³'],['cm³','×1000','dm³'],['dm³','×1000','m³']]},
+  {name:'重量',units:['g','kg','t'],rates:{g:1,kg:1000,t:1000000},
+   chains:[['g','×1000','kg'],['kg','×1000','t']]}
+];
+
+let cat=0,curMode=0,pCorrect=0,pWrong=0,pTotal=0,curAnswer=0;
+
+function setCat(c){cat=c;document.querySelectorAll('#catTabs .tab').forEach((el,i)=>el.classList.toggle('active',i===c));renderRate();populateSelects();doConvert();if(curMode===2)nextPractice()}
+function setMode(m){curMode=m;document.querySelectorAll('.mode-tab').forEach((el,i)=>el.classList.toggle('active',i===m));document.getElementById('ratePanel').style.display=m===0?'':'none';document.getElementById('convertPanel').style.display=m===1?'':'none';document.getElementById('practicePanel').style.display=m===2?'':'none';if(m===2)nextPractice()}
+
+function renderRate(){
+  const c=CATS[cat];
+  let html='';
+  c.chains.forEach(([from,rate,to],i)=>{
+    if(i===0)html+=`<div class="rate-unit">${from}</div>`;
+    html+=`<div class="rate-arrow">${rate}<span>→</span></div><div class="rate-unit">${to}</div>`;
+  });
+  document.getElementById('rateChain').innerHTML=html;
+}
+
+function populateSelects(){
+  const units=CATS[cat].units;
+  ['fromUnit','toUnit'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML=units.map((u,j)=>`<option value="${u}" ${j===(i===0?units.length-2:units.length-1)?'selected':''}>${u}</option>`).join('');
+  });
+}
+
+function doConvert(){
+  const c=CATS[cat];
+  const val=parseFloat(document.getElementById('convertVal').value)||0;
+  const from=document.getElementById('fromUnit').value;
+  const to=document.getElementById('toUnit').value;
+  const base=val*c.rates[from];
+  const result=base/c.rates[to];
+  document.getElementById('convertResult').textContent=result%1===0?result:parseFloat(result.toPrecision(10));
+}
+
+function nextPractice(){
+  const c=CATS[cat];
+  const units=c.units;
+  // Pick two adjacent units
+  const idx=Math.floor(Math.random()*(units.length-1));
+  const dir=Math.random()>0.5;// true: big to small
+  const fromU=dir?units[idx+1]:units[idx];
+  const toU=dir?units[idx]:units[idx+1];
+  const ratio=c.rates[fromU]/c.rates[toU];
+  // Nice values
+  const vals=dir?[1,2,3,5,10]:[10,100,1000,50,500];
+  const v=vals[Math.floor(Math.random()*vals.length)];
+  curAnswer=v*ratio;
+
+  document.getElementById('practiceQ').innerHTML=`${v} ${fromU} = <input class="practice-input" id="practiceInput" type="number" placeholder="?"> <span class="practice-unit">${toU}</span>`;
+  document.getElementById('practiceFb').textContent='';
+  const input=document.getElementById('practiceInput');
+  input.focus();
+  input.addEventListener('keydown',function handler(e){
+    if(e.key==='Enter'&&this.value.trim()){
+      const ans=parseFloat(this.value);
+      pTotal++;
+      if(Math.abs(ans-curAnswer)<0.001){
+        pCorrect++;this.classList.add('correct');
+        document.getElementById('practiceFb').innerHTML='<span style="color:#10B981">✅ 正确！</span>';
+      }else{
+        pWrong++;this.classList.add('wrong');
+        document.getElementById('practiceFb').innerHTML=`<span style="color:#EF4444">❌ 正确答案：${curAnswer}</span>`;
+      }
+      this.disabled=true;
+      document.getElementById('pCorrect').textContent=pCorrect;
+      document.getElementById('pWrong').textContent=pWrong;
+      document.getElementById('pTotal').textContent=pTotal;
+      this.removeEventListener('keydown',handler);
+    }
+  });
+}
+
+// Init
+renderRate();populateSelects();doConvert();
+</script>
+<noscript><p>单位换算教育版 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>

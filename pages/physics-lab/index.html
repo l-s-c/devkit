@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理实验模拟 | Physics Lab — DevKit</title>
+<meta name="description" content="在线物理实验模拟，欧姆定律V=IR互动实验，Canvas电路图，滑动调节电阻，实时计算电流。Physics lab simulation.">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/physics-lab/">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"物理实验模拟","description":"欧姆定律互动实验模拟，Canvas电路图，实时计算","url":"https://l-s-c.github.io/devkit/pages/physics-lab/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+h1.seo-only{position:absolute;left:-9999px;font-size:1px}
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:saturate(var(--glass-saturate)) blur(var(--glass-blur));border:0.5px solid var(--border-glass);border-radius:16px;box-shadow:var(--glass-shadow);padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.canvas-wrap{width:100%;aspect-ratio:16/9;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);overflow:hidden;margin-bottom:16px;position:relative}
+.canvas-wrap canvas{width:100%;height:100%;display:block}
+.bulb-glow{position:absolute;width:50px;height:50px;border-radius:50%;pointer-events:none;transition:all 300ms}
+.slider-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.slider-item{display:flex;flex-direction:column;gap:4px}
+.slider-label{font-size:11px;font-weight:700;color:var(--text-secondary);display:flex;justify-content:space-between}
+.slider-value{font-weight:800;color:#3B82F6;font-family:var(--font-code)}
+input[type=range]{width:100%;accent-color:#3B82F6;height:6px;cursor:pointer}
+.reading-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.reading-card{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass-outer);background:var(--bg-glass-input);text-align:center}
+.reading-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.reading-value{font-size:24px;font-weight:900;font-family:var(--font-code);color:#3B82F6}
+.reading-unit{font-size:10px;color:var(--text-caption)}
+.formula-box{padding:14px;border-radius:10px;border:2px solid #3B82F6;background:rgba(59,130,246,0.04);text-align:center;font-family:var(--font-code);font-size:16px;font-weight:700;color:var(--text-primary)}
+.short-circuit{padding:12px;border-radius:8px;background:rgba(239,68,68,0.1);border:1.5px solid #EF4444;color:#EF4444;font-size:13px;font-weight:700;text-align:center;margin-bottom:12px;display:none}
+</style>
+</head>
+<body>
+<h1 class="seo-only">物理实验模拟 - 欧姆定律</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a href="../index.html" class="topbar-logo"><div class="topbar-logo-icon">D</div><div class="topbar-logo-text">DevKit</div></a>
+  <span class="topbar-tool-name">物理实验模拟</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">⚡ 欧姆定律实验 · V = I × R</div>
+    <div class="canvas-wrap">
+      <canvas id="circuit"></canvas>
+    </div>
+    <div class="short-circuit" id="shortCircuit">⚠️ 短路警告！电阻为 0Ω，电路短路！</div>
+    <div class="slider-row">
+      <div class="slider-item">
+        <div class="slider-label"><span>电压 V</span><span class="slider-value" id="vLabel">6 V</span></div>
+        <input type="range" id="vSlider" min="1" max="24" value="6" step="1">
+      </div>
+      <div class="slider-item">
+        <div class="slider-label"><span>电阻 R</span><span class="slider-value" id="rLabel">10 Ω</span></div>
+        <input type="range" id="rSlider" min="0" max="100" value="10" step="1">
+      </div>
+    </div>
+    <div class="reading-grid">
+      <div class="reading-card"><div class="reading-label">电压 V</div><div class="reading-value" id="vReading">6</div><div class="reading-unit">V（伏特）</div></div>
+      <div class="reading-card"><div class="reading-label">电阻 R</div><div class="reading-value" id="rReading">10</div><div class="reading-unit">Ω（欧姆）</div></div>
+      <div class="reading-card"><div class="reading-label">电流 I</div><div class="reading-value" id="iReading" style="color:#F59E0B">0.60</div><div class="reading-unit">A（安培）</div></div>
+    </div>
+    <div class="formula-box" id="formulaBox">I = V / R = 6V / 10Ω = <span style="color:#F59E0B">0.60A</span></div>
+  </div>
+</div>
+<script type="module" src="../../shared/theme.js"></script>
+<script>
+const canvas=document.getElementById('circuit');
+const ctx=canvas.getContext('2d');
+const vSlider=document.getElementById('vSlider');
+const rSlider=document.getElementById('rSlider');
+const vLabel=document.getElementById('vLabel');
+const rLabel=document.getElementById('rLabel');
+const vReading=document.getElementById('vReading');
+const rReading=document.getElementById('rReading');
+const iReading=document.getElementById('iReading');
+const formulaBox=document.getElementById('formulaBox');
+const shortCircuit=document.getElementById('shortCircuit');
+
+function resize(){
+  const rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*2;canvas.height=rect.height*2;
+  ctx.scale(2,2);
+  draw();
+}
+
+function draw(){
+  const w=canvas.width/2,h=canvas.height/2;
+  const V=+vSlider.value,R=+rSlider.value;
+  const I=R===0?Infinity:(V/R);
+  const isShort=R===0;
+
+  ctx.clearRect(0,0,w,h);
+
+  // Wire color
+  const wireColor=getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim()||'#6B7280';
+  const textColor=getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim()||'#1D1D1F';
+
+  // Circuit layout
+  const mx=w/2,my=h/2;
+  const bw=w*0.35,bh=h*0.3;
+  const x1=mx-bw,x2=mx+bw,y1=my-bh,y2=my+bh;
+
+  ctx.strokeStyle=wireColor;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
+
+  // Draw wires (rectangle circuit)
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);ctx.lineTo(x2,y1); // top
+  ctx.lineTo(x2,y2); // right
+  ctx.lineTo(x1,y2); // bottom
+  ctx.lineTo(x1,y1); // left
+  ctx.stroke();
+
+  // Battery (top-left)
+  const batX=x1,batY=(y1+y2)/2;
+  ctx.fillStyle='rgba(239,68,68,0.08)';
+  ctx.fillRect(batX-30,batY-20,60,40);
+  ctx.strokeStyle='#EF4444';ctx.lineWidth=1.5;
+  ctx.strokeRect(batX-30,batY-20,60,40);
+  ctx.fillStyle='#EF4444';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('🔋 电源',batX,batY-6);
+  ctx.font='bold 10px monospace';
+  ctx.fillText(`V = ${V}V`,batX,batY+10);
+
+  // Resistor (top-right)
+  const resX=x2,resY=(y1+y2)/2;
+  ctx.fillStyle='rgba(59,130,246,0.08)';
+  ctx.fillRect(resX-30,resY-20,60,40);
+  ctx.strokeStyle='#3B82F6';ctx.lineWidth=1.5;
+  ctx.strokeRect(resX-30,resY-20,60,40);
+  ctx.fillStyle='#3B82F6';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('⚡ 电阻',resX,resY-6);
+  ctx.font='bold 10px monospace';
+  ctx.fillText(`R = ${R}Ω`,resX,resY+10);
+
+  // Ammeter (bottom center)
+  const amX=mx,amY=y2;
+  ctx.fillStyle='rgba(245,158,11,0.08)';
+  ctx.fillRect(amX-35,amY-18,70,36);
+  ctx.strokeStyle='#F59E0B';ctx.lineWidth=1.5;
+  ctx.strokeRect(amX-35,amY-18,70,36);
+  ctx.fillStyle='#F59E0B';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('📊 电流表',amX,amY-3);
+  ctx.font='bold 10px monospace';
+  ctx.fillText(isShort?'⚠️ 短路':`I = ${I.toFixed(2)}A`,amX,amY+12);
+
+  // Voltmeter (top center)
+  const vmX=mx,vmY=y1;
+  ctx.fillStyle='rgba(139,92,246,0.08)';
+  ctx.fillRect(vmX-35,vmY-18,70,36);
+  ctx.strokeStyle='#8B5CF6';ctx.lineWidth=1.5;
+  ctx.strokeRect(vmX-35,vmY-18,70,36);
+  ctx.fillStyle='#8B5CF6';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('📏 电压表',vmX,vmY-3);
+  ctx.font='bold 10px monospace';
+  ctx.fillText(`V = ${V}V`,vmX,vmY+12);
+
+  // Bulb (bottom-left area)
+  const bulbX=x1+60,bulbY=y2;
+  const brightness=isShort?0:Math.min(I/2.4,1);
+  ctx.beginPath();
+  ctx.arc(bulbX,bulbY,16,0,Math.PI*2);
+  ctx.fillStyle=`rgba(255,200,0,${brightness*0.6})`;
+  ctx.fill();
+  ctx.strokeStyle=brightness>0.3?'#F59E0B':wireColor;
+  ctx.lineWidth=1.5;ctx.stroke();
+  ctx.fillStyle=textColor;ctx.font='bold 10px sans-serif';
+  ctx.fillText('💡',bulbX-7,bulbY+4);
+
+  // Glow effect
+  if(brightness>0.1&&!isShort){
+    ctx.beginPath();ctx.arc(bulbX,bulbY,24,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,200,0,${brightness*0.2})`;ctx.fill();
+  }
+
+  // Current direction arrows
+  ctx.fillStyle=wireColor;ctx.font='14px sans-serif';
+  ctx.fillText('→',mx+bw*0.3,y1-8);
+  ctx.fillText('↓',x2+10,my);
+  ctx.fillText('←',mx-bw*0.3,y2+16);
+  ctx.fillText('↑',x1-14,my);
+}
+
+function update(){
+  const V=+vSlider.value,R=+rSlider.value;
+  const isShort=R===0;
+  const I=isShort?Infinity:(V/R);
+
+  vLabel.textContent=`${V} V`;
+  rLabel.textContent=`${R} Ω`;
+  vReading.textContent=V;
+  rReading.textContent=R;
+
+  if(isShort){
+    iReading.textContent='∞';
+    formulaBox.innerHTML=`I = V / R = ${V}V / 0Ω = <span style="color:#EF4444">∞（短路）</span>`;
+    shortCircuit.style.display='block';
+  }else{
+    iReading.textContent=I.toFixed(2);
+    formulaBox.innerHTML=`I = V / R = ${V}V / ${R}Ω = <span style="color:#F59E0B">${I.toFixed(2)}A</span>`;
+    shortCircuit.style.display='none';
+  }
+  draw();
+}
+
+vSlider.addEventListener('input',update);
+rSlider.addEventListener('input',update);
+window.addEventListener('resize',resize);
+resize();
+</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+<noscript><p>physics-lab — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

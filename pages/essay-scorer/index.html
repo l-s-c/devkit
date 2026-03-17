@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作文评分器 — DevKit 在线开发者工具箱</title>
+<meta name="description" content="在线作文评分工具，从字数、用词丰富度、句式多样性、修辞手法、结构完整五个维度智能评分，给出改进建议。">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/essay-scorer/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"作文评分器","description":"五维度智能作文评分，含改进建议","url":"https://l-s-c.github.io/devkit/pages/essay-scorer/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.glass{background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:16px;padding:20px;margin-bottom:16px}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.essay-input{width:100%;min-height:200px;padding:16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass);font-size:15px;line-height:1.8;outline:none;resize:vertical;font-family:inherit;color:var(--text-primary)}
+.essay-input:focus{border-color:#F59E0B}
+.char-count{text-align:right;font-size:11px;color:var(--text-caption);margin-top:4px}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#78350F;transition:all 150ms;display:block;margin:12px auto 0}
+.btn:hover{transform:translateY(-1px)}
+.score-section{display:none}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ring-wrap{text-align:center;padding:24px}
+.ring-canvas{width:160px;height:160px}
+.ring-score{font-size:48px;font-weight:900;font-family:var(--font-code)}
+.ring-label{font-size:12px;color:var(--text-caption);margin-top:4px}
+.dim-list{display:flex;flex-direction:column;gap:10px;padding:16px 0}
+.dim-item{display:flex;align-items:center;gap:10px}
+.dim-name{font-size:12px;font-weight:700;min-width:80px;color:var(--text-secondary)}
+.dim-bar{flex:1;height:8px;border-radius:4px;background:var(--border-glass);overflow:hidden}
+.dim-fill{height:100%;border-radius:4px;transition:width 500ms}
+.dim-val{font-size:12px;font-weight:800;font-family:var(--font-code);min-width:32px;text-align:right}
+.suggestions{margin-top:0}
+.sug-item{padding:10px 14px;border-radius:10px;margin-bottom:6px;font-size:13px;line-height:1.6;border:1px solid var(--border-glass);background:var(--bg-glass)}
+.sug-item.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.04)}
+.sug-item.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.04)}
+.disclaimer{text-align:center;font-size:11px;color:var(--text-caption);margin-top:16px;padding:10px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px dashed rgba(245,158,11,0.3)}
+@media(max-width:768px){.main{padding:16px}.dual{grid-template-columns:1fr}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">作文评分器 — DevKit 在线开发者工具箱</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-tool-name">作文评分器</span>
+  <div class="topbar-spacer"></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</div>
+<div class="main">
+  <div class="glass">
+    <div class="section-title">✍️ 作文评分器</div>
+    <textarea class="essay-input" id="essayInput" placeholder="请在此粘贴或输入作文内容..."></textarea>
+    <div class="char-count">已输入 <span id="charCount">0</span> 字</div>
+    <button class="btn" onclick="scoreEssay()">📊 开始评分</button>
+  </div>
+  <div class="score-section" id="scoreSection">
+    <div class="glass">
+      <div class="dual">
+        <div class="ring-wrap">
+          <canvas class="ring-canvas" id="ringCanvas" width="160" height="160"></canvas>
+          <div class="ring-score" id="totalScore">0</div>
+          <div class="ring-label">总分（满分100）</div>
+        </div>
+        <div class="dim-list" id="dimList"></div>
+      </div>
+    </div>
+    <div class="glass suggestions">
+      <div class="section-title">💡 改进建议</div>
+      <div id="sugList"></div>
+    </div>
+    <div class="disclaimer">⚠️ 本工具仅供参考，不代表实际考试评分。评分基于文本统计分析，无法替代教师的专业判断。</div>
+  </div>
+</div>
+<script src="../../shared/theme.js"></script>
+<script>
+const essayInput=document.getElementById('essayInput');
+essayInput.addEventListener('input',()=>{document.getElementById('charCount').textContent=essayInput.value.replace(/\s/g,'').length});
+
+const DIMS=[
+  {name:'字数',color:'#3B82F6',key:'wordCount'},
+  {name:'用词丰富度',color:'#10B981',key:'vocab'},
+  {name:'句式多样性',color:'#8B5CF6',key:'sentence'},
+  {name:'修辞手法',color:'#F59E0B',key:'rhetoric'},
+  {name:'结构完整',color:'#EF4444',key:'structure'}
+];
+
+function scoreEssay(){
+  const text=essayInput.value.trim();
+  if(!text){alert('请输入作文内容');return}
+  const chars=text.replace(/\s/g,'');
+  const len=chars.length;
+
+  // 1. Word count score (target ~400-800 for primary, ~600-1000 for middle)
+  let wcScore=len<100?Math.round(len/100*8):len<200?8+Math.round((len-100)/100*4):len<400?12+Math.round((len-200)/200*3):len<800?15+Math.round((len-400)/400*5):20;
+  wcScore=Math.min(20,wcScore);
+
+  // 2. Vocabulary richness - unique chars / total
+  const uniqueChars=new Set([...chars]).size;
+  const richness=uniqueChars/Math.max(1,len);
+  let vocabScore=Math.round(Math.min(1,richness*3.5)*20);
+
+  // 3. Sentence diversity
+  const sentences=text.split(/[。！？；\n]+/).filter(s=>s.trim().length>0);
+  const avgLen=sentences.length?len/sentences.length:len;
+  const lenVariance=sentences.length>1?sentences.reduce((s,sent)=>s+Math.pow(sent.length-avgLen,2),0)/sentences.length:0;
+  const hasQuestion=text.includes('？')||text.includes('?');
+  const hasExclamation=text.includes('！')||text.includes('!');
+  let sentScore=Math.min(20,Math.round((Math.min(lenVariance,500)/500*10)+(hasQuestion?3:0)+(hasExclamation?3:0)+(sentences.length>3?4:sentences.length>1?2:0)));
+
+  // 4. Rhetoric
+  const rhetoricPatterns=[/像[^，。]*一样/g,/如同/g,/仿佛/g,/好像/g,/宛如/g,/犹如/g,/难道/g,/怎能/g,/岂不/g,/不是.*吗/g,/排比/g];
+  let rhetoricCount=0;
+  rhetoricPatterns.forEach(p=>{const m=text.match(p);if(m)rhetoricCount+=m.length});
+  const hasParallel=sentences.filter(s=>s.length>5).some((s,i,arr)=>{
+    if(i<2)return false;
+    const prev1=arr[i-1],prev2=arr[i-2];
+    return Math.abs(s.length-prev1.length)<5&&Math.abs(prev1.length-prev2.length)<5&&s.length>8;
+  });
+  if(hasParallel)rhetoricCount+=2;
+  let rhetScore=Math.min(20,Math.round(Math.min(rhetoricCount,6)/6*20));
+
+  // 5. Structure
+  const hasParagraphs=text.split('\n').filter(l=>l.trim()).length;
+  const hasStart=len>50;
+  const hasEnd=text.match(/[。！？]$/);
+  let structScore=Math.min(20,(hasParagraphs>=3?8:hasParagraphs>=2?5:2)+(hasStart?4:0)+(hasEnd?4:0)+(len>200?4:len>100?2:0));
+
+  const scores={wordCount:wcScore,vocab:vocabScore,sentence:sentScore,rhetoric:rhetScore,structure:structScore};
+  const total=Object.values(scores).reduce((a,b)=>a+b,0);
+
+  // Render
+  document.getElementById('scoreSection').style.display='block';
+  document.getElementById('totalScore').textContent=total;
+  drawRing(total);
+
+  const dimList=document.getElementById('dimList');
+  dimList.innerHTML='';
+  DIMS.forEach(d=>{
+    const v=scores[d.key];
+    dimList.innerHTML+=`<div class="dim-item"><span class="dim-name">${d.name}</span><div class="dim-bar"><div class="dim-fill" style="width:${v/20*100}%;background:${d.color}"></div></div><span class="dim-val" style="color:${d.color}">${v}/20</span></div>`;
+  });
+
+  // Suggestions
+  const sugs=[];
+  if(wcScore>=16)sugs.push({type:'good',text:'✅ 字数充足，篇幅合理'});
+  else if(len<200)sugs.push({type:'warn',text:'⚠️ 字数偏少（'+len+'字），建议充实内容，目标400字以上'});
+  else sugs.push({type:'warn',text:'⚠️ 字数可再增加（'+len+'字），丰富细节描写'});
+
+  if(vocabScore>=14)sugs.push({type:'good',text:'✅ 用词丰富，词汇多样'});
+  else sugs.push({type:'warn',text:'⚠️ 用词重复较多，尝试使用近义词替换，丰富词汇量'});
+
+  if(sentScore>=14)sugs.push({type:'good',text:'✅ 句式多样，长短句搭配得当'});
+  else sugs.push({type:'warn',text:'⚠️ 句式较单一，可加入疑问句、感叹句、排比句等'});
+
+  if(rhetScore>=10)sugs.push({type:'good',text:'✅ 运用了修辞手法，增强表达效果'});
+  else sugs.push({type:'warn',text:'⚠️ 缺少修辞手法，可尝试比喻（像...一样）、排比、反问等'});
+
+  if(structScore>=14)sugs.push({type:'good',text:'✅ 文章结构完整，层次分明'});
+  else sugs.push({type:'warn',text:'⚠️ 注意文章结构：开头引入→中间展开→结尾总结，分段书写'});
+
+  document.getElementById('sugList').innerHTML=sugs.map(s=>`<div class="sug-item ${s.type}">${s.text}</div>`).join('');
+}
+
+function drawRing(score){
+  const canvas=document.getElementById('ringCanvas');
+  const ctx=canvas.getContext('2d');
+  const cx=80,cy=80,r=65,lw=12;
+  ctx.clearRect(0,0,160,160);
+  // bg
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(128,128,128,0.15)';ctx.lineWidth=lw;ctx.stroke();
+  // fill
+  const pct=score/100;
+  const color=score>=80?'#10B981':score>=60?'#F59E0B':'#EF4444';
+  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+}
+</script>
+<noscript><p>作文评分器 — DevKit 在线开发者工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+</body>
+</html>
