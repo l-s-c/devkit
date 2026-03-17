@@ -38,9 +38,7 @@
 .dk-hot-name{font-size:12px;font-weight:700}
 .dk-hot-desc{font-size:10px;color:var(--text-caption,#9CA3AF)}
 /* Bottom bar (mobile) */
-.dk-bottom{display:flex;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:22px;box-shadow:0 4px 24px rgba(0,0,0,0.12);padding:6px 12px;gap:4px;z-index:90}
-@media(min-width:1568px){.dk-bottom{display:none}}
-.dk-bottom .dk-act{border:none;background:transparent}
+
 `;
   document.head.appendChild(style);
 
@@ -77,15 +75,5 @@
   }
   document.body.appendChild(aside);
 
-  // Bottom bar (mobile)
-  const bottom = document.createElement('div');
-  bottom.className = 'dk-bottom';
-  bottom.innerHTML = `
-    <button class="dk-act" title="分享" onclick="if(navigator.share)navigator.share({title:document.title,url:location.href});else navigator.clipboard.writeText(location.href)"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
-    <button class="dk-act" title="收藏" onclick="this.classList.toggle('fav')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-    <button class="dk-act" title="复制链接" onclick="navigator.clipboard.writeText(location.href)"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>
-    <button class="dk-act" title="反馈" onclick="window.open('https://github.com/l-s-c/devkit/issues','_blank')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>
-    <button class="dk-act" title="回到顶部" onclick="scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></button>
-  `;
-  document.body.appendChild(bottom);
+
 })();
