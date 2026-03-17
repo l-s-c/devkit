@@ -14,10 +14,9 @@
   style.textContent = `
 /* V4 sidebar layout */
 @media(min-width:1380px){
-  .dk-page-wrap{display:flex;justify-content:center;gap:24px;padding:0 24px}
-  .dk-page-wrap>.main{max-width:960px;width:100%;min-width:0;margin:0}
+  .main{margin-right:316px!important}
 }
-.dk-sidebar{width:280px;flex-shrink:0;display:none;position:sticky;top:80px;align-self:flex-start;max-height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:none}
+.dk-sidebar{width:280px;display:none;position:fixed;right:24px;top:80px;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:none;z-index:40}
 .dk-sidebar::-webkit-scrollbar{display:none}
 @media(min-width:1380px){.dk-sidebar{display:block}}
 .dk-sb-section{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.04);padding:16px;margin-bottom:12px}
@@ -48,18 +47,10 @@
 `;
   document.head.appendChild(style);
 
-  // Wrap .main in flex container for sidebar layout
-  const main = document.querySelector('.main');
-  if (main) {
-    const wrap = document.createElement('div');
-    wrap.className = 'dk-page-wrap';
-    main.parentNode.insertBefore(wrap, main);
-    wrap.appendChild(main);
-
-    // Sidebar
-    const aside = document.createElement('aside');
-    aside.className = 'dk-sidebar';
-    aside.innerHTML = `
+  // Sidebar — fixed positioning, no wrapper needed
+  const aside = document.createElement('aside');
+  aside.className = 'dk-sidebar';
+  aside.innerHTML = `
       <div class="dk-sb-section">
         <div class="dk-act-row">
           <button class="dk-act" title="分享" onclick="if(navigator.share)navigator.share({title:document.title,url:location.href});else{navigator.clipboard.writeText(location.href);this.title='已复制!'}"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
@@ -81,9 +72,8 @@
       <div class="dk-sb-section" style="padding:0;overflow:hidden">
         <div class="dk-ad-slot s2"><span class="dk-ad-label">📢 广告 · 300×250</span></div>
       </div>
-    `;
-    wrap.appendChild(aside);
-  }
+  `;
+  document.body.appendChild(aside);
 
   // Bottom bar (mobile)
   const bottom = document.createElement('div');
