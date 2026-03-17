@@ -4,7 +4,7 @@
   // 首页和全屏工具跳过
   const path = location.pathname;
   if (path.endsWith('/pages/') || path.endsWith('/pages/index.html')) return;
-  const SKIP = ['/json/','/json-schema/','/code-formatter/','/sql-formatter/'];
+  const SKIP = ['/json/','/json-schema/','/code-formatter/','/sql-formatter/','/base64/','/url-codec/','/yaml/'];
   if (SKIP.some(s => path.includes(s))) return;
 
   const base = '../';
