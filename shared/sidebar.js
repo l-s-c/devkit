@@ -68,6 +68,13 @@
       </div>
 
   `;
+  // 动态对齐：侧边栏top = .main的offsetTop
+  const mainEl = document.querySelector('.main');
+  if (mainEl) {
+    const alignTop = mainEl.offsetTop + 'px';
+    aside.style.top = alignTop;
+    style.textContent = style.textContent.replace('top:80px', 'top:' + alignTop);
+  }
   document.body.appendChild(aside);
 
   // Bottom bar (mobile)
