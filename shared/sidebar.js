@@ -13,6 +13,7 @@
   const style = document.createElement('style');
   style.textContent = `
 /* V4 sidebar layout */
+@media(min-width:1380px){.main{margin-right:328px!important}}
 .dk-sidebar{width:280px;display:none;position:fixed;right:24px;top:80px;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:none;z-index:40}
 .dk-sidebar::-webkit-scrollbar{display:none}
 @media(min-width:1380px){.dk-sidebar{display:block}}
