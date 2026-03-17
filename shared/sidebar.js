@@ -3,7 +3,7 @@
   var path = location.pathname;
   var clean = path.replace(/\/devkit\/?/, '/');
   if (clean === '/' || clean === '/index.html' || clean === '/pages/' || clean === '/pages/index.html') return;
-  var SKIP = ['/json/','/json-schema/','/code-formatter/','/sql-formatter/','/base64/','/url-codec/','/yaml/','/periodic-table/'];
+  var SKIP = ['/json/','/json-schema/','/code-formatter/','/sql-formatter/','/base64/','/url-codec/','/yaml/','/periodic-table/','/color/','/text-diff/','/regex/','/hash/','/jwt/','/uuid/','/markdown/'];
   if (SKIP.some(function(s){return path.includes(s)})) return;
 
   var SIDEBAR_W = 280;
