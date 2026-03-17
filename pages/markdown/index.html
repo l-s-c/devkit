@@ -163,17 +163,35 @@ function parseMd(md) {
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function sanitize(html) {
-  // Strip <script> tags
-  html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
-  // Strip event handlers (onerror, onload, onclick, etc.)
-  html = html.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '');
-  html = html.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, '');
-  // Strip javascript: protocol in href/src
-  html = html.replace(/(href|src)\s*=\s*["']javascript:[^"']*["']/gi, '$1=""');
-  html = html.replace(/(href|src)\s*=\s*javascript:[^\s>]*/gi, '$1=""');
-  // Strip <iframe>, <object>, <embed>, <form>
-  html = html.replace(/<\/?(iframe|object|embed|form|style|link|meta|base)[\s\S]*?>/gi, '');
-  return html;
+  // Whitelist approach: only allow safe Markdown-rendered tags
+  const ALLOWED = /^(h[1-6]|p|br|hr|ul|ol|li|a|strong|em|b|i|u|s|del|code|pre|blockquote|table|thead|tbody|tr|th|td|sup|sub|span|img)$/i;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  // Remove all non-whitelisted tags (keep text content)
+  function walk(el) {
+    [...el.children].forEach(child => {
+      if (!ALLOWED.test(child.tagName)) {
+        child.replaceWith(...child.childNodes);
+      } else {
+        // Strip event handlers and dangerous attrs
+        [...child.attributes].forEach(a => {
+          if (/^on/i.test(a.name) || (a.name === 'href' && /^\s*javascript:/i.test(a.value)) ||
+              (a.name === 'src' && /^\s*javascript:/i.test(a.value))) {
+            child.removeAttribute(a.name);
+          }
+        });
+        // img: only allow src, alt, width, height
+        if (child.tagName === 'IMG') {
+          [...child.attributes].forEach(a => {
+            if (!['src','alt','width','height'].includes(a.name)) child.removeAttribute(a.name);
+          });
+        }
+        walk(child);
+      }
+    });
+  }
+  walk(tmp);
+  return tmp.innerHTML;
 }
 
 const editor = document.getElementById('editor');

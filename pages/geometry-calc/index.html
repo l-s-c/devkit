@@ -81,7 +81,11 @@ function renderForm(){
 }
 function calc(){
   const s=SHAPES[curShape];const vals={};
-  for(const[,key]of s.fields){vals[key]=parseFloat(document.getElementById('f_'+key).value)||0}
+  for(const[,key]of s.fields){
+    const v=parseFloat(document.getElementById('f_'+key).value);
+    if(isNaN(v)||v<=0){alert('请输入正数');return}
+    vals[key]=v;
+  }
   const results=s.calc(vals);
   document.getElementById('resultGrid').innerHTML=results.map(r=>`<div class="rc"><div class="rc-label">${r.l}</div><div class="rc-value">${r.v}</div><div class="rc-unit">${r.u}</div></div>`).join('');
   document.getElementById('formulaBox').textContent=s.formula(vals);

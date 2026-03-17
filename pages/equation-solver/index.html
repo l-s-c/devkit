@@ -67,11 +67,12 @@ document.querySelector('.tab-row').addEventListener('click',e=>{if(!e.target.cla
 function fmt(n){return Number.isInteger(n)?n:parseFloat(n.toFixed(4))}
 function solve(){
   const err=document.getElementById('errMsg');err.textContent='';
+  function clearResult(){document.getElementById('resultPanel').style.display='none'}
   const steps=[];let result='',note='';
   if(type==='linear1'){
     const a=parseFloat(document.getElementById('a').value),b=parseFloat(document.getElementById('b').value);
-    if(isNaN(a)||isNaN(b)){err.textContent='请输入系数';return}
-    if(a===0){err.textContent='a 不能为 0（否则不是方程）';return}
+    if(isNaN(a)||isNaN(b)){err.textContent='请输入系数';clearResult();return}
+    if(a===0){err.textContent='a 不能为 0（否则不是方程）';clearResult();return}
     steps.push(`方程：${a}x + ${b} = 0`);
     steps.push(`移项：${a}x = ${-b}`);
     const x=-b/a;
@@ -79,8 +80,8 @@ function solve(){
     result=`x = ${fmt(x)}`;
   } else if(type==='quadratic'){
     const a=parseFloat(document.getElementById('a').value),b=parseFloat(document.getElementById('b').value),c=parseFloat(document.getElementById('c').value);
-    if(isNaN(a)||isNaN(b)||isNaN(c)){err.textContent='请输入系数';return}
-    if(a===0){err.textContent='a 不能为 0（否则不是二次方程）';return}
+    if(isNaN(a)||isNaN(b)||isNaN(c)){err.textContent='请输入系数';clearResult();return}
+    if(a===0){err.textContent='a 不能为 0（否则不是二次方程）';clearResult();return}
     const delta=b*b-4*a*c;
     steps.push(`方程：${a}x² + (${b})x + (${c}) = 0`);
     steps.push(`判别式 Δ = b²−4ac = (${b})² − 4×${a}×(${c}) = ${fmt(delta)}`);
@@ -90,7 +91,7 @@ function solve(){
   } else {
     const a1=parseFloat(document.getElementById('a1').value),b1=parseFloat(document.getElementById('b1').value),c1=parseFloat(document.getElementById('c1').value);
     const a2=parseFloat(document.getElementById('a2').value),b2=-parseFloat(document.getElementById('b2').value),c2=parseFloat(document.getElementById('c2').value);
-    if([a1,b1,c1,a2,b2,c2].some(isNaN)){err.textContent='请输入系数';return}
+    if([a1,b1,c1,a2,b2,c2].some(isNaN)){err.textContent='请输入系数';clearResult();return}
     const det=a1*b2-a2*b1;
     steps.push(`方程组：${a1}x + ${b1}y = ${c1}，${a2}x + (${b2})y = ${c2}`);
     steps.push(`行列式 D = ${a1}×(${b2}) − ${a2}×${b1} = ${det}`);
