@@ -30,6 +30,13 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .canvas-wrap canvas{width:100%;height:100%}
 .hint{font-size:10px;color:var(--text-caption);margin-top:8px}
 .err{color:#EF4444;font-size:12px;margin-top:4px}
+.btn-add{padding:10px 16px;border-radius:20px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:12px;font-weight:700;cursor:pointer;color:var(--text-secondary)}
+.btn-add:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.func-del{width:28px;height:28px;border-radius:8px;border:1px solid var(--border-glass);background:none;cursor:pointer;font-size:12px;flex-shrink:0;color:var(--text-caption)}
+.func-del:hover{border-color:#EF4444;color:#EF4444}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;font-family:var(--font-code)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
 </style>
 <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
 </head>
@@ -40,9 +47,9 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="main">
   <div class="panel">
     <div class="section-title">📈 函数图像绘制</div>
-    <div class="func-row"><div class="func-color" style="background:#8B5CF6"></div><span class="func-label">y =</span><input class="func-input" id="funcInput" value="x^2" placeholder="输入表达式"></div>
-    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn" id="plotBtn">📈 绘制</button></div>
-    <div class="hint">💡 支持：+ − * / ^ sin cos tan log ln sqrt abs π e</div>
+    <div id="funcRows"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn" id="plotBtn">📈 绘制</button><button class="btn-add" id="addBtn">➕ 添加函数</button><button class="btn-add" id="clearBtn">🗑️ 清空</button></div>
+    <div class="hint">💡 支持：+ − * / ^ sin cos tan log ln sqrt abs π e ｜ 最多 5 条曲线叠加</div>
     <div class="err" id="errMsg"></div>
     <div class="preset-row">
       <span style="font-size:10px;color:var(--text-caption)">预设：</span>
@@ -135,8 +142,19 @@ function evalAST(node,x){
   }
   return NaN;
 }
+// === Multi-function support ===
+const COLORS=['#8B5CF6','#EF4444','#10B981','#F59E0B','#3B82F6'];
+let funcs=[{expr:'x^2'}];
+function renderFuncRows(){
+  document.getElementById('funcRows').innerHTML=funcs.map((f,i)=>`<div class="func-row"><div class="func-color" style="background:${COLORS[i]}"></div><span class="func-label">y${funcs.length>1?i+1:''} =</span><input class="func-input fi" data-idx="${i}" value="${f.expr}" placeholder="输入表达式">${funcs.length>1?`<button class="func-del" data-idx="${i}">✕</button>`:''}</div>`).join('');
+}
+document.getElementById('funcRows').addEventListener('input',e=>{if(e.target.classList.contains('fi'))funcs[+e.target.dataset.idx].expr=e.target.value});
+document.getElementById('funcRows').addEventListener('click',e=>{const b=e.target.closest('.func-del');if(!b)return;funcs.splice(+b.dataset.idx,1);renderFuncRows();plotAll()});
+document.getElementById('funcRows').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('fi'))plotAll()});
+document.getElementById('addBtn').addEventListener('click',()=>{if(funcs.length>=5)return;funcs.push({expr:''});renderFuncRows();document.querySelector('.fi:last-of-type')?.focus()});
+document.getElementById('clearBtn').addEventListener('click',()=>{funcs=[{expr:''}];renderFuncRows();plotAll()});
 // === Canvas plotting ===
-function plot(exprStr){
+function plotAll(){
   const canvas=document.getElementById('plotCanvas');
   const rect=canvas.parentElement.getBoundingClientRect();
   const W=rect.width*2,H=rect.height*2;
@@ -146,43 +164,42 @@ function plot(exprStr){
   const scaleX=W/(xMax-xMin),scaleY=H/(yMax-yMin);
   function toX(x){return(x-xMin)*scaleX}
   function toY(y){return(yMax-y)*scaleY}
-  // Clear
   const isDark=document.documentElement.dataset.theme==='dark';
   ctx.fillStyle=isDark?'#1E293B':'#FAFAFA';ctx.fillRect(0,0,W,H);
-  // Grid
   ctx.strokeStyle=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';ctx.lineWidth=1;
   for(let i=Math.ceil(xMin);i<=xMax;i++){ctx.beginPath();ctx.moveTo(toX(i),0);ctx.lineTo(toX(i),H);ctx.stroke()}
   for(let i=Math.ceil(yMin);i<=yMax;i++){ctx.beginPath();ctx.moveTo(0,toY(i));ctx.lineTo(W,toY(i));ctx.stroke()}
-  // Axes
   ctx.strokeStyle=isDark?'#64748B':'#9CA3AF';ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(toX(xMin),toY(0));ctx.lineTo(toX(xMax),toY(0));ctx.stroke();
   ctx.beginPath();ctx.moveTo(toX(0),toY(yMin));ctx.lineTo(toX(0),toY(yMax));ctx.stroke();
-  // Axis labels
   ctx.fillStyle=isDark?'#64748B':'#9CA3AF';ctx.font='20px monospace';
   for(let i=Math.ceil(xMin);i<=xMax;i++){if(i===0)continue;ctx.fillText(i.toString(),toX(i)-6,toY(0)+18)}
   for(let i=Math.ceil(yMin);i<=yMax;i++){if(i===0)continue;ctx.fillText(i.toString(),toX(0)+4,toY(i)+6)}
-  // Parse and draw
   const err=document.getElementById('errMsg');err.textContent='';
-  let ast;
-  try{const tokens=tokenize(exprStr);ast=parse(tokens)}catch(e){err.textContent='解析错误：'+e.message;return}
-  ctx.strokeStyle='#8B5CF6';ctx.lineWidth=3;ctx.beginPath();
-  let started=false,prevY=0;
-  for(let px=0;px<W;px++){
-    const x=xMin+px/scaleX;
-    let y;try{y=evalAST(ast,x)}catch(e){started=false;continue}
-    if(!isFinite(y)||isNaN(y)){started=false;continue}
-    const canvasY=toY(y);
-    if(!started||Math.abs(canvasY-prevY)>H*0.5){ctx.moveTo(px,canvasY);started=true}
-    else ctx.lineTo(px,canvasY);
-    prevY=canvasY;
-  }
-  ctx.stroke();
-  document.getElementById('statusInfo').textContent=`y = ${exprStr}`;
+  const drawn=[];
+  funcs.forEach((f,idx)=>{
+    const exprStr=f.expr.trim();if(!exprStr)return;
+    let ast;
+    try{const tokens=tokenize(exprStr);ast=parse(tokens)}catch(e){err.textContent+=`函数${idx+1} 解析错误：${e.message}\n`;return}
+    ctx.strokeStyle=COLORS[idx];ctx.lineWidth=3;ctx.beginPath();
+    let started=false,prevY=0;
+    for(let px=0;px<W;px++){
+      const x=xMin+px/scaleX;
+      let y;try{y=evalAST(ast,x)}catch(e){started=false;continue}
+      if(!isFinite(y)||isNaN(y)){started=false;continue}
+      const canvasY=toY(y);
+      if(!started||Math.abs(canvasY-prevY)>H*0.5){ctx.moveTo(px,canvasY);started=true}
+      else ctx.lineTo(px,canvasY);
+      prevY=canvasY;
+    }
+    ctx.stroke();
+    drawn.push({color:COLORS[idx],expr:exprStr});
+  });
+  document.getElementById('statusInfo').textContent=drawn.map(d=>`y = ${d.expr}`).join(' | ')||'函数图像绘制';
 }
-document.getElementById('plotBtn').addEventListener('click',()=>plot(document.getElementById('funcInput').value.trim()));
-document.querySelectorAll('.preset-pill').forEach(p=>p.addEventListener('click',function(){document.getElementById('funcInput').value=this.dataset.f;plot(this.dataset.f)}));
-document.getElementById('funcInput').addEventListener('keydown',e=>{if(e.key==='Enter')plot(e.target.value.trim())});
-plot('x^2');
+document.getElementById('plotBtn').addEventListener('click',plotAll);
+document.querySelectorAll('.preset-pill').forEach(p=>p.addEventListener('click',function(){funcs[0].expr=this.dataset.f;renderFuncRows();plotAll()}));
+renderFuncRows();plotAll();
 </script>
 <noscript><p>函数图像绘制 — DevKit。请启用 JavaScript。</p></noscript>
 </body>
