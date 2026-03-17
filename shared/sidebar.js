@@ -13,9 +13,10 @@
   const style = document.createElement('style');
   style.textContent = `
 /* V4 sidebar layout */
+@media(min-width:1380px){.main{margin-left:max(24px,calc((100vw - 328px - 960px)/2))!important;margin-right:328px!important}}
 .dk-sidebar{width:280px;display:none;position:fixed;right:24px;top:80px;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:none;z-index:40}
 .dk-sidebar::-webkit-scrollbar{display:none}
-@media(min-width:1568px){.dk-sidebar{display:block}}
+@media(min-width:1380px){.dk-sidebar{display:block}}
 .dk-sb-section{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.04);padding:16px;margin-bottom:12px}
 /* Action row */
 .dk-act-row{display:flex;justify-content:center;gap:4px}
