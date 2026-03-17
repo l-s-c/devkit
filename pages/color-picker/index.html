@@ -95,6 +95,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 const cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d',{willReadFrequently:true});
 const mag=document.getElementById('magnifier'),magCvs=document.getElementById('magCvs'),magCtx=magCvs.getContext('2d');
 let img=null,history=JSON.parse(localStorage.getItem('devkit-picker-history')||'[]');

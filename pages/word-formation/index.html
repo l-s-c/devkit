@@ -63,6 +63,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">组词练习</span><div class="statusbar-spacer"></div><span>小学常用字 · 纯本地</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 // Load 200 chars from external JSON
 let DATA={};
 fetch('./words.json').then(r=>r.json()).then(arr=>{

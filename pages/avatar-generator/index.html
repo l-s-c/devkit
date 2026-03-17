@@ -62,6 +62,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">随机头像</span><div class="statusbar-spacer"></div><span>Canvas · 纯本地</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 function genAvatar(cvs,size=200){
   cvs.width=size;cvs.height=size;
   const ctx=cvs.getContext('2d');

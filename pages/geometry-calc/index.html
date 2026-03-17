@@ -57,6 +57,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">几何图形计算器</span><div class="statusbar-spacer"></div><span>数学紫 · 10种图形</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 const PI=Math.PI,fmt=n=>Number.isInteger(n)?n:parseFloat(n.toFixed(4));
 const SHAPES=[
 {icon:'▭',name:'长方形',fields:[['长 a','a','8'],['宽 b','b','5']],calc:v=>[{l:'面积 S',v:fmt(v.a*v.b),u:'cm²'},{l:'周长 C',v:fmt(2*(v.a+v.b)),u:'cm'},{l:'对角线',v:fmt(Math.sqrt(v.a**2+v.b**2)),u:'cm'}],formula:v=>`S = a×b = ${v.a}×${v.b} = ${fmt(v.a*v.b)} cm²\nC = 2(a+b) = 2(${v.a}+${v.b}) = ${fmt(2*(v.a+v.b))} cm`},
