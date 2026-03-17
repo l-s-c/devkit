@@ -21,7 +21,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
 <style>
 body { min-height: 100vh; display: flex; flex-direction: column; }
-.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 720px; margin: 0 auto; width: 100%; }
+.main { flex: 1; position: relative; z-index: 1; padding: 24px 20px 80px; max-width: 960px; margin: 0 auto; width: 100%; }
 
 .privacy-badge {
   display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
@@ -301,6 +301,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 
 const MAX_FILES = 20;
 const MAX_SIZE = 20 * 1024 * 1024;

@@ -105,6 +105,7 @@ console.log('Hello, DevKit!');
 
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 
 // Simple Markdown parser (no dependency)
 function parseMd(md) {
@@ -248,7 +249,7 @@ document.getElementById('btnCopyHtml').addEventListener('click', () => {
   navigator.clipboard.writeText(preview.innerHTML);
 });
 document.getElementById('btnExport').addEventListener('click', () => {
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Markdown Export</title><style>body{max-width:800px;margin:40px auto;padding:0 20px;font-family:-apple-system,sans-serif;line-height:1.7}code{background:#f4f4f5;padding:2px 6px;border-radius:3px}pre{background:#f4f4f5;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:3px solid #6366f1;padding:4px 16px;color:#666}</style></head><body>${preview.innerHTML}
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Markdown Export</title><style>body{max-width:960px;margin:40px auto;padding:0 20px;font-family:-apple-system,sans-serif;line-height:1.7}code{background:#f4f4f5;padding:2px 6px;border-radius:3px}pre{background:#f4f4f5;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:3px solid #6366f1;padding:4px 16px;color:#666}</style></head><body>${preview.innerHTML}
 </body></html>`;
   const blob = new Blob([html], {type:'text/html'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='export.html'; a.click();

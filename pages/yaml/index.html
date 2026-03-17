@@ -96,7 +96,7 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 .status-msg { font-weight: 500; }
 .status-right { display: flex; gap: 12px; font-family: var(--font-code); }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .editor-wrap { grid-template-columns: 1fr; }
   .editor-pane + .editor-pane { border-left: none; border-top: 0.5px solid var(--border-glass); }
   .yaml-editor { min-height: 200px; }
@@ -171,6 +171,7 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 
 /* ===== 文案常量（预留 i18n） ===== */
 const LABELS = {

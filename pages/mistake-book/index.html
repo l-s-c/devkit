@@ -81,6 +81,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="statusbar"><span id="statusInfo">错题本</span><div class="statusbar-spacer"></div><span>localStorage 本地存储</span></div>
 <script type="module">
 import '../../shared/theme.js';
+import '../../shared/sidebar.js';
 const KEY='devkit_mistakes';
 let mistakes=JSON.parse(localStorage.getItem(KEY)||'[]');
 document.getElementById('fDate').value=new Date().toISOString().split('T')[0];
