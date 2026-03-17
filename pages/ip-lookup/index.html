@@ -74,7 +74,6 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
 <script type="module">
 import '../../shared/theme.js';
-import '../../shared/sidebar.js';
 fetch('https://api.ipify.org?format=json',{signal:AbortSignal.timeout(8000)})
   .then(r=>r.json()).then(d=>{document.getElementById('ipv4').textContent=d.ip;document.getElementById('statusInfo').textContent=`✅ ${d.ip}`})
   .catch(()=>{document.getElementById('ipv4').textContent='获取失败（网络不可用）';document.getElementById('statusInfo').textContent='❌ IP 获取失败'});

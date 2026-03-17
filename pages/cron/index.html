@@ -93,7 +93,6 @@ body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
 <script type="module">
 import '../../shared/theme.js';
-import '../../shared/sidebar.js';
 
 function getCron() {
   return [0,1,2,3,4].map(i=>document.getElementById('f'+i).value.trim()||'*').join(' ');
