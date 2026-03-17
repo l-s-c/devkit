@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>错题本生成器 | Mistake Book — DevKit</title>
+<meta name="description" content="在线错题本，记录错题、错答、正答和错因分析，支持打印和分类统计。">
+<meta name="keywords" content="错题本, 错题记录, 错题整理, 学习工具, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/mistake-book/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"错题本生成器","url":"https://l-s-c.github.io/devkit/pages/mistake-book/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#EF4444;--green:#10B981}[data-theme=dark]{--brand-500:#F87171;--green:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(239,68,68,0.04),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-item{display:flex;flex-direction:column;gap:4px}
+.form-item.full{grid-column:1/-1}
+.form-label{font-size:10px;font-weight:700;color:var(--text-caption)}
+.form-input,.form-select,.form-textarea{padding:10px 12px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none}
+.form-textarea{resize:none;height:80px;line-height:1.6}
+.form-input:focus,.form-textarea:focus{border-color:var(--brand-500)}
+.btn-row{display:flex;gap:8px;margin-top:12px}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#EF4444,#F87171);color:#fff}
+.btn-sec{padding:10px 24px;border-radius:20px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:12px;font-weight:700;cursor:pointer;color:var(--text-secondary)}
+.stats-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.stat-card{text-align:center;padding:10px 20px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.stat-num{font-size:24px;font-weight:900;font-family:var(--font-code)}
+.stat-label{font-size:9px;color:var(--text-caption)}
+.mistake-list{display:flex;flex-direction:column;gap:12px}
+.mc{padding:16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);border-left:4px solid var(--brand-500)}
+.mc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mc-num{font-size:10px;font-weight:800;color:var(--brand-500)}
+.mc-subject{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(239,68,68,0.08);color:var(--brand-500)}
+.mc-q{font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.6}
+.mc-answers{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.mc-answers{grid-template-columns:1fr}}
+.ans-box{padding:10px;border-radius:8px;font-size:12px;line-height:1.6}
+.ans-wrong{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15)}
+.ans-wrong .ans-label{color:var(--brand-500);font-weight:700;font-size:10px;margin-bottom:4px}
+.ans-right{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15)}
+.ans-right .ans-label{color:var(--green);font-weight:700;font-size:10px;margin-bottom:4px}
+.mc-note{padding:8px 10px;border-radius:6px;background:rgba(245,158,11,0.06);font-size:11px;color:var(--text-secondary);margin-top:8px;border-left:3px solid #F59E0B}
+.mc-del{font-size:10px;cursor:pointer;color:var(--text-caption);border:none;background:none}
+.empty-msg{text-align:center;padding:40px;color:var(--text-caption);font-size:13px}
+@media print{.topbar,.statusbar,.panel:first-child{display:none!important}.mesh-bg{display:none!important}body{background:#fff!important}.mc{break-inside:avoid;border:1px solid #ccc!important;background:#fff!important}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">错题本生成器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">错题本</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📕 添加错题</div>
+    <div class="form-grid">
+      <div class="form-item"><div class="form-label">📚 科目</div><select class="form-select" id="fSubject"><option>数学</option><option>语文</option><option>英语</option><option>物理</option><option>化学</option><option>生物</option></select></div>
+      <div class="form-item"><div class="form-label">📅 日期</div><input class="form-input" type="date" id="fDate"></div>
+      <div class="form-item full"><div class="form-label">❓ 题目</div><textarea class="form-textarea" id="fQuestion" placeholder="输入错题内容"></textarea></div>
+      <div class="form-item"><div class="form-label">❌ 我的错误答案</div><textarea class="form-textarea" id="fWrong" style="height:60px" placeholder="输入错误答案"></textarea></div>
+      <div class="form-item"><div class="form-label">✅ 正确答案</div><textarea class="form-textarea" id="fRight" style="height:60px" placeholder="输入正确答案"></textarea></div>
+      <div class="form-item full"><div class="form-label">💡 错因分析</div><textarea class="form-textarea" id="fNote" style="height:50px" placeholder="分析错误原因"></textarea></div>
+    </div>
+    <div class="btn-row"><button class="btn" id="addBtn">➕ 添加错题</button><button class="btn-sec" id="printBtn">🖨️ 打印错题本</button><button class="btn-sec" id="clearBtn">🗑️ 清空</button></div>
+  </div>
+  <div class="panel">
+    <div class="section-title">📊 统计</div>
+    <div class="stats-row" id="statsRow"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title" id="listTitle">📝 我的错题</div>
+    <div class="mistake-list" id="mistakeList"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">错题本</span><div class="statusbar-spacer"></div><span>localStorage 本地存储</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const KEY='devkit_mistakes';
+let mistakes=JSON.parse(localStorage.getItem(KEY)||'[]');
+document.getElementById('fDate').value=new Date().toISOString().split('T')[0];
+const COLORS={数学:'#8B5CF6',语文:'#F59E0B',英语:'#10B981',物理:'#3B82F6',化学:'#EF4444',生物:'#EC4899'};
+function save(){localStorage.setItem(KEY,JSON.stringify(mistakes))}
+function renderStats(){
+  const counts={};mistakes.forEach(m=>{counts[m.subject]=(counts[m.subject]||0)+1});
+  document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-num" style="color:var(--brand-500)">${mistakes.length}</div><div class="stat-label">总错题</div></div>`+Object.entries(counts).map(([s,c])=>`<div class="stat-card"><div class="stat-num" style="color:${COLORS[s]||'#6366F1'}">${c}</div><div class="stat-label">${s}</div></div>`).join('');
+}
+function renderList(){
+  document.getElementById('listTitle').textContent=`📝 我的错题 (${mistakes.length}题)`;
+  if(!mistakes.length){document.getElementById('mistakeList').innerHTML='<div class="empty-msg">还没有错题，添加一个吧 ✏️</div>';renderStats();return}
+  document.getElementById('mistakeList').innerHTML=mistakes.map((m,i)=>`<div class="mc"><div class="mc-header"><span class="mc-num">#${i+1} · ${m.date}</span><span class="mc-subject" style="background:${COLORS[m.subject]||'#6366F1'}20;color:${COLORS[m.subject]||'#6366F1'}">📐 ${m.subject}</span><button class="mc-del" data-idx="${i}">🗑️</button></div><div class="mc-q">${m.question}</div><div class="mc-answers"><div class="ans-box ans-wrong"><div class="ans-label">❌ 我的答案</div>${m.wrong}</div><div class="ans-box ans-right"><div class="ans-label">✅ 正确答案</div>${m.right}</div></div>${m.note?`<div class="mc-note">💡 ${m.note}</div>`:''}</div>`).join('');
+  renderStats();
+}
+document.getElementById('addBtn').addEventListener('click',()=>{
+  const q=document.getElementById('fQuestion').value.trim();
+  if(!q){alert('请输入题目');return}
+  mistakes.unshift({subject:document.getElementById('fSubject').value,date:document.getElementById('fDate').value,question:q,wrong:document.getElementById('fWrong').value.trim(),right:document.getElementById('fRight').value.trim(),note:document.getElementById('fNote').value.trim()});
+  save();renderList();
+  document.getElementById('fQuestion').value='';document.getElementById('fWrong').value='';document.getElementById('fRight').value='';document.getElementById('fNote').value='';
+});
+document.getElementById('mistakeList').addEventListener('click',e=>{const btn=e.target.closest('.mc-del');if(!btn)return;if(!confirm('删除这道错题？'))return;mistakes.splice(+btn.dataset.idx,1);save();renderList()});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+document.getElementById('clearBtn').addEventListener('click',()=>{if(!confirm('清空所有错题？'))return;mistakes=[];save();renderList()});
+renderList();
+</script>
+<noscript><p>错题本生成器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语作文模板 | Essay Template — DevKit</title>
+<meta name="description" content="高考四六级英语作文万能句型、开头结尾模板、连接词速查，一键复制。">
+<meta name="keywords" content="英语作文模板, 万能句型, 高考英语, 四六级作文, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/essay-template/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"英语作文模板","url":"https://l-s-c.github.io/devkit/pages/essay-template/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#10B981}[data-theme=dark]{--brand-500:#34D399}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(16,185,129,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.tab-row{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto}
+.tab{padding:7px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.tpl-list{display:flex;flex-direction:column;gap:8px}
+.tpl-card{padding:16px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);transition:all 200ms}
+.tpl-card:hover{border-color:var(--brand-500);transform:translateY(-1px)}
+.tpl-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tpl-title{font-size:14px;font-weight:800}
+.tpl-badge{padding:2px 8px;border-radius:6px;font-size:8px;font-weight:700;background:rgba(16,185,129,0.08);color:var(--brand-500)}
+.tpl-cn{font-size:11px;color:var(--text-secondary);margin-bottom:8px}
+.tpl-content{font-size:12px;line-height:1.8;color:var(--text-secondary);font-family:var(--font-code);padding:12px;border-radius:8px;background:rgba(16,185,129,0.04);border-left:3px solid var(--brand-500)}
+.tpl-content b{color:var(--brand-500);font-weight:800}
+.copy-btn{padding:4px 10px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:9px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-block}
+.copy-btn:hover{border-color:var(--brand-500);color:var(--brand-500)}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">英语作文模板 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">英语作文模板</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">✍️ 英语作文模板</div>
+    <div class="tab-row" id="tabRow"></div>
+  </div>
+  <div class="panel"><div class="tpl-list" id="tplList"></div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">英语作文模板</span><div class="statusbar-spacer"></div><span>📋 一键复制</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const TABS=['🎯 万能句型','📝 开头模板','📝 结尾模板','🔗 连接词'];
+// t=tab, title, cn, content, badge
+const DATA=[
+{t:0,title:'引出话题',cn:'引出讨论话题，适用于议论文开头',content:'<b>Nowadays</b>, <b>there is a growing concern about</b> [话题].\n<b>With the development of</b> [背景], <b>more and more people</b> [现象].',badge:'🎓 高考+四六级'},
+{t:0,title:'表达观点',cn:'表达个人立场',content:'<b>As far as I am concerned</b>, I firmly believe that [观点].\n<b>There are several reasons accounting for</b> my point of view.',badge:'💬 议论文'},
+{t:0,title:'举例论证',cn:'用例子支撑观点',content:'<b>Take ... for example</b>, [例子].\n<b>A good case in point is</b> [具体事例].',badge:'💬 通用'},
+{t:0,title:'对比分析',cn:'正反两面分析',content:'<b>On the one hand</b>, [正面]. <b>On the other hand</b>, [反面].\n<b>While some people hold the view that</b> [观点A], <b>others argue that</b> [观点B].',badge:'💬 议论文'},
+{t:0,title:'因果关系',cn:'分析原因和结果',content:'<b>The reason why ... is that</b> [原因].\n<b>As a result / Consequently</b>, [结果].',badge:'💬 通用'},
+{t:1,title:'现象描述开头',cn:'描述社会现象引入',content:'<b>In recent years</b>, [现象] <b>has become a hot topic</b> among people.\n<b>It is commonly believed that</b> [普遍观点].',badge:'🎓 高考'},
+{t:1,title:'引用名言开头',cn:'用名人名言引出话题',content:'<b>As the famous saying goes</b>, "[名言]".\n<b>This reminds us that</b> [启示].',badge:'📝 四六级'},
+{t:1,title:'数据引入开头',cn:'用数据引出话题',content:'<b>According to a recent survey</b>, [数据].\n<b>This shows that</b> [结论].',badge:'📊 图表'},
+{t:2,title:'总结呼吁结尾',cn:'总结全文，发出呼吁',content:'<b>In conclusion</b>, [总结]. <b>Only in this way can we</b> [目标].\n<b>I sincerely hope that</b> [期望].',badge:'📝 万能'},
+{t:2,title:'展望未来结尾',cn:'展望未来发展',content:'<b>I am firmly convinced that</b> [信念].\n<b>With the joint efforts of</b> [各方], <b>we will surely</b> [美好愿景].',badge:'📝 万能'},
+{t:2,title:'建议措施结尾',cn:'提出具体建议',content:'<b>In order to</b> [目标], <b>we should take the following measures</b>.\n<b>First and foremost</b>, [措施1]. <b>Furthermore</b>, [措施2].',badge:'💬 议论文'},
+{t:3,title:'递进关系',cn:'层层递进',content:'<b>Moreover / Furthermore / In addition / Besides / What\'s more</b>',badge:'🔗'},
+{t:3,title:'转折关系',cn:'表示转折',content:'<b>However / Nevertheless / On the contrary / In contrast / Although</b>',badge:'🔗'},
+{t:3,title:'因果关系',cn:'表示因果',content:'<b>Therefore / Thus / Hence / As a result / Consequently / Due to</b>',badge:'🔗'},
+{t:3,title:'总结关系',cn:'表示总结',content:'<b>In conclusion / To sum up / All in all / In a word / In brief</b>',badge:'🔗'},
+{t:3,title:'举例关系',cn:'表示举例',content:'<b>For example / For instance / Such as / Take ... for example / A case in point is</b>',badge:'🔗'},
+];
+let curTab=0;
+function renderTabs(){document.getElementById('tabRow').innerHTML=TABS.map((t,i)=>`<div class="tab${i===curTab?' active':''}" data-tab="${i}">${t}</div>`).join('')}
+function renderList(){
+  const list=DATA.filter(d=>d.t===curTab);
+  document.getElementById('tplList').innerHTML=list.map(d=>`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${d.title}</div><div class="tpl-badge">${d.badge}</div></div><div class="tpl-cn">${d.cn}</div><div class="tpl-content">${d.content.replace(/\n/g,'<br>')}</div><button class="copy-btn" data-text="${d.content.replace(/<[^>]+>/g,'').replace(/\n/g,' ').replace(/"/g,'&quot;')}">📋 复制</button></div>`).join('');
+  document.getElementById('statusInfo').textContent=`${list.length} 个模板`;
+}
+document.getElementById('tabRow').addEventListener('click',e=>{if(!e.target.classList.contains('tab'))return;curTab=+e.target.dataset.tab;renderTabs();renderList()});
+document.getElementById('tplList').addEventListener('click',e=>{const btn=e.target.closest('.copy-btn');if(!btn)return;navigator.clipboard.writeText(btn.dataset.text).then(()=>{btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 复制',1500)})});
+renderTabs();renderList();
+</script>
+<noscript><p>英语作文模板 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>函数图像绘制 | Function Plotter — DevKit</title>
+<meta name="description" content="输入数学表达式绘制函数图像，支持sin/cos/tan/log/sqrt，安全解析无eval。">
+<meta name="keywords" content="函数图像, 函数绘制, 数学绘图, 函数画图, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/function-plot/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"函数图像绘制","url":"https://l-s-c.github.io/devkit/pages/function-plot/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#8B5CF6}[data-theme=dark]{--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(139,92,246,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.func-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.func-color{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.func-label{font-size:14px;font-weight:800;font-family:var(--font-code);color:var(--text-caption);flex-shrink:0}
+.func-input{flex:1;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;font-family:var(--font-code);font-weight:700;outline:none;color:var(--text-primary)}
+.func-input:focus{border-color:var(--brand-500)}
+.btn{padding:10px 24px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff}
+.preset-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.preset-pill{padding:4px 10px;border-radius:10px;border:1px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-family:var(--font-code);font-weight:600;cursor:pointer}
+.preset-pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
+.canvas-wrap{width:100%;aspect-ratio:4/3;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);overflow:hidden}
+.canvas-wrap canvas{width:100%;height:100%}
+.hint{font-size:10px;color:var(--text-caption);margin-top:8px}
+.err{color:#EF4444;font-size:12px;margin-top:4px}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">函数图像绘制 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">函数图像绘制</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📈 函数图像绘制</div>
+    <div class="func-row"><div class="func-color" style="background:#8B5CF6"></div><span class="func-label">y =</span><input class="func-input" id="funcInput" value="x^2" placeholder="输入表达式"></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn" id="plotBtn">📈 绘制</button></div>
+    <div class="hint">💡 支持：+ − * / ^ sin cos tan log ln sqrt abs π e</div>
+    <div class="err" id="errMsg"></div>
+    <div class="preset-row">
+      <span style="font-size:10px;color:var(--text-caption)">预设：</span>
+      <div class="preset-pill" data-f="x^2">x²</div><div class="preset-pill" data-f="sin(x)">sin(x)</div>
+      <div class="preset-pill" data-f="cos(x)">cos(x)</div><div class="preset-pill" data-f="1/x">1/x</div>
+      <div class="preset-pill" data-f="sqrt(x)">√x</div><div class="preset-pill" data-f="x^3">x³</div>
+      <div class="preset-pill" data-f="2^x">2^x</div><div class="preset-pill" data-f="log(x)">log(x)</div>
+      <div class="preset-pill" data-f="abs(x)">|x|</div><div class="preset-pill" data-f="tan(x)">tan(x)</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="canvas-wrap"><canvas id="plotCanvas"></canvas></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">函数图像绘制</span><div class="statusbar-spacer"></div><span>安全解析 · 无 eval</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// === Recursive descent parser (no eval) ===
+function tokenize(expr){
+  const tokens=[];let i=0;
+  while(i<expr.length){
+    if(' \t'.includes(expr[i])){i++;continue}
+    if('+-*/^()'.includes(expr[i])){tokens.push({type:'op',value:expr[i]});i++;continue}
+    if(expr[i]>='0'&&expr[i]<='9'||expr[i]==='.'){
+      let n='';while(i<expr.length&&(expr[i]>='0'&&expr[i]<='9'||expr[i]==='.'))n+=expr[i++];
+      tokens.push({type:'num',value:parseFloat(n)});continue}
+    if(expr[i]>='a'&&expr[i]<='z'||expr[i]>='A'&&expr[i]<='Z'){
+      let id='';while(i<expr.length&&(expr[i]>='a'&&expr[i]<='z'||expr[i]>='A'&&expr[i]<='Z'))id+=expr[i++];
+      if(id==='pi'||id==='π')tokens.push({type:'num',value:Math.PI});
+      else if(id==='e'&&(i>=expr.length||expr[i]!=='x'))tokens.push({type:'num',value:Math.E});
+      else tokens.push({type:'id',value:id});continue}
+    if(expr[i]==='π'){tokens.push({type:'num',value:Math.PI});i++;continue}
+    throw new Error(`未知字符: ${expr[i]}`);
+  }
+  return tokens;
+}
+const FUNCS={sin:Math.sin,cos:Math.cos,tan:Math.tan,log:Math.log10,ln:Math.log,sqrt:Math.sqrt,abs:Math.abs};
+function parse(tokens){
+  let pos=0;
+  function peek(){return tokens[pos]}
+  function eat(v){if(peek()&&peek().value===v){pos++;return true}return false}
+  function expression(){
+    let node=term();
+    while(peek()&&(peek().value==='+'||peek().value==='-')){
+      const op=peek().value;pos++;const r=term();node={type:'bin',op,left:node,right:r}}
+    return node;
+  }
+  function term(){
+    let node=factor();
+    while(peek()&&(peek().value==='*'||peek().value==='/')){
+      const op=peek().value;pos++;const r=factor();node={type:'bin',op,left:node,right:r}}
+    return node;
+  }
+  function factor(){
+    let node=unary();
+    if(peek()&&peek().value==='^'){pos++;const r=factor();node={type:'bin',op:'^',left:node,right:r}}
+    return node;
+  }
+  function unary(){
+    if(peek()&&peek().value==='-'){pos++;return{type:'neg',child:unary()}}
+    if(peek()&&peek().value==='+'){pos++;return unary()}
+    return primary();
+  }
+  function primary(){
+    const t=peek();
+    if(!t)throw new Error('表达式不完整');
+    if(t.type==='num'){pos++;return{type:'num',value:t.value}}
+    if(t.type==='id'){
+      if(t.value==='x'){pos++;return{type:'var'}}
+      if(FUNCS[t.value]){const fn=t.value;pos++;if(!eat('('))throw new Error(`${fn} 后缺少 (`);const arg=expression();if(!eat(')'))throw new Error(`${fn} 缺少 )`);return{type:'fn',fn,arg}}
+      throw new Error(`未知标识符: ${t.value}`);
+    }
+    if(t.value==='('){pos++;const node=expression();if(!eat(')'))throw new Error('缺少 )');return node}
+    throw new Error(`意外的 token: ${t.value}`);
+  }
+  const ast=expression();
+  if(pos<tokens.length)throw new Error('多余的内容');
+  return ast;
+}
+function evalAST(node,x){
+  if(node.type==='num')return node.value;
+  if(node.type==='var')return x;
+  if(node.type==='neg')return -evalAST(node.child,x);
+  if(node.type==='fn')return FUNCS[node.fn](evalAST(node.arg,x));
+  if(node.type==='bin'){
+    const l=evalAST(node.left,x),r=evalAST(node.right,x);
+    if(node.op==='+')return l+r;if(node.op==='-')return l-r;
+    if(node.op==='*')return l*r;if(node.op==='/')return l/r;
+    if(node.op==='^')return Math.pow(l,r);
+  }
+  return NaN;
+}
+// === Canvas plotting ===
+function plot(exprStr){
+  const canvas=document.getElementById('plotCanvas');
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const W=rect.width*2,H=rect.height*2;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const xMin=-10,xMax=10,yMin=-10,yMax=10;
+  const scaleX=W/(xMax-xMin),scaleY=H/(yMax-yMin);
+  function toX(x){return(x-xMin)*scaleX}
+  function toY(y){return(yMax-y)*scaleY}
+  // Clear
+  const isDark=document.documentElement.dataset.theme==='dark';
+  ctx.fillStyle=isDark?'#1E293B':'#FAFAFA';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';ctx.lineWidth=1;
+  for(let i=Math.ceil(xMin);i<=xMax;i++){ctx.beginPath();ctx.moveTo(toX(i),0);ctx.lineTo(toX(i),H);ctx.stroke()}
+  for(let i=Math.ceil(yMin);i<=yMax;i++){ctx.beginPath();ctx.moveTo(0,toY(i));ctx.lineTo(W,toY(i));ctx.stroke()}
+  // Axes
+  ctx.strokeStyle=isDark?'#64748B':'#9CA3AF';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(toX(xMin),toY(0));ctx.lineTo(toX(xMax),toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(0),toY(yMin));ctx.lineTo(toX(0),toY(yMax));ctx.stroke();
+  // Axis labels
+  ctx.fillStyle=isDark?'#64748B':'#9CA3AF';ctx.font='20px monospace';
+  for(let i=Math.ceil(xMin);i<=xMax;i++){if(i===0)continue;ctx.fillText(i.toString(),toX(i)-6,toY(0)+18)}
+  for(let i=Math.ceil(yMin);i<=yMax;i++){if(i===0)continue;ctx.fillText(i.toString(),toX(0)+4,toY(i)+6)}
+  // Parse and draw
+  const err=document.getElementById('errMsg');err.textContent='';
+  let ast;
+  try{const tokens=tokenize(exprStr);ast=parse(tokens)}catch(e){err.textContent='解析错误：'+e.message;return}
+  ctx.strokeStyle='#8B5CF6';ctx.lineWidth=3;ctx.beginPath();
+  let started=false,prevY=0;
+  for(let px=0;px<W;px++){
+    const x=xMin+px/scaleX;
+    let y;try{y=evalAST(ast,x)}catch(e){started=false;continue}
+    if(!isFinite(y)||isNaN(y)){started=false;continue}
+    const canvasY=toY(y);
+    if(!started||Math.abs(canvasY-prevY)>H*0.5){ctx.moveTo(px,canvasY);started=true}
+    else ctx.lineTo(px,canvasY);
+    prevY=canvasY;
+  }
+  ctx.stroke();
+  document.getElementById('statusInfo').textContent=`y = ${exprStr}`;
+}
+document.getElementById('plotBtn').addEventListener('click',()=>plot(document.getElementById('funcInput').value.trim()));
+document.querySelectorAll('.preset-pill').forEach(p=>p.addEventListener('click',function(){document.getElementById('funcInput').value=this.dataset.f;plot(this.dataset.f)}));
+document.getElementById('funcInput').addEventListener('keydown',e=>{if(e.key==='Enter')plot(e.target.value.trim())});
+plot('x^2');
+</script>
+<noscript><p>函数图像绘制 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

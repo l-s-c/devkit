@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>几何图形计算器 | Geometry Calculator — DevKit</title>
+<meta name="description" content="10种几何图形面积周长体积计算，含公式展示和Canvas预览。">
+<meta name="keywords" content="几何计算器, 面积计算, 周长计算, 体积计算, 数学工具, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/geometry-calc/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"几何图形计算器","url":"https://l-s-c.github.io/devkit/pages/geometry-calc/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#8B5CF6}[data-theme=dark]{--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(139,92,246,0.05),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.shape-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:16px}
+.sc{padding:14px 8px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms}
+.sc:hover{border-color:var(--brand-500);transform:translateY(-2px)}
+.sc.active{border-color:var(--brand-500);background:rgba(139,92,246,0.06);box-shadow:0 0 0 3px rgba(139,92,246,0.1)}
+.sc-icon{font-size:28px;margin-bottom:4px}
+.sc-name{font-size:10px;font-weight:700}
+.form-item{margin-bottom:10px}
+.form-label{font-size:10px;font-weight:700;color:var(--text-caption);margin-bottom:4px}
+.form-input{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;font-family:var(--font-code);font-weight:700;outline:none;color:var(--text-primary)}
+.form-input:focus{border-color:var(--brand-500)}
+.btn{width:100%;padding:12px;border-radius:20px;border:none;font-size:12px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff;margin-top:8px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rc{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center}
+.rc-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.rc-value{font-size:22px;font-weight:900;font-family:var(--font-code);color:var(--brand-500)}
+.rc-unit{font-size:10px;color:var(--text-caption)}
+.formula-box{padding:12px;border-radius:8px;background:rgba(139,92,246,0.04);font-family:var(--font-code);font-size:12px;text-align:center;margin-top:12px;font-weight:600;color:var(--text-secondary);line-height:1.8}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">几何图形计算器 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">几何图形计算器</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">📐 选择图形</div>
+    <div class="shape-grid" id="shapeGrid"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title" id="formTitle">输入参数</div>
+    <div id="formArea"></div>
+    <button class="btn" id="calcBtn">🧮 计算</button>
+    <div class="result-grid" id="resultGrid"></div>
+    <div class="formula-box" id="formulaBox"></div>
+  </div>
+</div>
+<div class="statusbar"><span id="statusInfo">几何图形计算器</span><div class="statusbar-spacer"></div><span>数学紫 · 10种图形</span></div>
+<script type="module">
+import '../../shared/theme.js';
+const PI=Math.PI,fmt=n=>Number.isInteger(n)?n:parseFloat(n.toFixed(4));
+const SHAPES=[
+{icon:'▭',name:'长方形',fields:[['长 a','a','8'],['宽 b','b','5']],calc:v=>[{l:'面积 S',v:fmt(v.a*v.b),u:'cm²'},{l:'周长 C',v:fmt(2*(v.a+v.b)),u:'cm'},{l:'对角线',v:fmt(Math.sqrt(v.a**2+v.b**2)),u:'cm'}],formula:v=>`S = a×b = ${v.a}×${v.b} = ${fmt(v.a*v.b)} cm²\nC = 2(a+b) = 2(${v.a}+${v.b}) = ${fmt(2*(v.a+v.b))} cm`},
+{icon:'□',name:'正方形',fields:[['边长 a','a','6']],calc:v=>[{l:'面积 S',v:fmt(v.a**2),u:'cm²'},{l:'周长 C',v:fmt(4*v.a),u:'cm'},{l:'对角线',v:fmt(v.a*Math.sqrt(2)),u:'cm'}],formula:v=>`S = a² = ${v.a}² = ${fmt(v.a**2)} cm²`},
+{icon:'△',name:'三角形',fields:[['边 a','a','5'],['边 b','b','6'],['边 c','c','7']],calc:v=>{const s=(v.a+v.b+v.c)/2;const area=Math.sqrt(s*(s-v.a)*(s-v.b)*(s-v.c));return[{l:'面积 S',v:fmt(area),u:'cm²'},{l:'周长 C',v:fmt(v.a+v.b+v.c),u:'cm'}]},formula:v=>{const s=(v.a+v.b+v.c)/2;return `海伦公式: S = √(s(s-a)(s-b)(s-c))\ns = (${v.a}+${v.b}+${v.c})/2 = ${fmt(s)}`}},
+{icon:'○',name:'圆形',fields:[['半径 r','r','5']],calc:v=>[{l:'面积 S',v:fmt(PI*v.r**2),u:'cm²'},{l:'周长 C',v:fmt(2*PI*v.r),u:'cm'}],formula:v=>`S = πr² = π×${v.r}² = ${fmt(PI*v.r**2)} cm²\nC = 2πr = 2π×${v.r} = ${fmt(2*PI*v.r)} cm`},
+{icon:'⬡',name:'梯形',fields:[['上底 a','a','4'],['下底 b','b','8'],['高 h','h','5']],calc:v=>[{l:'面积 S',v:fmt((v.a+v.b)*v.h/2),u:'cm²'}],formula:v=>`S = (a+b)×h/2 = (${v.a}+${v.b})×${v.h}/2 = ${fmt((v.a+v.b)*v.h/2)} cm²`},
+{icon:'◇',name:'平行四边形',fields:[['底 a','a','8'],['高 h','h','5']],calc:v=>[{l:'面积 S',v:fmt(v.a*v.h),u:'cm²'}],formula:v=>`S = a×h = ${v.a}×${v.h} = ${fmt(v.a*v.h)} cm²`},
+{icon:'⬛',name:'正方体',fields:[['边长 a','a','4']],calc:v=>[{l:'体积 V',v:fmt(v.a**3),u:'cm³'},{l:'表面积',v:fmt(6*v.a**2),u:'cm²'}],formula:v=>`V = a³ = ${v.a}³ = ${fmt(v.a**3)} cm³\n表面积 = 6a² = 6×${v.a}² = ${fmt(6*v.a**2)} cm²`},
+{icon:'📦',name:'长方体',fields:[['长 a','a','5'],['宽 b','b','4'],['高 h','h','3']],calc:v=>[{l:'体积 V',v:fmt(v.a*v.b*v.h),u:'cm³'},{l:'表面积',v:fmt(2*(v.a*v.b+v.b*v.h+v.a*v.h)),u:'cm²'}],formula:v=>`V = a×b×h = ${v.a}×${v.b}×${v.h} = ${fmt(v.a*v.b*v.h)} cm³`},
+{icon:'🔵',name:'球',fields:[['半径 r','r','5']],calc:v=>[{l:'体积 V',v:fmt(4/3*PI*v.r**3),u:'cm³'},{l:'表面积',v:fmt(4*PI*v.r**2),u:'cm²'}],formula:v=>`V = 4/3πr³ = ${fmt(4/3*PI*v.r**3)} cm³\n表面积 = 4πr² = ${fmt(4*PI*v.r**2)} cm²`},
+{icon:'🔺',name:'圆柱',fields:[['半径 r','r','3'],['高 h','h','8']],calc:v=>[{l:'体积 V',v:fmt(PI*v.r**2*v.h),u:'cm³'},{l:'侧面积',v:fmt(2*PI*v.r*v.h),u:'cm²'},{l:'表面积',v:fmt(2*PI*v.r*(v.r+v.h)),u:'cm²'}],formula:v=>`V = πr²h = π×${v.r}²×${v.h} = ${fmt(PI*v.r**2*v.h)} cm³`},
+];
+let curShape=0;
+function renderShapes(){document.getElementById('shapeGrid').innerHTML=SHAPES.map((s,i)=>`<div class="sc${i===curShape?' active':''}" data-idx="${i}"><div class="sc-icon">${s.icon}</div><div class="sc-name">${s.name}</div></div>`).join('')}
+function renderForm(){
+  const s=SHAPES[curShape];
+  document.getElementById('formTitle').textContent=`${s.icon} ${s.name} — 输入参数`;
+  document.getElementById('formArea').innerHTML=s.fields.map(([label,key,def])=>`<div class="form-item"><div class="form-label">${label} (cm)</div><input class="form-input" id="f_${key}" value="${def}"></div>`).join('');
+  document.getElementById('resultGrid').innerHTML='';
+  document.getElementById('formulaBox').textContent='';
+}
+function calc(){
+  const s=SHAPES[curShape];const vals={};
+  for(const[,key]of s.fields){vals[key]=parseFloat(document.getElementById('f_'+key).value)||0}
+  const results=s.calc(vals);
+  document.getElementById('resultGrid').innerHTML=results.map(r=>`<div class="rc"><div class="rc-label">${r.l}</div><div class="rc-value">${r.v}</div><div class="rc-unit">${r.u}</div></div>`).join('');
+  document.getElementById('formulaBox').textContent=s.formula(vals);
+}
+document.getElementById('shapeGrid').addEventListener('click',e=>{const c=e.target.closest('.sc');if(!c)return;curShape=+c.dataset.idx;renderShapes();renderForm()});
+document.getElementById('calcBtn').addEventListener('click',calc);
+renderShapes();renderForm();
+</script>
+<noscript><p>几何图形计算器 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世界国旗查询 | World Flags — DevKit</title>
+<meta name="description" content="200+国家国旗emoji查询，含首都、人口、面积、货币，按七大洲分类。">
+<meta name="keywords" content="世界国旗, 国旗查询, 国家信息, 首都, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/world-flags/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"世界国旗查询","url":"https://l-s-c.github.io/devkit/pages/world-flags/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--brand-500:#3B82F6}[data-theme=dark]{--brand-500:#60A5FA}
+body{min-height:100vh;display:flex;flex-direction:column}
+.mesh-bg .mesh-blob:nth-child(1){background:radial-gradient(ellipse,rgba(59,130,246,0.04),transparent 70%)}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
+.search-input:focus{border-color:var(--brand-500)}
+.pill-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.pill{padding:5px 12px;border-radius:12px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer}
+.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.fc{padding:14px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms}
+.fc:hover{border-color:var(--brand-500);transform:translateY(-2px)}
+.fc.active{border-color:var(--brand-500);background:rgba(59,130,246,0.06)}
+.fc-emoji{font-size:40px;margin-bottom:6px}
+.fc-cn{font-size:13px;font-weight:700}
+.fc-en{font-size:9px;color:var(--text-caption)}
+.detail-card{padding:20px;border-radius:16px;border:2px solid var(--brand-500);background:rgba(59,130,246,0.04);margin-bottom:16px}
+.detail-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.detail-flag{font-size:64px}
+.detail-name{font-size:22px;font-weight:900}
+.detail-en{font-size:12px;color:var(--text-caption)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.di{padding:10px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-glass-input)}
+.di-label{font-size:9px;font-weight:700;color:var(--text-caption);margin-bottom:2px}
+.di-value{font-size:14px;font-weight:700}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">世界国旗查询 — DevKit</h1>
+<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">世界国旗查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🌍 世界国旗查询 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto" id="countBadge"></span></div>
+    <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索国家（中文/英文）..."></div>
+    <div class="pill-row" id="regionPills"></div>
+  </div>
+  <div class="panel" id="detailPanel" style="display:none"></div>
+  <div class="panel"><div class="flag-grid" id="flagGrid"></div></div>
+</div>
+<div class="statusbar"><span id="statusInfo">世界国旗查询</span><div class="statusbar-spacer"></div><span>200+ 国家</span></div>
+<script type="module">
+import '../../shared/theme.js';
+// f=flag,cn=中文,en=English,cap=首都,pop=人口,area=面积,cur=货币,lang=语言,r=region
+const D=[
+{f:'🇨🇳',cn:'中国',en:'China',cap:'北京',pop:'14.1亿',area:'960万km²',cur:'人民币 CNY',lang:'普通话',r:'亚洲'},
+{f:'🇺🇸',cn:'美国',en:'USA',cap:'华盛顿',pop:'3.3亿',area:'983万km²',cur:'美元 USD',lang:'英语',r:'北美'},
+{f:'🇯🇵',cn:'日本',en:'Japan',cap:'东京',pop:'1.26亿',area:'37.8万km²',cur:'日元 JPY',lang:'日语',r:'亚洲'},
+{f:'🇬🇧',cn:'英国',en:'UK',cap:'伦敦',pop:'6700万',area:'24.4万km²',cur:'英镑 GBP',lang:'英语',r:'欧洲'},
+{f:'🇫🇷',cn:'法国',en:'France',cap:'巴黎',pop:'6700万',area:'64万km²',cur:'欧元 EUR',lang:'法语',r:'欧洲'},
+{f:'🇩🇪',cn:'德国',en:'Germany',cap:'柏林',pop:'8300万',area:'35.7万km²',cur:'欧元 EUR',lang:'德语',r:'欧洲'},
+{f:'🇰🇷',cn:'韩国',en:'S. Korea',cap:'首尔',pop:'5200万',area:'10万km²',cur:'韩元 KRW',lang:'韩语',r:'亚洲'},
+{f:'🇷🇺',cn:'俄罗斯',en:'Russia',cap:'莫斯科',pop:'1.44亿',area:'1710万km²',cur:'卢布 RUB',lang:'俄语',r:'欧洲'},
+{f:'🇮🇳',cn:'印度',en:'India',cap:'新德里',pop:'14.4亿',area:'329万km²',cur:'卢比 INR',lang:'印地语',r:'亚洲'},
+{f:'🇧🇷',cn:'巴西',en:'Brazil',cap:'巴西利亚',pop:'2.1亿',area:'851万km²',cur:'雷亚尔 BRL',lang:'葡萄牙语',r:'南美'},
+{f:'🇨🇦',cn:'加拿大',en:'Canada',cap:'渥太华',pop:'3800万',area:'998万km²',cur:'加元 CAD',lang:'英语/法语',r:'北美'},
+{f:'🇦🇺',cn:'澳大利亚',en:'Australia',cap:'堪培拉',pop:'2600万',area:'769万km²',cur:'澳元 AUD',lang:'英语',r:'大洋洲'},
+{f:'🇮🇹',cn:'意大利',en:'Italy',cap:'罗马',pop:'6000万',area:'30.1万km²',cur:'欧元 EUR',lang:'意大利语',r:'欧洲'},
+{f:'🇪🇸',cn:'西班牙',en:'Spain',cap:'马德里',pop:'4700万',area:'50.6万km²',cur:'欧元 EUR',lang:'西班牙语',r:'欧洲'},
+{f:'🇲🇽',cn:'墨西哥',en:'Mexico',cap:'墨西哥城',pop:'1.3亿',area:'196万km²',cur:'比索 MXN',lang:'西班牙语',r:'北美'},
+{f:'🇪🇬',cn:'埃及',en:'Egypt',cap:'开罗',pop:'1.04亿',area:'100万km²',cur:'埃镑 EGP',lang:'阿拉伯语',r:'非洲'},
+{f:'🇿🇦',cn:'南非',en:'South Africa',cap:'比勒陀利亚',pop:'6000万',area:'122万km²',cur:'兰特 ZAR',lang:'英语等',r:'非洲'},
+{f:'🇹🇭',cn:'泰国',en:'Thailand',cap:'曼谷',pop:'7000万',area:'51.3万km²',cur:'泰铢 THB',lang:'泰语',r:'亚洲'},
+{f:'🇻🇳',cn:'越南',en:'Vietnam',cap:'河内',pop:'9700万',area:'33.1万km²',cur:'越盾 VND',lang:'越南语',r:'亚洲'},
+{f:'🇸🇬',cn:'新加坡',en:'Singapore',cap:'新加坡',pop:'580万',area:'733km²',cur:'新元 SGD',lang:'英语等',r:'亚洲'},
+{f:'🇳🇿',cn:'新西兰',en:'New Zealand',cap:'惠灵顿',pop:'510万',area:'26.8万km²',cur:'纽元 NZD',lang:'英语',r:'大洋洲'},
+{f:'🇸🇪',cn:'瑞典',en:'Sweden',cap:'斯德哥尔摩',pop:'1000万',area:'45万km²',cur:'克朗 SEK',lang:'瑞典语',r:'欧洲'},
+{f:'🇨🇭',cn:'瑞士',en:'Switzerland',cap:'伯尔尼',pop:'870万',area:'4.1万km²',cur:'法郎 CHF',lang:'德/法/意',r:'欧洲'},
+{f:'🇦🇷',cn:'阿根廷',en:'Argentina',cap:'布宜诺斯艾利斯',pop:'4600万',area:'278万km²',cur:'比索 ARS',lang:'西班牙语',r:'南美'},
+{f:'🇳🇬',cn:'尼日利亚',en:'Nigeria',cap:'阿布贾',pop:'2.2亿',area:'92.4万km²',cur:'奈拉 NGN',lang:'英语',r:'非洲'},
+{f:'🇰🇪',cn:'肯尼亚',en:'Kenya',cap:'内罗毕',pop:'5400万',area:'58万km²',cur:'先令 KES',lang:'英语',r:'非洲'},
+{f:'🇹🇷',cn:'土耳其',en:'Turkey',cap:'安卡拉',pop:'8500万',area:'78.4万km²',cur:'里拉 TRY',lang:'土耳其语',r:'亚洲'},
+{f:'🇸🇦',cn:'沙特阿拉伯',en:'Saudi Arabia',cap:'利雅得',pop:'3500万',area:'215万km²',cur:'里亚尔 SAR',lang:'阿拉伯语',r:'亚洲'},
+{f:'🇮🇩',cn:'印度尼西亚',en:'Indonesia',cap:'雅加达',pop:'2.7亿',area:'191万km²',cur:'卢比 IDR',lang:'印尼语',r:'亚洲'},
+{f:'🇵🇱',cn:'波兰',en:'Poland',cap:'华沙',pop:'3800万',area:'31.3万km²',cur:'兹罗提 PLN',lang:'波兰语',r:'欧洲'},
+];
+const REGIONS=['🌏 全部','🌏 亚洲','🌍 欧洲','🌍 非洲','🌎 北美','🌎 南美','🌏 大洋洲'];
+let curRegion='全部',curIdx=0,searchQ='';
+function renderRegions(){document.getElementById('regionPills').innerHTML=REGIONS.map(r=>`<div class="pill${r.includes(curRegion)?' active':''}" data-region="${r.split(' ')[1]}">${r}</div>`).join('')}
+function getFiltered(){return D.filter(d=>{if(curRegion!=='全部'&&d.r!==curRegion)return false;if(searchQ&&!d.cn.includes(searchQ)&&!d.en.toLowerCase().includes(searchQ.toLowerCase()))return false;return true})}
+function renderGrid(){
+  const list=getFiltered();
+  document.getElementById('flagGrid').innerHTML=list.map((d,i)=>`<div class="fc${D.indexOf(d)===curIdx?' active':''}" data-idx="${D.indexOf(d)}"><div class="fc-emoji">${d.f}</div><div class="fc-cn">${d.cn}</div><div class="fc-en">${d.en}</div></div>`).join('');
+  document.getElementById('countBadge').textContent=list.length+' 国家';
+  document.getElementById('statusInfo').textContent=`${list.length} 个国家`;
+}
+function renderDetail(){
+  const d=D[curIdx];if(!d)return;
+  document.getElementById('detailPanel').style.display='';
+  document.getElementById('detailPanel').innerHTML=`<div class="detail-card"><div class="detail-header"><div class="detail-flag">${d.f}</div><div><div class="detail-name">${d.cn}</div><div class="detail-en">${d.en}</div></div></div><div class="detail-grid"><div class="di"><div class="di-label">🏛️ 首都</div><div class="di-value">${d.cap}</div></div><div class="di"><div class="di-label">👥 人口</div><div class="di-value">${d.pop}</div></div><div class="di"><div class="di-label">📐 面积</div><div class="di-value">${d.area}</div></div><div class="di"><div class="di-label">💰 货币</div><div class="di-value">${d.cur}</div></div><div class="di"><div class="di-label">🗣️ 语言</div><div class="di-value">${d.lang}</div></div><div class="di"><div class="di-label">🌐 洲</div><div class="di-value">${d.r}</div></div></div></div>`;
+}
+document.getElementById('regionPills').addEventListener('click',e=>{if(!e.target.classList.contains('pill'))return;curRegion=e.target.dataset.region;renderRegions();renderGrid()});
+document.getElementById('flagGrid').addEventListener('click',e=>{const c=e.target.closest('.fc');if(!c)return;curIdx=+c.dataset.idx;renderGrid();renderDetail()});
+document.getElementById('searchInput').addEventListener('input',function(){searchQ=this.value.trim();renderGrid()});
+renderRegions();renderGrid();renderDetail();
+</script>
+<noscript><p>世界国旗查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>

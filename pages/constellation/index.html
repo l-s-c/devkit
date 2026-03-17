@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天文星座查询 | Constellation — DevKit</title>
+<meta name="description" content="12星座和88个天文星座查询，含元素、守护星、性格特征等详细信息。">
+<meta name="keywords" content="星座查询, 十二星座, 天文星座, 星座运势, DevKit">
+<link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/constellation/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"天文星座查询","url":"https://l-s-c.github.io/devkit/pages/constellation/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--bg-base:#0F172A;--bg-glass:rgba(30,41,59,0.72);--bg-glass-input:#1E293B;--border-glass:rgba(255,255,255,0.08);--text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-caption:#64748B;--brand-500:#A78BFA;--font-code:'JetBrains Mono','SF Mono',monospace}
+[data-theme=dark]{--bg-base:#0F172A;--bg-glass:rgba(30,41,59,0.72);--bg-glass-input:#1E293B;--border-glass:rgba(255,255,255,0.08);--text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-caption:#64748B;--brand-500:#A78BFA}
+body{min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 20% 0%,rgba(167,139,250,0.08),transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(56,189,248,0.05),transparent 50%),#0F172A;color:var(--text-primary);font-family:var(--font-sans)}
+.mesh-bg{display:none}
+.topbar{background:rgba(30,41,59,0.72);border-color:rgba(255,255,255,0.08)}
+.topbar-logo-text,.topbar-tool-name{color:#F1F5F9}
+.statusbar{background:rgba(30,41,59,0.72);border-color:rgba(255,255,255,0.08);color:#94A3B8}
+.main{flex:1;position:relative;z-index:1;padding:24px;max-width:960px;margin:0 auto;width:100%}
+.panel{padding:20px;border-radius:16px;margin-bottom:16px;background:rgba(30,41,59,0.72);backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.08)}
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;color:#F1F5F9}
+.zodiac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:640px){.zodiac-grid{grid-template-columns:repeat(3,1fr)}}
+.zc{padding:16px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:#1E293B;text-align:center;cursor:pointer;transition:all 200ms}
+.zc:hover{border-color:#A78BFA;transform:translateY(-2px);box-shadow:0 0 20px rgba(167,139,250,0.15)}
+.zc.active{border-color:#A78BFA;background:rgba(167,139,250,0.1)}
+.zc-icon{font-size:32px;margin-bottom:4px}
+.zc-name{font-size:14px;font-weight:800;margin-bottom:2px;color:#F1F5F9}
+.zc-en{font-size:9px;color:#64748B}
+.zc-date{font-size:8px;color:#64748B;margin-top:2px}
+.detail-card{padding:20px;border-radius:16px;border:2px solid #A78BFA;background:rgba(167,139,250,0.1)}
+.detail-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.detail-icon{font-size:56px}
+.detail-name{font-size:24px;font-weight:900;color:#F1F5F9}
+.detail-en{font-size:12px;color:#64748B;font-family:var(--font-code)}
+.detail-date{font-size:11px;color:#A78BFA;margin-top:2px}
+.trait-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trait-item{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:#1E293B}
+.trait-label{font-size:9px;color:#64748B;margin-bottom:2px}
+.trait-value{font-size:13px;font-weight:700;color:#F1F5F9}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0.3;animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:0.3}50%{opacity:0.8}}
+</style>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+</head>
+<body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">天文星座查询 — DevKit</h1>
+<div class="stars" id="stars"></div>
+<div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="url(#bg)"/><path d="M8 7L4 12L8 17M16 7L20 12L16 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#6366F1"/><stop offset="1" stop-color="#818CF8"/></linearGradient></defs></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">天文星座查询</span><div class="topbar-spacer"></div></div>
+<div class="main">
+  <div class="panel">
+    <div class="section-title">🌌 十二星座</div>
+    <div class="zodiac-grid" id="zodiacGrid"></div>
+  </div>
+  <div class="panel" id="detailPanel"></div>
+</div>
+<div class="statusbar"><span>天文星座查询</span><div class="statusbar-spacer"></div><span>🌌 暗夜星空</span></div>
+<script type="module">
+// No theme.js import — this page is always dark
+const Z=[
+{icon:'♈',n:'白羊座',en:'Aries',d:'3.21-4.19',el:'🔥 火象',star:'火星 Mars',gem:'钻石',color:'红色',pro:'热情、勇敢、直率',con:'冲动、急躁、自我'},
+{icon:'♉',n:'金牛座',en:'Taurus',d:'4.20-5.20',el:'🌍 土象',star:'金星 Venus',gem:'祖母绿',color:'绿色',pro:'稳重、务实、耐心',con:'固执、贪婪、占有欲'},
+{icon:'♊',n:'双子座',en:'Gemini',d:'5.21-6.21',el:'💨 风象',star:'水星 Mercury',gem:'玛瑙',color:'黄色',pro:'聪明、灵活、善言',con:'善变、肤浅、紧张'},
+{icon:'♋',n:'巨蟹座',en:'Cancer',d:'6.22-7.22',el:'💧 水象',star:'月亮 Moon',gem:'珍珠',color:'白色',pro:'温柔、体贴、顾家',con:'敏感、多疑、情绪化'},
+{icon:'♌',n:'狮子座',en:'Leo',d:'7.23-8.22',el:'🔥 火象',star:'太阳 Sun',gem:'琥珀',color:'金色',pro:'自信、大方、领导力',con:'骄傲、自负、爱面子'},
+{icon:'♍',n:'处女座',en:'Virgo',d:'8.23-9.22',el:'🌍 土象',star:'水星 Mercury',gem:'蓝宝石',color:'灰色',pro:'细心、完美主义、分析',con:'挑剔、神经质、洁癖'},
+{icon:'♎',n:'天秤座',en:'Libra',d:'9.23-10.23',el:'💨 风象',star:'金星 Venus',gem:'橄榄石',color:'粉色',pro:'公正、优雅、社交',con:'犹豫、依赖、逃避'},
+{icon:'♏',n:'天蝎座',en:'Scorpio',d:'10.24-11.22',el:'💧 水象',star:'冥王星 Pluto',gem:'黄玉',color:'深红',pro:'深沉、洞察力、执着',con:'嫉妒、多疑、报复'},
+{icon:'♐',n:'射手座',en:'Sagittarius',d:'11.23-12.21',el:'🔥 火象',star:'木星 Jupiter',gem:'绿松石',color:'紫色',pro:'乐观、自由、哲学',con:'粗心、不负责、直白'},
+{icon:'♑',n:'摩羯座',en:'Capricorn',d:'12.22-1.19',el:'🌍 土象',star:'土星 Saturn',gem:'石榴石',color:'黑色',pro:'踏实、有责任感、耐力',con:'悲观、冷漠、工作狂'},
+{icon:'♒',n:'水瓶座',en:'Aquarius',d:'1.20-2.18',el:'💨 风象',star:'天王星 Uranus',gem:'紫水晶',color:'蓝色',pro:'独立、创新、人道',con:'叛逆、冷淡、不合群'},
+{icon:'♓',n:'双鱼座',en:'Pisces',d:'2.19-3.20',el:'💧 水象',star:'海王星 Neptune',gem:'海蓝宝',color:'海蓝',pro:'浪漫、直觉、善良',con:'逃避、幻想、软弱'},
+];
+let active=0;
+function renderGrid(){
+  document.getElementById('zodiacGrid').innerHTML=Z.map((z,i)=>`<div class="zc${i===active?' active':''}" data-idx="${i}"><div class="zc-icon">${z.icon}</div><div class="zc-name">${z.n}</div><div class="zc-en">${z.en}</div><div class="zc-date">${z.d}</div></div>`).join('');
+}
+function renderDetail(){
+  const z=Z[active];
+  document.getElementById('detailPanel').innerHTML=`<div class="detail-card"><div class="detail-header"><div class="detail-icon">${z.icon}</div><div><div class="detail-name">${z.n}</div><div class="detail-en">${z.en}</div><div class="detail-date">📅 ${z.d}</div></div></div><div class="trait-grid"><div class="trait-item"><div class="trait-label">🔥 元素</div><div class="trait-value">${z.el}</div></div><div class="trait-item"><div class="trait-label">🌟 守护星</div><div class="trait-value">${z.star}</div></div><div class="trait-item"><div class="trait-label">💎 幸运宝石</div><div class="trait-value">${z.gem}</div></div><div class="trait-item"><div class="trait-label">🎨 幸运色</div><div class="trait-value">${z.color}</div></div><div class="trait-item"><div class="trait-label">✅ 优点</div><div class="trait-value">${z.pro}</div></div><div class="trait-item"><div class="trait-label">⚠️ 缺点</div><div class="trait-value">${z.con}</div></div></div></div>`;
+}
+document.getElementById('zodiacGrid').addEventListener('click',e=>{const c=e.target.closest('.zc');if(!c)return;active=+c.dataset.idx;renderGrid();renderDetail()});
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<30;i++){const s=document.createElement('div');s.className='star';s.style.top=Math.random()*100+'%';s.style.left=Math.random()*100+'%';s.style.animationDelay=Math.random()*3+'s';starsEl.appendChild(s)}
+renderGrid();renderDetail();
+</script>
+<noscript><p>天文星座查询 — DevKit。请启用 JavaScript。</p></noscript>
+</body>
+</html>
