@@ -207,10 +207,10 @@ function renderQuestion(){
 function updateScore(){
   document.getElementById('correctNum').textContent=correct;
   document.getElementById('wrongNum').textContent=wrong;
-  document.getElementById('progressNum').textContent=`${current}/${questions.length}`;
-  const total=correct+wrong;
-  document.getElementById('accuracyNum').textContent=total?Math.round(correct/total*100)+'%':'0%';
-  document.getElementById('progressFill').style.width=(current/10*100)+'%';
+  const done=correct+wrong;
+  document.getElementById('progressNum').textContent=`${done}/${questions.length}`;
+  document.getElementById('accuracyNum').textContent=done?Math.round(correct/done*100)+'%':'0%';
+  document.getElementById('progressFill').style.width=(done/questions.length*100)+'%';
 }
 
 function showResult(){
