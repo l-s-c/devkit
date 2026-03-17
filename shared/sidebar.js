@@ -14,7 +14,7 @@
   style.textContent = `
 /* V4 sidebar layout */
 @media(min-width:1380px){
-  .main{margin-right:316px!important}
+  .main{max-width:960px!important;margin-left:max(24px,calc((100vw - 960px - 280px - 48px)/2))!important;margin-right:auto!important}
 }
 .dk-sidebar{width:280px;display:none;position:fixed;right:24px;top:80px;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:none;z-index:40}
 .dk-sidebar::-webkit-scrollbar{display:none}
