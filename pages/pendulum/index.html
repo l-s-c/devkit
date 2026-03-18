@@ -82,6 +82,8 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 
 /* 公式区 */
 .formula-box { background: rgba(59,130,246,0.04); border-radius: 10px; padding: 12px; text-align: center; }
+.formula-explain { font-size: 11px; color: var(--text-secondary, #6B7280); line-height: 1.6; margin: 4px 0 8px; padding-left: 4px; }
+.formula-explain b { color: var(--text-primary, #1D1D1F); }
 .formula-note { font-size: 10px; color: var(--text-caption); margin-top: 6px; }
 
 /* Canvas */
@@ -172,12 +174,22 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     <!-- 公式 -->
     <div class="exp-card">
       <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l-4 8 4 8H4"/></svg>物理公式</div>
-      <div class="formula-box">
-        <div id="formulaT" style="margin-bottom:10px"></div>
-        <div id="formulaEk" style="margin-bottom:4px"></div>
-        <div id="formulaEp" style="margin-bottom:4px"></div>
-        <div id="formulaE" style="margin-bottom:6px"></div>
-        <div class="formula-note">* 周期公式为小角度近似，本模拟使用精确微分方程 θ'' = -(g/L)sin(θ)</div>
+      <div class="formula-box" style="text-align:left">
+        <div style="text-align:center;margin-bottom:8px" id="formulaT"></div>
+        <div class="formula-explain">
+          <b>T</b> 周期 = 摆一个来回的时间<br>
+          <b>L</b> 绳长（米）　<b>g</b> 重力加速度（m/s²）<br>
+          📌 绳越长摆越慢，重力越大摆越快，<b>与球的质量无关</b>
+        </div>
+        <div style="border-top:1px dashed rgba(59,130,246,0.15);margin:8px 0"></div>
+        <div style="margin-bottom:4px" id="formulaEk"></div>
+        <div class="formula-explain">动能：摆球运动的能量。<b>最低点</b>速度最大 → 动能最大</div>
+        <div style="margin-bottom:4px" id="formulaEp"></div>
+        <div class="formula-explain">势能：摆球因高度产生的能量。<b>最高点</b>偏角最大 → 势能最大</div>
+        <div style="margin-bottom:4px" id="formulaE"></div>
+        <div class="formula-explain">⚡ <b>机械能守恒</b>：不考虑阻力时，动能 + 势能 = 常数。能量只是在两种形式间转换，总量不变</div>
+        <div style="border-top:1px dashed rgba(59,130,246,0.15);margin:8px 0"></div>
+        <div class="formula-note">* 周期公式为小角度（<15°）近似。大角度时实际周期略大于公式值。本模拟使用精确微分方程 θ'' = -(g/L)sin(θ)，对任意角度都准确。</div>
       </div>
     </div>
   </div>
