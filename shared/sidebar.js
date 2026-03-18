@@ -32,6 +32,8 @@
     // 分享弹窗
     '.dk-share-popup{position:fixed;width:200px;background:var(--bg-glass,rgba(255,255,255,0.85));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:9999;display:none}',
     '.dk-share-popup.show{display:block}',
+    '.dk-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.15);z-index:9998;display:none}',
+    '.dk-overlay.show{display:block}',
     '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
     '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
     '.dk-share-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:8px;cursor:pointer;transition:all 150ms;border:none;background:transparent}',
@@ -103,6 +105,12 @@
     +'<a class="dk-hot-item" href="'+base+'hash/"><div class="dk-hot-icon" style="color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div><div><div class="dk-hot-name">Hash</div><div class="dk-hot-desc">MD5/SHA</div></div></a>'
     +'</div>';
 
+  // 遮罩层
+  var overlay = document.createElement('div');
+  overlay.className = 'dk-overlay';
+  overlay.addEventListener('click', function(){ closeAll(); });
+  document.body.appendChild(overlay);
+
   // 复制 Toast
   var copyToast = document.createElement('div');
   copyToast.className = 'dk-copy-toast';
@@ -147,6 +155,7 @@
   function closeAll() {
     sharePopup.classList.remove('show');
     favToast.classList.remove('show');
+    overlay.classList.remove('show');
     activePopup = null;
   }
 
@@ -161,6 +170,7 @@
     closeAll();
     if (btn) positionPopup(el, btn);
     el.classList.add('show');
+    overlay.classList.add('show');
     activePopup = el;
   }
 
