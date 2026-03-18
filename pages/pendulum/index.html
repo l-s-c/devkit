@@ -82,6 +82,20 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 
 /* 公式区 */
 .formula-box { background: rgba(59,130,246,0.04); border-radius: 10px; padding: 12px; text-align: center; }
+/* 能量折线图 */
+.echart-card { padding: 14px 16px !important; }
+.echart-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.echart-title { font-size: 13px; font-weight: 800; color: var(--text-primary, #1D1D1F); }
+.echart-legend { display: flex; gap: 12px; font-size: 10px; font-weight: 700; flex: 1; }
+.echart-toggle { background: none; border: 1px solid var(--border-glass, rgba(0,0,0,0.08)); border-radius: 6px; padding: 3px 10px; font-size: 10px; font-weight: 700; color: var(--text-caption); cursor: pointer; }
+.echart-toggle:hover { border-color: var(--exp-blue); color: var(--exp-blue); }
+.echart-canvas-wrap { position: relative; margin-bottom: 8px; }
+.echart-canvas-wrap canvas { width: 100%; height: 200px; display: block; border-radius: 10px; background: #FAFAFA; cursor: crosshair; }
+.echart-tooltip { position: absolute; display: none; padding: 6px 10px; border-radius: 8px; background: rgba(30,30,30,0.9); color: #fff; font-size: 10px; font-weight: 600; line-height: 1.6; pointer-events: none; z-index: 5; white-space: nowrap; }
+.echart-tip { font-size: 11px; line-height: 1.6; padding: 8px 12px; border-radius: 8px; background: rgba(139,92,246,0.06); color: #5B21B6; }
+.echart-tip b { color: #7C3AED; }
+.echart-mini canvas { width: 100%; height: 40px; display: block; border-radius: 8px; background: #FAFAFA; cursor: pointer; }
+
 /* 公式卡片（Canvas 下方） */
 .fml-card {
   display: flex; gap: 0;
@@ -198,15 +212,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
         <div class="energy-row"><div class="energy-label" style="color:#6366F1">势能</div><div class="energy-track"><div class="energy-fill energy-fill-pe" id="barPE" style="width:100%"></div></div><div class="energy-val" id="valPE">0.00</div></div>
         <div class="energy-row"><div class="energy-label" style="color:#059669">总能</div><div class="energy-track"><div class="energy-fill energy-fill-total" id="barTotal" style="width:100%"></div></div><div class="energy-val" id="valTotal">0.00</div></div>
       </div>
-      <button class="exp-btn exp-btn-secondary" id="btnChart" style="margin-top:8px;font-size:10px;padding:5px">📈 能量变化图</button>
-      <div id="energyChartWrap" style="display:none;margin-top:8px">
-        <canvas id="energyChart" width="260" height="120" style="width:100%;height:120px;border-radius:8px;background:#fafafa"></canvas>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:4px">
-          <span style="font-size:9px;color:#EF4444;font-weight:700">● 动能</span>
-          <span style="font-size:9px;color:#3B82F6;font-weight:700">● 势能</span>
-          <span style="font-size:9px;color:#10B981;font-weight:700">● 总能</span>
-        </div>
-      </div>
+
     </div>
 
 
@@ -216,6 +222,29 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   <div class="exp-canvas-wrap">
     <div class="exp-card" style="padding:0;overflow:hidden">
       <canvas id="pendulumCanvas" width="640" height="560"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 能量变化曲线（Canvas 下方） -->
+<div class="echart-section" style="max-width:960px;margin:12px auto 0">
+  <div class="exp-card echart-card">
+    <div class="echart-header">
+      <div class="echart-title">📊 能量变化曲线</div>
+      <div class="echart-legend"><span style="color:#EF4444">● 动能 Eₖ</span><span style="color:#10B981">● 势能 Eₚ</span><span style="color:#8B5CF6">● 总能量 E</span></div>
+      <button class="echart-toggle" id="btnChartToggle">收起 ∨</button>
+    </div>
+    <!-- 展开状态 -->
+    <div id="echartFull" class="echart-full">
+      <div class="echart-canvas-wrap">
+        <canvas id="energyChart"></canvas>
+        <div class="echart-tooltip" id="echartTooltip"></div>
+      </div>
+      <div class="echart-tip">💡 <b>观察：</b>红色动能和绿色势能像镜像一样此消彼长，而紫色总能量始终是一条水平线——这就是<b>机械能守恒</b>。开启阻尼后，紫色线会慢慢下降。</div>
+    </div>
+    <!-- 收起状态：缩略预览 -->
+    <div id="echartMini" class="echart-mini" style="display:none">
+      <canvas id="energyChartMini"></canvas>
     </div>
   </div>
 </div>
@@ -623,65 +652,118 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   canvas.addEventListener('touchend', onDragEnd);
 
   // === 能量折线图 ===
-  var chartVisible = false;
-  var energyHistory = { ke:[], pe:[], te:[], maxLen: 300 };
-  var chartCanvas = document.getElementById('energyChart');
-  var chartCtx = chartCanvas.getContext('2d');
+  var chartExpanded = true;
+  var eHist = { ke:[], pe:[], te:[], time:[], maxLen: 600 };
+  var chartEl = document.getElementById('energyChart');
+  var chartMiniEl = document.getElementById('energyChartMini');
+  var tooltipEl = document.getElementById('echartTooltip');
+  var physTime = 0; // 物理时间计数
 
-  document.getElementById('btnChart').addEventListener('click', function() {
-    chartVisible = !chartVisible;
-    document.getElementById('energyChartWrap').style.display = chartVisible ? 'block' : 'none';
-    this.textContent = chartVisible ? '📈 隐藏变化图' : '📈 能量变化图';
+  document.getElementById('btnChartToggle').addEventListener('click', function() {
+    chartExpanded = !chartExpanded;
+    document.getElementById('echartFull').style.display = chartExpanded ? 'block' : 'none';
+    document.getElementById('echartMini').style.display = chartExpanded ? 'none' : 'block';
+    this.textContent = chartExpanded ? '收起 ∨' : '展开 ∧';
   });
 
   function recordEnergy(KE, PE, TE) {
-    if (!chartVisible) return;
-    energyHistory.ke.push(KE);
-    energyHistory.pe.push(PE);
-    energyHistory.te.push(TE);
-    if (energyHistory.ke.length > energyHistory.maxLen) {
-      energyHistory.ke.shift();
-      energyHistory.pe.shift();
-      energyHistory.te.shift();
+    physTime += DT;
+    eHist.ke.push(KE); eHist.pe.push(PE); eHist.te.push(TE); eHist.time.push(physTime);
+    if (eHist.ke.length > eHist.maxLen) {
+      eHist.ke.shift(); eHist.pe.shift(); eHist.te.shift(); eHist.time.shift();
     }
+  }
+
+  function drawChart(cvs, h, showGrid) {
+    if (eHist.ke.length < 2) return;
+    var dpr = window.devicePixelRatio || 1;
+    var cw = cvs.clientWidth, ch = h;
+    cvs.width = cw * dpr; cvs.height = ch * dpr;
+    var cx = cvs.getContext('2d');
+    cx.setTransform(dpr,0,0,dpr,0,0);
+    cx.clearRect(0,0,cw,ch);
+
+    var pad = showGrid ? {l:36,r:10,t:8,b:22} : {l:2,r:2,t:2,b:2};
+    var gw = cw-pad.l-pad.r, gh = ch-pad.t-pad.b;
+    var maxE = 0;
+    for (var i=0;i<eHist.te.length;i++) { if(eHist.te[i]>maxE) maxE=eHist.te[i]; }
+    if (maxE < 0.01) maxE = 1;
+    maxE *= 1.1; // 留 10% 余量
+
+    // 网格 + 刻度
+    if (showGrid) {
+      cx.strokeStyle = 'rgba(0,0,0,0.06)'; cx.lineWidth = 0.5;
+      // Y 轴
+      for (var y=0; y<=4; y++) {
+        var yy = pad.t + gh - (y/4)*gh;
+        cx.beginPath(); cx.moveTo(pad.l,yy); cx.lineTo(pad.l+gw,yy); cx.stroke();
+        cx.fillStyle = '#9CA3AF'; cx.font = '9px system-ui'; cx.textAlign = 'right';
+        cx.fillText((maxE*y/4).toFixed(1)+' J', pad.l-4, yy+3);
+      }
+      // X 轴时间
+      var tStart = eHist.time[0], tEnd = eHist.time[eHist.time.length-1];
+      var tRange = tEnd - tStart;
+      if (tRange > 0.5) {
+        var step = tRange < 5 ? 1 : tRange < 15 ? 2 : 5;
+        var t0 = Math.ceil(tStart/step)*step;
+        for (var t=t0; t<=tEnd; t+=step) {
+          var tx = pad.l + ((t-tStart)/tRange)*gw;
+          cx.beginPath(); cx.moveTo(tx,pad.t); cx.lineTo(tx,pad.t+gh); cx.stroke();
+          cx.fillStyle = '#9CA3AF'; cx.font = '9px system-ui'; cx.textAlign = 'center';
+          cx.fillText(t.toFixed(0)+'s', tx, pad.t+gh+14);
+        }
+      }
+    }
+
+    function drawLine(arr, color, lw) {
+      cx.strokeStyle = color; cx.lineWidth = lw || 1.5; cx.beginPath();
+      for (var j=0;j<arr.length;j++) {
+        var x = pad.l + (j/(eHist.maxLen-1))*gw;
+        var yv = pad.t + gh - (arr[j]/maxE)*gh;
+        if(j===0) cx.moveTo(x,yv); else cx.lineTo(x,yv);
+      }
+      cx.stroke();
+    }
+    drawLine(eHist.te, '#8B5CF6', showGrid?2:1);
+    drawLine(eHist.pe, '#10B981', showGrid?1.5:1);
+    drawLine(eHist.ke, '#EF4444', showGrid?1.5:1);
+    return { pad:pad, gw:gw, gh:gh, maxE:maxE };
   }
 
   function drawEnergyChart() {
-    if (!chartVisible || energyHistory.ke.length < 2) return;
-    var w = chartCanvas.width, h = chartCanvas.height;
-    var dpr = window.devicePixelRatio || 1;
-    var cw = chartCanvas.clientWidth, ch = chartCanvas.clientHeight;
-    chartCanvas.width = cw * dpr;
-    chartCanvas.height = ch * dpr;
-    chartCtx.setTransform(dpr,0,0,dpr,0,0);
-    chartCtx.clearRect(0,0,cw,ch);
-
-    var pad = {l:4,r:4,t:4,b:4};
-    var gw = cw-pad.l-pad.r, gh = ch-pad.t-pad.b;
-    var maxE = 0;
-    for (var i=0;i<energyHistory.te.length;i++) { if(energyHistory.te[i]>maxE) maxE=energyHistory.te[i]; }
-    if (maxE < 0.01) maxE = 1;
-
-    function drawLine(arr, color) {
-      chartCtx.strokeStyle = color;
-      chartCtx.lineWidth = 1.5;
-      chartCtx.beginPath();
-      for (var j=0;j<arr.length;j++) {
-        var x = pad.l + (j / (energyHistory.maxLen-1)) * gw;
-        var y = pad.t + gh - (arr[j]/maxE)*gh;
-        if(j===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);
-      }
-      chartCtx.stroke();
+    if (chartExpanded) {
+      drawChart(chartEl, 200, true);
+    } else {
+      drawChart(chartMiniEl, 40, false);
     }
-    drawLine(energyHistory.te, '#10B981');
-    drawLine(energyHistory.pe, '#3B82F6');
-    drawLine(energyHistory.ke, '#EF4444');
   }
 
+  // Tooltip
+  chartEl.addEventListener('mousemove', function(e) {
+    if (eHist.ke.length < 2) return;
+    var rect = chartEl.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var cw = chartEl.clientWidth;
+    var pad = {l:36,r:10}; var gw = cw-pad.l-pad.r;
+    var ratio = (mx - pad.l) / gw;
+    if (ratio < 0 || ratio > 1) { tooltipEl.style.display='none'; return; }
+    var idx = Math.min(Math.floor(ratio * eHist.ke.length), eHist.ke.length-1);
+    tooltipEl.style.display = 'block';
+    tooltipEl.style.left = (mx+12)+'px';
+    tooltipEl.style.top = '20px';
+    tooltipEl.innerHTML = '<span style="color:#EF4444">Eₖ = '+eHist.ke[idx].toFixed(3)+' J</span><br>'
+      +'<span style="color:#10B981">Eₚ = '+eHist.pe[idx].toFixed(3)+' J</span><br>'
+      +'<span style="color:#8B5CF6">E = '+eHist.te[idx].toFixed(3)+' J</span>';
+  });
+  chartEl.addEventListener('mouseleave', function() { tooltipEl.style.display='none'; });
+
+  // 缩略图点击展开
+  chartMiniEl.addEventListener('click', function() {
+    document.getElementById('btnChartToggle').click();
+  });
+
   function clearEnergyHistory() {
-    energyHistory.ke = [];
-    energyHistory.pe = [];
-    energyHistory.te = [];
+    eHist.ke=[]; eHist.pe=[]; eHist.te=[]; eHist.time=[]; physTime=0;
   }
 
   // === 切tab处理 ===
