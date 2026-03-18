@@ -30,7 +30,7 @@
     '.dk-act:active{transform:scale(0.95)}',
 
     // 分享弹窗
-    '.dk-share-popup{position:absolute;top:50px;left:0;width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:100;display:none}',
+    '.dk-share-popup{position:absolute;top:50px;right:0;width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:100;display:none}',
     '.dk-share-popup.show{display:block}',
     '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
     '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
@@ -43,7 +43,7 @@
     '.dk-share-qr canvas{border-radius:6px}',
     '.dk-share-hint{font-size:9px;color:var(--text-caption,#9CA3AF);text-align:center}',
     // 收藏提示
-    '.dk-fav-toast{position:absolute;top:50px;left:0;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);padding:12px;text-align:center;z-index:100;display:none}',
+    '.dk-fav-toast{position:absolute;top:50px;right:0;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);padding:12px;text-align:center;z-index:100;display:none}',
     '.dk-fav-toast.show{display:block}',
     '.dk-fav-icon{font-size:24px;margin-bottom:4px}',
     '.dk-fav-text{font-size:11px;font-weight:700;color:var(--text-primary,#1D1D1F);margin-bottom:2px}',
@@ -201,7 +201,7 @@
 
   // 反馈
   document.getElementById('dkFeedback').addEventListener('click', function() {
-    window.open('https://github.com/l-s-c/devkit/issues', '_blank');
+    window.open('https://jsj.top/f/dZvLFl', '_blank');
   });
 
   // 广告区收藏按钮
