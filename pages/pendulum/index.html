@@ -536,6 +536,11 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   canvas.addEventListener('touchmove', onDragMove, { passive: false });
   canvas.addEventListener('touchend', onDragEnd);
 
+  // === 切tab处理 ===
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && running) { lastTime = 0; accumulator = 0; }
+  });
+
   // === KaTeX 渲染 ===
   if (typeof katex !== 'undefined') {
     katex.render('T = 2\\pi\\sqrt{\\dfrac{L}{g}}', document.getElementById('formulaT'), { displayMode: true });
