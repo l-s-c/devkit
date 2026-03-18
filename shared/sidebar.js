@@ -1,4 +1,4 @@
-// sidebar.js — 侧边栏：内容区在剩余空间居中
+// sidebar.js — 侧边栏V5：按钮交互 + 品牌广告占位
 (function(){
   var path = location.pathname;
   var clean = path.replace(/\/devkit\/?/, '/');
@@ -9,30 +9,59 @@
   var SIDEBAR_W = 280;
   var GAP = 24;
   var RIGHT = 24;
-  var TOTAL_RIGHT = SIDEBAR_W + GAP + RIGHT; // 328px
+  var TOTAL_RIGHT = SIDEBAR_W + GAP + RIGHT;
   var BREAKPOINT = 1380;
   var base = '../';
+  var isMac = navigator.platform.indexOf('Mac') > -1;
 
   var style = document.createElement('style');
   style.textContent = [
-    // 侧边栏
     '.dk-sidebar{width:'+SIDEBAR_W+'px;display:none;position:fixed;right:'+RIGHT+'px;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:none;z-index:40}',
     '.dk-sidebar::-webkit-scrollbar{display:none}',
-    // 核心：≥断点时，内容区在去除侧边栏后的剩余空间居中
     '@media(min-width:'+BREAKPOINT+'px){',
     '  .dk-sidebar{display:block}',
     '  .main{margin-left:calc((100vw - '+TOTAL_RIGHT+'px) / 2 - 480px) !important;margin-right:'+TOTAL_RIGHT+'px !important}',
     '}',
-    // 侧边栏样式
     '.dk-sb-section{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);padding:12px;margin-bottom:10px}',
     '.dk-act-row{display:flex;justify-content:center;gap:3px}',
-    '.dk-act{width:36px;height:36px;border-radius:9px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:var(--bg-card,#fff);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-caption,#9CA3AF);transition:all 150ms}',
+    '.dk-act{width:36px;height:36px;border-radius:9px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:var(--bg-card,#fff);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-caption,#9CA3AF);transition:all 150ms;position:relative}',
     '.dk-act svg{width:16px;height:16px;fill:currentColor}',
     '.dk-act:hover{border-color:var(--brand-500,#6366F1);color:var(--brand-500,#6366F1);transform:translateY(-1px)}',
     '.dk-act:active{transform:scale(0.95)}',
-    '.dk-act.fav{color:#EF4444;border-color:#EF4444}',
-    '.dk-ad-slot{border-radius:10px;overflow:hidden;aspect-ratio:300/250;display:flex;align-items:center;justify-content:center;border:1px dashed var(--border-glass,rgba(0,0,0,0.08));background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.06))}',
-    '.dk-ad-label{font-size:9px;color:var(--text-caption,#9CA3AF);font-weight:600;letter-spacing:1px}',
+    '.dk-act.fav{color:#EF4444;border-color:rgba(239,68,68,0.3)}',
+    // 分享弹窗
+    '.dk-share-popup{position:absolute;top:50px;right:0;width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:100;display:none}',
+    '.dk-share-popup.show{display:block}',
+    '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
+    '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
+    '.dk-share-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:8px;cursor:pointer;transition:all 150ms;border:none;background:transparent}',
+    '.dk-share-item:hover{background:rgba(99,102,241,0.06)}',
+    '.dk-share-item:active{transform:scale(0.96)}',
+    '.dk-share-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}',
+    '.dk-share-label{font-size:9px;font-weight:700;color:var(--text-caption,#9CA3AF)}',
+    '.dk-share-qr{width:100%;aspect-ratio:1;border-radius:8px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:#f9f9f9;display:flex;align-items:center;justify-content:center;margin-bottom:6px}',
+    '.dk-share-qr canvas{border-radius:6px}',
+    '.dk-share-hint{font-size:9px;color:var(--text-caption,#9CA3AF);text-align:center}',
+    // 收藏提示
+    '.dk-fav-toast{position:absolute;top:50px;right:0;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);padding:12px;text-align:center;z-index:100;display:none}',
+    '.dk-fav-toast.show{display:block}',
+    '.dk-fav-icon{font-size:24px;margin-bottom:4px}',
+    '.dk-fav-text{font-size:11px;font-weight:700;color:var(--text-primary,#1D1D1F);margin-bottom:2px}',
+    '.dk-fav-hint{font-size:9px;color:var(--text-caption,#9CA3AF)}',
+    '.dk-kbd{display:inline-block;padding:1px 6px;border-radius:4px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:#f5f5f5;font-size:9px;font-weight:700;font-family:monospace}',
+    // 复制 Toast
+    '.dk-copy-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:10px 20px;border-radius:10px;background:rgba(16,185,129,0.95);color:#fff;font-size:13px;font-weight:700;z-index:9999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.3)}',
+    '.dk-copy-toast.show{display:block}',
+    // 品牌广告
+    '.dk-ad-promo{border-radius:12px;overflow:hidden;aspect-ratio:300/250;background:linear-gradient(135deg,#6366F1,#818CF8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;position:relative}',
+    '.dk-ad-promo-badge{position:absolute;top:8px;right:8px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.2);font-size:8px;color:rgba(255,255,255,0.6)}',
+    '.dk-ad-promo-logo{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:10px;backdrop-filter:blur(10px)}',
+    '.dk-ad-promo-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}',
+    '.dk-ad-promo-desc{font-size:11px;color:rgba(255,255,255,0.8);margin-bottom:12px}',
+    '.dk-ad-promo-btn{padding:7px 18px;border-radius:16px;border:none;background:rgba(255,255,255,0.95);color:#6366F1;font-size:11px;font-weight:800;cursor:pointer;transition:all 150ms}',
+    '.dk-ad-promo-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.15)}',
+    '.dk-ad-promo-btn:active{transform:scale(0.97)}',
+    // 热门工具
     '.dk-hot-title{font-size:10px;font-weight:800;color:var(--text-caption,#9CA3AF);margin-bottom:8px}',
     '.dk-hot-item{display:flex;align-items:center;gap:8px;padding:6px;border-radius:7px;cursor:pointer;transition:all 150ms;text-decoration:none;color:var(--text-primary,#1D1D1F)}',
     '.dk-hot-item:hover{background:rgba(99,102,241,0.06)}',
@@ -42,15 +71,50 @@
   ].join('\n');
   document.head.appendChild(style);
 
+  // 收藏状态
+  var favKey = 'dk_fav';
+  var isFav = localStorage.getItem(favKey) === '1';
+
   var aside = document.createElement('aside');
   aside.className = 'dk-sidebar';
-  aside.innerHTML = '<div class="dk-sb-section"><div class="dk-act-row">'
-    +'<button class="dk-act" title="分享" onclick="if(navigator.share)navigator.share({title:document.title,url:location.href});else navigator.clipboard.writeText(location.href)"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>'
-    +'<button class="dk-act" title="收藏" onclick="this.classList.toggle(\'fav\')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>'
-    +'<button class="dk-act" title="复制链接" onclick="navigator.clipboard.writeText(location.href)"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>'
-    +'<button class="dk-act" title="反馈" onclick="window.open(\'https://github.com/l-s-c/devkit/issues\',\'_blank\')"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>'
-    +'</div></div>'
-    +'<div class="dk-sb-section" style="padding:8px;overflow:hidden"><div class="dk-ad-slot"><span class="dk-ad-label">📢 广告 300×250</span></div></div>'
+  aside.innerHTML = ''
+    // 操作按钮
+    +'<div class="dk-sb-section" style="position:relative;overflow:visible">'
+    +'<div class="dk-act-row">'
+    +'<button class="dk-act" id="dkShare" title="分享给朋友"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>'
+    +'<button class="dk-act'+(isFav?' fav':'')+'" id="dkFav" title="收藏本站"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>'
+    +'<button class="dk-act" id="dkCopy" title="复制链接"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>'
+    +'<button class="dk-act" id="dkFeedback" title="反馈"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>'
+    +'</div>'
+    // 分享弹窗
+    +'<div class="dk-share-popup" id="dkSharePopup">'
+    +'<div class="dk-share-title">分享给朋友</div>'
+    +'<div class="dk-share-grid">'
+    +'<button class="dk-share-item" id="dkShareWx"><div class="dk-share-icon" style="background:#07C160;color:#fff">💬</div><div class="dk-share-label">微信</div></button>'
+    +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
+    +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
+    +'</div>'
+    +'<div class="dk-share-qr" id="dkShareQR"><span style="font-size:10px;color:var(--text-caption,#9CA3AF)">📱 微信扫码分享</span></div>'
+    +'<div class="dk-share-hint">扫描二维码分享到微信</div>'
+    +'</div>'
+    // 收藏提示
+    +'<div class="dk-fav-toast" id="dkFavToast">'
+    +'<div class="dk-fav-icon">⭐</div>'
+    +'<div class="dk-fav-text">收藏本站</div>'
+    +'<div class="dk-fav-hint">按 <span class="dk-kbd">'+(isMac?'⌘':'Ctrl')+'</span> + <span class="dk-kbd">D</span> 添加书签</div>'
+    +'</div>'
+    +'</div>'
+    // 品牌广告占位
+    +'<div class="dk-sb-section" style="padding:0;overflow:hidden">'
+    +'<div class="dk-ad-promo">'
+    +'<div class="dk-ad-promo-badge">推广</div>'
+    +'<div class="dk-ad-promo-logo">D</div>'
+    +'<div class="dk-ad-promo-title">DevKit 工具箱</div>'
+    +'<div class="dk-ad-promo-desc">141 个免费在线工具<br>开发者的瑞士军刀 🔧</div>'
+    +'<button class="dk-ad-promo-btn" id="dkAdFav">⭐ 收藏本站</button>'
+    +'</div>'
+    +'</div>'
+    // 热门工具
     +'<div class="dk-sb-section"><div class="dk-hot-title">⭐ 热门工具</div>'
     +'<a class="dk-hot-item" href="'+base+'base64/"><div class="dk-hot-icon">🔐</div><div><div class="dk-hot-name">Base64</div><div class="dk-hot-desc">编解码</div></div></a>'
     +'<a class="dk-hot-item" href="'+base+'timestamp/"><div class="dk-hot-icon">⏰</div><div><div class="dk-hot-name">时间戳</div><div class="dk-hot-desc">Unix ↔ 日期</div></div></a>'
@@ -58,9 +122,105 @@
     +'<a class="dk-hot-item" href="'+base+'hash/"><div class="dk-hot-icon">#</div><div><div class="dk-hot-name">Hash</div><div class="dk-hot-desc">MD5/SHA</div></div></a>'
     +'</div>';
 
+  // 复制 Toast
+  var copyToast = document.createElement('div');
+  copyToast.className = 'dk-copy-toast';
+  copyToast.textContent = '✅ 链接已复制';
+  document.body.appendChild(copyToast);
+
   // 动态对齐顶部
   var mainEl = document.querySelector('.main');
   if (mainEl) aside.style.top = mainEl.offsetTop + 'px';
-
   document.body.appendChild(aside);
+
+  // === 事件绑定 ===
+  var sharePopup = document.getElementById('dkSharePopup');
+  var favToast = document.getElementById('dkFavToast');
+  var activePopup = null;
+
+  function closeAll() {
+    sharePopup.classList.remove('show');
+    favToast.classList.remove('show');
+    activePopup = null;
+  }
+
+  function toggle(el) {
+    if (activePopup === el) { closeAll(); return; }
+    closeAll();
+    el.classList.add('show');
+    activePopup = el;
+  }
+
+  // 分享按钮
+  document.getElementById('dkShare').addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: location.href });
+      return;
+    }
+    toggle(sharePopup);
+  });
+
+  // 微信 — 生成二维码
+  document.getElementById('dkShareWx').addEventListener('click', function(e) {
+    e.stopPropagation();
+    var qrBox = document.getElementById('dkShareQR');
+    // 简易 QR 码：用 canvas 画一个占位，或复制链接提示
+    qrBox.innerHTML = '<div style="text-align:center;padding:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">复制链接发给好友</div><div style="font-size:10px;color:var(--text-caption,#9CA3AF);word-break:break-all">'+location.href+'</div></div>';
+    navigator.clipboard.writeText(location.href);
+    showCopyToast();
+  });
+
+  // 微博
+  document.getElementById('dkShareWb').addEventListener('click', function() {
+    window.open('https://service.weibo.com/share/share.php?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title), '_blank');
+    closeAll();
+  });
+
+  // QQ
+  document.getElementById('dkShareQQ').addEventListener('click', function() {
+    window.open('https://connect.qq.com/widget/shareqq/index.html?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title), '_blank');
+    closeAll();
+  });
+
+  // 收藏按钮
+  var favBtn = document.getElementById('dkFav');
+  favBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    isFav = !isFav;
+    localStorage.setItem(favKey, isFav ? '1' : '0');
+    favBtn.classList.toggle('fav', isFav);
+    if (isFav) toggle(favToast); else closeAll();
+  });
+
+  // 复制链接
+  document.getElementById('dkCopy').addEventListener('click', function() {
+    navigator.clipboard.writeText(location.href);
+    showCopyToast();
+    closeAll();
+  });
+
+  function showCopyToast() {
+    copyToast.classList.add('show');
+    setTimeout(function(){ copyToast.classList.remove('show'); }, 1500);
+  }
+
+  // 反馈
+  document.getElementById('dkFeedback').addEventListener('click', function() {
+    window.open('https://github.com/l-s-c/devkit/issues', '_blank');
+  });
+
+  // 广告区收藏按钮
+  document.getElementById('dkAdFav').addEventListener('click', function() {
+    if (!isFav) {
+      isFav = true;
+      localStorage.setItem(favKey, '1');
+      favBtn.classList.add('fav');
+    }
+    toggle(favToast);
+  });
+
+  // 点击外部关闭弹窗
+  document.addEventListener('click', function() { closeAll(); });
+  aside.addEventListener('click', function(e) { e.stopPropagation(); });
 })();
