@@ -28,7 +28,7 @@
     '.dk-act svg{width:16px;height:16px;fill:currentColor}',
     '.dk-act:hover{border-color:var(--brand-500,#6366F1);color:var(--brand-500,#6366F1);transform:translateY(-1px)}',
     '.dk-act:active{transform:scale(0.95)}',
-    '.dk-act.fav{color:#EF4444;border-color:rgba(239,68,68,0.3)}',
+
     // 分享弹窗
     '.dk-share-popup{position:absolute;top:50px;right:0;width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:100;display:none}',
     '.dk-share-popup.show{display:block}',
@@ -71,9 +71,7 @@
   ].join('\n');
   document.head.appendChild(style);
 
-  // 收藏状态
-  var favKey = 'dk_fav';
-  var isFav = localStorage.getItem(favKey) === '1';
+  // 收藏：仅引导浏览器书签，不记录状态
 
   var aside = document.createElement('aside');
   aside.className = 'dk-sidebar';
@@ -82,7 +80,7 @@
     +'<div class="dk-sb-section" style="position:relative;overflow:visible">'
     +'<div class="dk-act-row">'
     +'<button class="dk-act" id="dkShare" title="分享给朋友"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>'
-    +'<button class="dk-act'+(isFav?' fav':'')+'" id="dkFav" title="收藏本站"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>'
+    +'<button class="dk-act" id="dkFav" title="收藏本站"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>'
     +'<button class="dk-act" id="dkCopy" title="复制链接"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>'
     +'<button class="dk-act" id="dkFeedback" title="反馈"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>'
     +'</div>'
@@ -183,14 +181,10 @@
     closeAll();
   });
 
-  // 收藏按钮
-  var favBtn = document.getElementById('dkFav');
-  favBtn.addEventListener('click', function(e) {
+  // 收藏按钮 — 仅弹引导
+  document.getElementById('dkFav').addEventListener('click', function(e) {
     e.stopPropagation();
-    isFav = !isFav;
-    localStorage.setItem(favKey, isFav ? '1' : '0');
-    favBtn.classList.toggle('fav', isFav);
-    if (isFav) toggle(favToast); else closeAll();
+    toggle(favToast);
   });
 
   // 复制链接
@@ -212,11 +206,6 @@
 
   // 广告区收藏按钮
   document.getElementById('dkAdFav').addEventListener('click', function() {
-    if (!isFav) {
-      isFav = true;
-      localStorage.setItem(favKey, '1');
-      favBtn.classList.add('fav');
-    }
     toggle(favToast);
   });
 
