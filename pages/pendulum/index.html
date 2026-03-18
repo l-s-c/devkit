@@ -87,14 +87,13 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 .echart-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
 .echart-title { font-size: 13px; font-weight: 800; color: var(--text-primary, #1D1D1F); }
 .echart-legend { display: flex; gap: 12px; font-size: 10px; font-weight: 700; flex: 1; }
-.echart-toggle { background: none; border: 1px solid var(--border-glass, rgba(0,0,0,0.08)); border-radius: 6px; padding: 3px 10px; font-size: 10px; font-weight: 700; color: var(--text-caption); cursor: pointer; }
-.echart-toggle:hover { border-color: var(--exp-blue); color: var(--exp-blue); }
+
 .echart-canvas-wrap { position: relative; margin-bottom: 8px; }
 .echart-canvas-wrap canvas { width: 100%; height: 200px; display: block; border-radius: 10px; background: #FAFAFA; cursor: crosshair; }
 .echart-tooltip { position: absolute; display: none; padding: 6px 10px; border-radius: 8px; background: rgba(30,30,30,0.9); color: #fff; font-size: 10px; font-weight: 600; line-height: 1.6; pointer-events: none; z-index: 5; white-space: nowrap; }
 .echart-tip { font-size: 11px; line-height: 1.6; padding: 8px 12px; border-radius: 8px; background: rgba(139,92,246,0.06); color: #5B21B6; }
 .echart-tip b { color: #7C3AED; }
-.echart-mini canvas { width: 100%; height: 40px; display: block; border-radius: 8px; background: #FAFAFA; cursor: pointer; }
+
 
 /* 公式卡片（Canvas 下方） */
 .fml-card {
@@ -232,9 +231,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     <div class="echart-header">
       <div class="echart-title">📊 能量变化曲线</div>
       <div class="echart-legend"><span style="color:#EF4444">● 动能 Eₖ</span><span style="color:#10B981">● 势能 Eₚ</span><span style="color:#8B5CF6">● 总能量 E</span></div>
-      <button class="echart-toggle" id="btnChartToggle">收起 ∨</button>
     </div>
-    <!-- 展开状态 -->
     <div id="echartFull" class="echart-full">
       <div class="echart-canvas-wrap">
         <canvas id="energyChart"></canvas>
@@ -242,10 +239,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       </div>
       <div class="echart-tip">💡 <b>观察：</b>红色动能和绿色势能像镜像一样此消彼长，而紫色总能量始终是一条水平线——这就是<b>机械能守恒</b>。开启阻尼后，紫色线会慢慢下降。</div>
     </div>
-    <!-- 收起状态：缩略预览 -->
-    <div id="echartMini" class="echart-mini" style="display:none">
-      <canvas id="energyChartMini"></canvas>
-    </div>
+
   </div>
 </div>
 
@@ -652,19 +646,10 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   canvas.addEventListener('touchend', onDragEnd);
 
   // === 能量折线图 ===
-  var chartExpanded = true;
   var eHist = { ke:[], pe:[], te:[], time:[], maxLen: 600 };
   var chartEl = document.getElementById('energyChart');
-  var chartMiniEl = document.getElementById('energyChartMini');
   var tooltipEl = document.getElementById('echartTooltip');
-  var physTime = 0; // 物理时间计数
-
-  document.getElementById('btnChartToggle').addEventListener('click', function() {
-    chartExpanded = !chartExpanded;
-    document.getElementById('echartFull').style.display = chartExpanded ? 'block' : 'none';
-    document.getElementById('echartMini').style.display = chartExpanded ? 'none' : 'block';
-    this.textContent = chartExpanded ? '收起 ∨' : '展开 ∧';
-  });
+  var physTime = 0;
 
   function recordEnergy(KE, PE, TE) {
     physTime += DT;
@@ -731,11 +716,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   }
 
   function drawEnergyChart() {
-    if (chartExpanded) {
-      drawChart(chartEl, 200, true);
-    } else {
-      drawChart(chartMiniEl, 40, false);
-    }
+    drawChart(chartEl, 200, true);
   }
 
   // Tooltip
@@ -756,11 +737,6 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       +'<span style="color:#8B5CF6">E = '+eHist.te[idx].toFixed(3)+' J</span>';
   });
   chartEl.addEventListener('mouseleave', function() { tooltipEl.style.display='none'; });
-
-  // 缩略图点击展开
-  chartMiniEl.addEventListener('click', function() {
-    document.getElementById('btnChartToggle').click();
-  });
 
   function clearEnergyHistory() {
     eHist.ke=[]; eHist.pe=[]; eHist.te=[]; eHist.time=[]; physTime=0;
