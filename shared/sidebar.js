@@ -166,9 +166,10 @@
 
   // 分享按钮
   var shareBtn = document.getElementById('dkShare');
+  var isMobile = /Mobi|Android/i.test(navigator.userAgent);
   shareBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    if (navigator.share) {
+    if (isMobile && navigator.share) {
       navigator.share({ title: document.title, url: location.href });
       return;
     }
