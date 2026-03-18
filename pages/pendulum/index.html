@@ -198,6 +198,15 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
         <div class="energy-row"><div class="energy-label" style="color:#6366F1">势能</div><div class="energy-track"><div class="energy-fill energy-fill-pe" id="barPE" style="width:100%"></div></div><div class="energy-val" id="valPE">0.00</div></div>
         <div class="energy-row"><div class="energy-label" style="color:#059669">总能</div><div class="energy-track"><div class="energy-fill energy-fill-total" id="barTotal" style="width:100%"></div></div><div class="energy-val" id="valTotal">0.00</div></div>
       </div>
+      <button class="exp-btn exp-btn-secondary" id="btnChart" style="margin-top:8px;font-size:10px;padding:5px">📈 能量变化图</button>
+      <div id="energyChartWrap" style="display:none;margin-top:8px">
+        <canvas id="energyChart" width="260" height="120" style="width:100%;height:120px;border-radius:8px;background:#fafafa"></canvas>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:4px">
+          <span style="font-size:9px;color:#EF4444;font-weight:700">● 动能</span>
+          <span style="font-size:9px;color:#3B82F6;font-weight:700">● 势能</span>
+          <span style="font-size:9px;color:#10B981;font-weight:700">● 总能</span>
+        </div>
+      </div>
     </div>
 
 
@@ -455,6 +464,9 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     document.getElementById('valKE').textContent = KE.toFixed(2);
     document.getElementById('valPE').textContent = PE.toFixed(2);
     document.getElementById('valTotal').textContent = TE.toFixed(2);
+
+    recordEnergy(KE, PE, TE);
+    drawEnergyChart();
   }
 
   // === 动画循环 ===
@@ -529,6 +541,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     accumulator = 0;
     lastTime = 0;
     btnPlay.textContent = '▶ 开始';
+    clearEnergyHistory();
     render();
     updateData();
   });
@@ -609,18 +622,92 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   canvas.addEventListener('touchmove', onDragMove, { passive: false });
   canvas.addEventListener('touchend', onDragEnd);
 
+  // === 能量折线图 ===
+  var chartVisible = false;
+  var energyHistory = { ke:[], pe:[], te:[], maxLen: 300 };
+  var chartCanvas = document.getElementById('energyChart');
+  var chartCtx = chartCanvas.getContext('2d');
+
+  document.getElementById('btnChart').addEventListener('click', function() {
+    chartVisible = !chartVisible;
+    document.getElementById('energyChartWrap').style.display = chartVisible ? 'block' : 'none';
+    this.textContent = chartVisible ? '📈 隐藏变化图' : '📈 能量变化图';
+  });
+
+  function recordEnergy(KE, PE, TE) {
+    if (!chartVisible) return;
+    energyHistory.ke.push(KE);
+    energyHistory.pe.push(PE);
+    energyHistory.te.push(TE);
+    if (energyHistory.ke.length > energyHistory.maxLen) {
+      energyHistory.ke.shift();
+      energyHistory.pe.shift();
+      energyHistory.te.shift();
+    }
+  }
+
+  function drawEnergyChart() {
+    if (!chartVisible || energyHistory.ke.length < 2) return;
+    var w = chartCanvas.width, h = chartCanvas.height;
+    var dpr = window.devicePixelRatio || 1;
+    var cw = chartCanvas.clientWidth, ch = chartCanvas.clientHeight;
+    chartCanvas.width = cw * dpr;
+    chartCanvas.height = ch * dpr;
+    chartCtx.setTransform(dpr,0,0,dpr,0,0);
+    chartCtx.clearRect(0,0,cw,ch);
+
+    var pad = {l:4,r:4,t:4,b:4};
+    var gw = cw-pad.l-pad.r, gh = ch-pad.t-pad.b;
+    var maxE = 0;
+    for (var i=0;i<energyHistory.te.length;i++) { if(energyHistory.te[i]>maxE) maxE=energyHistory.te[i]; }
+    if (maxE < 0.01) maxE = 1;
+
+    function drawLine(arr, color) {
+      chartCtx.strokeStyle = color;
+      chartCtx.lineWidth = 1.5;
+      chartCtx.beginPath();
+      for (var j=0;j<arr.length;j++) {
+        var x = pad.l + (j / (energyHistory.maxLen-1)) * gw;
+        var y = pad.t + gh - (arr[j]/maxE)*gh;
+        if(j===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);
+      }
+      chartCtx.stroke();
+    }
+    drawLine(energyHistory.te, '#10B981');
+    drawLine(energyHistory.pe, '#3B82F6');
+    drawLine(energyHistory.ke, '#EF4444');
+  }
+
+  function clearEnergyHistory() {
+    energyHistory.ke = [];
+    energyHistory.pe = [];
+    energyHistory.te = [];
+  }
+
   // === 切tab处理 ===
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden && running) { lastTime = 0; accumulator = 0; }
   });
 
   // === KaTeX 渲染 ===
-  if (typeof katex !== 'undefined') {
-    katex.render('T = 2\\pi\\sqrt{\\dfrac{L}{g}}', document.getElementById('formulaT'), { displayMode: true });
-    katex.render('E_k = \\tfrac{1}{2}mv^2', document.getElementById('formulaEk'), { displayMode: false });
-    katex.render('E_p = mgL(1-\\cos\\theta)', document.getElementById('formulaEp'), { displayMode: false });
-    katex.render('E_k + E_p = \\text{const}', document.getElementById('formulaE'), { displayMode: false });
-  }
+  // KaTeX 渲染 + 纯文本兜底
+  var formulas = [
+    { id:'formulaT', tex:'T = 2\\pi\\sqrt{\\dfrac{L}{g}}', fallback:'T = 2π√(L/g)', display:true },
+    { id:'formulaEk', tex:'E_k = \\tfrac{1}{2}mv^2', fallback:'Eₖ = ½mv²', display:false },
+    { id:'formulaEp', tex:'E_p = mgL(1-\\cos\\theta)', fallback:'Eₚ = mgL(1−cosθ)', display:false },
+    { id:'formulaE', tex:'E_k + E_p = \\text{const}', fallback:'Eₖ + Eₚ = 常数', display:false }
+  ];
+  formulas.forEach(function(f) {
+    var el = document.getElementById(f.id);
+    if (!el) return;
+    if (typeof katex !== 'undefined') {
+      try { katex.render(f.tex, el, { displayMode: f.display }); } catch(e) {
+        el.innerHTML = '<span style="font-size:18px;font-weight:800;font-family:serif">' + f.fallback + '</span>';
+      }
+    } else {
+      el.innerHTML = '<span style="font-size:18px;font-weight:800;font-family:serif">' + f.fallback + '</span>';
+    }
+  });
 
   // === 初始化 ===
   updateSliderValues();
