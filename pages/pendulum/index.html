@@ -82,9 +82,38 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 
 /* 公式区 */
 .formula-box { background: rgba(59,130,246,0.04); border-radius: 10px; padding: 12px; text-align: center; }
-.formula-explain { font-size: 11px; color: var(--text-secondary, #6B7280); line-height: 1.6; margin: 4px 0 8px; padding-left: 4px; }
-.formula-explain b { color: var(--text-primary, #1D1D1F); }
-.formula-note { font-size: 10px; color: var(--text-caption); margin-top: 6px; }
+/* 公式卡片（Canvas 下方） */
+.fml-card {
+  display: flex; gap: 0;
+  background: var(--bg-glass, rgba(255,255,255,0.72));
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 0.5px solid var(--border-glass, rgba(0,0,0,0.08));
+  border-radius: 14px; overflow: hidden; margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.fml-left {
+  width: 180px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  padding: 20px 16px; background: rgba(59,130,246,0.03);
+}
+.fml-left .katex { font-size: 1.1em; }
+.fml-right { flex: 1; padding: 14px 16px; }
+.fml-title { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+.fml-desc { font-size: 12px; color: var(--text-secondary, #6B7280); line-height: 1.7; margin-bottom: 8px; }
+.fml-desc b { color: var(--text-primary, #1D1D1F); }
+.fml-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.fml-tags span {
+  padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  background: rgba(0,0,0,0.04); color: var(--text-caption, #9CA3AF);
+}
+.fml-tip {
+  font-size: 11px; line-height: 1.6; padding: 8px 10px; border-radius: 8px;
+  background: rgba(245,158,11,0.06); color: #92400E;
+}
+.fml-tip b { color: #B45309; }
+@media (max-width: 640px) {
+  .fml-card { flex-direction: column; }
+  .fml-left { width: 100%; padding: 12px; }
+}
 
 /* Canvas */
 #pendulumCanvas {
@@ -171,33 +200,62 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       </div>
     </div>
 
-    <!-- 公式 -->
-    <div class="exp-card">
-      <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l-4 8 4 8H4"/></svg>物理公式</div>
-      <div class="formula-box" style="text-align:left">
-        <div style="text-align:center;margin-bottom:8px" id="formulaT"></div>
-        <div class="formula-explain">
-          <b>T</b> 周期 = 摆一个来回的时间<br>
-          <b>L</b> 绳长（米）　<b>g</b> 重力加速度（m/s²）<br>
-          📌 绳越长摆越慢，重力越大摆越快，<b>与球的质量无关</b>
-        </div>
-        <div style="border-top:1px dashed rgba(59,130,246,0.15);margin:8px 0"></div>
-        <div style="margin-bottom:4px" id="formulaEk"></div>
-        <div class="formula-explain">动能：摆球运动的能量。<b>最低点</b>速度最大 → 动能最大</div>
-        <div style="margin-bottom:4px" id="formulaEp"></div>
-        <div class="formula-explain">势能：摆球因高度产生的能量。<b>最高点</b>偏角最大 → 势能最大</div>
-        <div style="margin-bottom:4px" id="formulaE"></div>
-        <div class="formula-explain">⚡ <b>机械能守恒</b>：不考虑阻力时，动能 + 势能 = 常数。能量只是在两种形式间转换，总量不变</div>
-        <div style="border-top:1px dashed rgba(59,130,246,0.15);margin:8px 0"></div>
-        <div class="formula-note">* 周期公式为小角度（<15°）近似。大角度时实际周期略大于公式值。本模拟使用精确微分方程 θ'' = -(g/L)sin(θ)，对任意角度都准确。</div>
-      </div>
-    </div>
+
   </div>
 
   <!-- Canvas 动画区 -->
   <div class="exp-canvas-wrap">
     <div class="exp-card" style="padding:0;overflow:hidden">
       <canvas id="pendulumCanvas" width="640" height="560"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 公式解释区（Canvas 下方，全宽） -->
+<div class="formula-section" style="max-width:960px;margin:16px auto 0">
+  <div class="exp-card" style="padding:14px 16px 8px"><div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l-4 8 4 8H4"/></svg>核心公式</div></div>
+
+  <!-- 周期公式 -->
+  <div class="fml-card">
+    <div class="fml-left" style="border-left:4px solid #3B82F6"><div id="formulaT"></div></div>
+    <div class="fml-right">
+      <div class="fml-title" style="color:#3B82F6">⚙️ 周期公式</div>
+      <div class="fml-desc">摆球来回摆动一次的时间叫<b>周期 T</b>。它只跟<b>绳长 L</b> 和<b>重力加速度 g</b> 有关，跟摆球多重没关系——这是伽利略在 400 年前发现的。</div>
+      <div class="fml-tags"><span>T — 周期（s）</span><span>L — 绳长（m）</span><span>g — 重力加速度（m/s²）</span><span>π = 3.14159</span></div>
+      <div class="fml-tip">💡 <b>试一试：</b>把绳长从 1m 拉到 4m，周期从 ~2s 变成 ~4s（√4 = 2 倍）。把重力改成 1.6（月球），看摆球是不是慢了很多？</div>
+    </div>
+  </div>
+
+  <!-- 动能 -->
+  <div class="fml-card">
+    <div class="fml-left" style="border-left:4px solid #EF4444"><div id="formulaEk"></div></div>
+    <div class="fml-right">
+      <div class="fml-title" style="color:#EF4444">🔴 动能</div>
+      <div class="fml-desc">物体运动时具有的能量叫<b>动能</b>。速度 v 越大，动能越大。摆球经过<b>最低点</b>时速度最大，所以动能也最大。</div>
+      <div class="fml-tags"><span>Eₖ — 动能（J）</span><span>m — 质量（kg）</span><span>v — 速度（m/s）</span></div>
+      <div class="fml-tip">💡 <b>观察：</b>看能量条——摆球荡到最低点时，红色动能条最长，绿色势能条最短。</div>
+    </div>
+  </div>
+
+  <!-- 势能 -->
+  <div class="fml-card">
+    <div class="fml-left" style="border-left:4px solid #10B981"><div id="formulaEp"></div></div>
+    <div class="fml-right">
+      <div class="fml-title" style="color:#10B981">🟢 重力势能</div>
+      <div class="fml-desc">物体在高处时具有的能量叫<b>重力势能</b>。θ 是摆球偏离竖直线的角度，角度越大，摆球越高，势能越大。摆球在<b>最高点</b>时势能最大。</div>
+      <div class="fml-tags"><span>Eₚ — 势能（J）</span><span>m — 质量（kg）</span><span>g — 重力加速度</span><span>L — 绳长</span><span>θ — 偏角（rad）</span></div>
+      <div class="fml-tip">💡 <b>想一想：</b>为什么用 L(1-cosθ) 而不是直接用高度 h？因为 h = L − L·cosθ = L(1-cosθ)，这就是摆球相对最低点的高度。</div>
+    </div>
+  </div>
+
+  <!-- 机械能守恒 -->
+  <div class="fml-card">
+    <div class="fml-left" style="border-left:4px solid #8B5CF6"><div id="formulaE"></div></div>
+    <div class="fml-right">
+      <div class="fml-title" style="color:#8B5CF6">🟣 机械能守恒定律</div>
+      <div class="fml-desc">在没有阻力的情况下，<b>动能和势能可以互相转化</b>，但它们的总和始终不变。摆球从高处落下时，势能变成动能；荡上去时，动能又变回势能。</div>
+      <div class="fml-tags"><span>Eₖ + Eₚ = E总</span><span>E总 不随时间变化</span></div>
+      <div class="fml-tip">💡 <b>试一试：</b>把阻尼设为 0，观察紫色总能量条——它始终不变！再把阻尼调大，看总能量慢慢减少——这就是能量被摩擦力"吃掉"了。</div>
     </div>
   </div>
 </div>
