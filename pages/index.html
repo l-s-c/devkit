@@ -87,7 +87,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   transition: all 200ms; text-decoration: none; color: var(--text-primary); display: block;
 }
 .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: var(--brand-500); }
-.tool-emoji { font-size: 20px; margin-bottom: 4px; }
+.tool-emoji { font-size: 20px; margin-bottom: 4px; line-height:1; }
+.tool-icon-app { width:36px; height:36px; border-radius:8px; position:relative; margin-bottom:4px; display:inline-flex; align-items:center; justify-content:center; }
+.tool-icon-app .ti-sh { position:absolute; inset:0; border-radius:inherit; background:linear-gradient(170deg,rgba(255,255,255,0.35) 0%,rgba(255,255,255,0.08) 25%,transparent 50%,rgba(0,0,0,0.04) 100%); pointer-events:none; }
+.hot-icon-app { width:32px; height:32px; border-radius:7px; position:relative; margin-bottom:4px; display:inline-flex; align-items:center; justify-content:center; }
+.hot-icon-app .ti-sh { position:absolute; inset:0; border-radius:inherit; background:linear-gradient(170deg,rgba(255,255,255,0.35) 0%,rgba(255,255,255,0.08) 25%,transparent 50%,rgba(0,0,0,0.04) 100%); pointer-events:none; }
 .tool-name { font-size: 12px; font-weight: 700; line-height: 1.3; }
 .tool-desc {
   font-size: 10px; color: var(--text-caption); margin-top: 2px; line-height: 1.3;
@@ -115,6 +119,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   .search-wrap, .tags-wrap { padding: 0 16px; }
 }
 </style>
+<script src="../shared/tool-icons.js"></script>
 <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
 </head>
 <body>
@@ -321,13 +326,21 @@ const TOOLS = [
   { name:'世界之最百科', desc:'60+条+趣味事实', emoji:'🏆', cat:'edu', url:'./world-records/' },
 ];
 
+function getIconHtml(tool, size) {
+  var key = tool.url.replace(/^\.\//, '').replace(/\/$/, '');
+  var ic = window.TOOL_ICONS && window.TOOL_ICONS[key];
+  if (!ic) return size === 'hot' ? '<div class="hot-emoji">'+tool.emoji+'</div>' : '<div class="tool-emoji">'+tool.emoji+'</div>';
+  var cls = size === 'hot' ? 'hot-icon-app' : 'tool-icon-app';
+  return '<div class="'+cls+'" style="background:'+ic.gradient+'">'+ic.svg+'<div class="ti-sh"></div></div>';
+}
+
 let currentCat = 'all', searchQuery = '';
 const CAT_NAMES = { all:'全部', text:'📝 文本', image:'🖼️ 图片', calc:'🔢 计算', dev:'💻 开发', design:'🎨 设计', encode:'🔐 编码', life:'🏠 生活' };
 
 function renderHot() {
   const hots = TOOLS.filter(t => t.hot);
   document.getElementById('hotGrid').innerHTML = hots.map(t =>
-    `<a class="hot-card" href="${t.url}" target="_blank" rel="noopener"><div class="hot-emoji">${t.emoji}</div><div class="hot-name">${t.name}</div><div class="hot-desc">${t.desc}</div></a>`
+    `<a class="hot-card" href="${t.url}" target="_blank" rel="noopener">${getIconHtml(t,'hot')}<div class="hot-name">${t.name}</div><div class="hot-desc">${t.desc}</div></a>`
   ).join('');
 }
 
@@ -353,7 +366,7 @@ function render() {
     document.getElementById('toolsSection').style.display = 'block';
     document.getElementById('emptyState').style.display = 'none';
     document.getElementById('toolsGrid').innerHTML = list.map(t =>
-      `<a class="tool-card" href="${t.url}" target="_blank" rel="noopener"><div class="tool-emoji">${t.emoji}</div><div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`
+      `<a class="tool-card" href="${t.url}" target="_blank" rel="noopener">${getIconHtml(t,'tool')}<div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div></a>`
     ).join('');
   }
 
