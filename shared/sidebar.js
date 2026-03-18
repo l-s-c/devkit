@@ -30,7 +30,7 @@
     '.dk-act:active{transform:scale(0.95)}',
 
     // 分享弹窗
-    '.dk-share-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.15);padding:20px;z-index:9999;display:none}',
+    '.dk-share-popup{position:fixed;width:240px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:16px;z-index:9999;display:none}',
     '.dk-share-popup.show{display:block}',
     '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
     '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
@@ -43,7 +43,7 @@
     '.dk-share-qr canvas{border-radius:6px}',
     '.dk-share-hint{font-size:9px;color:var(--text-caption,#9CA3AF);text-align:center}',
     // 收藏提示
-    '.dk-fav-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,0.15);padding:16px;text-align:center;z-index:9999;display:none}',
+    '.dk-fav-toast{position:fixed;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:14px;text-align:center;z-index:9999;display:none}',
     '.dk-fav-toast.show{display:block}',
     '.dk-fav-icon{font-size:24px;margin-bottom:4px}',
     '.dk-fav-text{font-size:11px;font-weight:700;color:var(--text-primary,#1D1D1F);margin-bottom:2px}',
@@ -150,21 +150,29 @@
     activePopup = null;
   }
 
-  function toggle(el) {
+  function positionPopup(el, btn) {
+    var r = btn.getBoundingClientRect();
+    el.style.top = r.top + 'px';
+    el.style.right = (window.innerWidth - r.left + 8) + 'px';
+  }
+
+  function toggle(el, btn) {
     if (activePopup === el) { closeAll(); return; }
     closeAll();
+    if (btn) positionPopup(el, btn);
     el.classList.add('show');
     activePopup = el;
   }
 
   // 分享按钮
-  document.getElementById('dkShare').addEventListener('click', function(e) {
+  var shareBtn = document.getElementById('dkShare');
+  shareBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     if (navigator.share) {
       navigator.share({ title: document.title, url: location.href });
       return;
     }
-    toggle(sharePopup);
+    toggle(sharePopup, shareBtn);
   });
 
   // 微信 — 生成二维码
@@ -190,9 +198,10 @@
   });
 
   // 收藏按钮 — 仅弹引导，3秒后自动消失
-  document.getElementById('dkFav').addEventListener('click', function(e) {
+  var favBtn = document.getElementById('dkFav');
+  favBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    toggle(favToast);
+    toggle(favToast, favBtn);
     setTimeout(function(){ favToast.classList.remove('show'); activePopup = null; }, 3000);
   });
 
