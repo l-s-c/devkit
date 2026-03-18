@@ -84,23 +84,6 @@
     +'<button class="dk-act" id="dkCopy" title="复制链接"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>'
     +'<button class="dk-act" id="dkFeedback" title="反馈"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>'
     +'</div>'
-    // 分享弹窗
-    +'<div class="dk-share-popup" id="dkSharePopup">'
-    +'<div class="dk-share-title">分享给朋友</div>'
-    +'<div class="dk-share-grid">'
-    +'<button class="dk-share-item" id="dkShareWx"><div class="dk-share-icon" style="background:#07C160;color:#fff">💬</div><div class="dk-share-label">微信</div></button>'
-    +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
-    +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
-    +'</div>'
-    +'<div class="dk-share-qr" id="dkShareQR"><span style="font-size:10px;color:var(--text-caption,#9CA3AF)">📱 微信扫码分享</span></div>'
-    +'<div class="dk-share-hint">扫描二维码分享到微信</div>'
-    +'</div>'
-    // 收藏提示
-    +'<div class="dk-fav-toast" id="dkFavToast">'
-    +'<div class="dk-fav-icon">⭐</div>'
-    +'<div class="dk-fav-text">收藏本站</div>'
-    +'<div class="dk-fav-hint">按 <span class="dk-kbd">'+(isMac?'⌘':'Ctrl')+'</span> + <span class="dk-kbd">D</span> 添加书签</div>'
-    +'</div>'
     +'</div>'
     // 品牌广告占位
     +'<div class="dk-sb-section" style="padding:0;overflow:hidden">'
@@ -126,14 +109,39 @@
   copyToast.textContent = '✅ 链接已复制';
   document.body.appendChild(copyToast);
 
+  // 分享弹窗 — 挂在 body 上，fixed 定位才生效
+  var sharePopupEl = document.createElement('div');
+  sharePopupEl.className = 'dk-share-popup';
+  sharePopupEl.id = 'dkSharePopup';
+  sharePopupEl.innerHTML = '<div class="dk-share-title">分享给朋友</div>'
+    +'<div class="dk-share-grid">'
+    +'<button class="dk-share-item" id="dkShareWx"><div class="dk-share-icon" style="background:#07C160;color:#fff">💬</div><div class="dk-share-label">微信</div></button>'
+    +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
+    +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
+    +'</div>'
+    +'<div class="dk-share-qr" id="dkShareQR"><span style="font-size:10px;color:var(--text-caption,#9CA3AF)">📱 微信扫码分享</span></div>'
+    +'<div class="dk-share-hint">扫描二维码分享到微信</div>';
+  sharePopupEl.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.body.appendChild(sharePopupEl);
+
+  // 收藏引导 — 挂在 body 上
+  var favToastEl = document.createElement('div');
+  favToastEl.className = 'dk-fav-toast';
+  favToastEl.id = 'dkFavToast';
+  favToastEl.innerHTML = '<div class="dk-fav-icon">⭐</div>'
+    +'<div class="dk-fav-text">收藏本站</div>'
+    +'<div class="dk-fav-hint">按 <span class="dk-kbd">'+(isMac?'⌘':'Ctrl')+'</span> + <span class="dk-kbd">D</span> 添加书签</div>';
+  favToastEl.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.body.appendChild(favToastEl);
+
   // 动态对齐顶部
   var mainEl = document.querySelector('.main');
   if (mainEl) aside.style.top = mainEl.offsetTop + 'px';
   document.body.appendChild(aside);
 
   // === 事件绑定 ===
-  var sharePopup = document.getElementById('dkSharePopup');
-  var favToast = document.getElementById('dkFavToast');
+  var sharePopup = sharePopupEl;
+  var favToast = favToastEl;
   var activePopup = null;
 
   function closeAll() {
