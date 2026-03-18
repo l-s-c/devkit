@@ -142,6 +142,24 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   .exp-controls { width: 100%; }
 }
 
+/* 练习模式 */
+.quiz-q { font-size: 14px; font-weight: 700; line-height: 1.7; color: var(--text-primary, #1D1D1F); margin-bottom: 12px; }
+.quiz-options { display: flex; flex-direction: column; gap: 6px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 10px; border: 1.5px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 150ms; text-align: left;
+}
+.quiz-opt:hover { border-color: var(--exp-blue); background: rgba(59,130,246,0.04); }
+.quiz-opt.selected { border-color: var(--exp-blue); background: rgba(59,130,246,0.08); color: var(--exp-blue); }
+.quiz-opt.correct { border-color: #10B981; background: rgba(16,185,129,0.08); color: #059669; }
+.quiz-opt.wrong { border-color: #EF4444; background: rgba(239,68,68,0.08); color: #DC2626; }
+.quiz-opt.disabled { pointer-events: none; opacity: 0.7; }
+.quiz-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: 12px; line-height: 1.6; }
+.quiz-feedback.correct { background: rgba(16,185,129,0.08); color: #065F46; }
+.quiz-feedback.wrong { background: rgba(239,68,68,0.08); color: #991B1B; }
+.quiz-score { margin-top: 10px; font-size: 11px; color: var(--text-caption); text-align: center; }
+
 /* 侧边栏居中 */
 </style>
 <style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}</style>
@@ -288,6 +306,24 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       <div class="fml-desc">在没有阻力的情况下，<b>动能和势能可以互相转化</b>，但它们的总和始终不变。摆球从高处落下时，势能变成动能；荡上去时，动能又变回势能。</div>
       <div class="fml-tags"><span>Eₖ + Eₚ = E总</span><span>E总 不随时间变化</span></div>
       <div class="fml-tip">💡 <b>试一试：</b>把阻尼设为 0，观察紫色总能量条——它始终不变！再把阻尼调大，看总能量慢慢减少——这就是能量被摩擦力"吃掉"了。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 练习模式 -->
+<div class="quiz-section" style="max-width:960px;margin:16px auto 0">
+  <div class="exp-card" style="padding:16px">
+    <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>🎯 练习模式</div>
+
+    <div id="quizArea">
+      <div class="quiz-q" id="quizQuestion"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback" style="display:none"></div>
+      <div class="quiz-btns" style="margin-top:10px">
+        <button class="exp-btn exp-btn-secondary" id="btnVerify" style="display:none">🔬 动画验证</button>
+        <button class="exp-btn exp-btn-primary" id="btnNext">下一题 →</button>
+      </div>
+      <div class="quiz-score" id="quizScore">第 <span id="qNum">1</span>/8 题　正确 <span id="qCorrect">0</span> 题</div>
     </div>
   </div>
 </div>
@@ -766,6 +802,162 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       el.innerHTML = '<span style="font-size:18px;font-weight:800;font-family:serif">' + f.fallback + '</span>';
     }
   });
+
+  // === 练习模式 ===
+  var quizBank = [
+    {
+      q: '单摆的绳长从 1m 增加到 4m（其他条件不变），周期会怎样变化？',
+      opts: ['变为原来的 2 倍', '变为原来的 4 倍', '不变', '变为原来的 ½'],
+      ans: 0,
+      explain: '✅ T = 2π√(L/g)，L 变为 4 倍 → T 变为 √4 = 2 倍。',
+      verify: { L: 4, g: 9.8, theta: 10, damp: 0 }
+    },
+    {
+      q: '把单摆从地球（g=9.8）搬到月球（g=1.6），周期会怎样？',
+      opts: ['变长（摆得更慢）', '变短（摆得更快）', '不变', '先变长再变短'],
+      ans: 0,
+      explain: '✅ g 减小 → √(L/g) 增大 → T 变长，摆得更慢。月球重力只有地球的 1/6！',
+      verify: { L: 1.5, g: 1.6, theta: 15, damp: 0 }
+    },
+    {
+      q: '摆球经过最低点时，它的能量状态是？',
+      opts: ['动能最大，势能最小', '势能最大，动能最小', '动能和势能相等', '总能量最大'],
+      ans: 0,
+      explain: '✅ 最低点速度最大 → 动能最大；高度最低 → 势能最小。观察能量条可以验证！',
+      verify: { L: 1.5, g: 9.8, theta: 45, damp: 0 }
+    },
+    {
+      q: '增大摆球的质量（其他条件不变），周期会怎样？',
+      opts: ['不变', '变长', '变短', '取决于绳长'],
+      ans: 0,
+      explain: '✅ T = 2π√(L/g)，公式里根本没有质量 m！这是伽利略的发现：周期与质量无关。',
+      verify: { L: 1.5, g: 9.8, theta: 15, damp: 0 }
+    },
+    {
+      q: '无阻尼的单摆运动中，机械能（动能+势能）会怎样？',
+      opts: ['始终保持不变', '逐渐减小', '逐渐增大', '忽大忽小'],
+      ans: 0,
+      explain: '✅ 没有阻力时，动能和势能互相转化，但总和（机械能）守恒，始终不变。看能量折线图中紫色总能量线！',
+      verify: { L: 1.5, g: 9.8, theta: 30, damp: 0 }
+    },
+    {
+      q: '有空气阻力时，单摆的总机械能会怎样？',
+      opts: ['逐渐减小', '始终不变', '逐渐增大', '先减小后不变'],
+      ans: 0,
+      explain: '✅ 阻力做负功，机械能逐渐转化为内能（热量），所以总机械能减小，摆幅越来越小。把阻尼调大观察！',
+      verify: { L: 1.5, g: 9.8, theta: 45, damp: 0.05 }
+    },
+    {
+      q: '绳长 L=1m，g=9.8m/s²，小角度下周期约为多少？',
+      opts: ['约 2.0 秒', '约 1.0 秒', '约 3.14 秒', '约 0.5 秒'],
+      ans: 0,
+      explain: '✅ T = 2π√(1/9.8) = 2π × 0.3194 ≈ 2.007 秒 ≈ 2.0 秒。',
+      verify: { L: 1, g: 9.8, theta: 10, damp: 0 }
+    },
+    {
+      q: '把初始角度从 10° 增大到 80°（大角度），实际周期相比小角度公式计算值会？',
+      opts: ['实际周期更大（公式偏小）', '实际周期更小（公式偏大）', '完全一样', '无法判断'],
+      ans: 0,
+      explain: '✅ T = 2π√(L/g) 是小角度近似公式。大角度时真实运动更复杂，实际周期比公式算出来的大。本模拟用的精确方程能体现这个差异！',
+      verify: { L: 1.5, g: 9.8, theta: 80, damp: 0 }
+    }
+  ];
+
+  // 洗牌
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  var quizOrder = shuffle(quizBank.map(function(_,i){return i}));
+  var quizIdx = 0, quizCorrect = 0, answered = false;
+
+  function renderQuiz() {
+    var qi = quizBank[quizOrder[quizIdx]];
+    document.getElementById('quizQuestion').textContent = (quizIdx+1) + '. ' + qi.q;
+    var optDiv = document.getElementById('quizOptions');
+    optDiv.innerHTML = '';
+    // 生成选项（保持答案位置随机化但记住正确答案）
+    var indices = [0,1,2,3];
+    // 不打乱选项顺序，题目里答案已经在0位，我们打乱一下
+    var shuffledOpts = indices.slice();
+    shuffle(shuffledOpts);
+    var correctShuffledIdx = shuffledOpts.indexOf(qi.ans);
+
+    shuffledOpts.forEach(function(origIdx, dispIdx) {
+      var btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.textContent = 'ABCD'[dispIdx] + '. ' + qi.opts[origIdx];
+      btn.dataset.origIdx = origIdx;
+      btn.addEventListener('click', function() { submitAnswer(origIdx, qi, btn); });
+      optDiv.appendChild(btn);
+    });
+
+    document.getElementById('quizFeedback').style.display = 'none';
+    document.getElementById('btnVerify').style.display = 'none';
+    document.getElementById('btnNext').textContent = quizIdx < quizOrder.length - 1 ? '下一题 →' : '重新开始';
+    document.getElementById('qNum').textContent = quizIdx + 1;
+    document.getElementById('qCorrect').textContent = quizCorrect;
+    answered = false;
+  }
+
+  function submitAnswer(origIdx, qi, btn) {
+    if (answered) return;
+    answered = true;
+    var isCorrect = origIdx === qi.ans;
+    if (isCorrect) quizCorrect++;
+    document.getElementById('qCorrect').textContent = quizCorrect;
+
+    // 标记所有选项
+    var opts = document.querySelectorAll('.quiz-opt');
+    opts.forEach(function(o) {
+      o.classList.add('disabled');
+      if (parseInt(o.dataset.origIdx) === qi.ans) o.classList.add('correct');
+    });
+    if (!isCorrect) btn.classList.add('wrong');
+
+    // 反馈
+    var fb = document.getElementById('quizFeedback');
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'wrong');
+    fb.innerHTML = (isCorrect ? '🎉 回答正确！' : '❌ 回答错误。') + '<br>' + qi.explain;
+
+    // 显示动画验证按钮
+    if (qi.verify) {
+      var vBtn = document.getElementById('btnVerify');
+      vBtn.style.display = 'inline-block';
+      vBtn.onclick = function() {
+        // 设置参数并播放
+        sliderL.value = qi.verify.L; sliderG.value = qi.verify.g;
+        sliderTheta.value = qi.verify.theta; sliderDamp.value = qi.verify.damp;
+        updateSliderValues();
+        theta0 = qi.verify.theta * Math.PI / 180;
+        document.getElementById('valTheta').textContent = qi.verify.theta + '°';
+        // 重置并播放
+        theta = theta0; omega = 0; swingCount = 0; lastSign = 0;
+        accumulator = 0; lastTime = 0; clearEnergyHistory();
+        running = true;
+        btnPlay.textContent = '⏸ 暂停';
+        requestAnimationFrame(loop);
+        // 滚动到 Canvas
+        canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+    }
+  }
+
+  document.getElementById('btnNext').addEventListener('click', function() {
+    quizIdx++;
+    if (quizIdx >= quizOrder.length) {
+      quizIdx = 0; quizCorrect = 0;
+      quizOrder = shuffle(quizBank.map(function(_,i){return i}));
+    }
+    renderQuiz();
+  });
+
+  renderQuiz();
 
   // === 初始化 ===
   updateSliderValues();
