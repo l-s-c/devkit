@@ -173,8 +173,11 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     <div class="exp-card">
       <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l-4 8 4 8H4"/></svg>物理公式</div>
       <div class="formula-box">
-        <div id="formulaT"></div>
-        <div class="formula-note">* 此为小角度近似公式，本模拟使用精确微分方程 θ'' = -(g/L)sin(θ)</div>
+        <div id="formulaT" style="margin-bottom:10px"></div>
+        <div id="formulaEk" style="margin-bottom:4px"></div>
+        <div id="formulaEp" style="margin-bottom:4px"></div>
+        <div id="formulaE" style="margin-bottom:6px"></div>
+        <div class="formula-note">* 周期公式为小角度近似，本模拟使用精确微分方程 θ'' = -(g/L)sin(θ)</div>
       </div>
     </div>
   </div>
@@ -544,6 +547,9 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   // === KaTeX 渲染 ===
   if (typeof katex !== 'undefined') {
     katex.render('T = 2\\pi\\sqrt{\\dfrac{L}{g}}', document.getElementById('formulaT'), { displayMode: true });
+    katex.render('E_k = \\tfrac{1}{2}mv^2', document.getElementById('formulaEk'), { displayMode: false });
+    katex.render('E_p = mgL(1-\\cos\\theta)', document.getElementById('formulaEp'), { displayMode: false });
+    katex.render('E_k + E_p = \\text{const}', document.getElementById('formulaE'), { displayMode: false });
   }
 
   // === 初始化 ===
