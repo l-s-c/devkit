@@ -30,7 +30,7 @@
     '.dk-act:active{transform:scale(0.95)}',
 
     // 分享弹窗
-    '.dk-share-popup{position:fixed;width:240px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:16px;z-index:9999;display:none}',
+    '.dk-share-popup{position:fixed;width:200px;background:var(--bg-glass,rgba(255,255,255,0.85));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:9999;display:none}',
     '.dk-share-popup.show{display:block}',
     '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
     '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
@@ -43,7 +43,7 @@
     '.dk-share-qr canvas{border-radius:6px}',
     '.dk-share-hint{font-size:9px;color:var(--text-caption,#9CA3AF);text-align:center}',
     // 收藏提示
-    '.dk-fav-toast{position:fixed;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:14px;text-align:center;z-index:9999;display:none}',
+    '.dk-fav-toast{position:fixed;width:200px;background:var(--bg-glass,rgba(255,255,255,0.85));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;text-align:center;z-index:9999;display:none}',
     '.dk-fav-toast.show{display:block}',
     '.dk-fav-icon{font-size:24px;margin-bottom:4px}',
     '.dk-fav-text{font-size:11px;font-weight:700;color:var(--text-primary,#1D1D1F);margin-bottom:2px}',
@@ -119,8 +119,7 @@
     +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
     +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
     +'</div>'
-    +'<div class="dk-share-qr" id="dkShareQR"><span style="font-size:10px;color:var(--text-caption,#9CA3AF)">📱 微信扫码分享</span></div>'
-    +'<div class="dk-share-hint">扫描二维码分享到微信</div>';
+    +'<div class="dk-share-qr" id="dkShareQR" style="aspect-ratio:auto;padding:8px"><span style="font-size:9px;color:var(--text-caption,#9CA3AF)">点击微信按钮复制链接</span></div>';
   sharePopupEl.addEventListener('click', function(e){ e.stopPropagation(); });
   document.body.appendChild(sharePopupEl);
 
@@ -176,14 +175,13 @@
     toggle(sharePopup, shareBtn);
   });
 
-  // 微信 — 生成二维码
+  // 微信 — 复制链接发给好友
   document.getElementById('dkShareWx').addEventListener('click', function(e) {
     e.stopPropagation();
-    var qrBox = document.getElementById('dkShareQR');
-    // 简易 QR 码：用 canvas 画一个占位，或复制链接提示
-    qrBox.innerHTML = '<div style="text-align:center;padding:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">复制链接发给好友</div><div style="font-size:10px;color:var(--text-caption,#9CA3AF);word-break:break-all">'+location.href+'</div></div>';
     navigator.clipboard.writeText(location.href);
-    showCopyToast();
+    var qrBox = document.getElementById('dkShareQR');
+    qrBox.innerHTML = '<div style="text-align:center;padding:6px"><div style="font-size:11px;font-weight:700;color:#07C160;margin-bottom:4px">✅ 链接已复制</div><div style="font-size:9px;color:var(--text-caption,#9CA3AF)">粘贴发送给微信好友</div></div>';
+    setTimeout(function(){ closeAll(); }, 2000);
   });
 
   // 微博
