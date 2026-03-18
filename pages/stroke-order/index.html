@@ -11,8 +11,7 @@
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/stroke-order/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"笔顺动画","url":"https://l-s-c.github.io/devkit/pages/stroke-order/","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 <link rel="stylesheet" href="../../shared/liquid-glass.css">
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.2/dist/hanzi-writer.min.js" integrity="sha384-i8+DrFIpvp+PdWrhSKs+TIuaSloHfTo8x3kKgJzmt969nr5onRPq06NnW8yfzN/7" crossorigin="anonymous"></script>
-<script>if(typeof HanziWriter==='undefined'){var s=document.createElement('script');s.src='https://unpkg.com/hanzi-writer@3.5.2/dist/hanzi-writer.min.js';document.head.appendChild(s)}</script>
+<script src="../../lib/hanzi-writer.min.js"></script>
 <style>
 :root{--brand-500:#F59E0B}[data-theme=dark]{--brand-500:#FBBF24}
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -114,7 +113,8 @@ function initWriter(char){
       charDataLoader:(c,onLoad,onErr)=>{
         const urls=[
           `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${c}.json`,
-          `https://unpkg.com/hanzi-writer-data@2.0/${c}.json`
+          `https://unpkg.com/hanzi-writer-data@2.0/${c}.json`,
+          `https://raw.githubusercontent.com/chanind/hanzi-writer-data/master/data/${c}.json`
         ];
         let i=0;
         function tryNext(){
