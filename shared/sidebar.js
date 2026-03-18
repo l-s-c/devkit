@@ -114,12 +114,13 @@
   sharePopupEl.className = 'dk-share-popup';
   sharePopupEl.id = 'dkSharePopup';
   sharePopupEl.innerHTML = '<div class="dk-share-title">分享给朋友</div>'
+    +'<div class="dk-share-qr" id="dkShareQR" style="display:flex;align-items:center;justify-content:center;padding:8px;min-height:140px;border-radius:8px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:#fff;margin-bottom:8px"></div>'
+    +'<div style="text-align:center;font-size:9px;color:#07C160;font-weight:700;margin-bottom:10px">📱 微信扫一扫 分享给好友</div>'
     +'<div class="dk-share-grid">'
-    +'<button class="dk-share-item" id="dkShareWx"><div class="dk-share-icon" style="background:#07C160;color:#fff">💬</div><div class="dk-share-label">微信</div></button>'
     +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
     +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
-    +'</div>'
-    +'<div class="dk-share-qr" id="dkShareQR" style="aspect-ratio:auto;padding:8px"><span style="font-size:9px;color:var(--text-caption,#9CA3AF)">点击微信按钮复制链接</span></div>';
+    +'<button class="dk-share-item" id="dkShareCopy"><div class="dk-share-icon" style="background:#6366F1;color:#fff">🔗</div><div class="dk-share-label">复制链接</div></button>'
+    +'</div>';
   sharePopupEl.addEventListener('click', function(e){ e.stopPropagation(); });
   document.body.appendChild(sharePopupEl);
 
@@ -163,6 +164,31 @@
     activePopup = el;
   }
 
+  // QR码库懒加载
+  var qrLoaded = false;
+  function loadQRLib(cb) {
+    if (qrLoaded || window.QRCode) { qrLoaded = true; cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js';
+    s.integrity = 'sha384-HGmnkDZJy7mRkoARekrrj0VjEFSh9a0Z8qxGri/kTTAJkgR8hqD1lHsYSh3JdzRi';
+    s.crossOrigin = 'anonymous';
+    s.onload = function(){ qrLoaded = true; cb(); };
+    s.onerror = function(){ cb(); };
+    document.head.appendChild(s);
+  }
+
+  function renderQR() {
+    var box = document.getElementById('dkShareQR');
+    box.innerHTML = '';
+    if (!window.QRCode) {
+      box.innerHTML = '<span style="font-size:9px;color:#9CA3AF">二维码加载中...</span>';
+      return;
+    }
+    var canvas = document.createElement('canvas');
+    QRCode.toCanvas(canvas, location.href, { width: 120, margin: 1 }, function(){});
+    box.appendChild(canvas);
+  }
+
   // 分享按钮
   var shareBtn = document.getElementById('dkShare');
   var isMobile = /Mobi|Android/i.test(navigator.userAgent);
@@ -173,15 +199,15 @@
       return;
     }
     toggle(sharePopup, shareBtn);
+    loadQRLib(renderQR);
   });
 
-  // 微信 — 复制链接发给好友
-  document.getElementById('dkShareWx').addEventListener('click', function(e) {
+  // 复制链接按钮
+  document.getElementById('dkShareCopy').addEventListener('click', function(e) {
     e.stopPropagation();
     navigator.clipboard.writeText(location.href);
-    var qrBox = document.getElementById('dkShareQR');
-    qrBox.innerHTML = '<div style="text-align:center;padding:6px"><div style="font-size:11px;font-weight:700;color:#07C160;margin-bottom:4px">✅ 链接已复制</div><div style="font-size:9px;color:var(--text-caption,#9CA3AF)">粘贴发送给微信好友</div></div>';
-    setTimeout(function(){ closeAll(); }, 2000);
+    showCopyToast();
+    closeAll();
   });
 
   // 微博
