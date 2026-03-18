@@ -30,7 +30,7 @@
     '.dk-act:active{transform:scale(0.95)}',
 
     // 分享弹窗
-    '.dk-share-popup{position:absolute;top:50px;right:0;width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:14px;z-index:100;display:none}',
+    '.dk-share-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.15);padding:20px;z-index:9999;display:none}',
     '.dk-share-popup.show{display:block}',
     '.dk-share-title{font-size:11px;font-weight:800;color:var(--text-primary,#1D1D1F);margin-bottom:10px;text-align:center}',
     '.dk-share-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}',
@@ -43,7 +43,7 @@
     '.dk-share-qr canvas{border-radius:6px}',
     '.dk-share-hint{font-size:9px;color:var(--text-caption,#9CA3AF);text-align:center}',
     // 收藏提示
-    '.dk-fav-toast{position:absolute;top:50px;right:0;width:200px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);padding:12px;text-align:center;z-index:100;display:none}',
+    '.dk-fav-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;background:var(--bg-card,#fff);border:1px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,0.15);padding:16px;text-align:center;z-index:9999;display:none}',
     '.dk-fav-toast.show{display:block}',
     '.dk-fav-icon{font-size:24px;margin-bottom:4px}',
     '.dk-fav-text{font-size:11px;font-weight:700;color:var(--text-primary,#1D1D1F);margin-bottom:2px}',
@@ -181,10 +181,11 @@
     closeAll();
   });
 
-  // 收藏按钮 — 仅弹引导
+  // 收藏按钮 — 仅弹引导，3秒后自动消失
   document.getElementById('dkFav').addEventListener('click', function(e) {
     e.stopPropagation();
     toggle(favToast);
+    setTimeout(function(){ favToast.classList.remove('show'); activePopup = null; }, 3000);
   });
 
   // 复制链接
