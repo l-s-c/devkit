@@ -25,7 +25,7 @@
     '.dk-sb-section{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.08));border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);padding:12px;margin-bottom:10px}',
     '.dk-act-row{display:flex;justify-content:center;gap:3px}',
     '.dk-act{width:36px;height:36px;border-radius:9px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:var(--bg-card,#fff);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-caption,#9CA3AF);transition:all 150ms;position:relative}',
-    '.dk-act svg{width:16px;height:16px;fill:currentColor}',
+    '.dk-act svg{width:16px;height:16px}',
     '.dk-act:hover{border-color:var(--brand-500,#6366F1);color:var(--brand-500,#6366F1);transform:translateY(-1px)}',
     '.dk-act:active{transform:scale(0.95)}',
 
@@ -79,10 +79,10 @@
     // 操作按钮
     +'<div class="dk-sb-section" style="position:relative;overflow:visible">'
     +'<div class="dk-act-row">'
-    +'<button class="dk-act" id="dkShare" title="分享给朋友"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>'
-    +'<button class="dk-act" id="dkFav" title="收藏本站"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>'
-    +'<button class="dk-act" id="dkCopy" title="复制链接"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>'
-    +'<button class="dk-act" id="dkFeedback" title="反馈"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></button>'
+    +'<button class="dk-act" id="dkShare" title="分享给朋友"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>'
+    +'<button class="dk-act" id="dkFav" title="收藏本站"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
+    +'<button class="dk-act" id="dkCopy" title="复制链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>'
+    +'<button class="dk-act" id="dkFeedback" title="反馈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>'
     +'</div>'
     +'</div>'
     // 品牌广告占位
@@ -97,10 +97,10 @@
     +'</div>'
     // 热门工具
     +'<div class="dk-sb-section"><div class="dk-hot-title">⭐ 热门工具</div>'
-    +'<a class="dk-hot-item" href="'+base+'base64/"><div class="dk-hot-icon">🔐</div><div><div class="dk-hot-name">Base64</div><div class="dk-hot-desc">编解码</div></div></a>'
-    +'<a class="dk-hot-item" href="'+base+'timestamp/"><div class="dk-hot-icon">⏰</div><div><div class="dk-hot-name">时间戳</div><div class="dk-hot-desc">Unix ↔ 日期</div></div></a>'
-    +'<a class="dk-hot-item" href="'+base+'color/"><div class="dk-hot-icon">🎨</div><div><div class="dk-hot-name">颜色转换</div><div class="dk-hot-desc">HEX/RGB/HSL</div></div></a>'
-    +'<a class="dk-hot-item" href="'+base+'hash/"><div class="dk-hot-icon">#</div><div><div class="dk-hot-name">Hash</div><div class="dk-hot-desc">MD5/SHA</div></div></a>'
+    +'<a class="dk-hot-item" href="'+base+'base64/"><div class="dk-hot-icon" style="color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div><div class="dk-hot-name">Base64</div><div class="dk-hot-desc">编解码</div></div></a>'
+    +'<a class="dk-hot-item" href="'+base+'timestamp/"><div class="dk-hot-icon" style="color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="dk-hot-name">时间戳</div><div class="dk-hot-desc">Unix ↔ 日期</div></div></a>'
+    +'<a class="dk-hot-item" href="'+base+'color/"><div class="dk-hot-icon" style="color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="5" cy="14.5" r="2.5"/><circle cx="11" cy="18" r="2.5"/></svg></div><div><div class="dk-hot-name">颜色转换</div><div class="dk-hot-desc">HEX/RGB/HSL</div></div></a>'
+    +'<a class="dk-hot-item" href="'+base+'hash/"><div class="dk-hot-icon" style="color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></div><div><div class="dk-hot-name">Hash</div><div class="dk-hot-desc">MD5/SHA</div></div></a>'
     +'</div>';
 
   // 复制 Toast
@@ -117,9 +117,9 @@
     +'<div class="dk-share-qr" id="dkShareQR" style="display:flex;align-items:center;justify-content:center;padding:8px;min-height:140px;border-radius:8px;border:1px solid var(--border-glass,rgba(0,0,0,0.08));background:#fff;margin-bottom:8px"></div>'
     +'<div style="text-align:center;font-size:9px;color:#07C160;font-weight:700;margin-bottom:10px">📱 微信扫一扫 分享给好友</div>'
     +'<div class="dk-share-grid">'
-    +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D;color:#fff">📱</div><div class="dk-share-label">微博</div></button>'
-    +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5;color:#fff">🐧</div><div class="dk-share-label">QQ</div></button>'
-    +'<button class="dk-share-item" id="dkShareCopy"><div class="dk-share-icon" style="background:#6366F1;color:#fff">🔗</div><div class="dk-share-label">复制链接</div></button>'
+    +'<button class="dk-share-item" id="dkShareWb"><div class="dk-share-icon" style="background:#E6162D"><svg viewBox="0 0 24 24" fill="#fff" width="22" height="22"><path d="M17.525 11.384c-.282-.084-.477-.14-.328-.508.322-.8.355-1.49.007-1.983-.652-.922-2.434-.873-4.472-.025 0 0-.641.28-.477-.228.316-1.013.268-1.862-.224-2.352-.987-1.12-3.66.044-5.97 2.6-1.728 1.91-2.73 3.937-2.73 5.688 0 3.35 4.3 5.39 8.505 5.39 5.508 0 9.181-3.2 9.181-5.74 0-1.533-1.293-2.403-3.492-2.842zm-6.871 7.04c-3.244.32-6.044-1.148-6.254-3.276-.21-2.13 2.256-4.128 5.5-4.447 3.244-.32 6.044 1.15 6.254 3.278.21 2.128-2.256 4.126-5.5 4.445z"/><ellipse cx="11.5" cy="15.2" rx="2.2" ry="1.5"/></svg></div><div class="dk-share-label">微博</div></button>'
+    +'<button class="dk-share-item" id="dkShareQQ"><div class="dk-share-icon" style="background:#12B7F5"><svg viewBox="0 0 24 24" fill="#fff" width="22" height="22"><path d="M12 2C7.589 2 4 5.589 4 9.996c0 1.887.658 3.63 1.758 5.004-.175.666-.524 1.593-1.108 2.252-.135.152-.05.394.143.426.69.116 2.07-.122 3.143-.59A7.96 7.96 0 0 0 12 18c4.411 0 8-3.589 8-8.004C20 5.589 16.411 2 12 2zm-2.5 10.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm5 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg></div><div class="dk-share-label">QQ</div></button>'
+    +'<button class="dk-share-item" id="dkShareCopy"><div class="dk-share-icon" style="background:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div class="dk-share-label">复制链接</div></button>'
     +'</div>';
   sharePopupEl.addEventListener('click', function(e){ e.stopPropagation(); });
   document.body.appendChild(sharePopupEl);
