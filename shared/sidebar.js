@@ -93,7 +93,7 @@
     +'<div class="dk-ad-promo-badge">推广</div>'
     +'<div class="dk-ad-promo-logo">D</div>'
     +'<div class="dk-ad-promo-title">DevKit 工具箱</div>'
-    +'<div class="dk-ad-promo-desc">141 个免费在线工具<br>开发者的瑞士军刀 🔧</div>'
+    +'<div class="dk-ad-promo-desc">141 个免费在线工具<br>你的在线万能工具箱 🧰</div>'
     +'<button class="dk-ad-promo-btn" id="dkAdFav">⭐ 收藏本站</button>'
     +'</div>'
     +'</div>'
