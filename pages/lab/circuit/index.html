@@ -610,32 +610,20 @@ function drawCurrentDots(path, I) {
   }
   const positions = particleCache[key];
   ctx.save();
-  const tailLen = 4;
-  const tailGap = Math.max(6, pxPerSec * 0.012);
-  const tailStep = tailGap / totalLen;
+  ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
   for (let i = 0; i < dotCount; i++) {
     positions[i] = (positions[i] + speed) % 1;
-    for (let t = 0; t < tailLen; t++) {
-      const frac = (positions[i] - t * tailStep + tailLen) % 1;
-      const pt = pointOnPath(path, frac);
-      const alpha = 0.9 - t * 0.22;
-      const r = 4.5 - t * 0.8;
-      if (r <= 0) continue;
-      ctx.globalAlpha = alpha;
-      if (t === 0) {
-        ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
-        ctx.fillStyle = 'rgba(96,165,250,0.3)';
-        ctx.beginPath(); ctx.arc(pt[0], pt[1], r + 4, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#60A5FA';
-        ctx.beginPath(); ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2); ctx.fill();
-      } else {
-        ctx.fillStyle = '#60A5FA';
-        ctx.beginPath(); ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2); ctx.fill();
-      }
-    }
+    const pt = pointOnPath(path, positions[i]);
+    ctx.globalAlpha = 0.9;
+    // Glow
+    ctx.fillStyle = 'rgba(96,165,250,0.3)';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 8, 0, Math.PI * 2); ctx.fill();
+    // Core
+    ctx.fillStyle = '#60A5FA';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 4.5, 0, Math.PI * 2); ctx.fill();
+    // White center
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 }
