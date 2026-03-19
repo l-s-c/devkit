@@ -371,6 +371,7 @@ function buildSliders() {
       params[s.id] = v;
       document.getElementById('val_' + s.id).textContent = (Number.isInteger(v) ? v : v.toFixed(1)) + ' ' + s.unit;
       update();
+      if (!animRunning) render();
     });
   });
 }
@@ -593,7 +594,7 @@ const particleCache = {};
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
   const norm = Math.min(I, 5) / 5;
-  const speed = 0.003 + norm * norm * 0.08;
+  const speed = 0.002 + norm * norm * 0.12;
   const totalLen = pathLength(path);
   const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
   // Cache key from first point
