@@ -149,6 +149,8 @@ export default defineConfig({
         'phonics': resolve(__dirname, 'pages/phonics/index.html'),
         'sentence-parse': resolve(__dirname, 'pages/sentence-parse/index.html'),
         'physics-lab': resolve(__dirname, 'pages/physics-lab/index.html'),
+        'redirect-pendulum': resolve(__dirname, 'pages/pendulum/index.html'),
+        'redirect-circuit': resolve(__dirname, 'pages/circuit/index.html'),
         'lab': resolve(__dirname, 'pages/lab/index.html'),
         'lab-pendulum': resolve(__dirname, 'pages/lab/pendulum/index.html'),
         'lab-circuit': resolve(__dirname, 'pages/lab/circuit/index.html'),
