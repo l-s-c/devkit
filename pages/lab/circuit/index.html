@@ -598,9 +598,9 @@ function drawCurrentDots(path, I) {
   const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 1/60;
   lastFrameTime = now;
 
-  const norm = Math.min(I, 5) / 5;
   const totalLen = pathLength(path);
-  const pxPerSec = 50 + norm * norm * 500;
+  const logNorm = Math.log(1 + Math.min(I, 6)) / Math.log(7);
+  const pxPerSec = 30 + logNorm * 520;
   const speed = (pxPerSec * dt) / totalLen;
   const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
   const key = path[0][0] + ',' + path[0][1];
