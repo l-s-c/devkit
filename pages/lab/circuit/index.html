@@ -591,14 +591,18 @@ function drawAmmeter(x, y, value) {
 }
 
 const particleCache = {};
+let lastFrameTime = 0;
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
+  const now = performance.now();
+  const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 1/60;
+  lastFrameTime = now;
+
   const norm = Math.min(I, 5) / 5;
   const totalLen = pathLength(path);
-  const pxPerFrame = 0.8 + norm * norm * 8;
-  const speed = pxPerFrame / totalLen;
+  const pxPerSec = 50 + norm * norm * 500;
+  const speed = (pxPerSec * dt) / totalLen;
   const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
-  // Cache key from first point
   const key = path[0][0] + ',' + path[0][1];
   if (!particleCache[key] || particleCache[key].length !== dotCount) {
     particleCache[key] = [];
@@ -607,7 +611,8 @@ function drawCurrentDots(path, I) {
   const positions = particleCache[key];
   ctx.save();
   const tailLen = 4;
-  const tailStep = Math.max(0.01, speed * 3);
+  const tailGap = Math.max(6, pxPerSec * 0.012);
+  const tailStep = tailGap / totalLen;
   for (let i = 0; i < dotCount; i++) {
     positions[i] = (positions[i] + speed) % 1;
     for (let t = 0; t < tailLen; t++) {
@@ -618,12 +623,10 @@ function drawCurrentDots(path, I) {
       if (r <= 0) continue;
       ctx.globalAlpha = alpha;
       if (t === 0) {
-        // Glow on head
         ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
         ctx.fillStyle = 'rgba(96,165,250,0.3)';
         ctx.beginPath(); ctx.arc(pt[0], pt[1], r + 4, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
-        // White center
         ctx.fillStyle = '#60A5FA';
         ctx.beginPath(); ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.8)';
