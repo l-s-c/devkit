@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         root: resolve(__dirname, 'index.html'),
         main: resolve(__dirname, 'pages/index.html'),
+        'tools': resolve(__dirname, 'pages/tools.html'),
         json: resolve(__dirname, 'pages/json/index.html'),
         base64: resolve(__dirname, 'pages/base64/index.html'),
         'url-codec': resolve(__dirname, 'pages/url-codec/index.html'),
