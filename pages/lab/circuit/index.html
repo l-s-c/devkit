@@ -591,10 +591,11 @@ function drawAmmeter(x, y, value) {
 
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
-  const speed = 0.3 + Math.min(I, 5) * 0.6;
-  const t = (animFrame * speed * 0.02) % 1;
+  const norm = Math.min(I, 5) / 5;
+  const speed = 0.1 + Math.pow(norm, 0.5) * 3.5;
+  const t = (animFrame * speed * 0.015) % 1;
   const totalLen = pathLength(path);
-  const dotCount = Math.max(10, Math.min(30, Math.round(totalLen / 25)));
+  const dotCount = Math.max(8, Math.min(35, Math.round(totalLen / (40 - norm * 20))));
   ctx.save();
   ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
   for (let i = 0; i < dotCount; i++) {
