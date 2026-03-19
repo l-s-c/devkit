@@ -27,8 +27,6 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .tb-btn:active{transform:scale(0.96);background:rgba(0,0,0,0.06)}
 .tb-btn.disabled{opacity:0.3;pointer-events:none}
 .tb-btn svg{width:14px;height:14px}
-.tb-btn-save{background:rgba(59,130,246,0.08);color:#2563EB}
-.tb-btn-save:hover{background:rgba(59,130,246,0.15)}
 .tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
 .tb-zoom{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#8E8E93;font-family:'JetBrains Mono',monospace}
 
@@ -165,12 +163,10 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
   </div>
   <div class="tb-sep"></div>
   <div class="tb-group">
-    <button class="tb-btn tb-btn-save" id="btn-save" title="保存">💾 保存</button>
-    <button class="tb-btn" id="btn-load" title="加载">📂 加载</button>
-    <button class="tb-btn" id="btn-export" title="导出">📤 导出</button>
-    <button class="tb-btn" id="btn-import" title="导入">📥 导入</button>
-    <button class="tb-btn" id="btn-examples" title="示例">📖 示例</button>
-    <button class="tb-btn" id="btn-clear" title="清空">🗑️ 清空</button>
+    <button class="tb-btn" id="btn-export" title="导出"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
+    <button class="tb-btn" id="btn-import" title="导入"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>导入</button>
+    <button class="tb-btn" id="btn-examples" title="示例"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>示例</button>
+    <button class="tb-btn" id="btn-clear" title="清空"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>清空</button>
   </div>
   <div class="tb-right">
     <div class="tb-zoom">
@@ -789,6 +785,7 @@ function renderAll() {
 
   updateUndoRedoButtons();
   updatePropsPanel();
+  if (state.dirty) autoSave();
 }
 
 function renderWires() {
@@ -874,78 +871,31 @@ function updateUndoRedoButtons() {
   document.getElementById('btn-redo').classList.toggle('disabled', !state.redoStack.length);
 }
 
-// ===== Save/Load (localStorage) =====
-const STORAGE_KEY = 'devkit-circuit-builder';
-const MAX_SLOTS = 5;
+// ===== Auto Save/Load (localStorage) =====
+const STORAGE_KEY = 'devkit-circuit-builder-auto';
 
-function getSaveSlots() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+function autoSave() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      components: state.components,
+      connections: state.connections,
+      nextId: state.nextId,
+    }));
+    state.dirty = false;
+  } catch(e) { /* storage full */ }
 }
 
-function saveToSlot(slotIdx) {
-  const slots = getSaveSlots();
-  const existing = slots[slotIdx];
-  if (existing && !confirm(`覆盖存档「${existing.name}」？`)) return;
-  const defaultName = existing ? existing.name : `电路 ${slotIdx + 1}`;
-  slots[slotIdx] = {
-    name: prompt('存档名称:', defaultName) || defaultName,
-    components: state.components,
-    connections: state.connections,
-    nextId: state.nextId,
-    time: new Date().toLocaleString('zh-CN'),
-    count: state.components.length,
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(slots));
-  state.dirty = false;
-  renderSaveModal();
-}
-
-function loadFromSlot(slotIdx) {
-  const slots = getSaveSlots();
-  const slot = slots[slotIdx];
-  if (!slot) return;
-  pushUndo();
-  state.components = slot.components;
-  state.connections = slot.connections;
-  state.nextId = slot.nextId || state.nextId;
-  state.selectedId = null;
-  state.dirty = false;
-  closeModal();
-  renderAll();
-  solveAndUpdate();
-}
-
-function deleteSlot(slotIdx) {
-  if (!confirm('确定删除此存档？')) return;
-  const slots = getSaveSlots();
-  slots[slotIdx] = null;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(slots));
-  renderSaveModal();
-}
-
-function renderSaveModal() {
-  const slots = getSaveSlots();
-  const container = document.getElementById('modal-slots');
-  let html = '';
-  for (let i = 0; i < MAX_SLOTS; i++) {
-    const s = slots[i];
-    if (s) {
-      html += `<div class="slot"><span class="slot-icon">📄</span><div class="slot-info"><div class="slot-name">${s.name}</div><div class="slot-meta">${s.count} 个元件 · ${s.time}</div></div><div class="slot-actions"><button class="slot-btn slot-save" data-slot="${i}">覆盖</button><button class="slot-btn slot-load" data-slot="${i}">加载</button><button class="slot-btn slot-del" data-slot="${i}">删除</button></div></div>`;
-    } else {
-      html += `<div class="slot"><span class="slot-icon">➕</span><div class="slot-info"><div class="slot-name slot-empty">空槽位</div></div><div class="slot-actions"><button class="slot-btn slot-save" data-slot="${i}">保存</button></div></div>`;
+function autoLoad() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data?.components?.length) {
+      state.components = data.components;
+      state.connections = data.connections || [];
+      state.nextId = data.nextId || 1;
     }
-  }
-  container.innerHTML = html;
-  container.querySelectorAll('.slot-save').forEach(b => b.onclick = () => saveToSlot(+b.dataset.slot));
-  container.querySelectorAll('.slot-load').forEach(b => b.onclick = () => loadFromSlot(+b.dataset.slot));
-  container.querySelectorAll('.slot-del').forEach(b => b.onclick = () => deleteSlot(+b.dataset.slot));
+  } catch(e) { /* ignore */ }
 }
 
-function openModal(title) {
-  document.getElementById('modal-title').textContent = title;
-  renderSaveModal();
-  document.getElementById('modal-overlay').classList.add('show');
-}
 function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
 
 // ===== Export/Import JSON =====
@@ -982,8 +932,6 @@ function importCircuit(file) {
 // ===== Toolbar events =====
 document.getElementById('btn-undo').onclick = undo;
 document.getElementById('btn-redo').onclick = redo;
-document.getElementById('btn-save').onclick = () => openModal('💾 存档管理');
-document.getElementById('btn-load').onclick = () => openModal('📂 加载存档');
 document.getElementById('btn-export').onclick = exportCircuit;
 document.getElementById('btn-import').onclick = () => document.getElementById('import-input').click();
 document.getElementById('import-input').onchange = e => { if (e.target.files[0]) importCircuit(e.target.files[0]); e.target.value = ''; };
@@ -1115,8 +1063,10 @@ window.addEventListener('beforeunload', e => {
   if (state.dirty) { e.preventDefault(); e.returnValue = ''; }
 });
 
-// Init
+// Init — auto restore
+autoLoad();
 renderAll();
+if (state.components.length) solveAndUpdate();
 </script>
 
 <noscript><p>自由电路搭建 — 请启用 JavaScript</p></noscript>
