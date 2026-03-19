@@ -77,7 +77,9 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .port-circle{fill:rgba(59,130,246,0.1);stroke:#3B82F6;stroke-width:2;cursor:crosshair;transition:all 150ms;r:6}
 .port-circle:hover{fill:rgba(59,130,246,0.3);stroke:#2563EB;r:9}
 .port-circle.connected{fill:#3B82F6;stroke:#1D4ED8;r:7}
-.wire-line{stroke:#3B82F6;stroke-width:2.5;stroke-linecap:round;fill:none}
+.wire-line{stroke:#3B82F6;stroke-width:2.5;stroke-linecap:round;fill:none;cursor:pointer}
+.wire-line:hover{stroke:#2563EB;stroke-width:4}
+.wire-line.wire-selected{stroke:#EF4444;stroke-width:4;filter:drop-shadow(0 0 4px rgba(239,68,68,0.4))}
 .wire-temp{stroke:#3B82F6;stroke-width:2;stroke-dasharray:6 4;opacity:0.6;fill:none}
 
 /* === Right: Properties === */
@@ -166,6 +168,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
     <button class="tb-btn" id="btn-load" title="加载">📂 加载</button>
     <button class="tb-btn" id="btn-export" title="导出">📤 导出</button>
     <button class="tb-btn" id="btn-import" title="导入">📥 导入</button>
+    <button class="tb-btn" id="btn-examples" title="示例">📖 示例</button>
     <button class="tb-btn" id="btn-clear" title="清空">🗑️ 清空</button>
   </div>
   <div class="tb-right">
@@ -263,6 +266,7 @@ const state = {
   components: [],
   connections: [],
   selectedId: null,
+  selectedWireIdx: -1,
   nextId: 1,
   zoom: 1,
   dirty: false,
@@ -554,13 +558,35 @@ function addConnection(from, to) {
 // ===== Selection =====
 function selectComponent(id) {
   state.selectedId = id;
+  state.selectedWireIdx = -1;
   document.querySelectorAll('.comp-group').forEach(g => g.classList.toggle('selected', g.dataset.id === id));
+  renderWires();
   updatePropsPanel();
+}
+
+function selectWire(idx) {
+  state.selectedWireIdx = idx;
+  state.selectedId = null;
+  document.querySelectorAll('.comp-group').forEach(g => g.classList.remove('selected'));
+  renderWires();
+  updatePropsPanel();
+}
+
+function deleteSelectedWire() {
+  if (state.selectedWireIdx < 0 || state.selectedWireIdx >= state.connections.length) return;
+  pushUndo();
+  state.connections.splice(state.selectedWireIdx, 1);
+  state.selectedWireIdx = -1;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
 }
 
 svgEl.addEventListener('pointerdown', e => {
   if (e.target === svgEl || e.target.tagName === 'rect' && !e.target.closest('.comp-group')) {
     selectComponent(null);
+    state.selectedWireIdx = -1;
+    renderWires();
   }
 });
 
@@ -756,7 +782,19 @@ function renderWires() {
     line.setAttribute('x1', x1); line.setAttribute('y1', y1);
     line.setAttribute('x2', x2); line.setAttribute('y2', y2);
     line.setAttribute('class', 'wire-line');
+    // Wider invisible hit area
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    hit.setAttribute('x1', x1); hit.setAttribute('y1', y1);
+    hit.setAttribute('x2', x2); hit.setAttribute('y2', y2);
+    hit.setAttribute('stroke', 'transparent'); hit.setAttribute('stroke-width', '16');
+    hit.style.cursor = 'pointer';
+    const wireIdx = state.connections.indexOf(conn);
+    const clickHandler = e => { e.stopPropagation(); selectWire(wireIdx); };
+    hit.addEventListener('pointerdown', clickHandler);
+    line.addEventListener('pointerdown', clickHandler);
+    if (wireIdx === state.selectedWireIdx) line.classList.add('wire-selected');
     wiresLayer.appendChild(line);
+    wiresLayer.appendChild(hit);
   }
 
   // Update port visuals
@@ -927,6 +965,95 @@ document.getElementById('btn-clear').onclick = () => {
   state.components = []; state.connections = []; state.selectedId = null; state.dirty = false;
   renderAll(); solveAndUpdate();
 };
+// ===== Example circuits =====
+const EXAMPLES = {
+  '💡 简单电路 (电池+灯泡)': {
+    components: [
+      { id:'e1', type:'battery', x:200, y:100, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'bulb', x:400, y:100, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '🔗 串联电路 (电池+2电阻)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:12}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'resistor', x:340, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
+      { id:'e3', type:'resistor', x:340, y:240, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
+      { id:'e4', type:'wire', x:500, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e3',portId:'p1'} },
+      { from:{componentId:'e3',portId:'p0'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '⚡ 并联电路 (电池+2灯泡)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'bulb', x:400, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e3', type:'bulb', x:400, y:220, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e4', type:'wire', x:260, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e5', type:'wire', x:260, y:220, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e6', type:'wire', x:540, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e5',portId:'p0'} },
+      { from:{componentId:'e5',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
+      { from:{componentId:'e6',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '🔌 带开关的电路 (电池+开关+灯泡+电流表)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:200, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'switch', x:300, y:80, rotation:0, params:{closed:true}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e3', type:'ammeter', x:460, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-20,dy:0},{id:'p1',dx:20,dy:0}] },
+      { id:'e4', type:'bulb', x:460, y:200, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+};
+
+function loadExample(name) {
+  const ex = EXAMPLES[name];
+  if (!ex) return;
+  pushUndo();
+  state.components = JSON.parse(JSON.stringify(ex.components));
+  state.connections = JSON.parse(JSON.stringify(ex.connections));
+  state.nextId = ex.nextId || 10;
+  state.selectedId = null;
+  state.selectedWireIdx = -1;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+document.getElementById('btn-examples').onclick = () => {
+  const names = Object.keys(EXAMPLES);
+  const container = document.getElementById('modal-slots');
+  document.getElementById('modal-title').textContent = '📖 示例电路';
+  let html = '';
+  for (const name of names) {
+    const ex = EXAMPLES[name];
+    html += `<div class="slot" data-example="${name}"><span class="slot-icon">${name.split(' ')[0]}</span><div class="slot-info"><div class="slot-name">${name}</div><div class="slot-meta">${ex.components.length} 个元件</div></div><div class="slot-actions"><button class="slot-btn slot-load" data-ex-name="${name}">加载</button></div></div>`;
+  }
+  container.innerHTML = html;
+  container.querySelectorAll('[data-ex-name]').forEach(b => b.onclick = () => { loadExample(b.dataset.exName); closeModal(); });
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
 document.getElementById('modal-close').onclick = closeModal;
 document.getElementById('hint-export').onclick = exportCircuit;
 
@@ -948,7 +1075,11 @@ document.querySelectorAll('.lib-section-title').forEach(t => {
 document.addEventListener('keydown', e => {
   if (e.key === 'z' && (e.metaKey || e.ctrlKey) && !e.shiftKey) { e.preventDefault(); undo(); }
   if ((e.key === 'y' && (e.metaKey || e.ctrlKey)) || (e.key === 'z' && (e.metaKey || e.ctrlKey) && e.shiftKey)) { e.preventDefault(); redo(); }
-  if (e.key === 'Delete' || e.key === 'Backspace') { if (state.selectedId && document.activeElement.tagName !== 'INPUT') deleteComponent(state.selectedId); }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (document.activeElement.tagName === 'INPUT') return;
+    if (state.selectedId) deleteComponent(state.selectedId);
+    else if (state.selectedWireIdx >= 0) deleteSelectedWire();
+  }
 });
 
 // beforeunload
