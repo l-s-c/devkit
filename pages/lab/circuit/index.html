@@ -589,28 +589,48 @@ function drawAmmeter(x, y, value) {
   ctx.restore();
 }
 
+const particleCache = {};
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
   const norm = Math.min(I, 5) / 5;
-  const speed = 0.15 + Math.pow(norm, 0.4) * 4;
-  const t = (animFrame * speed * 0.012) % 1;
+  const speed = 0.002 + Math.pow(norm, 0.4) * 0.018;
   const totalLen = pathLength(path);
-  const dotCount = Math.max(6, Math.min(20, Math.round(totalLen / 50)));
+  const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
+  // Cache key from first point
+  const key = path[0][0] + ',' + path[0][1];
+  if (!particleCache[key] || particleCache[key].length !== dotCount) {
+    particleCache[key] = [];
+    for (let i = 0; i < dotCount; i++) particleCache[key].push(i / dotCount);
+  }
+  const positions = particleCache[key];
   ctx.save();
-  ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 8;
+  const tailLen = 4;
+  const tailStep = Math.max(0.008, speed * 2);
   for (let i = 0; i < dotCount; i++) {
-    const frac = (t + i / dotCount) % 1;
-    const pt = pointOnPath(path, frac);
-    ctx.globalAlpha = 0.85;
-    // Outer glow
-    ctx.fillStyle = 'rgba(96,165,250,0.25)';
-    ctx.beginPath(); ctx.arc(pt[0], pt[1], 7, 0, Math.PI * 2); ctx.fill();
-    // Core dot
-    ctx.fillStyle = '#60A5FA';
-    ctx.beginPath(); ctx.arc(pt[0], pt[1], 4, 0, Math.PI * 2); ctx.fill();
-    // White center
-    ctx.fillStyle = 'rgba(255,255,255,0.8)';
-    ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2); ctx.fill();
+    positions[i] = (positions[i] + speed) % 1;
+    for (let t = 0; t < tailLen; t++) {
+      const frac = (positions[i] - t * tailStep + tailLen) % 1;
+      const pt = pointOnPath(path, frac);
+      const alpha = 0.9 - t * 0.22;
+      const r = 4.5 - t * 0.8;
+      if (r <= 0) continue;
+      ctx.globalAlpha = alpha;
+      if (t === 0) {
+        // Glow on head
+        ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
+        ctx.fillStyle = 'rgba(96,165,250,0.3)';
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], r + 4, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        // White center
+        ctx.fillStyle = '#60A5FA';
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillStyle = '#60A5FA';
+        ctx.beginPath(); ctx.arc(pt[0], pt[1], r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
   }
   ctx.restore();
 }
