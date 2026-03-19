@@ -702,6 +702,16 @@ function solveAndUpdate() {
     wb.className = 'warning-bar';
   }
 
+  // Re-render SVG (bulb glow depends on solve result)
+  compsLayer.innerHTML = '';
+  for (const comp of state.components) {
+    const g = createCompSVG(comp);
+    compsLayer.appendChild(g);
+    setupCompDrag(g, comp);
+    g.querySelectorAll('.port-circle').forEach(setupPortClick);
+    if (comp.id === state.selectedId) g.classList.add('selected');
+  }
+  renderWires();
   updatePropsPanel();
 }
 
