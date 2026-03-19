@@ -808,8 +808,11 @@ function getSaveSlots() {
 
 function saveToSlot(slotIdx) {
   const slots = getSaveSlots();
+  const existing = slots[slotIdx];
+  if (existing && !confirm(`覆盖存档「${existing.name}」？`)) return;
+  const defaultName = existing ? existing.name : `电路 ${slotIdx + 1}`;
   slots[slotIdx] = {
-    name: prompt('存档名称:', `电路 ${slotIdx + 1}`) || `电路 ${slotIdx + 1}`,
+    name: prompt('存档名称:', defaultName) || defaultName,
     components: state.components,
     connections: state.connections,
     nextId: state.nextId,
@@ -851,7 +854,7 @@ function renderSaveModal() {
   for (let i = 0; i < MAX_SLOTS; i++) {
     const s = slots[i];
     if (s) {
-      html += `<div class="slot"><span class="slot-icon">📄</span><div class="slot-info"><div class="slot-name">${s.name}</div><div class="slot-meta">${s.count} 个元件 · ${s.time}</div></div><div class="slot-actions"><button class="slot-btn slot-load" data-slot="${i}">加载</button><button class="slot-btn slot-del" data-slot="${i}">删除</button></div></div>`;
+      html += `<div class="slot"><span class="slot-icon">📄</span><div class="slot-info"><div class="slot-name">${s.name}</div><div class="slot-meta">${s.count} 个元件 · ${s.time}</div></div><div class="slot-actions"><button class="slot-btn slot-save" data-slot="${i}">覆盖</button><button class="slot-btn slot-load" data-slot="${i}">加载</button><button class="slot-btn slot-del" data-slot="${i}">删除</button></div></div>`;
     } else {
       html += `<div class="slot"><span class="slot-icon">➕</span><div class="slot-info"><div class="slot-name slot-empty">空槽位</div></div><div class="slot-actions"><button class="slot-btn slot-save" data-slot="${i}">保存</button></div></div>`;
     }
