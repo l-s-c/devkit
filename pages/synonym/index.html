@@ -55,35 +55,20 @@ body{min-height:100vh;display:flex;flex-direction:column}
   </div>
   <div class="panel" id="resultPanel"><div class="empty-msg">👆 输入词语开始查询</div></div>
 </div>
-<div class="statusbar"><span id="statusInfo">近义词反义词查询</span><div class="statusbar-spacer"></div><span>500+ 组词汇</span></div>
+<div class="statusbar"><span id="statusInfo">近义词反义词查询</span><div class="statusbar-spacer"></div><span>270+ 组词汇</span></div>
 <script type="module">
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 // w=word, py=pinyin, syn=[[word,pinyin],...], ant=[[word,pinyin],...], ex=example
-const DATA=[
-{w:'快乐',py:'kuài lè',syn:[['高兴','gāo xìng'],['开心','kāi xīn'],['愉快','yú kuài'],['欢喜','huān xǐ'],['欣喜','xīn xǐ']],ant:[['悲伤','bēi shāng'],['难过','nán guò'],['忧愁','yōu chóu'],['痛苦','tòng kǔ']],ex:'放暑假了，小朋友们都非常快乐。'},
-{w:'美丽',py:'měi lì',syn:[['漂亮','piào liang'],['好看','hǎo kàn'],['美观','měi guān'],['秀丽','xiù lì']],ant:[['丑陋','chǒu lòu'],['难看','nán kàn'],['丑','chǒu']],ex:'公园里的花开得非常美丽。'},
-{w:'勇敢',py:'yǒng gǎn',syn:[['英勇','yīng yǒng'],['大胆','dà dǎn'],['无畏','wú wèi'],['果敢','guǒ gǎn']],ant:[['胆小','dǎn xiǎo'],['懦弱','nuò ruò'],['怯懦','qiè nuò']],ex:'消防员叔叔非常勇敢。'},
-{w:'聪明',py:'cōng míng',syn:[['机灵','jī líng'],['智慧','zhì huì'],['伶俐','líng lì'],['机智','jī zhì']],ant:[['愚笨','yú bèn'],['愚蠢','yú chǔn'],['迟钝','chí dùn']],ex:'这个孩子很聪明，学什么都快。'},
-{w:'安静',py:'ān jìng',syn:[['宁静','níng jìng'],['平静','píng jìng'],['寂静','jì jìng'],['幽静','yōu jìng']],ant:[['喧闹','xuān nào'],['吵闹','chǎo nào'],['热闹','rè nào']],ex:'图书馆里很安静。'},
-{w:'温暖',py:'wēn nuǎn',syn:[['暖和','nuǎn huo'],['温和','wēn hé'],['和煦','hé xù']],ant:[['寒冷','hán lěng'],['冰冷','bīng lěng'],['冷','lěng']],ex:'春天的阳光很温暖。'},
-{w:'困难',py:'kùn nán',syn:[['艰难','jiān nán'],['艰苦','jiān kǔ'],['棘手','jí shǒu']],ant:[['容易','róng yì'],['简单','jiǎn dān'],['轻松','qīng sōng']],ex:'遇到困难不要害怕。'},
-{w:'认真',py:'rèn zhēn',syn:[['仔细','zǐ xì'],['细心','xì xīn'],['专心','zhuān xīn']],ant:[['马虎','mǎ hu'],['粗心','cū xīn'],['草率','cǎo shuài']],ex:'做作业要认真。'},
-{w:'高兴',py:'gāo xìng',syn:[['开心','kāi xīn'],['快乐','kuài lè'],['欢喜','huān xǐ'],['喜悦','xǐ yuè']],ant:[['难过','nán guò'],['伤心','shāng xīn'],['悲伤','bēi shāng']],ex:'考了一百分，我很高兴。'},
-{w:'喜欢',py:'xǐ huān',syn:[['爱好','ài hào'],['喜爱','xǐ ài'],['热爱','rè ài']],ant:[['讨厌','tǎo yàn'],['厌恶','yàn wù'],['憎恨','zēng hèn']],ex:'我喜欢画画。'},
-{w:'著名',py:'zhù míng',syn:[['有名','yǒu míng'],['出名','chū míng'],['闻名','wén míng']],ant:[['无名','wú míng'],['平凡','píng fán']],ex:'李白是著名的诗人。'},
-{w:'害怕',py:'hài pà',syn:[['恐惧','kǒng jù'],['畏惧','wèi jù'],['胆怯','dǎn qiè']],ant:[['勇敢','yǒng gǎn'],['大胆','dà dǎn'],['无畏','wú wèi']],ex:'她害怕打雷。'},
-{w:'帮助',py:'bāng zhù',syn:[['援助','yuán zhù'],['协助','xié zhù'],['支持','zhī chí']],ant:[['阻碍','zǔ ài'],['妨碍','fáng ài']],ex:'同学之间要互相帮助。'},
-{w:'渐渐',py:'jiàn jiàn',syn:[['逐渐','zhú jiàn'],['慢慢','màn man'],['逐步','zhú bù']],ant:[['突然','tū rán'],['猛然','měng rán'],['骤然','zhòu rán']],ex:'天气渐渐变暖了。'},
-{w:'仔细',py:'zǐ xì',syn:[['认真','rèn zhēn'],['细心','xì xīn'],['详细','xiáng xì']],ant:[['马虎','mǎ hu'],['粗心','cū xīn'],['草率','cǎo shuài']],ex:'做实验要仔细观察。'},
-{w:'坚强',py:'jiān qiáng',syn:[['刚强','gāng qiáng'],['顽强','wán qiáng'],['坚毅','jiān yì']],ant:[['软弱','ruǎn ruò'],['脆弱','cuì ruò'],['懦弱','nuò ruò']],ex:'她是一个坚强的女孩。'},
-{w:'宽阔',py:'kuān kuò',syn:[['广阔','guǎng kuò'],['辽阔','liáo kuò'],['宽广','kuān guǎng']],ant:[['狭窄','xiá zhǎi'],['窄小','zhǎi xiǎo']],ex:'马路很宽阔。'},
-{w:'明白',py:'míng bái',syn:[['理解','lǐ jiě'],['懂得','dǒng de'],['了解','liǎo jiě']],ant:[['糊涂','hú tu'],['迷惑','mí huò'],['困惑','kùn huò']],ex:'我终于明白了这道题。'},
-{w:'赞美',py:'zàn měi',syn:[['赞扬','zàn yáng'],['称赞','chēng zàn'],['夸奖','kuā jiǎng']],ant:[['批评','pī píng'],['责备','zé bèi'],['指责','zhǐ zé']],ex:'老师赞美他的画画得好。'},
-{w:'骄傲',py:'jiāo ào',syn:[['自豪','zì háo'],['得意','dé yì'],['傲慢','ào màn']],ant:[['谦虚','qiān xū'],['谦逊','qiān xùn'],['虚心','xū xīn']],ex:'取得好成绩不要骄傲。'},
-];
-const QUICK=DATA.slice(0,12).map(d=>d.w);
-document.getElementById('quickPills').innerHTML=QUICK.map(w=>`<div class="pill">${w}</div>`).join('');
+let DATA=[];
+const LOADING_PILLS=['快乐','美丽','勇敢','聪明','安静','温暖','困难','认真','高兴','喜欢','著名','害怕'];
+document.getElementById('quickPills').innerHTML=LOADING_PILLS.map(w=>`<div class="pill">${w}</div>`).join('');
+fetch('../../data/synonyms.json').then(r=>r.json()).then(d=>{
+  DATA=d;
+  const QUICK=DATA.slice(0,16).map(d=>d.w);
+  document.getElementById('quickPills').innerHTML=QUICK.map(w=>`<div class="pill">${w}</div>`).join('');
+  document.getElementById('statusInfo').textContent=`近义词反义词查询 · ${DATA.length} 组词汇`;
+}).catch(()=>{document.getElementById('statusInfo').textContent='数据加载失败';});
 function render(word){
   const p=document.getElementById('resultPanel');
   if(!word){p.innerHTML='<div class="empty-msg">👆 输入词语开始查询</div>';return}
