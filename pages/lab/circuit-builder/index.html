@@ -663,12 +663,39 @@ function updatePropsPanel() {
   if (!comp) return;
 
   // Bind events
+  let isDraggingSlider = false;
   content.querySelectorAll('[data-param]').forEach(input => {
+    if (input.type === 'range') {
+      input.addEventListener('pointerdown', () => { isDraggingSlider = true; });
+      input.addEventListener('pointerup', () => { isDraggingSlider = false; });
+      input.addEventListener('lostpointercapture', () => { isDraggingSlider = false; });
+    }
     input.addEventListener('input', e => {
       const param = e.target.dataset.param;
       comp.params[param] = parseFloat(e.target.value);
       content.querySelectorAll(`[data-param="${param}"]`).forEach(el => { if (el !== e.target) el.value = e.target.value; });
       state.dirty = true;
+      // Lightweight solve without full re-render to avoid destroying slider mid-drag
+      const comps = state.components.map(c => {
+        const def = COMP_DEFAULTS[c.type];
+        return { id: c.id, type: c.type, params: { ...c.params }, ports: def.ports.map(p => ({ id: p.id, side: 'left' })) };
+      });
+      lastResult = solveCircuit({ components: comps, connections: state.connections });
+      // Update readings inline without rebuilding DOM
+      if (!isDraggingSlider) {
+        solveAndUpdate();
+      } else {
+        // Just update the reading values if visible
+        const br = lastResult?.branches?.[comp.id];
+        if (br) {
+          content.querySelectorAll('.pc-reading .rv').forEach((el, i) => {
+            el.textContent = i === 0 ? Math.abs(br.I).toFixed(3) : Math.abs(br.V).toFixed(2);
+          });
+        }
+      }
+    });
+    input.addEventListener('change', () => {
+      // On slider release, do full update
       solveAndUpdate();
     });
   });
