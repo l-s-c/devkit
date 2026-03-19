@@ -593,17 +593,26 @@ function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
   const speed = 0.3 + Math.min(I, 5) * 0.6;
   const t = (animFrame * speed * 0.02) % 1;
-  ctx.fillStyle = 'rgba(59,130,246,0.7)';
   const totalLen = pathLength(path);
-  const dotCount = Math.max(6, Math.min(20, Math.round(totalLen / 40)));
+  const dotCount = Math.max(10, Math.min(30, Math.round(totalLen / 25)));
+  ctx.save();
+  ctx.shadowColor = '#3B82F6'; ctx.shadowBlur = 10;
   for (let i = 0; i < dotCount; i++) {
     const frac = (t + i / dotCount) % 1;
     const pt = pointOnPath(path, frac);
-    const alpha = 0.4 + 0.4 * Math.sin(frac * Math.PI * 2);
+    const alpha = 0.5 + 0.5 * Math.sin(frac * Math.PI * 2);
     ctx.globalAlpha = alpha;
-    ctx.beginPath(); ctx.arc(pt[0], pt[1], 3, 0, Math.PI * 2); ctx.fill();
+    // Outer glow
+    ctx.fillStyle = 'rgba(96,165,250,0.3)';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 8, 0, Math.PI * 2); ctx.fill();
+    // Core dot
+    ctx.fillStyle = '#60A5FA';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 4, 0, Math.PI * 2); ctx.fill();
+    // White center
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.5, 0, Math.PI * 2); ctx.fill();
   }
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 function pathLength(pts) {
