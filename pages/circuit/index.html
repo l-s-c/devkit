@@ -177,6 +177,7 @@
       <span id="canvasTitle">电路图（闭合回路）</span>
       <div class="canvas-toggles">
         <button class="toggle-btn active" id="toggleAnim">电流动画</button>
+        <button class="toggle-btn" id="toggleVoltage">电压标注</button>
         <button class="toggle-btn active" id="toggleLabels">元件标签</button>
       </div>
     </div>
@@ -237,6 +238,7 @@ let currentCircuit = 'simple';
 let switchOn = true;
 let showAnim = true;
 let showLabels = true;
+let showVoltage = false;
 let animFrame = 0;
 let params = {};
 
@@ -549,6 +551,23 @@ function pointOnPath(pts, frac) {
   return pts[pts.length - 1];
 }
 
+function drawVoltageLabel(x, y, text, color = '#D97706') {
+  if (!showVoltage || !switchOn) return;
+  ctx.save();
+  ctx.font = '700 10px monospace';
+  ctx.textAlign = 'center';
+  const w = ctx.measureText(text).width + 10;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(x - w/2, y - 8, w, 16, 4);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y + 4);
+  ctx.restore();
+}
+
 /* ===== Circuit-specific drawing ===== */
 const cx = W / 2, cy = H / 2;
 const hw = 200, hh = 130;
@@ -569,6 +588,9 @@ function drawSimple(result) {
   drawResistor(x2, cy, false, 'R₁', params.R1);
   drawAmmeter(cx + 100, y1, switchOn ? result.I : 0);
   drawCurrentDots(path, result.I);
+  // Voltage annotations
+  drawVoltageLabel(x2 + 50, cy, (switchOn ? params.V : 0).toFixed(1) + 'V');
+  drawVoltageLabel(x1 - 40, cy, params.V.toFixed(1) + 'V', '#2563EB');
 }
 
 function drawSeries(result) {
@@ -586,6 +608,14 @@ function drawSeries(result) {
   drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
   const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
   drawCurrentDots(path, result.I);
+  // Voltage annotations
+  if (switchOn) {
+    const Rt = params.R1 + params.R2;
+    const I = params.V / Rt;
+    drawVoltageLabel(x2 + 50, cy - 50, (I * params.R1).toFixed(1) + 'V');
+    drawVoltageLabel(x2 + 50, cy + 50, (I * params.R2).toFixed(1) + 'V');
+  }
+  drawVoltageLabel(x1 - 40, cy, params.V.toFixed(1) + 'V', '#2563EB');
 }
 
 function drawParallel(result) {
@@ -614,6 +644,12 @@ function drawParallel(result) {
   drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
   const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
   drawCurrentDots(path, result.I);
+  // Voltage annotations — parallel: all branches same voltage
+  if (switchOn) {
+    drawVoltageLabel(bx1 - 30, cy, params.V.toFixed(1) + 'V');
+    drawVoltageLabel(bx2 + 30, cy, params.V.toFixed(1) + 'V');
+  }
+  drawVoltageLabel(x1 - 40, cy, params.V.toFixed(1) + 'V', '#2563EB');
 }
 
 function drawMixed(result) {
@@ -642,6 +678,16 @@ function drawMixed(result) {
   drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
   const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
   drawCurrentDots(path, result.I);
+  // Voltage annotations
+  if (switchOn) {
+    const Rp = params.R2 * params.R3 / (params.R2 + params.R3);
+    const Rt = params.R1 + Rp;
+    const I = params.V / Rt;
+    drawVoltageLabel(cx + 110, y1 - 22, (I * params.R1).toFixed(1) + 'V');
+    drawVoltageLabel(bx1 - 30, cy, (I * Rp).toFixed(1) + 'V');
+    drawVoltageLabel(bx2 + 30, cy, (I * Rp).toFixed(1) + 'V');
+  }
+  drawVoltageLabel(x1 - 40, cy, params.V.toFixed(1) + 'V', '#2563EB');
 }
 
 function drawOhmOrPower(result) {
@@ -675,6 +721,9 @@ function drawOhmOrPower(result) {
   ctx.setLineDash([]);
   const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
   drawCurrentDots(path, result.I);
+  // Voltage annotations
+  drawVoltageLabel(x2 + 50, cy - 20, (switchOn ? params.V : 0).toFixed(1) + 'V');
+  drawVoltageLabel(x1 - 40, cy, params.V.toFixed(1) + 'V', '#2563EB');
 }
 
 const DRAW_FN = {
@@ -737,6 +786,11 @@ document.getElementById('toggleAnim').addEventListener('click', function () {
   showAnim = !showAnim;
   this.classList.toggle('active', showAnim);
   if (showAnim && switchOn) startAnim(); else render();
+});
+document.getElementById('toggleVoltage').addEventListener('click', function () {
+  showVoltage = !showVoltage;
+  this.classList.toggle('active', showVoltage);
+  render();
 });
 document.getElementById('toggleLabels').addEventListener('click', function () {
   showLabels = !showLabels;
