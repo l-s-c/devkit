@@ -594,9 +594,9 @@ const particleCache = {};
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
   const norm = Math.min(I, 5) / 5;
-  const speed = 0.002 + norm * norm * 0.12;
-
   const totalLen = pathLength(path);
+  const pxPerFrame = 0.8 + norm * norm * 8;
+  const speed = pxPerFrame / totalLen;
   const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
   // Cache key from first point
   const key = path[0][0] + ',' + path[0][1];
