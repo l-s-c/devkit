@@ -593,7 +593,7 @@ const particleCache = {};
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
   const norm = Math.min(I, 5) / 5;
-  const speed = 0.002 + Math.pow(norm, 0.4) * 0.018;
+  const speed = 0.001 + Math.pow(norm, 0.3) * 0.05;
   const totalLen = pathLength(path);
   const dotCount = Math.max(5, Math.min(14, Math.round(totalLen / 60)));
   // Cache key from first point
@@ -605,7 +605,7 @@ function drawCurrentDots(path, I) {
   const positions = particleCache[key];
   ctx.save();
   const tailLen = 4;
-  const tailStep = Math.max(0.008, speed * 2);
+  const tailStep = Math.max(0.01, speed * 3);
   for (let i = 0; i < dotCount; i++) {
     positions[i] = (positions[i] + speed) % 1;
     for (let t = 0; t < tailLen; t++) {
