@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🔬 实验室 — DevKit 在线万能工具箱</title>
+<meta name="description" content="DevKit 互动实验室：用动画和交互理解物理、化学、数学原理。单摆运动、电路模拟、函数变换等在线实验。">
+<meta name="keywords" content="在线物理实验,虚拟实验室,物理模拟,化学实验,数学可视化,DevKit实验室">
+<meta property="og:title" content="🔬 实验室 — DevKit 在线万能工具箱">
+<meta property="og:description" content="用动画和交互理解物理、化学、数学原理">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../../shared/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--physics:#3B82F6;--chemistry:#06B6D4;--math:#8B5CF6}
+
+/* Hero */
+.lab-hero{max-width:960px;margin:0 auto;padding:40px 24px 28px;text-align:center}
+.lab-hero h2{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+.lab-hero h2 span{background:linear-gradient(135deg,var(--physics),var(--chemistry),var(--math));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lab-hero p{font-size:14px;color:var(--text-caption,#8E8E93);max-width:420px;margin:0 auto 16px;line-height:1.6}
+.lab-badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.lab-badges span{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(99,102,241,0.08);color:#6366F1}
+
+/* Section */
+.lab-section{max-width:960px;margin:0 auto;padding:0 24px 36px}
+.lab-section-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.lab-dot{width:8px;height:8px;border-radius:3px}
+.lab-section-title{font-size:16px;font-weight:800}
+.lab-section-count{font-size:11px;color:var(--text-caption,#8E8E93)}
+
+/* Cards */
+.lab-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.lab-card{
+  background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:0.5px solid var(--border-glass,rgba(0,0,0,0.06));border-radius:14px;
+  padding:16px;cursor:pointer;transition:all 250ms;position:relative;overflow:hidden;
+  text-decoration:none;color:inherit;display:block;
+}
+.lab-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+.lab-card:active{transform:scale(0.98)}
+.lab-card-preview{height:100px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lab-card h3{font-size:14px;font-weight:800;margin-bottom:3px}
+.lab-card p{font-size:11px;color:var(--text-caption,#8E8E93);line-height:1.5}
+.lab-tag{position:absolute;top:8px;right:8px;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:800;color:#fff}
+.lab-coming{position:absolute;inset:0;background:rgba(255,255,255,0.65);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--text-caption,#8E8E93);border-radius:14px}
+
+/* Physics preview */
+.physics-preview{background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(59,130,246,0.02))}
+.chemistry-preview{background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(6,182,212,0.02))}
+.math-preview{background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(139,92,246,0.02))}
+
+/* Pendulum animation */
+@keyframes pendulum-swing{0%,100%{transform:rotate(25deg)}50%{transform:rotate(-25deg)}}
+.pendulum-demo{width:2px;height:50px;background:#94A3B8;transform-origin:top center;animation:pendulum-swing 2s ease-in-out infinite;position:relative;margin-top:-8px}
+.pendulum-demo::after{content:'';position:absolute;bottom:-8px;left:-7px;width:16px;height:16px;border-radius:50%;background:var(--physics)}
+
+/* Fall animation */
+@keyframes fall-anim{0%{top:10%}80%{top:70%}100%{top:70%}}
+.fall-ball{width:14px;height:14px;border-radius:50%;background:var(--physics);position:absolute;left:50%;margin-left:-7px;animation:fall-anim 1.5s ease-in infinite}
+.fall-ground{position:absolute;bottom:15%;left:20%;right:20%;height:2px;background:rgba(59,130,246,0.25);border-radius:1px}
+
+/* Sidebar centering */
+</style>
+<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"DevKit 实验室","url":"https://l-s-c.github.io/devkit/pages/lab/","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"在线互动实验室，物理化学数学可视化实验","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+</head>
+<body>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-title">🔬 实验室</span>
+</div>
+
+<div class="main">
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">DevKit 互动实验室 — 在线物理化学数学实验</h1>
+
+<!-- Hero -->
+<div class="lab-hero">
+  <h2>🔬 <span>互动实验室</span></h2>
+  <p>用动画和交互理解物理、化学、数学原理<br>拖一拖、点一点，比课本有趣 100 倍</p>
+  <div class="lab-badges">
+    <span>⚛️ 物理实验</span>
+    <span>🧪 化学实验</span>
+    <span>📐 数学可视化</span>
+    <span>🎓 初高中适用</span>
+  </div>
+</div>
+
+<!-- 物理实验 -->
+<div class="lab-section">
+  <div class="lab-section-head">
+    <div class="lab-dot" style="background:var(--physics)"></div>
+    <div class="lab-section-title">⚛️ 物理实验</div>
+    <div class="lab-section-count">1 个已上线 · 4 个开发中</div>
+  </div>
+  <div class="lab-cards">
+    <a class="lab-card" href="../pendulum/" target="_blank">
+      <div class="lab-card-preview physics-preview">
+        <div class="pendulum-demo"></div>
+        <div class="lab-tag" style="background:var(--physics)">交互</div>
+      </div>
+      <h3>🔵 单摆运动模拟</h3>
+      <p>改变绳长和初始角度，观察周期变化。含能量守恒可视化和练习模式。</p>
+    </a>
+
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview physics-preview">
+        <svg width="200" height="40" viewBox="0 0 200 40"><rect x="10" y="15" width="180" height="10" rx="3" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/><circle cx="50" cy="20" r="8" fill="#3B82F6" opacity="0.6"/><circle cx="100" cy="20" r="6" fill="#F59E0B" opacity="0.5"/><circle cx="150" cy="20" r="6" fill="#EF4444" opacity="0.5"/></svg>
+        <div class="lab-tag" style="background:var(--physics)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🔵 电路模拟</h3>
+      <p>串并联电路，拖电阻观察电流和灯泡亮度</p>
+    </div>
+
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview physics-preview">
+        <div class="fall-ball"></div>
+        <div class="fall-ground"></div>
+        <div class="lab-tag" style="background:var(--physics)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🔵 自由落体</h3>
+      <p>调整高度和重力加速度，观察下落过程</p>
+    </div>
+
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview physics-preview">
+        <svg width="140" height="70" viewBox="0 0 140 70"><line x1="70" y1="5" x2="70" y2="65" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><line x1="30" y1="35" x2="110" y2="35" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><line x1="40" y1="10" x2="70" y2="35" stroke="#3B82F6" stroke-width="2"/><line x1="70" y1="35" x2="100" y2="60" stroke="#60A5FA" stroke-width="2"/><rect x="25" y="33" width="90" height="30" rx="3" fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/></svg>
+        <div class="lab-tag" style="background:var(--physics)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🔵 光的折射与反射</h3>
+      <p>拖动光源角度，观察折射率和全反射</p>
+    </div>
+
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview physics-preview">
+        <svg width="100" height="60" viewBox="0 0 100 60"><line x1="5" y1="55" x2="95" y2="55" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><line x1="5" y1="5" x2="5" y2="55" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><polyline points="5,50 25,45 45,30 65,10 85,5 95,4" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="lab-tag" style="background:var(--physics)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🔵 欧姆定律</h3>
+      <p>调节电压和电阻，实时观察 V=IR 曲线</p>
+    </div>
+  </div>
+</div>
+
+<!-- 化学实验 -->
+<div class="lab-section">
+  <div class="lab-section-head">
+    <div class="lab-dot" style="background:var(--chemistry)"></div>
+    <div class="lab-section-title">🧪 化学实验</div>
+    <div class="lab-section-count">即将推出</div>
+  </div>
+  <div class="lab-cards">
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview chemistry-preview">
+        <svg width="100" height="60" viewBox="0 0 100 60"><circle cx="35" cy="30" r="10" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="1.5"/><circle cx="65" cy="30" r="10" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="1.5"/><circle cx="35" cy="30" r="3" fill="#06B6D4" opacity="0.4"/><circle cx="65" cy="30" r="3" fill="#06B6D4" opacity="0.4"/></svg>
+        <div class="lab-tag" style="background:var(--chemistry)">动画</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🟢 原子结构模型</h3>
+      <p>选择元素，查看电子排布和轨道</p>
+    </div>
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview chemistry-preview">
+        <svg width="100" height="60" viewBox="0 0 100 60"><path d="M25 10h50v35c0 8-6 14-14 14H39c-8 0-14-6-14-14V10z" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.2)" stroke-width="1.5"/><path d="M27 30h46v15c0 7-5 12-12 12H39c-7 0-12-5-12-12V30z" fill="rgba(6,182,212,0.1)"/></svg>
+        <div class="lab-tag" style="background:var(--chemistry)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🟢 酸碱中和反应</h3>
+      <p>滴管加液，观察 pH 值和颜色变化</p>
+    </div>
+  </div>
+</div>
+
+<!-- 数学可视化 -->
+<div class="lab-section">
+  <div class="lab-section-head">
+    <div class="lab-dot" style="background:var(--math)"></div>
+    <div class="lab-section-title">📐 数学可视化</div>
+    <div class="lab-section-count">即将推出</div>
+  </div>
+  <div class="lab-cards">
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview math-preview">
+        <svg width="100" height="60" viewBox="0 0 100 60"><line x1="5" y1="30" x2="95" y2="30" stroke="rgba(139,92,246,0.15)" stroke-width="1"/><line x1="50" y1="5" x2="50" y2="55" stroke="rgba(139,92,246,0.15)" stroke-width="1"/><path d="M5 50 Q27 50 50 30 Q73 10 95 10" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="lab-tag" style="background:var(--math)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🟣 函数变换动画</h3>
+      <p>平移、缩放、翻转，实时看图像变化</p>
+    </div>
+    <div class="lab-card" style="cursor:default">
+      <div class="lab-card-preview math-preview">
+        <svg width="100" height="60" viewBox="0 0 100 60"><circle cx="40" cy="30" r="20" fill="none" stroke="rgba(139,92,246,0.2)" stroke-width="1.5"/><line x1="40" y1="30" x2="55" y2="18" stroke="#8B5CF6" stroke-width="2"/><circle cx="55" cy="18" r="3" fill="#8B5CF6"/></svg>
+        <div class="lab-tag" style="background:var(--math)">交互</div>
+        <div class="lab-coming">🔜 即将推出</div>
+      </div>
+      <h3>🟣 三角函数单位圆</h3>
+      <p>拖动角度，联动 sin/cos/tan 值</p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="statusbar">
+  <span>🔬 DevKit 实验室</span>
+  <span>1 个实验已上线 · 更多开发中</span>
+</div>
+
+<script type="module">import '../../shared/sidebar.js';</script>
+<noscript><p>DevKit 互动实验室 — 在线物理化学数学实验。请启用 JavaScript。</p></noscript>
+</body>
+</html>
