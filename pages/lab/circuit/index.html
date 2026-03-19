@@ -591,8 +591,8 @@ function drawAmmeter(x, y, value) {
 
 function drawCurrentDots(path, I) {
   if (!showAnim || !switchOn || I <= 0) return;
-  const speed = Math.min(I, 3);
-  const t = (animFrame * speed * 0.03) % 1;
+  const speed = 0.3 + Math.min(I, 5) * 0.6;
+  const t = (animFrame * speed * 0.02) % 1;
   ctx.fillStyle = 'rgba(59,130,246,0.7)';
   const totalLen = pathLength(path);
   const dotCount = Math.max(6, Math.min(20, Math.round(totalLen / 40)));
