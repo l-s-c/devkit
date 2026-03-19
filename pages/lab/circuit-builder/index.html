@@ -74,9 +74,9 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .comp-group:hover{filter:drop-shadow(0 0 4px rgba(59,130,246,0.2))}
 .comp-group.selected{filter:drop-shadow(0 0 6px rgba(59,130,246,0.4))}
 .comp-group.dragging{cursor:grabbing;opacity:0.8}
-.port-circle{fill:transparent;stroke:transparent;stroke-width:2;cursor:crosshair;transition:all 150ms}
-.port-circle:hover{fill:rgba(59,130,246,0.15);stroke:#3B82F6;r:8}
-.port-circle.connected{fill:#3B82F6;stroke:#1D4ED8}
+.port-circle{fill:rgba(59,130,246,0.1);stroke:#3B82F6;stroke-width:2;cursor:crosshair;transition:all 150ms;r:6}
+.port-circle:hover{fill:rgba(59,130,246,0.3);stroke:#2563EB;r:9}
+.port-circle.connected{fill:#3B82F6;stroke:#1D4ED8;r:7}
 .wire-line{stroke:#3B82F6;stroke-width:2.5;stroke-linecap:round;fill:none}
 .wire-temp{stroke:#3B82F6;stroke-width:2;stroke-dasharray:6 4;opacity:0.6;fill:none}
 
@@ -339,11 +339,18 @@ function getCompSVGContent(comp) {
       <rect x="-4" y="-8" width="4" height="16" rx="1" fill="#1C1C1E"/>
       <rect x="4" y="-8" width="4" height="16" rx="1" fill="#DC2626"/>
       <rect x="12" y="-8" width="4" height="16" rx="1" fill="#D97706" opacity="0.8"/>`;
-    case 'bulb': return `
-      <circle cx="0" cy="0" r="14" fill="#FEF9C3" stroke="#F59E0B" stroke-width="1.5"/>
+    case 'bulb': {
+      const br = lastResult?.branches?.[comp.id];
+      const on = br && Math.abs(br.I) > 0.01;
+      const glow = on ? `<circle cx="0" cy="-2" r="24" fill="none" opacity="0.5"><animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="0" cy="-2" r="24" fill="url(#bulbGlow${comp.id})"/>
+        <defs><radialGradient id="bulbGlow${comp.id}" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#FDE68A" stop-opacity="0.6"/><stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/></radialGradient></defs>` : '';
+      return `${glow}
+      <circle cx="0" cy="0" r="14" fill="${on ? '#FEF9C3' : '#F3F4F6'}" stroke="${on ? '#F59E0B' : '#9CA3AF'}" stroke-width="1.5"/>
       <ellipse cx="-3" cy="-5" rx="3" ry="5" fill="rgba(255,255,255,0.4)"/>
-      <path d="M-4,0 L-2,-5 L0,0 L2,-5 L4,0" fill="none" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M-4,0 L-2,-5 L0,0 L2,-5 L4,0" fill="none" stroke="${on ? '#D97706' : '#9CA3AF'}" stroke-width="1.2" stroke-linecap="round"/>
       <rect x="-5" y="14" width="10" height="5" rx="2" fill="#9CA3AF"/>`;
+    }
     case 'switch': {
       const closed = comp.params.closed;
       const color = closed ? '#22C55E' : '#EF4444';
@@ -383,13 +390,33 @@ document.querySelectorAll('.lib-item').forEach(item => {
     document.body.appendChild(dragGhost);
     moveGhost(e);
 
-    const onMove = ev => moveGhost(ev);
+    // Create preview SVG on canvas immediately
+    let previewG = null;
+    const onMove = ev => {
+      moveGhost(ev);
+      const rect = document.querySelector('.canvas-area').getBoundingClientRect();
+      if (ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom) {
+        const pt = svgPoint(ev);
+        const sx = snap(pt.x), sy = snap(pt.y);
+        if (!previewG) {
+          const tmpComp = { id: '_preview', type: dragType, x: sx, y: sy, rotation: 0, params: { ...COMP_DEFAULTS[dragType].params } };
+          previewG = createCompSVG(tmpComp);
+          previewG.style.opacity = '0.5';
+          previewG.style.pointerEvents = 'none';
+          tempLayer.appendChild(previewG);
+        } else {
+          previewG.setAttribute('transform', `translate(${sx},${sy})`);
+        }
+      } else if (previewG) {
+        previewG.remove(); previewG = null;
+      }
+    };
     const onUp = ev => {
       document.removeEventListener('pointermove', onMove);
       document.removeEventListener('pointerup', onUp);
       if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+      if (previewG) { previewG.remove(); previewG = null; }
 
-      // Check if dropped on canvas
       const rect = document.querySelector('.canvas-area').getBoundingClientRect();
       if (ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom) {
         const pt = svgPoint(ev);
@@ -541,18 +568,21 @@ svgEl.addEventListener('pointerdown', e => {
 function updatePropsPanel() {
   const empty = document.getElementById('props-empty');
   const content = document.getElementById('props-content');
-  if (!state.selectedId) {
+
+  // Always show component list
+  if (!state.components.length && !state.selectedId) {
     empty.style.display = 'flex'; content.style.display = 'none';
     return;
   }
   empty.style.display = 'none'; content.style.display = 'flex';
-  const comp = state.components.find(c => c.id === state.selectedId);
-  if (!comp) return;
-  const def = COMP_DEFAULTS[comp.type];
-  const result = lastResult?.branches?.[comp.id];
 
-  let html = `
-    <div class="pc-title"><span class="pci">${def.icon}</span><span class="pcn">${def.label}</span><span class="pct">${def.tag}</span></div>
+  let html = '';
+  const comp = state.selectedId ? state.components.find(c => c.id === state.selectedId) : null;
+
+  if (comp) {
+    const def = COMP_DEFAULTS[comp.type];
+    const result = lastResult?.branches?.[comp.id];
+    html += `<div class="pc-title"><span class="pci">${def.icon}</span><span class="pcn">${def.label}</span><span class="pct">${def.tag}</span></div>
     <div class="pc-divider"></div>`;
 
   if (comp.type === 'battery') {
@@ -576,8 +606,35 @@ function updatePropsPanel() {
   html += `<div class="pc-divider"></div><div class="pc-actions">
     <button class="pc-act pc-act-rotate" id="btn-rotate">🔄 旋转</button>
     <button class="pc-act pc-act-delete" id="btn-delete">🗑️ 删除</button></div>`;
+  } // end if (comp)
+
+  // Component list (BOM)
+  if (state.components.length) {
+    html += `<div class="pc-divider"></div><div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px">📋 元件清单 (${state.components.length})</div>`;
+    for (const c of state.components) {
+      const d = COMP_DEFAULTS[c.type];
+      const br = lastResult?.branches?.[c.id];
+      const sel = c.id === state.selectedId;
+      const paramStr = c.type === 'battery' ? `${c.params.V}V` : (c.type === 'resistor' || c.type === 'bulb') ? `${c.params.R}Ω` : c.type === 'switch' ? (c.params.closed ? '闭合' : '断开') : '';
+      const iStr = br ? ` · ${Math.abs(br.I).toFixed(2)}A` : '';
+      html += `<div class="bom-item${sel ? ' bom-sel' : ''}" data-bom-id="${c.id}" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:2px;background:${sel ? 'rgba(59,130,246,0.08)' : 'transparent'};transition:background 150ms">
+        <span style="font-size:14px">${d.icon}</span>
+        <span style="flex:1;font-weight:600;color:${sel ? '#2563EB' : '#374151'}">${d.label}</span>
+        <span style="color:#8E8E93;font-size:10px;font-family:'JetBrains Mono',monospace">${paramStr}${iStr}</span>
+      </div>`;
+    }
+  }
 
   content.innerHTML = html;
+
+  // Bind BOM clicks
+  content.querySelectorAll('[data-bom-id]').forEach(el => {
+    el.addEventListener('click', () => selectComponent(el.dataset.bomId));
+    el.addEventListener('mouseenter', () => { if (el.dataset.bomId !== state.selectedId) el.style.background = 'rgba(0,0,0,0.03)'; });
+    el.addEventListener('mouseleave', () => { if (el.dataset.bomId !== state.selectedId) el.style.background = 'transparent'; });
+  });
+
+  if (!comp) return;
 
   // Bind events
   content.querySelectorAll('[data-param]').forEach(input => {
@@ -667,6 +724,7 @@ function renderAll() {
   document.getElementById('cache-hint').style.display = state.dirty ? 'flex' : 'none';
 
   updateUndoRedoButtons();
+  updatePropsPanel();
 }
 
 function renderWires() {
