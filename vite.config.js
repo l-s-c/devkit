@@ -151,6 +151,7 @@ export default defineConfig({
         'physics-lab': resolve(__dirname, 'pages/physics-lab/index.html'),
         'pendulum': resolve(__dirname, 'pages/pendulum/index.html'),
         'lab': resolve(__dirname, 'pages/lab/index.html'),
+        'circuit': resolve(__dirname, 'pages/circuit/index.html'),
         'ion-equation': resolve(__dirname, 'pages/ion-equation/index.html'),
         'china-provinces': resolve(__dirname, 'pages/china-provinces/index.html'),
         'world-records': resolve(__dirname, 'pages/world-records/index.html'),

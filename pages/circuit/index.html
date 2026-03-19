@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🔌 电路模拟实验 — DevKit 在线万能工具箱</title>
+<meta name="description" content="在线电路模拟实验：欧姆定律验证、串联并联电路演示，拖动滑块调参数，实时观察电流电压变化和灯泡亮度。">
+<meta name="keywords" content="电路模拟,在线电路实验,欧姆定律模拟,串并联电路,电路仿真,物理实验">
+<meta property="og:title" content="🔌 电路模拟实验 — DevKit">
+<meta property="og:description" content="在线电路模拟：欧姆定律、串联并联电路交互实验">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../../shared/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/circuit/">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<style>
+:root{--physics:#3B82F6;--physics2:#1D4ED8}
+
+/* Title */
+.title-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.title-row h2{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(59,130,246,0.1);color:var(--physics)}
+
+/* Tabs */
+.circuit-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.circuit-tab{padding:7px 13px;border-radius:10px;font-size:12px;font-weight:700;border:1.5px solid #E5E7EB;cursor:pointer;transition:all 200ms;color:#6B7280;background:rgba(255,255,255,0.7);display:flex;align-items:center;gap:5px;user-select:none}
+.circuit-tab:hover{border-color:var(--physics);color:var(--physics);background:rgba(59,130,246,0.02)}
+.circuit-tab:active{transform:scale(0.97)}
+.circuit-tab.active{background:rgba(59,130,246,0.08);border-color:var(--physics);color:var(--physics2);box-shadow:0 2px 8px rgba(59,130,246,0.1)}
+
+/* Layout */
+.experiment{display:grid;grid-template-columns:220px 1fr;gap:16px}
+
+/* Panel */
+.panel{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.06));border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.panel-title{font-size:12px;font-weight:700;color:var(--text-caption,#8E8E93);letter-spacing:0.3px;display:flex;align-items:center;gap:5px}
+
+/* Controls */
+.control{display:flex;flex-direction:column;gap:5px}
+.control label{font-size:11px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.control label span{font-size:11px;color:var(--physics);font-weight:700;font-family:monospace}
+.control input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#E5E7EB;outline:none;cursor:pointer}
+.control input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--physics);box-shadow:0 1px 4px rgba(0,0,0,0.15);cursor:grab}
+.control input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12)}
+.control input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(0.95)}
+
+.divider{height:1px;background:rgba(0,0,0,0.06)}
+
+/* Switch */
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.switch-label{font-size:11px;font-weight:600}
+.switch-status{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.switch-on{background:rgba(34,197,94,0.1);color:#16A34A}
+.switch-off{background:rgba(239,68,68,0.1);color:#DC2626}
+.switch-toggle{width:40px;height:22px;border-radius:11px;background:#D1D5DB;border:1.5px solid rgba(0,0,0,0.1);cursor:pointer;position:relative;transition:all 200ms}
+.switch-toggle.on{background:#22C55E;border-color:rgba(0,0,0,0.05)}
+.switch-dot{width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);position:absolute;top:2px;left:2px;transition:all 200ms}
+.switch-toggle.on .switch-dot{left:20px}
+
+/* Meters */
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.meter{background:rgba(59,130,246,0.03);border-radius:8px;padding:10px;text-align:center;position:relative}
+.meter .val{font-size:18px;font-weight:800;font-family:monospace}
+.meter .lbl{font-size:9px;color:var(--text-caption,#8E8E93);margin-top:2px}
+.meter-a{border-left:3px solid #EF4444}.meter-a .val{color:#DC2626}
+.meter-v{border-left:3px solid #F59E0B}.meter-v .val{color:#D97706}
+
+/* Element values */
+.elem-list{display:flex;flex-direction:column;gap:5px}
+.elem-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:7px;background:rgba(0,0,0,0.02);font-size:10px}
+.elem-name{font-weight:600;display:flex;align-items:center;gap:3px}
+.elem-val{font-family:monospace;font-weight:700;color:var(--physics);font-size:11px}
+
+/* Canvas */
+.canvas-wrap{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.06));border-radius:14px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.canvas-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.04)}
+.canvas-header span{font-size:11px;font-weight:600;color:var(--text-caption,#8E8E93)}
+.canvas-toggles{display:flex;gap:6px}
+.toggle-btn{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer;color:var(--text-caption,#8E8E93);transition:all 150ms}
+.toggle-btn:hover{background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.2);color:var(--physics)}
+.toggle-btn.active{background:rgba(59,130,246,0.1);border-color:var(--physics);color:var(--physics)}
+#circuitCanvas{width:100%;display:block;cursor:default}
+.canvas-hint{text-align:center;padding:6px;font-size:10px;color:var(--text-caption,#8E8E93);background:rgba(0,0,0,0.02);border-top:1px solid rgba(0,0,0,0.04)}
+
+/* Formula section */
+.formula-section{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.formula-card{background:var(--bg-glass,rgba(255,255,255,0.72));backdrop-filter:blur(20px);border:0.5px solid var(--border-glass,rgba(0,0,0,0.06));border-radius:14px;overflow:hidden;display:flex}
+.formula-expr{flex:0 0 160px;padding:16px;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:18px;font-weight:700;position:relative}
+.formula-expr::after{content:'';position:absolute;right:0;top:12px;bottom:12px;width:1px;background:rgba(0,0,0,0.06)}
+.formula-body{flex:1;padding:16px}
+.formula-name{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.formula-explain{font-size:12px;color:#6B7280;line-height:1.7}
+.formula-explain strong{color:#1C1C1E}
+.symbols{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.sym-tag{padding:2px 7px;border-radius:5px;font-size:10px;font-weight:600;font-family:monospace;background:rgba(0,0,0,0.04);color:#6B7280}
+.insight{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:11px;line-height:1.6;display:flex;gap:6px;align-items:flex-start}
+
+.f-ohm .formula-expr{background:rgba(59,130,246,0.04);color:#2563EB}
+.f-ohm .formula-name{color:#2563EB}
+.f-ohm .insight{background:rgba(59,130,246,0.03);color:#1D4ED8}
+.f-series .formula-expr{background:rgba(245,158,11,0.04);color:#D97706}
+.f-series .formula-name{color:#D97706}
+.f-series .insight{background:rgba(245,158,11,0.03);color:#92400E}
+.f-parallel .formula-expr{background:rgba(16,185,129,0.04);color:#059669}
+.f-parallel .formula-name{color:#059669}
+.f-parallel .insight{background:rgba(16,185,129,0.03);color:#065F46}
+
+/* Responsive */
+@media(max-width:700px){
+  .experiment{grid-template-columns:1fr}
+  .panel{order:2}
+  .formula-card{flex-direction:column}
+  .formula-expr{flex:none;padding:12px}
+  .formula-expr::after{display:none}
+}
+
+/* Warning */
+.warning-bar{display:none;padding:6px 12px;border-radius:8px;background:rgba(239,68,68,0.08);color:#DC2626;font-size:11px;font-weight:600;align-items:center;gap:6px;margin-bottom:8px}
+.warning-bar.show{display:flex}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"电路模拟实验","url":"https://l-s-c.github.io/devkit/pages/circuit/","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"在线电路模拟：欧姆定律、串联并联电路交互实验","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+</script>
+</head>
+<body>
+<div class="topbar">
+  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
+  <span class="topbar-title">🔌 电路模拟实验</span>
+</div>
+
+<div class="main">
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">电路模拟实验 — 在线欧姆定律串联并联电路模拟</h1>
+
+<div class="title-row">
+  <h2>🔌 电路模拟实验</h2>
+  <span class="badge">交互实验</span>
+</div>
+
+<!-- Circuit selector tabs -->
+<div class="circuit-tabs" id="tabs">
+  <div class="circuit-tab active" data-circuit="simple"><span>💡</span> 简单电路</div>
+  <div class="circuit-tab" data-circuit="series"><span>🔗</span> 串联电路</div>
+  <div class="circuit-tab" data-circuit="parallel"><span>🔀</span> 并联电路</div>
+  <div class="circuit-tab" data-circuit="mixed"><span>🔧</span> 混联电路</div>
+  <div class="circuit-tab" data-circuit="ohm"><span>📏</span> 欧姆定律</div>
+  <div class="circuit-tab" data-circuit="power"><span>⚡</span> 电功率</div>
+</div>
+
+<div class="warning-bar" id="warning">⚠️ 电阻过低，电流过大！实际电路中可能烧毁元件。</div>
+
+<div class="experiment">
+  <!-- Left panel -->
+  <div class="panel" id="controlPanel">
+    <div class="panel-title">⚙️ 电路参数</div>
+    <div id="sliders"></div>
+    <div class="divider"></div>
+    <div class="switch-row">
+      <span class="switch-label">开关 S</span>
+      <span class="switch-status switch-on" id="switchLabel">闭合</span>
+      <div class="switch-toggle on" id="switchToggle"><div class="switch-dot"></div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="panel-title">📊 仪表读数</div>
+    <div class="meters">
+      <div class="meter meter-a"><div class="val" id="meterI">0.60</div><div class="lbl">电流 I (A)</div></div>
+      <div class="meter meter-v"><div class="val" id="meterV">6.00</div><div class="lbl">电压 V (V)</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="panel-title">📋 元件参数</div>
+    <div class="elem-list" id="elemList"></div>
+  </div>
+
+  <!-- Right canvas -->
+  <div class="canvas-wrap">
+    <div class="canvas-header">
+      <span id="canvasTitle">电路图（闭合回路）</span>
+      <div class="canvas-toggles">
+        <button class="toggle-btn active" id="toggleAnim">电流动画</button>
+        <button class="toggle-btn active" id="toggleLabels">元件标签</button>
+      </div>
+    </div>
+    <canvas id="circuitCanvas" width="660" height="440"></canvas>
+    <div class="canvas-hint">💡 闭合开关后观察电流流动 · 拖动滑块改变电压和电阻</div>
+  </div>
+</div>
+
+<!-- Formula section -->
+<div class="formula-section">
+  <div class="panel-title" style="margin-bottom:4px">📐 核心公式</div>
+
+  <div class="formula-card f-ohm">
+    <div class="formula-expr">V = I × R</div>
+    <div class="formula-body">
+      <div class="formula-name">⚡ 欧姆定律</div>
+      <div class="formula-explain">电路中的<strong>电压 V</strong>等于<strong>电流 I</strong>乘以<strong>电阻 R</strong>。电阻越大，通过的电流越小——就像水管越细，水流越小。</div>
+      <div class="symbols"><span class="sym-tag">V — 电压 (V)</span><span class="sym-tag">I — 电流 (A)</span><span class="sym-tag">R — 电阻 (Ω)</span></div>
+      <div class="insight"><span>💡</span><span><strong>试一试：</strong>保持电压 6V 不变，把电阻从 10Ω 拉到 20Ω，看电流从 0.6A 变成 0.3A — 电阻翻倍，电流减半！</span></div>
+    </div>
+  </div>
+
+  <div class="formula-card f-series">
+    <div class="formula-expr">I₁ = I₂ = I</div>
+    <div class="formula-body">
+      <div class="formula-name">🔗 串联电路规律</div>
+      <div class="formula-explain">串联电路中<strong>电流处处相等</strong>，电压按电阻分配：<strong>V = V₁ + V₂</strong>。电阻大的分到的电压多。就像一条路上的收费站，每个收费站都要经过。</div>
+      <div class="symbols"><span class="sym-tag">I 处处相等</span><span class="sym-tag">V = V₁ + V₂</span><span class="sym-tag">R总 = R₁ + R₂</span></div>
+      <div class="insight"><span>💡</span><span><strong>切换到「串联电路」：</strong>两个电阻串联，调大 R₁ 看它分到的电压变大，R₂ 的电压变小。</span></div>
+    </div>
+  </div>
+
+  <div class="formula-card f-parallel">
+    <div class="formula-expr">V₁ = V₂ = V</div>
+    <div class="formula-body">
+      <div class="formula-name">🔀 并联电路规律</div>
+      <div class="formula-explain">并联电路中<strong>电压处处相等</strong>，电流按电阻分配：<strong>I = I₁ + I₂</strong>。电阻小的分到的电流多。就像马路分叉，宽的路车多。</div>
+      <div class="symbols"><span class="sym-tag">V 处处相等</span><span class="sym-tag">I = I₁ + I₂</span><span class="sym-tag">1/R总 = 1/R₁ + 1/R₂</span></div>
+      <div class="insight"><span>💡</span><span><strong>切换到「并联电路」：</strong>两个电阻并联，调小 R₁ 看流过它的电流变大，总电流也变大。</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="statusbar">
+  <span>🔌 电路模拟实验</span>
+  <span>6 种电路 · 交互式教学</span>
+</div>
+
+<script>
+/* ===== Circuit Simulation Engine ===== */
+const canvas = document.getElementById('circuitCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+// State
+let currentCircuit = 'simple';
+let switchOn = true;
+let showAnim = true;
+let showLabels = true;
+let animFrame = 0;
+let params = {};
+
+// Circuit definitions
+const CIRCUITS = {
+  simple: {
+    label: '简单电路（电池 + 灯泡 + 开关）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:6, unit:'V' },
+      { id:'R1', label:'灯泡电阻 R₁', min:1, max:100, step:1, val:10, unit:'Ω' }
+    ],
+    solve(p, on) {
+      if (!on) return { I:0, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'💡 灯泡 L₁',v:`0 V · 0 A`},{n:'📏 R₁',v:`${p.R1} Ω`},{n:'⚡ 功率',v:'0 W'}
+      ]};
+      const I = p.V / p.R1;
+      const P = I * I * p.R1;
+      return { I, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'💡 灯泡 L₁',v:`${p.V.toFixed(1)} V · ${I.toFixed(2)} A`},{n:'📏 R₁',v:`${p.R1} Ω`},{n:'⚡ 功率',v:`${P.toFixed(2)} W`}
+      ]};
+    }
+  },
+  series: {
+    label: '串联电路（R₁ + R₂ 串联）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:12, unit:'V' },
+      { id:'R1', label:'电阻 R₁', min:1, max:100, step:1, val:10, unit:'Ω' },
+      { id:'R2', label:'电阻 R₂', min:1, max:100, step:1, val:20, unit:'Ω' }
+    ],
+    solve(p, on) {
+      if (!on) return { I:0, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · 0 V`},{n:'📏 R₂',v:`${p.R2} Ω · 0 V`},{n:'总电阻',v:`${p.R1+p.R2} Ω`}
+      ]};
+      const Rt = p.R1 + p.R2;
+      const I = p.V / Rt;
+      const V1 = I * p.R1, V2 = I * p.R2;
+      return { I, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · ${V1.toFixed(2)} V`},{n:'📏 R₂',v:`${p.R2} Ω · ${V2.toFixed(2)} V`},{n:'总电阻',v:`${Rt} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+      ]};
+    }
+  },
+  parallel: {
+    label: '并联电路（R₁ ∥ R₂）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:12, unit:'V' },
+      { id:'R1', label:'电阻 R₁', min:1, max:100, step:1, val:10, unit:'Ω' },
+      { id:'R2', label:'电阻 R₂', min:1, max:100, step:1, val:20, unit:'Ω' }
+    ],
+    solve(p, on) {
+      if (!on) return { I:0, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · 0 A`},{n:'📏 R₂',v:`${p.R2} Ω · 0 A`},{n:'总电阻',v:`${(p.R1*p.R2/(p.R1+p.R2)).toFixed(1)} Ω`}
+      ]};
+      const I1 = p.V / p.R1, I2 = p.V / p.R2;
+      const I = I1 + I2;
+      const Rt = p.R1 * p.R2 / (p.R1 + p.R2);
+      return { I, V_total:p.V, I1, I2, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · ${I1.toFixed(2)} A`},{n:'📏 R₂',v:`${p.R2} Ω · ${I2.toFixed(2)} A`},{n:'总电阻',v:`${Rt.toFixed(1)} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+      ]};
+    }
+  },
+  mixed: {
+    label: '混联电路（R₁ 串联 (R₂∥R₃)）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:12, unit:'V' },
+      { id:'R1', label:'串联 R₁', min:1, max:100, step:1, val:10, unit:'Ω' },
+      { id:'R2', label:'并联 R₂', min:1, max:100, step:1, val:20, unit:'Ω' },
+      { id:'R3', label:'并联 R₃', min:1, max:100, step:1, val:20, unit:'Ω' }
+    ],
+    solve(p, on) {
+      const Rp = p.R2 * p.R3 / (p.R2 + p.R3);
+      const Rt = p.R1 + Rp;
+      if (!on) return { I:0, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁(串)',v:`${p.R1} Ω`},{n:'📏 R₂(并)',v:`${p.R2} Ω`},{n:'📏 R₃(并)',v:`${p.R3} Ω`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`}
+      ]};
+      const I = p.V / Rt;
+      const V1 = I * p.R1, Vp = I * Rp;
+      const I2 = Vp / p.R2, I3 = Vp / p.R3;
+      return { I, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁(串)',v:`${p.R1} Ω · ${V1.toFixed(2)} V · ${I.toFixed(2)} A`},{n:'📏 R₂(并)',v:`${p.R2} Ω · ${Vp.toFixed(2)} V · ${I2.toFixed(2)} A`},{n:'📏 R₃(并)',v:`${p.R3} Ω · ${Vp.toFixed(2)} V · ${I3.toFixed(2)} A`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+      ]};
+    }
+  },
+  ohm: {
+    label: '欧姆定律验证（改 R 观察 I）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:6, unit:'V' },
+      { id:'R1', label:'电阻 R', min:1, max:100, step:1, val:10, unit:'Ω' }
+    ],
+    solve(p, on) {
+      if (!on) return { I:0, V_total:p.V, elems:[{n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`}]};
+      const I = p.V / p.R1;
+      return { I, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`},{n:'🔴 I = V/R',v:`${I.toFixed(3)} A`},{n:'⚡ P = V×I',v:`${(p.V*I).toFixed(2)} W`}
+      ]};
+    }
+  },
+  power: {
+    label: '电功率（P = V × I = I²R）',
+    sliders: [
+      { id:'V', label:'电源电压 V', min:1, max:24, step:0.5, val:12, unit:'V' },
+      { id:'R1', label:'电阻 R', min:1, max:100, step:1, val:10, unit:'Ω' }
+    ],
+    solve(p, on) {
+      if (!on) return { I:0, V_total:p.V, elems:[{n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`}]};
+      const I = p.V / p.R1;
+      const P = p.V * I;
+      return { I, V_total:p.V, elems:[
+        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`},{n:'🔴 I',v:`${I.toFixed(3)} A`},{n:'⚡ P = V×I',v:`${P.toFixed(2)} W`},{n:'⚡ P = I²R',v:`${(I*I*p.R1).toFixed(2)} W`},{n:'⚡ P = V²/R',v:`${(p.V*p.V/p.R1).toFixed(2)} W`}
+      ]};
+    }
+  }
+};
+
+/* ===== UI Building ===== */
+function buildSliders() {
+  const circuit = CIRCUITS[currentCircuit];
+  const container = document.getElementById('sliders');
+  container.innerHTML = '';
+  params = {};
+  circuit.sliders.forEach(s => {
+    params[s.id] = s.val;
+    const div = document.createElement('div');
+    div.className = 'control';
+    div.innerHTML = `<label>${s.label} <span id="val_${s.id}">${s.val} ${s.unit}</span></label>
+      <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.val}" data-id="${s.id}" data-unit="${s.unit}">`;
+    container.appendChild(div);
+    div.querySelector('input').addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      params[s.id] = v;
+      document.getElementById('val_' + s.id).textContent = (Number.isInteger(v) ? v : v.toFixed(1)) + ' ' + s.unit;
+      update();
+    });
+  });
+}
+
+function update() {
+  const circuit = CIRCUITS[currentCircuit];
+  const result = circuit.solve(params, switchOn);
+
+  // Warning
+  const warn = document.getElementById('warning');
+  if (result.I > 5 && switchOn) { warn.classList.add('show'); } else { warn.classList.remove('show'); }
+
+  // Meters
+  document.getElementById('meterI').textContent = switchOn ? result.I.toFixed(2) : '0.00';
+  document.getElementById('meterV').textContent = result.V_total.toFixed(2);
+
+  // Elem list
+  const list = document.getElementById('elemList');
+  list.innerHTML = result.elems.map(e =>
+    `<div class="elem-item"><span class="elem-name">${e.n}</span><span class="elem-val">${e.v}</span></div>`
+  ).join('');
+
+  // Canvas title
+  document.getElementById('canvasTitle').textContent = switchOn ? '电路图（闭合回路）' : '电路图（开路）';
+}
+
+/* ===== Drawing ===== */
+function drawGrid() {
+  ctx.strokeStyle = 'rgba(0,0,0,0.03)';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+}
+
+function drawWire(points, color = '#6B7280') {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.stroke();
+}
+
+function drawBattery(x, y, v) {
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#2563EB';
+  ctx.beginPath(); ctx.moveTo(x - 12, y - 12); ctx.lineTo(x + 12, y - 12); ctx.stroke();
+  ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(x - 7, y + 12); ctx.lineTo(x + 7, y + 12); ctx.stroke();
+  if (showLabels) {
+    ctx.font = '700 10px sans-serif'; ctx.fillStyle = '#2563EB'; ctx.textAlign = 'center';
+    ctx.fillText('+', x, y - 18); ctx.fillText('−', x, y + 24);
+    ctx.font = '600 11px sans-serif';
+    ctx.fillText('🔋 ' + v.toFixed(1) + 'V', x, y + 40);
+    ctx.textAlign = 'left';
+  }
+}
+
+function drawResistor(x, y, horizontal, label, ohm) {
+  ctx.strokeStyle = '#F59E0B';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const n = 4;
+  if (horizontal) {
+    const w = 8, h = 12;
+    ctx.moveTo(x - n * w / 2, y);
+    for (let i = 0; i < n; i++) {
+      ctx.lineTo(x - n * w / 2 + w * i + w / 4, y - h);
+      ctx.lineTo(x - n * w / 2 + w * i + w * 3 / 4, y + h);
+      ctx.lineTo(x - n * w / 2 + w * (i + 1), y);
+    }
+  } else {
+    const w = 8, h = 12;
+    ctx.moveTo(x, y - n * h / 2);
+    for (let i = 0; i < n; i++) {
+      ctx.lineTo(x + w, y - n * h / 2 + h * i + h / 4);
+      ctx.lineTo(x - w, y - n * h / 2 + h * i + h * 3 / 4);
+      ctx.lineTo(x, y - n * h / 2 + h * (i + 1));
+    }
+  }
+  ctx.stroke();
+  if (showLabels) {
+    ctx.font = '600 11px sans-serif'; ctx.fillStyle = '#D97706';
+    if (horizontal) ctx.fillText(label + ' = ' + ohm + 'Ω', x - 20, y - 20);
+    else ctx.fillText(label + ' = ' + ohm + 'Ω', x + 14, y + 4);
+  }
+}
+
+function drawBulb(x, y, brightness) {
+  // Glow
+  if (brightness > 0) {
+    const glow = ctx.createRadialGradient(x, y, 8, x, y, 28);
+    glow.addColorStop(0, `rgba(251,191,36,${0.15 + brightness * 0.25})`);
+    glow.addColorStop(1, 'rgba(251,191,36,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(x, y, 28, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.strokeStyle = brightness > 0 ? '#EF4444' : '#9CA3AF';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x - 7, y - 7); ctx.lineTo(x + 7, y + 7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x + 7, y - 7); ctx.lineTo(x - 7, y + 7); ctx.stroke();
+  if (showLabels) {
+    ctx.font = '600 11px sans-serif'; ctx.fillStyle = '#DC2626';
+    ctx.fillText('💡 L₁', x + 18, y + 4);
+  }
+}
+
+function drawSwitch(x, y, closed) {
+  ctx.strokeStyle = closed ? '#22C55E' : '#DC2626';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x - 15, y, 4, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x + 15, y, 4, 0, Math.PI * 2); ctx.stroke();
+  if (closed) {
+    ctx.beginPath(); ctx.moveTo(x - 11, y); ctx.lineTo(x + 11, y); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.moveTo(x - 11, y); ctx.lineTo(x + 8, y - 14); ctx.stroke();
+  }
+  if (showLabels) {
+    ctx.font = '600 10px sans-serif';
+    ctx.fillStyle = closed ? '#16A34A' : '#DC2626';
+    ctx.fillText('S (' + (closed ? '闭合' : '断开') + ')', x - 18, y - 16);
+  }
+}
+
+function drawAmmeter(x, y, value) {
+  ctx.strokeStyle = '#DC2626';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI * 2); ctx.stroke();
+  ctx.font = '700 11px sans-serif'; ctx.fillStyle = '#DC2626'; ctx.textAlign = 'center';
+  ctx.fillText('A', x, y + 4);
+  if (showLabels) {
+    ctx.font = '600 9px monospace';
+    ctx.fillText(value.toFixed(2) + 'A', x, y + 22);
+  }
+  ctx.textAlign = 'left';
+}
+
+function drawCurrentDots(path, I) {
+  if (!showAnim || !switchOn || I <= 0) return;
+  const speed = Math.min(I, 3);
+  const t = (animFrame * speed * 0.03) % 1;
+  ctx.fillStyle = 'rgba(59,130,246,0.7)';
+  const totalLen = pathLength(path);
+  const dotCount = Math.max(6, Math.min(20, Math.round(totalLen / 40)));
+  for (let i = 0; i < dotCount; i++) {
+    const frac = (t + i / dotCount) % 1;
+    const pt = pointOnPath(path, frac);
+    const alpha = 0.4 + 0.4 * Math.sin(frac * Math.PI * 2);
+    ctx.globalAlpha = alpha;
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 3, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function pathLength(pts) {
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const dx = pts[i][0] - pts[i - 1][0], dy = pts[i][1] - pts[i - 1][1];
+    len += Math.sqrt(dx * dx + dy * dy);
+  }
+  return len;
+}
+
+function pointOnPath(pts, frac) {
+  const total = pathLength(pts);
+  let target = frac * total, acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const dx = pts[i][0] - pts[i - 1][0], dy = pts[i][1] - pts[i - 1][1];
+    const seg = Math.sqrt(dx * dx + dy * dy);
+    if (acc + seg >= target) {
+      const t = (target - acc) / seg;
+      return [pts[i - 1][0] + dx * t, pts[i - 1][1] + dy * t];
+    }
+    acc += seg;
+  }
+  return pts[pts.length - 1];
+}
+
+/* ===== Circuit-specific drawing ===== */
+const cx = W / 2, cy = H / 2;
+const hw = 200, hh = 130;
+const x1 = cx - hw, x2 = cx + hw, y1 = cy - hh, y2 = cy + hh;
+
+function drawSimple(result) {
+  const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
+  drawWire([[x1, cy - 30], [x1, y1]]);
+  drawWire([[x1, y1], [cx - 30, y1]]);
+  drawWire([[cx + 30, y1], [x2, y1]]);
+  drawWire([[x2, y1], [x2, y2]]);
+  drawWire([[x2, y2], [cx + 16, y2]]);
+  drawWire([[cx - 16, y2], [x1, y2]]);
+  drawWire([[x1, y2], [x1, cy + 30]]);
+  drawBattery(x1, cy, params.V);
+  drawSwitch(cx, y1, switchOn);
+  drawBulb(cx, y2, switchOn ? Math.min(result.I / 2, 1) : 0);
+  drawResistor(x2, cy, false, 'R₁', params.R1);
+  drawAmmeter(cx + 100, y1, switchOn ? result.I : 0);
+  drawCurrentDots(path, result.I);
+}
+
+function drawSeries(result) {
+  drawWire([[x1, cy - 30], [x1, y1]]);
+  drawWire([[x1, y1], [cx - 30, y1]]);
+  drawWire([[cx + 30, y1], [x2, y1]]);
+  drawWire([[x2, y1], [x2, cy]]);
+  drawWire([[x2, cy], [x2, y2]]);
+  drawWire([[x2, y2], [x1, y2]]);
+  drawWire([[x1, y2], [x1, cy + 30]]);
+  drawBattery(x1, cy, params.V);
+  drawSwitch(cx, y1, switchOn);
+  drawResistor(x2, cy - 50, false, 'R₁', params.R1);
+  drawResistor(x2, cy + 50, false, 'R₂', params.R2);
+  drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
+  const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
+  drawCurrentDots(path, result.I);
+}
+
+function drawParallel(result) {
+  const mx = cx + 60;
+  drawWire([[x1, cy - 30], [x1, y1]]);
+  drawWire([[x1, y1], [cx - 30, y1]]);
+  drawWire([[cx + 30, y1], [x2, y1]]);
+  // Branch split
+  drawWire([[x2, y1], [x2, cy - 40]]);
+  drawWire([[x2, cy + 40], [x2, y2]]);
+  // Branch 1 (R1) — right side, offset right
+  const bx1 = x2 - 40, bx2 = x2 + 40;
+  drawWire([[x2, cy - 40], [bx1, cy - 40]]);
+  drawWire([[bx1, cy - 40], [bx1, cy + 40]]);
+  drawWire([[bx1, cy + 40], [x2, cy + 40]]);
+  drawResistor(bx1, cy, false, 'R₁', params.R1);
+  // Branch 2 (R2) — further right
+  drawWire([[x2, cy - 40], [bx2, cy - 40]]);
+  drawWire([[bx2, cy - 40], [bx2, cy + 40]]);
+  drawWire([[bx2, cy + 40], [x2, cy + 40]]);
+  drawResistor(bx2, cy, false, 'R₂', params.R2);
+  drawWire([[x2, y2], [x1, y2]]);
+  drawWire([[x1, y2], [x1, cy + 30]]);
+  drawBattery(x1, cy, params.V);
+  drawSwitch(cx, y1, switchOn);
+  drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
+  const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
+  drawCurrentDots(path, result.I);
+}
+
+function drawMixed(result) {
+  // R1 in series on top, then R2∥R3 on right
+  drawWire([[x1, cy - 30], [x1, y1]]);
+  drawWire([[x1, y1], [cx - 30, y1]]);
+  drawWire([[cx + 30, y1], [x2, y1]]);
+  // R1 on top
+  drawResistor(cx + 110, y1, true, 'R₁', params.R1);
+  // Right side splits into R2 and R3
+  drawWire([[x2, y1], [x2, cy - 50]]);
+  const bx1 = x2 - 35, bx2 = x2 + 35;
+  drawWire([[x2, cy - 50], [bx1, cy - 50]]);
+  drawWire([[bx1, cy - 50], [bx1, cy + 50]]);
+  drawWire([[bx1, cy + 50], [x2, cy + 50]]);
+  drawResistor(bx1, cy, false, 'R₂', params.R2);
+  drawWire([[x2, cy - 50], [bx2, cy - 50]]);
+  drawWire([[bx2, cy - 50], [bx2, cy + 50]]);
+  drawWire([[bx2, cy + 50], [x2, cy + 50]]);
+  drawResistor(bx2, cy, false, 'R₃', params.R3);
+  drawWire([[x2, cy + 50], [x2, y2]]);
+  drawWire([[x2, y2], [x1, y2]]);
+  drawWire([[x1, y2], [x1, cy + 30]]);
+  drawBattery(x1, cy, params.V);
+  drawSwitch(cx, y1, switchOn);
+  drawAmmeter(cx - 80, y2, switchOn ? result.I : 0);
+  const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
+  drawCurrentDots(path, result.I);
+}
+
+function drawOhmOrPower(result) {
+  drawWire([[x1, cy - 30], [x1, y1]]);
+  drawWire([[x1, y1], [cx - 30, y1]]);
+  drawWire([[cx + 30, y1], [x2, y1]]);
+  drawWire([[x2, y1], [x2, y2]]);
+  drawWire([[x2, y2], [x1, y2]]);
+  drawWire([[x1, y2], [x1, cy + 30]]);
+  drawBattery(x1, cy, params.V);
+  drawSwitch(cx, y1, switchOn);
+  drawResistor(x2, cy, false, 'R', params.R1);
+  drawAmmeter(cx + 100, y1, switchOn ? result.I : 0);
+  // Voltmeter across resistor
+  ctx.strokeStyle = '#D97706';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(x2 + 60, cy, 13, 0, Math.PI * 2); ctx.stroke();
+  ctx.font = '700 11px sans-serif'; ctx.fillStyle = '#D97706'; ctx.textAlign = 'center';
+  ctx.fillText('V', x2 + 60, cy + 4);
+  if (showLabels) {
+    ctx.font = '600 9px monospace';
+    ctx.fillText(switchOn ? params.V.toFixed(1) + 'V' : '0V', x2 + 60, cy + 22);
+  }
+  ctx.textAlign = 'left';
+  // Dashed lines from voltmeter to circuit
+  ctx.setLineDash([4, 3]);
+  ctx.strokeStyle = '#D97706';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x2 + 47, cy - 8); ctx.lineTo(x2 + 5, y1 + 5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2 + 47, cy + 8); ctx.lineTo(x2 + 5, y2 - 5); ctx.stroke();
+  ctx.setLineDash([]);
+  const path = [[x1, cy - 30], [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, cy + 30]];
+  drawCurrentDots(path, result.I);
+}
+
+const DRAW_FN = {
+  simple: drawSimple,
+  series: drawSeries,
+  parallel: drawParallel,
+  mixed: drawMixed,
+  ohm: drawOhmOrPower,
+  power: drawOhmOrPower
+};
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+  drawGrid();
+  const circuit = CIRCUITS[currentCircuit];
+  const result = circuit.solve(params, switchOn);
+  DRAW_FN[currentCircuit](result);
+  animFrame++;
+  if (showAnim && switchOn) requestAnimationFrame(render);
+}
+
+let animRunning = false;
+function startAnim() {
+  if (animRunning) return;
+  animRunning = true;
+  (function loop() {
+    render();
+    if (showAnim && switchOn) requestAnimationFrame(loop);
+    else { animRunning = false; render(); }
+  })();
+}
+
+/* ===== Event Handlers ===== */
+// Tab switching
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.circuit-tab');
+  if (!tab) return;
+  document.querySelectorAll('.circuit-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentCircuit = tab.dataset.circuit;
+  buildSliders();
+  update();
+  startAnim();
+});
+
+// Switch
+document.getElementById('switchToggle').addEventListener('click', () => {
+  switchOn = !switchOn;
+  const el = document.getElementById('switchToggle');
+  el.classList.toggle('on', switchOn);
+  const lbl = document.getElementById('switchLabel');
+  lbl.textContent = switchOn ? '闭合' : '断开';
+  lbl.className = 'switch-status ' + (switchOn ? 'switch-on' : 'switch-off');
+  update();
+  startAnim();
+});
+
+// Toggles
+document.getElementById('toggleAnim').addEventListener('click', function () {
+  showAnim = !showAnim;
+  this.classList.toggle('active', showAnim);
+  if (showAnim && switchOn) startAnim(); else render();
+});
+document.getElementById('toggleLabels').addEventListener('click', function () {
+  showLabels = !showLabels;
+  this.classList.toggle('active', showLabels);
+  render();
+});
+
+/* ===== Init ===== */
+buildSliders();
+update();
+startAnim();
+</script>
+<script type="module">import '../../shared/sidebar.js';</script>
+<noscript><p>电路模拟实验 — 在线欧姆定律串联并联电路模拟。请启用 JavaScript。</p></noscript>
+</body>
+</html>
