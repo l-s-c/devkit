@@ -2,313 +2,1477 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>物理引擎 Demo — DevKit 实验室</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>自由电路搭建 (引擎版) — DevKit 互动实验室</title>
+<meta name="description" content="自由拖拽搭建电路，MNA 求解器实时计算电流电压。支持电池、电阻、灯泡、开关、电流表、电压表。">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/circuit-builder/">
+<meta property="og:image" content="../../../shared/og-image.png">
+<meta property="og:title" content="自由电路搭建 — DevKit">
+<meta property="og:description" content="拖拽搭建任意电路，实时求解电流电压">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;height:100vh;display:flex;flex-direction:column;background:#F0F1F5}
-.topbar{height:48px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 16px;gap:12px}
-.topbar h1{font-size:14px;font-weight:800}
-.topbar .tag{font-size:10px;padding:2px 8px;border-radius:4px;background:#DBEAFE;color:#1D4ED8;font-weight:700}
-.view-toggle{margin-left:auto;display:flex;gap:4px}
-.view-btn{padding:6px 12px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(0,0,0,0.04);color:#6B7280;transition:all 200ms}
-.view-btn.active{background:#3B82F6;color:#fff}
-.main{flex:1;display:flex;overflow:hidden}
-.sidebar{width:200px;background:#fff;border-right:1px solid rgba(0,0,0,0.06);overflow-y:auto;padding:12px}
-.sidebar h3{font-size:10px;font-weight:700;color:#8E8E93;margin-bottom:8px;letter-spacing:0.5px}
-.comp-btn{display:flex;align-items:center;gap:8px;padding:8px;border:none;border-radius:8px;background:rgba(0,0,0,0.02);cursor:grab;width:100%;text-align:left;font-size:12px;font-weight:600;margin-bottom:4px;transition:all 150ms}
-.comp-btn:hover{background:rgba(59,130,246,0.08)}
-.canvas-area{flex:1;position:relative;background:#FAFBFF;overflow:hidden}
-#engine-svg{width:100%;height:100%}
-.info-bar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);padding:6px 16px;background:rgba(255,255,255,0.9);border-radius:8px;font-size:11px;color:#6B7280;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1C1C1E;height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
-/* Engine styles */
+/* === Topbar === */
+.topbar{height:48px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0}
+.tb-brand{display:flex;align-items:center;gap:8px;margin-right:16px}
+.tb-brand svg{width:24px;height:24px}
+.tb-brand span{font-size:14px;font-weight:800;letter-spacing:-0.5px}
+.tb-sep{width:1px;height:24px;background:rgba(0,0,0,0.06);margin:0 8px}
+.tb-group{display:flex;gap:2px}
+.tb-btn{padding:6px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all 150ms;border:none;background:transparent;color:#6B7280;display:flex;align-items:center;gap:4px}
+.tb-btn:hover{background:rgba(0,0,0,0.04);color:#1C1C1E}
+.tb-btn:active{transform:scale(0.96);background:rgba(0,0,0,0.06)}
+.tb-btn.disabled{opacity:0.3;pointer-events:none}
+.tb-btn svg{width:14px;height:14px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-zoom{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#8E8E93;font-family:'JetBrains Mono',monospace}
+
+/* === Main 3-column === */
+.workspace{flex:1;display:flex;overflow:hidden}
+
+/* === Left: Component Library === */
+.lib{width:200px;background:#fff;border-right:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.lib-header{padding:12px 16px;font-size:12px;font-weight:700;color:#8E8E93;letter-spacing:0.5px;border-bottom:1px solid rgba(0,0,0,0.04)}
+.lib-section{border-bottom:1px solid rgba(0,0,0,0.04)}
+.lib-section-title{padding:10px 16px;font-size:11px;font-weight:700;color:#8E8E93;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 150ms;user-select:none}
+.lib-section-title:hover{background:rgba(0,0,0,0.02)}
+.lib-section-title .chevron{width:12px;height:12px;color:#AEAEB2;transition:transform 200ms}
+.lib-section.open .chevron{transform:rotate(180deg)}
+.lib-items{padding:4px 8px 8px;display:none;grid-template-columns:1fr 1fr;gap:6px}
+.lib-section.open .lib-items{display:grid}
+.lib-item{background:#F8F9FC;border-radius:10px;padding:10px 8px;text-align:center;cursor:grab;transition:all 200ms;border:1.5px solid transparent}
+.lib-item:hover{background:#EFF6FF;border-color:rgba(59,130,246,0.15);transform:translateY(-1px)}
+.lib-item:active{cursor:grabbing;transform:scale(0.95);background:#DBEAFE}
+.lib-item .li-icon{margin-bottom:4px;display:flex;align-items:center;justify-content:center;height:46px}
+.lib-item .li-icon svg{width:46px;height:46px}
+.lib-item .li-name{font-size:9px;font-weight:600;color:#6B7280}
+
+/* === Center: SVG Canvas === */
+.canvas-area{flex:1;position:relative;background:#FAFBFF;overflow:hidden}
+#circuit-svg{width:100%;height:100%;cursor:default}
+.grid-pattern{fill:rgba(0,0,0,0.06)}
+
+/* Empty state */
+.canvas-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:1}
+.ce-icon{font-size:48px;margin-bottom:16px;opacity:0.2}
+.ce-title{font-size:16px;font-weight:700;color:#AEAEB2;margin-bottom:8px}
+.ce-desc{font-size:12px;color:#C7C7CC;max-width:240px;text-align:center;line-height:1.6}
+
+/* Warning bar */
+.warning-bar{position:absolute;top:8px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:10px;font-size:12px;font-weight:600;display:none;align-items:center;gap:8px;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+.warning-bar.show{display:flex}
+.warning-short{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626}
+.warning-open{background:#FFF7ED;border:1px solid #FED7AA;color:#C2410C}
+.warning-over{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626}
+
+/* SVG component styles */
 .comp-group{cursor:grab;transition:filter 200ms}
 .comp-group:hover{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.12))}
 .comp-group.selected{filter:drop-shadow(0 3px 8px rgba(59,130,246,0.3))}
 .comp-group.selected line,.comp-group.selected rect,.comp-group.selected circle,.comp-group.selected path{stroke:#3B82F6}
 .comp-group.selected text{fill:#3B82F6}
-.port-circle{fill:transparent;stroke:transparent;stroke-width:2;cursor:crosshair;transition:all 150ms;pointer-events:all}
+.sel-box{fill:none;stroke:#3B82F6;stroke-width:1.5;stroke-dasharray:4 3}
+.comp-group.dragging{cursor:grabbing;opacity:0.65}
+.comp-group.just-placed{animation:placeBounce 300ms ease-out}
+@keyframes placeBounce{0%{transform:scale(1.1)}50%{transform:scale(0.96)}100%{transform:scale(1)}}
+.port-circle{fill:transparent;stroke:transparent;stroke-width:2;cursor:crosshair;transition:all 150ms;r:5;pointer-events:all}
 .comp-group:hover .port-circle{fill:#fff;stroke:#3B82F6}
-.port-circle:hover{fill:rgba(59,130,246,0.1);stroke:#3B82F6}
+.port-circle:hover{fill:rgba(59,130,246,0.1);stroke:#3B82F6;r:8}
 .comp-group.selected .port-circle{fill:#3B82F6;stroke:#1D4ED8}
-.port-circle.connected{fill:#374151;stroke:#374151}
+.port-circle.connected{fill:#374151;stroke:#374151;r:4}
 .wire-line{stroke:#DC2626;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none;cursor:pointer}
 .wire-line:hover{stroke:#EF4444;stroke-width:5}
-.wire-line.wire-selected{stroke:#3B82F6;stroke-width:5}
+.wire-line.wire-selected{stroke:#3B82F6;stroke-width:5;filter:drop-shadow(0 0 6px rgba(59,130,246,0.4))}
 .wire-line.wire-schematic{stroke:#374151;stroke-width:2}
+.wire-line.wire-schematic:hover{stroke:#3B82F6;stroke-width:3}
 .wire-temp{stroke:#DC2626;stroke-width:3;stroke-dasharray:6 4;opacity:0.5;fill:none}
+
+/* === Right: Properties === */
+.props{width:240px;background:#fff;border-left:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.props-header{padding:12px 16px;font-size:12px;font-weight:700;color:#8E8E93;letter-spacing:0.5px;border-bottom:1px solid rgba(0,0,0,0.04)}
+.props-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.pe-icon{font-size:32px;margin-bottom:12px;opacity:0.2}
+.pe-text{font-size:12px;color:#C7C7CC;text-align:center;line-height:1.6}
+.props-content{padding:16px;display:flex;flex-direction:column;gap:14px}
+.pc-title{display:flex;align-items:center;gap:8px}
+.pc-title .pci{font-size:24px}
+.pc-title .pcn{font-size:15px;font-weight:800}
+.pc-title .pct{font-size:10px;font-weight:600;color:#8E8E93;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.04)}
+.pc-divider{height:1px;background:rgba(0,0,0,0.06)}
+.pc-field{display:flex;flex-direction:column;gap:4px}
+.pc-field label{font-size:11px;font-weight:600;color:#6B7280}
+.pc-input{display:flex;align-items:center;gap:6px}
+.pc-input input{flex:1;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;outline:none;transition:all 200ms}
+.pc-input input:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.pc-input .unit{font-size:11px;font-weight:700;color:#8E8E93}
+.pc-slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:#E5E7EB;outline:none}
+.pc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #3B82F6;box-shadow:0 1px 3px rgba(0,0,0,0.15);cursor:grab}
+.pc-readings{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc-reading{background:rgba(59,130,246,0.04);border-radius:8px;padding:10px;text-align:center}
+.pc-reading .rv{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#2563EB}
+.pc-reading .rl{font-size:9px;color:#8E8E93;margin-top:2px}
+.pc-actions{display:flex;gap:6px}
+.pc-act{flex:1;padding:8px;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all 150ms}
+.pc-act:hover{transform:translateY(-1px)}
+.pc-act:active{transform:scale(0.97)}
+.pc-act-rotate{background:rgba(0,0,0,0.04);color:#1C1C1E}
+.pc-act-delete{background:rgba(239,68,68,0.08);color:#DC2626}
+
+/* === Save Modal === */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;width:400px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.slot{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1.5px solid #E5E7EB;margin-bottom:8px;cursor:pointer;transition:all 200ms}
+.slot:hover{border-color:#3B82F6;background:rgba(59,130,246,0.02)}
+.slot-icon{font-size:24px}
+.slot-info{flex:1}
+.slot-name{font-size:13px;font-weight:700}
+.slot-meta{font-size:10px;color:#8E8E93}
+.slot-empty{color:#C7C7CC;font-style:italic}
+.slot-actions{display:flex;gap:4px}
+.slot-btn{padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;border:none;cursor:pointer;transition:all 150ms}
+.slot-btn:hover{transform:scale(1.05)}
+.slot-btn:active{transform:scale(0.95)}
+.slot-save{background:#2563EB;color:#fff}
+.slot-load{background:rgba(0,0,0,0.04);color:#1C1C1E}
+.slot-del{background:rgba(239,68,68,0.08);color:#DC2626}
+.modal-close{width:100%;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:rgba(0,0,0,0.04);color:#6B7280;margin-top:8px;transition:all 150ms}
+.modal-close:hover{background:rgba(0,0,0,0.08)}
+
+/* Cache hint */
+.cache-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);padding:6px 14px;border-radius:8px;font-size:11px;font-weight:500;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);color:#92400E;z-index:5;display:flex;align-items:center;gap:6px}
+.cache-hint button{background:none;border:none;color:#2563EB;font-weight:600;cursor:pointer;font-size:11px;text-decoration:underline}
+
+.ctx-menu{position:fixed;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:4px 0;z-index:100;min-width:160px;display:none;font-size:12px}
+.ctx-menu.show{display:block}
+.ctx-item{padding:8px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:background 120ms;user-select:none}
+.ctx-item:hover{background:#EFF6FF}
+.ctx-item.danger{color:#DC2626}
+.ctx-item.danger:hover{background:#FEF2F2}
+.ctx-item .shortcut{font-size:10px;color:#9CA3AF;font-weight:600}
+.ctx-divider{height:1px;background:rgba(0,0,0,0.06);margin:4px 0}
+@media(max-width:768px){.lib{width:160px}.props{width:200px}}
 </style>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">自由电路搭建 — DevKit 互动实验室</h1>
 
+<!-- Topbar -->
 <div class="topbar">
-  <h1>🔬 物理引擎 Demo</h1>
-  <span class="tag">ENGINE v0.1</span>
-  <div class="view-toggle">
-    <button class="view-btn active" data-view="realistic">🔧 实验台</button>
-    <button class="view-btn" data-view="schematic">📐 电路图</button>
+  <div class="tb-brand">
+    <svg viewBox="0 0 512 512"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#tg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-.7 23.3-2l-.1.1C465 223.3 480 190.8 480 155c0-8.5-.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 .7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity=".95"/></g></svg>
+    <span>电路搭建</span>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn disabled" id="btn-undo" title="撤销">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 14-4-4 4-4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg>
+      撤销
+    </button>
+    <button class="tb-btn disabled" id="btn-redo" title="重做">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 14 4-4-4-4"/><path d="M19 10H8a4 4 0 0 0 0 8h1"/></svg>
+      重做
+    </button>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn" id="btn-export" title="导出"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出</button>
+    <button class="tb-btn" id="btn-import" title="导入"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>导入</button>
+    <button class="tb-btn" id="btn-examples" title="示例"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>示例</button>
+    <button class="tb-btn" id="btn-clear" title="清空"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>清空</button>
+  </div>
+  <div class="tb-right">
+    <div class="view-toggle" style="display:flex;gap:2px;margin-right:8px">
+      <button class="tb-btn view-btn active" data-view="realistic" style="background:rgba(59,130,246,0.1);color:#2563EB">🔧 实验台</button>
+      <button class="tb-btn view-btn" data-view="schematic">📐 电路图</button>
+    </div>
+    <div class="tb-zoom">
+      <button class="tb-btn" id="btn-zoom-out" title="缩小">−</button>
+      <span id="zoom-level">100%</span>
+      <button class="tb-btn" id="btn-zoom-in" title="放大">+</button>
+    </div>
+    <div class="tb-sep"></div>
+    <a class="tb-btn" href="../" title="返回实验室">← 返回</a>
   </div>
 </div>
 
-<div class="main">
-  <div class="sidebar">
-    <h3>⚡ 电源</h3>
-    <button class="comp-btn" data-type="battery">🔋 电池 (1.5V)</button>
-    <h3 style="margin-top:12px">🔧 元件</h3>
-    <button class="comp-btn" data-type="resistor">📏 电阻 (10Ω)</button>
-    <button class="comp-btn" data-type="bulb">💡 灯泡</button>
-    <button class="comp-btn" data-type="switch">🔘 开关</button>
-    <button class="comp-btn" data-type="wire">〰️ 导线</button>
-    <h3 style="margin-top:12px">📊 仪表</h3>
-    <button class="comp-btn" data-type="ammeter">🔴 电流表</button>
-    <button class="comp-btn" data-type="voltmeter">🟡 电压表</button>
+<!-- 3-column workspace -->
+<div class="workspace">
+  <!-- Left: Component Library -->
+  <div class="lib">
+    <div class="lib-header">📦 元件库</div>
+    <div class="lib-section open">
+      <div class="lib-section-title">⚡ 电源 <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="lib-items">
+        <div class="lib-item" data-type="battery"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#DBEAFE"/><rect x="13" y="14" width="30" height="28" rx="4" fill="#3B82F6"/><rect x="11" y="10" width="34" height="5" rx="2" fill="#D1D5DB"/><rect x="22" y="5" width="12" height="7" rx="3" fill="#EF4444"/><rect x="11" y="41" width="34" height="5" rx="2" fill="#D1D5DB"/><text x="28" y="34" font-size="8" font-weight="800" fill="#fff" text-anchor="middle">1.5V</text></svg></span><span class="li-name">电池</span></div>
+      </div>
+    </div>
+    <div class="lib-section open">
+      <div class="lib-section-title">🔧 元件 <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="lib-items">
+        <div class="lib-item" data-type="resistor"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FEF3C7"/><line x1="4" y1="28" x2="14" y2="28" stroke="#9CA3AF" stroke-width="2.5"/><line x1="42" y1="28" x2="52" y2="28" stroke="#9CA3AF" stroke-width="2.5"/><rect x="14" y="20" width="28" height="16" rx="8" fill="#E8C9A0" stroke="#B8956A" stroke-width="1"/><rect x="20" y="20" width="3" height="16" rx="1" fill="#92400E"/><rect x="26" y="20" width="3" height="16" rx="1" fill="#1C1C1E"/><rect x="32" y="20" width="3" height="16" rx="1" fill="#DC2626"/></svg></span><span class="li-name">电阻</span></div>
+        <div class="lib-item" data-type="bulb"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FFFBEB"/><ellipse cx="28" cy="22" rx="14" ry="16" fill="rgba(255,251,235,0.8)" stroke="#D1D5DB" stroke-width="1"/><path d="M22 22 L24 16 L27 22 L30 16 L33 22" fill="none" stroke="#92400E" stroke-width="1.2"/><rect x="20" y="36" width="16" height="10" rx="2" fill="#A8A29E"/><line x1="20" y1="40" x2="36" y2="40" stroke="#78716C" stroke-width="0.8"/></svg></span><span class="li-name">灯泡</span></div>
+        <div class="lib-item" data-type="switch"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#F5F5F4"/><rect x="8" y="30" width="40" height="16" rx="3" fill="#E7E5E4" stroke="#A8A29E" stroke-width="1"/><rect x="14" y="26" width="8" height="10" rx="1.5" fill="#78716C"/><rect x="34" y="26" width="8" height="10" rx="1.5" fill="#78716C"/><line x1="18" y1="30" x2="32" y2="16" stroke="#9CA3AF" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="16" r="4" fill="#EF4444" stroke="#B91C1C" stroke-width="1"/></svg></span><span class="li-name">开关</span></div>
+        <div class="lib-item" data-type="wire"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FEF2F2"/><path d="M8 28 C18 18, 38 38, 48 28" fill="none" stroke="#DC2626" stroke-width="4" stroke-linecap="round"/><rect x="3" y="22" width="8" height="12" rx="1.5" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.8"/><rect x="45" y="22" width="8" height="12" rx="1.5" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.8"/></svg></span><span class="li-name">导线</span></div>
+      </div>
+    </div>
+    <div class="lib-section open">
+      <div class="lib-section-title">📊 仪表 <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="lib-items">
+        <div class="lib-item" data-type="ammeter"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FEF2F2"/><rect x="8" y="8" width="40" height="34" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/><rect x="12" y="11" width="32" height="26" rx="3" fill="#fff"/><path d="M18 32 Q28 12 38 32" fill="none" stroke="#FECACA" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="28" y1="30" x2="22" y2="18" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/><circle cx="28" cy="30" r="2" fill="#DC2626"/><text x="28" y="28" font-size="8" font-weight="900" fill="#DC2626" text-anchor="middle">A</text><circle cx="20" cy="48" r="4" fill="#DC2626"/><circle cx="36" cy="48" r="4" fill="#1C1C1E"/></svg></span><span class="li-name">电流表</span></div>
+        <div class="lib-item" data-type="voltmeter"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FFFBEB"/><rect x="8" y="8" width="40" height="34" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/><rect x="12" y="11" width="32" height="26" rx="3" fill="#fff"/><path d="M18 32 Q28 12 38 32" fill="none" stroke="#FDE68A" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="28" y1="30" x2="22" y2="18" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/><circle cx="28" cy="30" r="2" fill="#D97706"/><text x="28" y="28" font-size="8" font-weight="900" fill="#D97706" text-anchor="middle">V</text><circle cx="20" cy="48" r="4" fill="#DC2626"/><circle cx="36" cy="48" r="4" fill="#1C1C1E"/></svg></span><span class="li-name">电压表</span></div>
+      </div>
+    </div>
   </div>
+
+  <!-- Center: SVG Canvas -->
+  <div class="ctx-menu" id="ctx-menu"></div>
   <div class="canvas-area">
-    <div id="engine-container" style="width:100%;height:100%"></div>
-    <div class="info-bar">物理引擎 v0.1 | 滚轮缩放 · 空格平移 · R旋转 · Delete删除</div>
+    <div class="warning-bar" id="warning-bar"></div>
+    <div class="canvas-empty" id="empty-state">
+      <div class="ce-icon">🔌</div>
+      <div class="ce-title">从左侧拖拽元件到画布</div>
+      <div class="ce-desc">拖拽放置元件，点击端口连线，搭建你的电路</div>
+    </div>
+    <svg id="circuit-svg">
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="10" cy="10" r="0.8" fill="rgba(0,0,0,0.06)"/>
+        </pattern>
+        <!-- V4 Realistic gradients -->
+        <linearGradient id="battCyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1D4ED8"/><stop offset="30%" stop-color="#3B82F6"/><stop offset="50%" stop-color="#60A5FA"/><stop offset="70%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#1D4ED8"/></linearGradient>
+        <linearGradient id="battCap" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="30%" stop-color="#D1D5DB"/><stop offset="50%" stop-color="#F3F4F6"/><stop offset="70%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+        <linearGradient id="battNub" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#B91C1C"/><stop offset="40%" stop-color="#EF4444"/><stop offset="60%" stop-color="#FCA5A5"/><stop offset="100%" stop-color="#B91C1C"/></linearGradient>
+        <linearGradient id="resBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE8C8"/><stop offset="50%" stop-color="#E8C9A0"/><stop offset="100%" stop-color="#C9A06C"/></linearGradient>
+        <linearGradient id="resWire" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+        <radialGradient id="bulbGlass" cx="45%" cy="40%" r="50%"><stop offset="0%" stop-color="rgba(255,255,255,0.9)"/><stop offset="40%" stop-color="rgba(255,251,235,0.6)"/><stop offset="100%" stop-color="rgba(253,230,138,0.3)"/></radialGradient>
+        <linearGradient id="bulbBase" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#78716C"/><stop offset="30%" stop-color="#A8A29E"/><stop offset="50%" stop-color="#D6D3D1"/><stop offset="70%" stop-color="#A8A29E"/><stop offset="100%" stop-color="#78716C"/></linearGradient>
+        <linearGradient id="swBase" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F5F5F4"/><stop offset="100%" stop-color="#D6D3D1"/></linearGradient>
+        <linearGradient id="swBlade" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+        <linearGradient id="meterCase" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F4F6"/><stop offset="100%" stop-color="#D1D5DB"/></linearGradient>
+        <linearGradient id="wireInsul" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EF4444"/><stop offset="50%" stop-color="#DC2626"/><stop offset="100%" stop-color="#B91C1C"/></linearGradient>
+        <linearGradient id="clipMetal" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="40%" stop-color="#E5E7EB"/><stop offset="60%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+      <g id="wires-layer"></g>
+      <g id="components-layer"></g>
+      <g id="temp-layer"></g>
+    </svg>
+    <div class="cache-hint" id="cache-hint" style="display:none">
+      💡 电路仅保存在浏览器缓存中，清除缓存会丢失。
+      <button id="hint-export">导出保存 📤</button>
+    </div>
+  </div>
+
+  <!-- Right: Properties -->
+  <div class="props">
+    <div class="props-header">📋 属性</div>
+    <div class="props-empty" id="props-empty">
+      <div class="pe-icon">🖱️</div>
+      <div class="pe-text">点击画布上的元件<br>查看和编辑属性</div>
+    </div>
+    <div class="props-content" id="props-content" style="display:none"></div>
   </div>
 </div>
+
+<!-- Save/Load Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">💾 存档管理</div>
+    <div id="modal-slots"></div>
+    <button class="modal-close" id="modal-close">关闭</button>
+  </div>
+</div>
+
+<input type="file" id="import-input" accept=".json" style="display:none">
 
 <script type="module">
-import { PhysicsEngine, CanvasView, WireRenderer, createCircuitSolver } from '../../../shared/physics-engine/index.js';
+import { solveCircuit } from './circuit-solver.js';
 
-// Create engine
-const engine = new PhysicsEngine({
-  container: document.getElementById('engine-container'),
-  mode: 'circuit',
+// ===== State =====
+const state = {
+  components: [],
+  connections: [],
+  selectedId: null,
+  selectedWireIdx: -1,
+  nextId: 1,
+  zoom: 1,
+  dirty: false,
+  undoStack: [],
+  redoStack: [],
+};
+
+const GRID = 20;
+const snap = v => Math.round(v / GRID) * GRID;
+
+function getPortPos(comp, port) {
+  const rad = (comp.rotation || 0) * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return {
+    x: comp.x + port.dx * cos - port.dy * sin,
+    y: comp.y + port.dx * sin + port.dy * cos,
+  };
+}
+
+const COMP_DEFAULTS = {
+  battery:   { label: '电池', icon: '🔋', tag: '电源', params: { V: 6 }, ports: [{id:'pos',dx:0,dy:-40},{id:'neg',dx:0,dy:32}] },
+  resistor:  { label: '电阻', icon: '📏', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
+  bulb:      { label: '灯泡', icon: '💡', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:0,dy:32},{id:'p1',dx:-12,dy:15}] },
+  switch:    { label: '开关', icon: '🔘', tag: '元件', params: { closed: true }, ports: [{id:'p0',dx:-22,dy:35},{id:'p1',dx:22,dy:35}] },
+  ammeter:   { label: '电流表', icon: '🔴', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
+  voltmeter: { label: '电压表', icon: '🟡', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
+  wire:      { label: '导线', icon: '〰️', tag: '元件', params: {}, ports: [{id:'p0',dx:-36,dy:0},{id:'p1',dx:36,dy:0}] },
+};
+
+// ===== SVG helpers =====
+const svgEl = document.getElementById('circuit-svg');
+const wiresLayer = document.getElementById('wires-layer');
+const compsLayer = document.getElementById('components-layer');
+const tempLayer = document.getElementById('temp-layer');
+
+let panX = 0, panY = 0;
+
+function svgPoint(e) {
+  const rect = svgEl.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) / state.zoom + panX, y: (e.clientY - rect.top) / state.zoom + panY };
+}
+
+function updateViewBox() {
+  const rect = svgEl.getBoundingClientRect();
+  const w = rect.width / state.zoom, h = rect.height / state.zoom;
+  svgEl.setAttribute('viewBox', `${panX} ${panY} ${w} ${h}`);
+}
+
+// Zoom with wheel
+document.querySelector('.canvas-area').addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = svgEl.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / state.zoom + panX;
+  const my = (e.clientY - rect.top) / state.zoom + panY;
+  const oldZoom = state.zoom;
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  state.zoom = Math.max(0.3, Math.min(3, state.zoom * factor));
+  // Keep mouse point stable
+  panX = mx - (e.clientX - rect.left) / state.zoom;
+  panY = my - (e.clientY - rect.top) / state.zoom;
+  updateViewBox();
+}, { passive: false });
+
+// Pan with middle mouse or space+drag
+let isPanning = false, panStart = { x: 0, y: 0 }, panStartPan = { x: 0, y: 0 };
+let spaceDown = false;
+
+document.addEventListener('keydown', e => { if (e.code === 'Space' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) { spaceDown = true; svgEl.style.cursor = 'grab'; e.preventDefault(); } });
+document.addEventListener('keyup', e => { if (e.code === 'Space') { spaceDown = false; if (!isPanning) svgEl.style.cursor = 'default'; } });
+
+svgEl.addEventListener('pointerdown', e => {
+  if (e.button === 1 || (e.button === 0 && spaceDown)) {
+    e.preventDefault();
+    isPanning = true;
+    panStart = { x: e.clientX, y: e.clientY };
+    panStartPan = { x: panX, y: panY };
+    svgEl.style.cursor = 'grabbing';
+    const onMove = ev => {
+      panX = panStartPan.x - (ev.clientX - panStart.x) / state.zoom;
+      panY = panStartPan.y - (ev.clientY - panStart.y) / state.zoom;
+      updateViewBox();
+    };
+    const onUp = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      isPanning = false;
+      svgEl.style.cursor = spaceDown ? 'grab' : 'default';
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  }
 });
 
-// Create views
-const canvasView = new CanvasView(engine);
-const wireRenderer = new WireRenderer(engine);
+// Init viewBox on load
+requestAnimationFrame(() => updateViewBox());
+window.addEventListener('resize', () => updateViewBox());
 
-// Set solver
-engine.setSolver(createCircuitSolver());
+// ===== Component SVG renderers =====
+function createCompSVG(comp) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', 'comp-group');
+  g.setAttribute('data-id', comp.id);
+  const rot = comp.rotation || 0;
+  g.setAttribute('transform', `translate(${comp.x},${comp.y})${rot ? ` rotate(${rot})` : ''}`);
 
-// Render wires after components
-engine.on('render:after', () => wireRenderer.renderWires(engine.getView()));
-engine.on('wire:redraw', () => wireRenderer.renderWires(engine.getView()));
+  const def = COMP_DEFAULTS[comp.type];
+  // Draw component shape
+  const inner = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  inner.innerHTML = getCompSVGContent(comp);
+  g.appendChild(inner);
 
-// ===== Register circuit components =====
+  // Draw ports
+  for (const port of def.ports) {
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', port.dx);
+    c.setAttribute('cy', port.dy);
+    c.setAttribute('r', '6');
+    c.setAttribute('class', 'port-circle');
+    c.setAttribute('data-comp-id', comp.id);
+    c.setAttribute('data-port-id', port.id);
+    g.appendChild(c);
+  }
 
-// Battery
-engine.registerComponent('battery', {
-  ports: [{ id: 'pos', dx: 0, dy: -40 }, { id: 'neg', dx: 0, dy: 32 }],
-  params: { V: { default: 6, min: 1, max: 24, unit: 'V' } },
-  render: {
-    realistic: (comp) => `
-      <rect x="-30" y="-28" width="60" height="56" rx="6" fill="#3B82F6"/>
-      <rect x="-32" y="-32" width="64" height="8" rx="3" fill="#D1D5DB"/>
-      <rect x="-8" y="-40" width="16" height="10" rx="4" fill="#EF4444"/>
-      <rect x="-32" y="24" width="64" height="8" rx="3" fill="#D1D5DB"/>
+  return g;
+}
+
+let currentView = 'realistic';
+
+function getCompSVGContent(comp) {
+  if (currentView === 'schematic') return getSchematicSVG(comp);
+  switch (comp.type) {
+    case 'battery': return `
+      <rect x="-30" y="-28" width="60" height="56" rx="6" fill="url(#battCyl)"/>
+      <rect x="-32" y="-32" width="64" height="8" rx="3" fill="url(#battCap)"/>
+      <rect x="-8" y="-40" width="16" height="10" rx="4" fill="url(#battNub)"/>
+      <rect x="-32" y="24" width="64" height="8" rx="3" fill="url(#battCap)"/>
       <rect x="-22" y="-16" width="44" height="32" rx="3" fill="rgba(255,255,255,0.15)"/>
-      <text x="0" y="-4" font-size="8" font-weight="700" fill="#DBEAFE" text-anchor="middle">${comp.params.V}V</text>
-      <text x="0" y="10" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">⚡</text>`,
-    schematic: (comp) => `
+      <text x="0" y="-4" font-size="8" font-weight="700" fill="#DBEAFE" text-anchor="middle">1.5V</text>
+      <text x="0" y="10" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">⚡</text>
+      <text x="0" y="-36" font-size="10" font-weight="900" fill="#DC2626" text-anchor="middle">+</text>
+      <text x="0" y="42" font-size="12" font-weight="900" fill="#6B7280" text-anchor="middle">−</text>
+      <rect x="-26" y="-26" width="12" height="50" rx="4" fill="rgba(255,255,255,0.12)"/>`;
+    case 'resistor': return `
+      <line x1="-40" y1="0" x2="-22" y2="0" stroke="url(#resWire)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="22" y1="0" x2="40" y2="0" stroke="url(#resWire)" stroke-width="3" stroke-linecap="round"/>
+      <rect x="-22" y="-14" width="44" height="28" rx="14" fill="url(#resBody)" stroke="#B8956A" stroke-width="1"/>
+      <rect x="-14" y="-14" width="5" height="28" rx="1" fill="#92400E" opacity="0.9"/>
+      <rect x="-6" y="-14" width="5" height="28" rx="1" fill="#1C1C1E" opacity="0.9"/>
+      <rect x="2" y="-14" width="5" height="28" rx="1" fill="#DC2626" opacity="0.9"/>
+      <rect x="12" y="-14" width="4" height="28" rx="1" fill="#D97706" opacity="0.7"/>
+      <ellipse cx="0" cy="-8" rx="18" ry="5" fill="rgba(255,255,255,0.3)"/>`;
+    case 'bulb': {
+      const br = lastResult?.branches?.[comp.id];
+      const on = br && Math.abs(br.I) > 0.01;
+      const glow = on ? `<circle cx="0" cy="-12" r="30" fill="url(#bulbGlowOn${comp.id})"/>
+        <defs><radialGradient id="bulbGlowOn${comp.id}" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#FDE68A" stop-opacity="0.6"/><stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/></radialGradient></defs>` : '';
+      return `${glow}
+      <ellipse cx="0" cy="-14" rx="22" ry="26" fill="url(#bulbGlass)" stroke="#D1D5DB" stroke-width="1"/>
+      <path d="M-8 -12 L-5 -22 L-2 -12 L1 -22 L4 -12 L7 -22 L10 -12" fill="none" stroke="${on ? '#D97706' : '#92400E'}" stroke-width="1.5" stroke-linecap="round" opacity="${on ? 1 : 0.6}"/>
+      <line x1="-6" y1="4" x2="-6" y2="-12" stroke="#78716C" stroke-width="0.8"/>
+      <line x1="6" y1="4" x2="6" y2="-12" stroke="#78716C" stroke-width="0.8"/>
+      <rect x="-12" y="10" width="24" height="16" rx="3" fill="url(#bulbBase)"/>
+      <line x1="-12" y1="14" x2="12" y2="14" stroke="#57534E" stroke-width="0.8"/>
+      <line x1="-12" y1="18" x2="12" y2="18" stroke="#57534E" stroke-width="0.8"/>
+      <line x1="-12" y1="22" x2="12" y2="22" stroke="#57534E" stroke-width="0.8"/>
+      <rect x="-6" y="26" width="12" height="6" rx="2" fill="#78716C"/>
+      <ellipse cx="-8" cy="-22" rx="6" ry="10" fill="rgba(255,255,255,0.5)"/>`;
+    }
+    case 'switch': {
+      const closed = comp.params.closed;
+      return `
+        <rect x="-38" y="2" width="76" height="28" rx="4" fill="url(#swBase)" stroke="#A8A29E" stroke-width="1"/>
+        <circle cx="-28" cy="24" r="3" fill="#D1D5DB" stroke="#57534E" stroke-width="0.8"/>
+        <circle cx="28" cy="24" r="3" fill="#D1D5DB" stroke="#57534E" stroke-width="0.8"/>
+        <rect x="-28" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
+        <circle cx="-22" cy="2" r="5" fill="#D1D5DB" stroke="#57534E" stroke-width="1"/>
+        <rect x="16" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
+        <circle cx="22" cy="2" r="5" fill="#D1D5DB" stroke="#57534E" stroke-width="1"/>
+        <line x1="-22" y1="2" x2="${closed ? '22' : '12'}" y2="${closed ? '2' : '-26'}" stroke="url(#swBlade)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="${closed ? '22' : '12'}" cy="${closed ? '2' : '-26'}" r="5" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
+        <circle cx="${closed ? '22' : '12'}" cy="${closed ? '2' : '-26'}" r="2" fill="#fff" opacity="0.4"/>
+        <circle cx="-22" cy="2" r="2.5" fill="#57534E"/>`;
+    }
+    case 'ammeter': return `
+      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="url(#meterCase)" stroke="#9CA3AF" stroke-width="1.5"/>
+      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1"/>
+      <path d="M-20 10 Q0 -26 20 10" fill="none" stroke="#FECACA" stroke-width="1" stroke-dasharray="2 3"/>
+      <line x1="-18" y1="6" x2="-16" y2="2" stroke="#DC2626" stroke-width="1"/>
+      <line x1="0" y1="-14" x2="0" y2="-18" stroke="#DC2626" stroke-width="1"/>
+      <line x1="18" y1="6" x2="16" y2="2" stroke="#DC2626" stroke-width="1"/>
+      <text x="-22" y="14" font-size="6" fill="#DC2626" text-anchor="middle">0</text>
+      <text x="0" y="-20" font-size="6" fill="#DC2626" text-anchor="middle">3</text>
+      <text x="22" y="14" font-size="6" fill="#DC2626" text-anchor="middle">6</text>
+      <line x1="0" y1="12" x2="-12" y2="-10" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="0" cy="12" r="3.5" fill="#DC2626"/>
+      <circle cx="0" cy="12" r="1.5" fill="#fff" opacity="0.5"/>
+      <text x="0" y="4" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle" font-family="serif">A</text>
+      <circle cx="-15" cy="40" r="5" fill="#DC2626" stroke="#B91C1C" stroke-width="1.5"/>
+      <text x="-15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">+</text>
+      <circle cx="15" cy="40" r="5" fill="#1C1C1E" stroke="#374151" stroke-width="1.5"/>
+      <text x="15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">−</text>`;
+    case 'voltmeter': return `
+      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="url(#meterCase)" stroke="#9CA3AF" stroke-width="1.5"/>
+      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1"/>
+      <path d="M-20 10 Q0 -26 20 10" fill="none" stroke="#FDE68A" stroke-width="1" stroke-dasharray="2 3"/>
+      <line x1="-18" y1="6" x2="-16" y2="2" stroke="#D97706" stroke-width="1"/>
+      <line x1="0" y1="-14" x2="0" y2="-18" stroke="#D97706" stroke-width="1"/>
+      <line x1="18" y1="6" x2="16" y2="2" stroke="#D97706" stroke-width="1"/>
+      <text x="-22" y="14" font-size="6" fill="#D97706" text-anchor="middle">0</text>
+      <text x="0" y="-20" font-size="6" fill="#D97706" text-anchor="middle">15</text>
+      <text x="22" y="14" font-size="6" fill="#D97706" text-anchor="middle">30</text>
+      <line x1="0" y1="12" x2="-12" y2="-10" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="0" cy="12" r="3.5" fill="#D97706"/>
+      <circle cx="0" cy="12" r="1.5" fill="#fff" opacity="0.5"/>
+      <text x="0" y="4" font-size="11" font-weight="900" fill="#D97706" text-anchor="middle" font-family="serif">V</text>
+      <circle cx="-15" cy="40" r="5" fill="#DC2626" stroke="#B91C1C" stroke-width="1.5"/>
+      <text x="-15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">+</text>
+      <circle cx="15" cy="40" r="5" fill="#1C1C1E" stroke="#374151" stroke-width="1.5"/>
+      <text x="15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">−</text>`;
+    case 'wire': return `
+      <path d="M-30 0 C-10 -10, 10 10, 30 0" fill="none" stroke="url(#wireInsul)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M-30 -2 C-10 -12, 10 8, 30 -2" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="-36" y="-8" width="14" height="16" rx="2" fill="url(#clipMetal)" stroke="#6B7280" stroke-width="1"/>
+      <rect x="22" y="-8" width="14" height="16" rx="2" fill="url(#clipMetal)" stroke="#6B7280" stroke-width="1"/>`;
+    default: return '';
+  }
+}
+
+function getSchematicSVG(comp) {
+  switch (comp.type) {
+    case 'battery': return `
       <line x1="0" y1="-40" x2="0" y2="-8" stroke="#374151" stroke-width="2"/>
       <line x1="0" y1="8" x2="0" y2="32" stroke="#374151" stroke-width="2"/>
       <line x1="-14" y1="-8" x2="14" y2="-8" stroke="#374151" stroke-width="2.5"/>
       <line x1="-9" y1="0" x2="9" y2="0" stroke="#374151" stroke-width="4"/>
       <text x="18" y="-4" font-size="9" font-weight="800" fill="#DC2626">+</text>
-      <text x="18" y="6" font-size="10" font-weight="800" fill="#3B82F6">−</text>`,
-  },
-  solver: { type: 'voltage-source' },
-  meta: { label: '电池', category: '电源' },
-});
-
-// Resistor
-engine.registerComponent('resistor', {
-  ports: [{ id: 'p0', dx: -40, dy: 0 }, { id: 'p1', dx: 40, dy: 0 }],
-  params: { R: { default: 10, min: 1, max: 1000, unit: 'Ω' } },
-  render: {
-    realistic: (comp) => `
-      <line x1="-40" y1="0" x2="-22" y2="0" stroke="#9CA3AF" stroke-width="3"/>
-      <line x1="22" y1="0" x2="40" y2="0" stroke="#9CA3AF" stroke-width="3"/>
-      <rect x="-22" y="-14" width="44" height="28" rx="14" fill="#E8C9A0" stroke="#B8956A" stroke-width="1"/>
-      <rect x="-14" y="-14" width="5" height="28" rx="1" fill="#92400E"/>
-      <rect x="-6" y="-14" width="5" height="28" rx="1" fill="#1C1C1E"/>
-      <rect x="2" y="-14" width="5" height="28" rx="1" fill="#DC2626"/>
-      <rect x="12" y="-14" width="4" height="28" rx="1" fill="#D97706" opacity="0.7"/>`,
-    schematic: (comp) => `
+      <text x="18" y="6" font-size="10" font-weight="800" fill="#3B82F6">−</text>`;
+    case 'resistor': return `
       <line x1="-40" y1="0" x2="-16" y2="0" stroke="#374151" stroke-width="2"/>
       <line x1="16" y1="0" x2="40" y2="0" stroke="#374151" stroke-width="2"/>
       <rect x="-16" y="-8" width="32" height="16" rx="1" fill="none" stroke="#374151" stroke-width="2"/>
-      <text x="0" y="4" font-size="10" font-weight="700" fill="#374151" text-anchor="middle">R</text>`,
-  },
-  solver: { type: 'resistor' },
-  meta: { label: '电阻', category: '元件' },
-});
-
-// Bulb
-engine.registerComponent('bulb', {
-  ports: [{ id: 'p0', dx: 0, dy: 32 }, { id: 'p1', dx: -12, dy: 15 }],
-  params: { R: { default: 10, min: 1, max: 100, unit: 'Ω' } },
-  render: {
-    realistic: (comp, result) => {
-      const br = result?.branches?.[comp.id];
+      <text x="0" y="4" font-size="10" font-weight="700" fill="#374151" text-anchor="middle">R</text>`;
+    case 'bulb': {
+      const br = lastResult?.branches?.[comp.id];
       const on = br && Math.abs(br.I) > 0.01;
       return `
-        ${on ? '<circle cx="0" cy="-14" r="30" fill="rgba(253,230,138,0.3)"/>' : ''}
-        <ellipse cx="0" cy="-14" rx="22" ry="26" fill="rgba(255,251,235,${on ? 0.8 : 0.4})" stroke="#D1D5DB" stroke-width="1"/>
-        <path d="M-8 -12 L-5 -22 L-2 -12 L1 -22 L4 -12 L7 -22 L10 -12" fill="none" stroke="${on ? '#D97706' : '#92400E'}" stroke-width="1.5" opacity="${on ? 1 : 0.6}"/>
-        <rect x="-12" y="10" width="24" height="16" rx="3" fill="#A8A29E"/>`;
-    },
-    schematic: (comp, result) => {
-      const br = result?.branches?.[comp.id];
-      const on = br && Math.abs(br.I) > 0.01;
-      return `
-        <circle cx="0" cy="0" r="14" fill="${on ? 'rgba(253,230,138,0.15)' : 'none'}" stroke="#374151" stroke-width="2"/>
-        <line x1="-9" y1="-9" x2="9" y2="9" stroke="#374151" stroke-width="2"/>
-        <line x1="9" y1="-9" x2="-9" y2="9" stroke="#374151" stroke-width="2"/>`;
-    },
-  },
-  solver: { type: 'resistor' },
-  meta: { label: '灯泡', category: '元件' },
-});
-
-// Switch
-engine.registerComponent('switch', {
-  ports: [{ id: 'p0', dx: -22, dy: 35 }, { id: 'p1', dx: 22, dy: 35 }],
-  params: { closed: { default: true } },
-  render: {
-    realistic: (comp) => {
-      const closed = comp.params.closed;
-      return `
-        <rect x="-38" y="2" width="76" height="28" rx="4" fill="#E7E5E4" stroke="#A8A29E" stroke-width="1"/>
-        <rect x="-28" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
-        <rect x="16" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
-        <line x1="-22" y1="2" x2="${closed ? '22' : '12'}" y2="${closed ? '2' : '-26'}" stroke="#9CA3AF" stroke-width="5" stroke-linecap="round"/>
-        <circle cx="${closed ? '22' : '12'}" cy="${closed ? '2' : '-26'}" r="5" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>`;
-    },
-    schematic: (comp) => {
+      <circle cx="0" cy="0" r="14" fill="${on ? 'rgba(253,230,138,0.15)' : 'none'}" stroke="#374151" stroke-width="2"/>
+      <line x1="-9" y1="-9" x2="9" y2="9" stroke="#374151" stroke-width="2"/>
+      <line x1="9" y1="-9" x2="-9" y2="9" stroke="#374151" stroke-width="2"/>`;
+    }
+    case 'switch': {
       const closed = comp.params.closed;
       return `
         <circle cx="-10" cy="0" r="3" fill="none" stroke="#374151" stroke-width="2"/>
         <circle cx="10" cy="0" r="3" fill="none" stroke="#374151" stroke-width="2"/>
         <line x1="-10" y1="0" x2="${closed ? '10' : '4'}" y2="${closed ? '0' : '-16'}" stroke="#374151" stroke-width="2.5"/>`;
-    },
-  },
-  solver: { type: 'switch' },
-  meta: { label: '开关', category: '元件' },
-  onInteract: (comp, engine) => {
-    comp.params.closed = !comp.params.closed;
-    engine.render();
-    engine.solve();
-  },
-});
-
-// Ammeter
-engine.registerComponent('ammeter', {
-  ports: [{ id: 'p0', dx: -15, dy: 48 }, { id: 'p1', dx: 15, dy: 48 }],
-  params: {},
-  render: {
-    realistic: () => `
-      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
-      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff"/>
-      <text x="0" y="4" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle">A</text>
-      <circle cx="-15" cy="40" r="5" fill="#DC2626"/>
-      <circle cx="15" cy="40" r="5" fill="#1C1C1E"/>`,
-    schematic: () => `
+    }
+    case 'ammeter': return `
       <circle cx="0" cy="0" r="15" fill="none" stroke="#DC2626" stroke-width="2"/>
-      <text x="0" y="5" font-size="14" font-weight="800" fill="#DC2626" text-anchor="middle">A</text>`,
-  },
-  solver: { type: 'resistor' },
-  meta: { label: '电流表', category: '仪表' },
-});
-
-// Voltmeter
-engine.registerComponent('voltmeter', {
-  ports: [{ id: 'p0', dx: -15, dy: 48 }, { id: 'p1', dx: 15, dy: 48 }],
-  params: {},
-  render: {
-    realistic: () => `
-      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
-      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff"/>
-      <text x="0" y="4" font-size="11" font-weight="900" fill="#D97706" text-anchor="middle">V</text>
-      <circle cx="-15" cy="40" r="5" fill="#DC2626"/>
-      <circle cx="15" cy="40" r="5" fill="#1C1C1E"/>`,
-    schematic: () => `
+      <text x="0" y="5" font-size="14" font-weight="800" fill="#DC2626" text-anchor="middle">A</text>`;
+    case 'voltmeter': return `
       <circle cx="0" cy="0" r="15" fill="none" stroke="#D97706" stroke-width="2"/>
-      <text x="0" y="5" font-size="14" font-weight="800" fill="#D97706" text-anchor="middle">V</text>`,
-  },
-  solver: { type: 'resistor' },
-  meta: { label: '电压表', category: '仪表' },
-});
+      <text x="0" y="5" font-size="14" font-weight="800" fill="#D97706" text-anchor="middle">V</text>`;
+    case 'wire': return `
+      <line x1="-36" y1="0" x2="36" y2="0" stroke="#374151" stroke-width="2" stroke-linecap="round"/>`;
+    default: return '';
+  }
+}
 
-// Wire
-engine.registerComponent('wire', {
-  ports: [{ id: 'p0', dx: -36, dy: 0 }, { id: 'p1', dx: 36, dy: 0 }],
-  params: {},
-  render: {
-    realistic: () => `
-      <path d="M-30 0 C-10 -10, 10 10, 30 0" fill="none" stroke="#DC2626" stroke-width="5" stroke-linecap="round"/>
-      <path d="M-30 -2 C-10 -12, 10 8, 30 -2" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-      <rect x="-36" y="-8" width="14" height="16" rx="2" fill="#D1D5DB" stroke="#6B7280" stroke-width="1"/>
-      <rect x="22" y="-8" width="14" height="16" rx="2" fill="#D1D5DB" stroke="#6B7280" stroke-width="1"/>`,
-    schematic: () => `
-      <line x1="-36" y1="0" x2="36" y2="0" stroke="#374151" stroke-width="2" stroke-linecap="round"/>`,
-  },
-  solver: { type: 'resistor' },
-  meta: { label: '导线', category: '元件' },
-});
+// ===== Drag from library =====
+let dragType = null, dragGhost = null;
 
-// ===== Sidebar drag to add =====
-document.querySelectorAll('.comp-btn').forEach(btn => {
-  btn.addEventListener('pointerdown', e => {
+document.querySelectorAll('.lib-item').forEach(item => {
+  item.addEventListener('pointerdown', e => {
     e.preventDefault();
-    const type = btn.dataset.type;
+    dragType = item.dataset.type;
+    // Create ghost element
+    // No floating ghost — only canvas preview
 
+    // Create preview SVG on canvas immediately
     let previewG = null;
     const onMove = ev => {
       const rect = document.querySelector('.canvas-area').getBoundingClientRect();
-      if (ev.clientX >= rect.left && ev.clientX <= rect.right) {
-        const pt = engine.svgPoint(ev);
-        const sx = engine._snap(pt.x), sy = engine._snap(pt.y);
+      if (ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom) {
+        const pt = svgPoint(ev);
+        const sx = snap(pt.x), sy = snap(pt.y);
         if (!previewG) {
-          const tmpComp = engine.registry.createInstance(type, sx, sy, '_preview');
-          previewG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-          const def = engine.registry.get(type);
-          const renderFn = def.render[engine.getView()] || def.render.realistic;
-          previewG.innerHTML = renderFn(tmpComp, null);
+          const tmpComp = { id: '_preview', type: dragType, x: sx, y: sy, rotation: 0, params: { ...COMP_DEFAULTS[dragType].params } };
+          previewG = createCompSVG(tmpComp);
           previewG.style.opacity = '0.5';
           previewG.style.pointerEvents = 'none';
-          previewG.setAttribute('transform', `translate(${sx},${sy})`);
-          engine._tempLayer.appendChild(previewG);
+          tempLayer.appendChild(previewG);
         } else {
           previewG.setAttribute('transform', `translate(${sx},${sy})`);
         }
       } else if (previewG) {
-        previewG.remove();
-        previewG = null;
+        previewG.remove(); previewG = null;
       }
     };
     const onUp = ev => {
       document.removeEventListener('pointermove', onMove);
       document.removeEventListener('pointerup', onUp);
+      
       if (previewG) { previewG.remove(); previewG = null; }
+
       const rect = document.querySelector('.canvas-area').getBoundingClientRect();
-      if (ev.clientX >= rect.left && ev.clientX <= rect.right) {
-        const pt = engine.svgPoint(ev);
-        engine.addComponent(type, pt.x, pt.y);
+      if (ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom) {
+        const pt = svgPoint(ev);
+        addComponent(dragType, snap(pt.x), snap(pt.y));
       }
+      dragType = null;
     };
     document.addEventListener('pointermove', onMove);
     document.addEventListener('pointerup', onUp);
   });
 });
 
+
+
+// ===== Add component =====
+function addComponent(type, x, y) {
+  const def = COMP_DEFAULTS[type];
+  const comp = {
+    id: 'c' + state.nextId++,
+    type,
+    x, y,
+    rotation: 0,
+    params: { ...def.params },
+    ports: def.ports.map(p => ({ ...p })),
+  };
+  pushUndo();
+  state.components.push(comp);
+  state.dirty = true;
+  renderAll();
+  // Bounce animation on placement
+  const g = compsLayer.querySelector(`[data-id="${comp.id}"]`);
+  if (g) { g.classList.add('just-placed'); g.addEventListener('animationend', () => g.classList.remove('just-placed'), { once: true }); }
+}
+
+// ===== Move components on canvas =====
+let movingComp = null, moveOffset = { x: 0, y: 0 };
+
+function setupCompDrag(g, comp) {
+  g.addEventListener('pointerdown', e => {
+    if (e.target.classList.contains('port-circle')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    selectComponent(comp.id);
+    movingComp = comp;
+    const pt = svgPoint(e);
+    moveOffset = { x: pt.x - comp.x, y: pt.y - comp.y };
+    g.classList.add('dragging');
+    let hasMoved = false;
+
+    const onMove = ev => {
+      hasMoved = true;
+      const p = svgPoint(ev);
+      comp.x = snap(p.x - moveOffset.x);
+      comp.y = snap(p.y - moveOffset.y);
+      const r = comp.rotation || 0;
+      g.setAttribute('transform', `translate(${comp.x},${comp.y})${r ? ` rotate(${r})` : ''}`);
+      renderWires();
+    };
+    const onUp = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      g.classList.remove('dragging');
+      movingComp = null;
+      // Switch: click without drag = toggle
+      if (!hasMoved && comp.type === 'switch') {
+        pushUndo();
+        comp.params.closed = !comp.params.closed;
+        state.dirty = true;
+        renderAll();
+        solveAndUpdate();
+        return;
+      }
+      state.dirty = true;
+      solveAndUpdate();
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  });
+}
+
+// ===== Port connection =====
+let connectFrom = null, tempLine = null;
+
+function setupPortClick(circle) {
+  circle.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const compId = circle.dataset.compId;
+    const portId = circle.dataset.portId;
+
+    if (!connectFrom) {
+      connectFrom = { componentId: compId, portId };
+      // Start temp line
+      const comp = state.components.find(c => c.id === compId);
+      const def = COMP_DEFAULTS[comp.type];
+      const port = def.ports.find(p => p.id === portId);
+      const sp = getPortPos(comp, port);
+      const sx = sp.x, sy = sp.y;
+      tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      tempLine.setAttribute('class', 'wire-temp');
+      tempLine.setAttribute('d', `M${sx},${sy} L${sx},${sy}`);
+      tempLayer.appendChild(tempLine);
+
+      function softPath(ax, ay, bx, by) {
+        const ddx = Math.abs(bx - ax), sag = Math.max(15, Math.hypot(ddx, Math.abs(by - ay)) * 0.12);
+        return `M${ax},${ay} C${ax + ddx * 0.3},${ay + sag} ${bx - ddx * 0.3},${by + sag} ${bx},${by}`;
+      }
+
+      let snapIndicator = null;
+      const onMove = ev => {
+        const pt = svgPoint(ev);
+        // Find nearest port for snap preview
+        let bestDist = 24, bestPos = null;
+        state.components.forEach(c => {
+          COMP_DEFAULTS[c.type].ports.forEach(p => {
+            if (c.id === compId && p.id === portId) return;
+            const pp = getPortPos(c, p);
+            const d = Math.hypot(pp.x - pt.x, pp.y - pt.y);
+            if (d < bestDist) { bestDist = d; bestPos = pp; }
+          });
+        });
+        if (bestPos) {
+          tempLine.setAttribute('d', softPath(sx, sy, bestPos.x, bestPos.y));
+          if (!snapIndicator) {
+            snapIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            snapIndicator.setAttribute('r', '8'); snapIndicator.setAttribute('fill', 'rgba(59,130,246,0.15)');
+            snapIndicator.setAttribute('stroke', '#3B82F6'); snapIndicator.setAttribute('stroke-width', '2');
+            snapIndicator.style.pointerEvents = 'none';
+            // Pulse animation
+            const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            anim.setAttribute('attributeName', 'r'); anim.setAttribute('values', '6;10;6');
+            anim.setAttribute('dur', '0.8s'); anim.setAttribute('repeatCount', 'indefinite');
+            snapIndicator.appendChild(anim);
+            tempLayer.appendChild(snapIndicator);
+          }
+          snapIndicator.setAttribute('cx', bestPos.x); snapIndicator.setAttribute('cy', bestPos.y);
+        } else {
+          tempLine.setAttribute('d', softPath(sx, sy, pt.x, pt.y));
+          if (snapIndicator) { snapIndicator.remove(); snapIndicator = null; }
+        }
+      };
+      const SNAP_RADIUS = 24;
+      const onUp = ev => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        if (tempLine) { tempLine.remove(); tempLine = null; }
+        if (snapIndicator) { snapIndicator.remove(); snapIndicator = null; }
+        // Find nearest port within snap radius
+        const pt = svgPoint(ev);
+        let bestDist = SNAP_RADIUS, bestTarget = null;
+        state.components.forEach(c => {
+          if (c.id === compId) return; // skip same component? no, allow different port
+          const def = COMP_DEFAULTS[c.type];
+          def.ports.forEach(p => {
+            const pp = getPortPos(c, p);
+            const d = Math.hypot(pp.x - pt.x, pp.y - pt.y);
+            if (d < bestDist && !(c.id === compId && p.id === portId)) {
+              bestDist = d; bestTarget = { componentId: c.id, portId: p.id };
+            }
+          });
+        });
+        if (bestTarget) {
+          addConnection(connectFrom, bestTarget);
+        }
+        connectFrom = null;
+      };
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    }
+  });
+}
+
+function addConnection(from, to) {
+  // Check duplicate
+  const exists = state.connections.some(c =>
+    (c.from.componentId === from.componentId && c.from.portId === from.portId &&
+     c.to.componentId === to.componentId && c.to.portId === to.portId) ||
+    (c.from.componentId === to.componentId && c.from.portId === to.portId &&
+     c.to.componentId === from.componentId && c.to.portId === from.portId)
+  );
+  if (exists) return;
+  pushUndo();
+  state.connections.push({ from, to });
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+// ===== Selection =====
+function selectComponent(id) {
+  state.selectedId = id;
+  state.selectedWireIdx = -1;
+  document.querySelectorAll('.comp-group').forEach(g => g.classList.toggle('selected', g.dataset.id === id));
+  renderWires();
+  updatePropsPanel();
+}
+
+function selectWire(idx) {
+  state.selectedWireIdx = idx;
+  state.selectedId = null;
+  document.querySelectorAll('.comp-group').forEach(g => g.classList.remove('selected'));
+  renderWires();
+  updatePropsPanel();
+}
+
+function deleteSelectedWire() {
+  if (state.selectedWireIdx < 0 || state.selectedWireIdx >= state.connections.length) return;
+  pushUndo();
+  state.connections.splice(state.selectedWireIdx, 1);
+  state.selectedWireIdx = -1;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+svgEl.addEventListener('pointerdown', e => {
+  if (e.target === svgEl || e.target.tagName === 'rect' && !e.target.closest('.comp-group')) {
+    selectComponent(null);
+    state.selectedWireIdx = -1;
+    renderWires();
+  }
+});
+
+// ===== Properties Panel =====
+function updatePropsPanel() {
+  const empty = document.getElementById('props-empty');
+  const content = document.getElementById('props-content');
+
+  // Always show component list
+  if (!state.components.length && !state.selectedId) {
+    empty.style.display = 'flex'; content.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none'; content.style.display = 'flex';
+
+  let html = '';
+  const comp = state.selectedId ? state.components.find(c => c.id === state.selectedId) : null;
+
+  if (comp) {
+    const def = COMP_DEFAULTS[comp.type];
+    const result = lastResult?.branches?.[comp.id];
+    html += `<div class="pc-title"><span class="pci">${def.icon}</span><span class="pcn">${def.label}</span><span class="pct">${def.tag}</span></div>
+    <div class="pc-divider"></div>`;
+
+  if (comp.type === 'battery') {
+    html += `<div class="pc-field"><label>电压 (V)</label><div class="pc-input"><input type="number" value="${comp.params.V}" step="0.5" min="0.5" max="48" data-param="V"><span class="unit">V</span></div>
+    <input type="range" class="pc-slider" min="0.5" max="48" step="0.5" value="${comp.params.V}" data-param="V"></div>`;
+  }
+  if (comp.type === 'resistor' || comp.type === 'bulb') {
+    html += `<div class="pc-field"><label>电阻 (Ω)</label><div class="pc-input"><input type="number" value="${comp.params.R}" step="1" min="1" max="1000" data-param="R"><span class="unit">Ω</span></div>
+    <input type="range" class="pc-slider" min="1" max="1000" step="1" value="${comp.params.R}" data-param="R"></div>`;
+  }
+  if (comp.type === 'switch') {
+    html += `<div class="pc-field"><label>状态</label><button class="pc-act" style="background:${comp.params.closed ? 'rgba(34,197,94,0.1);color:#16A34A' : 'rgba(239,68,68,0.1);color:#DC2626'}" id="toggle-switch">${comp.params.closed ? '🟢 闭合' : '🔴 断开'}</button></div>`;
+  }
+
+  if (result) {
+    html += `<div class="pc-divider"></div><div class="pc-readings">
+      <div class="pc-reading"><div class="rv">${Math.abs(result.I).toFixed(3)}</div><div class="rl">电流 (A)</div></div>
+      <div class="pc-reading"><div class="rv">${Math.abs(result.V).toFixed(2)}</div><div class="rl">电压 (V)</div></div></div>`;
+  }
+
+  html += `<div class="pc-divider"></div><div class="pc-actions">
+    <button class="pc-act pc-act-rotate" id="btn-rotate">🔄 旋转</button>
+    <button class="pc-act pc-act-delete" id="btn-delete">🗑️ 删除</button></div>`;
+  } // end if (comp)
+
+  // Component list (BOM)
+  if (state.components.length) {
+    html += `<div class="pc-divider"></div><div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px">📋 元件清单 (${state.components.length})</div>`;
+    for (const c of state.components) {
+      const d = COMP_DEFAULTS[c.type];
+      const br = lastResult?.branches?.[c.id];
+      const sel = c.id === state.selectedId;
+      const paramStr = c.type === 'battery' ? `${c.params.V}V` : (c.type === 'resistor' || c.type === 'bulb') ? `${c.params.R}Ω` : c.type === 'switch' ? (c.params.closed ? '闭合' : '断开') : '';
+      const iStr = br ? ` · ${Math.abs(br.I).toFixed(2)}A` : '';
+      html += `<div class="bom-item${sel ? ' bom-sel' : ''}" data-bom-id="${c.id}" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:2px;background:${sel ? 'rgba(59,130,246,0.08)' : 'transparent'};transition:background 150ms">
+        <span style="font-size:14px">${d.icon}</span>
+        <span style="flex:1;font-weight:600;color:${sel ? '#2563EB' : '#374151'}">${d.label}</span>
+        <span style="color:#8E8E93;font-size:10px;font-family:'JetBrains Mono',monospace">${paramStr}${iStr}</span>
+      </div>`;
+    }
+  }
+
+  content.innerHTML = html;
+
+  // Bind BOM clicks
+  content.querySelectorAll('[data-bom-id]').forEach(el => {
+    el.addEventListener('click', () => selectComponent(el.dataset.bomId));
+    el.addEventListener('mouseenter', () => { if (el.dataset.bomId !== state.selectedId) el.style.background = 'rgba(0,0,0,0.03)'; });
+    el.addEventListener('mouseleave', () => { if (el.dataset.bomId !== state.selectedId) el.style.background = 'transparent'; });
+  });
+
+  if (!comp) return;
+
+  // Bind events
+  let isDraggingSlider = false;
+  content.querySelectorAll('[data-param]').forEach(input => {
+    if (input.type === 'range') {
+      input.addEventListener('pointerdown', () => { isDraggingSlider = true; });
+      input.addEventListener('pointerup', () => { isDraggingSlider = false; });
+      input.addEventListener('lostpointercapture', () => { isDraggingSlider = false; });
+    }
+    input.addEventListener('input', e => {
+      const param = e.target.dataset.param;
+      comp.params[param] = parseFloat(e.target.value);
+      content.querySelectorAll(`[data-param="${param}"]`).forEach(el => { if (el !== e.target) el.value = e.target.value; });
+      state.dirty = true;
+      // Lightweight solve without full re-render to avoid destroying slider mid-drag
+      const comps = state.components.map(c => {
+        const def = COMP_DEFAULTS[c.type];
+        return { id: c.id, type: c.type, params: { ...c.params }, ports: def.ports.map(p => ({ id: p.id, side: 'left' })) };
+      });
+      lastResult = solveCircuit({ components: comps, connections: state.connections });
+      // Update readings inline without rebuilding DOM
+      if (!isDraggingSlider) {
+        solveAndUpdate();
+      } else {
+        // Just update the reading values if visible
+        const br = lastResult?.branches?.[comp.id];
+        if (br) {
+          content.querySelectorAll('.pc-reading .rv').forEach((el, i) => {
+            el.textContent = i === 0 ? Math.abs(br.I).toFixed(3) : Math.abs(br.V).toFixed(2);
+          });
+        }
+      }
+    });
+    input.addEventListener('change', () => {
+      // On slider release, do full update
+      solveAndUpdate();
+    });
+  });
+
+  const toggleBtn = content.querySelector('#toggle-switch');
+  if (toggleBtn) toggleBtn.onclick = () => {
+    pushUndo();
+    comp.params.closed = !comp.params.closed;
+    state.dirty = true;
+    renderAll();
+    solveAndUpdate();
+  };
+
+  const delBtn = content.querySelector('#btn-delete');
+  if (delBtn) delBtn.onclick = () => deleteComponent(comp.id);
+
+  const rotBtn = content.querySelector('#btn-rotate');
+  if (rotBtn) rotBtn.onclick = () => {
+    // Rotation not implemented in MVP
+  };
+}
+
+function deleteComponent(id) {
+  pushUndo();
+  state.components = state.components.filter(c => c.id !== id);
+  state.connections = state.connections.filter(c => c.from.componentId !== id && c.to.componentId !== id);
+  if (state.selectedId === id) state.selectedId = null;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+// ===== Solve =====
+let lastResult = null;
+function solveAndUpdate() {
+  // Map to solver format
+  const comps = state.components.map(c => {
+    const def = COMP_DEFAULTS[c.type];
+    return {
+      id: c.id,
+      type: c.type,
+      params: { ...c.params },
+      ports: def.ports.map(p => ({ id: p.id, side: 'left' })),
+    };
+  });
+  lastResult = solveCircuit({ components: comps, connections: state.connections });
+
+  // Update warning
+  const wb = document.getElementById('warning-bar');
+  if (lastResult.warning === 'overcurrent') {
+    wb.textContent = '⚠️ 检测到过流！电流超过 10A';
+    wb.className = 'warning-bar warning-over show';
+  } else if (lastResult.error === 'singular-matrix') {
+    wb.textContent = '⚠️ 电路异常，请检查连接';
+    wb.className = 'warning-bar warning-short show';
+  } else {
+    wb.className = 'warning-bar';
+  }
+  // Auto-dismiss warning after 4s
+  if (wb.classList.contains('show')) {
+    clearTimeout(wb._timer);
+    wb._timer = setTimeout(() => { wb.className = 'warning-bar'; }, 4000);
+  }
+
+  // Re-render SVG (bulb glow depends on solve result)
+  compsLayer.innerHTML = '';
+  for (const comp of state.components) {
+    const g = createCompSVG(comp);
+    compsLayer.appendChild(g);
+    setupCompDrag(g, comp);
+    g.querySelectorAll('.port-circle').forEach(setupPortClick);
+    if (comp.id === state.selectedId) g.classList.add('selected');
+  }
+  renderWires();
+  updatePropsPanel();
+}
+
+// ===== Render =====
+function renderAll() {
+  // Components
+  compsLayer.innerHTML = '';
+  for (const comp of state.components) {
+    const g = createCompSVG(comp);
+    compsLayer.appendChild(g);
+    setupCompDrag(g, comp);
+    g.querySelectorAll('.port-circle').forEach(setupPortClick);
+    if (comp.id === state.selectedId) g.classList.add('selected');
+  }
+  renderWires();
+
+  // Empty state
+  document.getElementById('empty-state').style.display = state.components.length ? 'none' : 'flex';
+  // Cache hint
+  document.getElementById('cache-hint').style.display = state.dirty ? 'flex' : 'none';
+
+  updateUndoRedoButtons();
+  updatePropsPanel();
+  if (state.dirty) autoSave();
+}
+
+function renderWires() {
+  wiresLayer.innerHTML = '';
+  for (const conn of state.connections) {
+    const fromComp = state.components.find(c => c.id === conn.from.componentId);
+    const toComp = state.components.find(c => c.id === conn.to.componentId);
+    if (!fromComp || !toComp) continue;
+    const fromDef = COMP_DEFAULTS[fromComp.type];
+    const toDef = COMP_DEFAULTS[toComp.type];
+    const fromPort = fromDef.ports.find(p => p.id === conn.from.portId);
+    const toPort = toDef.ports.find(p => p.id === conn.to.portId);
+    if (!fromPort || !toPort) continue;
+
+    const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
+    const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
+
+    // Wire path depends on view mode
+    if (!conn.ctrl) conn.ctrl = { dx: 0, dy: 0 };
+    let pathD;
+    if (currentView === 'schematic') {
+      // Orthogonal straight-angle lines
+      const mx = (x1 + x2) / 2;
+      pathD = Math.abs(y1 - y2) < 2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
+    } else {
+      // Soft bezier with draggable control point
+      const midX = (x1 + x2) / 2 + conn.ctrl.dx;
+      const midY = (y1 + y2) / 2 + conn.ctrl.dy;
+      const dx = Math.abs(x2 - x1), dist = Math.hypot(dx, Math.abs(y2 - y1));
+      const sag = Math.max(15, dist * 0.1);
+      const cx1 = x1 + (midX - x1) * 0.5, cy1 = y1 + (midY - y1) * 0.5 + sag;
+      const cx2 = x2 + (midX - x2) * 0.5, cy2 = y2 + (midY - y2) * 0.5 + sag;
+      pathD = `M${x1},${y1} Q${cx1},${cy1} ${midX},${midY} Q${cx2},${cy2} ${x2},${y2}`;
+    }
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    line.setAttribute('d', pathD);
+    line.setAttribute('class', currentView === 'schematic' ? 'wire-line wire-schematic' : 'wire-line');
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    hit.setAttribute('d', pathD);
+    hit.setAttribute('stroke', 'transparent'); hit.setAttribute('stroke-width', '16');
+    hit.setAttribute('fill', 'none');
+    hit.style.cursor = 'pointer';
+    const wireIdx = state.connections.indexOf(conn);
+    hit.dataset.wireIdx = wireIdx;
+    line.dataset.wireIdx = wireIdx;
+    const clickHandler = e => { e.stopPropagation(); selectWire(wireIdx); };
+    hit.addEventListener('pointerdown', clickHandler);
+    line.addEventListener('pointerdown', clickHandler);
+    if (wireIdx === state.selectedWireIdx) line.classList.add('wire-selected');
+    wiresLayer.appendChild(line);
+    wiresLayer.appendChild(hit);
+
+    // Draggable midpoint handle (realistic view only)
+    if (currentView !== 'realistic') continue;
+    const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    handle.setAttribute('cx', midX); handle.setAttribute('cy', midY);
+    handle.setAttribute('r', '6'); handle.setAttribute('fill', 'rgba(220,38,38,0.15)');
+    handle.setAttribute('stroke', '#DC2626'); handle.setAttribute('stroke-width', '1.5');
+    handle.style.cursor = 'grab'; handle.style.opacity = '0';
+    handle.style.transition = 'opacity 150ms';
+    // Show on wire hover
+    const showHandle = () => handle.style.opacity = '1';
+    const hideHandle = () => { if (!handle._dragging) handle.style.opacity = '0'; };
+    hit.addEventListener('pointerenter', showHandle);
+    line.addEventListener('pointerenter', showHandle);
+    hit.addEventListener('pointerleave', hideHandle);
+    line.addEventListener('pointerleave', hideHandle);
+    handle.addEventListener('pointerenter', showHandle);
+    handle.addEventListener('pointerleave', hideHandle);
+
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault(); e.stopPropagation();
+      handle._dragging = true;
+      handle.style.cursor = 'grabbing';
+      const baseMX = (x1 + x2) / 2, baseMY = (y1 + y2) / 2;
+      const onMove = ev => {
+        const pt = svgPoint(ev);
+        conn.ctrl.dx = pt.x - baseMX;
+        conn.ctrl.dy = pt.y - baseMY;
+        renderWires();
+      };
+      const onUp = () => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        handle._dragging = false;
+        state.dirty = true;
+        if (state.dirty) autoSave();
+      };
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    });
+    wiresLayer.appendChild(handle);
+  }
+
+  // Update port visuals
+  document.querySelectorAll('.port-circle').forEach(circle => {
+    const cid = circle.dataset.compId, pid = circle.dataset.portId;
+    const isConnected = state.connections.some(c =>
+      (c.from.componentId === cid && c.from.portId === pid) ||
+      (c.to.componentId === cid && c.to.portId === pid)
+    );
+    circle.classList.toggle('connected', isConnected);
+  });
+}
+
+// ===== Undo/Redo =====
+function pushUndo() {
+  state.undoStack.push(JSON.stringify({ components: state.components, connections: state.connections, nextId: state.nextId }));
+  state.redoStack = [];
+  if (state.undoStack.length > 50) state.undoStack.shift();
+}
+
+function undo() {
+  if (!state.undoStack.length) return;
+  state.redoStack.push(JSON.stringify({ components: state.components, connections: state.connections, nextId: state.nextId }));
+  const prev = JSON.parse(state.undoStack.pop());
+  state.components = prev.components;
+  state.connections = prev.connections;
+  state.nextId = prev.nextId;
+  state.selectedId = null;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+function redo() {
+  if (!state.redoStack.length) return;
+  state.undoStack.push(JSON.stringify({ components: state.components, connections: state.connections, nextId: state.nextId }));
+  const next = JSON.parse(state.redoStack.pop());
+  state.components = next.components;
+  state.connections = next.connections;
+  state.nextId = next.nextId;
+  state.selectedId = null;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+function updateUndoRedoButtons() {
+  document.getElementById('btn-undo').classList.toggle('disabled', !state.undoStack.length);
+  document.getElementById('btn-redo').classList.toggle('disabled', !state.redoStack.length);
+}
+
+// ===== Auto Save/Load (localStorage) =====
+const STORAGE_KEY = 'devkit-circuit-builder-auto';
+
+function autoSave() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      components: state.components,
+      connections: state.connections,
+      nextId: state.nextId,
+    }));
+    state.dirty = false;
+  } catch(e) { /* storage full */ }
+}
+
+function autoLoad() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data?.components?.length) {
+      state.components = data.components;
+      state.connections = data.connections || [];
+      state.nextId = data.nextId || 1;
+    }
+  } catch(e) { /* ignore */ }
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+
+// ===== Export/Import JSON =====
+function exportCircuit() {
+  const data = { components: state.components, connections: state.connections, nextId: state.nextId, version: 1 };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'circuit.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  state.dirty = false;
+}
+
+function importCircuit(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.components || !data.connections) throw new Error('invalid');
+      pushUndo();
+      state.components = data.components;
+      state.connections = data.connections;
+      state.nextId = data.nextId || 100;
+      state.selectedId = null;
+      state.dirty = false;
+      renderAll();
+      solveAndUpdate();
+    } catch { alert('文件格式错误'); }
+  };
+  reader.readAsText(file);
+}
+
+// ===== Toolbar events =====
+document.getElementById('btn-undo').onclick = undo;
+document.getElementById('btn-redo').onclick = redo;
+document.getElementById('btn-export').onclick = exportCircuit;
+document.getElementById('btn-import').onclick = () => document.getElementById('import-input').click();
+document.getElementById('import-input').onchange = e => { if (e.target.files[0]) importCircuit(e.target.files[0]); e.target.value = ''; };
+document.getElementById('btn-clear').onclick = () => {
+  if (state.components.length && !confirm('确定清空所有元件？')) return;
+  pushUndo();
+  state.components = []; state.connections = []; state.selectedId = null; state.dirty = false;
+  renderAll(); solveAndUpdate();
+};
+// ===== Example circuits =====
+const EXAMPLES = {
+  '💡 简单电路 (电池+灯泡)': {
+    components: [
+      { id:'e1', type:'battery', x:200, y:100, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'bulb', x:400, y:100, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '🔗 串联电路 (电池+2电阻)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:12}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'resistor', x:340, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
+      { id:'e3', type:'resistor', x:340, y:240, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
+      { id:'e4', type:'wire', x:500, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e3',portId:'p1'} },
+      { from:{componentId:'e3',portId:'p0'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '⚡ 并联电路 (电池+2灯泡)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'bulb', x:400, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e3', type:'bulb', x:400, y:220, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e4', type:'wire', x:260, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e5', type:'wire', x:260, y:220, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e6', type:'wire', x:540, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e5',portId:'p0'} },
+      { from:{componentId:'e5',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
+      { from:{componentId:'e6',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '🔌 带开关的电路 (电池+开关+灯泡+电流表)': {
+    components: [
+      { id:'e1', type:'battery', x:140, y:200, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
+      { id:'e2', type:'switch', x:300, y:80, rotation:0, params:{closed:true}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
+      { id:'e3', type:'ammeter', x:460, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-20,dy:0},{id:'p1',dx:20,dy:0}] },
+      { id:'e4', type:'bulb', x:460, y:200, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+};
+
+function loadExample(name) {
+  const ex = EXAMPLES[name];
+  if (!ex) return;
+  pushUndo();
+  state.components = JSON.parse(JSON.stringify(ex.components));
+  state.connections = JSON.parse(JSON.stringify(ex.connections));
+  state.nextId = ex.nextId || 10;
+  state.selectedId = null;
+  state.selectedWireIdx = -1;
+  state.dirty = true;
+  renderAll();
+  solveAndUpdate();
+}
+
+document.getElementById('btn-examples').onclick = () => {
+  const names = Object.keys(EXAMPLES);
+  const container = document.getElementById('modal-slots');
+  document.getElementById('modal-title').textContent = '📖 示例电路';
+  let html = '';
+  for (const name of names) {
+    const ex = EXAMPLES[name];
+    html += `<div class="slot" data-example="${name}"><span class="slot-icon">${name.split(' ')[0]}</span><div class="slot-info"><div class="slot-name">${name}</div><div class="slot-meta">${ex.components.length} 个元件</div></div><div class="slot-actions"><button class="slot-btn slot-load" data-ex-name="${name}">加载</button></div></div>`;
+  }
+  container.innerHTML = html;
+  container.querySelectorAll('[data-ex-name]').forEach(b => b.onclick = () => { loadExample(b.dataset.exName); closeModal(); });
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
+document.getElementById('modal-close').onclick = closeModal;
+document.getElementById('hint-export').onclick = exportCircuit;
+
+// Zoom
+document.getElementById('btn-zoom-in').onclick = () => { state.zoom = Math.min(2, state.zoom + 0.1); updateZoom(); };
+document.getElementById('btn-zoom-out').onclick = () => { state.zoom = Math.max(0.5, state.zoom - 0.1); updateZoom(); };
+function updateZoom() {
+  document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
+  compsLayer.setAttribute('transform', `scale(${state.zoom})`);
+  wiresLayer.setAttribute('transform', `scale(${state.zoom})`);
+}
+
+// Section fold/unfold
+document.querySelectorAll('.lib-section-title').forEach(t => {
+  t.onclick = () => t.parentElement.classList.toggle('open');
+});
+
+// ===== Right-click context menu =====
+const ctxMenu = document.getElementById('ctx-menu');
+let ctxTarget = null; // { type: 'comp'|'wire'|'canvas', id?, wireIdx? }
+
+function showCtxMenu(x, y, items) {
+  ctxMenu.innerHTML = items.map(item => {
+    if (item === '---') return '<div class="ctx-divider"></div>';
+    return `<div class="ctx-item${item.danger ? ' danger' : ''}" data-action="${item.action}"><span>${item.icon} ${item.label}</span>${item.shortcut ? `<span class="shortcut">${item.shortcut}</span>` : ''}</div>`;
+  }).join('');
+  ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
+  ctxMenu.classList.add('show');
+  // Keep in viewport
+  const rect = ctxMenu.getBoundingClientRect();
+  if (rect.right > window.innerWidth) ctxMenu.style.left = (x - rect.width) + 'px';
+  if (rect.bottom > window.innerHeight) ctxMenu.style.top = (y - rect.height) + 'px';
+}
+
+function hideCtxMenu() { ctxMenu.classList.remove('show'); ctxTarget = null; }
+document.addEventListener('click', hideCtxMenu);
+document.addEventListener('contextmenu', e => { if (!e.target.closest('.canvas-area')) hideCtxMenu(); });
+
+svgEl.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  hideCtxMenu();
+  const compG = e.target.closest('.comp-group');
+  if (compG) {
+    const compId = compG.dataset.id;
+    selectComponent(compId);
+    ctxTarget = { type: 'comp', id: compId };
+    showCtxMenu(e.clientX, e.clientY, [
+      { icon: '🔄', label: '旋转', action: 'rotate', shortcut: 'R' },
+      { icon: '📋', label: '编辑参数', action: 'edit' },
+      '---',
+      { icon: '🗑️', label: '删除', action: 'delete', shortcut: 'Delete', danger: true },
+    ]);
+    return;
+  }
+  // Check wire hit
+  const wireHit = e.target.closest('[data-wire-idx]');
+  if (wireHit) {
+    const idx = parseInt(wireHit.dataset.wireIdx);
+    state.selectedWireIdx = idx; renderWires();
+    ctxTarget = { type: 'wire', wireIdx: idx };
+    showCtxMenu(e.clientX, e.clientY, [
+      { icon: '🗑️', label: '删除连线', action: 'delete-wire', danger: true },
+    ]);
+    return;
+  }
+  // Canvas blank
+  ctxTarget = { type: 'canvas' };
+  showCtxMenu(e.clientX, e.clientY, [
+    { icon: '📖', label: '加载示例', action: 'examples' },
+    { icon: '📥', label: '导入电路', action: 'import' },
+    '---',
+    { icon: '🗑️', label: '清空画布', action: 'clear', danger: true },
+  ]);
+});
+
+ctxMenu.addEventListener('click', e => {
+  const item = e.target.closest('.ctx-item');
+  if (!item) return;
+  const action = item.dataset.action;
+  if (action === 'rotate' && ctxTarget?.id) {
+    const comp = state.components.find(c => c.id === ctxTarget.id);
+    if (comp) { pushUndo(); comp.rotation = ((comp.rotation || 0) + 90) % 360; state.dirty = true; renderAll(); solveAndUpdate(); }
+  }
+  if (action === 'edit' && ctxTarget?.id) { selectComponent(ctxTarget.id); }
+  if (action === 'delete' && ctxTarget?.id) { deleteComponent(ctxTarget.id); }
+  if (action === 'delete-wire' && ctxTarget?.wireIdx >= 0) { state.selectedWireIdx = ctxTarget.wireIdx; deleteSelectedWire(); }
+  if (action === 'examples') document.getElementById('btn-examples')?.click();
+  if (action === 'import') document.getElementById('btn-import')?.click();
+  if (action === 'clear') document.getElementById('btn-clear')?.click();
+  hideCtxMenu();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'z' && (e.metaKey || e.ctrlKey) && !e.shiftKey) { e.preventDefault(); undo(); }
+  if ((e.key === 'y' && (e.metaKey || e.ctrlKey)) || (e.key === 'z' && (e.metaKey || e.ctrlKey) && e.shiftKey)) { e.preventDefault(); redo(); }
+  if (document.activeElement.tagName === 'INPUT') return;
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (state.selectedId) deleteComponent(state.selectedId);
+    else if (state.selectedWireIdx >= 0) deleteSelectedWire();
+  }
+  if (e.key === 'Escape') { selectComponent(null); state.selectedWireIdx = -1; renderWires(); }
+  if (e.key === 'r' || e.key === 'R') {
+    if (state.selectedId) {
+      const comp = state.components.find(c => c.id === state.selectedId);
+      if (comp) { pushUndo(); comp.rotation = ((comp.rotation || 0) + 90) % 360; state.dirty = true; renderAll(); solveAndUpdate(); }
+    }
+  }
+  if (e.key === 'a' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); /* TODO: multi-select */ }
+});
+
+// beforeunload
+window.addEventListener('beforeunload', e => {
+  if (state.dirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
 // ===== View toggle =====
 document.querySelectorAll('.view-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view-btn').forEach(b => {
+      b.classList.remove('active');
+      b.style.background = '';
+      b.style.color = '';
+    });
     btn.classList.add('active');
-    engine.setView(btn.dataset.view);
+    btn.style.background = 'rgba(59,130,246,0.1)';
+    btn.style.color = '#2563EB';
+    currentView = btn.dataset.view;
+    renderAll();
+    solveAndUpdate();
   });
 });
 
-// Initial render
-engine.render();
+// Init — auto restore
+autoLoad();
+renderAll();
+if (state.components.length) solveAndUpdate();
 </script>
+
+<noscript><p>自由电路搭建 — 请启用 JavaScript</p></noscript>
 </body>
 </html>
