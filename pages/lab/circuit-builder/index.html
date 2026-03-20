@@ -69,13 +69,15 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .warning-over{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626}
 
 /* SVG component styles */
-.comp-group{cursor:grab}
-.comp-group:hover{filter:drop-shadow(0 0 4px rgba(59,130,246,0.2))}
-.comp-group.selected{filter:none}
+.comp-group{cursor:grab;transition:filter 200ms}
+.comp-group:hover{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.12))}
+.comp-group.selected{filter:drop-shadow(0 3px 8px rgba(59,130,246,0.3))}
 .comp-group.selected line,.comp-group.selected rect,.comp-group.selected circle,.comp-group.selected path{stroke:#3B82F6}
 .comp-group.selected text{fill:#3B82F6}
 .sel-box{fill:none;stroke:#3B82F6;stroke-width:1.5;stroke-dasharray:4 3}
-.comp-group.dragging{cursor:grabbing;opacity:0.8}
+.comp-group.dragging{cursor:grabbing;opacity:0.65}
+.comp-group.just-placed{animation:placeBounce 300ms ease-out}
+@keyframes placeBounce{0%{transform:scale(1.1)}50%{transform:scale(0.96)}100%{transform:scale(1)}}
 .port-circle{fill:transparent;stroke:transparent;stroke-width:2;cursor:crosshair;transition:all 150ms;r:5;pointer-events:all}
 .comp-group:hover .port-circle{fill:#fff;stroke:#3B82F6}
 .port-circle:hover{fill:rgba(59,130,246,0.1);stroke:#3B82F6;r:8}
@@ -533,6 +535,9 @@ function addComponent(type, x, y) {
   state.components.push(comp);
   state.dirty = true;
   renderAll();
+  // Bounce animation on placement
+  const g = compsLayer.querySelector(`[data-id="${comp.id}"]`);
+  if (g) { g.classList.add('just-placed'); g.addEventListener('animationend', () => g.classList.remove('just-placed'), { once: true }); }
 }
 
 // ===== Move components on canvas =====
@@ -614,6 +619,11 @@ function setupPortClick(circle) {
             snapIndicator.setAttribute('r', '8'); snapIndicator.setAttribute('fill', 'rgba(59,130,246,0.15)');
             snapIndicator.setAttribute('stroke', '#3B82F6'); snapIndicator.setAttribute('stroke-width', '2');
             snapIndicator.style.pointerEvents = 'none';
+            // Pulse animation
+            const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            anim.setAttribute('attributeName', 'r'); anim.setAttribute('values', '6;10;6');
+            anim.setAttribute('dur', '0.8s'); anim.setAttribute('repeatCount', 'indefinite');
+            snapIndicator.appendChild(anim);
             tempLayer.appendChild(snapIndicator);
           }
           snapIndicator.setAttribute('cx', bestPos.x); snapIndicator.setAttribute('cy', bestPos.y);
