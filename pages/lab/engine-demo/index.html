@@ -59,6 +59,7 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;height:
     <button class="comp-btn" data-type="resistor">📏 电阻 (10Ω)</button>
     <button class="comp-btn" data-type="bulb">💡 灯泡</button>
     <button class="comp-btn" data-type="switch">🔘 开关</button>
+    <button class="comp-btn" data-type="wire">〰️ 导线</button>
     <h3 style="margin-top:12px">📊 仪表</h3>
     <button class="comp-btn" data-type="ammeter">🔴 电流表</button>
     <button class="comp-btn" data-type="voltmeter">🟡 电压表</button>
@@ -233,6 +234,23 @@ engine.registerComponent('voltmeter', {
   },
   solver: { type: 'resistor' },
   meta: { label: '电压表', category: '仪表' },
+});
+
+// Wire
+engine.registerComponent('wire', {
+  ports: [{ id: 'p0', dx: -36, dy: 0 }, { id: 'p1', dx: 36, dy: 0 }],
+  params: {},
+  render: {
+    realistic: () => `
+      <path d="M-30 0 C-10 -10, 10 10, 30 0" fill="none" stroke="#DC2626" stroke-width="5" stroke-linecap="round"/>
+      <path d="M-30 -2 C-10 -12, 10 8, 30 -2" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      <rect x="-36" y="-8" width="14" height="16" rx="2" fill="#D1D5DB" stroke="#6B7280" stroke-width="1"/>
+      <rect x="22" y="-8" width="14" height="16" rx="2" fill="#D1D5DB" stroke="#6B7280" stroke-width="1"/>`,
+    schematic: () => `
+      <line x1="-36" y1="0" x2="36" y2="0" stroke="#374151" stroke-width="2" stroke-linecap="round"/>`,
+  },
+  solver: { type: 'resistor' },
+  meta: { label: '导线', category: '元件' },
 });
 
 // ===== Sidebar drag to add =====
