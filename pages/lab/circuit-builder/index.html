@@ -279,6 +279,15 @@ const state = {
 const GRID = 20;
 const snap = v => Math.round(v / GRID) * GRID;
 
+function getPortPos(comp, port) {
+  const rad = (comp.rotation || 0) * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return {
+    x: comp.x + port.dx * cos - port.dy * sin,
+    y: comp.y + port.dx * sin + port.dy * cos,
+  };
+}
+
 const COMP_DEFAULTS = {
   battery:   { label: '电池', icon: '🔋', tag: '电源', params: { V: 6 }, ports: [{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
   resistor:  { label: '电阻', icon: '📏', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
@@ -305,7 +314,8 @@ function createCompSVG(comp) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.setAttribute('class', 'comp-group');
   g.setAttribute('data-id', comp.id);
-  g.setAttribute('transform', `translate(${comp.x},${comp.y})`);
+  const rot = comp.rotation || 0;
+  g.setAttribute('transform', `translate(${comp.x},${comp.y})${rot ? ` rotate(${rot})` : ''}`);
 
   const def = COMP_DEFAULTS[comp.type];
   // Draw component shape
@@ -477,7 +487,8 @@ function setupCompDrag(g, comp) {
       const p = svgPoint(ev);
       comp.x = snap(p.x - moveOffset.x);
       comp.y = snap(p.y - moveOffset.y);
-      g.setAttribute('transform', `translate(${comp.x},${comp.y})`);
+      const r = comp.rotation || 0;
+      g.setAttribute('transform', `translate(${comp.x},${comp.y})${r ? ` rotate(${r})` : ''}`);
       renderWires();
     };
     const onUp = () => {
@@ -509,7 +520,8 @@ function setupPortClick(circle) {
       const comp = state.components.find(c => c.id === compId);
       const def = COMP_DEFAULTS[comp.type];
       const port = def.ports.find(p => p.id === portId);
-      const sx = comp.x + port.dx, sy = comp.y + port.dy;
+      const sp = getPortPos(comp, port);
+      const sx = sp.x, sy = sp.y;
       tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       tempLine.setAttribute('class', 'wire-temp');
       tempLine.setAttribute('x1', sx); tempLine.setAttribute('y1', sy);
@@ -810,8 +822,8 @@ function renderWires() {
     const toPort = toDef.ports.find(p => p.id === conn.to.portId);
     if (!fromPort || !toPort) continue;
 
-    const x1 = fromComp.x + fromPort.dx, y1 = fromComp.y + fromPort.dy;
-    const x2 = toComp.x + toPort.dx, y2 = toComp.y + toPort.dy;
+    const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
+    const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
 
     // Orthogonal routing: horizontal first, then vertical
     const midX = (x1 + x2) / 2;
