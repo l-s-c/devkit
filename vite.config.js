@@ -154,6 +154,7 @@ export default defineConfig({
         'lab-pendulum': resolve(__dirname, 'pages/lab/pendulum/index.html'),
         'lab-circuit': resolve(__dirname, 'pages/lab/circuit/index.html'),
         'lab-circuit-builder': resolve(__dirname, 'pages/lab/circuit-builder/index.html'),
+        'lab-engine-demo': resolve(__dirname, 'pages/lab/engine-demo/index.html'),
         'ion-equation': resolve(__dirname, 'pages/ion-equation/index.html'),
         'china-provinces': resolve(__dirname, 'pages/china-provinces/index.html'),
         'world-records': resolve(__dirname, 'pages/world-records/index.html'),
