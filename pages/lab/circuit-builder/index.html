@@ -304,10 +304,67 @@ const wiresLayer = document.getElementById('wires-layer');
 const compsLayer = document.getElementById('components-layer');
 const tempLayer = document.getElementById('temp-layer');
 
+let panX = 0, panY = 0;
+
 function svgPoint(e) {
   const rect = svgEl.getBoundingClientRect();
-  return { x: (e.clientX - rect.left) / state.zoom, y: (e.clientY - rect.top) / state.zoom };
+  return { x: (e.clientX - rect.left) / state.zoom + panX, y: (e.clientY - rect.top) / state.zoom + panY };
 }
+
+function updateViewBox() {
+  const rect = svgEl.getBoundingClientRect();
+  const w = rect.width / state.zoom, h = rect.height / state.zoom;
+  svgEl.setAttribute('viewBox', `${panX} ${panY} ${w} ${h}`);
+}
+
+// Zoom with wheel
+document.querySelector('.canvas-area').addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = svgEl.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / state.zoom + panX;
+  const my = (e.clientY - rect.top) / state.zoom + panY;
+  const oldZoom = state.zoom;
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  state.zoom = Math.max(0.3, Math.min(3, state.zoom * factor));
+  // Keep mouse point stable
+  panX = mx - (e.clientX - rect.left) / state.zoom;
+  panY = my - (e.clientY - rect.top) / state.zoom;
+  updateViewBox();
+}, { passive: false });
+
+// Pan with middle mouse or space+drag
+let isPanning = false, panStart = { x: 0, y: 0 }, panStartPan = { x: 0, y: 0 };
+let spaceDown = false;
+
+document.addEventListener('keydown', e => { if (e.code === 'Space' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) { spaceDown = true; svgEl.style.cursor = 'grab'; e.preventDefault(); } });
+document.addEventListener('keyup', e => { if (e.code === 'Space') { spaceDown = false; if (!isPanning) svgEl.style.cursor = 'default'; } });
+
+svgEl.addEventListener('pointerdown', e => {
+  if (e.button === 1 || (e.button === 0 && spaceDown)) {
+    e.preventDefault();
+    isPanning = true;
+    panStart = { x: e.clientX, y: e.clientY };
+    panStartPan = { x: panX, y: panY };
+    svgEl.style.cursor = 'grabbing';
+    const onMove = ev => {
+      panX = panStartPan.x - (ev.clientX - panStart.x) / state.zoom;
+      panY = panStartPan.y - (ev.clientY - panStart.y) / state.zoom;
+      updateViewBox();
+    };
+    const onUp = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      isPanning = false;
+      svgEl.style.cursor = spaceDown ? 'grab' : 'default';
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  }
+});
+
+// Init viewBox on load
+requestAnimationFrame(() => updateViewBox());
+window.addEventListener('resize', () => updateViewBox());
 
 // ===== Component SVG renderers =====
 function createCompSVG(comp) {
@@ -528,22 +585,56 @@ function setupPortClick(circle) {
       tempLine.setAttribute('x2', sx); tempLine.setAttribute('y2', sy);
       tempLayer.appendChild(tempLine);
 
+      let snapIndicator = null;
       const onMove = ev => {
         const pt = svgPoint(ev);
-        tempLine.setAttribute('x2', pt.x); tempLine.setAttribute('y2', pt.y);
+        // Find nearest port for snap preview
+        let bestDist = 24, bestPos = null;
+        state.components.forEach(c => {
+          COMP_DEFAULTS[c.type].ports.forEach(p => {
+            if (c.id === compId && p.id === portId) return;
+            const pp = getPortPos(c, p);
+            const d = Math.hypot(pp.x - pt.x, pp.y - pt.y);
+            if (d < bestDist) { bestDist = d; bestPos = pp; }
+          });
+        });
+        if (bestPos) {
+          tempLine.setAttribute('x2', bestPos.x); tempLine.setAttribute('y2', bestPos.y);
+          if (!snapIndicator) {
+            snapIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            snapIndicator.setAttribute('r', '8'); snapIndicator.setAttribute('fill', 'rgba(59,130,246,0.15)');
+            snapIndicator.setAttribute('stroke', '#3B82F6'); snapIndicator.setAttribute('stroke-width', '2');
+            snapIndicator.style.pointerEvents = 'none';
+            tempLayer.appendChild(snapIndicator);
+          }
+          snapIndicator.setAttribute('cx', bestPos.x); snapIndicator.setAttribute('cy', bestPos.y);
+        } else {
+          tempLine.setAttribute('x2', pt.x); tempLine.setAttribute('y2', pt.y);
+          if (snapIndicator) { snapIndicator.remove(); snapIndicator = null; }
+        }
       };
+      const SNAP_RADIUS = 24;
       const onUp = ev => {
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
         if (tempLine) { tempLine.remove(); tempLine = null; }
-        // Check if we ended on another port
-        const target = ev.target;
-        if (target.classList.contains('port-circle')) {
-          const toCompId = target.dataset.compId;
-          const toPortId = target.dataset.portId;
-          if (toCompId !== compId || toPortId !== portId) {
-            addConnection(connectFrom, { componentId: toCompId, portId: toPortId });
-          }
+        if (snapIndicator) { snapIndicator.remove(); snapIndicator = null; }
+        // Find nearest port within snap radius
+        const pt = svgPoint(ev);
+        let bestDist = SNAP_RADIUS, bestTarget = null;
+        state.components.forEach(c => {
+          if (c.id === compId) return; // skip same component? no, allow different port
+          const def = COMP_DEFAULTS[c.type];
+          def.ports.forEach(p => {
+            const pp = getPortPos(c, p);
+            const d = Math.hypot(pp.x - pt.x, pp.y - pt.y);
+            if (d < bestDist && !(c.id === compId && p.id === portId)) {
+              bestDist = d; bestTarget = { componentId: c.id, portId: p.id };
+            }
+          });
+        });
+        if (bestTarget) {
+          addConnection(connectFrom, bestTarget);
         }
         connectFrom = null;
       };
