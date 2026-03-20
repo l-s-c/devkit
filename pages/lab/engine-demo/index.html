@@ -16,7 +16,8 @@
 body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1C1C1E;height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
 /* === Topbar === */
-.topbar{height:48px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0}
+.topbar{height:48px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 12px;gap:4px;flex-shrink:0;overflow:visible}
+.topbar .tb-group{flex-shrink:0}
 .tb-brand{display:flex;align-items:center;gap:8px;margin-right:16px}
 .tb-brand svg{width:24px;height:24px}
 .tb-brand span{font-size:14px;font-weight:800;letter-spacing:-0.5px}
@@ -187,8 +188,8 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
   </div>
   <div class="tb-right">
     <div class="view-toggle" style="display:flex;gap:2px;margin-right:8px">
-      <button class="tb-btn view-btn active" data-view="realistic" style="background:rgba(59,130,246,0.1);color:#2563EB">🔧 实验台</button>
-      <button class="tb-btn view-btn" data-view="schematic">📐 电路图</button>
+      <button class="tb-btn view-btn active" data-view="realistic" style="background:rgba(59,130,246,0.1);color:#2563EB;padding:4px 8px;font-size:10px">🔧 实物</button>
+      <button class="tb-btn view-btn" data-view="schematic" style="padding:4px 8px;font-size:10px">📐 电路图</button>
     </div>
     <div class="tb-zoom">
       <button class="tb-btn" id="btn-zoom-out" title="缩小">−</button>
