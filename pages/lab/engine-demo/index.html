@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理引擎 Demo — DevKit 实验室</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;height:100vh;display:flex;flex-direction:column;background:#F0F1F5}
+.topbar{height:48px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 16px;gap:12px}
+.topbar h1{font-size:14px;font-weight:800}
+.topbar .tag{font-size:10px;padding:2px 8px;border-radius:4px;background:#DBEAFE;color:#1D4ED8;font-weight:700}
+.view-toggle{margin-left:auto;display:flex;gap:4px}
+.view-btn{padding:6px 12px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(0,0,0,0.04);color:#6B7280;transition:all 200ms}
+.view-btn.active{background:#3B82F6;color:#fff}
+.main{flex:1;display:flex;overflow:hidden}
+.sidebar{width:200px;background:#fff;border-right:1px solid rgba(0,0,0,0.06);overflow-y:auto;padding:12px}
+.sidebar h3{font-size:10px;font-weight:700;color:#8E8E93;margin-bottom:8px;letter-spacing:0.5px}
+.comp-btn{display:flex;align-items:center;gap:8px;padding:8px;border:none;border-radius:8px;background:rgba(0,0,0,0.02);cursor:grab;width:100%;text-align:left;font-size:12px;font-weight:600;margin-bottom:4px;transition:all 150ms}
+.comp-btn:hover{background:rgba(59,130,246,0.08)}
+.canvas-area{flex:1;position:relative;background:#FAFBFF;overflow:hidden}
+#engine-svg{width:100%;height:100%}
+.info-bar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);padding:6px 16px;background:rgba(255,255,255,0.9);border-radius:8px;font-size:11px;color:#6B7280;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+/* Engine styles */
+.comp-group{cursor:grab;transition:filter 200ms}
+.comp-group:hover{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.12))}
+.comp-group.selected{filter:drop-shadow(0 3px 8px rgba(59,130,246,0.3))}
+.comp-group.selected line,.comp-group.selected rect,.comp-group.selected circle,.comp-group.selected path{stroke:#3B82F6}
+.comp-group.selected text{fill:#3B82F6}
+.port-circle{fill:transparent;stroke:transparent;stroke-width:2;cursor:crosshair;transition:all 150ms;pointer-events:all}
+.comp-group:hover .port-circle{fill:#fff;stroke:#3B82F6}
+.port-circle:hover{fill:rgba(59,130,246,0.1);stroke:#3B82F6}
+.comp-group.selected .port-circle{fill:#3B82F6;stroke:#1D4ED8}
+.port-circle.connected{fill:#374151;stroke:#374151}
+.wire-line{stroke:#DC2626;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none;cursor:pointer}
+.wire-line:hover{stroke:#EF4444;stroke-width:5}
+.wire-line.wire-selected{stroke:#3B82F6;stroke-width:5}
+.wire-line.wire-schematic{stroke:#374151;stroke-width:2}
+.wire-temp{stroke:#DC2626;stroke-width:3;stroke-dasharray:6 4;opacity:0.5;fill:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🔬 物理引擎 Demo</h1>
+  <span class="tag">ENGINE v0.1</span>
+  <div class="view-toggle">
+    <button class="view-btn active" data-view="realistic">🔧 实验台</button>
+    <button class="view-btn" data-view="schematic">📐 电路图</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <h3>⚡ 电源</h3>
+    <button class="comp-btn" data-type="battery">🔋 电池 (1.5V)</button>
+    <h3 style="margin-top:12px">🔧 元件</h3>
+    <button class="comp-btn" data-type="resistor">📏 电阻 (10Ω)</button>
+    <button class="comp-btn" data-type="bulb">💡 灯泡</button>
+    <button class="comp-btn" data-type="switch">🔘 开关</button>
+    <h3 style="margin-top:12px">📊 仪表</h3>
+    <button class="comp-btn" data-type="ammeter">🔴 电流表</button>
+    <button class="comp-btn" data-type="voltmeter">🟡 电压表</button>
+  </div>
+  <div class="canvas-area">
+    <div id="engine-container" style="width:100%;height:100%"></div>
+    <div class="info-bar">物理引擎 v0.1 | 滚轮缩放 · 空格平移 · R旋转 · Delete删除</div>
+  </div>
+</div>
+
+<script type="module">
+import { PhysicsEngine, CanvasView, WireRenderer, createCircuitSolver } from '../../../shared/physics-engine/index.js';
+
+// Create engine
+const engine = new PhysicsEngine({
+  container: document.getElementById('engine-container'),
+  mode: 'circuit',
+});
+
+// Create views
+const canvasView = new CanvasView(engine);
+const wireRenderer = new WireRenderer(engine);
+
+// Set solver
+engine.setSolver(createCircuitSolver());
+
+// Render wires after components
+engine.on('render:after', () => wireRenderer.renderWires(engine.getView()));
+engine.on('wire:redraw', () => wireRenderer.renderWires(engine.getView()));
+
+// ===== Register circuit components =====
+
+// Battery
+engine.registerComponent('battery', {
+  ports: [{ id: 'pos', dx: 0, dy: -40 }, { id: 'neg', dx: 0, dy: 32 }],
+  params: { V: { default: 6, min: 1, max: 24, unit: 'V' } },
+  render: {
+    realistic: (comp) => `
+      <rect x="-30" y="-28" width="60" height="56" rx="6" fill="#3B82F6"/>
+      <rect x="-32" y="-32" width="64" height="8" rx="3" fill="#D1D5DB"/>
+      <rect x="-8" y="-40" width="16" height="10" rx="4" fill="#EF4444"/>
+      <rect x="-32" y="24" width="64" height="8" rx="3" fill="#D1D5DB"/>
+      <rect x="-22" y="-16" width="44" height="32" rx="3" fill="rgba(255,255,255,0.15)"/>
+      <text x="0" y="-4" font-size="8" font-weight="700" fill="#DBEAFE" text-anchor="middle">${comp.params.V}V</text>
+      <text x="0" y="10" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">⚡</text>`,
+    schematic: (comp) => `
+      <line x1="0" y1="-40" x2="0" y2="-8" stroke="#374151" stroke-width="2"/>
+      <line x1="0" y1="8" x2="0" y2="32" stroke="#374151" stroke-width="2"/>
+      <line x1="-14" y1="-8" x2="14" y2="-8" stroke="#374151" stroke-width="2.5"/>
+      <line x1="-9" y1="0" x2="9" y2="0" stroke="#374151" stroke-width="4"/>
+      <text x="18" y="-4" font-size="9" font-weight="800" fill="#DC2626">+</text>
+      <text x="18" y="6" font-size="10" font-weight="800" fill="#3B82F6">−</text>`,
+  },
+  solver: { type: 'voltage-source' },
+  meta: { label: '电池', category: '电源' },
+});
+
+// Resistor
+engine.registerComponent('resistor', {
+  ports: [{ id: 'p0', dx: -40, dy: 0 }, { id: 'p1', dx: 40, dy: 0 }],
+  params: { R: { default: 10, min: 1, max: 1000, unit: 'Ω' } },
+  render: {
+    realistic: (comp) => `
+      <line x1="-40" y1="0" x2="-22" y2="0" stroke="#9CA3AF" stroke-width="3"/>
+      <line x1="22" y1="0" x2="40" y2="0" stroke="#9CA3AF" stroke-width="3"/>
+      <rect x="-22" y="-14" width="44" height="28" rx="14" fill="#E8C9A0" stroke="#B8956A" stroke-width="1"/>
+      <rect x="-14" y="-14" width="5" height="28" rx="1" fill="#92400E"/>
+      <rect x="-6" y="-14" width="5" height="28" rx="1" fill="#1C1C1E"/>
+      <rect x="2" y="-14" width="5" height="28" rx="1" fill="#DC2626"/>
+      <rect x="12" y="-14" width="4" height="28" rx="1" fill="#D97706" opacity="0.7"/>`,
+    schematic: (comp) => `
+      <line x1="-40" y1="0" x2="-16" y2="0" stroke="#374151" stroke-width="2"/>
+      <line x1="16" y1="0" x2="40" y2="0" stroke="#374151" stroke-width="2"/>
+      <rect x="-16" y="-8" width="32" height="16" rx="1" fill="none" stroke="#374151" stroke-width="2"/>
+      <text x="0" y="4" font-size="10" font-weight="700" fill="#374151" text-anchor="middle">R</text>`,
+  },
+  solver: { type: 'resistor' },
+  meta: { label: '电阻', category: '元件' },
+});
+
+// Bulb
+engine.registerComponent('bulb', {
+  ports: [{ id: 'p0', dx: 0, dy: 32 }, { id: 'p1', dx: -12, dy: 15 }],
+  params: { R: { default: 10, min: 1, max: 100, unit: 'Ω' } },
+  render: {
+    realistic: (comp, result) => {
+      const br = result?.branches?.[comp.id];
+      const on = br && Math.abs(br.I) > 0.01;
+      return `
+        ${on ? '<circle cx="0" cy="-14" r="30" fill="rgba(253,230,138,0.3)"/>' : ''}
+        <ellipse cx="0" cy="-14" rx="22" ry="26" fill="rgba(255,251,235,${on ? 0.8 : 0.4})" stroke="#D1D5DB" stroke-width="1"/>
+        <path d="M-8 -12 L-5 -22 L-2 -12 L1 -22 L4 -12 L7 -22 L10 -12" fill="none" stroke="${on ? '#D97706' : '#92400E'}" stroke-width="1.5" opacity="${on ? 1 : 0.6}"/>
+        <rect x="-12" y="10" width="24" height="16" rx="3" fill="#A8A29E"/>`;
+    },
+    schematic: (comp, result) => {
+      const br = result?.branches?.[comp.id];
+      const on = br && Math.abs(br.I) > 0.01;
+      return `
+        <circle cx="0" cy="0" r="14" fill="${on ? 'rgba(253,230,138,0.15)' : 'none'}" stroke="#374151" stroke-width="2"/>
+        <line x1="-9" y1="-9" x2="9" y2="9" stroke="#374151" stroke-width="2"/>
+        <line x1="9" y1="-9" x2="-9" y2="9" stroke="#374151" stroke-width="2"/>`;
+    },
+  },
+  solver: { type: 'resistor' },
+  meta: { label: '灯泡', category: '元件' },
+});
+
+// Switch
+engine.registerComponent('switch', {
+  ports: [{ id: 'p0', dx: -22, dy: 35 }, { id: 'p1', dx: 22, dy: 35 }],
+  params: { closed: { default: true } },
+  render: {
+    realistic: (comp) => {
+      const closed = comp.params.closed;
+      return `
+        <rect x="-38" y="2" width="76" height="28" rx="4" fill="#E7E5E4" stroke="#A8A29E" stroke-width="1"/>
+        <rect x="-28" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
+        <rect x="16" y="-2" width="12" height="16" rx="2" fill="#78716C"/>
+        <line x1="-22" y1="2" x2="${closed ? '22' : '12'}" y2="${closed ? '2' : '-26'}" stroke="#9CA3AF" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="${closed ? '22' : '12'}" cy="${closed ? '2' : '-26'}" r="5" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>`;
+    },
+    schematic: (comp) => {
+      const closed = comp.params.closed;
+      return `
+        <circle cx="-10" cy="0" r="3" fill="none" stroke="#374151" stroke-width="2"/>
+        <circle cx="10" cy="0" r="3" fill="none" stroke="#374151" stroke-width="2"/>
+        <line x1="-10" y1="0" x2="${closed ? '10' : '4'}" y2="${closed ? '0' : '-16'}" stroke="#374151" stroke-width="2.5"/>`;
+    },
+  },
+  solver: { type: 'switch' },
+  meta: { label: '开关', category: '元件' },
+  onInteract: (comp, engine) => {
+    comp.params.closed = !comp.params.closed;
+    engine.render();
+    engine.solve();
+  },
+});
+
+// Ammeter
+engine.registerComponent('ammeter', {
+  ports: [{ id: 'p0', dx: -15, dy: 48 }, { id: 'p1', dx: 15, dy: 48 }],
+  params: {},
+  render: {
+    realistic: () => `
+      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff"/>
+      <text x="0" y="4" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle">A</text>
+      <circle cx="-15" cy="40" r="5" fill="#DC2626"/>
+      <circle cx="15" cy="40" r="5" fill="#1C1C1E"/>`,
+    schematic: () => `
+      <circle cx="0" cy="0" r="15" fill="none" stroke="#DC2626" stroke-width="2"/>
+      <text x="0" y="5" font-size="14" font-weight="800" fill="#DC2626" text-anchor="middle">A</text>`,
+  },
+  solver: { type: 'resistor' },
+  meta: { label: '电流表', category: '仪表' },
+});
+
+// Voltmeter
+engine.registerComponent('voltmeter', {
+  ports: [{ id: 'p0', dx: -15, dy: 48 }, { id: 'p1', dx: 15, dy: 48 }],
+  params: {},
+  render: {
+    realistic: () => `
+      <rect x="-38" y="-34" width="76" height="68" rx="6" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+      <rect x="-32" y="-30" width="64" height="52" rx="4" fill="#fff"/>
+      <text x="0" y="4" font-size="11" font-weight="900" fill="#D97706" text-anchor="middle">V</text>
+      <circle cx="-15" cy="40" r="5" fill="#DC2626"/>
+      <circle cx="15" cy="40" r="5" fill="#1C1C1E"/>`,
+    schematic: () => `
+      <circle cx="0" cy="0" r="15" fill="none" stroke="#D97706" stroke-width="2"/>
+      <text x="0" y="5" font-size="14" font-weight="800" fill="#D97706" text-anchor="middle">V</text>`,
+  },
+  solver: { type: 'resistor' },
+  meta: { label: '电压表', category: '仪表' },
+});
+
+// ===== Sidebar drag to add =====
+document.querySelectorAll('.comp-btn').forEach(btn => {
+  btn.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const type = btn.dataset.type;
+
+    let previewG = null;
+    const onMove = ev => {
+      const rect = document.querySelector('.canvas-area').getBoundingClientRect();
+      if (ev.clientX >= rect.left && ev.clientX <= rect.right) {
+        const pt = engine.svgPoint(ev);
+        const sx = engine._snap(pt.x), sy = engine._snap(pt.y);
+        if (!previewG) {
+          const tmpComp = engine.registry.createInstance(type, sx, sy, '_preview');
+          previewG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          const def = engine.registry.get(type);
+          const renderFn = def.render[engine.getView()] || def.render.realistic;
+          previewG.innerHTML = renderFn(tmpComp, null);
+          previewG.style.opacity = '0.5';
+          previewG.style.pointerEvents = 'none';
+          previewG.setAttribute('transform', `translate(${sx},${sy})`);
+          engine._tempLayer.appendChild(previewG);
+        } else {
+          previewG.setAttribute('transform', `translate(${sx},${sy})`);
+        }
+      } else if (previewG) {
+        previewG.remove();
+        previewG = null;
+      }
+    };
+    const onUp = ev => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      if (previewG) { previewG.remove(); previewG = null; }
+      const rect = document.querySelector('.canvas-area').getBoundingClientRect();
+      if (ev.clientX >= rect.left && ev.clientX <= rect.right) {
+        const pt = engine.svgPoint(ev);
+        engine.addComponent(type, pt.x, pt.y);
+      }
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  });
+});
+
+// ===== View toggle =====
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    engine.setView(btn.dataset.view);
+  });
+});
+
+// Initial render
+engine.render();
+</script>
+</body>
+</html>
