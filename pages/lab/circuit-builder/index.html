@@ -526,15 +526,11 @@ document.querySelectorAll('.lib-item').forEach(item => {
     e.preventDefault();
     dragType = item.dataset.type;
     // Create ghost element
-    dragGhost = item.cloneNode(true);
-    dragGhost.style.cssText = 'position:fixed;pointer-events:none;opacity:0.7;z-index:999;transform:scale(0.8)';
-    document.body.appendChild(dragGhost);
-    moveGhost(e);
+    // No floating ghost — only canvas preview
 
     // Create preview SVG on canvas immediately
     let previewG = null;
     const onMove = ev => {
-      moveGhost(ev);
       const rect = document.querySelector('.canvas-area').getBoundingClientRect();
       if (ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom) {
         const pt = svgPoint(ev);
@@ -555,7 +551,7 @@ document.querySelectorAll('.lib-item').forEach(item => {
     const onUp = ev => {
       document.removeEventListener('pointermove', onMove);
       document.removeEventListener('pointerup', onUp);
-      if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+      
       if (previewG) { previewG.remove(); previewG = null; }
 
       const rect = document.querySelector('.canvas-area').getBoundingClientRect();
@@ -570,12 +566,7 @@ document.querySelectorAll('.lib-item').forEach(item => {
   });
 });
 
-function moveGhost(e) {
-  if (dragGhost) {
-    dragGhost.style.left = (e.clientX - 30) + 'px';
-    dragGhost.style.top = (e.clientY - 20) + 'px';
-  }
-}
+
 
 // ===== Add component =====
 function addComponent(type, x, y) {
@@ -602,7 +593,7 @@ let movingComp = null, moveOffset = { x: 0, y: 0 };
 
 function setupCompDrag(g, comp) {
   g.addEventListener('pointerdown', e => {
-    if (e.target.classList.contains('port-circle')) return; // port click, not drag
+    if (e.target.classList.contains('port-circle')) return;
     e.preventDefault();
     e.stopPropagation();
     selectComponent(comp.id);
@@ -610,8 +601,10 @@ function setupCompDrag(g, comp) {
     const pt = svgPoint(e);
     moveOffset = { x: pt.x - comp.x, y: pt.y - comp.y };
     g.classList.add('dragging');
+    let hasMoved = false;
 
     const onMove = ev => {
+      hasMoved = true;
       const p = svgPoint(ev);
       comp.x = snap(p.x - moveOffset.x);
       comp.y = snap(p.y - moveOffset.y);
@@ -624,6 +617,15 @@ function setupCompDrag(g, comp) {
       document.removeEventListener('pointerup', onUp);
       g.classList.remove('dragging');
       movingComp = null;
+      // Switch: click without drag = toggle
+      if (!hasMoved && comp.type === 'switch') {
+        pushUndo();
+        comp.params.closed = !comp.params.closed;
+        state.dirty = true;
+        renderAll();
+        solveAndUpdate();
+        return;
+      }
       state.dirty = true;
       solveAndUpdate();
     };
@@ -996,13 +998,15 @@ function renderWires() {
     const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
     const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
 
-    // Soft wire: cubic bezier curve (like real flexible wire)
-    const dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
-    const dist = Math.hypot(dx, dy);
-    const sag = Math.max(20, dist * 0.15); // natural droop
-    const cx1 = x1 + dx * 0.3, cy1 = y1 + sag;
-    const cx2 = x2 - dx * 0.3, cy2 = y2 + sag;
-    const pathD = `M${x1},${y1} C${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`;
+    // Soft wire with draggable control point
+    if (!conn.ctrl) conn.ctrl = { dx: 0, dy: 0 };
+    const midX = (x1 + x2) / 2 + conn.ctrl.dx;
+    const midY = (y1 + y2) / 2 + conn.ctrl.dy;
+    const dx = Math.abs(x2 - x1), dist = Math.hypot(dx, Math.abs(y2 - y1));
+    const sag = Math.max(15, dist * 0.1);
+    const cx1 = x1 + (midX - x1) * 0.5, cy1 = y1 + (midY - y1) * 0.5 + sag;
+    const cx2 = x2 + (midX - x2) * 0.5, cy2 = y2 + (midY - y2) * 0.5 + sag;
+    const pathD = `M${x1},${y1} Q${cx1},${cy1} ${midX},${midY} Q${cx2},${cy2} ${x2},${y2}`;
 
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     line.setAttribute('d', pathD);
@@ -1021,6 +1025,46 @@ function renderWires() {
     if (wireIdx === state.selectedWireIdx) line.classList.add('wire-selected');
     wiresLayer.appendChild(line);
     wiresLayer.appendChild(hit);
+
+    // Draggable midpoint handle
+    const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    handle.setAttribute('cx', midX); handle.setAttribute('cy', midY);
+    handle.setAttribute('r', '6'); handle.setAttribute('fill', 'rgba(220,38,38,0.15)');
+    handle.setAttribute('stroke', '#DC2626'); handle.setAttribute('stroke-width', '1.5');
+    handle.style.cursor = 'grab'; handle.style.opacity = '0';
+    handle.style.transition = 'opacity 150ms';
+    // Show on wire hover
+    const showHandle = () => handle.style.opacity = '1';
+    const hideHandle = () => { if (!handle._dragging) handle.style.opacity = '0'; };
+    hit.addEventListener('pointerenter', showHandle);
+    line.addEventListener('pointerenter', showHandle);
+    hit.addEventListener('pointerleave', hideHandle);
+    line.addEventListener('pointerleave', hideHandle);
+    handle.addEventListener('pointerenter', showHandle);
+    handle.addEventListener('pointerleave', hideHandle);
+
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault(); e.stopPropagation();
+      handle._dragging = true;
+      handle.style.cursor = 'grabbing';
+      const baseMX = (x1 + x2) / 2, baseMY = (y1 + y2) / 2;
+      const onMove = ev => {
+        const pt = svgPoint(ev);
+        conn.ctrl.dx = pt.x - baseMX;
+        conn.ctrl.dy = pt.y - baseMY;
+        renderWires();
+      };
+      const onUp = () => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        handle._dragging = false;
+        state.dirty = true;
+        if (state.dirty) autoSave();
+      };
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    });
+    wiresLayer.appendChild(handle);
   }
 
   // Update port visuals
