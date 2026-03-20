@@ -143,6 +143,14 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .cache-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);padding:6px 14px;border-radius:8px;font-size:11px;font-weight:500;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);color:#92400E;z-index:5;display:flex;align-items:center;gap:6px}
 .cache-hint button{background:none;border:none;color:#2563EB;font-weight:600;cursor:pointer;font-size:11px;text-decoration:underline}
 
+.ctx-menu{position:fixed;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:4px 0;z-index:100;min-width:160px;display:none;font-size:12px}
+.ctx-menu.show{display:block}
+.ctx-item{padding:8px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:background 120ms;user-select:none}
+.ctx-item:hover{background:#EFF6FF}
+.ctx-item.danger{color:#DC2626}
+.ctx-item.danger:hover{background:#FEF2F2}
+.ctx-item .shortcut{font-size:10px;color:#9CA3AF;font-weight:600}
+.ctx-divider{height:1px;background:rgba(0,0,0,0.06);margin:4px 0}
 @media(max-width:768px){.lib{width:160px}.props{width:200px}}
 </style>
 </head>
@@ -214,6 +222,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
   </div>
 
   <!-- Center: SVG Canvas -->
+  <div class="ctx-menu" id="ctx-menu"></div>
   <div class="canvas-area">
     <div class="warning-bar" id="warning-bar"></div>
     <div class="canvas-empty" id="empty-state">
@@ -931,6 +940,8 @@ function renderWires() {
     hit.setAttribute('fill', 'none');
     hit.style.cursor = 'pointer';
     const wireIdx = state.connections.indexOf(conn);
+    hit.dataset.wireIdx = wireIdx;
+    line.dataset.wireIdx = wireIdx;
     const clickHandler = e => { e.stopPropagation(); selectWire(wireIdx); };
     hit.addEventListener('pointerdown', clickHandler);
     line.addEventListener('pointerdown', clickHandler);
@@ -1162,6 +1173,81 @@ function updateZoom() {
 // Section fold/unfold
 document.querySelectorAll('.lib-section-title').forEach(t => {
   t.onclick = () => t.parentElement.classList.toggle('open');
+});
+
+// ===== Right-click context menu =====
+const ctxMenu = document.getElementById('ctx-menu');
+let ctxTarget = null; // { type: 'comp'|'wire'|'canvas', id?, wireIdx? }
+
+function showCtxMenu(x, y, items) {
+  ctxMenu.innerHTML = items.map(item => {
+    if (item === '---') return '<div class="ctx-divider"></div>';
+    return `<div class="ctx-item${item.danger ? ' danger' : ''}" data-action="${item.action}"><span>${item.icon} ${item.label}</span>${item.shortcut ? `<span class="shortcut">${item.shortcut}</span>` : ''}</div>`;
+  }).join('');
+  ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
+  ctxMenu.classList.add('show');
+  // Keep in viewport
+  const rect = ctxMenu.getBoundingClientRect();
+  if (rect.right > window.innerWidth) ctxMenu.style.left = (x - rect.width) + 'px';
+  if (rect.bottom > window.innerHeight) ctxMenu.style.top = (y - rect.height) + 'px';
+}
+
+function hideCtxMenu() { ctxMenu.classList.remove('show'); ctxTarget = null; }
+document.addEventListener('click', hideCtxMenu);
+document.addEventListener('contextmenu', e => { if (!e.target.closest('.canvas-area')) hideCtxMenu(); });
+
+svgEl.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  hideCtxMenu();
+  const compG = e.target.closest('.comp-group');
+  if (compG) {
+    const compId = compG.dataset.id;
+    selectComponent(compId);
+    ctxTarget = { type: 'comp', id: compId };
+    showCtxMenu(e.clientX, e.clientY, [
+      { icon: '🔄', label: '旋转', action: 'rotate', shortcut: 'R' },
+      { icon: '📋', label: '编辑参数', action: 'edit' },
+      '---',
+      { icon: '🗑️', label: '删除', action: 'delete', shortcut: 'Delete', danger: true },
+    ]);
+    return;
+  }
+  // Check wire hit
+  const wireHit = e.target.closest('[data-wire-idx]');
+  if (wireHit) {
+    const idx = parseInt(wireHit.dataset.wireIdx);
+    state.selectedWireIdx = idx; renderWires();
+    ctxTarget = { type: 'wire', wireIdx: idx };
+    showCtxMenu(e.clientX, e.clientY, [
+      { icon: '🗑️', label: '删除连线', action: 'delete-wire', danger: true },
+    ]);
+    return;
+  }
+  // Canvas blank
+  ctxTarget = { type: 'canvas' };
+  showCtxMenu(e.clientX, e.clientY, [
+    { icon: '📖', label: '加载示例', action: 'examples' },
+    { icon: '📥', label: '导入电路', action: 'import' },
+    '---',
+    { icon: '🗑️', label: '清空画布', action: 'clear', danger: true },
+  ]);
+});
+
+ctxMenu.addEventListener('click', e => {
+  const item = e.target.closest('.ctx-item');
+  if (!item) return;
+  const action = item.dataset.action;
+  if (action === 'rotate' && ctxTarget?.id) {
+    const comp = state.components.find(c => c.id === ctxTarget.id);
+    if (comp) { pushUndo(); comp.rotation = ((comp.rotation || 0) + 90) % 360; state.dirty = true; renderAll(); solveAndUpdate(); }
+  }
+  if (action === 'edit' && ctxTarget?.id) { selectComponent(ctxTarget.id); }
+  if (action === 'delete' && ctxTarget?.id) { deleteComponent(ctxTarget.id); }
+  if (action === 'delete-wire' && ctxTarget?.wireIdx >= 0) { state.selectedWireIdx = ctxTarget.wireIdx; deleteSelectedWire(); }
+  if (action === 'examples') document.getElementById('btn-examples')?.click();
+  if (action === 'import') document.getElementById('btn-import')?.click();
+  if (action === 'clear') document.getElementById('btn-clear')?.click();
+  hideCtxMenu();
 });
 
 // Keyboard shortcuts
