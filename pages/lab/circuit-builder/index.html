@@ -593,11 +593,15 @@ function setupPortClick(circle) {
       const port = def.ports.find(p => p.id === portId);
       const sp = getPortPos(comp, port);
       const sx = sp.x, sy = sp.y;
-      tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       tempLine.setAttribute('class', 'wire-temp');
-      tempLine.setAttribute('x1', sx); tempLine.setAttribute('y1', sy);
-      tempLine.setAttribute('x2', sx); tempLine.setAttribute('y2', sy);
+      tempLine.setAttribute('d', `M${sx},${sy} L${sx},${sy}`);
       tempLayer.appendChild(tempLine);
+
+      function softPath(ax, ay, bx, by) {
+        const ddx = Math.abs(bx - ax), sag = Math.max(15, Math.hypot(ddx, Math.abs(by - ay)) * 0.12);
+        return `M${ax},${ay} C${ax + ddx * 0.3},${ay + sag} ${bx - ddx * 0.3},${by + sag} ${bx},${by}`;
+      }
 
       let snapIndicator = null;
       const onMove = ev => {
@@ -613,7 +617,7 @@ function setupPortClick(circle) {
           });
         });
         if (bestPos) {
-          tempLine.setAttribute('x2', bestPos.x); tempLine.setAttribute('y2', bestPos.y);
+          tempLine.setAttribute('d', softPath(sx, sy, bestPos.x, bestPos.y));
           if (!snapIndicator) {
             snapIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             snapIndicator.setAttribute('r', '8'); snapIndicator.setAttribute('fill', 'rgba(59,130,246,0.15)');
@@ -628,7 +632,7 @@ function setupPortClick(circle) {
           }
           snapIndicator.setAttribute('cx', bestPos.x); snapIndicator.setAttribute('cy', bestPos.y);
         } else {
-          tempLine.setAttribute('x2', pt.x); tempLine.setAttribute('y2', pt.y);
+          tempLine.setAttribute('d', softPath(sx, sy, pt.x, pt.y));
           if (snapIndicator) { snapIndicator.remove(); snapIndicator = null; }
         }
       };
@@ -935,11 +939,13 @@ function renderWires() {
     const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
     const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
 
-    // Orthogonal routing: horizontal first, then vertical
-    const midX = (x1 + x2) / 2;
-    const pathD = Math.abs(y1 - y2) < 2
-      ? `M${x1},${y1} L${x2},${y2}`  // Same height → straight
-      : `M${x1},${y1} L${midX},${y1} L${midX},${y2} L${x2},${y2}`;  // Right-angle
+    // Soft wire: cubic bezier curve (like real flexible wire)
+    const dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
+    const dist = Math.hypot(dx, dy);
+    const sag = Math.max(20, dist * 0.15); // natural droop
+    const cx1 = x1 + dx * 0.3, cy1 = y1 + sag;
+    const cx2 = x2 - dx * 0.3, cy2 = y2 + sag;
+    const pathD = `M${x1},${y1} C${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`;
 
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     line.setAttribute('d', pathD);
