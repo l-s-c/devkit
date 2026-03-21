@@ -1192,22 +1192,43 @@ function renderWires() {
     const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
     const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
 
-    // Soft wire with draggable control point
-    if (!conn.ctrl) conn.ctrl = { dx: 0, dy: 0 };
-    const midX = (x1 + x2) / 2 + conn.ctrl.dx;
-    const midY = (y1 + y2) / 2 + conn.ctrl.dy;
+    // Multi-point wire: conn.ctrls is array of {x, y} absolute positions
+    if (!conn.ctrls) {
+      // Migrate old single ctrl to new format
+      const mx = (x1 + x2) / 2 + (conn.ctrl?.dx || 0);
+      const my = (y1 + y2) / 2 + (conn.ctrl?.dy || 0);
+      conn.ctrls = [{ x: mx, y: my }];
+      delete conn.ctrl;
+    }
+    const pts = [{ x: x1, y: y1 }, ...conn.ctrls, { x: x2, y: y2 }];
     let pathD;
     if (currentView === 'schematic') {
-      // Orthogonal straight-angle lines
       const mx = (x1 + x2) / 2;
       pathD = Math.abs(y1 - y2) < 2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
     } else {
-      // Soft bezier with draggable control point
-      const dx = Math.abs(x2 - x1), dist = Math.hypot(dx, Math.abs(y2 - y1));
-      const sag = Math.max(15, dist * 0.1);
-      const cx1 = x1 + (midX - x1) * 0.5, cy1 = y1 + (midY - y1) * 0.5 + sag;
-      const cx2 = x2 + (midX - x2) * 0.5, cy2 = y2 + (midY - y2) * 0.5 + sag;
-      pathD = `M${x1},${y1} Q${cx1},${cy1} ${midX},${midY} Q${cx2},${cy2} ${x2},${y2}`;
+      // Catmull-Rom-like smooth curve through all points
+      if (pts.length === 2) {
+        pathD = `M${x1},${y1} L${x2},${y2}`;
+      } else if (pts.length === 3) {
+        const mp = pts[1];
+        const dist = Math.hypot(x2 - x1, y2 - y1);
+        const sag = Math.max(15, dist * 0.1);
+        const cx1b = x1 + (mp.x - x1) * 0.5, cy1b = y1 + (mp.y - y1) * 0.5 + sag;
+        const cx2b = x2 + (mp.x - x2) * 0.5, cy2b = y2 + (mp.y - y2) * 0.5 + sag;
+        pathD = `M${x1},${y1} Q${cx1b},${cy1b} ${mp.x},${mp.y} Q${cx2b},${cy2b} ${x2},${y2}`;
+      } else {
+        // Multiple control points: chain quadratic beziers
+        pathD = `M${pts[0].x},${pts[0].y}`;
+        for (let pi = 1; pi < pts.length - 1; pi++) {
+          const prev = pts[pi - 1], curr = pts[pi], next = pts[pi + 1];
+          const mx1 = (prev.x + curr.x) / 2, my1 = (prev.y + curr.y) / 2;
+          const mx2 = (curr.x + next.x) / 2, my2 = (curr.y + next.y) / 2;
+          if (pi === 1) pathD += ` Q${curr.x},${curr.y} ${mx2},${my2}`;
+          else pathD += ` Q${curr.x},${curr.y} ${mx2},${my2}`;
+        }
+        const last = pts[pts.length - 1];
+        pathD += ` L${last.x},${last.y}`;
+      }
     }
 
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -1228,46 +1249,70 @@ function renderWires() {
     wiresLayer.appendChild(line);
     wiresLayer.appendChild(hit);
 
-    // Draggable midpoint handle (realistic view only)
+    // Draggable control point handles (realistic view only)
     if (currentView !== 'realistic') continue;
-    const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    handle.setAttribute('cx', midX); handle.setAttribute('cy', midY);
-    handle.setAttribute('r', '6'); handle.setAttribute('fill', 'rgba(220,38,38,0.15)');
-    handle.setAttribute('stroke', '#DC2626'); handle.setAttribute('stroke-width', '1.5');
-    handle.style.cursor = 'grab'; handle.style.opacity = '0';
-    handle.style.transition = 'opacity 150ms';
-    // Show on wire hover
-    const showHandle = () => handle.style.opacity = '1';
-    const hideHandle = () => { if (!handle._dragging) handle.style.opacity = '0'; };
-    hit.addEventListener('pointerenter', showHandle);
-    line.addEventListener('pointerenter', showHandle);
-    hit.addEventListener('pointerleave', hideHandle);
-    line.addEventListener('pointerleave', hideHandle);
-    handle.addEventListener('pointerenter', showHandle);
-    handle.addEventListener('pointerleave', hideHandle);
 
-    handle.addEventListener('pointerdown', e => {
+    // Double-click on wire to add a new control point
+    const dblHandler = e => {
       e.preventDefault(); e.stopPropagation();
-      handle._dragging = true;
-      handle.style.cursor = 'grabbing';
-      const baseMX = (x1 + x2) / 2, baseMY = (y1 + y2) / 2;
-      const onMove = ev => {
-        const pt = svgPoint(ev);
-        conn.ctrl.dx = pt.x - baseMX;
-        conn.ctrl.dy = pt.y - baseMY;
-        renderWires();
-      };
-      const onUp = () => {
-        document.removeEventListener('pointermove', onMove);
-        document.removeEventListener('pointerup', onUp);
-        handle._dragging = false;
-        state.dirty = true;
-        if (state.dirty) autoSave();
-      };
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-    });
-    wiresLayer.appendChild(handle);
+      const pt = svgPoint(e);
+      // Find best insert position
+      let bestIdx = 0, bestDist = Infinity;
+      for (let pi = 0; pi < pts.length - 1; pi++) {
+        const a = pts[pi], b = pts[pi + 1];
+        const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        const d = Math.hypot(pt.x - mx, pt.y - my);
+        if (d < bestDist) { bestDist = d; bestIdx = pi; }
+      }
+      conn.ctrls.splice(bestIdx, 0, { x: pt.x, y: pt.y });
+      state.dirty = true;
+      renderWires();
+    };
+    hit.addEventListener('dblclick', dblHandler);
+    line.addEventListener('dblclick', dblHandler);
+
+    // Render handles for each control point
+    for (let ci = 0; ci < conn.ctrls.length; ci++) {
+      const cp = conn.ctrls[ci];
+      const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      handle.setAttribute('cx', cp.x); handle.setAttribute('cy', cp.y);
+      handle.setAttribute('r', '5'); handle.setAttribute('fill', 'rgba(220,38,38,0.15)');
+      handle.setAttribute('stroke', '#DC2626'); handle.setAttribute('stroke-width', '1.5');
+      handle.style.cursor = 'grab'; handle.style.opacity = '0';
+      handle.style.transition = 'opacity 150ms';
+      const showHandle = () => { handle.style.opacity = '1'; };
+      const hideHandle = () => { if (!handle._dragging) handle.style.opacity = '0'; };
+      hit.addEventListener('pointerenter', showHandle);
+      line.addEventListener('pointerenter', showHandle);
+      hit.addEventListener('pointerleave', hideHandle);
+      line.addEventListener('pointerleave', hideHandle);
+      handle.addEventListener('pointerenter', showHandle);
+      handle.addEventListener('pointerleave', hideHandle);
+
+      ((ctrlPt) => {
+        handle.addEventListener('pointerdown', e => {
+          e.preventDefault(); e.stopPropagation();
+          handle._dragging = true;
+          handle.style.cursor = 'grabbing';
+          const onMove = ev => {
+            const pt = svgPoint(ev);
+            ctrlPt.x = pt.x;
+            ctrlPt.y = pt.y;
+            renderWires();
+          };
+          const onUp = () => {
+            document.removeEventListener('pointermove', onMove);
+            document.removeEventListener('pointerup', onUp);
+            handle._dragging = false;
+            state.dirty = true;
+            autoSave();
+          };
+          document.addEventListener('pointermove', onMove);
+          document.addEventListener('pointerup', onUp);
+        });
+      })(cp);
+      wiresLayer.appendChild(handle);
+    }
   }
 
   // Update port visuals
