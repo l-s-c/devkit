@@ -23,11 +23,15 @@ export function solveCircuit(circuit) {
     uf.union(a, b);
   }
 
-  // Also register isolated ports
+  // Also register isolated ports + merge wire ports (zero resistance)
   for (const comp of components) {
     for (const port of comp.ports) {
       const key = `${comp.id}:${port.id}`;
       uf.find(key); // ensure exists
+    }
+    // Wire: merge both ports into same node (zero resistance)
+    if (comp.type === 'wire' && comp.ports.length >= 2) {
+      uf.union(`${comp.id}:${comp.ports[0].id}`, `${comp.id}:${comp.ports[1].id}`);
     }
   }
 
@@ -93,7 +97,7 @@ export function solveCircuit(circuit) {
         resistors.push({ ...comp, params: { ...comp.params, R: 1e6 } });
         break;
       case 'wire':
-        // Treat as zero-resistance (already merged in node map via connections)
+        // Already merged in step 1 (before node mapping)
         break;
     }
   }
