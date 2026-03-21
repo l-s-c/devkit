@@ -444,13 +444,15 @@ function getCompSVGContent(comp) {
     case 'bulb': {
       const br = lastResult?.branches?.[comp.id];
       const on = br && Math.abs(br.I) > 0.01;
-      const glow = on ? `<circle cx="0" cy="-12" r="50" fill="url(#bulbGlowOn${comp.id})"/>
-        <defs><radialGradient id="bulbGlowOn${comp.id}" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.7"/><stop offset="50%" stop-color="#FDE68A" stop-opacity="0.3"/><stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/></radialGradient></defs>` : '';
-      const glassFill = on ? 'rgba(253,224,71,0.45)' : 'rgba(209,213,219,0.25)';
+      const glow = on ? `<circle cx="0" cy="-12" r="60" fill="url(#bulbGlowOuter${comp.id})"/>
+        <circle cx="0" cy="-12" r="40" fill="url(#bulbGlowInner${comp.id})"/>
+        <defs><radialGradient id="bulbGlowOuter${comp.id}" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#FDE68A" stop-opacity="0.6"/><stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/></radialGradient>
+        <radialGradient id="bulbGlowInner${comp.id}" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.4"/><stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/></radialGradient></defs>` : '';
+      const glassFill = on ? 'rgba(254,243,199,0.7)' : 'rgba(229,231,235,0.3)';
       const glassStroke = on ? '#F59E0B' : '#D1D5DB';
       return `${glow}
       <ellipse cx="0" cy="-14" rx="22" ry="26" fill="${glassFill}" stroke="${glassStroke}" stroke-width="1"/>
-      <path d="M-8 -12 L-5 -22 L-2 -12 L1 -22 L4 -12 L7 -22 L10 -12" fill="none" stroke="${on ? '#F59E0B' : '#9CA3AF'}" stroke-width="1.5" stroke-linecap="round" opacity="${on ? 1 : 0.4}"/>
+      <path d="M-8 -12 L-5 -22 L-2 -12 L1 -22 L4 -12 L7 -22 L10 -12" fill="none" stroke="${on ? '#F59E0B' : '#9CA3AF'}" stroke-width="2.5" stroke-linecap="round" opacity="${on ? 1 : 0.4}"/>
       <line x1="-6" y1="4" x2="-6" y2="-12" stroke="#78716C" stroke-width="0.8"/>
       <line x1="6" y1="4" x2="6" y2="-12" stroke="#78716C" stroke-width="0.8"/>
       <rect x="-12" y="10" width="24" height="16" rx="3" fill="url(#bulbBase)"/>
