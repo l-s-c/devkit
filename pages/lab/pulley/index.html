@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>滑轮组实验 - DevKit 实验室</title>
+<meta name="description" content="交互式滑轮组实验 — 定滑轮、动滑轮、滑轮组，探究省力原理">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
+.lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
+.lab-header h1{font-size:16px;font-weight:700}
+.lab-container{display:flex;max-width:1080px;margin:20px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;min-height:500px}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+.panel-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.06);padding:16px}
+.panel-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px}
+.field select{width:100%;padding:6px 8px;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;font-size:13px}
+.slider-row{display:flex;align-items:center;gap:8px}
+.slider-row input[type=range]{flex:1}
+.slider-val{font-size:12px;font-weight:700;color:#3B82F6;min-width:40px;text-align:right;font-family:'JetBrains Mono',monospace}
+.reading{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.reading:last-child{border-bottom:none}
+.reading .rl{color:#8E8E93}
+.reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
+.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;text-align:center;font-size:13px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
+.btn-pull{width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);color:#fff;font-weight:700;font-size:13px;cursor:pointer;margin-top:8px;transition:transform 0.1s}
+.btn-pull:hover{transform:scale(1.02)}
+.btn-pull:active{transform:scale(0.98)}
+.info-box{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;margin-top:8px;font-size:11px;color:#6B7280;line-height:1.6}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<header class="lab-header">
+  <a href="../">← 实验室</a>
+  <h1>🔬 滑轮组实验</h1>
+</header>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="lab-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pulleyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9CA3AF"/>
+          <stop offset="100%" stop-color="#6B7280"/>
+        </linearGradient>
+        <linearGradient id="ropeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#D97706"/>
+          <stop offset="100%" stop-color="#B45309"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Ceiling / support -->
+      <rect x="0" y="0" width="500" height="30" fill="#E5E7EB"/>
+      <line x1="0" y1="30" x2="500" y2="30" stroke="#9CA3AF" stroke-width="2"/>
+
+      <!-- Drawing area -->
+      <g id="pulley-scene"></g>
+
+      <!-- Force arrows -->
+      <g id="force-arrows"></g>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-card">
+      <div class="panel-title">⚙️ 实验参数</div>
+      <div class="field">
+        <label>滑轮类型</label>
+        <select id="type-select">
+          <option value="fixed">定滑轮</option>
+          <option value="movable">动滑轮</option>
+          <option value="block2">滑轮组（2段绳）</option>
+          <option value="block3">滑轮组（3段绳）</option>
+          <option value="block4">滑轮组（4段绳）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>物体重量 G</label>
+        <div class="slider-row">
+          <input type="range" id="weight-slider" min="1" max="20" step="0.5" value="6">
+          <span class="slider-val" id="weight-val">6 N</span>
+        </div>
+      </div>
+      <button class="btn-pull" id="btn-pull">⬆️ 拉动提升</button>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📊 力学数据</div>
+      <div class="reading"><span class="rl">物体重量 G</span><span class="rv" id="r-g">6.0 N</span></div>
+      <div class="reading"><span class="rl">拉力 F</span><span class="rv" id="r-f">6.0 N</span></div>
+      <div class="reading"><span class="rl">绳子段数 n</span><span class="rv" id="r-n">1</span></div>
+      <div class="reading"><span class="rl">省力比</span><span class="rv" id="r-ratio">1:1</span></div>
+      <div class="reading"><span class="rl">机械效率</span><span class="rv" id="r-eff">100%</span></div>
+      <div class="formula" id="formula-display">F = G（不省力）</div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📖 原理说明</div>
+      <div class="info-box" id="info-text">
+        <b>定滑轮：</b>固定在天花板上，只改变力的方向，不省力。F = G
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const svg = document.getElementById('lab-svg');
+const scene = document.getElementById('pulley-scene');
+const arrowsG = document.getElementById('force-arrows');
+
+let pulleyType = 'fixed';
+let weight = 6;
+let liftOffset = 0;
+let animating = false;
+
+function drawPulley(cx, cy, r, fixed) {
+  let html = '';
+  // Axle support
+  if (fixed) {
+    html += `<line x1="${cx}" y1="30" x2="${cx}" y2="${cy}" stroke="#78716C" stroke-width="3"/>`;
+  }
+  // Pulley wheel
+  html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#pulleyGrad)" stroke="#4B5563" stroke-width="2"/>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="${r * 0.3}" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1"/>`;
+  // Groove
+  html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#57534E" stroke-width="1" stroke-dasharray="3 3"/>`;
+  return html;
+}
+
+function drawWeight(cx, cy, w) {
+  const size = 40;
+  let html = `<rect x="${cx - size / 2}" y="${cy}" width="${size}" height="${size}" rx="4" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>`;
+  html += `<text x="${cx}" y="${cy + size / 2 + 5}" font-size="12" fill="#fff" text-anchor="middle" font-weight="800">${w}N</text>`;
+  return html;
+}
+
+function render() {
+  scene.innerHTML = '';
+  arrowsG.innerHTML = '';
+  const r = 25; // pulley radius
+  let n = 1, pull, info, formula;
+  let html = '';
+  const baseY = 300 - liftOffset;
+
+  switch (pulleyType) {
+    case 'fixed': {
+      n = 1; pull = weight;
+      const px = 250, py = 80;
+      html += drawPulley(px, py, r, true);
+      // Rope: left side (weight) → over pulley → right side (pull)
+      html += `<line x1="${px - r}" y1="${py}" x2="${px - r}" y2="${baseY}" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<path d="M${px - r},${py} A${r},${r} 0 1 1 ${px + r},${py}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="${baseY + 30}" stroke="#D97706" stroke-width="2.5"/>`;
+      // Weight
+      html += drawWeight(px - r, baseY, weight);
+      // Pull arrow
+      html += `<line x1="${px + r}" y1="${baseY + 50}" x2="${px + r}" y2="${baseY + 100}" stroke="#3B82F6" stroke-width="3" marker-end="url(#)"/>`;
+      html += `<polygon points="${px + r},${baseY + 100} ${px + r - 5},${baseY + 88} ${px + r + 5},${baseY + 88}" fill="#3B82F6"/>`;
+      html += `<text x="${px + r + 12}" y="${baseY + 80}" font-size="12" fill="#3B82F6" font-weight="700">F=${pull.toFixed(1)}N ↓</text>`;
+      info = '<b>定滑轮：</b>固定在天花板上，只改变力的方向，不省力。F = G';
+      formula = 'F = G（不省力）';
+      break;
+    }
+    case 'movable': {
+      n = 2; pull = weight / 2;
+      const px = 250, py = baseY - 30;
+      // Fixed hook at ceiling
+      html += `<line x1="${px - r}" y1="30" x2="${px - r}" y2="${py}" stroke="#D97706" stroke-width="2.5"/>`;
+      html += drawPulley(px, py, r, false);
+      // Rope goes: ceiling anchor → under pulley → up
+      html += `<path d="M${px - r},${py} A${r},${r} 0 1 0 ${px + r},${py}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+      // Weight hangs from pulley
+      html += `<line x1="${px}" y1="${py + r}" x2="${px}" y2="${py + r + 10}" stroke="#78716C" stroke-width="2"/>`;
+      html += drawWeight(px, py + r + 10, weight);
+      // Pull arrow (upward)
+      html += `<polygon points="${px + r},30 ${px + r - 5},42 ${px + r + 5},42" fill="#3B82F6"/>`;
+      html += `<text x="${px + r + 12}" y="${50}" font-size="12" fill="#3B82F6" font-weight="700">F=${pull.toFixed(1)}N ↑</text>`;
+      info = '<b>动滑轮：</b>随物体一起移动，省一半力。F = G/2<br>但拉动距离是物体上升距离的2倍。';
+      formula = 'F = G/2（省一半力）';
+      break;
+    }
+    default: {
+      // Block pulley systems
+      const segments = parseInt(pulleyType.replace('block', ''));
+      n = segments; pull = weight / segments;
+      const fixedY = 70, movableY = baseY - 20;
+      const fixedX = 250, movableX = 250;
+
+      // Fixed pulley (top)
+      html += drawPulley(fixedX, fixedY, r, true);
+      // Movable pulley (bottom)
+      html += drawPulley(movableX, movableY, r, false);
+      // Weight
+      html += `<line x1="${movableX}" y1="${movableY + r}" x2="${movableX}" y2="${movableY + r + 10}" stroke="#78716C" stroke-width="2"/>`;
+      html += drawWeight(movableX, movableY + r + 10, weight);
+
+      // Draw rope segments
+      const leftX = fixedX - r, rightX = fixedX + r;
+      if (segments === 2) {
+        // Anchor at ceiling left, down to movable, up over fixed, down pull
+        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX - 30}" y2="${fixedY + 80}" stroke="#D97706" stroke-width="2.5"/>`;
+      } else if (segments === 3) {
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${fixedY} A${r},${r} 0 1 0 ${rightX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${fixedY}" x2="${rightX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+      } else { // 4 segments
+        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 0 0 ${movableX},${movableY - r}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX + 40}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+      }
+
+      // Pull arrow
+      html += `<text x="${fixedX + 60}" y="${80}" font-size="12" fill="#3B82F6" font-weight="700">F=${pull.toFixed(1)}N</text>`;
+
+      info = `<b>滑轮组（${segments}段绳）：</b>绳子承担${segments}段，F = G/${segments}<br>拉动距离是物体上升距离的${segments}倍。`;
+      formula = `F = G/${segments} = ${pull.toFixed(1)}N`;
+      break;
+    }
+  }
+
+  scene.innerHTML = html;
+
+  // Update readings
+  document.getElementById('r-g').textContent = weight.toFixed(1) + ' N';
+  document.getElementById('r-f').textContent = pull.toFixed(1) + ' N';
+  document.getElementById('r-n').textContent = n;
+  document.getElementById('r-ratio').textContent = `1:${n}`;
+  document.getElementById('r-eff').textContent = '100%'; // ideal
+  document.getElementById('formula-display').textContent = formula;
+  document.getElementById('info-text').innerHTML = info;
+  document.getElementById('weight-val').textContent = weight + ' N';
+}
+
+// Controls
+document.getElementById('type-select').addEventListener('change', e => {
+  pulleyType = e.target.value;
+  liftOffset = 0;
+  render();
+});
+
+document.getElementById('weight-slider').addEventListener('input', e => {
+  weight = parseFloat(e.target.value);
+  render();
+});
+
+// Pull animation
+document.getElementById('btn-pull').addEventListener('click', () => {
+  if (animating) return;
+  animating = true;
+  const target = 80;
+  const start = liftOffset;
+  const duration = 800;
+  const startTime = performance.now();
+
+  function animate(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    liftOffset = start + (target - start) * ease;
+    render();
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // Reset after pause
+      setTimeout(() => {
+        liftOffset = 0;
+        render();
+        animating = false;
+      }, 600);
+    }
+  }
+  requestAnimationFrame(animate);
+});
+
+// Init
+render();
+</script>
+</body>
+</html>
