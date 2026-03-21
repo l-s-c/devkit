@@ -219,6 +219,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
         <div class="lib-item" data-type="resistor"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FEF3C7"/><line x1="4" y1="28" x2="14" y2="28" stroke="#9CA3AF" stroke-width="2.5"/><line x1="42" y1="28" x2="52" y2="28" stroke="#9CA3AF" stroke-width="2.5"/><rect x="14" y="20" width="28" height="16" rx="8" fill="#E8C9A0" stroke="#B8956A" stroke-width="1"/><rect x="20" y="20" width="3" height="16" rx="1" fill="#92400E"/><rect x="26" y="20" width="3" height="16" rx="1" fill="#1C1C1E"/><rect x="32" y="20" width="3" height="16" rx="1" fill="#DC2626"/></svg></span><span class="li-name">电阻</span></div>
         <div class="lib-item" data-type="bulb"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FFFBEB"/><ellipse cx="28" cy="22" rx="14" ry="16" fill="rgba(255,251,235,0.8)" stroke="#D1D5DB" stroke-width="1"/><path d="M22 22 L24 16 L27 22 L30 16 L33 22" fill="none" stroke="#92400E" stroke-width="1.2"/><rect x="20" y="36" width="16" height="10" rx="2" fill="#A8A29E"/><line x1="20" y1="40" x2="36" y2="40" stroke="#78716C" stroke-width="0.8"/></svg></span><span class="li-name">灯泡</span></div>
         <div class="lib-item" data-type="switch"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#F5F5F4"/><rect x="8" y="30" width="40" height="16" rx="3" fill="#E7E5E4" stroke="#A8A29E" stroke-width="1"/><rect x="14" y="26" width="8" height="10" rx="1.5" fill="#78716C"/><rect x="34" y="26" width="8" height="10" rx="1.5" fill="#78716C"/><line x1="18" y1="30" x2="32" y2="16" stroke="#9CA3AF" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="16" r="4" fill="#EF4444" stroke="#B91C1C" stroke-width="1"/></svg></span><span class="li-name">开关</span></div>
+        <div class="lib-item" data-type="rheostat"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#F0FDF4"/><rect x="6" y="22" width="44" height="18" rx="3" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.8"/><path d="M10 30 L14 24 L18 36 L22 24 L26 36 L30 24 L34 36 L38 24 L42 36 L46 30" fill="none" stroke="#57534E" stroke-width="1.2"/><rect x="22" y="16" width="8" height="14" rx="2" fill="#3B82F6" stroke="#1D4ED8" stroke-width="0.8"/></svg></span><span class="li-name">滑动变阻器</span></div>
         <div class="lib-item" data-type="wire"><span class="li-icon"><svg viewBox="0 0 56 56"><rect width="56" height="56" rx="12" fill="#FEF2F2"/><path d="M8 28 C18 18, 38 38, 48 28" fill="none" stroke="#DC2626" stroke-width="4" stroke-linecap="round"/><rect x="3" y="22" width="8" height="12" rx="1.5" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.8"/><rect x="45" y="22" width="8" height="12" rx="1.5" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.8"/></svg></span><span class="li-name">导线</span></div>
       </div>
     </div>
@@ -335,6 +336,7 @@ const SCHEMATIC_PORTS = {
   switch:    [{id:'p0',dx:-13,dy:0},{id:'p1',dx:13,dy:0}],
   ammeter:   [{id:'p0',dx:-15,dy:0},{id:'p1',dx:15,dy:0}],
   voltmeter: [{id:'p0',dx:-15,dy:0},{id:'p1',dx:15,dy:0}],
+  rheostat:  [{id:'p0',dx:-24,dy:0},{id:'p1',dx:24,dy:0}],
   wire:      [{id:'p0',dx:-20,dy:0},{id:'p1',dx:20,dy:0}],
 };
 
@@ -477,6 +479,7 @@ const COMP_DEFAULTS = {
   switch:    { label: '开关', icon: '🔘', tag: '元件', params: { closed: true }, ports: [{id:'p0',dx:-22,dy:35},{id:'p1',dx:22,dy:35}] },
   ammeter:   { label: '电流表', icon: '🔴', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
   voltmeter: { label: '电压表', icon: '🟡', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
+  rheostat:  { label: '滑动变阻器', icon: '🎚️', tag: '元件', params: { R_total: 20, slider: 0.5 }, ports: [{id:'p0',dx:-40,dy:20},{id:'p1',dx:40,dy:20}] },
   wire:      { label: '导线', icon: '〰️', tag: '元件', params: {}, ports: [{id:'p0',dx:-36,dy:0},{id:'p1',dx:36,dy:0}] },
 };
 
@@ -679,6 +682,21 @@ function getCompSVGContent(comp) {
       <text x="-15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">+</text>
       <circle cx="15" cy="40" r="5" fill="#1C1C1E" stroke="#374151" stroke-width="1.5"/>
       <text x="15" y="43" font-size="6" font-weight="800" fill="#fff" text-anchor="middle">−</text>`;
+    case 'rheostat': {
+      const sl = comp.params.slider ?? 0.5;
+      const slX = -30 + sl * 60; // slider position (-30 to 30)
+      const effR = ((comp.params.R_total || 20) * sl).toFixed(1);
+      return `
+      <rect x="-36" y="6" width="72" height="28" rx="4" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.5"/>
+      <rect x="-30" y="10" width="60" height="4" rx="2" fill="#78716C"/>
+      <path d="M-30 12 L-26 8 L-22 16 L-18 8 L-14 16 L-10 8 L-6 16 L-2 8 L2 16 L6 8 L10 16 L14 8 L18 16 L22 8 L26 16 L30 12" fill="none" stroke="#57534E" stroke-width="1.5"/>
+      <rect x="-36" y="20" width="72" height="10" rx="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.8"/>
+      <line x1="-40" y1="20" x2="-40" y2="34" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+      <line x1="40" y1="20" x2="40" y2="34" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+      <rect x="${slX - 5}" y="-2" width="10" height="22" rx="3" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1.5"/>
+      <line x1="${slX}" y1="-2" x2="${slX}" y2="10" stroke="#fff" stroke-width="1" opacity="0.5"/>
+      <text x="0" y="42" font-size="8" font-weight="600" fill="#6B7280" text-anchor="middle">${effR}Ω</text>`;
+    }
     case 'wire': return `
       <path d="M-30 0 C-10 -10, 10 10, 30 0" fill="none" stroke="url(#wireInsul)" stroke-width="5" stroke-linecap="round"/>
       <path d="M-30 -2 C-10 -12, 10 8, 30 -2" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/>
@@ -723,6 +741,12 @@ function getSchematicSVG(comp) {
     case 'voltmeter': return `
       <circle cx="0" cy="0" r="15" fill="none" stroke="#D97706" stroke-width="2"/>
       <text x="0" y="5" font-size="14" font-weight="800" fill="#D97706" text-anchor="middle">V</text>`;
+    case 'rheostat': return `
+      <line x1="-24" y1="0" x2="-16" y2="0" stroke="#374151" stroke-width="2"/>
+      <rect x="-16" y="-8" width="32" height="16" rx="1" fill="none" stroke="#374151" stroke-width="2"/>
+      <line x1="16" y1="0" x2="24" y2="0" stroke="#374151" stroke-width="2"/>
+      <line x1="0" y1="-14" x2="0" y2="-8" stroke="#374151" stroke-width="2"/>
+      <polygon points="-3,-14 3,-14 0,-8" fill="#374151"/>`;
     case 'wire': return `
       <line x1="-36" y1="0" x2="36" y2="0" stroke="#374151" stroke-width="2" stroke-linecap="round"/>`;
     default: return '';
@@ -1019,6 +1043,13 @@ function updatePropsPanel() {
   if (comp.type === 'switch') {
     html += `<div class="pc-field"><label>状态</label><button class="pc-act" style="background:${comp.params.closed ? 'rgba(34,197,94,0.1);color:#16A34A' : 'rgba(239,68,68,0.1);color:#DC2626'}" id="toggle-switch">${comp.params.closed ? '🟢 闭合' : '🔴 断开'}</button></div>`;
   }
+  if (comp.type === 'rheostat') {
+    const effR = ((comp.params.R_total || 20) * (comp.params.slider ?? 0.5)).toFixed(1);
+    html += `<div class="pc-field"><label>总阻值 (Ω)</label><div class="pc-input"><input type="number" value="${comp.params.R_total || 20}" step="1" min="1" max="200" data-param="R_total"><span class="unit">Ω</span></div>
+    <input type="range" class="pc-slider" min="1" max="200" step="1" value="${comp.params.R_total || 20}" data-param="R_total"></div>`;
+    html += `<div class="pc-field"><label>滑片位置 (${effR}Ω)</label>
+    <input type="range" class="pc-slider" min="0.01" max="1" step="0.01" value="${comp.params.slider ?? 0.5}" data-param="slider"></div>`;
+  }
 
   if (result) {
     html += `<div class="pc-divider"></div><div class="pc-readings">
@@ -1038,7 +1069,7 @@ function updatePropsPanel() {
       const d = COMP_DEFAULTS[c.type];
       const br = lastResult?.branches?.[c.id];
       const sel = c.id === state.selectedId;
-      const paramStr = c.type === 'battery' ? `${c.params.V}V` : (c.type === 'resistor' || c.type === 'bulb') ? `${c.params.R}Ω` : c.type === 'switch' ? (c.params.closed ? '闭合' : '断开') : '';
+      const paramStr = c.type === 'battery' ? `${c.params.V}V` : (c.type === 'resistor' || c.type === 'bulb') ? `${c.params.R}Ω` : c.type === 'rheostat' ? `${((c.params.R_total||20)*(c.params.slider??0.5)).toFixed(1)}Ω/${c.params.R_total}Ω` : c.type === 'switch' ? (c.params.closed ? '闭合' : '断开') : '';
       const iStr = br ? ` · ${Math.abs(br.I).toFixed(2)}A` : '';
       const reversed = br && (c.type === 'ammeter' || c.type === 'voltmeter') && br.I < -0.001;
       const warnStr = reversed ? ' ⚠️接反' : '';

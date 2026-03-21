@@ -82,6 +82,9 @@ export function solveCircuit(circuit) {
       case 'bulb':
         resistors.push(comp);
         break;
+      case 'rheostat':
+        resistors.push({ ...comp, params: { ...comp.params, R: Math.max(0.01, (comp.params.R_total || 20) * (comp.params.slider ?? 0.5)) } });
+        break;
       case 'battery':
         voltageSources.push(comp);
         break;
