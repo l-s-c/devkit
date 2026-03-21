@@ -23,7 +23,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .mc{background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.04);padding:24px;transition:all 300ms;position:relative;overflow:hidden}
 .mc:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.08);border-color:var(--ca)}
 .mc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cg);border-radius:20px 20px 0 0}
-.mc-avatar{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;background:var(--cb)}
+.mc-avatar{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;background:var(--cb);overflow:hidden}.mc-avatar img{width:100%;height:100%;object-fit:cover;border-radius:16px}
 .mc-role{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--ca);margin-bottom:2px}
 .mc-name{font-size:18px;font-weight:800;margin-bottom:4px}
 .mc-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px}
@@ -62,14 +62,14 @@ body{min-height:100vh;display:flex;flex-direction:column}
   </div>
 
   <div class="team-grid">
-    <div class="mc c-pm"><div class="mc-avatar">📋</div><div class="mc-role">Product Manager</div><div class="mc-name">陆明</div><div class="mc-desc">需求的源头，用户的代言人。每一个工具背后，都有一份被认真打磨的需求文档。</div><div class="mc-quote">今天目标不变：上线！🚀</div></div>
-    <div class="mc c-arch"><div class="mc-avatar">🏗️</div><div class="mc-role">Architect</div><div class="mc-name">严柏</div><div class="mc-desc">技术的守护者，架构的决策者。从 MPA 到 Liquid Glass，每个技术选型都经过深思熟虑。</div><div class="mc-quote">Review 通过 ✅ 架构没问题。</div></div>
-    <div class="mc c-dev"><div class="mc-avatar">💻</div><div class="mc-role">Developer</div><div class="mc-name">程远</div><div class="mc-desc">代码的工匠，把设计稿变成活的页面。144 个工具，每一行代码都是他的手笔。</div><div class="mc-quote">做完了，commit 已 push 💻</div></div>
-    <div class="mc c-qa"><div class="mc-avatar">🧪</div><div class="mc-role">QA Engineer</div><div class="mc-name">严测</div><div class="mc-desc">质量的底线，bug 的噩梦。10 轮测试不是任务，是对用户的承诺。</div><div class="mc-quote">10 轮测试零 bug ✅</div></div>
-    <div class="mc c-des"><div class="mc-avatar">🎨</div><div class="mc-role">Designer</div><div class="mc-name">苏棠</div><div class="mc-desc">像素级强迫症，Liquid Glass 的缔造者。每个 1px 的差别，都是业余和专业的分界线。</div><div class="mc-quote">还原度 95%+，设计验收通过 🎨</div></div>
-    <div class="mc c-ed"><div class="mc-avatar">✍️</div><div class="mc-role">Editor</div><div class="mc-name">苏白</div><div class="mc-desc">文字的雕刻师，传播的策划者。让每个工具被看见，被分享，被记住。</div><div class="mc-quote">好的内容 = 好的故事 + 不正经的表达</div></div>
-    <div class="mc c-biz"><div class="mc-avatar">💼</div><div class="mc-role">Business Lead</div><div class="mc-name">钱进</div><div class="mc-desc">商业的嗅觉，增长的引擎。教育赛道、SEO 策略、变现路径，每一步都踩在点上。</div><div class="mc-quote">老板，ROI 我算过了 💼</div></div>
-    <div class="mc c-img"><div class="mc-avatar">🎨</div><div class="mc-role">Image Gen</div><div class="mc-name">墨生</div><div class="mc-desc">AI 画师，笔墨生花。Logo、封面、配图，一句话描述就能变成画面。</div><div class="mc-quote">图已出，看看效果 🖼️</div></div>
+    <div class="mc c-pm"><div class="mc-avatar"><img src="../../assets/team-avatars/luming-avatar.png" alt="陆明"></div><div class="mc-role">Product Manager</div><div class="mc-name">陆明</div><div class="mc-desc">需求的源头，用户的代言人。每一个工具背后，都有一份被认真打磨的需求文档。</div><div class="mc-quote">今天目标不变：上线！🚀</div></div>
+    <div class="mc c-arch"><div class="mc-avatar"><img src="../../assets/team-avatars/yanbo-avatar.png" alt="严柏"></div><div class="mc-role">Architect</div><div class="mc-name">严柏</div><div class="mc-desc">技术的守护者，架构的决策者。从 MPA 到 Liquid Glass，每个技术选型都经过深思熟虑。</div><div class="mc-quote">Review 通过 ✅ 架构没问题。</div></div>
+    <div class="mc c-dev"><div class="mc-avatar"><img src="../../assets/team-avatars/chengyuan-avatar.png" alt="程远"></div><div class="mc-role">Developer</div><div class="mc-name">程远</div><div class="mc-desc">代码的工匠，把设计稿变成活的页面。144 个工具，每一行代码都是他的手笔。</div><div class="mc-quote">做完了，commit 已 push 💻</div></div>
+    <div class="mc c-qa"><div class="mc-avatar"><img src="../../assets/team-avatars/yance-avatar.png" alt="严测"></div><div class="mc-role">QA Engineer</div><div class="mc-name">严测</div><div class="mc-desc">质量的底线，bug 的噩梦。10 轮测试不是任务，是对用户的承诺。</div><div class="mc-quote">10 轮测试零 bug ✅</div></div>
+    <div class="mc c-des"><div class="mc-avatar"><img src="../../assets/team-avatars/sutang-avatar.png" alt="苏棠"></div><div class="mc-role">Designer</div><div class="mc-name">苏棠</div><div class="mc-desc">像素级强迫症，Liquid Glass 的缔造者。每个 1px 的差别，都是业余和专业的分界线。</div><div class="mc-quote">还原度 95%+，设计验收通过 🎨</div></div>
+    <div class="mc c-ed"><div class="mc-avatar"><img src="../../assets/team-avatars/subai-avatar.png" alt="苏白"></div><div class="mc-role">Editor</div><div class="mc-name">苏白</div><div class="mc-desc">文字的雕刻师，传播的策划者。让每个工具被看见，被分享，被记住。</div><div class="mc-quote">好的内容 = 好的故事 + 不正经的表达</div></div>
+    <div class="mc c-biz"><div class="mc-avatar"><img src="../../assets/team-avatars/qianjin-avatar.png" alt="钱进"></div><div class="mc-role">Business Lead</div><div class="mc-name">钱进</div><div class="mc-desc">商业的嗅觉，增长的引擎。教育赛道、SEO 策略、变现路径，每一步都踩在点上。</div><div class="mc-quote">老板，ROI 我算过了 💼</div></div>
+    <div class="mc c-img"><div class="mc-avatar"><img src="../../assets/team-avatars/moshen-avatar-ai.png" alt="墨生"></div><div class="mc-role">Image Gen</div><div class="mc-name">墨生</div><div class="mc-desc">AI 画师，笔墨生花。Logo、封面、配图，一句话描述就能变成画面。</div><div class="mc-quote">图已出，看看效果 🖼️</div></div>
   </div>
 
   <div class="tl-section">
