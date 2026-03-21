@@ -1391,61 +1391,64 @@ document.getElementById('btn-clear').onclick = () => {
 };
 // ===== Example circuits =====
 const EXAMPLES = {
-  '💡 简单电路 (电池+灯泡)': {
+  '💡 简单电路 (电池+开关+灯泡)': {
     components: [
-      { id:'e1', type:'battery', x:200, y:100, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
-      { id:'e2', type:'bulb', x:400, y:100, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:6} },
+      { id:'e2', type:'switch', x:340, y:60, rotation:0, params:{closed:true} },
+      { id:'e3', type:'bulb', x:500, y:160, rotation:0, params:{R:10} },
     ],
     connections: [
       { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
-      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
     ], nextId: 10,
   },
-  '🔗 串联电路 (电池+2电阻)': {
+  '🔗 串联电路 (电池+开关+2灯泡)': {
     components: [
-      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:12}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
-      { id:'e2', type:'resistor', x:340, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
-      { id:'e3', type:'resistor', x:340, y:240, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
-      { id:'e4', type:'wire', x:500, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
-    ],
-    connections: [
-      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
-      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
-      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e3',portId:'p1'} },
-      { from:{componentId:'e3',portId:'p0'}, to:{componentId:'e1',portId:'neg'} },
-    ], nextId: 10,
-  },
-  '⚡ 并联电路 (电池+2灯泡)': {
-    components: [
-      { id:'e1', type:'battery', x:140, y:160, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
-      { id:'e2', type:'bulb', x:400, y:80, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
-      { id:'e3', type:'bulb', x:400, y:220, rotation:0, params:{R:20}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
-      { id:'e4', type:'wire', x:260, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
-      { id:'e5', type:'wire', x:260, y:220, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
-      { id:'e6', type:'wire', x:540, y:160, rotation:0, params:{}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
-    ],
-    connections: [
-      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e4',portId:'p0'} },
-      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e2',portId:'p0'} },
-      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e5',portId:'p0'} },
-      { from:{componentId:'e5',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
-      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
-      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e6',portId:'p0'} },
-      { from:{componentId:'e6',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
-    ], nextId: 10,
-  },
-  '🔌 带开关的电路 (电池+开关+灯泡+电流表)': {
-    components: [
-      { id:'e1', type:'battery', x:140, y:200, rotation:0, params:{V:6}, ports:[{id:'neg',dx:-40,dy:0},{id:'pos',dx:40,dy:0}] },
-      { id:'e2', type:'switch', x:300, y:80, rotation:0, params:{closed:true}, ports:[{id:'p0',dx:-30,dy:0},{id:'p1',dx:30,dy:0}] },
-      { id:'e3', type:'ammeter', x:460, y:80, rotation:0, params:{}, ports:[{id:'p0',dx:-20,dy:0},{id:'p1',dx:20,dy:0}] },
-      { id:'e4', type:'bulb', x:460, y:200, rotation:0, params:{R:10}, ports:[{id:'p0',dx:-20,dy:20},{id:'p1',dx:20,dy:20}] },
+      { id:'e1', type:'battery', x:120, y:180, rotation:0, params:{V:6} },
+      { id:'e2', type:'switch', x:300, y:60, rotation:0, params:{closed:true} },
+      { id:'e3', type:'bulb', x:500, y:60, rotation:0, params:{R:10} },
+      { id:'e4', type:'bulb', x:500, y:180, rotation:0, params:{R:10} },
     ],
     connections: [
       { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
       { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
       { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
       { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '⚡ 并联电路 (电池+开关+2灯泡)': {
+    components: [
+      { id:'e1', type:'battery', x:120, y:160, rotation:0, params:{V:6} },
+      { id:'e2', type:'switch', x:280, y:60, rotation:0, params:{closed:true} },
+      { id:'e3', type:'bulb', x:460, y:80, rotation:0, params:{R:10} },
+      { id:'e4', type:'bulb', x:460, y:240, rotation:0, params:{R:10} },
+      { id:'e5', type:'wire', x:580, y:160, rotation:0, params:{} },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e5',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e5',portId:'p0'} },
+      { from:{componentId:'e5',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+    ], nextId: 10,
+  },
+  '🔌 完整电路 (电池+开关+灯泡+电流表+电压表)': {
+    components: [
+      { id:'e1', type:'battery', x:120, y:200, rotation:0, params:{V:6} },
+      { id:'e2', type:'switch', x:300, y:60, rotation:0, params:{closed:true} },
+      { id:'e3', type:'ammeter', x:460, y:60, rotation:0, params:{} },
+      { id:'e4', type:'bulb', x:540, y:200, rotation:0, params:{R:10} },
+      { id:'e5', type:'voltmeter', x:340, y:280, rotation:0, params:{} },
+    ],
+    connections: [
+      { from:{componentId:'e1',portId:'pos'}, to:{componentId:'e2',portId:'p0'} },
+      { from:{componentId:'e2',portId:'p1'}, to:{componentId:'e3',portId:'p0'} },
+      { from:{componentId:'e3',portId:'p1'}, to:{componentId:'e4',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e1',portId:'neg'} },
+      { from:{componentId:'e4',portId:'p0'}, to:{componentId:'e5',portId:'p0'} },
+      { from:{componentId:'e4',portId:'p1'}, to:{componentId:'e5',portId:'p1'} },
     ], nextId: 10,
   },
 };
