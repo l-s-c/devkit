@@ -411,34 +411,26 @@ function computeSchematicLayout() {
 
   if (!found || loopComps.length < 2) { fallbackLayout(comps); return; }
 
-  // Distribute along rectangle — battery on left, vertical
-  // Layout: battery(left,vertical) → top edge(right) → right corner → bottom edge(left) → back to battery
+  // Distribute along rectangle:
+  // Battery on left (vertical), all other components on top edge (horizontal, left→right)
+  // Bottom edge is just a return wire (no components)
   const n = loopComps.length;
-  const spacing = 100;
-  const topCount = Math.ceil((n - 1) / 2);
-  const bottomCount = n - 1 - topCount;
-  const W = Math.max(300, (Math.max(topCount, bottomCount) + 1) * spacing);
-  const H = 200;
+  const otherCount = n - 1; // non-battery components
+  const spacing = 120;
+  const W = Math.max(280, (otherCount + 1) * spacing);
+  const H = 160;
   const left = 400 - W / 2, right = 400 + W / 2;
   const top = 300 - H / 2, bottom = 300 + H / 2;
 
-  // Battery: left side, vertical (pos on top, neg on bottom)
+  // Battery: left side, vertical (pos=top, neg=bottom)
   loopComps[0]._sx = left; loopComps[0]._sy = 300; loopComps[0]._sr = 0;
 
-  // Top edge: elements go left→right, horizontal (rot=0)
-  for (let i = 0; i < topCount; i++) {
+  // All other components on top edge, evenly spaced left→right
+  for (let i = 0; i < otherCount; i++) {
     const comp = loopComps[1 + i];
-    comp._sx = left + (i + 1) * (W / (topCount + 1));
+    comp._sx = left + (i + 1) * (W / (otherCount + 1));
     comp._sy = top;
-    comp._sr = 0; // horizontal, p0 left, p1 right
-  }
-
-  // Bottom edge: elements go right→left, horizontal (rot=180)
-  for (let i = 0; i < bottomCount; i++) {
-    const comp = loopComps[1 + topCount + i];
-    comp._sx = right - (i + 1) * (W / (bottomCount + 1));
-    comp._sy = bottom;
-    comp._sr = 180; // horizontal, flipped
+    comp._sr = 0; // horizontal, p0=left, p1=right
   }
 
   // Voltmeters and other non-loop components: below the circuit
@@ -1230,14 +1222,25 @@ function renderWires() {
     const pts = [{ x: x1, y: y1 }, ...conn.ctrls, { x: x2, y: y2 }];
     let pathD;
     if (currentView === 'schematic') {
-      // Clean orthogonal lines: horizontal first, then vertical, then horizontal
-      if (Math.abs(y1 - y2) < 2) {
+      // Orthogonal routing for schematic view
+      const dx = Math.abs(x1 - x2), dy = Math.abs(y1 - y2);
+      if (dy < 3) {
+        // Same row — straight horizontal
         pathD = `M${x1},${y1} L${x2},${y2}`;
-      } else if (Math.abs(x1 - x2) < 2) {
+      } else if (dx < 3) {
+        // Same column — straight vertical
         pathD = `M${x1},${y1} L${x2},${y2}`;
       } else {
-        // L-shape or Z-shape routing
-        pathD = `M${x1},${y1} L${x1},${y2} L${x2},${y2}`;
+        // Different row & column — use right-angle routing
+        // Go vertical from start, then horizontal to end (or vice versa)
+        // Choose route that follows the rectangle perimeter
+        if (y1 < y2) {
+          // Going down: go horizontal first to align, then vertical
+          pathD = `M${x1},${y1} L${x2},${y1} L${x2},${y2}`;
+        } else {
+          // Going up: go vertical first, then horizontal
+          pathD = `M${x1},${y1} L${x1},${y2} L${x2},${y2}`;
+        }
       }
     } else {
       // Catmull-Rom-like smooth curve through all points
