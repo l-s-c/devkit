@@ -593,8 +593,8 @@ function getCompSVGContent(comp) {
       <rect x="-22" y="-16" width="44" height="32" rx="3" fill="rgba(255,255,255,0.15)"/>
       <text x="0" y="-4" font-size="8" font-weight="700" fill="#DBEAFE" text-anchor="middle">1.5V</text>
       <text x="0" y="10" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">⚡</text>
-      <text x="0" y="-36" font-size="10" font-weight="900" fill="#DC2626" text-anchor="middle">+</text>
-      <text x="0" y="42" font-size="12" font-weight="900" fill="#6B7280" text-anchor="middle">−</text>
+      <text x="0" y="-42" font-size="16" font-weight="900" fill="#DC2626" text-anchor="middle">+</text>
+      <text x="0" y="50" font-size="16" font-weight="900" fill="#3B82F6" text-anchor="middle">−</text>
       <rect x="-26" y="-26" width="12" height="50" rx="4" fill="rgba(255,255,255,0.12)"/>`;
     case 'resistor': return `
       <line x1="-40" y1="0" x2="-22" y2="0" stroke="url(#resWire)" stroke-width="3" stroke-linecap="round"/>
@@ -1114,7 +1114,10 @@ function updatePropsPanel() {
 
   const rotBtn = content.querySelector('#btn-rotate');
   if (rotBtn) rotBtn.onclick = () => {
-    // Rotation not implemented in MVP
+    if (!comp) return;
+    pushUndo();
+    comp.rotation = ((comp.rotation || 0) + 90) % 360;
+    renderAll(); solveAndUpdate(); state.dirty = true; autoSave();
   };
 }
 
@@ -1186,6 +1189,63 @@ function renderAll() {
   }
   renderWires();
 
+  // Rotation handle for selected component
+  tempLayer.innerHTML = '';
+  if (state.selectedId && currentView === 'realistic') {
+    const selComp = state.components.find(c => c.id === state.selectedId);
+    if (selComp) {
+      const cx = selComp.x, cy = selComp.y;
+      const handleR = 50; // distance from center
+      const rot = selComp.rotation || 0;
+      const rad = (rot - 90) * Math.PI / 180; // handle at top
+      const hx = cx + handleR * Math.cos(rad), hy = cy + handleR * Math.sin(rad);
+
+      // Arc track
+      const arc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      arc.setAttribute('cx', cx); arc.setAttribute('cy', cy);
+      arc.setAttribute('r', handleR);
+      arc.setAttribute('fill', 'none'); arc.setAttribute('stroke', 'rgba(59,130,246,0.2)');
+      arc.setAttribute('stroke-width', '1.5'); arc.setAttribute('stroke-dasharray', '4 4');
+      tempLayer.appendChild(arc);
+
+      // Handle dot
+      const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      handle.setAttribute('cx', hx); handle.setAttribute('cy', hy);
+      handle.setAttribute('r', '8'); handle.setAttribute('fill', '#3B82F6');
+      handle.setAttribute('stroke', '#fff'); handle.setAttribute('stroke-width', '2');
+      handle.style.cursor = 'grab'; handle.style.filter = 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))';
+
+      // Rotation icon (↻)
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', hx); txt.setAttribute('y', hy + 3.5);
+      txt.setAttribute('font-size', '10'); txt.setAttribute('fill', '#fff');
+      txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('pointer-events', 'none');
+      txt.textContent = '↻';
+
+      handle.addEventListener('pointerdown', e => {
+        e.preventDefault(); e.stopPropagation();
+        handle.style.cursor = 'grabbing';
+        const onMove = ev => {
+          const pt = svgPoint(ev);
+          const angle = Math.atan2(pt.y - cy, pt.x - cx) * 180 / Math.PI + 90;
+          // Snap to 15° increments
+          selComp.rotation = Math.round(angle / 15) * 15 % 360;
+          if (selComp.rotation < 0) selComp.rotation += 360;
+          renderAll(); solveAndUpdate();
+        };
+        const onUp = () => {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+          state.dirty = true; autoSave();
+        };
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp);
+      });
+      tempLayer.appendChild(handle);
+      tempLayer.appendChild(txt);
+    }
+  }
+
   // Empty state
   document.getElementById('empty-state').style.display = state.components.length ? 'none' : 'flex';
   // Cache hint
@@ -1213,10 +1273,14 @@ function renderWires() {
 
     // Multi-point wire: conn.ctrls is array of {x, y} absolute positions
     if (!conn.ctrls) {
-      // Migrate old single ctrl to new format
-      const mx = (x1 + x2) / 2 + (conn.ctrl?.dx || 0);
-      const my = (y1 + y2) / 2 + (conn.ctrl?.dy || 0);
-      conn.ctrls = [{ x: mx, y: my }];
+      if (conn.ctrl && (conn.ctrl.dx || conn.ctrl.dy)) {
+        // Migrate old single ctrl with actual offset
+        const mx = (x1 + x2) / 2 + conn.ctrl.dx;
+        const my = (y1 + y2) / 2 + conn.ctrl.dy;
+        conn.ctrls = [{ x: mx, y: my }];
+      } else {
+        conn.ctrls = []; // New connection: no control points
+      }
       delete conn.ctrl;
     }
     const pts = [{ x: x1, y: y1 }, ...conn.ctrls, { x: x2, y: y2 }];
