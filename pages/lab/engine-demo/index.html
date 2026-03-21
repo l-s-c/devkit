@@ -1044,7 +1044,7 @@ function updatePropsPanel() {
       const reversed = br && (c.type === 'ammeter' || c.type === 'voltmeter') && br.I < -0.001;
       const warnStr = reversed ? ' ⚠️接反' : '';
       html += `<div class="bom-item${sel ? ' bom-sel' : ''}" data-bom-id="${c.id}" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:2px;background:${sel ? 'rgba(59,130,246,0.08)' : reversed ? 'rgba(220,38,38,0.06)' : 'transparent'};transition:background 150ms">
-        <span style="font-size:14px">${d.icon}</span>
+        <svg viewBox="-50 -55 100 110" width="28" height="28" style="flex-shrink:0">${(() => { const sv = currentView; currentView = 'realistic'; const s = getCompSVGContent(c); currentView = sv; return s; })()}</svg>
         <span style="flex:1;font-weight:600;color:${reversed ? '#DC2626' : sel ? '#2563EB' : '#374151'}">${d.label}${warnStr}</span>
         <span style="color:#8E8E93;font-size:10px;font-family:'JetBrains Mono',monospace">${paramStr}${iStr}</span>
       </div>`;
