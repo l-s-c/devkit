@@ -958,8 +958,7 @@ function selectComponent(id) {
   state.selectedId = id;
   state.selectedWireIdx = -1;
   document.querySelectorAll('.comp-group').forEach(g => g.classList.toggle('selected', g.dataset.id === id));
-  renderWires();
-  updatePropsPanel();
+  renderAll();
 }
 
 function selectWire(idx) {
