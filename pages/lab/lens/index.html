@@ -35,7 +35,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </head>
 <body>
 <header class="lab-header">
-  <a href="../">← 实验室</a>
+  <a href="../" style="display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</span>
   <h1>🔬 凸透镜成像实验</h1>
 </header>
 
@@ -47,7 +47,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <polygon points="0,0 8,3 0,6" fill="#3B82F6"/>
         </marker>
         <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0,0 8,3 0,6" fill="#10B981"/>
+          <polygon points="0,0 8,3 0,6" fill="#3B82F6"/>
         </marker>
       </defs>
 
@@ -79,9 +79,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
       <!-- Image -->
       <g id="image-group">
-        <line id="img-line" x1="500" y1="200" x2="500" y2="280" stroke="#10B981" stroke-width="3"/>
-        <polygon id="img-arrow" points="500,280 494,268 506,268" fill="#10B981"/>
-        <text id="img-label" x="500" y="292" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">像</text>
+        <line id="img-line" x1="500" y1="200" x2="500" y2="280" stroke="#3B82F6" stroke-width="3"/>
+        <polygon id="img-arrow" points="500,280 494,268 506,268" fill="#3B82F6"/>
+        <text id="img-label" x="500" y="292" font-size="11" fill="#3B82F6" text-anchor="middle" font-weight="700">像</text>
       </g>
 
       <!-- Drag hint -->
@@ -220,8 +220,8 @@ function update() {
     // Draw rays going parallel (no convergence)
     drawRay(objX, axisY - objHeight, lensX, axisY - objHeight, '#3B82F6', false);
     drawRay(lensX, axisY - objHeight, 680, axisY - objHeight, '#3B82F6', false);
-    drawRay(objX, axisY - objHeight, lensX, axisY, '#10B981', false);
-    drawRay(lensX, axisY, 680, axisY - (lensX - objX) / f * objHeight, '#10B981', false);
+    drawRay(objX, axisY - objHeight, lensX, axisY, '#9CA3AF', false);
+    drawRay(lensX, axisY, 680, axisY - (lensX - objX) / f * objHeight, '#3B82F6', false);
   } else {
     // Thin lens formula: 1/f = 1/u + 1/v → v = uf/(u-f)
     v = u * f / (u - f);
@@ -248,7 +248,7 @@ function update() {
     els.imgLine.setAttribute('stroke-dasharray', isVirtual ? '4 3' : 'none');
     els.imgArrow.setAttribute('points',
       `${clampedImgX},${clampedImgTop} ${clampedImgX - 6},${clampedImgTop + (isVirtual ? 12 : -12)} ${clampedImgX + 6},${clampedImgTop + (isVirtual ? 12 : -12)}`);
-    els.imgArrow.setAttribute('fill', '#10B981');
+    els.imgArrow.setAttribute('fill', '#3B82F6');
     els.imgArrow.setAttribute('opacity', isVirtual ? '0.5' : '1');
     els.imgLabel.setAttribute('x', clampedImgX);
     els.imgLabel.setAttribute('y', isVirtual ? clampedImgTop - 8 : clampedImgTop + 16);
@@ -284,8 +284,8 @@ function update() {
     const slope = -objHeight / u; // slope of line from obj top to lens center
     const extendX = isVirtual ? 20 : 680;
     const extendY = axisY + slope * (extendX - lensX);
-    drawRay(objX, axisY - objHeight, lensX, axisY, '#10B981', false);
-    drawRay(lensX, axisY, extendX, extendY, '#10B981', isVirtual);
+    drawRay(objX, axisY - objHeight, lensX, axisY, '#9CA3AF', false);
+    drawRay(lensX, axisY, extendX, extendY, '#9CA3AF', isVirtual);
 
     // Update readings
     document.getElementById('r-v').textContent = (isVirtual ? '-' : '') + v.toFixed(0);

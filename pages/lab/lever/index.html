@@ -25,8 +25,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
 .formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
 .weight-box{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.weight-item{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;cursor:grab;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.weight-item{width:36px;height:36px;background:linear-gradient(135deg,#9CA3AF,#6B7280);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;cursor:grab;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
 .weight-item:active{cursor:grabbing;transform:scale(1.1)}
+.weight-item.w2{background:linear-gradient(135deg,#60A5FA,#2563EB)}
+.weight-item.w5{background:linear-gradient(135deg,#F87171,#DC2626);width:42px;height:42px;font-size:12px}
 .badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700}
 .badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
 .badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
@@ -37,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </head>
 <body>
 <header class="lab-header">
-  <a href="../">← 实验室</a>
+  <a href="../" style="display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</span>
   <h1>🔬 杠杆平衡实验</h1>
 </header>
 
@@ -46,12 +48,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <svg id="lab-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="leverGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#A8A29E"/>
-          <stop offset="100%" stop-color="#78716C"/>
+          <stop offset="0%" stop-color="#D97706"/>
+          <stop offset="50%" stop-color="#A16207"/>
+          <stop offset="100%" stop-color="#92400E"/>
         </linearGradient>
-        <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#FBBF24"/>
-          <stop offset="100%" stop-color="#D97706"/>
+        <linearGradient id="weightGrad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9CA3AF"/>
+          <stop offset="100%" stop-color="#6B7280"/>
+        </linearGradient>
+        <linearGradient id="weightGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#60A5FA"/>
+          <stop offset="100%" stop-color="#2563EB"/>
+        </linearGradient>
+        <linearGradient id="weightGrad5" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F87171"/>
+          <stop offset="100%" stop-color="#DC2626"/>
         </linearGradient>
       </defs>
 
@@ -90,8 +101,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <div class="weight-item" data-weight="1">1N</div>
         <div class="weight-item" data-weight="1">1N</div>
         <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="2">2N</div>
-        <div class="weight-item" data-weight="2">2N</div>
+        <div class="weight-item w2" data-weight="2">2N</div>
+        <div class="weight-item w2" data-weight="2">2N</div>
+        <div class="weight-item w5" data-weight="5">5N</div>
       </div>
       <button class="btn-reset" id="btn-reset">🔄 重置</button>
     </div>
@@ -246,8 +258,10 @@ function renderWeights() {
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       rect.setAttribute('x', wx - size / 2); rect.setAttribute('y', wy);
       rect.setAttribute('width', size); rect.setAttribute('height', size);
-      rect.setAttribute('rx', '3'); rect.setAttribute('fill', 'url(#weightGrad)');
-      rect.setAttribute('stroke', '#B45309'); rect.setAttribute('stroke-width', '1');
+      const gradId = w.weight >= 5 ? 'weightGrad5' : w.weight >= 2 ? 'weightGrad2' : 'weightGrad1';
+      const strokeColor = w.weight >= 5 ? '#B91C1C' : w.weight >= 2 ? '#1D4ED8' : '#4B5563';
+      rect.setAttribute('rx', '3'); rect.setAttribute('fill', `url(#${gradId})`);
+      rect.setAttribute('stroke', strokeColor); rect.setAttribute('stroke-width', '1');
       rect.style.cursor = 'grab';
 
       const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');

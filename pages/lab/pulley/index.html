@@ -39,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </head>
 <body>
 <header class="lab-header">
-  <a href="../">← 实验室</a>
+  <a href="../" style="display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</span>
   <h1>🔬 滑轮组实验</h1>
 </header>
 
@@ -52,8 +52,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <stop offset="100%" stop-color="#6B7280"/>
         </linearGradient>
         <linearGradient id="ropeGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#D97706"/>
-          <stop offset="100%" stop-color="#B45309"/>
+          <stop offset="0%" stop-color="#92400E"/>
+          <stop offset="100%" stop-color="#78350F"/>
         </linearGradient>
       </defs>
 
@@ -74,13 +74,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="panel-title">⚙️ 实验参数</div>
       <div class="field">
         <label>滑轮类型</label>
-        <select id="type-select">
-          <option value="fixed">定滑轮</option>
-          <option value="movable">动滑轮</option>
-          <option value="block2">滑轮组（2段绳）</option>
-          <option value="block3">滑轮组（3段绳）</option>
-          <option value="block4">滑轮组（4段绳）</option>
-        </select>
+        <div id="type-btns" style="display:flex;flex-direction:column;gap:4px">
+          <button class="type-btn active" data-type="fixed" style="padding:8px;border:2px solid #3B82F6;border-radius:8px;background:rgba(59,130,246,0.08);color:#3B82F6;font-weight:700;font-size:12px;cursor:pointer;text-align:left">⚙️ 定滑轮</button>
+          <button class="type-btn" data-type="movable" style="padding:8px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer;text-align:left">⚙️ 动滑轮</button>
+          <button class="type-btn" data-type="block2" style="padding:8px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer;text-align:left">🔗 滑轮组（2段）</button>
+          <button class="type-btn" data-type="block3" style="padding:8px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer;text-align:left">🔗 滑轮组（3段）</button>
+          <button class="type-btn" data-type="block4" style="padding:8px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer;text-align:left">🔗 滑轮组（4段）</button>
+        </div>
       </div>
       <div class="field">
         <label>物体重量 G</label>
@@ -137,7 +137,7 @@ function drawPulley(cx, cy, r, fixed) {
 
 function drawWeight(cx, cy, w) {
   const size = 40;
-  let html = `<rect x="${cx - size / 2}" y="${cy}" width="${size}" height="${size}" rx="4" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>`;
+  let html = `<rect x="${cx - size / 2}" y="${cy}" width="${size}" height="${size}" rx="4" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1.5"/>`;
   html += `<text x="${cx}" y="${cy + size / 2 + 5}" font-size="12" fill="#fff" text-anchor="middle" font-weight="800">${w}N</text>`;
   return html;
 }
@@ -156,9 +156,9 @@ function render() {
       const px = 250, py = 80;
       html += drawPulley(px, py, r, true);
       // Rope: left side (weight) → over pulley → right side (pull)
-      html += `<line x1="${px - r}" y1="${py}" x2="${px - r}" y2="${baseY}" stroke="#D97706" stroke-width="2.5"/>`;
-      html += `<path d="M${px - r},${py} A${r},${r} 0 1 1 ${px + r},${py}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="${baseY + 30}" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<line x1="${px - r}" y1="${py}" x2="${px - r}" y2="${baseY}" stroke="#92400E" stroke-width="2.5"/>`;
+      html += `<path d="M${px - r},${py} A${r},${r} 0 1 1 ${px + r},${py}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="${baseY + 30}" stroke="#92400E" stroke-width="2.5"/>`;
       // Weight
       html += drawWeight(px - r, baseY, weight);
       // Pull arrow
@@ -173,11 +173,11 @@ function render() {
       n = 2; pull = weight / 2;
       const px = 250, py = baseY - 30;
       // Fixed hook at ceiling
-      html += `<line x1="${px - r}" y1="30" x2="${px - r}" y2="${py}" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<line x1="${px - r}" y1="30" x2="${px - r}" y2="${py}" stroke="#92400E" stroke-width="2.5"/>`;
       html += drawPulley(px, py, r, false);
       // Rope goes: ceiling anchor → under pulley → up
-      html += `<path d="M${px - r},${py} A${r},${r} 0 1 0 ${px + r},${py}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+      html += `<path d="M${px - r},${py} A${r},${r} 0 1 0 ${px + r},${py}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+      html += `<line x1="${px + r}" y1="${py}" x2="${px + r}" y2="30" stroke="#92400E" stroke-width="2.5"/>`;
       // Weight hangs from pulley
       html += `<line x1="${px}" y1="${py + r}" x2="${px}" y2="${py + r + 10}" stroke="#78716C" stroke-width="2"/>`;
       html += drawWeight(px, py + r + 10, weight);
@@ -207,25 +207,25 @@ function render() {
       const leftX = fixedX - r, rightX = fixedX + r;
       if (segments === 2) {
         // Anchor at ceiling left, down to movable, up over fixed, down pull
-        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX - 30}" y2="${fixedY + 80}" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX - 30}" y2="${fixedY + 80}" stroke="#92400E" stroke-width="2.5"/>`;
       } else if (segments === 3) {
-        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${leftX},${fixedY} A${r},${r} 0 1 0 ${rightX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${rightX}" y1="${fixedY}" x2="${rightX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${fixedY} A${r},${r} 0 1 0 ${rightX},${fixedY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${fixedY}" x2="${rightX}" y2="${movableY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX}" y2="30" stroke="#92400E" stroke-width="2.5"/>`;
       } else { // 4 segments
-        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<path d="M${leftX},${movableY} A${r},${r} 0 0 0 ${movableX},${movableY - r}" fill="none" stroke="#D97706" stroke-width="2.5"/>`;
-        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX + 40}" y2="30" stroke="#D97706" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="30" x2="${leftX}" y2="${movableY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 1 0 ${rightX},${movableY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${rightX}" y1="${movableY}" x2="${rightX}" y2="${fixedY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${rightX},${fixedY} A${r},${r} 0 1 1 ${leftX},${fixedY}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${leftX}" y1="${fixedY}" x2="${leftX}" y2="${movableY}" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<path d="M${leftX},${movableY} A${r},${r} 0 0 0 ${movableX},${movableY - r}" fill="none" stroke="#92400E" stroke-width="2.5"/>`;
+        html += `<line x1="${movableX}" y1="${movableY - r}" x2="${movableX + 40}" y2="30" stroke="#92400E" stroke-width="2.5"/>`;
       }
 
       // Pull arrow
@@ -251,10 +251,14 @@ function render() {
 }
 
 // Controls
-document.getElementById('type-select').addEventListener('change', e => {
-  pulleyType = e.target.value;
-  liftOffset = 0;
-  render();
+document.querySelectorAll('.type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.type-btn').forEach(b => { b.style.border = '2px solid #E5E7EB'; b.style.background = '#fff'; b.style.color = '#6B7280'; });
+    btn.style.border = '2px solid #3B82F6'; btn.style.background = 'rgba(59,130,246,0.08)'; btn.style.color = '#3B82F6';
+    pulleyType = btn.dataset.type;
+    liftOffset = 0;
+    render();
+  });
 });
 
 document.getElementById('weight-slider').addEventListener('input', e => {
