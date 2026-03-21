@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>杠杆平衡实验 - DevKit 实验室</title>
+<meta name="description" content="交互式杠杆平衡实验 — 在杠杆两侧挂砝码，探究平衡条件 F₁L₁=F₂L₂">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
+.lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
+.lab-header h1{font-size:16px;font-weight:700}
+.lab-container{display:flex;max-width:1080px;margin:20px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;min-height:450px}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+.panel-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.06);padding:16px}
+.panel-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.reading{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.reading:last-child{border-bottom:none}
+.reading .rl{color:#8E8E93}
+.reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
+.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
+.weight-box{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.weight-item{width:36px;height:36px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;cursor:grab;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.weight-item:active{cursor:grabbing;transform:scale(1.1)}
+.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700}
+.badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
+.badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
+.btn-reset{width:100%;padding:8px;border:none;border-radius:8px;background:rgba(239,68,68,0.08);color:#DC2626;font-weight:600;font-size:12px;cursor:pointer;margin-top:8px}
+.btn-reset:hover{background:rgba(239,68,68,0.15)}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<header class="lab-header">
+  <a href="../">← 实验室</a>
+  <h1>🔬 杠杆平衡实验</h1>
+</header>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="lab-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="leverGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#A8A29E"/>
+          <stop offset="100%" stop-color="#78716C"/>
+        </linearGradient>
+        <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FBBF24"/>
+          <stop offset="100%" stop-color="#D97706"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background ruler marks -->
+      <g id="ruler-marks"></g>
+
+      <!-- Fulcrum (triangle) -->
+      <polygon id="fulcrum" points="300,260 285,300 315,300" fill="#6B7280" stroke="#4B5563" stroke-width="1.5"/>
+      <line x1="285" y1="300" x2="315" y2="300" stroke="#4B5563" stroke-width="2"/>
+
+      <!-- Base -->
+      <rect x="250" y="298" width="100" height="12" rx="3" fill="#9CA3AF"/>
+
+      <!-- Lever beam -->
+      <g id="lever-group" transform="rotate(0,300,260)">
+        <rect id="lever-beam" x="50" y="250" width="500" height="14" rx="4" fill="url(#leverGrad)" stroke="#57534E" stroke-width="1"/>
+        <!-- Hook points (5 on each side) -->
+        <g id="hook-points"></g>
+        <!-- Weights on lever -->
+        <g id="lever-weights"></g>
+      </g>
+
+      <!-- Drop zones hint -->
+      <text id="hint-text" x="300" y="380" font-size="12" fill="#9CA3AF" text-anchor="middle">↑ 将砝码拖到杠杆刻度上</text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-card">
+      <div class="panel-title">🏋️ 砝码盒</div>
+      <p style="font-size:11px;color:#8E8E93;margin-bottom:6px">拖拽砝码到杠杆上（每个 1N）</p>
+      <div class="weight-box" id="weight-box">
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="1">1N</div>
+        <div class="weight-item" data-weight="2">2N</div>
+        <div class="weight-item" data-weight="2">2N</div>
+      </div>
+      <button class="btn-reset" id="btn-reset">🔄 重置</button>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📊 力矩分析</div>
+      <div class="reading"><span class="rl">左侧力 F₁</span><span class="rv" id="r-f1">0 N</span></div>
+      <div class="reading"><span class="rl">左侧力臂 L₁</span><span class="rv" id="r-l1">0 格</span></div>
+      <div class="reading"><span class="rl">左力矩 F₁L₁</span><span class="rv" id="r-m1">0</span></div>
+      <div class="reading"><span class="rl">右侧力 F₂</span><span class="rv" id="r-f2">0 N</span></div>
+      <div class="reading"><span class="rl">右侧力臂 L₂</span><span class="rv" id="r-l2">0 格</span></div>
+      <div class="reading"><span class="rl">右力矩 F₂L₂</span><span class="rv" id="r-m2">0</span></div>
+      <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-warn">空杠杆</span></span></div>
+      <div class="formula" id="formula-display">F₁L₁ = F₂L₂</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const svg = document.getElementById('lab-svg');
+const leverGroup = document.getElementById('lever-group');
+const hookPointsG = document.getElementById('hook-points');
+const leverWeightsG = document.getElementById('lever-weights');
+const rulerMarksG = document.getElementById('ruler-marks');
+const pivotX = 300, pivotY = 260;
+const hookSpacing = 45; // pixels between hooks
+const hooks = []; // { pos: -5 to 5, x, y }
+const placed = []; // { pos, weight, el }
+
+// Create hook points
+for (let i = -5; i <= 5; i++) {
+  if (i === 0) continue; // skip center
+  const x = pivotX + i * hookSpacing;
+  const y = 264; // bottom of lever
+  hooks.push({ pos: i, x, y });
+
+  // Draw hook mark
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x); line.setAttribute('y1', 250);
+  line.setAttribute('x2', x); line.setAttribute('y2', 268);
+  line.setAttribute('stroke', '#57534E'); line.setAttribute('stroke-width', '1');
+  hookPointsG.appendChild(line);
+
+  // Label
+  const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  txt.setAttribute('x', x); txt.setAttribute('y', 248);
+  txt.setAttribute('font-size', '9'); txt.setAttribute('fill', '#9CA3AF');
+  txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '600');
+  txt.textContent = Math.abs(i);
+  hookPointsG.appendChild(txt);
+}
+
+// Background ruler
+for (let i = -5; i <= 5; i++) {
+  const x = pivotX + i * hookSpacing;
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x); line.setAttribute('y1', 255);
+  line.setAttribute('x2', x); line.setAttribute('y2', 320);
+  line.setAttribute('stroke', 'rgba(0,0,0,0.04)'); line.setAttribute('stroke-width', '1');
+  line.setAttribute('stroke-dasharray', '2 4');
+  rulerMarksG.appendChild(line);
+}
+
+function svgPoint(e) {
+  const rect = svg.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) / rect.width * 600, y: (e.clientY - rect.top) / rect.height * 400 };
+}
+
+function findNearestHook(x) {
+  let best = null, bestDist = Infinity;
+  for (const h of hooks) {
+    const d = Math.abs(x - h.x);
+    if (d < bestDist) { bestDist = d; best = h; }
+  }
+  return bestDist < 30 ? best : null;
+}
+
+function getWeightsAtPos(pos) {
+  return placed.filter(p => p.pos === pos);
+}
+
+function calculate() {
+  let leftTorque = 0, rightTorque = 0;
+  let leftForce = 0, rightForce = 0;
+  let leftArm = 0, rightArm = 0;
+
+  // Group by position
+  const leftWeights = placed.filter(p => p.pos < 0);
+  const rightWeights = placed.filter(p => p.pos > 0);
+
+  // Calculate torques
+  for (const w of leftWeights) {
+    leftTorque += w.weight * Math.abs(w.pos);
+    leftForce += w.weight;
+  }
+  for (const w of rightWeights) {
+    rightTorque += w.weight * Math.abs(w.pos);
+    rightForce += w.weight;
+  }
+
+  // Average arm (weighted)
+  if (leftForce > 0) leftArm = (leftTorque / leftForce).toFixed(1);
+  if (rightForce > 0) rightArm = (rightTorque / rightForce).toFixed(1);
+
+  const balanced = placed.length > 0 && Math.abs(leftTorque - rightTorque) < 0.01;
+  const tiltAngle = placed.length === 0 ? 0 : balanced ? 0 : Math.min(15, Math.max(-15, (rightTorque - leftTorque) * 2));
+
+  // Animate lever tilt
+  leverGroup.style.transition = 'transform 0.4s ease-out';
+  leverGroup.setAttribute('transform', `rotate(${tiltAngle},${pivotX},${pivotY})`);
+
+  // Update readings
+  document.getElementById('r-f1').textContent = leftForce + ' N';
+  document.getElementById('r-l1').textContent = leftArm + ' 格';
+  document.getElementById('r-m1').textContent = leftTorque.toFixed(0);
+  document.getElementById('r-f2').textContent = rightForce + ' N';
+  document.getElementById('r-l2').textContent = rightArm + ' 格';
+  document.getElementById('r-m2').textContent = rightTorque.toFixed(0);
+
+  if (placed.length === 0) {
+    document.getElementById('r-status').innerHTML = '<span class="badge badge-warn">空杠杆</span>';
+    document.getElementById('formula-display').textContent = 'F₁L₁ = F₂L₂';
+  } else if (balanced) {
+    document.getElementById('r-status').innerHTML = '<span class="badge badge-ok">✅ 平衡！</span>';
+    document.getElementById('formula-display').textContent = `${leftTorque} = ${rightTorque} ✅`;
+  } else {
+    const side = leftTorque > rightTorque ? '左偏' : '右偏';
+    document.getElementById('r-status').innerHTML = `<span class="badge badge-warn">${side}</span>`;
+    document.getElementById('formula-display').textContent = `${leftTorque} ≠ ${rightTorque}`;
+  }
+}
+
+function renderWeights() {
+  leverWeightsG.innerHTML = '';
+  // Group by position
+  const groups = {};
+  for (const p of placed) {
+    if (!groups[p.pos]) groups[p.pos] = [];
+    groups[p.pos].push(p);
+  }
+
+  for (const [pos, weights] of Object.entries(groups)) {
+    const hook = hooks.find(h => h.pos === parseInt(pos));
+    if (!hook) continue;
+
+    for (let i = 0; i < weights.length; i++) {
+      const w = weights[i];
+      const wx = hook.x;
+      const wy = 270 + i * 22; // stack vertically
+      const size = w.weight === 2 ? 20 : 16;
+
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', wx - size / 2); rect.setAttribute('y', wy);
+      rect.setAttribute('width', size); rect.setAttribute('height', size);
+      rect.setAttribute('rx', '3'); rect.setAttribute('fill', 'url(#weightGrad)');
+      rect.setAttribute('stroke', '#B45309'); rect.setAttribute('stroke-width', '1');
+      rect.style.cursor = 'grab';
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', wx); txt.setAttribute('y', wy + size / 2 + 4);
+      txt.setAttribute('font-size', '9'); txt.setAttribute('fill', '#fff');
+      txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '800');
+      txt.setAttribute('pointer-events', 'none');
+      txt.textContent = w.weight + 'N';
+
+      // Drag to remove
+      rect.addEventListener('pointerdown', e => {
+        e.preventDefault(); e.stopPropagation();
+        const idx = placed.indexOf(w);
+        if (idx >= 0) {
+          placed.splice(idx, 1);
+          renderWeights();
+          calculate();
+        }
+      });
+
+      leverWeightsG.appendChild(rect);
+      leverWeightsG.appendChild(txt);
+
+      // Hook line
+      if (i === 0) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', wx); line.setAttribute('y1', 264);
+        line.setAttribute('x2', wx); line.setAttribute('y2', wy);
+        line.setAttribute('stroke', '#78716C'); line.setAttribute('stroke-width', '1');
+        leverWeightsG.insertBefore(line, leverWeightsG.firstChild);
+      }
+    }
+  }
+}
+
+// Drag from weight box
+document.querySelectorAll('.weight-item').forEach(item => {
+  item.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const weight = parseInt(item.dataset.weight);
+
+    const onMove = ev => {
+      // Visual feedback could go here
+    };
+    const onUp = ev => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      const pt = svgPoint(ev);
+      const hook = findNearestHook(pt.x);
+      if (hook && pt.y > 200 && pt.y < 380) {
+        // Check max 3 per hook
+        const existing = getWeightsAtPos(hook.pos);
+        if (existing.length < 3) {
+          placed.push({ pos: hook.pos, weight });
+          renderWeights();
+          calculate();
+        }
+      }
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  });
+});
+
+// Reset
+document.getElementById('btn-reset').addEventListener('click', () => {
+  placed.length = 0;
+  renderWeights();
+  calculate();
+});
+
+// Init
+calculate();
+</script>
+</body>
+</html>
