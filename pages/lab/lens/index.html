@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>凸透镜成像实验 - DevKit 实验室</title>
+<meta name="description" content="交互式凸透镜成像实验 — 拖动物体位置，探究成像规律（放大/缩小/正立/倒立）">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
+.lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
+.lab-header h1{font-size:16px;font-weight:700}
+.lab-container{display:flex;max-width:1080px;margin:20px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;min-height:400px}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+.panel-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.06);padding:16px}
+.panel-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px}
+.slider-row{display:flex;align-items:center;gap:8px}
+.slider-row input[type=range]{flex:1}
+.slider-val{font-size:12px;font-weight:700;color:#3B82F6;min-width:50px;text-align:right;font-family:'JetBrains Mono',monospace}
+.reading{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.reading:last-child{border-bottom:none}
+.reading .rl{color:#8E8E93}
+.reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
+.rule-box{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;margin-top:8px;font-size:12px;font-weight:600;color:#3B82F6;line-height:1.6}
+.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;text-align:center;font-size:13px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<header class="lab-header">
+  <a href="../">← 实验室</a>
+  <h1>🔬 凸透镜成像实验</h1>
+</header>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="lab-svg" viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0,0 8,3 0,6" fill="#3B82F6"/>
+        </marker>
+        <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0,0 8,3 0,6" fill="#10B981"/>
+        </marker>
+      </defs>
+
+      <!-- Optical bench (main axis) -->
+      <line x1="20" y1="200" x2="680" y2="200" stroke="#D1D5DB" stroke-width="2"/>
+
+      <!-- Ruler marks -->
+      <g id="ruler"></g>
+
+      <!-- Lens -->
+      <g id="lens-group" transform="translate(350,200)">
+        <ellipse cx="0" cy="0" rx="6" ry="80" fill="rgba(59,130,246,0.1)" stroke="#3B82F6" stroke-width="2"/>
+        <polygon points="-8,-80 0,-88 8,-80" fill="#3B82F6"/>
+        <polygon points="-8,80 0,88 8,80" fill="#3B82F6"/>
+      </g>
+
+      <!-- Focus points -->
+      <g id="focus-marks"></g>
+
+      <!-- Light rays -->
+      <g id="rays"></g>
+
+      <!-- Object (arrow/candle) -->
+      <g id="object-group" cursor="grab">
+        <line id="obj-line" x1="200" y1="200" x2="200" y2="120" stroke="#EF4444" stroke-width="3"/>
+        <polygon id="obj-arrow" points="200,120 194,132 206,132" fill="#EF4444"/>
+        <text id="obj-label" x="200" y="112" font-size="11" fill="#EF4444" text-anchor="middle" font-weight="700">物</text>
+      </g>
+
+      <!-- Image -->
+      <g id="image-group">
+        <line id="img-line" x1="500" y1="200" x2="500" y2="280" stroke="#10B981" stroke-width="3"/>
+        <polygon id="img-arrow" points="500,280 494,268 506,268" fill="#10B981"/>
+        <text id="img-label" x="500" y="292" font-size="11" fill="#10B981" text-anchor="middle" font-weight="700">像</text>
+      </g>
+
+      <!-- Drag hint -->
+      <text id="drag-hint" x="200" y="108" font-size="10" fill="#EF4444" text-anchor="middle" opacity="0.6">← 拖动 →</text>
+
+      <!-- Labels -->
+      <text x="350" y="318" font-size="11" fill="#3B82F6" text-anchor="middle" font-weight="600">凸透镜</text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-card">
+      <div class="panel-title">⚙️ 实验参数</div>
+      <div class="field">
+        <label>焦距 f</label>
+        <div class="slider-row">
+          <input type="range" id="focal-slider" min="30" max="120" step="5" value="60">
+          <span class="slider-val" id="focal-val">60px</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>物距 u（拖动物体或用滑块）</label>
+        <div class="slider-row">
+          <input type="range" id="u-slider" min="20" max="300" step="5" value="150">
+          <span class="slider-val" id="u-val">150px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📊 实验数据</div>
+      <div class="reading"><span class="rl">焦距 f</span><span class="rv" id="r-f">60</span></div>
+      <div class="reading"><span class="rl">物距 u</span><span class="rv" id="r-u">150</span></div>
+      <div class="reading"><span class="rl">像距 v</span><span class="rv" id="r-v">100</span></div>
+      <div class="reading"><span class="rl">放大倍数 m</span><span class="rv" id="r-m">0.67</span></div>
+      <div class="reading"><span class="rl">像的性质</span><span class="rv" id="r-nature">缩小倒立实像</span></div>
+      <div class="formula">1/f = 1/u + 1/v</div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📖 成像规律</div>
+      <div class="rule-box" id="rule-text">
+        u > 2f：成缩小、倒立的实像<br>
+        像在 f 和 2f 之间
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const svg = document.getElementById('lab-svg');
+const lensX = 350, axisY = 200;
+let f = 60; // focal length in px
+let u = 150; // object distance in px
+const objHeight = 80; // object arrow height
+
+const els = {
+  objLine: document.getElementById('obj-line'),
+  objArrow: document.getElementById('obj-arrow'),
+  objLabel: document.getElementById('obj-label'),
+  imgLine: document.getElementById('img-line'),
+  imgArrow: document.getElementById('img-arrow'),
+  imgLabel: document.getElementById('img-label'),
+  imageGroup: document.getElementById('image-group'),
+  raysG: document.getElementById('rays'),
+  focusMarks: document.getElementById('focus-marks'),
+  ruler: document.getElementById('ruler'),
+  dragHint: document.getElementById('drag-hint'),
+};
+
+function svgPoint(e) {
+  const rect = svg.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) / rect.width * 700, y: (e.clientY - rect.top) / rect.height * 350 };
+}
+
+function drawFocusMarks() {
+  els.focusMarks.innerHTML = '';
+  const marks = [
+    { x: lensX - f, label: 'F' },
+    { x: lensX + f, label: "F'" },
+    { x: lensX - 2 * f, label: '2F' },
+    { x: lensX + 2 * f, label: "2F'" },
+  ];
+  for (const m of marks) {
+    if (m.x < 20 || m.x > 680) continue;
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', m.x); line.setAttribute('y1', axisY - 6);
+    line.setAttribute('x2', m.x); line.setAttribute('y2', axisY + 6);
+    line.setAttribute('stroke', '#3B82F6'); line.setAttribute('stroke-width', '2');
+    els.focusMarks.appendChild(line);
+
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.setAttribute('x', m.x); txt.setAttribute('y', axisY + 20);
+    txt.setAttribute('font-size', '11'); txt.setAttribute('fill', '#3B82F6');
+    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '700');
+    txt.textContent = m.label;
+    els.focusMarks.appendChild(txt);
+  }
+
+  // Ruler
+  els.ruler.innerHTML = '';
+  for (let x = 50; x < 680; x += 25) {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x); line.setAttribute('y1', axisY + 1);
+    line.setAttribute('x2', x); line.setAttribute('y2', axisY + (x % 50 === 0 ? 5 : 3));
+    line.setAttribute('stroke', '#D1D5DB'); line.setAttribute('stroke-width', '1');
+    els.ruler.appendChild(line);
+  }
+}
+
+function update() {
+  const objX = lensX - u;
+
+  // Object
+  els.objLine.setAttribute('x1', objX); els.objLine.setAttribute('y1', axisY);
+  els.objLine.setAttribute('x2', objX); els.objLine.setAttribute('y2', axisY - objHeight);
+  els.objArrow.setAttribute('points', `${objX},${axisY - objHeight} ${objX - 6},${axisY - objHeight + 12} ${objX + 6},${axisY - objHeight + 12}`);
+  els.objLabel.setAttribute('x', objX);
+  els.objLabel.setAttribute('y', axisY - objHeight - 8);
+  els.dragHint.setAttribute('x', objX);
+  els.dragHint.setAttribute('y', axisY - objHeight - 20);
+
+  els.raysG.innerHTML = '';
+
+  // Calculate image
+  let v, imgH, isVirtual = false;
+  let nature = '', rule = '';
+
+  if (Math.abs(u - f) < 1) {
+    // u = f: no image (parallel rays)
+    v = Infinity;
+    nature = '不成像';
+    rule = 'u = f：折射光平行，不成像\n像在无穷远处';
+    els.imageGroup.setAttribute('opacity', '0');
+
+    // Draw rays going parallel (no convergence)
+    drawRay(objX, axisY - objHeight, lensX, axisY - objHeight, '#3B82F6', false);
+    drawRay(lensX, axisY - objHeight, 680, axisY - objHeight, '#3B82F6', false);
+    drawRay(objX, axisY - objHeight, lensX, axisY, '#10B981', false);
+    drawRay(lensX, axisY, 680, axisY - (lensX - objX) / f * objHeight, '#10B981', false);
+  } else {
+    // Thin lens formula: 1/f = 1/u + 1/v → v = uf/(u-f)
+    v = u * f / (u - f);
+    const m = v / u; // magnification (absolute)
+    imgH = objHeight * Math.abs(m);
+
+    if (v < 0) {
+      // Virtual image (same side as object)
+      isVirtual = true;
+      v = -v;
+    }
+
+    const imgX = isVirtual ? lensX - v : lensX + v;
+    const imgTop = isVirtual ? axisY - imgH : axisY + imgH; // virtual=upright, real=inverted
+
+    // Clamp
+    const clampedImgX = Math.max(20, Math.min(680, imgX));
+    const clampedImgH = Math.min(150, imgH);
+    const clampedImgTop = isVirtual ? axisY - clampedImgH : axisY + clampedImgH;
+
+    els.imageGroup.setAttribute('opacity', '1');
+    els.imgLine.setAttribute('x1', clampedImgX); els.imgLine.setAttribute('y1', axisY);
+    els.imgLine.setAttribute('x2', clampedImgX); els.imgLine.setAttribute('y2', clampedImgTop);
+    els.imgLine.setAttribute('stroke-dasharray', isVirtual ? '4 3' : 'none');
+    els.imgArrow.setAttribute('points',
+      `${clampedImgX},${clampedImgTop} ${clampedImgX - 6},${clampedImgTop + (isVirtual ? 12 : -12)} ${clampedImgX + 6},${clampedImgTop + (isVirtual ? 12 : -12)}`);
+    els.imgArrow.setAttribute('fill', '#10B981');
+    els.imgArrow.setAttribute('opacity', isVirtual ? '0.5' : '1');
+    els.imgLabel.setAttribute('x', clampedImgX);
+    els.imgLabel.setAttribute('y', isVirtual ? clampedImgTop - 8 : clampedImgTop + 16);
+    els.imgLabel.textContent = isVirtual ? '虚像' : '像';
+
+    // Determine case
+    if (u > 2 * f) {
+      nature = '缩小倒立实像';
+      rule = `u > 2f：成缩小、倒立的实像\n像在 f 和 2f 之间`;
+    } else if (Math.abs(u - 2 * f) < 2) {
+      nature = '等大倒立实像';
+      rule = `u = 2f：成等大、倒立的实像\n像在 2f 处`;
+    } else if (u > f) {
+      nature = '放大倒立实像';
+      rule = `f < u < 2f：成放大、倒立的实像\n像在 2f 以外`;
+    } else {
+      nature = '放大正立虚像';
+      rule = `u < f：成放大、正立的虚像\n像在物体同侧`;
+    }
+
+    // Draw characteristic rays
+    // Ray 1: parallel to axis → through F'
+    drawRay(objX, axisY - objHeight, lensX, axisY - objHeight, '#3B82F6', false);
+    if (!isVirtual) {
+      drawRay(lensX, axisY - objHeight, clampedImgX, clampedImgTop, '#3B82F6', false);
+    } else {
+      // Virtual: extends backward
+      drawRay(lensX, axisY - objHeight, 680, axisY - objHeight + (680 - lensX) * objHeight / f, '#3B82F6', true);
+      drawRay(lensX, axisY - objHeight, clampedImgX, clampedImgTop, '#3B82F6', true);
+    }
+
+    // Ray 2: through optical center (no deflection)
+    const slope = -objHeight / u; // slope of line from obj top to lens center
+    const extendX = isVirtual ? 20 : 680;
+    const extendY = axisY + slope * (extendX - lensX);
+    drawRay(objX, axisY - objHeight, lensX, axisY, '#10B981', false);
+    drawRay(lensX, axisY, extendX, extendY, '#10B981', isVirtual);
+
+    // Update readings
+    document.getElementById('r-v').textContent = (isVirtual ? '-' : '') + v.toFixed(0);
+    document.getElementById('r-m').textContent = Math.abs(m).toFixed(2);
+  }
+
+  document.getElementById('r-f').textContent = f;
+  document.getElementById('r-u').textContent = u.toFixed(0);
+  document.getElementById('r-nature').textContent = nature;
+  document.getElementById('rule-text').innerHTML = rule.replace('\n', '<br>');
+
+  // Sync sliders
+  document.getElementById('u-slider').value = u;
+  document.getElementById('u-val').textContent = u.toFixed(0) + 'px';
+  document.getElementById('focal-slider').value = f;
+  document.getElementById('focal-val').textContent = f + 'px';
+}
+
+function drawRay(x1, y1, x2, y2, color, dashed) {
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+  line.setAttribute('stroke', color); line.setAttribute('stroke-width', '1.5');
+  if (dashed) line.setAttribute('stroke-dasharray', '4 3');
+  line.setAttribute('opacity', dashed ? '0.5' : '0.8');
+  els.raysG.appendChild(line);
+}
+
+// Drag object
+let dragging = false;
+document.getElementById('object-group').addEventListener('pointerdown', e => {
+  e.preventDefault();
+  dragging = true;
+});
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const pt = svgPoint(e);
+  u = Math.max(20, Math.min(300, lensX - pt.x));
+  update();
+});
+document.addEventListener('pointerup', () => { dragging = false; });
+
+// Sliders
+document.getElementById('u-slider').addEventListener('input', e => {
+  u = parseFloat(e.target.value);
+  update();
+});
+document.getElementById('focal-slider').addEventListener('input', e => {
+  f = parseFloat(e.target.value);
+  drawFocusMarks();
+  update();
+});
+
+// Init
+drawFocusMarks();
+update();
+</script>
+</body>
+</html>
