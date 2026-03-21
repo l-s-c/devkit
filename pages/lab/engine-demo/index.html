@@ -84,6 +84,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .port-circle:hover{fill:rgba(59,130,246,0.1);stroke:#3B82F6;r:8}
 .comp-group.selected .port-circle{fill:#3B82F6;stroke:#1D4ED8}
 .port-circle.connected{fill:#374151;stroke:#374151;r:4}
+.schematic-mode .port-circle{fill:transparent!important;stroke:transparent!important;r:0!important}
 .wire-line{stroke:#DC2626;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none;cursor:pointer}
 .wire-line:hover{stroke:#EF4444;stroke-width:5}
 .wire-line.wire-selected{stroke:#3B82F6;stroke-width:5;filter:drop-shadow(0 0 6px rgba(59,130,246,0.4))}
@@ -1026,9 +1027,11 @@ function updatePropsPanel() {
       const sel = c.id === state.selectedId;
       const paramStr = c.type === 'battery' ? `${c.params.V}V` : (c.type === 'resistor' || c.type === 'bulb') ? `${c.params.R}Ω` : c.type === 'switch' ? (c.params.closed ? '闭合' : '断开') : '';
       const iStr = br ? ` · ${Math.abs(br.I).toFixed(2)}A` : '';
-      html += `<div class="bom-item${sel ? ' bom-sel' : ''}" data-bom-id="${c.id}" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:2px;background:${sel ? 'rgba(59,130,246,0.08)' : 'transparent'};transition:background 150ms">
+      const reversed = br && (c.type === 'ammeter' || c.type === 'voltmeter') && br.I < -0.001;
+      const warnStr = reversed ? ' ⚠️接反' : '';
+      html += `<div class="bom-item${sel ? ' bom-sel' : ''}" data-bom-id="${c.id}" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-bottom:2px;background:${sel ? 'rgba(59,130,246,0.08)' : reversed ? 'rgba(220,38,38,0.06)' : 'transparent'};transition:background 150ms">
         <span style="font-size:14px">${d.icon}</span>
-        <span style="flex:1;font-weight:600;color:${sel ? '#2563EB' : '#374151'}">${d.label}</span>
+        <span style="flex:1;font-weight:600;color:${reversed ? '#DC2626' : sel ? '#2563EB' : '#374151'}">${d.label}${warnStr}</span>
         <span style="color:#8E8E93;font-size:10px;font-family:'JetBrains Mono',monospace">${paramStr}${iStr}</span>
       </div>`;
     }
@@ -1644,6 +1647,7 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     btn.style.background = 'rgba(59,130,246,0.1)';
     btn.style.color = '#2563EB';
     currentView = btn.dataset.view;
+    svgEl.classList.toggle('schematic-mode', currentView === 'schematic');
     if (currentView === 'schematic') computeSchematicLayout();
     renderAll();
     solveAndUpdate();
