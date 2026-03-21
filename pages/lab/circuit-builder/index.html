@@ -315,7 +315,7 @@ function getPortPos(comp, port) {
 const COMP_DEFAULTS = {
   battery:   { label: '电池', icon: '🔋', tag: '电源', params: { V: 6 }, ports: [{id:'pos',dx:0,dy:-40},{id:'neg',dx:0,dy:32}] },
   resistor:  { label: '电阻', icon: '📏', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:-40,dy:0},{id:'p1',dx:40,dy:0}] },
-  bulb:      { label: '灯泡', icon: '💡', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:0,dy:32},{id:'p1',dx:-12,dy:15}] },
+  bulb:      { label: '灯泡', icon: '💡', tag: '元件', params: { R: 10 }, ports: [{id:'p0',dx:-30,dy:18},{id:'p1',dx:30,dy:18}] },
   switch:    { label: '开关', icon: '🔘', tag: '元件', params: { closed: true }, ports: [{id:'p0',dx:-22,dy:35},{id:'p1',dx:22,dy:35}] },
   ammeter:   { label: '电流表', icon: '🔴', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
   voltmeter: { label: '电压表', icon: '🟡', tag: '仪表', params: {}, ports: [{id:'p0',dx:-15,dy:48},{id:'p1',dx:15,dy:48}] },
@@ -460,6 +460,8 @@ function getCompSVGContent(comp) {
       <line x1="-12" y1="18" x2="12" y2="18" stroke="#57534E" stroke-width="0.8"/>
       <line x1="-12" y1="22" x2="12" y2="22" stroke="#57534E" stroke-width="0.8"/>
       <rect x="-6" y="26" width="12" height="6" rx="2" fill="#78716C"/>
+      <line x1="-12" y1="18" x2="-30" y2="18" stroke="#78716C" stroke-width="2" stroke-linecap="round"/>
+      <line x1="12" y1="18" x2="30" y2="18" stroke="#78716C" stroke-width="2" stroke-linecap="round"/>
       <ellipse cx="-8" cy="-22" rx="6" ry="10" fill="rgba(255,255,255,0.5)"/>`;
     }
     case 'switch': {
