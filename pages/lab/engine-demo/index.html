@@ -311,12 +311,143 @@ const GRID = 20;
 const snap = v => Math.round(v / GRID) * GRID;
 
 function getPortPos(comp, port) {
-  const rad = (comp.rotation || 0) * Math.PI / 180;
+  const useSchematic = currentView === 'schematic' && comp._sx != null;
+  const cx = useSchematic ? comp._sx : comp.x;
+  const cy = useSchematic ? comp._sy : comp.y;
+  const rot = useSchematic ? (comp._sr || 0) : (comp.rotation || 0);
+  const rad = rot * Math.PI / 180;
   const cos = Math.cos(rad), sin = Math.sin(rad);
   return {
-    x: comp.x + port.dx * cos - port.dy * sin,
-    y: comp.y + port.dx * sin + port.dy * cos,
+    x: cx + port.dx * cos - port.dy * sin,
+    y: cy + port.dx * sin + port.dy * cos,
   };
+}
+
+// ===== Schematic auto-layout (serial circuit MVP) =====
+function computeSchematicLayout() {
+  const comps = state.components;
+  const conns = state.connections;
+  if (comps.length === 0) return;
+
+  // Build adjacency: node = "compId:portId", edges = connections
+  const adj = {};
+  const addEdge = (a, b) => { (adj[a] = adj[a] || []).push(b); (adj[b] = adj[b] || []).push(a); };
+  for (const c of conns) {
+    addEdge(`${c.from.componentId}:${c.from.portId}`, `${c.to.componentId}:${c.to.portId}`);
+  }
+
+  // Find serial loop starting from battery
+  const battery = comps.find(c => c.type === 'battery');
+  if (!battery) { fallbackLayout(comps); return; }
+
+  // DFS to find loop: traverse component-by-component
+  const loopComps = [];
+  const visited = new Set();
+  
+  function findLoop(compId, fromPortId) {
+    if (visited.has(compId)) {
+      return compId === battery.id; // found loop back to battery
+    }
+    visited.add(compId);
+    const comp = comps.find(c => c.id === compId);
+    if (!comp) return false;
+    loopComps.push(comp);
+    
+    const def = COMP_DEFAULTS[comp.type];
+    // Find the other port (for serial circuit, component has 2 ports)
+    const otherPorts = def.ports.filter(p => p.id !== fromPortId);
+    
+    for (const port of otherPorts) {
+      const nodeKey = `${compId}:${port.id}`;
+      const neighbors = adj[nodeKey] || [];
+      for (const nb of neighbors) {
+        const [nbCompId, nbPortId] = nb.split(':');
+        if (findLoop(nbCompId, nbPortId)) return true;
+      }
+    }
+    
+    loopComps.pop();
+    visited.delete(compId);
+    return false;
+  }
+
+  // Start from battery's first port
+  const battDef = COMP_DEFAULTS[battery.type];
+  let found = false;
+  for (const port of battDef.ports) {
+    const nodeKey = `${battery.id}:${port.id}`;
+    const neighbors = adj[nodeKey] || [];
+    for (const nb of neighbors) {
+      const [nbCompId, nbPortId] = nb.split(':');
+      loopComps.length = 0;
+      visited.clear();
+      loopComps.push(battery);
+      visited.add(battery.id);
+      if (findLoop(nbCompId, nbPortId)) { found = true; break; }
+    }
+    if (found) break;
+  }
+
+  if (!found || loopComps.length < 2) { fallbackLayout(comps); return; }
+
+  // Layout loop components along rectangle
+  const n = loopComps.length;
+  const centerX = 400, centerY = 300;
+  const W = Math.max(300, n * 60), H = Math.max(200, n * 40);
+  const halfW = W / 2, halfH = H / 2;
+  const perimeter = 2 * (W + H);
+
+  for (let i = 0; i < n; i++) {
+    const t = (i / n) * perimeter; // position along perimeter
+    let px, py, rot;
+    
+    if (t < W) {
+      // Top edge: left to right
+      px = centerX - halfW + t;
+      py = centerY - halfH;
+      rot = 0;
+    } else if (t < W + H) {
+      // Right edge: top to bottom
+      px = centerX + halfW;
+      py = centerY - halfH + (t - W);
+      rot = 90;
+    } else if (t < 2 * W + H) {
+      // Bottom edge: right to left
+      px = centerX + halfW - (t - W - H);
+      py = centerY + halfH;
+      rot = 180;
+    } else {
+      // Left edge: bottom to top
+      px = centerX - halfW;
+      py = centerY + halfH - (t - 2 * W - H);
+      rot = 270;
+    }
+    
+    loopComps[i]._sx = Math.round(px);
+    loopComps[i]._sy = Math.round(py);
+    loopComps[i]._sr = rot;
+  }
+
+  // Components not in loop: hide or place off-screen
+  const loopIds = new Set(loopComps.map(c => c.id));
+  let offX = centerX - halfW;
+  for (const comp of comps) {
+    if (!loopIds.has(comp.id)) {
+      comp._sx = offX;
+      comp._sy = centerY + halfH + 100;
+      comp._sr = 0;
+      offX += 80;
+    }
+  }
+}
+
+function fallbackLayout(comps) {
+  const startX = 200, startY = 300, spacing = 100;
+  for (let i = 0; i < comps.length; i++) {
+    comps[i]._sx = startX + i * spacing;
+    comps[i]._sy = startY;
+    comps[i]._sr = 0;
+  }
 }
 
 const COMP_DEFAULTS = {
@@ -402,8 +533,11 @@ function createCompSVG(comp) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.setAttribute('class', 'comp-group');
   g.setAttribute('data-id', comp.id);
-  const rot = comp.rotation || 0;
-  g.setAttribute('transform', `translate(${comp.x},${comp.y})${rot ? ` rotate(${rot})` : ''}`);
+  const useSchematic = currentView === 'schematic' && comp._sx != null;
+  const cx = useSchematic ? comp._sx : comp.x;
+  const cy = useSchematic ? comp._sy : comp.y;
+  const rot = useSchematic ? (comp._sr || 0) : (comp.rotation || 0);
+  g.setAttribute('transform', `translate(${cx},${cy})${rot ? ` rotate(${rot})` : ''}`);
 
   const def = COMP_DEFAULTS[comp.type];
   // Draw component shape
@@ -1467,6 +1601,7 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     btn.style.background = 'rgba(59,130,246,0.1)';
     btn.style.color = '#2563EB';
     currentView = btn.dataset.view;
+    if (currentView === 'schematic') computeSchematicLayout();
     renderAll();
     solveAndUpdate();
   });
