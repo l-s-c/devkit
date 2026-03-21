@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>光的折射实验 - DevKit 实验室</title>
+<meta name="description" content="交互式光的折射实验 — 拖动光线角度观察折射现象，探究斯涅尔定律">
+<meta property="og:title" content="光的折射实验 - DevKit 实验室">
+<meta property="og:description" content="拖动入射光线角度，观察折射、反射和全反射现象">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
+.lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
+.lab-header h1{font-size:16px;font-weight:700;color:#1C1C1E}
+.lab-container{display:flex;max-width:1080px;margin:20px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;position:relative;min-height:500px}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+.panel-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.06);padding:16px}
+.panel-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px}
+.field select,.field input[type=range]{width:100%;font-size:13px}
+.field select{padding:6px 8px;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB}
+.slider-row{display:flex;align-items:center;gap:8px}
+.slider-row input[type=range]{flex:1}
+.slider-val{font-size:12px;font-weight:700;color:#3B82F6;min-width:36px;text-align:right;font-family:'JetBrains Mono',monospace}
+.reading{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.reading:last-child{border-bottom:none}
+.reading .rl{color:#8E8E93}
+.reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
+.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700}
+.badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
+.badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
+@media(max-width:768px){
+  .lab-container{flex-direction:column}
+  .panel{width:100%;flex-direction:row;flex-wrap:wrap}
+  .panel-card{flex:1;min-width:200px}
+}
+</style>
+</head>
+<body>
+<header class="lab-header">
+  <a href="../">← 实验室</a>
+  <h1>🔬 光的折射实验</h1>
+</header>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="lab-svg" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <pattern id="water-pattern" x="0" y="0" width="60" height="20" patternUnits="userSpaceOnUse">
+          <path d="M0 10 Q15 5 30 10 Q45 15 60 10" fill="none" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
+        </pattern>
+      </defs>
+
+      <!-- Air region (top) -->
+      <rect x="0" y="0" width="600" height="250" fill="#FAFBFC"/>
+      <text x="20" y="24" font-size="12" fill="#9CA3AF" font-weight="600">空气 n₁=1.00</text>
+
+      <!-- Medium region (bottom) -->
+      <rect id="medium-bg" x="0" y="250" width="600" height="250" fill="rgba(59,130,246,0.08)"/>
+      <rect x="0" y="250" width="600" height="250" fill="url(#water-pattern)"/>
+      <text id="medium-label" x="20" y="274" font-size="12" fill="#3B82F6" font-weight="600">水 n₂=1.33</text>
+
+      <!-- Interface line -->
+      <line x1="0" y1="250" x2="600" y2="250" stroke="#3B82F6" stroke-width="2" stroke-dasharray="8 4" opacity="0.5"/>
+
+      <!-- Normal line (vertical dashed) -->
+      <line id="normal-line" x1="300" y1="50" x2="300" y2="450" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="304" y="68" font-size="10" fill="#9CA3AF">法线</text>
+
+      <!-- Reflected ray -->
+      <line id="reflect-ray" x1="300" y1="250" x2="300" y2="50" stroke="#FBBF24" stroke-width="2.5" stroke-dasharray="6 3" opacity="0.5" filter="url(#glow)"/>
+
+      <!-- Refracted ray -->
+      <line id="refract-ray" x1="300" y1="250" x2="300" y2="450" stroke="#FDE68A" stroke-width="3" filter="url(#glow)"/>
+
+      <!-- Incident ray -->
+      <line id="incident-ray" x1="150" y1="100" x2="300" y2="250" stroke="#FBBF24" stroke-width="3" filter="url(#glow)"/>
+
+      <!-- Angle arcs -->
+      <path id="arc-theta1" d="" fill="none" stroke="#EF4444" stroke-width="1.5"/>
+      <path id="arc-theta2" d="" fill="none" stroke="#3B82F6" stroke-width="1.5"/>
+
+      <!-- Angle labels -->
+      <text id="label-theta1" x="310" y="220" font-size="13" fill="#EF4444" font-weight="700">θ₁=30°</text>
+      <text id="label-theta2" x="310" y="290" font-size="13" fill="#3B82F6" font-weight="700">θ₂=22°</text>
+
+      <!-- Total internal reflection badge -->
+      <text id="tir-badge" x="300" y="350" font-size="16" fill="#DC2626" font-weight="800" text-anchor="middle" opacity="0">⚠️ 全反射</text>
+
+      <!-- Draggable handle on incident ray -->
+      <circle id="drag-handle" cx="150" cy="100" r="10" fill="#FBBF24" stroke="#fff" stroke-width="2" cursor="grab" filter="url(#glow)"/>
+      <text id="drag-hint" x="155" y="92" font-size="10" fill="#D97706" font-weight="600">← 拖动改变入射角</text>
+
+      <!-- Arrow heads -->
+      <polygon id="arrow-incident" points="0,0 -6,-10 6,-10" fill="#FBBF24"/>
+      <polygon id="arrow-refract" points="0,0 -6,-10 6,-10" fill="#FDE68A"/>
+      <polygon id="arrow-reflect" points="0,0 -6,-10 6,-10" fill="#FBBF24" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-card">
+      <div class="panel-title">⚙️ 实验参数</div>
+      <div class="field">
+        <label>介质选择</label>
+        <select id="medium-select">
+          <option value="1.33">水 (n=1.33)</option>
+          <option value="1.50">玻璃 (n=1.50)</option>
+          <option value="2.42">钻石 (n=2.42)</option>
+          <option value="1.00">空气→空气 (n=1.00)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>光线方向</label>
+        <select id="direction-select">
+          <option value="dense">空气 → 介质（疏→密）</option>
+          <option value="sparse">介质 → 空气（密→疏）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>入射角 θ₁</label>
+        <div class="slider-row">
+          <input type="range" id="angle-slider" min="0" max="89" step="1" value="30">
+          <span class="slider-val" id="angle-val">30°</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">📊 实验数据</div>
+      <div class="reading"><span class="rl">入射角 θ₁</span><span class="rv" id="r-theta1">30.0°</span></div>
+      <div class="reading"><span class="rl">折射角 θ₂</span><span class="rv" id="r-theta2">22.1°</span></div>
+      <div class="reading"><span class="rl">反射角 θ₃</span><span class="rv" id="r-theta3">30.0°</span></div>
+      <div class="reading"><span class="rl">折射率 n₁</span><span class="rv" id="r-n1">1.00</span></div>
+      <div class="reading"><span class="rl">折射率 n₂</span><span class="rv" id="r-n2">1.33</span></div>
+      <div class="reading"><span class="rl">临界角</span><span class="rv" id="r-critical">—</span></div>
+      <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-ok">正常折射</span></span></div>
+      <div class="formula" id="formula-display">n₁sinθ₁ = n₂sinθ₂</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const origin = { x: 300, y: 250 }; // interface point
+let theta1 = 30; // incident angle in degrees
+let n1 = 1.00, n2 = 1.33;
+let direction = 'dense'; // dense = air→medium, sparse = medium→air
+
+const els = {
+  incidentRay: document.getElementById('incident-ray'),
+  refractRay: document.getElementById('refract-ray'),
+  reflectRay: document.getElementById('reflect-ray'),
+  arcTheta1: document.getElementById('arc-theta1'),
+  arcTheta2: document.getElementById('arc-theta2'),
+  labelTheta1: document.getElementById('label-theta1'),
+  labelTheta2: document.getElementById('label-theta2'),
+  tirBadge: document.getElementById('tir-badge'),
+  dragHandle: document.getElementById('drag-handle'),
+  dragHint: document.getElementById('drag-hint'),
+  angleSlider: document.getElementById('angle-slider'),
+  angleVal: document.getElementById('angle-val'),
+  mediumSelect: document.getElementById('medium-select'),
+  directionSelect: document.getElementById('direction-select'),
+  mediumBg: document.getElementById('medium-bg'),
+  mediumLabel: document.getElementById('medium-label'),
+  arrowIncident: document.getElementById('arrow-incident'),
+  arrowRefract: document.getElementById('arrow-refract'),
+  arrowReflect: document.getElementById('arrow-reflect'),
+  formula: document.getElementById('formula-display'),
+};
+
+const mediumNames = { '1.33': '水', '1.50': '玻璃', '2.42': '钻石', '1.00': '空气' };
+const mediumColors = { '1.33': 'rgba(59,130,246,0.08)', '1.50': 'rgba(139,92,246,0.08)', '2.42': 'rgba(236,72,153,0.08)', '1.00': 'rgba(0,0,0,0.02)' };
+
+function update() {
+  const rad1 = theta1 * Math.PI / 180;
+  const rayLen = 200;
+
+  // Determine actual n1, n2 based on direction
+  let actualN1, actualN2;
+  if (direction === 'dense') {
+    actualN1 = 1.00; actualN2 = n2;
+  } else {
+    actualN1 = n2; actualN2 = 1.00;
+  }
+
+  // Incident ray endpoint (above interface for dense, below for sparse)
+  const incSign = direction === 'dense' ? -1 : 1;
+  const refSign = -incSign;
+  const incX = origin.x - Math.sin(rad1) * rayLen;
+  const incY = origin.y + incSign * Math.cos(rad1) * rayLen;
+
+  els.incidentRay.setAttribute('x1', incX);
+  els.incidentRay.setAttribute('y1', incY);
+  els.incidentRay.setAttribute('x2', origin.x);
+  els.incidentRay.setAttribute('y2', origin.y);
+
+  // Drag handle
+  els.dragHandle.setAttribute('cx', incX);
+  els.dragHandle.setAttribute('cy', incY);
+  els.dragHint.setAttribute('x', incX + 15);
+  els.dragHint.setAttribute('y', incY - 8);
+
+  // Reflected ray (same side as incident, symmetric)
+  const refX = origin.x + Math.sin(rad1) * rayLen;
+  const refY = origin.y + incSign * Math.cos(rad1) * rayLen;
+  els.reflectRay.setAttribute('x1', origin.x);
+  els.reflectRay.setAttribute('y1', origin.y);
+  els.reflectRay.setAttribute('x2', refX);
+  els.reflectRay.setAttribute('y2', refY);
+
+  // Snell's law: n1*sin(theta1) = n2*sin(theta2)
+  const sinTheta2 = actualN1 * Math.sin(rad1) / actualN2;
+  const isTIR = Math.abs(sinTheta2) > 1; // total internal reflection
+
+  // Critical angle
+  let criticalAngle = null;
+  if (actualN1 > actualN2) {
+    criticalAngle = Math.asin(actualN2 / actualN1) * 180 / Math.PI;
+  }
+
+  if (isTIR) {
+    // Total internal reflection
+    els.refractRay.setAttribute('opacity', '0');
+    els.reflectRay.setAttribute('opacity', '1');
+    els.reflectRay.setAttribute('stroke-dasharray', 'none');
+    els.reflectRay.setAttribute('stroke-width', '3');
+    els.tirBadge.setAttribute('opacity', '1');
+    els.tirBadge.setAttribute('y', direction === 'dense' ? 350 : 150);
+    els.arrowRefract.setAttribute('opacity', '0');
+
+    document.getElementById('r-theta2').textContent = '—（全反射）';
+    document.getElementById('r-status').innerHTML = '<span class="badge badge-warn">全反射</span>';
+  } else {
+    const theta2 = Math.asin(sinTheta2);
+    const theta2Deg = theta2 * 180 / Math.PI;
+
+    // Refracted ray (opposite side of interface)
+    const refractX = origin.x + Math.sin(theta2) * rayLen;
+    const refractY = origin.y + refSign * Math.cos(theta2) * rayLen;
+    els.refractRay.setAttribute('x1', origin.x);
+    els.refractRay.setAttribute('y1', origin.y);
+    els.refractRay.setAttribute('x2', refractX);
+    els.refractRay.setAttribute('y2', refractY);
+    els.refractRay.setAttribute('opacity', '1');
+
+    els.reflectRay.setAttribute('opacity', '0.4');
+    els.reflectRay.setAttribute('stroke-dasharray', '6 3');
+    els.reflectRay.setAttribute('stroke-width', '2');
+    els.tirBadge.setAttribute('opacity', '0');
+    els.arrowRefract.setAttribute('opacity', '1');
+
+    // Arrow on refracted ray (midpoint)
+    const rmx = (origin.x + refractX) / 2, rmy = (origin.y + refractY) / 2;
+    const ra = Math.atan2(refractY - origin.y, refractX - origin.x) * 180 / Math.PI;
+    els.arrowRefract.setAttribute('transform', `translate(${rmx},${rmy}) rotate(${ra + 90})`);
+
+    document.getElementById('r-theta2').textContent = theta2Deg.toFixed(1) + '°';
+    document.getElementById('r-status').innerHTML = '<span class="badge badge-ok">正常折射</span>';
+
+    // Angle arc for theta2
+    const arcR2 = 40;
+    const a2start = direction === 'dense' ? 90 : 270;
+    const a2s = (a2start) * Math.PI / 180;
+    const a2e = (a2start + (direction === 'dense' ? 1 : -1) * theta2Deg) * Math.PI / 180;
+    const a2sx = origin.x + arcR2 * Math.cos(a2s), a2sy = origin.y + arcR2 * Math.sin(a2s);
+    const a2ex = origin.x + arcR2 * Math.cos(a2e), a2ey = origin.y + arcR2 * Math.sin(a2e);
+    const large2 = theta2Deg > 180 ? 1 : 0;
+    const sweep2 = direction === 'dense' ? 1 : 0;
+    els.arcTheta2.setAttribute('d', `M${a2sx},${a2sy} A${arcR2},${arcR2} 0 ${large2} ${sweep2} ${a2ex},${a2ey}`);
+
+    // Label theta2
+    const a2mid = (a2s + a2e) / 2;
+    els.labelTheta2.setAttribute('x', origin.x + 55 * Math.cos(a2mid));
+    els.labelTheta2.setAttribute('y', origin.y + 55 * Math.sin(a2mid));
+    els.labelTheta2.textContent = `θ₂=${theta2Deg.toFixed(1)}°`;
+  }
+
+  // Angle arc for theta1
+  const arcR1 = 40;
+  const a1start = direction === 'dense' ? 270 : 90;
+  const a1s = a1start * Math.PI / 180;
+  const a1e = (a1start - (direction === 'dense' ? 1 : -1) * theta1) * Math.PI / 180;
+  const a1sx = origin.x + arcR1 * Math.cos(a1s), a1sy = origin.y + arcR1 * Math.sin(a1s);
+  const a1ex = origin.x + arcR1 * Math.cos(a1e), a1ey = origin.y + arcR1 * Math.sin(a1e);
+  const large1 = theta1 > 180 ? 1 : 0;
+  const sweep1 = direction === 'dense' ? 0 : 1;
+  els.arcTheta1.setAttribute('d', `M${a1sx},${a1sy} A${arcR1},${arcR1} 0 ${large1} ${sweep1} ${a1ex},${a1ey}`);
+
+  // Label theta1
+  const a1mid = (a1s + a1e) / 2;
+  els.labelTheta1.setAttribute('x', origin.x + 55 * Math.cos(a1mid));
+  els.labelTheta1.setAttribute('y', origin.y + 55 * Math.sin(a1mid));
+  els.labelTheta1.textContent = `θ₁=${theta1.toFixed(0)}°`;
+
+  // Arrow on incident ray (midpoint)
+  const imx = (incX + origin.x) / 2, imy = (incY + origin.y) / 2;
+  const ia = Math.atan2(origin.y - incY, origin.x - incX) * 180 / Math.PI;
+  els.arrowIncident.setAttribute('transform', `translate(${imx},${imy}) rotate(${ia + 90})`);
+
+  // Arrow on reflected ray
+  const rlmx = (origin.x + refX) / 2, rlmy = (origin.y + refY) / 2;
+  const rla = Math.atan2(refY - origin.y, refX - origin.x) * 180 / Math.PI;
+  els.arrowReflect.setAttribute('transform', `translate(${rlmx},${rlmy}) rotate(${rla + 90})`);
+  els.arrowReflect.setAttribute('opacity', isTIR ? '1' : '0.4');
+
+  // Update readings
+  document.getElementById('r-theta1').textContent = theta1.toFixed(1) + '°';
+  document.getElementById('r-theta3').textContent = theta1.toFixed(1) + '°';
+  document.getElementById('r-n1').textContent = actualN1.toFixed(2);
+  document.getElementById('r-n2').textContent = actualN2.toFixed(2);
+  document.getElementById('r-critical').textContent = criticalAngle ? criticalAngle.toFixed(1) + '°' : '—（无全反射）';
+
+  // Formula
+  const lhs = (actualN1 * Math.sin(rad1)).toFixed(3);
+  els.formula.textContent = `${actualN1}×sin${theta1}° = ${lhs}`;
+
+  // Slider sync
+  els.angleSlider.value = theta1;
+  els.angleVal.textContent = theta1 + '°';
+}
+
+// Drag handle interaction
+let dragging = false;
+const svg = document.getElementById('lab-svg');
+
+function svgPoint(e) {
+  const rect = svg.getBoundingClientRect();
+  const scaleX = 600 / rect.width, scaleY = 500 / rect.height;
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+}
+
+els.dragHandle.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  dragging = true;
+  els.dragHandle.style.cursor = 'grabbing';
+});
+
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const pt = svgPoint(e);
+  const dx = pt.x - origin.x;
+  const dy = pt.y - origin.y;
+  // Calculate angle from normal
+  let angle;
+  if (direction === 'dense') {
+    angle = Math.atan2(-dx, -dy) * 180 / Math.PI; // from top normal
+  } else {
+    angle = Math.atan2(-dx, dy) * 180 / Math.PI; // from bottom normal
+  }
+  theta1 = Math.max(0, Math.min(89, Math.abs(angle)));
+  update();
+});
+
+document.addEventListener('pointerup', () => {
+  dragging = false;
+  els.dragHandle.style.cursor = 'grab';
+});
+
+// Controls
+els.angleSlider.addEventListener('input', e => {
+  theta1 = parseFloat(e.target.value);
+  update();
+});
+
+els.mediumSelect.addEventListener('change', e => {
+  n2 = parseFloat(e.target.value);
+  const name = mediumNames[e.target.value] || '介质';
+  els.mediumBg.setAttribute('fill', mediumColors[e.target.value] || 'rgba(59,130,246,0.08)');
+  if (direction === 'dense') {
+    els.mediumLabel.textContent = `${name} n₂=${n2.toFixed(2)}`;
+  } else {
+    document.querySelector('#lab-svg text:first-of-type').textContent = `${name} n₁=${n2.toFixed(2)}`;
+  }
+  update();
+});
+
+els.directionSelect.addEventListener('change', e => {
+  direction = e.target.value;
+  const name = mediumNames[n2.toString()] || '介质';
+  if (direction === 'dense') {
+    document.querySelector('#lab-svg text:first-of-type').textContent = `空气 n₁=1.00`;
+    els.mediumLabel.textContent = `${name} n₂=${n2.toFixed(2)}`;
+  } else {
+    document.querySelector('#lab-svg text:first-of-type').textContent = `${name} n₁=${n2.toFixed(2)}`;
+    els.mediumLabel.textContent = `空气 n₂=1.00`;
+  }
+  update();
+});
+
+// Init
+update();
+</script>
+</body>
+</html>
