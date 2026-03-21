@@ -1049,8 +1049,10 @@ function renderWires() {
     const p1 = getPortPos(fromComp, fromPort), p2 = getPortPos(toComp, toPort);
     const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
 
-    // Wire path depends on view mode
+    // Soft wire with draggable control point
     if (!conn.ctrl) conn.ctrl = { dx: 0, dy: 0 };
+    const midX = (x1 + x2) / 2 + conn.ctrl.dx;
+    const midY = (y1 + y2) / 2 + conn.ctrl.dy;
     let pathD;
     if (currentView === 'schematic') {
       // Orthogonal straight-angle lines
@@ -1058,8 +1060,6 @@ function renderWires() {
       pathD = Math.abs(y1 - y2) < 2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
     } else {
       // Soft bezier with draggable control point
-      const midX = (x1 + x2) / 2 + conn.ctrl.dx;
-      const midY = (y1 + y2) / 2 + conn.ctrl.dy;
       const dx = Math.abs(x2 - x1), dist = Math.hypot(dx, Math.abs(y2 - y1));
       const sag = Math.max(15, dist * 0.1);
       const cx1 = x1 + (midX - x1) * 0.5, cy1 = y1 + (midY - y1) * 0.5 + sag;
