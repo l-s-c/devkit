@@ -313,9 +313,11 @@ const snap = v => Math.round(v / GRID) * GRID;
 
 function getPortPos(comp, port) {
   const useSchematic = currentView === 'schematic' && comp._sx != null;
-  const cx = useSchematic ? comp._sx : comp.x;
-  const cy = useSchematic ? comp._sy : comp.y;
-  const rot = useSchematic ? (comp._sr || 0) : (comp.rotation || 0);
+  if (useSchematic) {
+    return getSchematicPortPos(comp, port.id);
+  }
+  const cx = comp.x, cy = comp.y;
+  const rot = comp.rotation || 0;
   const rad = rot * Math.PI / 180;
   const cos = Math.cos(rad), sin = Math.sin(rad);
   return {
@@ -325,66 +327,82 @@ function getPortPos(comp, port) {
 }
 
 // ===== Schematic auto-layout (serial circuit MVP) =====
+// Schematic port offsets (different from realistic view)
+const SCHEMATIC_PORTS = {
+  battery:   [{id:'pos',dx:0,dy:-20},{id:'neg',dx:0,dy:20}],
+  resistor:  [{id:'p0',dx:-24,dy:0},{id:'p1',dx:24,dy:0}],
+  bulb:      [{id:'p0',dx:-14,dy:0},{id:'p1',dx:14,dy:0}],
+  switch:    [{id:'p0',dx:-13,dy:0},{id:'p1',dx:13,dy:0}],
+  ammeter:   [{id:'p0',dx:-15,dy:0},{id:'p1',dx:15,dy:0}],
+  voltmeter: [{id:'p0',dx:-15,dy:0},{id:'p1',dx:15,dy:0}],
+  wire:      [{id:'p0',dx:-20,dy:0},{id:'p1',dx:20,dy:0}],
+};
+
+function getSchematicPortPos(comp, portId) {
+  const ports = SCHEMATIC_PORTS[comp.type] || COMP_DEFAULTS[comp.type].ports;
+  const port = ports.find(p => p.id === portId) || { dx: 0, dy: 0 };
+  const rot = comp._sr || 0;
+  const rad = rot * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return {
+    x: comp._sx + port.dx * cos - port.dy * sin,
+    y: comp._sy + port.dx * sin + port.dy * cos,
+  };
+}
+
 function computeSchematicLayout() {
   const comps = state.components;
   const conns = state.connections;
   if (comps.length === 0) return;
 
-  // Build adjacency: node = "compId:portId", edges = connections
+  // Build adjacency
   const adj = {};
   const addEdge = (a, b) => { (adj[a] = adj[a] || []).push(b); (adj[b] = adj[b] || []).push(a); };
   for (const c of conns) {
     addEdge(`${c.from.componentId}:${c.from.portId}`, `${c.to.componentId}:${c.to.portId}`);
   }
 
-  // Find serial loop starting from battery
   const battery = comps.find(c => c.type === 'battery');
   if (!battery) { fallbackLayout(comps); return; }
 
-  // DFS to find loop: traverse component-by-component
-  // Skip voltmeters (they're parallel-connected, not part of main serial loop)
+  // DFS to find serial loop (skip voltmeters)
   const serialComps = new Set(comps.filter(c => c.type !== 'voltmeter').map(c => c.id));
   const loopComps = [];
+  const loopEntryPorts = []; // which port we entered each comp from
   const visited = new Set();
   
   function findLoop(compId, fromPortId) {
-    if (visited.has(compId)) {
-      return compId === battery.id; // found loop back to battery
-    }
-    if (!serialComps.has(compId)) return false; // skip voltmeters
+    if (visited.has(compId)) return compId === battery.id;
+    if (!serialComps.has(compId)) return false;
     visited.add(compId);
     const comp = comps.find(c => c.id === compId);
     if (!comp) return false;
     loopComps.push(comp);
+    loopEntryPorts.push(fromPortId);
     
     const def = COMP_DEFAULTS[comp.type];
     const otherPorts = def.ports.filter(p => p.id !== fromPortId);
-    
     for (const port of otherPorts) {
       const nodeKey = `${compId}:${port.id}`;
-      const neighbors = adj[nodeKey] || [];
-      for (const nb of neighbors) {
+      for (const nb of (adj[nodeKey] || [])) {
         const [nbCompId, nbPortId] = nb.split(':');
         if (findLoop(nbCompId, nbPortId)) return true;
       }
     }
-    
     loopComps.pop();
+    loopEntryPorts.pop();
     visited.delete(compId);
     return false;
   }
 
-  // Start from battery's pos port, traverse the main loop
   const battDef = COMP_DEFAULTS[battery.type];
   let found = false;
   for (const port of battDef.ports) {
-    const nodeKey = `${battery.id}:${port.id}`;
-    const neighbors = adj[nodeKey] || [];
-    for (const nb of neighbors) {
+    for (const nb of (adj[`${battery.id}:${port.id}`] || [])) {
       const [nbCompId, nbPortId] = nb.split(':');
-      loopComps.length = 0;
+      loopComps.length = 0; loopEntryPorts.length = 0;
       visited.clear();
-      loopComps.push(battery);
+      loopComps.push(battery); loopEntryPorts.push(null);
       visited.add(battery.id);
       if (findLoop(nbCompId, nbPortId)) { found = true; break; }
     }
@@ -393,53 +411,57 @@ function computeSchematicLayout() {
 
   if (!found || loopComps.length < 2) { fallbackLayout(comps); return; }
 
-  // Layout loop components along rectangle
+  // Distribute along rectangle — battery on left, vertical
+  // Layout: battery(left,vertical) → top edge(right) → right corner → bottom edge(left) → back to battery
   const n = loopComps.length;
-  const centerX = 400, centerY = 300;
-  const W = Math.max(300, n * 60), H = Math.max(200, n * 40);
-  const halfW = W / 2, halfH = H / 2;
-  const perimeter = 2 * (W + H);
+  const spacing = 100;
+  const topCount = Math.ceil((n - 1) / 2);
+  const bottomCount = n - 1 - topCount;
+  const W = Math.max(300, (Math.max(topCount, bottomCount) + 1) * spacing);
+  const H = 200;
+  const left = 400 - W / 2, right = 400 + W / 2;
+  const top = 300 - H / 2, bottom = 300 + H / 2;
 
-  for (let i = 0; i < n; i++) {
-    const t = (i / n) * perimeter; // position along perimeter
-    let px, py, rot;
-    
-    if (t < W) {
-      // Top edge: left to right
-      px = centerX - halfW + t;
-      py = centerY - halfH;
-      rot = 0;
-    } else if (t < W + H) {
-      // Right edge: top to bottom
-      px = centerX + halfW;
-      py = centerY - halfH + (t - W);
-      rot = 90;
-    } else if (t < 2 * W + H) {
-      // Bottom edge: right to left
-      px = centerX + halfW - (t - W - H);
-      py = centerY + halfH;
-      rot = 180;
-    } else {
-      // Left edge: bottom to top
-      px = centerX - halfW;
-      py = centerY + halfH - (t - 2 * W - H);
-      rot = 270;
-    }
-    
-    loopComps[i]._sx = Math.round(px);
-    loopComps[i]._sy = Math.round(py);
-    loopComps[i]._sr = rot;
+  // Battery: left side, vertical (pos on top, neg on bottom)
+  loopComps[0]._sx = left; loopComps[0]._sy = 300; loopComps[0]._sr = 0;
+
+  // Top edge: elements go left→right, horizontal (rot=0)
+  for (let i = 0; i < topCount; i++) {
+    const comp = loopComps[1 + i];
+    comp._sx = left + (i + 1) * (W / (topCount + 1));
+    comp._sy = top;
+    comp._sr = 0; // horizontal, p0 left, p1 right
   }
 
-  // Components not in loop: hide or place off-screen
+  // Bottom edge: elements go right→left, horizontal (rot=180)
+  for (let i = 0; i < bottomCount; i++) {
+    const comp = loopComps[1 + topCount + i];
+    comp._sx = right - (i + 1) * (W / (bottomCount + 1));
+    comp._sy = bottom;
+    comp._sr = 180; // horizontal, flipped
+  }
+
+  // Voltmeters and other non-loop components: below the circuit
   const loopIds = new Set(loopComps.map(c => c.id));
-  let offX = centerX - halfW;
+  let offX = left;
   for (const comp of comps) {
     if (!loopIds.has(comp.id)) {
-      comp._sx = offX;
-      comp._sy = centerY + halfH + 100;
-      comp._sr = 0;
-      offX += 80;
+      // Place voltmeters near their connected components
+      if (comp.type === 'voltmeter') {
+        // Find what it's connected to and place near it
+        let refX = 400, refY = bottom + 80;
+        for (const port of COMP_DEFAULTS[comp.type].ports) {
+          for (const nb of (adj[`${comp.id}:${port.id}`] || [])) {
+            const [nbId] = nb.split(':');
+            const nbComp = comps.find(c => c.id === nbId);
+            if (nbComp && nbComp._sx != null) { refX = nbComp._sx; break; }
+          }
+        }
+        comp._sx = refX; comp._sy = refY; comp._sr = 0;
+      } else {
+        comp._sx = offX; comp._sy = bottom + 80; comp._sr = 0;
+        offX += 80;
+      }
     }
   }
 }
@@ -1208,8 +1230,15 @@ function renderWires() {
     const pts = [{ x: x1, y: y1 }, ...conn.ctrls, { x: x2, y: y2 }];
     let pathD;
     if (currentView === 'schematic') {
-      const mx = (x1 + x2) / 2;
-      pathD = Math.abs(y1 - y2) < 2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
+      // Clean orthogonal lines: horizontal first, then vertical, then horizontal
+      if (Math.abs(y1 - y2) < 2) {
+        pathD = `M${x1},${y1} L${x2},${y2}`;
+      } else if (Math.abs(x1 - x2) < 2) {
+        pathD = `M${x1},${y1} L${x2},${y2}`;
+      } else {
+        // L-shape or Z-shape routing
+        pathD = `M${x1},${y1} L${x1},${y2} L${x2},${y2}`;
+      }
     } else {
       // Catmull-Rom-like smooth curve through all points
       if (pts.length === 2) {
