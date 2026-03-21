@@ -1255,25 +1255,37 @@ function renderWires() {
       if (e.button !== 0) return; // left click only
       e.preventDefault(); e.stopPropagation();
       const startPt = svgPoint(e);
-      let moved = false, newCtrl = null, insertIdx = 0;
+      let moved = false, dragCtrl = null;
+
+      // Check if near an existing control point (within 30px) — move it instead of creating new
+      let existingIdx = -1;
+      for (let ci = 0; ci < conn.ctrls.length; ci++) {
+        const d = Math.hypot(startPt.x - conn.ctrls[ci].x, startPt.y - conn.ctrls[ci].y);
+        if (d < 30) { existingIdx = ci; break; }
+      }
 
       const onMove = ev => {
         const pt = svgPoint(ev);
         if (!moved) {
-          // First move: create new control point at start position
           moved = true;
-          let bestDist = Infinity;
-          for (let pi = 0; pi < pts.length - 1; pi++) {
-            const a = pts[pi], b = pts[pi + 1];
-            const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-            const d = Math.hypot(startPt.x - mx, startPt.y - my);
-            if (d < bestDist) { bestDist = d; insertIdx = pi; }
+          if (existingIdx >= 0) {
+            // Move existing control point
+            dragCtrl = conn.ctrls[existingIdx];
+          } else {
+            // Create new control point
+            let bestIdx = 0, bestDist = Infinity;
+            for (let pi = 0; pi < pts.length - 1; pi++) {
+              const a = pts[pi], b = pts[pi + 1];
+              const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+              const d = Math.hypot(startPt.x - mx, startPt.y - my);
+              if (d < bestDist) { bestDist = d; bestIdx = pi; }
+            }
+            dragCtrl = { x: startPt.x, y: startPt.y };
+            conn.ctrls.splice(bestIdx, 0, dragCtrl);
           }
-          newCtrl = { x: startPt.x, y: startPt.y };
-          conn.ctrls.splice(insertIdx, 0, newCtrl);
         }
-        newCtrl.x = pt.x;
-        newCtrl.y = pt.y;
+        dragCtrl.x = pt.x;
+        dragCtrl.y = pt.y;
         renderWires();
       };
       const onUp = () => {
