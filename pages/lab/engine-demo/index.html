@@ -1288,48 +1288,7 @@ function renderWires() {
     hit.addEventListener('pointerdown', wireDragHandler);
     line.addEventListener('pointerdown', wireDragHandler);
 
-    // Render handles for each control point
-    for (let ci = 0; ci < conn.ctrls.length; ci++) {
-      const cp = conn.ctrls[ci];
-      const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      handle.setAttribute('cx', cp.x); handle.setAttribute('cy', cp.y);
-      handle.setAttribute('r', '5'); handle.setAttribute('fill', 'rgba(220,38,38,0.15)');
-      handle.setAttribute('stroke', '#DC2626'); handle.setAttribute('stroke-width', '1.5');
-      handle.style.cursor = 'grab'; handle.style.opacity = '0';
-      handle.style.transition = 'opacity 150ms';
-      const showHandle = () => { handle.style.opacity = '1'; };
-      const hideHandle = () => { if (!handle._dragging) handle.style.opacity = '0'; };
-      hit.addEventListener('pointerenter', showHandle);
-      line.addEventListener('pointerenter', showHandle);
-      hit.addEventListener('pointerleave', hideHandle);
-      line.addEventListener('pointerleave', hideHandle);
-      handle.addEventListener('pointerenter', showHandle);
-      handle.addEventListener('pointerleave', hideHandle);
-
-      ((ctrlPt) => {
-        handle.addEventListener('pointerdown', e => {
-          e.preventDefault(); e.stopPropagation();
-          handle._dragging = true;
-          handle.style.cursor = 'grabbing';
-          const onMove = ev => {
-            const pt = svgPoint(ev);
-            ctrlPt.x = pt.x;
-            ctrlPt.y = pt.y;
-            renderWires();
-          };
-          const onUp = () => {
-            document.removeEventListener('pointermove', onMove);
-            document.removeEventListener('pointerup', onUp);
-            handle._dragging = false;
-            state.dirty = true;
-            autoSave();
-          };
-          document.addEventListener('pointermove', onMove);
-          document.addEventListener('pointerup', onUp);
-        });
-      })(cp);
-      wiresLayer.appendChild(handle);
-    }
+    // No visible control point handles — drag anywhere on wire to reshape
   }
 
   // Update port visuals
