@@ -156,6 +156,7 @@ export default defineConfig({
         'lab-circuit-builder': resolve(__dirname, 'pages/lab/circuit-builder/index.html'),
         'lab-engine-demo': resolve(__dirname, 'pages/lab/engine-demo/index.html'),
         'lab-refraction': resolve(__dirname, 'pages/lab/refraction/index.html'),
+        'lab-buoyancy': resolve(__dirname, 'pages/lab/buoyancy/index.html'),
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-lens': resolve(__dirname, 'pages/lab/lens/index.html'),
         'lab-pulley': resolve(__dirname, 'pages/lab/pulley/index.html'),
