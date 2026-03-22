@@ -162,6 +162,7 @@ export default defineConfig({
         'lab-electromagnet': resolve(__dirname, 'pages/lab/electromagnet/index.html'),
         'lab-friction': resolve(__dirname, 'pages/lab/friction/index.html'),
         'lab-series-parallel': resolve(__dirname, 'pages/lab/series-parallel/index.html'),
+        'lab-sound': resolve(__dirname, 'pages/lab/sound/index.html'),
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-mirror': resolve(__dirname, 'pages/lab/mirror/index.html'),
         'lab-ohm': resolve(__dirname, 'pages/lab/ohm/index.html'),
