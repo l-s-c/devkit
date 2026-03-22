@@ -3,621 +3,846 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>测量物质密度实验 - 天平量筒在线模拟 | DevKit</title>
-<meta name="keywords" content="测量物质密度, 天平量筒模拟, ρ=m/V, 初中物理实验, 中考操作考试">
-<meta name="description" content="在线模拟测量物质密度实验，天平称质量量筒测体积，计算ρ=m/V，初中物理中考操作考试必考">
-<meta property="og:title" content="测量物质密度实验 - 天平量筒在线模拟 | DevKit">
-<meta property="og:description" content="在线模拟测量物质密度实验，天平称质量量筒测体积，计算ρ=m/V">
+<title>测量物质密度 - 天平量筒法在线实验 | DevKit</title>
+<meta name="keywords" content="密度测量, 天平量筒法, ρ=m/V, 拖砝码称质量, 初中物理力学">
+<meta name="description" content="在线模拟密度测量实验，拖砝码到天平称质量，拖物体入量筒测体积，计算ρ=m/V">
+<meta property="og:title" content="测量物质密度 - 天平量筒法在线实验 | DevKit">
+<meta property="og:description" content="拖砝码称质量，拖物体入量筒测体积，计算ρ=m/V">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/density.png">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/density/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F;min-height:100vh;overflow:hidden}
-.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
 .topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .topbar .back svg{width:14px;height:14px;color:#374151}
 .breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
-.breadcrumb a{color:#3B82F6;text-decoration:none;font-weight:500}
+.breadcrumb a{color:#EA580C;text-decoration:none;font-weight:500}
 .topbar h1{font-size:15px;font-weight:700}
-.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px}
 .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#FFF7ED;color:#EA580C;border:1px solid #FED7AA;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
-.purpose-tag svg{width:12px;height:12px}
-.lab-container{display:flex;height:calc(100vh - 48px - 29px)}
-.canvas-area{flex:1;display:flex;flex-direction:column;padding:16px;min-width:0;gap:8px}
-
-/* Step tabs */
-.step-tabs{display:flex;gap:4px;background:#fff;border-radius:10px;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
-.step-tab{flex:1;padding:8px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:#6B7280;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px}
-.step-tab.active{background:#EA580C;color:#fff;box-shadow:0 2px 6px rgba(234,88,12,0.3)}
-.step-tab .step-num{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.06);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
-.step-tab.active .step-num{background:rgba(255,255,255,0.25)}
-.step-tab.done{color:#059669}
-.step-tab.done .step-num{background:#D1FAE5;color:#059669}
-
-.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;flex:1;position:relative;user-select:none}
+.lab-container{display:flex;flex-wrap:wrap;align-items:stretch}
+.canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
 .canvas-wrapper svg{width:100%;height:100%}
-.step-view{display:none}
-.step-view.active{display:block}
-
-.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
 .panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
 .data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
 .data-row:last-child{border-bottom:none}
 .data-label{color:#6B7280}
 .data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
-.formula-box{background:#FFF7ED;border-radius:8px;padding:10px;text-align:center;margin-top:6px}
-.weight-btn{padding:6px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s}
-.weight-btn:hover{background:#FFF7ED;border-color:#FED7AA;color:#EA580C}
-.weight-btn.added{background:#EA580C;color:#fff;border-color:#EA580C}
-.weight-box{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.preset-btn{padding:6px 12px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
-.preset-btn:hover{background:#FFF7ED;border-color:#FED7AA;color:#EA580C}
-.preset-btn.active{background:#EA580C;color:#fff;border-color:#EA580C}
-.slider-control{margin:8px 0}
-.slider-control label{font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px}
-.slider-control input[type=range]{width:100%;accent-color:#EA580C;height:6px}
-.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#EA580C}
-.status-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;margin-top:6px}
-.status-ok{background:#D1FAE5;color:#065F46}
-.status-warn{background:#FEF3C7;color:#92400E}
-.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
-.reset-btn svg{width:13px;height:13px}
+.mat-btn{padding:6px 12px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
+.mat-btn:hover{background:#FFF7ED;border-color:#FED7AA;color:#EA580C}
+.mat-btn.active{background:#EA580C;color:#fff;border-color:#EA580C}
+.tab-bar{display:flex;background:#F3F4F6;border-radius:8px;padding:2px;margin:0 16px 0}
+.tab-btn{flex:1;padding:8px;text-align:center;border-radius:6px;border:none;background:none;font-size:12px;font-weight:600;color:#6B7280;cursor:pointer;transition:all 0.2s}
+.tab-btn.active{background:#EA580C;color:#fff;box-shadow:0 1px 3px rgba(234,88,12,0.3)}
+.tab-btn .num{display:inline-flex;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.08);align-items:center;justify-content:center;font-size:10px;margin-right:4px}
+.tab-btn.active .num{background:rgba(255,255,255,0.3)}
+.tab-btn.done{color:#059669}
+.tab-btn.done .num{background:#ECFDF5;color:#059669}
+.slider-container input[type=range]{width:100%;accent-color:#EA580C;height:6px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto}
 .reset-btn:hover{background:#E5E7EB}
-.next-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#EA580C;color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
-.next-btn:hover{background:#DC2626}
-.next-btn:disabled{background:#D1D5DB;cursor:not-allowed}
-.guide-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;animation:guideFade 4s ease-in-out forwards}
-.guide-label{position:absolute;font-size:12px;color:#EA580C;font-weight:600;background:rgba(255,247,237,0.92);padding:4px 10px;border-radius:6px;border:1px solid #FED7AA;white-space:nowrap}
-@keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
-.related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
-.related-bar span{color:#9CA3AF;font-weight:600}
-.related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
-.related-bar a:hover{background:#EFF6FF}
+.step-btn{width:100%;padding:10px;border-radius:8px;border:none;background:#EA580C;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.step-btn:hover{background:#DC2626}
+.step-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.status-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:100px;font-size:12px;font-weight:700;pointer-events:none;z-index:10;transition:all 0.3s;white-space:nowrap}
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#EA580C;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,#FFF7ED,#FFEDD5);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #FED7AA}
+.knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
+.knowledge-card.example{background:linear-gradient(180deg,#FFFBF5,#FFF7ED)}
+.knowledge-card.example .card-header .accent{background:#C2410C}
+.knowledge-card.example .solve{background:#fff;border-radius:8px;padding:14px 16px;margin-top:10px;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#374151}
+.balance-hint{font-size:10px;color:#EA580C;font-weight:600;text-align:center;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="topbar">
   <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="/devkit/pages/lab/">实验室</a><span style="color:#D1D5DB">/</span><a href="/devkit/pages/lab/" style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</a><span style="color:#D1D5DB">/</span></div>
+  <div class="breadcrumb"><a href="#">实验室</a><span>/</span><a href="#">物理实验</a><span>/</span></div>
   <h1>测量物质密度</h1>
 </div>
 <div class="purpose-bar">
   <div class="purpose-tag">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
     天平称质量 + 量筒测体积 + ρ=m/V · 中考操作必考
   </div>
 </div>
 
+<!-- Tabs -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab1" onclick="switchTab(1)"><span class="num">1</span>称质量</button>
+  <button class="tab-btn" id="tab2" onclick="switchTab(2)"><span class="num">2</span>测体积</button>
+  <button class="tab-btn" id="tab3" onclick="switchTab(3)"><span class="num">3</span>计算密度</button>
+</div>
+
 <div class="lab-container">
   <div class="canvas-area">
-    <div class="step-tabs">
-      <button class="step-tab active" onclick="switchStep(0)"><span class="step-num">1</span>称质量</button>
-      <button class="step-tab" onclick="switchStep(1)"><span class="step-num">2</span>测体积</button>
-      <button class="step-tab" onclick="switchStep(2)"><span class="step-num">3</span>计算密度</button>
-    </div>
     <div class="canvas-wrapper">
-      <!-- ===== STEP 1: Balance ===== -->
-      <div class="step-view active" id="step0">
-        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
-          <rect width="700" height="400" fill="#FAFBFE"/>
+      <div id="statusBadge" class="status-badge" style="background:rgba(234,88,12,0.1);color:#EA580C">拖砝码到右盘，调游码使天平平衡</div>
 
-          <!-- Base -->
-          <rect x="270" y="340" width="160" height="12" rx="4" fill="#78716C" />
-          <rect x="260" y="348" width="180" height="10" rx="3" fill="#57534E"/>
-          <!-- Pillar -->
-          <rect x="346" y="180" width="8" height="164" fill="#78716C"/>
-          <!-- Pointer -->
-          <g id="balancePointerGroup" transform="rotate(0,350,185)">
-            <line x1="350" y1="185" x2="350" y2="260" stroke="#DC2626" stroke-width="1.5"/>
-            <polygon points="345,258 350,270 355,258" fill="#DC2626"/>
-          </g>
-          <!-- Scale arc -->
-          <path d="M330,265 Q350,250 370,265" fill="none" stroke="#9CA3AF" stroke-width="1"/>
-          <line x1="350" y1="253" x2="350" y2="258" stroke="#1D1D1F" stroke-width="1.5"/>
-          <line x1="340" y1="257" x2="342" y2="262" stroke="#9CA3AF" stroke-width="0.8"/>
-          <line x1="360" y1="257" x2="358" y2="262" stroke="#9CA3AF" stroke-width="0.8"/>
+      <!-- ===== TAB 1: BALANCE ===== -->
+      <svg id="svgBalance" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="panGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E5E7EB"/><stop offset="100%" stop-color="#D1D5DB"/></linearGradient>
+          <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="50%" stop-color="#6B7280"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B45309"/><stop offset="100%" stop-color="#92400E"/></linearGradient>
+        </defs>
 
-          <!-- Beam -->
-          <g id="beamGroup" transform="rotate(0,350,180)">
-            <rect x="170" y="176" width="360" height="8" rx="2" fill="#A8A29E"/>
-            <circle cx="350" cy="180" r="6" fill="#78716C" stroke="#57534E" stroke-width="1"/>
-            <!-- Left pan hanger -->
-            <line x1="210" y1="184" x2="210" y2="220" stroke="#9CA3AF" stroke-width="1"/>
-            <line x1="170" y1="184" x2="210" y2="220" stroke="#9CA3AF" stroke-width="0.5" opacity="0.5"/>
-            <line x1="250" y1="184" x2="210" y2="220" stroke="#9CA3AF" stroke-width="0.5" opacity="0.5"/>
-            <!-- Left pan -->
-            <ellipse id="leftPan" cx="210" cy="224" rx="50" ry="8" fill="#D6D3D1" stroke="#A8A29E" stroke-width="1"/>
+        <!-- Base -->
+        <rect x="280" y="370" width="140" height="12" rx="3" fill="#374151"/>
+        <rect x="310" y="350" width="80" height="24" rx="4" fill="#4B5563"/>
+        
+        <!-- Pillar -->
+        <rect x="345" y="140" width="10" height="214" rx="2" fill="url(#beamGrad)"/>
+
+        <!-- Pointer -->
+        <line id="pointer" x1="350" y1="170" x2="350" y2="260" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+        
+        <!-- Scale arc -->
+        <path d="M320,260 Q350,240 380,260" fill="none" stroke="#9CA3AF" stroke-width="1"/>
+        <line x1="350" y1="245" x2="350" y2="260" stroke="#9CA3AF" stroke-width="0.5"/>
+
+        <!-- Beam -->
+        <g id="beamGroup">
+          <line id="beam" x1="120" y1="155" x2="580" y2="155" stroke="url(#beamGrad)" stroke-width="4" stroke-linecap="round"/>
+          
+          <!-- Left pan (object) -->
+          <g id="leftPanGroup">
+            <line x1="190" y1="155" x2="160" y2="210" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="190" y1="155" x2="220" y2="210" stroke="#9CA3AF" stroke-width="1"/>
+            <ellipse id="leftPan" cx="190" cy="215" rx="55" ry="10" fill="url(#panGrad)" stroke="#9CA3AF" stroke-width="0.5"/>
             <!-- Object on left pan -->
-            <g id="objectOnPan" opacity="0">
-              <rect x="192" y="198" width="36" height="24" rx="3" fill="#9CA3AF" stroke="#6B7280" stroke-width="1"/>
-              <text id="objectLabel" x="210" y="214" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
-            </g>
-
-            <!-- Right pan hanger -->
-            <line x1="490" y1="184" x2="490" y2="220" stroke="#9CA3AF" stroke-width="1"/>
-            <line x1="450" y1="184" x2="490" y2="220" stroke="#9CA3AF" stroke-width="0.5" opacity="0.5"/>
-            <line x1="530" y1="184" x2="490" y2="220" stroke="#9CA3AF" stroke-width="0.5" opacity="0.5"/>
-            <!-- Right pan -->
-            <ellipse cx="490" cy="224" rx="50" ry="8" fill="#D6D3D1" stroke="#A8A29E" stroke-width="1"/>
-            <!-- Weights on right pan -->
-            <g id="weightsOnPan"></g>
-          </g>
-
-          <!-- Rider (游码) -->
-          <rect x="348" y="168" width="60" height="6" rx="1" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
-          <!-- Rider ticks -->
-          <g font-size="7" fill="#9CA3AF">
-            <line x1="350" y1="168" x2="350" y2="174" stroke="#6B7280" stroke-width="0.8"/>
-            <text x="350" y="164" text-anchor="middle">0</text>
-            <line x1="362" y1="168" x2="362" y2="172" stroke="#9CA3AF" stroke-width="0.5"/>
-            <text x="362" y="164" text-anchor="middle">1</text>
-            <line x1="374" y1="168" x2="374" y2="172" stroke="#9CA3AF" stroke-width="0.5"/>
-            <text x="374" y="164" text-anchor="middle">2</text>
-            <line x1="386" y1="168" x2="386" y2="172" stroke="#9CA3AF" stroke-width="0.5"/>
-            <text x="386" y="164" text-anchor="middle">3</text>
-            <line x1="398" y1="168" x2="398" y2="172" stroke="#9CA3AF" stroke-width="0.5"/>
-            <text x="398" y="164" text-anchor="middle">4</text>
-            <line x1="410" y1="168" x2="410" y2="174" stroke="#6B7280" stroke-width="0.8"/>
-            <text x="410" y="164" text-anchor="middle">5</text>
-          </g>
-          <g id="riderHandle" cursor="grab">
-            <rect id="riderRect" x="346" y="161" width="8" height="14" rx="2" fill="#EA580C" stroke="#C2410C" stroke-width="0.8"/>
-          </g>
-
-          <!-- Weight box -->
-          <g transform="translate(50, 300)">
-            <rect x="0" y="0" width="130" height="55" rx="5" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
-            <text x="65" y="14" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">砝码盒</text>
-            <g id="weightBoxItems"></g>
-          </g>
-
-          <!-- Labels -->
-          <text x="210" y="150" font-size="10" fill="#6B7280" text-anchor="middle" font-weight="600">左盘（物体）</text>
-          <text x="490" y="150" font-size="10" fill="#6B7280" text-anchor="middle" font-weight="600">右盘（砝码）</text>
-
-          <!-- Balance status -->
-          <g id="balanceStatus" transform="translate(350, 310)">
-            <rect x="-45" y="-10" width="90" height="20" rx="10" fill="#FEF3C7" stroke="#FDE68A" stroke-width="0.5"/>
-            <text id="balanceText" x="0" y="4" font-size="10" fill="#92400E" text-anchor="middle" font-weight="700">未平衡</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- ===== STEP 2: Graduated Cylinder ===== -->
-      <div class="step-view" id="step1">
-        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
-          <rect width="700" height="400" fill="#FAFBFE"/>
-
-          <!-- Cylinder -->
-          <g transform="translate(250, 30)">
-            <!-- Body -->
-            <rect x="0" y="0" width="80" height="320" rx="3" fill="rgba(186,230,253,0.15)" stroke="#93C5FD" stroke-width="1.5"/>
-            <!-- Spout -->
-            <path d="M-2,0 Q-5,-5 0,-3 L80,-3 Q85,-5 82,0" fill="none" stroke="#93C5FD" stroke-width="1"/>
-
-            <!-- Scale markings -->
-            <g font-size="8" fill="#6B7280">
-              <line x1="0" y1="320" x2="20" y2="320" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="323" text-anchor="end">0</text>
-
-              <line x1="0" y1="288" x2="15" y2="288" stroke="#93C5FD" stroke-width="0.5"/>
-              <line x1="0" y1="256" x2="20" y2="256" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="259" text-anchor="end">20</text>
-
-              <line x1="0" y1="224" x2="15" y2="224" stroke="#93C5FD" stroke-width="0.5"/>
-              <line x1="0" y1="192" x2="20" y2="192" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="195" text-anchor="end">40</text>
-
-              <line x1="0" y1="160" x2="15" y2="160" stroke="#93C5FD" stroke-width="0.5"/>
-              <line x1="0" y1="128" x2="20" y2="128" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="131" text-anchor="end">60</text>
-
-              <line x1="0" y1="96" x2="15" y2="96" stroke="#93C5FD" stroke-width="0.5"/>
-              <line x1="0" y1="64" x2="20" y2="64" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="67" text-anchor="end">80</text>
-
-              <line x1="0" y1="32" x2="15" y2="32" stroke="#93C5FD" stroke-width="0.5"/>
-              <line x1="0" y1="0" x2="20" y2="0" stroke="#93C5FD" stroke-width="1"/>
-              <text x="-5" y="3" text-anchor="end">100</text>
-            </g>
-            <text x="85" y="160" font-size="9" fill="#6B7280" font-weight="600">mL</text>
-
-            <!-- Water fill -->
-            <rect id="waterFill" x="1" y="192" width="78" height="128" fill="rgba(59,130,246,0.15)"/>
-            <!-- Meniscus (凹液面) -->
-            <path id="meniscus" d="M1,192 Q40,198 79,192" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="1.5"/>
-
-            <!-- Object in cylinder -->
-            <g id="objectInCylinder" opacity="0">
-              <rect id="cylObject" x="20" y="260" width="40" height="30" rx="3" fill="#9CA3AF" stroke="#6B7280" stroke-width="1" opacity="0.7"/>
-              <text id="cylObjectLabel" x="40" y="279" font-size="8" fill="#fff" text-anchor="middle" font-weight="600">铝块</text>
-            </g>
-
-            <!-- Reading markers -->
-            <g id="v1Marker">
-              <line x1="80" y1="192" x2="130" y2="192" stroke="#3B82F6" stroke-width="1" stroke-dasharray="4,2"/>
-              <text id="v1Text" x="135" y="195" font-size="10" fill="#3B82F6" font-weight="700">V₁=40mL</text>
-            </g>
-            <g id="v2Marker" opacity="0">
-              <line id="v2Line" x1="80" y1="160" x2="130" y2="160" stroke="#EA580C" stroke-width="1" stroke-dasharray="4,2"/>
-              <text id="v2Text" x="135" y="163" font-size="10" fill="#EA580C" font-weight="700">V₂=50mL</text>
-              <line id="dvLine1" x1="155" y1="192" x2="155" y2="160" stroke="#059669" stroke-width="1.5"/>
-              <line id="dvTop" x1="150" y1="160" x2="160" y2="160" stroke="#059669" stroke-width="1"/>
-              <line id="dvBot" x1="150" y1="192" x2="160" y2="192" stroke="#059669" stroke-width="1"/>
-              <text id="dvText" x="168" y="179" font-size="10" fill="#059669" font-weight="700">ΔV=10mL</text>
-            </g>
-
-            <!-- Eye level guide -->
-            <g id="eyeGuide" opacity="0.4">
-              <line x1="-40" y1="192" x2="0" y2="192" stroke="#9CA3AF" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <text x="-45" y="188" font-size="7" fill="#9CA3AF">平视</text>
+            <g id="objectOnPan">
+              <rect x="168" y="190" width="44" height="25" rx="3" fill="#78716C" stroke="#57534E" stroke-width="1"/>
+              <text x="190" y="207" font-size="9" fill="#fff" text-anchor="middle" font-weight="700" id="objLabel">铝块</text>
             </g>
           </g>
 
-          <!-- Instructions -->
-          <g transform="translate(450, 80)">
-            <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFF7ED" stroke="#FED7AA" stroke-width="1"/>
-            <text x="15" y="22" font-size="11" fill="#EA580C" font-weight="700">量筒读数注意</text>
-            <text x="15" y="40" font-size="10" fill="#78716C">1. 视线与凹液面最低点平齐</text>
-            <text x="15" y="56" font-size="10" fill="#78716C">2. 俯视偏大，仰视偏小</text>
-            <text x="15" y="72" font-size="10" fill="#78716C">3. 量程 100mL，分度 2mL</text>
+          <!-- Right pan (weights) -->
+          <g id="rightPanGroup">
+            <line x1="510" y1="155" x2="480" y2="210" stroke="#9CA3AF" stroke-width="1"/>
+            <line x1="510" y1="155" x2="540" y2="210" stroke="#9CA3AF" stroke-width="1"/>
+            <ellipse id="rightPan" cx="510" cy="215" rx="55" ry="10" fill="url(#panGrad)" stroke="#9CA3AF" stroke-width="0.5"/>
           </g>
-        </svg>
-      </div>
 
-      <!-- ===== STEP 3: Calculate ===== -->
-      <div class="step-view" id="step2">
-        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
-          <rect width="700" height="400" fill="#FAFBFE"/>
+          <!-- Stacked weights on right pan -->
+          <g id="stackedWeights"></g>
+        </g>
 
+        <!-- Rider (游码) bar -->
+        <rect x="350" y="142" width="120" height="6" rx="2" fill="#E5E7EB" stroke="#D1D5DB" stroke-width="0.5"/>
+        <text x="355" y="139" font-size="7" fill="#9CA3AF">0</text>
+        <text x="375" y="139" font-size="7" fill="#9CA3AF">1</text>
+        <text x="395" y="139" font-size="7" fill="#9CA3AF">2</text>
+        <text x="415" y="139" font-size="7" fill="#9CA3AF">3</text>
+        <text x="435" y="139" font-size="7" fill="#9CA3AF">4</text>
+        <text x="455" y="139" font-size="7" fill="#9CA3AF">5</text>
+
+        <!-- Rider handle -->
+        <rect id="rider" x="348" y="140" width="10" height="12" rx="2" fill="#EA580C" stroke="#C2410C" stroke-width="0.5" style="cursor:ew-resize"/>
+
+        <!-- Weight shelf -->
+        <rect x="50" y="330" width="200" height="60" rx="8" fill="#FAFBFC" stroke="#E5E7EB" stroke-width="1"/>
+        <text x="150" y="348" font-size="10" fill="#374151" text-anchor="middle" font-weight="700">砝码盒</text>
+        <text x="150" y="400" font-size="8" fill="#EA580C" text-anchor="middle" font-weight="600">拖砝码到右盘</text>
+
+        <!-- Draggable weights: 100g/50g/20g/10g/5g 各1个 -->
+        <g id="w100" class="weight" style="cursor:grab" data-mass="100" data-x="60" data-y="352">
+          <rect x="60" y="352" width="36" height="28" rx="4" fill="url(#weightGrad)" stroke="#78350F" stroke-width="0.5"/>
+          <text x="78" y="370" font-size="9" fill="#FEF3C7" text-anchor="middle" font-weight="700">100g</text>
+        </g>
+        <g id="w50" class="weight" style="cursor:grab" data-mass="50" data-x="104" data-y="355">
+          <rect x="104" y="355" width="32" height="25" rx="4" fill="url(#weightGrad)" stroke="#78350F" stroke-width="0.5"/>
+          <text x="120" y="372" font-size="9" fill="#FEF3C7" text-anchor="middle" font-weight="700">50g</text>
+        </g>
+        <g id="w20" class="weight" style="cursor:grab" data-mass="20" data-x="144" data-y="358">
+          <rect x="144" y="358" width="28" height="22" rx="3" fill="url(#weightGrad)" stroke="#78350F" stroke-width="0.5"/>
+          <text x="158" y="373" font-size="8" fill="#FEF3C7" text-anchor="middle" font-weight="700">20g</text>
+        </g>
+        <g id="w10" class="weight" style="cursor:grab" data-mass="10" data-x="180" data-y="360">
+          <rect x="180" y="360" width="24" height="20" rx="3" fill="url(#weightGrad)" stroke="#78350F" stroke-width="0.5"/>
+          <text x="192" y="374" font-size="8" fill="#FEF3C7" text-anchor="middle" font-weight="700">10g</text>
+        </g>
+        <g id="w5" class="weight" style="cursor:grab" data-mass="5" data-x="212" data-y="362">
+          <rect x="212" y="362" width="20" height="18" rx="2" fill="url(#weightGrad)" stroke="#78350F" stroke-width="0.5"/>
+          <text x="222" y="375" font-size="7" fill="#FEF3C7" text-anchor="middle" font-weight="700">5g</text>
+        </g>
+
+        <!-- Balance status -->
+        <rect id="balStatusBg" x="290" y="280" width="120" height="28" rx="14" fill="rgba(234,88,12,0.1)"/>
+        <text id="balStatusText" x="350" y="299" font-size="11" fill="#EA580C" text-anchor="middle" font-weight="700">左偏重</text>
+      </svg>
+
+      <!-- ===== TAB 2: GRADUATED CYLINDER ===== -->
+      <svg id="svgVolume" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <!-- Graduated cylinder -->
+        <g transform="translate(250,20)">
+          <!-- Cylinder body -->
+          <rect x="0" y="30" width="80" height="320" rx="4" fill="rgba(200,220,255,0.15)" stroke="#93C5FD" stroke-width="1.5"/>
+          <rect x="0" y="345" width="80" height="5" rx="2" fill="#93C5FD" opacity="0.3"/>
+          
+          <!-- Scale markings -->
+          <line x1="0" y1="330" x2="20" y2="330" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="333" font-size="8" fill="#9CA3AF" text-anchor="end">0</text>
+          <line x1="0" y1="300" x2="20" y2="300" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="303" font-size="8" fill="#9CA3AF" text-anchor="end">10</text>
+          <line x1="0" y1="270" x2="20" y2="270" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="273" font-size="8" fill="#9CA3AF" text-anchor="end">20</text>
+          <line x1="0" y1="240" x2="20" y2="240" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="243" font-size="8" fill="#9CA3AF" text-anchor="end">30</text>
+          <line x1="0" y1="210" x2="20" y2="210" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="213" font-size="8" fill="#9CA3AF" text-anchor="end">40</text>
+          <line x1="0" y1="180" x2="20" y2="180" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="183" font-size="8" fill="#9CA3AF" text-anchor="end">50</text>
+          <line x1="0" y1="150" x2="20" y2="150" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="153" font-size="8" fill="#9CA3AF" text-anchor="end">60</text>
+          <line x1="0" y1="120" x2="20" y2="120" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="123" font-size="8" fill="#9CA3AF" text-anchor="end">70</text>
+          <line x1="0" y1="90" x2="20" y2="90" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="93" font-size="8" fill="#9CA3AF" text-anchor="end">80</text>
+          <line x1="0" y1="60" x2="20" y2="60" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="63" font-size="8" fill="#9CA3AF" text-anchor="end">90</text>
+          <line x1="0" y1="30" x2="20" y2="30" stroke="#9CA3AF" stroke-width="0.5"/><text x="-5" y="33" font-size="8" fill="#9CA3AF" text-anchor="end">100</text>
+          
+          <!-- Minor ticks -->
+          <g id="minorTicks"></g>
+
+          <!-- Water -->
+          <rect id="water" x="2" y="210" width="76" height="138" rx="2" fill="rgba(59,130,246,0.2)"/>
+          
+          <!-- Water surface -->
+          <path id="waterSurface" d="M2,210 Q20,207 40,210 Q60,213 78,210" fill="none" stroke="#3B82F6" stroke-width="1.5"/>
+          
+          <!-- V1 label -->
+          <g id="v1Label">
+            <line x1="80" y1="210" x2="110" y2="210" stroke="#3B82F6" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="115" y="213" font-size="10" fill="#3B82F6" font-weight="700">V₁ = 40.0 mL</text>
+          </g>
+
+          <!-- V2 label (hidden until object dropped) -->
+          <g id="v2Label" opacity="0">
+            <line x1="80" y1="180" x2="110" y2="180" stroke="#EA580C" stroke-width="1" stroke-dasharray="3,2"/>
+            <text id="v2Text" x="115" y="183" font-size="10" fill="#EA580C" font-weight="700">V₂ = 50.0 mL</text>
+          </g>
+
+          <!-- Object in cylinder (hidden until dropped) -->
+          <rect id="objInCylinder" x="20" y="300" width="40" height="28" rx="3" fill="#78716C" stroke="#57534E" stroke-width="1" opacity="0"/>
+        </g>
+
+        <!-- Draggable object for volume -->
+        <g id="volObject" style="cursor:grab">
+          <rect id="volObjRect" x="500" y="180" width="60" height="40" rx="5" fill="#78716C" stroke="#57534E" stroke-width="1.5"/>
+          <text id="volObjLabel" x="530" y="205" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
+          <text x="530" y="240" font-size="9" fill="#EA580C" text-anchor="middle" font-weight="600">拖入量筒</text>
+        </g>
+
+        <!-- Volume status -->
+        <rect id="volStatusBg" x="430" y="310" width="200" height="40" rx="10" fill="rgba(234,88,12,0.08)" stroke="#FED7AA" stroke-width="1"/>
+        <text id="volStatusText" x="530" y="335" font-size="12" fill="#EA580C" text-anchor="middle" font-weight="600">拖物体放入量筒中</text>
+      </svg>
+
+      <!-- ===== TAB 3: CALCULATION ===== -->
+      <svg id="svgCalc" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <g transform="translate(100,40)">
           <!-- Result card -->
-          <g transform="translate(150, 60)">
-            <rect x="0" y="0" width="400" height="280" rx="16" fill="#fff" stroke="#E5E7EB" stroke-width="1.5"/>
+          <rect x="0" y="0" width="500" height="340" rx="16" fill="#FAFBFC" stroke="#E5E7EB" stroke-width="1"/>
+          
+          <!-- Header -->
+          <rect x="0" y="0" width="500" height="50" rx="16" fill="linear-gradient(135deg,#FFF7ED,#FFEDD5)"/>
+          <rect x="0" y="35" width="500" height="15" fill="#FFF7ED"/>
+          <text x="250" y="32" font-size="16" fill="#EA580C" text-anchor="middle" font-weight="800">密度计算结果</text>
 
-            <text x="200" y="40" font-size="16" fill="#1D1D1F" text-anchor="middle" font-weight="800">密度计算结果</text>
+          <!-- Material -->
+          <text x="40" y="90" font-size="13" fill="#6B7280">实验材料</text>
+          <text id="calcMat" x="460" y="90" font-size="14" fill="#1D1D1F" text-anchor="end" font-weight="700">铝块</text>
+          <line x1="40" y1="105" x2="460" y2="105" stroke="#F3F4F6" stroke-width="1"/>
 
-            <!-- Divider -->
-            <line x1="30" y1="55" x2="370" y2="55" stroke="#F3F4F6" stroke-width="1"/>
+          <!-- Mass -->
+          <text x="40" y="130" font-size="13" fill="#6B7280">质量 m</text>
+          <text id="calcM" x="460" y="130" font-size="14" fill="#1D1D1F" text-anchor="end" font-weight="700">— g</text>
+          <line x1="40" y1="145" x2="460" y2="145" stroke="#F3F4F6" stroke-width="1"/>
 
-            <!-- Mass -->
-            <g transform="translate(30, 75)">
-              <circle cx="12" cy="0" r="10" fill="#FFF7ED"/>
-              <text x="12" y="4" font-size="10" fill="#EA580C" text-anchor="middle" font-weight="800">m</text>
-              <text x="30" y="4" font-size="13" fill="#374151" font-weight="600">质量</text>
-              <text id="resultM" x="340" y="4" font-size="14" fill="#1D1D1F" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="700">27.0 g</text>
-            </g>
+          <!-- Volume -->
+          <text x="40" y="170" font-size="13" fill="#6B7280">体积 V = V₂ - V₁</text>
+          <text id="calcV" x="460" y="170" font-size="14" fill="#1D1D1F" text-anchor="end" font-weight="700">— mL = — cm³</text>
+          <line x1="40" y1="185" x2="460" y2="185" stroke="#F3F4F6" stroke-width="1"/>
 
-            <!-- Volume -->
-            <g transform="translate(30, 115)">
-              <circle cx="12" cy="0" r="10" fill="#EFF6FF"/>
-              <text x="12" y="4" font-size="10" fill="#3B82F6" text-anchor="middle" font-weight="800">V</text>
-              <text x="30" y="4" font-size="13" fill="#374151" font-weight="600">体积</text>
-              <text id="resultV" x="340" y="4" font-size="14" fill="#1D1D1F" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="700">10.0 mL</text>
-            </g>
+          <!-- Density calculation -->
+          <text x="40" y="215" font-size="13" fill="#6B7280">ρ = m / V</text>
+          <text id="calcRho" x="460" y="215" font-size="16" fill="#EA580C" text-anchor="end" font-weight="800">— g/cm³</text>
+          <line x1="40" y1="235" x2="460" y2="235" stroke="#F3F4F6" stroke-width="1"/>
 
-            <line x1="30" y1="140" x2="370" y2="140" stroke="#F3F4F6" stroke-width="1"/>
+          <!-- Reference -->
+          <text x="40" y="265" font-size="12" fill="#9CA3AF">参考密度</text>
+          <text id="calcRef" x="460" y="265" font-size="12" fill="#9CA3AF" text-anchor="end">—</text>
 
-            <!-- Density result -->
-            <g transform="translate(30, 175)">
-              <rect x="0" y="-20" width="340" height="50" rx="10" fill="#FFF7ED" stroke="#FED7AA" stroke-width="1"/>
-              <text x="15" y="4" font-size="12" fill="#EA580C" font-weight="600">密度 ρ = m / V</text>
-              <text id="resultRho" x="325" y="6" font-size="20" fill="#EA580C" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800">2.70 g/cm³</text>
-            </g>
+          <!-- Error -->
+          <text x="40" y="295" font-size="12" fill="#9CA3AF">测量误差</text>
+          <text id="calcErr" x="460" y="295" font-size="12" fill="#9CA3AF" text-anchor="end">—</text>
 
-            <!-- Reference -->
-            <g transform="translate(30, 230)">
-              <text x="0" y="0" font-size="10" fill="#9CA3AF" font-weight="600">参考值</text>
-              <text id="refLabel" x="0" y="18" font-size="11" fill="#6B7280">铝 ρ = 2.7 g/cm³</text>
-              <text id="errorText" x="200" y="18" font-size="11" fill="#059669" font-weight="700">误差：0.0%</text>
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      <div class="guide-overlay" id="guideOverlay">
-        <div class="guide-label" style="top:20%;left:5%">在砝码盒中选砝码放到右盘</div>
-        <div class="guide-label" style="top:50%;left:45%">拖动游码精确调平</div>
-        <div class="guide-label" style="top:12%;right:20%">3 步完成密度测量</div>
-      </div>
+          <!-- Verdict -->
+          <rect id="verdictBg" x="120" y="305" width="260" height="28" rx="14" fill="rgba(5,150,105,0.1)" opacity="0"/>
+          <text id="verdictText" x="250" y="324" font-size="12" fill="#059669" text-anchor="middle" font-weight="700" opacity="0"></text>
+        </g>
+      </svg>
     </div>
   </div>
 
+  <!-- Panel -->
   <div class="panel">
     <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> 实验材料</h3>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> 实验材料</h3>
       <div style="display:flex;gap:4px">
-        <button class="preset-btn active" onclick="setPreset('al')">铝块</button>
-        <button class="preset-btn" onclick="setPreset('fe')">铁块</button>
-        <button class="preset-btn" onclick="setPreset('stone')">石块</button>
+        <button class="mat-btn active" onclick="setMaterial('al',this)">铝块</button>
+        <button class="mat-btn" onclick="setMaterial('fe',this)">铁块</button>
+        <button class="mat-btn" onclick="setMaterial('stone',this)">石块</button>
       </div>
-      <div class="data-row" style="margin-top:8px"><span class="data-label">实际质量</span><span class="data-value" id="actualM">27.0 g</span></div>
-      <div class="data-row"><span class="data-label">实际体积</span><span class="data-value" id="actualV">10.0 mL</span></div>
     </div>
 
-    <div class="panel-section" id="panelStep0">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg> Step1：称质量</h3>
-      <div style="font-size:10px;color:#6B7280;margin-bottom:8px">点击砝码放到右盘，拖游码精调</div>
-      <div class="weight-box" id="weightBtns"></div>
-      <div class="slider-control" style="margin-top:8px">
-        <label>游码 = <span class="slider-val" id="riderVal">0.0 g</span></label>
-        <input type="range" id="riderSlider" min="0" max="5" step="0.2" value="0" oninput="updateBalance()">
+    <!-- Tab 1 panel -->
+    <div id="panel1">
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg> STEP1：称质量</h3>
+        <div class="data-row"><span class="data-label">砝码总质量</span><span class="data-value" id="valWeights">0 g</span></div>
+        <div class="data-row"><span class="data-label">游码示数</span><span class="data-value" id="valRider">0.0 g</span></div>
+        <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:600">测量质量 m</span><span class="data-value" id="valMass" style="color:#EA580C">0.0 g</span></div>
+        <div class="slider-container" style="margin-top:6px">
+          <div style="font-size:10px;color:#6B7280;margin-bottom:2px">游码 (0-5g，步长0.2g)</div>
+          <input type="range" min="0" max="50" value="0" step="2" id="riderSlider" oninput="updateRider()"/>
+        </div>
       </div>
-      <div class="data-row"><span class="data-label">砝码总质量</span><span class="data-value" id="weightTotal">0 g</span></div>
-      <div class="data-row"><span class="data-label">游码示数</span><span class="data-value" id="riderDisplay">0.0 g</span></div>
-      <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:700">测量质量 m</span><span class="data-value" id="measuredM" style="color:#EA580C">0.0 g</span></div>
-      <div id="balStatus"></div>
-      <button class="next-btn" id="nextBtn1" onclick="switchStep(1)" disabled>确认质量，下一步</button>
+      <button class="step-btn" id="confirmMass" onclick="confirmMass()" disabled>确认质量，下一步</button>
     </div>
 
-    <div class="panel-section" id="panelStep1" style="display:none">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg> Step2：测体积</h3>
-      <div class="data-row"><span class="data-label">初始水面 V₁</span><span class="data-value" id="panelV1">40 mL</span></div>
-      <button class="next-btn" style="margin:8px 0;background:#3B82F6" id="dropBtn" onclick="dropObject()">放入物体</button>
-      <div class="data-row"><span class="data-label">放入后 V₂</span><span class="data-value" id="panelV2">— mL</span></div>
-      <div class="data-row"><span class="data-label" style="color:#059669;font-weight:700">体积 ΔV</span><span class="data-value" id="panelDV" style="color:#059669">— mL</span></div>
-      <button class="next-btn" id="nextBtn2" onclick="switchStep(2)" disabled>确认体积，下一步</button>
+    <!-- Tab 2 panel -->
+    <div id="panel2" style="display:none">
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> STEP2：测体积</h3>
+        <div class="data-row"><span class="data-label">初始水位 V₁</span><span class="data-value" id="valV1">40.0 mL</span></div>
+        <div class="data-row"><span class="data-label">放入后 V₂</span><span class="data-value" id="valV2">— mL</span></div>
+        <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:600">体积 ΔV</span><span class="data-value" id="valDV" style="color:#EA580C">— mL</span></div>
+      </div>
+      <button class="step-btn" id="confirmVol" onclick="confirmVolume()" disabled>确认体积，计算密度</button>
     </div>
 
-    <div class="panel-section" id="panelStep2" style="display:none">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> Step3：计算密度</h3>
-      <div class="formula-box" id="formula1"></div>
-      <div class="data-row" style="margin-top:8px"><span class="data-label">m</span><span class="data-value" id="calcM">27.0 g</span></div>
-      <div class="data-row"><span class="data-label">V</span><span class="data-value" id="calcV">10.0 mL</span></div>
-      <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:800;font-size:13px">ρ = m/V</span><span class="data-value" id="calcRho" style="color:#EA580C;font-size:14px">2.70 g/cm³</span></div>
-      <div style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">
-        1 mL = 1 cm³<br/>
-        密度是物质的特性，与质量和体积无关
+    <!-- Tab 3 panel -->
+    <div id="panel3" style="display:none">
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 实验结果</h3>
+        <div class="data-row"><span class="data-label">质量 m</span><span class="data-value" id="resM">—</span></div>
+        <div class="data-row"><span class="data-label">体积 V</span><span class="data-value" id="resV">—</span></div>
+        <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:700">密度 ρ</span><span class="data-value" id="resRho" style="color:#EA580C;font-size:14px">—</span></div>
       </div>
     </div>
 
     <button class="reset-btn" onclick="resetAll()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
       重置实验
     </button>
   </div>
 </div>
 
-<div class="related-bar">
-  <span>相关实验</span>
-  <a href="/devkit/pages/lab/buoyancy/">浮力实验</a>
-  <a href="/devkit/pages/lab/spring/">弹簧测力计</a>
-  <a href="/devkit/pages/lab/lever/">杠杆平衡</a>
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>密度公式</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>密度是物质的一种特性，同种物质密度相同，不同物质密度一般不同。</p>
+      <ul>
+        <li><strong>ρ</strong> — 密度（单位：kg/m³ 或 g/cm³）</li>
+        <li><strong>m</strong> — 质量（单位：kg 或 g）</li>
+        <li><strong>V</strong> — 体积（单位：m³ 或 cm³）</li>
+        <li>1 g/cm³ = 1000 kg/m³</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验步骤与注意事项</h2></div>
+    <div class="card-body">
+      <ul>
+        <li><strong>先调零</strong>：使用天平前先调节平衡螺母使指针对准中线</li>
+        <li><strong>左物右码</strong>：物体放左盘，砝码放右盘</li>
+        <li><strong>由大到小</strong>加砝码：先加大砝码，质量过大则取下换小砝码</li>
+        <li><strong>游码微调</strong>：最后用游码调平衡</li>
+        <li><strong>量筒读数</strong>：视线与凹液面最低处水平</li>
+      </ul>
+      <p style="margin-top:8px;color:#EA580C;font-size:12px;font-weight:600">考点提醒：m = 砝码质量 + 游码示数！游码读左边刻度线！</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>用天平和量筒测某金属块密度。天平上砝码 20g+5g，游码 2.4g。量筒中水 40mL，放入后 50mL。求密度。</p>
+      <div class="solve">
+        m = 20 + 5 + 2.4 = 27.4 g<br/>
+        V = V₂ - V₁ = 50 - 40 = 10 mL = 10 cm³<br/>
+        ρ = m/V = 27.4/10 = <strong style="color:#EA580C">2.74 g/cm³</strong><br/>
+        接近铝的密度 2.7 g/cm³ → 该金属可能是铝
+      </div>
+    </div>
+  </div>
+  <!-- ad placeholder hidden -->
 </div>
 <script>
-const presets = {
-  al:    { name:'铝块', m: 27.0, v: 10.0, rho: 2.7, ref:'铝 ρ = 2.7 g/cm³' },
-  fe:    { name:'铁块', m: 78.0, v: 10.0, rho: 7.8, ref:'铁 ρ = 7.8 g/cm³' },
-  stone: { name:'石块', m: 25.0, v: 10.0, rho: 2.5, ref:'石 ρ ≈ 2.5 g/cm³' }
+// ===== MATERIALS =====
+const MATERIALS = {
+  al:    { name:'铝块', mass:27.0, volume:10.0, refRho:2.70, color:'#78716C' },
+  fe:    { name:'铁块', mass:39.5, volume:5.0,  refRho:7.90, color:'#57534E' },
+  stone: { name:'石块', mass:32.0, volume:12.5, refRho:2.56, color:'#A8A29E' }
 };
-let current = 'al';
-let step = 0;
-const weights = [100, 50, 20, 10, 5]; // g
-let addedWeights = {};
+let currentMat = 'al';
+let currentTab = 1;
+
+// Balance state
+const WEIGHT_IDS = ['w100','w50','w20','w10','w5'];
+const WEIGHT_MASSES = [100, 50, 20, 10, 5];
+let weightOnPan = [false,false,false,false,false]; // on right pan?
+let weightStates = []; // {x,y,origX,origY,mass,onPan}
+let riderValue = 0; // 0-5g
+let massConfirmed = false;
+let volumeConfirmed = false;
+
+// Drag
+let draggingWeight = -1;
+let dragOff = {x:0, y:0};
+
+// Volume
 let objectDropped = false;
+let draggingVolObj = false;
+let volObjPos = {x:500, y:180};
+let volObjOrig = {x:500, y:180};
 
-function setPreset(key) {
-  current = key;
-  document.querySelectorAll('.preset-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['al','fe','stone'][i] === key);
-  });
-  document.getElementById('actualM').textContent = presets[key].m.toFixed(1) + ' g';
-  document.getElementById('actualV').textContent = presets[key].v.toFixed(1) + ' mL';
-  resetAll();
-}
-
-function initWeightBtns() {
-  const c = document.getElementById('weightBtns');
-  c.innerHTML = '';
-  weights.forEach(w => {
-    addedWeights[w] = 0;
-    const b = document.createElement('button');
-    b.className = 'weight-btn';
-    b.textContent = w + 'g';
-    b.onclick = () => toggleWeight(w, b);
-    b.dataset.w = w;
-    c.appendChild(b);
+// ===== INIT =====
+function initWeights() {
+  weightStates = [];
+  WEIGHT_IDS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    const ox = parseInt(el.getAttribute('data-x'));
+    const oy = parseInt(el.getAttribute('data-y'));
+    weightStates.push({ x:ox, y:oy, origX:ox, origY:oy, mass:WEIGHT_MASSES[i], onPan:false });
   });
 }
 
-function toggleWeight(w, btn) {
-  if (addedWeights[w]) { addedWeights[w] = 0; btn.classList.remove('added'); }
-  else { addedWeights[w] = 1; btn.classList.add('added'); }
-  updateBalance();
-}
+function getMat() { return MATERIALS[currentMat]; }
+function getTotalWeights() { return weightStates.reduce((s,w) => s + (w.onPan ? w.mass : 0), 0); }
+function getMeasuredMass() { return getTotalWeights() + riderValue; }
 
-function getWeightTotal() {
-  let s = 0;
-  for (const w in addedWeights) s += addedWeights[w] * parseInt(w);
-  return s;
-}
-
+// ===== DRAWING =====
 function updateBalance() {
-  const rider = parseFloat(document.getElementById('riderSlider').value);
-  const wt = getWeightTotal();
-  const measured = wt + rider;
-  const actual = presets[current].m;
-
-  document.getElementById('riderVal').textContent = rider.toFixed(1) + ' g';
-  document.getElementById('weightTotal').textContent = wt + ' g';
-  document.getElementById('riderDisplay').textContent = rider.toFixed(1) + ' g';
-  document.getElementById('measuredM').textContent = measured.toFixed(1) + ' g';
+  const objMass = getMat().mass;
+  const measured = getMeasuredMass();
+  const diff = objMass - measured; // positive = left heavy
 
   // Beam tilt
-  const diff = actual - measured;
-  const angle = Math.max(-8, Math.min(8, diff * 0.5));
-  document.getElementById('beamGroup').setAttribute('transform', `rotate(${angle},350,180)`);
+  const angle = Math.max(-8, Math.min(8, diff * 0.3));
+  const beam = document.getElementById('beamGroup');
+  beam.setAttribute('transform', `rotate(${angle},350,155)`);
 
   // Pointer
-  const pAngle = -angle * 2;
-  document.getElementById('balancePointerGroup').setAttribute('transform', `rotate(${pAngle},350,185)`);
+  const ptr = document.getElementById('pointer');
+  ptr.setAttribute('x2', 350 + Math.sin(angle * Math.PI / 180) * 90);
 
-  // Rider position on SVG
-  const rx = 346 + (rider / 5) * 60;
-  document.getElementById('riderRect').setAttribute('x', rx);
-
-  // Balance check
-  const balanced = Math.abs(diff) < 0.3;
-  const bt = document.getElementById('balanceText');
-  const bs = document.getElementById('balanceStatus').querySelector('rect');
-  const bal = document.getElementById('balStatus');
-  if (balanced) {
-    bt.textContent = '已平衡';
-    bs.setAttribute('fill', '#D1FAE5'); bs.setAttribute('stroke', '#A7F3D0');
-    bt.setAttribute('fill', '#065F46');
-    bal.innerHTML = '<div class="status-pill status-ok"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 天平已平衡</div>';
-    document.getElementById('nextBtn1').disabled = false;
+  // Status
+  const bg = document.getElementById('balStatusBg');
+  const txt = document.getElementById('balStatusText');
+  if (Math.abs(diff) < 0.3) {
+    txt.textContent = '天平平衡';
+    bg.setAttribute('fill', 'rgba(5,150,105,0.1)');
+    txt.setAttribute('fill', '#059669');
+    document.getElementById('confirmMass').disabled = false;
+  } else if (diff > 0) {
+    txt.textContent = '左偏重';
+    bg.setAttribute('fill', 'rgba(234,88,12,0.1)');
+    txt.setAttribute('fill', '#EA580C');
+    document.getElementById('confirmMass').disabled = true;
   } else {
-    bt.textContent = diff > 0 ? '左偏重' : '右偏重';
-    bs.setAttribute('fill', '#FEF3C7'); bs.setAttribute('stroke', '#FDE68A');
-    bt.setAttribute('fill', '#92400E');
-    bal.innerHTML = '<div class="status-pill status-warn"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2M12 15h.01"/></svg> ' + (diff > 0 ? '需加砝码或调游码' : '砝码过重') + '</div>';
-    document.getElementById('nextBtn1').disabled = true;
+    txt.textContent = '右偏重';
+    bg.setAttribute('fill', 'rgba(234,88,12,0.1)');
+    txt.setAttribute('fill', '#EA580C');
+    document.getElementById('confirmMass').disabled = true;
   }
 
-  // Draw weights on pan
-  const wp = document.getElementById('weightsOnPan');
-  wp.innerHTML = '';
-  let wy = 0;
-  for (const w of weights) {
-    if (addedWeights[w]) {
-      const h = w >= 50 ? 16 : (w >= 20 ? 12 : 8);
-      const ww = w >= 50 ? 30 : (w >= 20 ? 24 : 18);
+  // Stacked weights visual
+  const stack = document.getElementById('stackedWeights');
+  stack.innerHTML = '';
+  let stackY = 205;
+  weightStates.forEach((w, i) => {
+    if (w.onPan) {
+      const h = w.mass >= 50 ? 14 : w.mass >= 20 ? 12 : w.mass >= 10 ? 10 : 8;
+      const ww = w.mass >= 50 ? 30 : w.mass >= 20 ? 26 : w.mass >= 10 ? 22 : 16;
+      stackY -= h;
       const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
-      r.setAttribute('x', 490-ww/2); r.setAttribute('y', 220-wy-h);
+      r.setAttribute('x', 510 - ww/2); r.setAttribute('y', stackY);
       r.setAttribute('width', ww); r.setAttribute('height', h);
-      r.setAttribute('rx','2'); r.setAttribute('fill','#D6D3D1');
-      r.setAttribute('stroke','#A8A29E'); r.setAttribute('stroke-width','0.8');
-      wp.appendChild(r);
+      r.setAttribute('rx','2'); r.setAttribute('fill','url(#weightGrad)');
+      r.setAttribute('stroke','#78350F'); r.setAttribute('stroke-width','0.5');
+      stack.appendChild(r);
       const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x','490'); t.setAttribute('y', 220-wy-h/2+3);
-      t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','7');
-      t.setAttribute('fill','#57534E'); t.setAttribute('font-weight','600');
-      t.textContent = w+'g';
-      wp.appendChild(t);
-      wy += h + 2;
+      t.setAttribute('x','510'); t.setAttribute('y', stackY + h - 3);
+      t.setAttribute('font-size','7'); t.setAttribute('fill','#FEF3C7');
+      t.setAttribute('text-anchor','middle'); t.setAttribute('font-weight','700');
+      t.textContent = w.mass + 'g';
+      stack.appendChild(t);
+    }
+  });
+
+  // Update weight positions (shelf ones)
+  WEIGHT_IDS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    const w = weightStates[i];
+    if (w.onPan) {
+      el.style.opacity = '0.2';
+    } else {
+      el.style.opacity = '1';
+      const rect = el.querySelector('rect');
+      const text = el.querySelector('text');
+      rect.setAttribute('x', w.x); rect.setAttribute('y', w.y);
+      const rw = parseFloat(rect.getAttribute('width'));
+      const rh = parseFloat(rect.getAttribute('height'));
+      text.setAttribute('x', w.x + rw/2); text.setAttribute('y', w.y + rh - 4);
+    }
+  });
+
+  // Panel
+  document.getElementById('valWeights').textContent = getTotalWeights() + ' g';
+  document.getElementById('valMass').textContent = getMeasuredMass().toFixed(1) + ' g';
+
+  // Status badge
+  const badge = document.getElementById('statusBadge');
+  if (currentTab === 1) {
+    if (Math.abs(diff) < 0.3) {
+      badge.textContent = '天平平衡！m = ' + getMeasuredMass().toFixed(1) + 'g';
+      badge.style.background = 'rgba(5,150,105,0.12)';
+      badge.style.color = '#059669';
+    } else {
+      badge.textContent = '拖砝码到右盘，调游码使天平平衡';
+      badge.style.background = 'rgba(234,88,12,0.1)';
+      badge.style.color = '#EA580C';
     }
   }
 }
 
-function dropObject() {
-  if (objectDropped) return;
-  objectDropped = true;
-  const p = presets[current];
-  const v2 = 40 + p.v;
-  const v2y = 320 - v2 * 3.2; // scale: 100mL = 320px
-  const v1y = 320 - 40 * 3.2; // 40mL initial
-
-  // Water rises
-  document.getElementById('waterFill').setAttribute('y', v2y + 30);
-  document.getElementById('waterFill').setAttribute('height', 320 - v2y - 30 + 30);
-  document.getElementById('meniscus').setAttribute('d', `M1,${v2y+30} Q40,${v2y+36} 79,${v2y+30}`);
-
-  // Object visible
-  document.getElementById('objectInCylinder').setAttribute('opacity', '1');
-  document.getElementById('cylObject').setAttribute('y', 320 - 40*3.2 - 30);
-  document.getElementById('cylObjectLabel').setAttribute('y', 320 - 40*3.2 - 12);
-  document.getElementById('cylObjectLabel').textContent = p.name;
-
-  // V2 marker
-  const v2m = document.getElementById('v2Marker');
-  v2m.setAttribute('opacity', '1');
-  document.getElementById('v2Line').setAttribute('y1', v2y+30);
-  document.getElementById('v2Line').setAttribute('y2', v2y+30);
-  document.getElementById('v2Text').setAttribute('y', v2y+33);
-  document.getElementById('v2Text').textContent = `V₂=${v2.toFixed(0)}mL`;
-  document.getElementById('dvLine1').setAttribute('y1', v1y+30);
-  document.getElementById('dvLine1').setAttribute('y2', v2y+30);
-  document.getElementById('dvTop').setAttribute('y1', v2y+30);
-  document.getElementById('dvTop').setAttribute('y2', v2y+30);
-  document.getElementById('dvBot').setAttribute('y1', v1y+30);
-  document.getElementById('dvBot').setAttribute('y2', v1y+30);
-  document.getElementById('dvText').setAttribute('y', (v1y+v2y)/2+33);
-  document.getElementById('dvText').textContent = `ΔV=${p.v.toFixed(0)}mL`;
-
-  // Panel
-  document.getElementById('panelV2').textContent = v2.toFixed(0) + ' mL';
-  document.getElementById('panelDV').textContent = p.v.toFixed(0) + ' mL';
-  document.getElementById('nextBtn2').disabled = false;
-  document.getElementById('dropBtn').disabled = true;
-  document.getElementById('dropBtn').textContent = '已放入';
-  document.getElementById('dropBtn').style.background = '#9CA3AF';
-}
-
-function switchStep(s) {
-  step = s;
-  document.querySelectorAll('.step-tab').forEach((t, i) => {
-    t.classList.toggle('active', i === s);
-    if (i < s) t.classList.add('done');
-  });
-  document.querySelectorAll('.step-view').forEach((v, i) => v.classList.toggle('active', i === s));
-
-  document.getElementById('panelStep0').style.display = s === 0 ? 'block' : 'none';
-  document.getElementById('panelStep1').style.display = s === 1 ? 'block' : 'none';
-  document.getElementById('panelStep2').style.display = s === 2 ? 'block' : 'none';
-
-  if (s === 1) {
-    document.getElementById('objectOnPan').setAttribute('opacity', '1');
-    document.getElementById('objectLabel').textContent = presets[current].name;
-  }
-
-  if (s === 2) {
-    const p = presets[current];
-    const mMeasured = parseFloat(document.getElementById('measuredM').textContent);
-    const vMeasured = p.v;
-    const rho = mMeasured / vMeasured;
-    document.getElementById('calcM').textContent = mMeasured.toFixed(1) + ' g';
-    document.getElementById('calcV').textContent = vMeasured.toFixed(1) + ' mL';
-    document.getElementById('calcRho').textContent = rho.toFixed(2) + ' g/cm³';
-    document.getElementById('resultM').textContent = mMeasured.toFixed(1) + ' g';
-    document.getElementById('resultV').textContent = vMeasured.toFixed(1) + ' mL';
-    document.getElementById('resultRho').textContent = rho.toFixed(2) + ' g/cm³';
-    document.getElementById('refLabel').textContent = p.ref;
-    const err = Math.abs(rho - p.rho) / p.rho * 100;
-    document.getElementById('errorText').textContent = '误差：' + err.toFixed(1) + '%';
-  }
-}
-
-function resetAll() {
-  step = 0; objectDropped = false;
-  addedWeights = {};
-  initWeightBtns();
-  document.getElementById('riderSlider').value = 0;
-  document.getElementById('nextBtn1').disabled = true;
-  document.getElementById('nextBtn2').disabled = true;
-  document.getElementById('dropBtn').disabled = false;
-  document.getElementById('dropBtn').textContent = '放入物体';
-  document.getElementById('dropBtn').style.background = '#3B82F6';
-  document.getElementById('panelV2').textContent = '— mL';
-  document.getElementById('panelDV').textContent = '— mL';
-  document.getElementById('objectInCylinder').setAttribute('opacity', '0');
-  document.getElementById('v2Marker').setAttribute('opacity', '0');
-  document.getElementById('objectOnPan').setAttribute('opacity', '0');
-
-  // Reset water
-  document.getElementById('waterFill').setAttribute('y', '222');
-  document.getElementById('waterFill').setAttribute('height', '128');
-  document.getElementById('meniscus').setAttribute('d', 'M1,222 Q40,228 79,222');
-
-  switchStep(0);
+function updateRider() {
+  riderValue = parseInt(document.getElementById('riderSlider').value) / 10;
+  document.getElementById('valRider').textContent = riderValue.toFixed(1) + ' g';
+  // Move rider visual
+  const riderEl = document.getElementById('rider');
+  const px = 348 + (riderValue / 5) * 120;
+  riderEl.setAttribute('x', px);
   updateBalance();
 }
 
-function renderFormulas() {
-  try {
-    katex.render('\\rho = \\frac{m}{V}', document.getElementById('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {
-    document.getElementById('formula1').textContent = 'ρ = m / V';
+// ===== WEIGHT DRAG =====
+const svgBal = document.getElementById('svgBalance');
+function getSvgPt(svg, e) {
+  const pt = svg.createSVGPoint();
+  const touch = e.touches ? e.touches[0] : e;
+  pt.x = touch.clientX; pt.y = touch.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function onWeightDown(e) {
+  if (currentTab !== 1) return;
+  e.preventDefault();
+  const p = getSvgPt(svgBal, e);
+  for (let i = 0; i < weightStates.length; i++) {
+    const w = weightStates[i];
+    if (w.onPan) continue;
+    const el = document.getElementById(WEIGHT_IDS[i]);
+    const rect = el.querySelector('rect');
+    const rx = parseFloat(rect.getAttribute('x'));
+    const ry = parseFloat(rect.getAttribute('y'));
+    const rw = parseFloat(rect.getAttribute('width'));
+    const rh = parseFloat(rect.getAttribute('height'));
+    if (p.x >= rx && p.x <= rx+rw && p.y >= ry && p.y <= ry+rh) {
+      draggingWeight = i;
+      dragOff.x = p.x - rx;
+      dragOff.y = p.y - ry;
+      return;
+    }
   }
 }
 
-initWeightBtns();
+function onWeightMove(e) {
+  if (draggingWeight < 0) return;
+  e.preventDefault();
+  const p = getSvgPt(svgBal, e);
+  weightStates[draggingWeight].x = p.x - dragOff.x;
+  weightStates[draggingWeight].y = p.y - dragOff.y;
+  updateBalance();
+}
+
+function onWeightUp(e) {
+  if (draggingWeight < 0) return;
+  const w = weightStates[draggingWeight];
+  // Check if dropped on right pan area (x: 455-565, y: 140-220)
+  const cx = w.x + 15;
+  const cy = w.y + 10;
+  if (cx > 455 && cx < 565 && cy > 120 && cy < 230) {
+    w.onPan = true;
+  } else {
+    w.x = w.origX;
+    w.y = w.origY;
+  }
+  draggingWeight = -1;
+  updateBalance();
+}
+
+svgBal.addEventListener('mousedown', onWeightDown);
+svgBal.addEventListener('mousemove', onWeightMove);
+svgBal.addEventListener('mouseup', onWeightUp);
+svgBal.addEventListener('touchstart', onWeightDown, {passive:false});
+svgBal.addEventListener('touchmove', onWeightMove, {passive:false});
+svgBal.addEventListener('touchend', onWeightUp);
+
+// ===== VOLUME DRAG =====
+const svgVol = document.getElementById('svgVolume');
+
+function onVolDown(e) {
+  if (currentTab !== 2 || objectDropped) return;
+  const p = getSvgPt(svgVol, e);
+  if (p.x >= volObjPos.x && p.x <= volObjPos.x+60 && p.y >= volObjPos.y && p.y <= volObjPos.y+40) {
+    e.preventDefault();
+    draggingVolObj = true;
+    dragOff.x = p.x - volObjPos.x;
+    dragOff.y = p.y - volObjPos.y;
+  }
+}
+
+function onVolMove(e) {
+  if (!draggingVolObj) return;
+  e.preventDefault();
+  const p = getSvgPt(svgVol, e);
+  volObjPos.x = p.x - dragOff.x;
+  volObjPos.y = p.y - dragOff.y;
+  const rect = document.getElementById('volObjRect');
+  const label = document.getElementById('volObjLabel');
+  rect.setAttribute('x', volObjPos.x); rect.setAttribute('y', volObjPos.y);
+  label.setAttribute('x', volObjPos.x + 30); label.setAttribute('y', volObjPos.y + 25);
+}
+
+function onVolUp(e) {
+  if (!draggingVolObj) return;
+  draggingVolObj = false;
+  // Check if dropped in cylinder (x: 250-330, y: 30-350 in svg, adjusted for transform)
+  const cx = volObjPos.x + 30;
+  const cy = volObjPos.y + 20;
+  if (cx > 250 && cx < 330 && cy > 50 && cy < 370) {
+    dropObject();
+  } else {
+    volObjPos.x = volObjOrig.x; volObjPos.y = volObjOrig.y;
+    const rect = document.getElementById('volObjRect');
+    const label = document.getElementById('volObjLabel');
+    rect.setAttribute('x', volObjPos.x); rect.setAttribute('y', volObjPos.y);
+    label.setAttribute('x', volObjPos.x+30); label.setAttribute('y', volObjPos.y+25);
+  }
+}
+
+function dropObject() {
+  objectDropped = true;
+  const mat = getMat();
+  const V1 = 40;
+  const V2 = V1 + mat.volume;
+  
+  // Hide draggable, show in cylinder
+  document.getElementById('volObject').style.opacity = '0';
+  const objIn = document.getElementById('objInCylinder');
+  objIn.setAttribute('opacity', '1');
+  objIn.setAttribute('fill', mat.color);
+  
+  // Water rises
+  const waterY = 330 - V2 * 3; // scale: 3px per mL
+  document.getElementById('water').setAttribute('y', waterY);
+  document.getElementById('water').setAttribute('height', 330 + 18 - waterY);
+  document.getElementById('waterSurface').setAttribute('d', `M252,${waterY+20} Q270,${waterY+17} 290,${waterY+20} Q310,${waterY+23} 328,${waterY+20}`);
+  
+  // V2 label
+  const v2g = document.getElementById('v2Label');
+  v2g.setAttribute('opacity', '1');
+  const v2line = v2g.querySelector('line');
+  v2line.setAttribute('y1', waterY+20); v2line.setAttribute('y2', waterY+20);
+  const v2t = document.getElementById('v2Text');
+  v2t.setAttribute('y', waterY+23);
+  v2t.textContent = 'V₂ = ' + V2.toFixed(1) + ' mL';
+
+  // Panel
+  document.getElementById('valV2').textContent = V2.toFixed(1) + ' mL';
+  document.getElementById('valDV').textContent = mat.volume.toFixed(1) + ' mL';
+  document.getElementById('confirmVol').disabled = false;
+
+  // Status
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = 'V = ' + V2.toFixed(1) + ' - ' + V1.toFixed(1) + ' = ' + mat.volume.toFixed(1) + ' mL';
+  badge.style.background = 'rgba(5,150,105,0.12)';
+  badge.style.color = '#059669';
+
+  const st = document.getElementById('volStatusText');
+  st.textContent = 'ΔV = ' + mat.volume.toFixed(1) + ' mL';
+}
+
+svgVol.addEventListener('mousedown', onVolDown);
+svgVol.addEventListener('mousemove', onVolMove);
+svgVol.addEventListener('mouseup', onVolUp);
+svgVol.addEventListener('touchstart', onVolDown, {passive:false});
+svgVol.addEventListener('touchmove', onVolMove, {passive:false});
+svgVol.addEventListener('touchend', onVolUp);
+
+// ===== TABS =====
+function switchTab(n) {
+  if (n === 2 && !massConfirmed) return;
+  if (n === 3 && !volumeConfirmed) return;
+  currentTab = n;
+  document.getElementById('svgBalance').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('svgVolume').style.display = n===2 ? 'block' : 'none';
+  document.getElementById('svgCalc').style.display = n===3 ? 'block' : 'none';
+  document.getElementById('panel1').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('panel2').style.display = n===2 ? 'block' : 'none';
+  document.getElementById('panel3').style.display = n===3 ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', i+1 === n);
+  });
+  updateStatusForTab();
+}
+
+function updateStatusForTab() {
+  const badge = document.getElementById('statusBadge');
+  if (currentTab === 1) {
+    updateBalance();
+  } else if (currentTab === 2) {
+    if (!objectDropped) {
+      badge.textContent = '拖' + getMat().name + '放入量筒';
+      badge.style.background = 'rgba(234,88,12,0.1)';
+      badge.style.color = '#EA580C';
+    }
+  } else if (currentTab === 3) {
+    badge.textContent = '实验完成';
+    badge.style.background = 'rgba(5,150,105,0.12)';
+    badge.style.color = '#059669';
+  }
+}
+
+function confirmMass() {
+  massConfirmed = true;
+  document.getElementById('tab1').classList.add('done');
+  switchTab(2);
+}
+
+function confirmVolume() {
+  volumeConfirmed = true;
+  document.getElementById('tab2').classList.add('done');
+  showResults();
+  switchTab(3);
+}
+
+function showResults() {
+  const mat = getMat();
+  const m = getMeasuredMass();
+  const V = mat.volume;
+  const rho = m / V;
+  const refRho = mat.refRho;
+  const err = Math.abs(rho - refRho) / refRho * 100;
+
+  document.getElementById('calcMat').textContent = mat.name;
+  document.getElementById('calcM').textContent = m.toFixed(1) + ' g';
+  document.getElementById('calcV').textContent = V.toFixed(1) + ' mL = ' + V.toFixed(1) + ' cm³';
+  document.getElementById('calcRho').textContent = rho.toFixed(2) + ' g/cm³';
+  document.getElementById('calcRef').textContent = mat.name + '参考密度 ' + refRho.toFixed(2) + ' g/cm³';
+  document.getElementById('calcErr').textContent = err.toFixed(1) + '%';
+
+  document.getElementById('resM').textContent = m.toFixed(1) + ' g';
+  document.getElementById('resV').textContent = V.toFixed(1) + ' cm³';
+  document.getElementById('resRho').textContent = rho.toFixed(2) + ' g/cm³';
+
+  const vbg = document.getElementById('verdictBg');
+  const vtxt = document.getElementById('verdictText');
+  if (err < 5) {
+    vtxt.textContent = '测量准确！误差 ' + err.toFixed(1) + '%';
+    vbg.setAttribute('fill', 'rgba(5,150,105,0.1)');
+    vtxt.setAttribute('fill', '#059669');
+  } else {
+    vtxt.textContent = '误差较大 ' + err.toFixed(1) + '%，请检查操作';
+    vbg.setAttribute('fill', 'rgba(234,88,12,0.1)');
+    vtxt.setAttribute('fill', '#EA580C');
+  }
+  vbg.setAttribute('opacity', '1');
+  vtxt.setAttribute('opacity', '1');
+}
+
+// ===== MATERIAL =====
+function setMaterial(key, btn) {
+  if (massConfirmed || volumeConfirmed) return; // can't change mid-experiment
+  currentMat = key;
+  document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const mat = getMat();
+  document.getElementById('objLabel').textContent = mat.name;
+  document.getElementById('objectOnPan').querySelector('rect').setAttribute('fill', mat.color);
+  document.getElementById('volObjRect').setAttribute('fill', mat.color);
+  document.getElementById('volObjLabel').textContent = mat.name;
+  updateBalance();
+}
+
+// ===== RESET =====
+function resetAll() {
+  currentTab = 1;
+  massConfirmed = false;
+  volumeConfirmed = false;
+  objectDropped = false;
+  riderValue = 0;
+  document.getElementById('riderSlider').value = 0;
+  document.getElementById('valRider').textContent = '0.0 g';
+  document.getElementById('rider').setAttribute('x', 348);
+  
+  // Reset weights
+  initWeights();
+  
+  // Reset volume
+  volObjPos = {...volObjOrig};
+  document.getElementById('volObject').style.opacity = '1';
+  const rect = document.getElementById('volObjRect');
+  const label = document.getElementById('volObjLabel');
+  rect.setAttribute('x', volObjOrig.x); rect.setAttribute('y', volObjOrig.y);
+  label.setAttribute('x', volObjOrig.x+30); label.setAttribute('y', volObjOrig.y+25);
+  document.getElementById('objInCylinder').setAttribute('opacity', '0');
+  document.getElementById('v2Label').setAttribute('opacity', '0');
+  document.getElementById('water').setAttribute('y', 230);
+  document.getElementById('water').setAttribute('height', 118);
+  document.getElementById('valV2').textContent = '— mL';
+  document.getElementById('valDV').textContent = '— mL';
+  document.getElementById('confirmVol').disabled = true;
+  document.getElementById('confirmMass').disabled = true;
+  document.getElementById('volStatusText').textContent = '拖物体放入量筒中';
+  
+  // Reset tabs
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('done'));
+  switchTab(1);
+  
+  // Reset calc
+  ['calcMat','calcM','calcV','calcRho','calcRef','calcErr','resM','resV','resRho'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  document.getElementById('verdictBg').setAttribute('opacity', '0');
+  document.getElementById('verdictText').setAttribute('opacity', '0');
+  
+  updateBalance();
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  const el = document.getElementById('formula1');
+  if (el && window.katex) {
+    katex.render('\\rho = \\frac{m}{V}', el, { throwOnError:false, displayMode:true });
+  }
+}
+
+// ===== INIT =====
+initWeights();
 updateBalance();
-renderFormulas();
-if (localStorage.getItem('density-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('density-guide-seen','1'); }
 </script>
 <script src="/shared/theme.js"></script>
 </body>
