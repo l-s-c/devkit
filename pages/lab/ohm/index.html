@@ -432,12 +432,10 @@
       R = 10;
       document.getElementById('valR').textContent = '10 Ω';
     } else {
-      document.getElementById('expDesc').textContent = 'U 不变（调至3V），换不同 R，观察 I 变化';
-      document.getElementById('sliderControl').style.display = 'none';
+      document.getElementById('expDesc').innerHTML = '换不同 R，<b style="color:#4338CA">手动调变阻器使 U≈3.0V</b>，观察 I 变化';
+      document.getElementById('sliderControl').style.display = '';
       document.getElementById('rSelectArea').style.display = '';
-      // In exp2, adjust slider to keep U=3V for the selected R
       R = 10;
-      adjustSliderForTargetU(3);
     }
     document.getElementById('resistorLabel').textContent = `R=${R}Ω`;
     updateCircuit();
@@ -449,7 +447,6 @@
     document.getElementById('resistorLabel').textContent = `R=${r}Ω`;
     document.querySelectorAll('.r-pill').forEach(p => p.classList.remove('active'));
     document.querySelector(`.r-pill[onclick="selectR(${r})"]`).classList.add('active');
-    if (expMode === 2) adjustSliderForTargetU(3);
     updateCircuit();
   }
 
