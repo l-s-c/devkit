@@ -67,7 +67,7 @@
     background: #fff; border-radius: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.04);
     overflow: hidden; width: 100%;
-    position: relative;
+    position: relative; user-select: none; -webkit-user-select: none;
   }
   .canvas-wrapper svg { width: 100%; height: 100%; }
 
@@ -698,6 +698,7 @@
   svg.addEventListener('mousedown', (e) => {
     const w = getShelfWeight(e);
     if (!w) return;
+    e.preventDefault(); // prevent text selection while dragging
     const {x:sx, y:sy} = svgCoords(e);
     const ghost = createGhost(w, sx, sy);
     svg.appendChild(ghost);
