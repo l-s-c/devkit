@@ -60,6 +60,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <stop offset="0%" stop-color="#92400E"/>
           <stop offset="100%" stop-color="#78350F"/>
         </linearGradient>
+      
+        <!-- V2 升级渐变 -->
+        <pattern id="ceilingHatch" width="10" height="10" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="10" x2="10" y2="0" stroke="#94A3B8" stroke-width="1" opacity="0.3"/>
+        </pattern>
+        <radialGradient id="pulleyMetal" cx="45%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#E5E7EB"/><stop offset="30%" stop-color="#D1D5DB"/>
+          <stop offset="70%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/>
+        </radialGradient>
+        <radialGradient id="pulleyGroove" cx="50%" cy="50%" r="50%">
+          <stop offset="70%" stop-color="transparent"/><stop offset="80%" stop-color="rgba(0,0,0,0.08)"/>
+          <stop offset="90%" stop-color="rgba(0,0,0,0.03)"/><stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <radialGradient id="axleGrad" cx="40%" cy="35%" r="50%">
+          <stop offset="0%" stop-color="#F9FAFB"/><stop offset="60%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/>
+        </radialGradient>
+        <linearGradient id="blockGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3B82F6"/><stop offset="50%" stop-color="#2563EB"/><stop offset="100%" stop-color="#1D4ED8"/>
+        </linearGradient>
+        <filter id="metalShadow"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/></filter>
+        <filter id="blockShadow"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.2"/></filter>
       </defs>
 
       <!-- Ceiling / support -->

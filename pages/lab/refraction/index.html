@@ -60,6 +60,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <pattern id="water-pattern" x="0" y="0" width="60" height="20" patternUnits="userSpaceOnUse">
           <path d="M0 10 Q15 5 30 10 Q45 15 60 10" fill="none" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
         </pattern>
+      
+        <!-- V2 升级渐变 -->
+        <linearGradient id="airGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F0F9FF"/><stop offset="100%" stop-color="#E0F2FE"/>
+        </linearGradient>
+        <linearGradient id="waterGradV2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#BFDBFE"/><stop offset="30%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#3B82F6"/>
+        </linearGradient>
+        <linearGradient id="interfaceGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(59,130,246,0)"/><stop offset="50%" stop-color="rgba(59,130,246,0.15)"/><stop offset="100%" stop-color="rgba(59,130,246,0)"/>
+        </linearGradient>
+        <radialGradient id="lightSource" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FDE68A"/><stop offset="40%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#F59E0B"/>
+        </radialGradient>
+        <filter id="sourceGlow">
+          <feGaussianBlur stdDeviation="8" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <pattern id="waterWaves" x="0" y="0" width="60" height="12" patternUnits="userSpaceOnUse">
+          <path d="M0,6 Q15,2 30,6 Q45,10 60,6" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        </pattern>
       </defs>
 
       <!-- Air region (top) -->
@@ -76,9 +96,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       </defs>
       <rect id="medium-bg" x="0" y="250" width="600" height="250" fill="url(#mediumGrad)"/>
       <rect x="0" y="250" width="600" height="250" fill="url(#water-pattern)"/>
-      <text id="medium-label" x="20" y="274" font-size="12" fill="#3B82F6" font-weight="600">水 n₂=1.33</text>
+      <text id="medium-label" x="20" y="274" font-size="12" fill="#1E40AF" font-weight="600">水 n₂=1.33</text>
 
       <!-- Interface line -->
+      <rect x="0" y="240" width="600" height="20" fill="url(#interfaceGrad)" pointer-events="none"/>
       <line x1="0" y1="250" x2="600" y2="250" stroke="#3B82F6" stroke-width="2" stroke-dasharray="8 4" opacity="0.5"/>
 
       <!-- Normal line (vertical dashed) -->
