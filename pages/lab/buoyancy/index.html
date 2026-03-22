@@ -24,7 +24,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
 .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
 .purpose-tag svg{width:12px;height:12px}
-.lab-container{display:flex;flex-wrap:wrap}
+.lab-container{display:flex;flex-wrap:wrap;align-items:flex-start}
 .canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
 .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
 .canvas-wrapper svg{width:100%;height:100%}
@@ -289,21 +289,6 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
         <span class="data-label">力的箭头</span>
         <div class="toggle-switch on" id="forceToggle" onclick="toggleForces()"></div>
       </div>
-    </div>
-
-    <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 阿基米德原理</h3>
-      <div class="formula-box" id="formula1"></div>
-      <p style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">浮力 = 排开液体的重力<br/>= ρ液 × g × V排</p>
-    </div>
-
-    <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 数据记录</h3>
-      <button class="record-btn" onclick="recordData()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        记录本次数据
-      </button>
-      <div id="dataTableArea"></div>
     </div>
 
     <button class="reset-btn" onclick="resetAll()">
@@ -605,7 +590,7 @@ function resetAll() {
 
 function renderFormulas() {
   try {
-    katex.render('F_{\\text{浮}} = \\rho_{\\text{液}} \\cdot g \\cdot V_{\\text{排}}', document.getElementById('formula1'), { throwOnError: false, displayMode: true });
+    // formula1 removed from panel, only render in knowledge section
     katex.render('F_{\\text{浮}} = \\rho_{\\text{液}} \\cdot g \\cdot V_{\\text{排}}', document.getElementById('knowledgeFormula1'), { throwOnError: false, displayMode: true });
   } catch(e) {}
 }
