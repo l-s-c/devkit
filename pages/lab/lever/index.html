@@ -24,16 +24,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .reading .rl{color:#8E8E93}
 .reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
 .formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
-.weight-box{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.weight-item{width:36px;height:36px;background:linear-gradient(135deg,#9CA3AF,#6B7280);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;cursor:grab;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
-.weight-item:active{cursor:grabbing;transform:scale(1.1)}
-.weight-item.w2{background:linear-gradient(135deg,#60A5FA,#2563EB)}
-.weight-item.w5{background:linear-gradient(135deg,#F87171,#DC2626);width:42px;height:42px;font-size:12px}
 .badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700}
 .badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
 .badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
-.btn-reset{width:100%;padding:8px;border:none;border-radius:8px;background:rgba(239,68,68,0.08);color:#DC2626;font-weight:600;font-size:12px;cursor:pointer;margin-top:8px}
-.btn-reset:hover{background:rgba(239,68,68,0.15)}
+
 @media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
 </style>
 </head>
@@ -45,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <div class="lab-container">
   <div class="canvas-area">
-    <svg id="lab-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+    <svg id="lab-svg" viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="leverGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#D97706"/>
@@ -85,29 +79,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <g id="lever-weights"></g>
       </g>
 
-      <!-- Drop zones hint -->
-      <text id="hint-text" x="300" y="380" font-size="12" fill="#9CA3AF" text-anchor="middle">↑ 将砝码拖到杠杆刻度上</text>
+      <!-- Weight box inside canvas -->
+      <rect x="60" y="360" width="480" height="80" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+      <text x="80" y="378" font-size="10" fill="#9CA3AF" font-weight="700">砝码盒 — 拖到杠杆刻度上 ↑</text>
+      <g id="weight-box-svg"></g>
+
+      <!-- Reset button in canvas -->
+      <g id="btn-reset-svg" cursor="pointer">
+        <rect x="460" y="395" width="60" height="28" rx="6" fill="rgba(239,68,68,0.08)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+        <text x="490" y="413" font-size="11" fill="#DC2626" text-anchor="middle" font-weight="700">🔄 重置</text>
+      </g>
     </svg>
   </div>
 
   <div class="panel">
-    <div class="panel-card">
-      <div class="panel-title">🏋️ 砝码盒</div>
-      <p style="font-size:11px;color:#8E8E93;margin-bottom:6px">拖拽砝码到杠杆上（每个 1N）</p>
-      <div class="weight-box" id="weight-box">
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item" data-weight="1">1N</div>
-        <div class="weight-item w2" data-weight="2">2N</div>
-        <div class="weight-item w2" data-weight="2">2N</div>
-        <div class="weight-item w5" data-weight="5">5N</div>
-      </div>
-      <button class="btn-reset" id="btn-reset">🔄 重置</button>
-    </div>
-
     <div class="panel-card">
       <div class="panel-title">📊 力矩分析</div>
       <div class="reading"><span class="rl">左侧力 F₁</span><span class="rv" id="r-f1">0 N</span></div>
@@ -297,37 +282,80 @@ function renderWeights() {
   }
 }
 
-// Drag from weight box
-document.querySelectorAll('.weight-item').forEach(item => {
-  item.addEventListener('pointerdown', e => {
-    e.preventDefault();
-    const weight = parseInt(item.dataset.weight);
+// SVG weight box sources
+const weightBoxG = document.getElementById('weight-box-svg');
+const weightSources = [
+  {w:1},{w:1},{w:1},{w:1},{w:1},{w:1},
+  {w:2},{w:2},
+  {w:5}
+];
 
-    const onMove = ev => {
-      // Visual feedback could go here
-    };
-    const onUp = ev => {
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
+function renderWeightBox() {
+  weightBoxG.innerHTML = '';
+  weightSources.forEach((src, i) => {
+    const bx = 80 + i * 46;
+    const by = 390;
+    const size = src.w >= 5 ? 32 : src.w >= 2 ? 28 : 24;
+    const gradId = src.w >= 5 ? 'weightGrad5' : src.w >= 2 ? 'weightGrad2' : 'weightGrad1';
+    const strokeColor = src.w >= 5 ? '#B91C1C' : src.w >= 2 ? '#1D4ED8' : '#4B5563';
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.style.cursor = 'grab';
+    const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    r.setAttribute('x', bx - size/2); r.setAttribute('y', by);
+    r.setAttribute('width', size); r.setAttribute('height', size);
+    r.setAttribute('rx', '4'); r.setAttribute('fill', `url(#${gradId})`);
+    r.setAttribute('stroke', strokeColor); r.setAttribute('stroke-width', '1.5');
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', bx); t.setAttribute('y', by + size/2 + 4);
+    t.setAttribute('font-size', src.w >= 5 ? '11' : '10'); t.setAttribute('fill', '#fff');
+    t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '800');
+    t.setAttribute('pointer-events', 'none');
+    t.textContent = src.w + 'N';
+    g.appendChild(r); g.appendChild(t);
+    weightBoxG.appendChild(g);
+
+    // Drag interaction
+    let dragging = false, ghost = null;
+    g.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      dragging = true;
+      // Create ghost element
+      ghost = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      ghost.setAttribute('width', size); ghost.setAttribute('height', size);
+      ghost.setAttribute('rx', '4'); ghost.setAttribute('fill', `url(#${gradId})`);
+      ghost.setAttribute('stroke', strokeColor); ghost.setAttribute('stroke-width', '1.5');
+      ghost.setAttribute('opacity', '0.7'); ghost.setAttribute('pointer-events', 'none');
+      svg.appendChild(ghost);
+    });
+    document.addEventListener('pointermove', ev => {
+      if (!dragging || !ghost) return;
+      const pt = svgPoint(ev);
+      ghost.setAttribute('x', pt.x - size/2);
+      ghost.setAttribute('y', pt.y - size/2);
+    });
+    document.addEventListener('pointerup', ev => {
+      if (!dragging) return;
+      dragging = false;
+      if (ghost) { ghost.remove(); ghost = null; }
       const pt = svgPoint(ev);
       const hook = findNearestHook(pt.x);
-      if (hook && pt.y > 200 && pt.y < 380) {
-        // Check max 3 per hook
+      if (hook && pt.y > 200 && pt.y < 360) {
         const existing = getWeightsAtPos(hook.pos);
         if (existing.length < 3) {
-          placed.push({ pos: hook.pos, weight });
+          placed.push({ pos: hook.pos, weight: src.w });
           renderWeights();
           calculate();
         }
       }
-    };
-    document.addEventListener('pointermove', onMove);
-    document.addEventListener('pointerup', onUp);
+    });
   });
-});
+}
 
-// Reset
-document.getElementById('btn-reset').addEventListener('click', () => {
+renderWeightBox();
+
+// Reset (SVG button)
+document.getElementById('btn-reset-svg').addEventListener('click', () => {
   placed.length = 0;
   renderWeights();
   calculate();
