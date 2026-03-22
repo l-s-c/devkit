@@ -331,6 +331,21 @@
 
     <div class="panel-section">
       <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        显示选项
+      </h3>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#4B5563;cursor:pointer">
+        <input type="checkbox" id="toggleRays" onchange="document.getElementById('lightRays').setAttribute('display',this.checked?'inline':'none')" style="accent-color:#C2410C">
+        显示光路辅助线
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#4B5563;cursor:pointer;margin-top:4px">
+        <input type="checkbox" id="toggleHeight" checked onchange="document.getElementById('heightMarker').style.opacity=this.checked?'0.6':'0'" style="accent-color:#059669">
+        显示高度标注
+      </label>
+    </div>
+
+    <div class="panel-section">
+      <h3>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
         实验记录
       </h3>
