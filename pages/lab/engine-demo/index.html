@@ -357,106 +357,192 @@ function computeSchematicLayout() {
   const conns = state.connections;
   if (comps.length === 0) return;
 
-  // Build adjacency
-  const adj = {};
-  const addEdge = (a, b) => { (adj[a] = adj[a] || []).push(b); (adj[b] = adj[b] || []).push(a); };
+  // === Step 1: Build netlist (Union-Find to merge connected ports into nets) ===
+  const parent = {};
+  function find(x) { return parent[x] === x ? x : (parent[x] = find(parent[x])); }
+  function union(a, b) { parent[find(a)] = find(b); }
+
+  // Init: each port is its own net
+  for (const comp of comps) {
+    const def = COMP_DEFAULTS[comp.type];
+    for (const p of def.ports) parent[`${comp.id}:${p.id}`] = `${comp.id}:${p.id}`;
+  }
+  // Merge connected ports
   for (const c of conns) {
-    addEdge(`${c.from.componentId}:${c.from.portId}`, `${c.to.componentId}:${c.to.portId}`);
+    const a = `${c.from.componentId}:${c.from.portId}`;
+    const b = `${c.to.componentId}:${c.to.portId}`;
+    if (parent[a] !== undefined && parent[b] !== undefined) union(a, b);
+  }
+
+  // === Step 2: Build component graph (each comp = edge between two nets) ===
+  // Skip voltmeters (they bridge across, don't affect topology)
+  const circuitComps = comps.filter(c => c.type !== 'voltmeter');
+  const compByNet = {}; // net → [{comp, otherNet}]
+  
+  for (const comp of circuitComps) {
+    const def = COMP_DEFAULTS[comp.type];
+    if (def.ports.length < 2) continue;
+    const net0 = find(`${comp.id}:${def.ports[0].id}`);
+    const net1 = find(`${comp.id}:${def.ports[1].id}`);
+    (compByNet[net0] = compByNet[net0] || []).push({comp, otherNet: net1, fromPort: def.ports[0].id, toPort: def.ports[1].id});
+    (compByNet[net1] = compByNet[net1] || []).push({comp, otherNet: net0, fromPort: def.ports[1].id, toPort: def.ports[0].id});
   }
 
   const battery = comps.find(c => c.type === 'battery');
   if (!battery) { fallbackLayout(comps); return; }
 
-  // DFS to find serial loop (skip voltmeters)
-  const serialComps = new Set(comps.filter(c => c.type !== 'voltmeter').map(c => c.id));
-  const loopComps = [];
-  const loopEntryPorts = []; // which port we entered each comp from
-  const visited = new Set();
-  
-  function findLoop(compId, fromPortId) {
-    if (visited.has(compId)) return compId === battery.id;
-    if (!serialComps.has(compId)) return false;
-    visited.add(compId);
-    const comp = comps.find(c => c.id === compId);
-    if (!comp) return false;
-    loopComps.push(comp);
-    loopEntryPorts.push(fromPortId);
-    
-    const def = COMP_DEFAULTS[comp.type];
-    const otherPorts = def.ports.filter(p => p.id !== fromPortId);
-    for (const port of otherPorts) {
-      const nodeKey = `${compId}:${port.id}`;
-      for (const nb of (adj[nodeKey] || [])) {
-        const [nbCompId, nbPortId] = nb.split(':');
-        if (findLoop(nbCompId, nbPortId)) return true;
-      }
-    }
-    loopComps.pop();
-    loopEntryPorts.pop();
-    visited.delete(compId);
-    return false;
-  }
-
+  // === Step 3: DFS from battery to build circuit topology tree ===
+  // Result: a sequence of "segments" where each segment is either:
+  //   - {type:'series', comp} — a single component
+  //   - {type:'parallel', branches: [[segment, ...], [segment, ...]]} — parallel branches
   const battDef = COMP_DEFAULTS[battery.type];
-  let found = false;
-  for (const port of battDef.ports) {
-    for (const nb of (adj[`${battery.id}:${port.id}`] || [])) {
-      const [nbCompId, nbPortId] = nb.split(':');
-      loopComps.length = 0; loopEntryPorts.length = 0;
-      visited.clear();
-      loopComps.push(battery); loopEntryPorts.push(null);
-      visited.add(battery.id);
-      if (findLoop(nbCompId, nbPortId)) { found = true; break; }
-    }
-    if (found) break;
-  }
+  const battNet0 = find(`${battery.id}:${battDef.ports[0].id}`);
+  const battNet1 = find(`${battery.id}:${battDef.ports[1].id}`);
 
-  if (!found || loopComps.length < 2) { fallbackLayout(comps); return; }
-
-  // Distribute along rectangle:
-  // Battery on left (vertical), all other components on top edge (horizontal, left→right)
-  // Bottom edge is just a return wire (no components)
-  const n = loopComps.length;
-  const otherCount = n - 1; // non-battery components
-  const spacing = 120;
-  const W = Math.max(280, (otherCount + 1) * spacing);
-  const H = 160;
-  const left = 400 - W / 2, right = 400 + W / 2;
-  const top = 300 - H / 2, bottom = 300 + H / 2;
-
-  // Battery: left side, vertical (pos=top, neg=bottom)
-  loopComps[0]._sx = left; loopComps[0]._sy = 300; loopComps[0]._sr = 0;
-
-  // All other components on top edge, evenly spaced left→right
-  for (let i = 0; i < otherCount; i++) {
-    const comp = loopComps[1 + i];
-    comp._sx = left + (i + 1) * (W / (otherCount + 1));
-    comp._sy = top;
-    comp._sr = 0; // horizontal, p0=left, p1=right
-  }
-
-  // Voltmeters and other non-loop components: below the circuit
-  const loopIds = new Set(loopComps.map(c => c.id));
-  let offX = left;
-  for (const comp of comps) {
-    if (!loopIds.has(comp.id)) {
-      // Place voltmeters near their connected components
-      if (comp.type === 'voltmeter') {
-        // Find what it's connected to and place near it
-        let refX = 400, refY = bottom + 80;
-        for (const port of COMP_DEFAULTS[comp.type].ports) {
-          for (const nb of (adj[`${comp.id}:${port.id}`] || [])) {
-            const [nbId] = nb.split(':');
-            const nbComp = comps.find(c => c.id === nbId);
-            if (nbComp && nbComp._sx != null) { refX = nbComp._sx; break; }
-          }
-        }
-        comp._sx = refX; comp._sy = refY; comp._sr = 0;
-      } else {
-        comp._sx = offX; comp._sy = bottom + 80; comp._sr = 0;
-        offX += 80;
+  function findPaths(startNet, endNet, excludeComps) {
+    // Find all simple paths from startNet to endNet through components
+    // Returns array of paths, each path = array of {comp, nextNet}
+    const results = [];
+    const visitedComps = new Set(excludeComps);
+    
+    function dfs(curNet, path) {
+      if (curNet === endNet) { results.push([...path]); return; }
+      for (const edge of (compByNet[curNet] || [])) {
+        if (visitedComps.has(edge.comp.id)) continue;
+        visitedComps.add(edge.comp.id);
+        path.push({comp: edge.comp, nextNet: edge.otherNet});
+        dfs(edge.otherNet, path);
+        path.pop();
+        visitedComps.delete(edge.comp.id);
       }
     }
+    dfs(startNet, []);
+    return results;
+  }
+
+  // Find net degrees (how many components connect to each net)
+  const netDegree = {};
+  for (const comp of circuitComps) {
+    const def = COMP_DEFAULTS[comp.type];
+    if (def.ports.length < 2) continue;
+    const n0 = find(`${comp.id}:${def.ports[0].id}`);
+    const n1 = find(`${comp.id}:${def.ports[1].id}`);
+    netDegree[n0] = (netDegree[n0] || 0) + 1;
+    netDegree[n1] = (netDegree[n1] || 0) + 1;
+  }
+
+  // Build topology: walk from battery positive terminal back to negative
+  // Detect fork points (degree > 2) and identify parallel sections
+  function buildTopology(startNet, endNet, excludeComps) {
+    const paths = findPaths(startNet, endNet, excludeComps);
+    if (paths.length === 0) return [];
+    if (paths.length === 1) {
+      // Pure series
+      return paths[0].map(p => ({type:'series', comp: p.comp}));
+    }
+    // Multiple paths = parallel section
+    // Find fork net (startNet) and merge net: where paths reconverge
+    // For now treat entire startNet→endNet as one parallel block
+    const branches = paths.map(path => path.map(p => ({type:'series', comp: p.comp})));
+    return [{type:'parallel', branches}];
+  }
+
+  const topology = buildTopology(battNet0, battNet1, [battery.id]);
+
+  // === Step 4: Layout based on topology ===
+  const SPACING_X = 120;
+  const SPACING_Y = 80;
+  const CX = 400, CY = 300;
+
+  // Measure width of topology
+  function measureWidth(segments) {
+    let w = 0;
+    for (const seg of segments) {
+      if (seg.type === 'series') w += SPACING_X;
+      else if (seg.type === 'parallel') {
+        let maxBranchW = 0;
+        for (const branch of seg.branches) maxBranchW = Math.max(maxBranchW, measureWidth(branch));
+        w += maxBranchW;
+      }
+    }
+    return w || SPACING_X;
+  }
+
+  function measureHeight(segments) {
+    let maxH = 0;
+    for (const seg of segments) {
+      if (seg.type === 'parallel') {
+        let totalH = 0;
+        for (const branch of seg.branches) totalH += Math.max(SPACING_Y, measureHeight(branch));
+        maxH = Math.max(maxH, totalH);
+      }
+    }
+    return maxH || SPACING_Y;
+  }
+
+  const totalW = measureWidth(topology);
+  const totalH = measureHeight(topology);
+  const H = Math.max(160, totalH);
+
+  const left = CX - totalW / 2 - 60; // extra space for battery
+  const topY = CY - H / 2;
+
+  // Battery on left, vertical
+  battery._sx = left; battery._sy = CY; battery._sr = 0;
+
+  // Place topology components
+  let curX = left + SPACING_X;
+  function placeSegments(segments, startX, y) {
+    let x = startX;
+    for (const seg of segments) {
+      if (seg.type === 'series') {
+        seg.comp._sx = x; seg.comp._sy = y; seg.comp._sr = 0;
+        x += SPACING_X;
+      } else if (seg.type === 'parallel') {
+        const branchCount = seg.branches.length;
+        let maxBranchW = 0;
+        for (const branch of seg.branches) maxBranchW = Math.max(maxBranchW, measureWidth(branch));
+        
+        // Stack branches vertically centered on y
+        const branchH = SPACING_Y;
+        const totalBranchH = branchCount * branchH;
+        let branchY = y - totalBranchH / 2 + branchH / 2;
+        
+        for (const branch of seg.branches) {
+          placeSegments(branch, x, branchY);
+          branchY += branchH;
+        }
+        x += maxBranchW;
+      }
+    }
+    return x;
+  }
+
+  placeSegments(topology, curX, topY);
+
+  // Voltmeters: place below circuit near connected components
+  const placedIds = new Set([battery.id, ...topology.flatMap(function collect(s) {
+    if (s.type === 'series') return [s.comp.id];
+    return s.branches.flatMap(b => b.flatMap(collect));
+  })]);
+
+  for (const comp of comps) {
+    if (placedIds.has(comp.id)) continue;
+    if (comp.type === 'voltmeter') {
+      // Find connected component and place below it
+      let refX = CX;
+      const def = COMP_DEFAULTS[comp.type];
+      for (const port of def.ports) {
+        const net = find(`${comp.id}:${port.id}`);
+        for (const edge of (compByNet[net] || [])) {
+          if (edge.comp._sx != null && placedIds.has(edge.comp.id)) { refX = edge.comp._sx; break; }
+        }
+      }
+      comp._sx = refX; comp._sy = CY + H / 2 + 80; comp._sr = 0;
+    } else {
+      comp._sx = CX; comp._sy = CY + H / 2 + 80; comp._sr = 0;
+    }
+    placedIds.add(comp.id);
   }
 }
 
