@@ -390,7 +390,15 @@
     const { U, I } = getValues();
 
     // Panel readouts
-    document.getElementById('valU').textContent = U.toFixed(2) + ' V';
+    const valUEl = document.getElementById('valU');
+    valUEl.textContent = U.toFixed(2) + ' V';
+    // Exp2: green highlight when U ≈ 3.0V (±0.15V)
+    if (expMode === 2 && Math.abs(U - 3) < 0.15) {
+      valUEl.style.color = '#059669';
+      valUEl.textContent = U.toFixed(2) + ' V ✓';
+    } else {
+      valUEl.style.color = '#1D1D1F';
+    }
     document.getElementById('valI').textContent = I.toFixed(2) + ' A';
     document.getElementById('valCalcR').textContent = I > 0.001 ? (U / I).toFixed(1) + ' Ω' : '— Ω';
 
