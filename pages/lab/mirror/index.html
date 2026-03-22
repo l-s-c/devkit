@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平面镜成像模拟 - 像与物对称规律验证 | DevKit</title>
+<meta name="keywords" content="平面镜成像模拟, 像与物等大等距, 平面镜规律, 初中物理光学, 在线物理实验">
+<meta name="description" content="在线模拟平面镜成像实验，拖动蜡烛观察虚像变化，验证像与物等大等距，初中物理光学必考">
+<meta property="og:title" content="平面镜成像模拟 - 像与物对称规律验证 | DevKit">
+<meta property="og:description" content="在线模拟平面镜成像实验，拖动蜡烛观察虚像变化，验证像与物等大等距">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/mirror.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/mirror/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F;min-height:100vh;overflow:hidden}
+
+  .topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px}
+  .topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+  .topbar .back:hover{background:rgba(0,0,0,0.08)}
+  .topbar .back svg{width:14px;height:14px;color:#374151}
+  .breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+  .breadcrumb a{color:#3B82F6;text-decoration:none;font-weight:500}
+  .topbar h1{font-size:15px;font-weight:700}
+
+  .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+  .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+  .purpose-tag svg{width:12px;height:12px}
+
+  .lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+  .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0}
+  .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
+  .canvas-wrapper svg{width:100%;height:100%}
+
+  .panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+  .panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+  .panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+  .panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+
+  .preset-group{display:flex;gap:6px;flex-wrap:wrap}
+  .preset-pill{padding:5px 12px;border-radius:100px;border:1px solid #E5E7EB;background:#fff;color:#4B5563;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+  .preset-pill:hover{border-color:#FDBA74;color:#C2410C}
+  .preset-pill.active{background:#C2410C;color:#fff;border-color:#C2410C}
+
+  .data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+  .data-row:last-child{border-bottom:none}
+  .data-label{color:#6B7280}
+  .data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+
+  .formula-box{background:#FFF7ED;border-radius:8px;padding:10px;text-align:center;margin-top:6px}
+
+  .check-item{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:#059669;font-weight:600}
+  .check-item svg{width:14px;height:14px;color:#059669}
+
+  .record-btn{width:100%;padding:7px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+  .record-btn svg{width:12px;height:12px}
+  .record-btn:hover{background:#FFF7ED;border-color:#FDBA74;color:#C2410C}
+  .records-list{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+  .records-list.open{max-height:200px;overflow-y:auto}
+  .record-item{display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);color:#4B5563}
+  .record-item .r-num{color:#9CA3AF;width:18px}
+  .record-item .r-data{font-family:'JetBrains Mono',monospace;font-size:10px}
+
+  .reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+  .reset-btn svg{width:13px;height:13px}
+  .reset-btn:hover{background:#E5E7EB}
+
+  .guide-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;animation:guideFade 4s ease-in-out forwards}
+  .guide-label{position:absolute;font-size:12px;color:#C2410C;font-weight:600;background:rgba(255,247,237,0.92);padding:4px 10px;border-radius:6px;border:1px solid #FED7AA;white-space:nowrap}
+  @keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
+
+  .related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
+  .related-bar span{color:#9CA3AF;font-weight:600}
+  .related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+  .related-bar a:hover{background:#EFF6FF}
+
+  /* Flame animation */
+  @keyframes flicker{0%,100%{d:path("M0,-28 Q-6,-20 -7,-10 Q-8,0 -5,8 Q-2,14 0,16 Q2,14 5,8 Q8,0 7,-10 Q6,-20 0,-28Z")}50%{d:path("M0,-30 Q-7,-22 -8,-12 Q-9,-2 -6,6 Q-3,12 0,16 Q3,12 6,6 Q9,-2 8,-12 Q7,-22 0,-30Z")}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb">
+    <a href="/devkit/pages/lab/">实验室</a><span style="color:#D1D5DB">/</span>
+    <a href="/devkit/pages/lab/" style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</a><span style="color:#D1D5DB">/</span>
+  </div>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="15" r="3"/><path d="M10 12V2h4v10"/><path d="M14 12a7 7 0 11-4 0"/></svg> 平面镜成像</h1>
+</div>
+
+<div class="purpose-bar">
+  <div class="purpose-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    探究平面镜成像规律：像与物等大、等距、关于镜面对称 · 初中光学
+  </div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(147,197,253,0.15)"/>
+            <stop offset="30%" stop-color="rgba(147,197,253,0.08)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.25)"/>
+            <stop offset="70%" stop-color="rgba(147,197,253,0.08)"/>
+            <stop offset="100%" stop-color="rgba(147,197,253,0.15)"/>
+          </linearGradient>
+          <linearGradient id="candleGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FEF3C7"/>
+            <stop offset="100%" stop-color="#F59E0B"/>
+          </linearGradient>
+          <linearGradient id="flameGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FDE68A"/>
+            <stop offset="30%" stop-color="#F59E0B"/>
+            <stop offset="70%" stop-color="#EA580C"/>
+            <stop offset="100%" stop-color="#DC2626"/>
+          </linearGradient>
+          <radialGradient id="flameGlow" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="rgba(251,191,36,0.3)"/>
+            <stop offset="100%" stop-color="rgba(251,191,36,0)"/>
+          </radialGradient>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="3" result="g"/>
+            <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <!-- Grid pattern for graph paper background -->
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <rect width="20" height="20" fill="none"/>
+            <line x1="0" y1="0" x2="20" y2="0" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="20" stroke="#E5E7EB" stroke-width="0.5"/>
+          </pattern>
+          <pattern id="gridMajor" width="100" height="100" patternUnits="userSpaceOnUse">
+            <rect width="100" height="100" fill="url(#grid)"/>
+            <line x1="0" y1="0" x2="100" y2="0" stroke="#D1D5DB" stroke-width="0.8"/>
+            <line x1="0" y1="0" x2="0" y2="100" stroke="#D1D5DB" stroke-width="0.8"/>
+          </pattern>
+        </defs>
+
+        <!-- Background with grid paper -->
+        <rect width="700" height="440" fill="#FAFBFE"/>
+        <rect width="700" height="440" fill="url(#gridMajor)" opacity="0.6"/>
+
+        <!-- Table surface -->
+        <rect x="0" y="360" width="700" height="80" fill="#F3F0EB" opacity="0.5"/>
+        <line x1="0" y1="360" x2="700" y2="360" stroke="#D6D0C7" stroke-width="1"/>
+
+        <!-- ========== MIRROR (center) ========== -->
+        <g id="mirror">
+          <rect x="346" y="60" width="8" height="300" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1" rx="1"/>
+          <!-- Glass highlight streaks -->
+          <line x1="348" y1="70" x2="348" y2="130" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+          <line x1="352" y1="100" x2="352" y2="180" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+          <line x1="348" y1="200" x2="348" y2="280" stroke="rgba(255,255,255,0.35)" stroke-width="0.6"/>
+          <!-- Mirror label -->
+          <text x="350" y="55" text-anchor="middle" font-size="10" fill="#6B7280" font-weight="600">玻璃板</text>
+          <!-- Mirror base -->
+          <rect x="340" y="356" width="20" height="8" rx="2" fill="#94A3B8" opacity="0.5"/>
+        </g>
+
+        <!-- ========== REAL CANDLE (left, draggable) ========== -->
+        <g id="candleGroup" cursor="grab">
+          <!-- Candle body -->
+          <rect id="candleBody" x="195" y="290" width="16" height="70" rx="3" fill="url(#candleGrad)" stroke="#D97706" stroke-width="0.8"/>
+          <!-- Wick -->
+          <line id="wick" x1="203" y1="288" x2="203" y2="278" stroke="#44403C" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Flame (with glow) -->
+          <g id="flameGroup" filter="url(#softGlow)">
+            <ellipse cx="203" cy="268" rx="14" ry="14" fill="url(#flameGlow)"/>
+            <path id="flame" d="M203,248 Q197,256 196,264 Q195,272 198,278 Q200,282 203,284 Q206,282 208,278 Q211,272 210,264 Q209,256 203,248Z" fill="url(#flameGrad)" opacity="0.9">
+              <animate attributeName="d" dur="0.6s" repeatCount="indefinite" values="
+                M203,248 Q197,256 196,264 Q195,272 198,278 Q200,282 203,284 Q206,282 208,278 Q211,272 210,264 Q209,256 203,248Z;
+                M203,246 Q196,255 195,263 Q194,273 197,279 Q200,283 203,284 Q206,283 209,279 Q212,273 211,263 Q210,255 203,246Z;
+                M203,248 Q197,256 196,264 Q195,272 198,278 Q200,282 203,284 Q206,282 208,278 Q211,272 210,264 Q209,256 203,248Z"/>
+            </path>
+            <!-- Inner flame (bright core) -->
+            <path d="M203,258 Q200,264 200,270 Q200,276 203,280 Q206,276 206,270 Q206,264 203,258Z" fill="#FEF3C7" opacity="0.8">
+              <animate attributeName="d" dur="0.5s" repeatCount="indefinite" values="
+                M203,258 Q200,264 200,270 Q200,276 203,280 Q206,276 206,270 Q206,264 203,258Z;
+                M203,256 Q199,263 199,269 Q199,277 203,281 Q207,277 207,269 Q207,263 203,256Z;
+                M203,258 Q200,264 200,270 Q200,276 203,280 Q206,276 206,270 Q206,264 203,258Z"/>
+            </path>
+          </g>
+          <!-- Candle label -->
+          <text id="candleLabelText" x="203" y="375" text-anchor="middle" font-size="9" fill="#92400E" font-weight="600">蜡烛（物）</text>
+        </g>
+
+        <!-- ========== VIRTUAL IMAGE (right, mirror of candle) ========== -->
+        <g id="imageGroup" pointer-events="none" opacity="0.35">
+          <!-- Image candle body (dashed outline) -->
+          <rect id="imgBody" x="489" y="290" width="16" height="70" rx="3" fill="none" stroke="#D97706" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <!-- Image wick -->
+          <line id="imgWick" x1="497" y1="288" x2="497" y2="278" stroke="#44403C" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3,2"/>
+          <!-- Image flame (ghost) -->
+          <g id="imgFlame">
+            <path d="M497,248 Q491,256 490,264 Q489,272 492,278 Q494,282 497,284 Q500,282 502,278 Q505,272 504,264 Q503,256 497,248Z" fill="url(#flameGrad)" opacity="0.5" stroke="#EA580C" stroke-width="0.5" stroke-dasharray="3,2">
+              <animate attributeName="d" dur="0.6s" repeatCount="indefinite" values="
+                M497,248 Q491,256 490,264 Q489,272 492,278 Q494,282 497,284 Q500,282 502,278 Q505,272 504,264 Q503,256 497,248Z;
+                M497,246 Q490,255 489,263 Q488,273 491,279 Q494,283 497,284 Q500,283 503,279 Q506,273 505,263 Q504,255 497,246Z;
+                M497,248 Q491,256 490,264 Q489,272 492,278 Q494,282 497,284 Q500,282 502,278 Q505,272 504,264 Q503,256 497,248Z"/>
+            </path>
+          </g>
+          <text id="imgLabelText" x="497" y="375" text-anchor="middle" font-size="9" fill="#92400E" font-weight="600">虚像</text>
+        </g>
+
+        <!-- ========== DISTANCE MARKERS ========== -->
+        <!-- Object distance u (candle to mirror) -->
+        <g id="distU">
+          <line id="distULine" x1="203" y1="370" x2="350" y2="370" stroke="#C2410C" stroke-width="1.5"/>
+          <line x1="203" y1="366" x2="203" y2="374" stroke="#C2410C" stroke-width="1.5"/>
+          <line x1="350" y1="366" x2="350" y2="374" stroke="#C2410C" stroke-width="1.5"/>
+          <!-- Arrowheads -->
+          <polygon id="distUArrowL" points="203,370 209,367 209,373" fill="#C2410C"/>
+          <polygon id="distUArrowR" points="350,370 344,367 344,373" fill="#C2410C"/>
+          <rect id="distUBg" x="255" y="362" width="40" height="16" rx="3" fill="#FFF7ED" stroke="#FED7AA" stroke-width="0.5"/>
+          <text id="distUText" x="275" y="374" text-anchor="middle" font-size="10" fill="#C2410C" font-weight="700" font-family="JetBrains Mono, monospace">u=6cm</text>
+        </g>
+        <!-- Image distance v (mirror to image) -->
+        <g id="distV">
+          <line id="distVLine" x1="350" y1="386" x2="497" y2="386" stroke="#2563EB" stroke-width="1.5"/>
+          <line x1="350" y1="382" x2="350" y2="390" stroke="#2563EB" stroke-width="1.5"/>
+          <line x1="497" y1="382" x2="497" y2="390" stroke="#2563EB" stroke-width="1.5"/>
+          <polygon id="distVArrowL" points="350,386 356,383 356,389" fill="#2563EB"/>
+          <polygon id="distVArrowR" points="497,386 491,383 491,389" fill="#2563EB"/>
+          <rect id="distVBg" x="402" y="378" width="40" height="16" rx="3" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="0.5"/>
+          <text id="distVText" x="422" y="390" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="700" font-family="JetBrains Mono, monospace">v=6cm</text>
+        </g>
+
+        <!-- ========== HEIGHT MARKERS ========== -->
+        <g id="heightMarker" opacity="0.6">
+          <line id="hLine" x1="180" y1="248" x2="180" y2="360" stroke="#059669" stroke-width="1" stroke-dasharray="3,3"/>
+          <text id="hText" x="170" y="310" font-size="8" fill="#059669" font-weight="600" text-anchor="end">h</text>
+          <line id="hPrimeLine" x1="520" y1="248" x2="520" y2="360" stroke="#059669" stroke-width="1" stroke-dasharray="3,3"/>
+          <text id="hPrimeText" x="530" y="310" font-size="8" fill="#059669" font-weight="600">h'</text>
+        </g>
+
+        <!-- ========== LIGHT RAYS (optional, toggled) ========== -->
+        <g id="lightRays" opacity="0.4" display="none">
+          <line id="ray1" x1="203" y1="268" x2="350" y2="300" stroke="#F59E0B" stroke-width="1"/>
+          <line id="ray1r" x1="350" y1="300" x2="600" y2="340" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3"/>
+          <line id="ray2" x1="203" y1="268" x2="350" y2="268" stroke="#F59E0B" stroke-width="1"/>
+          <line id="ray2r" x1="350" y1="268" x2="600" y2="268" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3"/>
+        </g>
+      </svg>
+
+      <!-- First-time guide -->
+      <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-label" style="top:45%;left:10%">← → 拖拽蜡烛改变物距</div>
+        <div class="guide-label" style="top:30%;left:50%">虚像自动对称生成</div>
+        <div class="guide-label" style="bottom:12%;left:30%">观察 u = v 始终成立</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+        预设方案
+      </h3>
+      <div class="preset-group">
+        <button class="preset-pill" onclick="loadPreset(3)">近距 3cm</button>
+        <button class="preset-pill active" onclick="loadPreset(6)">中距 6cm</button>
+        <button class="preset-pill" onclick="loadPreset(12)">远距 12cm</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg>
+        实时数据
+      </h3>
+      <div class="data-row">
+        <span class="data-label" style="color:#C2410C">物距 u</span>
+        <span class="data-value" id="valU">6.0 cm</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label" style="color:#2563EB">像距 v</span>
+        <span class="data-value" id="valV">6.0 cm</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label" style="color:#059669">物高 h</span>
+        <span class="data-value" id="valH">5.6 cm</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label" style="color:#059669">像高 h'</span>
+        <span class="data-value" id="valHp">5.6 cm</span>
+      </div>
+      <div style="margin-top:8px">
+        <div class="check-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          u = v（物距 = 像距）
+        </div>
+        <div class="check-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          h = h'（物高 = 像高）
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        成像特点
+      </h3>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="background:#F0FDF4;color:#059669;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid #BBF7D0">正立</span>
+        <span style="background:#F0FDF4;color:#059669;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid #BBF7D0">等大</span>
+        <span style="background:#FFF7ED;color:#C2410C;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid #FED7AA">虚像</span>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#8E8E93;line-height:1.5">
+        平面镜成的像是虚像，不能用光屏接收
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg>
+        成像规律
+      </h3>
+      <div class="formula-box" id="formula1"></div>
+      <div class="formula-box" id="formula2" style="margin-top:4px"></div>
+      <div style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">
+        像与物关于镜面对称<br/>
+        像到镜面的距离 = 物到镜面的距离
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        实验记录
+      </h3>
+      <button class="record-btn" onclick="recordData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        记录本次数据
+      </button>
+      <div class="records-list" id="recordsList"></div>
+    </div>
+
+    <button class="reset-btn" onclick="loadPreset(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<div class="related-bar">
+  <span>相关实验</span>
+  <a href="/devkit/pages/lab/refraction/">光的折射</a>
+  <a href="/devkit/pages/lab/lens/">凸透镜成像</a>
+  <a href="/devkit/pages/lab/buoyancy/">浮力实验</a>
+  <a href="/devkit/pages/lab/lever/">杠杆平衡</a>
+</div>
+<script>
+// Constants
+  const mirrorX = 350; // Mirror center x in SVG
+  const tableY = 360;  // Table surface y
+  const candleW = 16, candleH = 70;
+  const flameH = 36; // approximate flame height
+  const pixPerCm = 20; // 1cm = 20px in SVG (matches grid)
+  const minDist = 1; // minimum 1cm from mirror
+
+  let candleX = 203; // center x of candle
+  let records = [];
+
+  function getCandleDist() {
+    return (mirrorX - candleX) / pixPerCm;
+  }
+
+  function render() {
+    const dist = getCandleDist();
+    const imageX = mirrorX + (mirrorX - candleX); // symmetric
+
+    // Candle position
+    const bodyX = candleX - candleW/2;
+    const bodyY = tableY - candleH;
+    document.getElementById('candleBody').setAttribute('x', bodyX);
+    document.getElementById('candleBody').setAttribute('y', bodyY);
+    document.getElementById('wick').setAttribute('x1', candleX);
+    document.getElementById('wick').setAttribute('x2', candleX);
+    document.getElementById('wick').setAttribute('y1', bodyY - 2);
+    document.getElementById('wick').setAttribute('y2', bodyY - 12);
+
+    // Flame position
+    const flameGroup = document.getElementById('flameGroup');
+    const flameCY = bodyY - 22;
+    // Update flame paths by shifting
+    const flames = flameGroup.querySelectorAll('path');
+    const flameEllipse = flameGroup.querySelector('ellipse');
+    flameEllipse.setAttribute('cx', candleX);
+    flameEllipse.setAttribute('cy', flameCY);
+    // Rebuild flame paths at new position
+    updateFlame(flames[0], candleX, flameCY, 7);
+    updateFlame(flames[1], candleX, flameCY - 2, 3);
+
+    document.getElementById('candleLabelText').setAttribute('x', candleX);
+
+    // Image position (mirrored)
+    const imgBodyX = imageX - candleW/2;
+    document.getElementById('imgBody').setAttribute('x', imgBodyX);
+    document.getElementById('imgBody').setAttribute('y', bodyY);
+    document.getElementById('imgWick').setAttribute('x1', imageX);
+    document.getElementById('imgWick').setAttribute('x2', imageX);
+    document.getElementById('imgWick').setAttribute('y1', bodyY - 2);
+    document.getElementById('imgWick').setAttribute('y2', bodyY - 12);
+
+    // Image flame
+    const imgFlame = document.getElementById('imgFlame');
+    const imgPaths = imgFlame.querySelectorAll('path');
+    updateFlame(imgPaths[0], imageX, flameCY, 7);
+
+    document.getElementById('imgLabelText').setAttribute('x', imageX);
+
+    // Distance markers
+    // u line
+    document.getElementById('distULine').setAttribute('x1', candleX);
+    document.getElementById('distULine').setAttribute('x2', mirrorX);
+    document.querySelector('#distU line:nth-child(2)').setAttribute('x1', candleX);
+    document.querySelector('#distU line:nth-child(2)').setAttribute('x2', candleX);
+    document.getElementById('distUArrowL').setAttribute('points', `${candleX},370 ${candleX+6},367 ${candleX+6},373`);
+    document.getElementById('distUArrowR').setAttribute('points', `${mirrorX},370 ${mirrorX-6},367 ${mirrorX-6},373`);
+    const uMid = (candleX + mirrorX) / 2;
+    document.getElementById('distUBg').setAttribute('x', uMid - 20);
+    document.getElementById('distUText').setAttribute('x', uMid);
+    document.getElementById('distUText').textContent = `u=${dist.toFixed(1)}`;
+
+    // v line
+    document.getElementById('distVLine').setAttribute('x1', mirrorX);
+    document.getElementById('distVLine').setAttribute('x2', imageX);
+    document.querySelector('#distV line:nth-child(2)').setAttribute('x1', mirrorX);
+    document.querySelector('#distV line:nth-child(2)').setAttribute('x2', mirrorX);
+    document.querySelector('#distV line:nth-child(3)').setAttribute('x1', imageX);
+    document.querySelector('#distV line:nth-child(3)').setAttribute('x2', imageX);
+    document.getElementById('distVArrowL').setAttribute('points', `${mirrorX},386 ${mirrorX+6},383 ${mirrorX+6},389`);
+    document.getElementById('distVArrowR').setAttribute('points', `${imageX},386 ${imageX-6},383 ${imageX-6},389`);
+    const vMid = (mirrorX + imageX) / 2;
+    document.getElementById('distVBg').setAttribute('x', vMid - 20);
+    document.getElementById('distVText').setAttribute('x', vMid);
+    document.getElementById('distVText').textContent = `v=${dist.toFixed(1)}`;
+
+    // Height markers
+    const flameTop = flameCY - 16;
+    document.getElementById('hLine').setAttribute('x1', candleX - 23);
+    document.getElementById('hLine').setAttribute('x2', candleX - 23);
+    document.getElementById('hLine').setAttribute('y1', flameTop);
+    document.getElementById('hText').setAttribute('x', candleX - 33);
+    document.getElementById('hText').setAttribute('y', (flameTop + tableY) / 2);
+    document.getElementById('hPrimeLine').setAttribute('x1', imageX + 23);
+    document.getElementById('hPrimeLine').setAttribute('x2', imageX + 23);
+    document.getElementById('hPrimeLine').setAttribute('y1', flameTop);
+    document.getElementById('hPrimeText').setAttribute('x', imageX + 33);
+    document.getElementById('hPrimeText').setAttribute('y', (flameTop + tableY) / 2);
+
+    // Panel
+    const totalH = (tableY - flameTop) / pixPerCm;
+    document.getElementById('valU').textContent = dist.toFixed(1) + ' cm';
+    document.getElementById('valV').textContent = dist.toFixed(1) + ' cm';
+    document.getElementById('valH').textContent = totalH.toFixed(1) + ' cm';
+    document.getElementById('valHp').textContent = totalH.toFixed(1) + ' cm';
+  }
+
+  function updateFlame(pathEl, cx, cy, r) {
+    const d = `M${cx},${cy-r*4} Q${cx-r},${cy-r*2} ${cx-r-1},${cy} Q${cx-r-2},${cy+r} ${cx-r+3},${cy+r*2} Q${cx-1},${cy+r*2.5} ${cx},${cy+r*2.5+2} Q${cx+1},${cy+r*2.5} ${cx+r-3},${cy+r*2} Q${cx+r+2},${cy+r} ${cx+r+1},${cy} Q${cx+r},${cy-r*2} ${cx},${cy-r*4}Z`;
+    pathEl.setAttribute('d', d);
+    // Remove animate children to avoid conflicts
+    const anims = pathEl.querySelectorAll('animate');
+    anims.forEach(a => a.remove());
+  }
+
+  // Drag
+  let dragging = false, dragStartX = 0, candleStartX = 0;
+  const svg = document.getElementById('canvas');
+  const candleGroup = document.getElementById('candleGroup');
+
+  function startDrag(clientX) {
+    dragging = true;
+    dragStartX = clientX;
+    candleStartX = candleX;
+    candleGroup.style.cursor = 'grabbing';
+  }
+  function moveDrag(clientX) {
+    if (!dragging) return;
+    const rect = svg.getBoundingClientRect();
+    const scale = 700 / rect.width;
+    const dx = (clientX - dragStartX) * scale;
+    const newX = candleStartX + dx;
+    // Clamp: min 1cm from mirror, max edge of canvas
+    const maxLeft = 30;
+    const minRight = mirrorX - minDist * pixPerCm;
+    candleX = Math.max(maxLeft, Math.min(minRight, newX));
+    render();
+  }
+  function endDrag() {
+    dragging = false;
+    candleGroup.style.cursor = 'grab';
+  }
+
+  candleGroup.addEventListener('mousedown', e => { e.preventDefault(); startDrag(e.clientX); });
+  document.addEventListener('mousemove', e => moveDrag(e.clientX));
+  document.addEventListener('mouseup', endDrag);
+  candleGroup.addEventListener('touchstart', e => { e.preventDefault(); startDrag(e.touches[0].clientX); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); moveDrag(e.touches[0].clientX); } }, { passive: false });
+  document.addEventListener('touchend', endDrag);
+
+  // Presets
+  function loadPreset(cm) {
+    candleX = mirrorX - cm * pixPerCm;
+    document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.preset-pill[onclick="loadPreset(${cm})"]`).classList.add('active');
+    render();
+  }
+
+  // Record
+  function recordData() {
+    const d = getCandleDist();
+    records.push({ id: records.length + 1, u: d.toFixed(1), v: d.toFixed(1) });
+    const list = document.getElementById('recordsList');
+    list.classList.add('open');
+    let html = '';
+    records.forEach(r => {
+      html += `<div class="record-item"><span class="r-num">#${r.id}</span><span class="r-data">u=${r.u}cm v=${r.v}cm u=v ✓</span></div>`;
+    });
+    list.innerHTML = html;
+  }
+
+  // Formula rendering
+  function renderFormulas() {
+    try {
+      katex.render('u = v \\quad (\\text{物距} = \\text{像距})', document.getElementById('formula1'), { throwOnError: false, displayMode: true });
+      katex.render('h = h\' \\quad (\\text{物高} = \\text{像高})', document.getElementById('formula2'), { throwOnError: false, displayMode: true });
+    } catch(e) {
+      document.getElementById('formula1').textContent = 'u = v（物距 = 像距）';
+      document.getElementById('formula2').textContent = "h = h'（物高 = 像高）";
+    }
+  }
+
+  // Init
+  loadPreset(6);
+  renderFormulas();
+
+  // Guide
+  if (localStorage.getItem('mirror-guide-seen')) {
+    const g = document.getElementById('guideOverlay');
+    if (g) g.style.display = 'none';
+  } else {
+    localStorage.setItem('mirror-guide-seen', '1');
+  }
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
