@@ -3,32 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>电磁铁实验模拟 - 探究磁性强弱因素 | DevKit</title>
-<meta name="keywords" content="电磁铁实验, 磁性强弱, 匝数电流, 控制变量法, 初中物理电磁学">
-<meta name="description" content="在线模拟电磁铁实验，调节匝数和电流观察磁性变化，初中物理电磁学基础">
-<meta property="og:title" content="电磁铁实验模拟 - 探究磁性强弱因素 | DevKit">
-<meta property="og:description" content="在线模拟电磁铁实验，调节匝数和电流观察磁性变化">
+<title>电磁铁实验模拟 - 匝数电流与磁性探究 | DevKit</title>
+<meta name="keywords" content="电磁铁实验, 匝数电流磁性, 回形针吸附, 控制变量法, 初中物理电磁学">
+<meta name="description" content="在线模拟电磁铁实验，拖拽回形针靠近铁芯观察吸附效果，探究匝数电流对磁性影响，初中物理电磁学必考">
+<meta property="og:title" content="电磁铁实验模拟 - 匝数电流与磁性探究 | DevKit">
+<meta property="og:description" content="拖拽回形针靠近铁芯观察吸附效果，探究匝数电流对磁性影响">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/electromagnet.png">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/electromagnet/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F;min-height:100vh;overflow:hidden}
-.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
 .topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .topbar .back svg{width:14px;height:14px;color:#374151}
 .breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
-.breadcrumb a{color:#3B82F6;text-decoration:none;font-weight:500}
+.breadcrumb a{color:#4338CA;text-decoration:none;font-weight:500}
 .topbar h1{font-size:15px;font-weight:700}
 .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
 .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
 .purpose-tag svg{width:12px;height:12px}
-.lab-container{display:flex;height:calc(100vh - 48px - 29px)}
-.canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0}
-.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
+.lab-container{display:flex;flex-wrap:wrap;align-items:stretch}
+.canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
 .canvas-wrapper svg{width:100%;height:100%}
-.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
 .panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
@@ -36,42 +36,35 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .data-row:last-child{border-bottom:none}
 .data-label{color:#6B7280}
 .data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
-.formula-box{background:#EEF2FF;border-radius:8px;padding:10px;text-align:center;margin-top:6px}
 .coil-btn{padding:6px 12px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
 .coil-btn:hover{background:#EEF2FF;border-color:#C7D2FE;color:#4338CA}
 .coil-btn.active{background:#4338CA;color:#fff;border-color:#4338CA}
-.slider-control{margin:6px 0}
-.slider-control label{font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px}
-.slider-control input[type=range]{width:100%;accent-color:#4338CA;height:6px}
-.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#4338CA}
-.record-btn{width:100%;padding:7px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
-.record-btn svg{width:12px;height:12px}
-.record-btn:hover{background:#EEF2FF;border-color:#C7D2FE;color:#4338CA}
-.data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:10px}
-.data-table th{background:#F8F9FC;color:#6B7280;padding:4px 6px;text-align:center;font-weight:600;border:1px solid #E5E7EB}
-.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:10px}
-.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.slider-container{margin-top:6px}
+.slider-container input[type=range]{width:100%;accent-color:#4338CA;height:6px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto}
 .reset-btn svg{width:13px;height:13px}
 .reset-btn:hover{background:#E5E7EB}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:12px}
-.toggle-switch{width:36px;height:20px;border-radius:10px;background:#D1D5DB;cursor:pointer;position:relative;transition:background 0.2s}
-.toggle-switch.on{background:#4338CA}
-.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.15)}
-.toggle-switch.on::after{transform:translateX(16px)}
-.strength-bar{height:10px;background:#F3F4F6;border-radius:5px;overflow:hidden;margin-top:6px}
-.strength-fill{height:100%;border-radius:5px;transition:width 0.3s,background 0.3s}
-.guide-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;animation:guideFade 4s ease-in-out forwards}
-.guide-label{position:absolute;font-size:12px;color:#4338CA;font-weight:600;background:rgba(238,242,255,0.92);padding:4px 10px;border-radius:6px;border:1px solid #C7D2FE;white-space:nowrap}
-@keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
-.related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
-.related-bar span{color:#9CA3AF;font-weight:600}
-.related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#4338CA;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #C7D2FE}
+.knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
+.knowledge-card.example{background:linear-gradient(180deg,#FAFBFF,#EEF2FF)}
+.knowledge-card.example .card-header .accent{background:#2563EB}
+.knowledge-card.example .solve{background:#fff;border-radius:8px;padding:14px 16px;margin-top:10px;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#374151}
+.status-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:100px;font-size:12px;font-weight:700;pointer-events:none;z-index:10;transition:all 0.3s}
+.mag-bar{height:6px;border-radius:3px;background:#E5E7EB;overflow:hidden;margin-top:4px}
+.mag-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#818CF8,#4338CA);transition:width 0.3s}
 </style>
 </head>
 <body>
 <div class="topbar">
   <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="/devkit/pages/lab/">实验室</a><span style="color:#D1D5DB">/</span><a href="/devkit/pages/lab/" style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</a><span style="color:#D1D5DB">/</span></div>
+  <div class="breadcrumb"><a href="#">实验室</a><span>/</span><a href="#">物理实验</a><span>/</span></div>
   <h1>电磁铁探究</h1>
 </div>
 <div class="purpose-bar">
@@ -84,181 +77,138 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 <div class="lab-container">
   <div class="canvas-area">
     <div class="canvas-wrapper">
-      <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
+      <div id="statusBadge" class="status-badge" style="background:rgba(67,56,202,0.1);color:#4338CA">闭合开关，拖回形针靠近铁芯</div>
+      <svg id="canvas" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="ironCore" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/>
-          </linearGradient>
-          <linearGradient id="coilGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#818CF8"/><stop offset="100%" stop-color="#4338CA"/>
-          </linearGradient>
-          <filter id="glowMag"><feGaussianBlur stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <linearGradient id="coreGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="50%" stop-color="#6B7280"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="coilGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#818CF8"/><stop offset="100%" stop-color="#4338CA"/></linearGradient>
+          <linearGradient id="clipGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="4" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
 
-        <rect width="700" height="440" fill="#FAFBFE"/>
-
-        <!-- ===== CIRCUIT (simplified, left side) ===== -->
+        <!-- ===== CIRCUIT ===== -->
         <!-- Wires -->
-        <line x1="60" y1="100" x2="200" y2="100" stroke="#4338CA" stroke-width="2"/>
-        <line x1="60" y1="100" x2="60" y2="340" stroke="#4338CA" stroke-width="2"/>
-        <line x1="60" y1="340" x2="200" y2="340" stroke="#4338CA" stroke-width="2"/>
-        <!-- To electromagnet -->
-        <line x1="200" y1="100" x2="280" y2="100" stroke="#4338CA" stroke-width="2"/>
-        <line x1="200" y1="340" x2="280" y2="340" stroke="#4338CA" stroke-width="2"/>
-        <!-- Connect to coil -->
-        <line x1="280" y1="100" x2="280" y2="140" stroke="#4338CA" stroke-width="2"/>
-        <line x1="280" y1="300" x2="280" y2="340" stroke="#4338CA" stroke-width="2"/>
-
-        <!-- Battery -->
-        <g transform="translate(60,200)">
-          <line x1="0" y1="-20" x2="0" y2="-8" stroke="#4338CA" stroke-width="2"/>
-          <line x1="-10" y1="-8" x2="10" y2="-8" stroke="#4338CA" stroke-width="2.5"/>
-          <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#4338CA" stroke-width="2.5"/>
-          <line x1="-10" y1="4" x2="10" y2="4" stroke="#4338CA" stroke-width="2.5"/>
-          <line x1="-5" y1="10" x2="5" y2="10" stroke="#4338CA" stroke-width="2.5"/>
-          <line x1="0" y1="10" x2="0" y2="20" stroke="#4338CA" stroke-width="2"/>
-          <text x="-28" y="4" font-size="9" fill="#4338CA" font-weight="600">6V</text>
+        <polyline points="60,300 60,120 200,120" fill="none" stroke="#4338CA" stroke-width="2"/>
+        <polyline points="200,120 300,120" fill="none" stroke="#4338CA" stroke-width="2" id="wire1"/>
+        <polyline points="300,120 300,180" fill="none" stroke="#4338CA" stroke-width="2"/>
+        <polyline points="300,320 300,360 60,360 60,300" fill="none" stroke="#4338CA" stroke-width="2"/>
+        
+        <!-- Battery (6V) -->
+        <g transform="translate(60,300)">
+          <line x1="-8" y1="0" x2="8" y2="0" stroke="#4338CA" stroke-width="3"/>
+          <line x1="-4" y1="8" x2="4" y2="8" stroke="#4338CA" stroke-width="1.5"/>
+          <line x1="-8" y1="16" x2="8" y2="16" stroke="#4338CA" stroke-width="3"/>
+          <line x1="-4" y1="24" x2="4" y2="24" stroke="#4338CA" stroke-width="1.5"/>
+          <text x="20" y="16" font-size="11" fill="#4338CA" font-weight="700">6V</text>
         </g>
 
         <!-- Switch -->
-        <g transform="translate(130,100)">
-          <circle cx="-15" cy="0" r="2.5" fill="#4338CA"/>
-          <circle cx="15" cy="0" r="2.5" fill="none" stroke="#4338CA" stroke-width="1.5"/>
-          <line x1="-15" y1="0" x2="13" y2="-10" stroke="#4338CA" stroke-width="2" stroke-linecap="round"/>
-          <text x="0" y="-16" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">S</text>
+        <g id="switchGroup" style="cursor:pointer" onclick="toggleSwitch()">
+          <circle cx="200" cy="120" r="4" fill="#fff" stroke="#4338CA" stroke-width="2"/>
+          <line id="switchArm" x1="200" y1="120" x2="240" y2="100" stroke="#4338CA" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="250" cy="120" r="4" fill="#fff" stroke="#4338CA" stroke-width="2"/>
+          <text x="225" y="95" font-size="9" fill="#6B7280" text-anchor="middle">S</text>
         </g>
 
-        <!-- Rheostat (simplified) -->
-        <g transform="translate(130,340)">
-          <rect x="-30" y="-8" width="60" height="16" rx="3" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
-          <path d="M-22,0 L-14,-5 -6,5 2,-5 10,5 18,-5 22,0" fill="none" stroke="#6B7280" stroke-width="1"/>
-          <text x="0" y="18" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">变阻器</text>
+        <!-- Rheostat -->
+        <g transform="translate(120,340)">
+          <rect x="0" y="0" width="80" height="20" rx="4" fill="none" stroke="#4338CA" stroke-width="1.5"/>
+          <path d="M10,10 L20,3 L30,17 L40,3 L50,17 L60,3 L70,10" fill="none" stroke="#4338CA" stroke-width="1.5"/>
+          <text x="40" y="35" font-size="8" fill="#6B7280" text-anchor="middle">变阻器</text>
         </g>
 
         <!-- Ammeter -->
-        <g transform="translate(200,340)">
-          <circle cx="0" cy="0" r="14" fill="#fff" stroke="#D1D5DB" stroke-width="1.5"/>
-          <line id="ammeterPtr" x1="0" y1="2" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,2)"/>
-          <circle cx="0" cy="2" r="1.5" fill="#DC2626"/>
-          <text x="0" y="10" font-size="8" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+        <g transform="translate(250,340)">
+          <circle cx="15" cy="10" r="12" fill="none" stroke="#4338CA" stroke-width="1.5"/>
+          <text x="15" y="14" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="700">A</text>
         </g>
 
-        <!-- ===== ELECTROMAGNET ===== -->
-        <g transform="translate(280, 140)">
+        <!-- ===== ELECTROMAGNET (铁芯+线圈) ===== -->
+        <g id="magnetGroup" transform="translate(300,160)">
           <!-- Iron core -->
-          <rect x="-15" y="0" width="30" height="160" rx="4" fill="url(#ironCore)"/>
+          <rect x="-8" y="0" width="16" height="160" rx="3" fill="url(#coreGrad)"/>
           <text x="0" y="-8" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">铁芯</text>
-
-          <!-- Coil windings -->
+          
+          <!-- Coils (visual count changes with N) -->
           <g id="coilGroup">
             <!-- Generated by JS -->
           </g>
-
-          <!-- Magnetic glow -->
-          <ellipse id="magGlow" cx="0" cy="170" rx="40" ry="15" fill="rgba(99,102,241,0.15)" opacity="0"/>
+          
+          <!-- Magnetic field glow (visible when on) -->
+          <ellipse id="magGlow" cx="0" cy="80" rx="60" ry="100" fill="rgba(99,102,241,0.08)" filter="url(#glow)" opacity="0"/>
         </g>
 
-        <!-- ===== MAGNETIC FIELD LINES ===== -->
-        <g id="fieldLines" opacity="0">
-          <path d="M280,150 C230,120 220,220 280,220" fill="none" stroke="#818CF8" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
-          <path d="M280,150 C330,120 340,220 280,220" fill="none" stroke="#818CF8" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
-          <path d="M280,140 C200,100 190,250 280,240" fill="none" stroke="#818CF8" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.35"/>
-          <path d="M280,140 C360,100 370,250 280,240" fill="none" stroke="#818CF8" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.35"/>
-          <path d="M280,130 C170,80 160,270 280,260" fill="none" stroke="#818CF8" stroke-width="0.6" stroke-dasharray="4,3" opacity="0.2"/>
-          <path d="M280,130 C390,80 400,270 280,260" fill="none" stroke="#818CF8" stroke-width="0.6" stroke-dasharray="4,3" opacity="0.2"/>
-          <text x="380" y="140" font-size="8" fill="#818CF8" font-weight="600">N</text>
-          <text x="380" y="260" font-size="8" fill="#818CF8" font-weight="600">S</text>
+        <!-- ===== PAPERCLIPS (回形针) ===== -->
+        <g id="clipShelf">
+          <text x="550" y="55" font-size="11" fill="#374151" text-anchor="middle" font-weight="700">回形针</text>
+          <rect x="480" y="62" width="140" height="4" rx="2" fill="#D1D5DB"/>
+          
+          <!-- 6 paperclips on shelf -->
+          <g id="clip0" class="clip" style="cursor:grab" data-x="490" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(490,70)"/>
+          </g>
+          <g id="clip1" class="clip" style="cursor:grab" data-x="512" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(512,70)"/>
+          </g>
+          <g id="clip2" class="clip" style="cursor:grab" data-x="534" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(534,70)"/>
+          </g>
+          <g id="clip3" class="clip" style="cursor:grab" data-x="556" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(556,70)"/>
+          </g>
+          <g id="clip4" class="clip" style="cursor:grab" data-x="578" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(578,70)"/>
+          </g>
+          <g id="clip5" class="clip" style="cursor:grab" data-x="600" data-y="70">
+            <path d="M0,0 L0,18 Q0,24 6,24 Q12,24 12,18 L12,6 Q12,0 6,0 Q0,0 0,6" fill="none" stroke="url(#clipGrad)" stroke-width="1.5" transform="translate(600,70)"/>
+          </g>
+          <text x="550" y="108" font-size="8" fill="#4338CA" text-anchor="middle" font-weight="600">拖回形针靠近铁芯</text>
         </g>
 
-        <!-- ===== PAPERCLIPS ===== -->
-        <g id="paperclips" transform="translate(280, 320)">
-          <!-- Scattered clips on table -->
-          <g id="scatteredClips"></g>
-          <!-- Attracted clips hanging -->
-          <g id="attractedClips"></g>
-        </g>
+        <!-- Attracted clips counter -->
+        <rect id="countBg" x="440" y="280" width="180" height="40" rx="10" fill="rgba(67,56,202,0.08)" stroke="#C7D2FE" stroke-width="1"/>
+        <text x="490" y="305" font-size="12" fill="#4B5563" font-weight="600">吸引回形针</text>
+        <text id="clipCount" x="590" y="306" font-size="18" fill="#4338CA" font-weight="800" text-anchor="middle">0 个</text>
 
-        <!-- Table surface -->
-        <rect x="180" y="390" width="200" height="8" rx="2" fill="#D6D3D1"/>
-
-        <!-- Strength label -->
-        <g transform="translate(480, 200)">
-          <rect x="0" y="-14" width="160" height="28" rx="8" fill="rgba(238,242,255,0.9)" stroke="#C7D2FE" stroke-width="0.5"/>
-          <text id="strengthLabel" x="80" y="4" font-size="11" fill="#4338CA" text-anchor="middle" font-weight="700">磁性：中等</text>
-        </g>
-
-        <!-- Clip count display -->
-        <g transform="translate(480, 250)">
-          <text x="0" y="0" font-size="10" fill="#6B7280" font-weight="600">吸引回形针</text>
-          <text id="clipCountText" x="100" y="0" font-size="16" fill="#4338CA" font-weight="800" font-family="JetBrains Mono, monospace">3 个</text>
+        <!-- Guide label -->
+        <g id="guideLabels" opacity="1">
+          <rect x="440" y="180" width="150" height="20" rx="4" fill="rgba(67,56,202,0.9)"/>
+          <text x="515" y="194" font-size="9" fill="#fff" text-anchor="middle" font-weight="600">先闭合开关 S →</text>
         </g>
       </svg>
-
-      <div class="guide-overlay" id="guideOverlay">
-        <div class="guide-label" style="top:20%;left:5%">调节电流大小改变磁性</div>
-        <div class="guide-label" style="top:50%;left:25%">切换匝数观察变化</div>
-        <div class="guide-label" style="bottom:15%;left:30%">数回形针验证磁性强弱</div>
-      </div>
     </div>
   </div>
 
+  <!-- Panel -->
   <div class="panel">
     <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6"/></svg> 线圈匝数</h3>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg> 线圈匝数</h3>
       <div style="display:flex;gap:4px">
-        <button class="coil-btn" onclick="setCoils(50)">50匝</button>
-        <button class="coil-btn active" onclick="setCoils(100)">100匝</button>
-        <button class="coil-btn" onclick="setCoils(200)">200匝</button>
+        <button class="coil-btn" onclick="setCoils(50,this)">50匝</button>
+        <button class="coil-btn active" onclick="setCoils(100,this)">100匝</button>
+        <button class="coil-btn" onclick="setCoils(200,this)">200匝</button>
       </div>
     </div>
 
     <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg> 电流控制</h3>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> 电流控制</h3>
       <div class="data-row"><span class="data-label">电源电压</span><span class="data-value">6.0 V</span></div>
-      <div class="slider-control">
-        <label>变阻器 R = <span class="slider-val" id="rVal">20 Ω</span></label>
-        <input type="range" id="rSlider" min="5" max="50" step="1" value="20" oninput="updateEM()">
+      <div class="slider-container">
+        <div class="data-row"><span class="data-label">变阻器 R</span><span class="data-value" id="valR">20 Ω</span></div>
+        <input type="range" min="5" max="50" value="20" id="rheostat" oninput="updateCurrent()"/>
       </div>
-      <div class="data-row"><span class="data-label" style="color:#4338CA">电流 I</span><span class="data-value" id="valI" style="color:#4338CA">0.30 A</span></div>
+      <div class="data-row"><span class="data-label">电流 I</span><span class="data-value" id="valI" style="color:#4338CA">0.30 A</span></div>
     </div>
 
     <div class="panel-section">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 磁性数据</h3>
       <div class="data-row"><span class="data-label">匝数 N</span><span class="data-value" id="valN">100</span></div>
       <div class="data-row"><span class="data-label">电流 I</span><span class="data-value" id="valI2">0.30 A</span></div>
-      <div class="data-row"><span class="data-label" style="color:#4338CA;font-weight:700">N × I</span><span class="data-value" id="valNI" style="color:#4338CA">30</span></div>
-      <div class="data-row"><span class="data-label">回形针数</span><span class="data-value" id="valClips">3 个</span></div>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">N × I</span><span class="data-value" id="valNI" style="color:#4338CA">30</span></div>
+      <div class="data-row"><span class="data-label">吸引针数</span><span class="data-value" id="valClips">0 个</span></div>
       <div style="margin-top:6px">
-        <div style="font-size:10px;color:#6B7280;margin-bottom:3px">磁性强度</div>
-        <div class="strength-bar"><div id="strengthFill" class="strength-fill" style="width:30%;background:#4338CA"></div></div>
-      </div>
-    </div>
-
-    <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 显示选项</h3>
-      <div class="toggle-row">
-        <span class="data-label">磁力线</span>
-        <div class="toggle-switch" id="fieldToggle" onclick="toggleField()"></div>
-      </div>
-    </div>
-
-    <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 数据记录</h3>
-      <button class="record-btn" onclick="recordData()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        记录本次数据
-      </button>
-      <div id="dataTableArea"></div>
-    </div>
-
-    <div class="panel-section">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 电磁铁原理</h3>
-      <div class="formula-box" id="formula1"></div>
-      <div style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">
-        电磁铁磁性强弱取决于：<br/>
-        1. 线圈匝数 N（越多越强）<br/>
-        2. 电流大小 I（越大越强）<br/>
-        3. 有无铁芯（有铁芯更强）
+        <span class="data-label" style="font-size:11px">磁性强度</span>
+        <div class="mag-bar"><div class="mag-bar-fill" id="magBar" style="width:30%"></div></div>
       </div>
     </div>
 
@@ -269,172 +219,321 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
   </div>
 </div>
 
-<div class="related-bar">
-  <span>相关实验</span>
-  <a href="/devkit/pages/lab/ohm/">欧姆定律</a>
-  <a href="/devkit/pages/lab/series-parallel/">串并联电路</a>
-  <a href="/devkit/pages/lab/circuit-builder/">电路搭建</a>
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>电磁铁原理</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="knowledgeFormula1"></div>
+      <p>电磁铁的磁性强弱与线圈匝数和通过的电流大小有关。</p>
+      <ul>
+        <li><strong>B</strong> — 磁感应强度，与 N×I 成正比</li>
+        <li><strong>N</strong> — 线圈匝数，匝数越多磁性越强</li>
+        <li><strong>I</strong> — 电流大小，电流越大磁性越强</li>
+      </ul>
+      <p style="margin-top:12px;color:#6B7280;font-size:12px">实验方法：控制变量法 — 保持电流不变改变匝数，或保持匝数不变改变电流，观察吸引回形针数量。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>电磁铁特点</h2></div>
+    <div class="card-body">
+      <ul>
+        <li><strong>磁性可控</strong>：通电有磁性，断电磁性消失</li>
+        <li><strong>磁性强弱可调</strong>：改变电流大小可调节磁性强弱</li>
+        <li><strong>磁极可变</strong>：改变电流方向可改变磁极（安培定则）</li>
+      </ul>
+      <p style="margin-top:8px;color:#4338CA;font-size:12px;font-weight:600">考点提醒：电磁铁和永磁体的区别 — 电磁铁磁性可控、可调、可变，永磁体磁性恒定。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>某电磁铁线圈匝数 200 匝，通过 0.5A 电流时能吸引 8 个回形针。若电流不变，匝数减半为 100 匝，能吸引约几个回形针？</p>
+      <div class="solve">
+        B ∝ N × I<br/>
+        原来：N₁×I = 200 × 0.5 = 100<br/>
+        现在：N₂×I = 100 × 0.5 = 50（减半）<br/>
+        磁性减半 → 吸引约 <strong style="color:#4338CA">4 个</strong>回形针
+      </div>
+    </div>
+  </div>
+  <!-- ad placeholder hidden -->
 </div>
 <script>
-const E = 6;
-let N = 100;
-let R = 20;
-let showField = false;
-let records = [];
+// ===== STATE =====
+let switchOn = false;
+let coilN = 100;
+let resistance = 20; // Ω
+const VOLTAGE = 6; // V
+let attractedClips = 0;
+const TOTAL_CLIPS = 6;
+let clipStates = []; // {attached:bool, x, y, origX, origY}
+let draggingClip = -1;
+let dragOffX = 0, dragOffY = 0;
 
-function getI() { return E / (R + 2); } // 2Ω internal resistance
-function getNI() { return N * getI(); }
-function getClips() { return Math.min(10, Math.max(0, Math.round(getNI() / 12))); }
+// Magnet center (SVG coords)
+const MAG_CX = 300;
+const MAG_CY = 240; // center of iron core
 
-function setCoils(n) {
-  N = n;
-  document.querySelectorAll('.coil-btn').forEach((b, i) => {
-    b.classList.toggle('active', [50,100,200][i] === n);
-  });
-  drawCoils();
-  updateEM();
+function getCurrent() { return switchOn ? VOLTAGE / resistance : 0; }
+function getMagStrength() { return coilN * getCurrent(); } // N×I
+function getAttractRadius() {
+  if (!switchOn) return 0;
+  const NI = getMagStrength();
+  return Math.min(120, 30 + NI * 0.6); // px radius for attraction
+}
+function getMaxClips() {
+  if (!switchOn) return 0;
+  const NI = getMagStrength();
+  if (NI < 10) return 1;
+  if (NI < 30) return 2;
+  if (NI < 60) return 3;
+  if (NI < 100) return 4;
+  if (NI < 150) return 5;
+  return 6;
 }
 
+// ===== INIT CLIPS =====
+function initClips() {
+  clipStates = [];
+  for (let i = 0; i < TOTAL_CLIPS; i++) {
+    const el = document.getElementById('clip' + i);
+    const ox = parseInt(el.getAttribute('data-x'));
+    const oy = parseInt(el.getAttribute('data-y'));
+    clipStates.push({ attached: false, x: ox, y: oy, origX: ox, origY: oy });
+  }
+}
+
+// ===== DRAWING =====
 function drawCoils() {
-  const cg = document.getElementById('coilGroup');
-  cg.innerHTML = '';
-  const numVisible = N === 50 ? 6 : (N === 100 ? 10 : 16);
-  const spacing = 150 / numVisible;
-  for (let i = 0; i < numVisible; i++) {
-    const y = 5 + i * spacing;
-    const el = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
-    el.setAttribute('cx','0'); el.setAttribute('cy', y);
-    el.setAttribute('rx','22'); el.setAttribute('ry','6');
-    el.setAttribute('fill','none'); el.setAttribute('stroke','url(#coilGrad)');
-    el.setAttribute('stroke-width', N === 200 ? '3' : '2.5');
-    cg.appendChild(el);
-  }
-}
-
-function drawPaperclips(count) {
-  const attracted = document.getElementById('attractedClips');
-  const scattered = document.getElementById('scatteredClips');
-  attracted.innerHTML = '';
-  scattered.innerHTML = '';
-
-  // Attracted clips (hanging from bottom of iron core)
+  const g = document.getElementById('coilGroup');
+  g.innerHTML = '';
+  const count = coilN === 50 ? 5 : coilN === 100 ? 8 : 12;
+  const coreH = 160;
+  const spacing = coreH / (count + 1);
   for (let i = 0; i < count; i++) {
-    const x = -20 + (i % 5) * 10;
-    const y = -10 + Math.floor(i / 5) * 18;
-    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.setAttribute('transform', `translate(${x},${y})`);
-    // Paperclip shape
-    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d', 'M0,0 L0,12 A3,3 0 0,0 6,12 L6,3 A2,2 0 0,0 2,3 L2,10');
-    p.setAttribute('fill','none'); p.setAttribute('stroke','#6B7280');
-    p.setAttribute('stroke-width','1.2'); p.setAttribute('stroke-linecap','round');
-    g.appendChild(p);
-    attracted.appendChild(g);
-  }
-
-  // Scattered clips on table (remaining)
-  const scatteredCount = Math.max(0, 10 - count);
-  for (let i = 0; i < scatteredCount; i++) {
-    const x = -60 + i * 14 + (i % 3) * 5;
-    const y = 55 + (i % 2) * 8;
-    const rot = -30 + (i * 47) % 60;
-    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.setAttribute('transform', `translate(${x},${y}) rotate(${rot})`);
-    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d', 'M0,0 L0,10 A2.5,2.5 0 0,0 5,10 L5,2 A1.5,1.5 0 0,0 2,2 L2,8');
-    p.setAttribute('fill','none'); p.setAttribute('stroke','#9CA3AF');
-    p.setAttribute('stroke-width','1'); p.setAttribute('stroke-linecap','round');
-    g.appendChild(p);
-    scattered.appendChild(g);
+    const y = spacing * (i + 1);
+    const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    ellipse.setAttribute('cx', '0');
+    ellipse.setAttribute('cy', String(y));
+    ellipse.setAttribute('rx', '20');
+    ellipse.setAttribute('ry', '8');
+    ellipse.setAttribute('fill', 'none');
+    ellipse.setAttribute('stroke', switchOn ? '#4338CA' : '#A5B4FC');
+    ellipse.setAttribute('stroke-width', '2.5');
+    ellipse.setAttribute('opacity', switchOn ? '1' : '0.5');
+    g.appendChild(ellipse);
   }
 }
 
-function updateEM() {
-  R = parseInt(document.getElementById('rSlider').value);
-  const I = getI();
-  const ni = getNI();
-  const clips = getClips();
+function updateClipPositions() {
+  for (let i = 0; i < TOTAL_CLIPS; i++) {
+    const el = document.getElementById('clip' + i);
+    const s = clipStates[i];
+    const path = el.querySelector('path');
+    path.setAttribute('transform', `translate(${s.x},${s.y})`);
+  }
+}
 
-  document.getElementById('rVal').textContent = R + ' Ω';
+function updateMagGlow() {
+  const glow = document.getElementById('magGlow');
+  if (switchOn) {
+    const NI = getMagStrength();
+    const r = Math.min(80, 20 + NI * 0.4);
+    glow.setAttribute('rx', r);
+    glow.setAttribute('ry', r * 1.3);
+    glow.setAttribute('opacity', Math.min(0.25, NI * 0.002));
+  } else {
+    glow.setAttribute('opacity', '0');
+  }
+}
+
+function updatePanel() {
+  const I = getCurrent();
+  document.getElementById('valR').textContent = resistance + ' Ω';
   document.getElementById('valI').textContent = I.toFixed(2) + ' A';
   document.getElementById('valI2').textContent = I.toFixed(2) + ' A';
-  document.getElementById('valN').textContent = N;
-  document.getElementById('valNI').textContent = ni.toFixed(0);
-  document.getElementById('valClips').textContent = clips + ' 个';
-  document.getElementById('clipCountText').textContent = clips + ' 个';
+  document.getElementById('valN').textContent = coilN;
+  document.getElementById('valNI').textContent = switchOn ? Math.round(coilN * I) : '—';
+  document.getElementById('valClips').textContent = attractedClips + ' 个';
+  
+  // Mag bar
+  const pct = switchOn ? Math.min(100, getMagStrength() / 1.5) : 0;
+  document.getElementById('magBar').style.width = pct + '%';
 
-  // Strength
-  const pct = Math.min(100, ni / 120 * 100);
-  document.getElementById('strengthFill').style.width = pct + '%';
-  const sl = document.getElementById('strengthLabel');
-  if (pct < 20) { sl.textContent = '磁性：很弱'; document.getElementById('strengthFill').style.background = '#93C5FD'; }
-  else if (pct < 40) { sl.textContent = '磁性：较弱'; document.getElementById('strengthFill').style.background = '#818CF8'; }
-  else if (pct < 60) { sl.textContent = '磁性：中等'; document.getElementById('strengthFill').style.background = '#4338CA'; }
-  else if (pct < 80) { sl.textContent = '磁性：较强'; document.getElementById('strengthFill').style.background = '#3730A3'; }
-  else { sl.textContent = '磁性：很强'; document.getElementById('strengthFill').style.background = '#312E81'; }
+  // Clip count display
+  document.getElementById('clipCount').textContent = attractedClips + ' 个';
 
-  // Magnetic glow
-  const glow = document.getElementById('magGlow');
-  glow.setAttribute('opacity', Math.min(0.6, pct / 100 * 0.6));
-  glow.setAttribute('rx', 30 + pct * 0.3);
-
-  // Ammeter pointer
-  const aAng = -60 + (I / 1.2) * 120;
-  document.getElementById('ammeterPtr').setAttribute('transform', `rotate(${Math.min(60,aAng)},0,2)`);
-
-  // Paperclips
-  drawPaperclips(clips);
-
-  // Field lines intensity
-  if (showField) {
-    document.getElementById('fieldLines').setAttribute('opacity', Math.min(0.8, 0.2 + pct/100*0.6));
+  // Status badge
+  const badge = document.getElementById('statusBadge');
+  if (!switchOn) {
+    badge.textContent = '开关断开 — 请闭合开关 S';
+    badge.style.background = 'rgba(107,114,128,0.1)';
+    badge.style.color = '#6B7280';
+  } else if (attractedClips === 0) {
+    badge.textContent = '已通电 — 拖回形针靠近铁芯';
+    badge.style.background = 'rgba(67,56,202,0.1)';
+    badge.style.color = '#4338CA';
+  } else {
+    badge.textContent = `磁性${getMagStrength() > 80 ? '很强' : getMagStrength() > 40 ? '较强' : '较弱'} — 吸住 ${attractedClips} 个回形针`;
+    badge.style.background = 'rgba(67,56,202,0.15)';
+    badge.style.color = '#4338CA';
   }
 }
 
-function toggleField() {
-  showField = !showField;
-  document.getElementById('fieldToggle').classList.toggle('on', showField);
-  document.getElementById('fieldLines').setAttribute('opacity', showField ? '0.5' : '0');
-  if (showField) updateEM();
+function checkAttraction() {
+  attractedClips = 0;
+  const maxC = getMaxClips();
+  const radius = getAttractRadius();
+  
+  for (let i = 0; i < TOTAL_CLIPS; i++) {
+    if (draggingClip === i) continue;
+    const s = clipStates[i];
+    const dx = (s.x + 6) - MAG_CX;
+    const dy = (s.y + 12) - MAG_CY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    if (switchOn && dist < radius && attractedClips < maxC) {
+      // Attract — snap to core
+      if (!s.attached) {
+        s.attached = true;
+        // Snap position to core side
+        const angle = Math.atan2(dy, dx);
+        s.x = MAG_CX + Math.cos(angle) * 25 - 6;
+        s.y = MAG_CY + (attractedClips * 20) - 50;
+      }
+      attractedClips++;
+    } else if (!switchOn && s.attached) {
+      // Drop — return to shelf or fall
+      s.attached = false;
+      s.x = s.origX;
+      s.y = s.origY;
+    }
+  }
+  updateClipPositions();
+  updatePanel();
 }
 
-function recordData() {
-  const I = getI();
-  const clips = getClips();
-  records.push({ N, I: I.toFixed(2), NI: (N*I).toFixed(0), clips });
-
-  let html = '<table class="data-table"><tr><th>#</th><th>N/匝</th><th>I/A</th><th>N×I</th><th>回形针</th></tr>';
-  records.forEach((r, i) => {
-    html += `<tr><td>${i+1}</td><td>${r.N}</td><td>${r.I}</td><td>${r.NI}</td><td>${r.clips}</td></tr>`;
-  });
-  html += '</table>';
-  document.getElementById('dataTableArea').innerHTML = html;
-}
-
-function resetAll() {
-  N = 100; R = 20; records = [];
-  document.getElementById('rSlider').value = 20;
-  document.querySelectorAll('.coil-btn').forEach((b,i) => b.classList.toggle('active', i===1));
-  document.getElementById('dataTableArea').innerHTML = '';
-  showField = false;
-  document.getElementById('fieldToggle').classList.remove('on');
-  document.getElementById('fieldLines').setAttribute('opacity', '0');
+// ===== SWITCH =====
+function toggleSwitch() {
+  switchOn = !switchOn;
+  const arm = document.getElementById('switchArm');
+  if (switchOn) {
+    arm.setAttribute('x2', '250');
+    arm.setAttribute('y2', '120');
+  } else {
+    arm.setAttribute('x2', '240');
+    arm.setAttribute('y2', '100');
+  }
   drawCoils();
-  updateEM();
+  updateMagGlow();
+  checkAttraction();
+  updatePanel();
+  document.getElementById('guideLabels').style.opacity = '0';
 }
 
-function renderFormulas() {
-  try {
-    katex.render('B \\propto N \\cdot I', document.getElementById('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {
-    document.getElementById('formula1').textContent = 'B ∝ N·I';
+// ===== COILS =====
+function setCoils(n, btn) {
+  coilN = n;
+  document.querySelectorAll('.coil-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawCoils();
+  updateMagGlow();
+  checkAttraction();
+  updatePanel();
+}
+
+// ===== CURRENT =====
+function updateCurrent() {
+  resistance = parseInt(document.getElementById('rheostat').value);
+  updateMagGlow();
+  checkAttraction();
+  updatePanel();
+}
+
+// ===== DRAG CLIPS =====
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) {
+  const pt = svg.createSVGPoint();
+  const touch = e.touches ? e.touches[0] : e;
+  pt.x = touch.clientX; pt.y = touch.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function onDown(e) {
+  e.preventDefault();
+  const p = getSvgPoint(e);
+  for (let i = 0; i < TOTAL_CLIPS; i++) {
+    const s = clipStates[i];
+    if (p.x >= s.x && p.x <= s.x + 12 && p.y >= s.y && p.y <= s.y + 24) {
+      draggingClip = i;
+      dragOffX = p.x - s.x;
+      dragOffY = p.y - s.y;
+      s.attached = false;
+      return;
+    }
   }
 }
 
+function onMove(e) {
+  if (draggingClip < 0) return;
+  e.preventDefault();
+  const p = getSvgPoint(e);
+  clipStates[draggingClip].x = p.x - dragOffX;
+  clipStates[draggingClip].y = p.y - dragOffY;
+  updateClipPositions();
+}
+
+function onUp(e) {
+  if (draggingClip < 0) return;
+  draggingClip = -1;
+  checkAttraction();
+}
+
+svg.addEventListener('mousedown', onDown);
+svg.addEventListener('mousemove', onMove);
+svg.addEventListener('mouseup', onUp);
+svg.addEventListener('touchstart', onDown, { passive: false });
+svg.addEventListener('touchmove', onMove, { passive: false });
+svg.addEventListener('touchend', onUp);
+
+// ===== RESET =====
+function resetAll() {
+  switchOn = false;
+  coilN = 100;
+  resistance = 20;
+  document.getElementById('rheostat').value = 20;
+  document.getElementById('switchArm').setAttribute('x2', '240');
+  document.getElementById('switchArm').setAttribute('y2', '100');
+  document.querySelectorAll('.coil-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === 1);
+  });
+  initClips();
+  updateClipPositions();
+  drawCoils();
+  updateMagGlow();
+  attractedClips = 0;
+  updatePanel();
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  const el = document.getElementById('knowledgeFormula1');
+  if (el && window.katex) {
+    katex.render('B \\propto N \\cdot I', el, { throwOnError: false, displayMode: true });
+  }
+}
+
+// ===== INIT =====
+initClips();
 drawCoils();
-updateEM();
-renderFormulas();
-if (localStorage.getItem('em-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('em-guide-seen','1'); }
+updatePanel();
+setTimeout(() => {
+  const g = document.getElementById('guideLabels');
+  if (g) { g.style.transition = 'opacity 1s'; g.style.opacity = '0'; }
+}, 4000);
 </script>
 <script src="/shared/theme.js"></script>
 </body>
