@@ -142,9 +142,9 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
             <rect x="160" y="210" width="240" height="200" rx="3" fill="none" stroke="#93C5FD" stroke-width="2"/>
             <rect x="155" y="206" width="250" height="8" rx="2" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
             <!-- Water -->
-            <rect id="waterBody" x="162" y="260" width="236" height="148" fill="url(#waterGrad)"/>
+            <rect id="waterBody" x="162" y="230" width="236" height="178" fill="url(#waterGrad)"/>
             <!-- Water surface line -->
-            <line id="waterSurface" x1="162" y1="260" x2="398" y2="260" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
+            <line id="waterSurface" x1="162" y1="230" x2="398" y2="230" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
             <!-- Water level label -->
             <text id="waterLabel" x="405" y="264" font-size="9" fill="#3B82F6" font-weight="600">水面</text>
             <!-- Graduation marks on beaker -->
@@ -356,7 +356,7 @@ let records = [];
 
 const g = 10;
 const objH = 40, objW = 50;
-const waterTop0 = 260; // initial water surface y
+const waterTop0 = 230; // initial water surface y
 const containerTop = 210, containerBot = 408;
 
 function getG() { return materials[mat].rho * materials[mat].vol / 1000 * g; }
