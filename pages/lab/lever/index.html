@@ -614,7 +614,13 @@
         wHtml += `<text x="${x}" y="${y+h*0.6+7}" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600" pointer-events="none">N</text>`;
       });
     }
-    wg.innerHTML = wHtml;
+    // SVG innerHTML needs namespace workaround
+    while(wg.firstChild) wg.removeChild(wg.firstChild);
+    if(wHtml) {
+      const tmp = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      tmp.innerHTML = wHtml;
+      while(tmp.firstChild) wg.appendChild(tmp.firstChild);
+    }
   }
 
   // === Interactions ===
