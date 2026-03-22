@@ -75,17 +75,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <filter id="arrowShadow"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.15"/></filter>
       </defs>
 
+      <!-- Background -->
+      <rect width="700" height="350" fill="#FAFBFE"/>
       <!-- Optical bench (main axis) -->
-      <line x1="20" y1="200" x2="680" y2="200" stroke="#D1D5DB" stroke-width="2"/>
+      <line x1="20" y1="200" x2="680" y2="200" stroke="#CBD5E1" stroke-width="1.5"/>
+      <polygon points="675,197 685,200 675,203" fill="#CBD5E1"/>
 
       <!-- Ruler marks -->
       <g id="ruler"></g>
 
       <!-- Lens -->
       <g id="lens-group" transform="translate(350,200)">
-        <ellipse cx="0" cy="0" rx="6" ry="80" fill="rgba(59,130,246,0.1)" stroke="#3B82F6" stroke-width="2"/>
-        <polygon points="-8,-80 0,-88 8,-80" fill="#3B82F6"/>
-        <polygon points="-8,80 0,88 8,80" fill="#3B82F6"/>
+        <!-- 双凸贝塞尔曲线透镜 -->
+        <path d="M0,-80 Q15,-40 15,0 Q15,40 0,80 Q-15,40 -15,0 Q-15,-40 0,-80 Z" fill="url(#lensGrad)"/>
+        <path d="M0,-80 Q15,-40 15,0 Q15,40 0,80" fill="none" stroke="url(#lensEdge)" stroke-width="2.5" filter="url(#lensGlow)"/>
+        <path d="M0,-80 Q-15,-40 -15,0 Q-15,40 0,80" fill="none" stroke="url(#lensEdge)" stroke-width="2.5" filter="url(#lensGlow)"/>
+        <polygon points="-6,-80 0,-88 6,-80" fill="#3B82F6" opacity="0.6"/>
+        <polygon points="-6,80 0,88 6,80" fill="#3B82F6" opacity="0.6"/>
       </g>
 
       <!-- Focus points -->
@@ -96,15 +102,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
       <!-- Object (arrow/candle) -->
       <g id="object-group" cursor="grab">
-        <line id="obj-line" x1="200" y1="200" x2="200" y2="120" stroke="#EF4444" stroke-width="3"/>
-        <polygon id="obj-arrow" points="200,120 194,132 206,132" fill="#EF4444"/>
+        <rect id="obj-base" x="192" y="198" width="16" height="4" rx="2" fill="#DC2626" opacity="0.5"/>
+        <line id="obj-line" x1="200" y1="200" x2="200" y2="120" stroke="url(#objectGrad)" stroke-width="4" filter="url(#arrowShadow)"/>
+        <polygon id="obj-arrow" points="200,115 192,130 208,130" fill="#EF4444"/>
         <text id="obj-label" x="200" y="112" font-size="11" fill="#EF4444" text-anchor="middle" font-weight="700">物</text>
       </g>
 
       <!-- Image -->
       <g id="image-group">
-        <line id="img-line" x1="500" y1="200" x2="500" y2="280" stroke="#3B82F6" stroke-width="3"/>
-        <polygon id="img-arrow" points="500,280 494,268 506,268" fill="#3B82F6"/>
+        <rect id="img-base" x="493" y="198" width="14" height="3" rx="1.5" fill="#2563EB" opacity="0.4"/>
+        <line id="img-line" x1="500" y1="200" x2="500" y2="280" stroke="url(#imageGrad)" stroke-width="4" filter="url(#arrowShadow)" opacity="0.85"/>
+        <polygon id="img-arrow" points="500,285 492,270 508,270" fill="#3B82F6" opacity="0.85"/>
         <text id="img-label" x="500" y="292" font-size="11" fill="#3B82F6" text-anchor="middle" font-weight="700">像</text>
       </g>
 
