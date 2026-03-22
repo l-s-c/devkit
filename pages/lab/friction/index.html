@@ -339,16 +339,11 @@ function drawSpring() {
 
 function updateScalePosition() {
   const dx = pullX || 0;
-  const scaleBody = document.getElementById('scaleBody');
-  scaleBody.setAttribute('x', 350 + dx);
-  // Move marks, pointer, reading, handle
-  const marks = document.getElementById('scaleMarks');
-  marks.setAttribute('transform', `translate(${dx},0)`);
-  document.getElementById('scalePointer').setAttribute('transform', `translate(${dx},0)`);
-  document.getElementById('readBg').setAttribute('x', 370 + dx);
-  document.getElementById('readText').setAttribute('x', 395 + dx);
-  // Handle
-  const handle = scaleBody.nextElementSibling; // handle rect
+  // Move entire spring scale group
+  document.getElementById('springScaleGroup').setAttribute('transform', `translate(${dx},0)`);
+  // Guide label also moves
+  const guideEl = document.getElementById('guideLabels');
+  if (guideEl) guideEl.setAttribute('transform', `translate(${dx},0)`);
 }
 
 function updateReading() {
@@ -362,25 +357,24 @@ function updateReading() {
   document.getElementById('valBlockM').textContent = BLOCK_MASS + ' g';
   document.getElementById('valWeightM').textContent = (stackedCount * 100) + ' g';
   
-  // Pointer position (F = friction when pulling)
-  const pointerX = 360 + (pullX || 0) + displayF * 20;
+  // Pointer position — 1N = 20px on scale, 0N at x=360 (relative to group, no pullX offset needed since group moves)
+  const pointerX = 360 + displayF * 20;
   document.getElementById('scalePointer').setAttribute('points',
     `${pointerX},213 ${pointerX+3},208 ${pointerX-3},208`
   );
 
-  // Pull arrow
+  // Pull arrow (stays relative to scale group position)
   const arrowPull = document.getElementById('arrowPull');
   const labelPull = document.getElementById('labelPull');
   arrowPull.setAttribute('opacity', isPulling ? '1' : '0');
   labelPull.setAttribute('opacity', isPulling ? '1' : '0');
-  arrowPull.setAttribute('x1', 500 + (pullX || 0));
-  arrowPull.setAttribute('x2', 540 + (pullX || 0));
-  labelPull.setAttribute('x', 545 + (pullX || 0));
 
-  // f arrow length based on friction
+  // f arrow length based on friction (relative to block which moves)
+  const blockDx = blockX - 180;
   const fLen = isPulling ? Math.min(displayF, friction) * 20 : 0;
-  document.getElementById('arrowF').setAttribute('x2', 180 - fLen);
-  document.getElementById('labelF').setAttribute('x', 170 - fLen);
+  document.getElementById('arrowF').setAttribute('x1', 180 + blockDx);
+  document.getElementById('arrowF').setAttribute('x2', 180 + blockDx - fLen);
+  document.getElementById('labelF').setAttribute('x', 170 + blockDx - fLen);
   document.getElementById('arrowF').setAttribute('opacity', isPulling ? '1' : '0.3');
   document.getElementById('labelF').setAttribute('opacity', isPulling ? '1' : '0.3');
 
@@ -457,8 +451,35 @@ function getSvgPoint(e) {
   return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
 
-let dragType = null; // 'scale' or 'weight'
+let dragType = null; // 'scale' or 'weight' or 'unstackWeight'
 let dragIdx = -1;
+let dragGhost = null; // ghost element for weight drag feedback
+let dragGhostPos = { x: 0, y: 0 };
+let blockAnimFrame = null;
+
+// Create/update ghost for weight dragging
+function createDragGhost(x, y) {
+  if (!dragGhost) {
+    dragGhost = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    dragGhost.setAttribute('pointer-events', 'none');
+    dragGhost.setAttribute('opacity', '0.6');
+    const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    r.setAttribute('width', '26'); r.setAttribute('height', '28'); r.setAttribute('rx', '4');
+    r.setAttribute('fill', 'url(#weightGrad)'); r.setAttribute('stroke', '#4B5563'); r.setAttribute('stroke-width', '0.8');
+    dragGhost.appendChild(r);
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', '13'); t.setAttribute('y', '20'); t.setAttribute('font-size', '7');
+    t.setAttribute('fill', '#fff'); t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '600');
+    t.textContent = '100g';
+    dragGhost.appendChild(t);
+    svg.appendChild(dragGhost);
+  }
+  dragGhost.setAttribute('transform', `translate(${x - 13},${y - 14})`);
+}
+
+function removeDragGhost() {
+  if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+}
 
 function onDown(e) {
   e.preventDefault();
@@ -471,6 +492,13 @@ function onDown(e) {
     document.getElementById('guideLabels').style.opacity = '0';
     return;
   }
+  // Check stacked weights on block (click to unstack / drag back)
+  if (stackedCount > 0 && p.x >= 200 && p.x <= 260 && p.y >= 100 && p.y <= 250) {
+    dragType = 'unstackWeight';
+    createDragGhost(p.x, p.y);
+    document.getElementById('guideLabels').style.opacity = '0';
+    return;
+  }
   // Check shelf weights
   for (let i = 0; i < 3; i++) {
     if (!shelfAvail[i]) continue;
@@ -478,6 +506,7 @@ function onDown(e) {
     if (p.x >= wx && p.x <= wx + 26 && p.y >= 52 && p.y <= 80) {
       dragType = 'weight';
       dragIdx = i;
+      createDragGhost(p.x, p.y);
       document.getElementById('guideLabels').style.opacity = '0';
       return;
     }
@@ -487,21 +516,41 @@ function onDown(e) {
 function onMove(e) {
   if (!dragType) return;
   e.preventDefault();
+  const p = getSvgPoint(e.touches ? e.touches[0] : e);
   if (dragType === 'scale') {
-    const p = getSvgPoint(e);
     pullX = Math.max(0, Math.min(150, p.x - pullStartX));
+    // Move block when pull force >= friction
+    const friction = getFriction();
+    const scaleForce = pullX * (5 / 150); // map pullX to 0-5N
+    if (scaleForce >= friction && friction > 0) {
+      // Block follows: offset = how far past the friction threshold
+      const excess = pullX - (friction / 5 * 150);
+      moveBlock(180 + Math.max(0, excess));
+    } else {
+      moveBlock(180);
+    }
     drawSpring();
     updateScalePosition();
     updateReading();
   }
+  if (dragType === 'weight' || dragType === 'unstackWeight') {
+    createDragGhost(p.x, p.y);
+  }
+}
+
+function moveBlock(newX) {
+  blockX = newX;
+  const dx = blockX - 180;
+  document.getElementById('blockGroup').setAttribute('transform', `translate(${dx},0)`);
+  document.getElementById('stackedWeights').setAttribute('transform', `translate(${dx},0)`);
 }
 
 function onUp(e) {
   if (!dragType) return;
+  const p = getSvgPoint(e.changedTouches ? e.changedTouches[0] : e);
   if (dragType === 'weight') {
-    const p = getSvgPoint(e.changedTouches ? e.changedTouches[0] : e);
     // Drop near block
-    if (p.x >= 180 && p.x <= 280 && p.y >= 120 && p.y <= 250) {
+    if (p.x >= 160 && p.x <= 300 && p.y >= 100 && p.y <= 260) {
       shelfAvail[dragIdx] = false;
       stackedCount++;
       document.getElementById('shelfW' + dragIdx).style.opacity = '0.2';
@@ -510,9 +559,27 @@ function onUp(e) {
       updateReading();
     }
   }
+  if (dragType === 'unstackWeight') {
+    // If dropped near shelf area, remove top weight
+    if (p.x >= 30 && p.x <= 160 && p.y >= 20 && p.y <= 120) {
+      stackedCount--;
+      // Restore first available shelf slot
+      for (let i = 2; i >= 0; i--) {
+        if (!shelfAvail[i]) {
+          shelfAvail[i] = true;
+          document.getElementById('shelfW' + i).style.opacity = '1';
+          document.getElementById('shelfW' + i).style.pointerEvents = '';
+          break;
+        }
+      }
+      drawStackedWeights();
+      updateReading();
+    }
+  }
   if (dragType === 'scale') {
     // Keep position, don't reset
   }
+  removeDragGhost();
   dragType = null;
 }
 
@@ -536,16 +603,22 @@ function toggleForces() {
 // ===== RESET =====
 function resetAll() {
   pullX = 0; isPulling = false; isUniform = false;
+  blockX = 180;
   stackedCount = 0;
   shelfAvail = [true, true, true];
   for (let i = 0; i < 3; i++) {
     document.getElementById('shelfW' + i).style.opacity = '1';
     document.getElementById('shelfW' + i).style.pointerEvents = '';
   }
+  moveBlock(180);
+  document.getElementById('springScaleGroup').setAttribute('transform', 'translate(0,0)');
+  removeDragGhost();
   drawSpring();
   updateScalePosition();
   drawStackedWeights();
   updateReading();
+  document.getElementById('guideLabels').style.opacity = '1';
+  document.getElementById('guideLabels').setAttribute('transform', 'translate(0,0)');
 }
 
 // ===== KATEX =====
