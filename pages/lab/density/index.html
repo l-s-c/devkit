@@ -537,7 +537,7 @@ function updateBalance() {
 
 function updateRider() {
   riderValue = parseInt(document.getElementById('riderSlider').value) / 10;
-  document.getElementById('valRider').textContent = riderValue.toFixed(1) + ' g';
+  
   // Move rider visual
   const riderEl = document.getElementById('rider');
   const px = 348 + (riderValue / 5) * 120;
@@ -650,7 +650,7 @@ function onBalMove(e) {
     riderValue = (step * 0.2);
     riderValue = Math.round(riderValue * 10) / 10;
     document.getElementById('riderSlider').value = Math.round(riderValue * 10);
-    document.getElementById('valRider').textContent = riderValue.toFixed(1) + ' g';
+    
     updateBalance();
     return;
   }
@@ -883,7 +883,7 @@ function resetAll() {
   objectDropped = false;
   riderValue = 0;
   document.getElementById('riderSlider').value = 0;
-  document.getElementById('valRider').textContent = '0.0 g';
+  
   document.getElementById('rider').setAttribute('x', 348);
   
   // Reset weights
