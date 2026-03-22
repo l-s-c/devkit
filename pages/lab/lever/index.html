@@ -248,11 +248,14 @@
       <svg id="canvas" viewBox="0 20 680 470" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <!-- Wood grain pattern -->
-          <pattern id="woodGrain" x="0" y="0" width="8" height="14" patternUnits="userSpaceOnUse">
-            <rect width="8" height="14" fill="#A16207"/>
-            <line x1="0" y1="3" x2="8" y2="3" stroke="#92400E" stroke-width="0.4" opacity="0.3"/>
-            <line x1="0" y1="8" x2="8" y2="8" stroke="#92400E" stroke-width="0.3" opacity="0.25"/>
-            <line x1="0" y1="12" x2="8" y2="12" stroke="#92400E" stroke-width="0.3" opacity="0.2"/>
+          <pattern id="woodGrain" x="0" y="0" width="10" height="14" patternUnits="userSpaceOnUse">
+            <rect width="10" height="14" fill="#A16207"/>
+            <line x1="0" y1="2" x2="10" y2="2" stroke="#78350F" stroke-width="0.5" opacity="0.5"/>
+            <line x1="0" y1="5" x2="10" y2="5.5" stroke="#92400E" stroke-width="0.4" opacity="0.4"/>
+            <line x1="0" y1="8" x2="10" y2="8" stroke="#78350F" stroke-width="0.5" opacity="0.45"/>
+            <line x1="0" y1="11" x2="10" y2="11.5" stroke="#92400E" stroke-width="0.3" opacity="0.35"/>
+            <line x1="3" y1="0" x2="3" y2="14" stroke="#78350F" stroke-width="0.2" opacity="0.15"/>
+            <line x1="7" y1="0" x2="7.5" y2="14" stroke="#78350F" stroke-width="0.2" opacity="0.12"/>
           </pattern>
           <!-- Beam gradient -->
           <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
@@ -282,11 +285,12 @@
             <stop offset="100%" stop-color="#4B5563"/>
           </linearGradient>
           <linearGradient id="wCopper" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#FDE68A"/>
-            <stop offset="15%" stop-color="#F59E0B"/>
-            <stop offset="50%" stop-color="#D97706"/>
-            <stop offset="85%" stop-color="#B45309"/>
-            <stop offset="100%" stop-color="#92400E"/>
+            <stop offset="0%" stop-color="#FEF3C7"/>
+            <stop offset="10%" stop-color="#FDE68A"/>
+            <stop offset="30%" stop-color="#F59E0B"/>
+            <stop offset="55%" stop-color="#D97706"/>
+            <stop offset="80%" stop-color="#B45309"/>
+            <stop offset="100%" stop-color="#7C2D12"/>
           </linearGradient>
           <linearGradient id="wIron" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#9CA3AF"/>
@@ -318,7 +322,7 @@
         <!-- Fulcrum triangle -->
         <polygon id="fulcrum" points="340,282 316,332 364,332" fill="url(#fulcrumGrad)" stroke="#4B5563" stroke-width="0.8" stroke-linejoin="round"/>
         <!-- Red pivot marker -->
-        <circle cx="340" cy="282" r="3.5" fill="#DC2626" stroke="#fff" stroke-width="1"/>
+        <circle cx="340" cy="282" r="5" fill="#DC2626" stroke="#fff" stroke-width="2"/>
 
         <!-- Lever beam (rotates around pivot) -->
         <g id="leverGroup" transform="rotate(0, 340, 278)">
