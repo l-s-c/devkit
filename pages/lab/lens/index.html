@@ -176,6 +176,8 @@ const els = {
   objLabel: document.getElementById('obj-label'),
   imgLine: document.getElementById('img-line'),
   imgArrow: document.getElementById('img-arrow'),
+  objBase: document.getElementById('obj-base'),
+  imgBase: document.getElementById('img-base'),
   imgLabel: document.getElementById('img-label'),
   imageGroup: document.getElementById('image-group'),
   raysG: document.getElementById('rays'),
@@ -230,7 +232,8 @@ function update() {
   // Object
   els.objLine.setAttribute('x1', objX); els.objLine.setAttribute('y1', axisY);
   els.objLine.setAttribute('x2', objX); els.objLine.setAttribute('y2', axisY - objHeight);
-  els.objArrow.setAttribute('points', `${objX},${axisY - objHeight} ${objX - 6},${axisY - objHeight + 12} ${objX + 6},${axisY - objHeight + 12}`);
+  els.objArrow.setAttribute('points', `${objX},${axisY - objHeight - 5} ${objX - 8},${axisY - objHeight + 10} ${objX + 8},${axisY - objHeight + 10}`);
+  if(els.objBase){els.objBase.setAttribute('x',objX-8);els.objBase.setAttribute('y',axisY-2);}
   els.objLabel.setAttribute('x', objX);
   els.objLabel.setAttribute('y', axisY - objHeight - 8);
   els.dragHint.setAttribute('x', objX);
@@ -280,7 +283,7 @@ function update() {
     els.imgLine.setAttribute('stroke-dasharray', isVirtual ? '4 3' : 'none');
     els.imgArrow.setAttribute('points',
       `${clampedImgX},${clampedImgTop} ${clampedImgX - 6},${clampedImgTop + (isVirtual ? 12 : -12)} ${clampedImgX + 6},${clampedImgTop + (isVirtual ? 12 : -12)}`);
-    els.imgArrow.setAttribute('fill', '#3B82F6');
+    els.imgArrow.setAttribute('fill', 'url(#imageGrad)');
     els.imgArrow.setAttribute('opacity', isVirtual ? '0.5' : '1');
     els.imgLabel.setAttribute('x', clampedImgX);
     els.imgLabel.setAttribute('y', isVirtual ? clampedImgTop - 8 : clampedImgTop + 16);
