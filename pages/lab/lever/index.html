@@ -2,436 +2,729 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>杠杆平衡模拟实验 - 在线物理实验室 \</title>
-<meta name="keywords" content="杠杆平衡实验,杠杆原理模拟,力矩计算,初中物理力学">
-<meta name="description" content="DevKit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>杠杆平衡模拟实验 - 在线物理实验室 | DevKit</title>
+<meta name="keywords" content="杠杆平衡实验, 杠杆原理模拟, F1L1=F2L2, 初中物理力学, 在线物理实验">
+<meta name="description" content="在线杠杆平衡模拟实验，拖拽砝码验证F₁L₁=F₂L₂，3种经典预设一键加载，初中物理力学必考实验">
 <meta property="og:title" content="杠杆平衡模拟实验 - 在线物理实验室 \">
 <meta property="og:description" content="DevKit">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
-.lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
-.lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
-.lab-header h1{font-size:16px;font-weight:700}
-.lab-container{display:flex;max-width:1080px;margin:20px auto;gap:16px;padding:0 16px}
-.canvas-area{flex:1;background:#fff;border-radius:16px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;min-height:450px}
-.canvas-area svg{width:100%;height:100%;display:block}
-.panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
-.panel-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,0.06);padding:16px}
-.panel-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
-.reading{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
-.reading:last-child{border-bottom:none}
-.reading .rl{color:#8E8E93}
-.reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
-.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
-.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700}
-.badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
-.badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
-
-@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
-</style>
-<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/lever/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/lever.png">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/lever/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tQ2/19gy0j1MnFnQJBaSjH3wATSwX0YJgAxC7JpWDKRZ3fNjIZlI" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber2bNf1MP7q2FgR8gYRI7N96j64TL5HSb28OKXZ" crossorigin="anonymous" onload="if(typeof renderFormula==='function')renderFormula()"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'Inter', 'PingFang SC', sans-serif;
+    background: #F0F1F5; color: #1D1D1F;
+    min-height: 100vh; overflow: hidden;
+  }
+
+
+  /* Topbar (site standard) */
+  .topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 20px;height:48px;display:flex;align-items:center;gap:12px}
+  .topbar-logo{display:flex;align-items:center;gap:6px;text-decoration:none}
+  .topbar-logo-text{font-size:15px;font-weight:700;color:#1D1D1F}
+  .topbar a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
+
+  /* === Topbar (design) === */
+/* topbar styles above */
+  .topbar .back {
+    width: 28px; height: 28px; border-radius: 6px; border: none;
+    background: rgba(0,0,0,0.04); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .topbar .back:hover { background: rgba(0,0,0,0.08); }
+  .topbar .back svg { width: 14px; height: 14px; color: #374151; }
+  .breadcrumb { font-size: 13px; color: #6B7280; display: flex; align-items: center; gap: 6px; }
+  .breadcrumb a { color: #3B82F6; text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { color: #D1D5DB; }
+  .topbar h1 { font-size: 15px; font-weight: 700; color: #1D1D1F; }
+
+  /* === Purpose tag === */
+  .purpose-bar {
+    background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(0,0,0,0.04);
+    padding: 6px 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .purpose-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE;
+    padding: 3px 12px; border-radius: 100px; font-size: 12px; font-weight: 600;
+  }
+  .purpose-tag svg { width: 12px; height: 12px; }
+
+  /* === Main layout === */
+  .lab-container {
+    display: flex; height: calc(100vh - 48px - 29px); /* topbar + purpose bar */
+  }
+  .canvas-area {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 16px; min-width: 0;
+  }
+  .canvas-wrapper {
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.04);
+    overflow: hidden; width: 100%; max-width: 680px;
+    aspect-ratio: 4/3; position: relative;
+  }
+  .canvas-wrapper svg { width: 100%; height: 100%; }
+
+  /* === Panel === */
+  .panel {
+    width: 280px; background: rgba(255,255,255,0.88); backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(0,0,0,0.06); padding: 14px;
+    overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+    flex-shrink: 0;
+  }
+  .panel-section {
+    background: #fff; border-radius: 10px; padding: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .panel-section h3 {
+    font-size: 11px; font-weight: 700; color: #8E8E93;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .panel-section h3 svg { width: 12px; height: 12px; color: #8E8E93; }
+
+  /* === Preset pills === */
+  .preset-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .preset-pill {
+    padding: 5px 12px; border-radius: 100px; border: 1px solid #E5E7EB;
+    background: #fff; color: #4B5563; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .preset-pill:hover { border-color: #93C5FD; color: #2563EB; }
+  .preset-pill.active {
+    background: #2563EB; color: #fff; border-color: #2563EB;
+  }
+
+  /* === Data rows === */
+  .data-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 12px;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: #6B7280; }
+  .data-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #1D1D1F; font-size: 13px; }
+
+  .formula-box { background: #F8F9FC; border-radius: 8px; padding: 10px; text-align: center; margin-top: 6px; }
+
+  /* === Status pill === */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; margin-top: 6px;
+  }
+  .status-pill svg { width: 12px; height: 12px; }
+  .status-pill.balanced { background: #D1FAE5; color: #065F46; }
+  .status-pill.unbalanced { background: #FEE2E2; color: #991B1B; }
+  .status-pill.empty { background: #F3F4F6; color: #6B7280; }
+
+  /* === Weight shelf === */
+  .weight-shelf-label {
+    font-size: 10px; color: #9CA3AF; font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .weight-shelf-label svg { width: 10px; height: 10px; }
+  .weight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .weight-item {
+    height: 40px; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: grab; transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none; position: relative;
+  }
+  .weight-item:hover { transform: scale(1.06); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .weight-item:active { transform: scale(0.95); cursor: grabbing; }
+  .weight-item .w-num { font-size: 13px; font-weight: 800; color: #fff; font-family: Georgia, serif; line-height: 1; }
+  .weight-item .w-unit { font-size: 7px; font-weight: 600; color: rgba(255,255,255,0.7); line-height: 1; }
+  .w-silver { background: linear-gradient(180deg, #E5E7EB 0%, #9CA3AF 15%, #6B7280 50%, #4B5563 85%, #374151 100%); box-shadow: 0 2px 4px rgba(55,65,81,0.3); }
+  .w-copper { background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 15%, #D97706 50%, #B45309 85%, #92400E 100%); box-shadow: 0 2px 4px rgba(146,64,14,0.3); }
+  .w-iron { background: linear-gradient(180deg, #9CA3AF 0%, #6B7280 15%, #4B5563 50%, #374151 85%, #1F2937 100%); box-shadow: 0 2px 4px rgba(31,41,55,0.3); }
+
+  /* === Data records === */
+  .record-btn {
+    width: 100%; padding: 7px; border-radius: 6px; border: 1px solid #E5E7EB;
+    background: #FAFBFC; color: #374151; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .record-btn svg { width: 12px; height: 12px; }
+  .record-btn:hover { background: #EFF6FF; border-color: #93C5FD; color: #2563EB; }
+  .records-list {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+  }
+  .records-list.open { max-height: 200px; overflow-y: auto; }
+  .record-item {
+    display: flex; justify-content: space-between; font-size: 11px;
+    padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #4B5563;
+  }
+  .record-item .r-num { color: #9CA3AF; width: 20px; }
+  .record-item .r-data { font-family: 'JetBrains Mono', monospace; color: #1D1D1F; font-weight: 500; }
+  .record-item .r-status { font-weight: 700; }
+  .record-item .r-status.ok { color: #059669; }
+  .record-item .r-status.no { color: #DC2626; }
+
+  /* === Reset button === */
+  .reset-btn {
+    width: 100%; padding: 9px; border-radius: 8px; border: none;
+    background: #F3F4F6; color: #374151; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .reset-btn svg { width: 13px; height: 13px; }
+  .reset-btn:hover { background: #E5E7EB; }
+  .reset-btn:active { transform: scale(0.97); }
+
+  /* === First-time guide overlay === */
+  .guide-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 10;
+    animation: guideFade 3s ease-in-out forwards;
+  }
+  .guide-label {
+    position: absolute; font-size: 12px; color: #2563EB; font-weight: 600;
+    background: rgba(239,246,255,0.9); padding: 4px 10px; border-radius: 6px;
+    border: 1px solid #BFDBFE; white-space: nowrap;
+  }
+  .guide-label::before {
+    content: ''; position: absolute; width: 20px; height: 2px;
+    background: #3B82F6; top: 50%;
+  }
+  .guide-left { top: 60%; left: 8%; }
+  .guide-left::before { right: -22px; }
+  .guide-right { top: 30%; right: 8%; }
+  .guide-right::before { left: -22px; }
+  .guide-bottom { bottom: 12%; left: 50%; transform: translateX(-50%); }
+
+  @keyframes guideFade {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* === Related experiments === */
+  .related-bar {
+    position: fixed; bottom: 0; left: 0; right: 280px;
+    background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding: 6px 24px; display: flex; align-items: center; gap: 16px;
+    font-size: 11px;
+  }
+  .related-bar span { color: #9CA3AF; font-weight: 600; }
+  .related-bar a {
+    color: #3B82F6; text-decoration: none; font-weight: 500;
+    padding: 2px 8px; border-radius: 4px; transition: background 0.15s;
+  }
+  .related-bar a:hover { background: #EFF6FF; }
+
+  @media(max-width:768px) {
+    .lab-container { flex-direction: column; height: auto; }
+    .panel { width: 100%; }
+    .related-bar { right: 0; }
+  }
+</style>
 </head>
 <body>
-<header class="lab-header">
+
+<div class="topbar">
+  <a class="topbar-logo" href="../../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
   <a href="../" style="display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</span>
-  <h1>🔬 杠杆平衡实验</h1>
-</header>
+  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">杠杆平衡模拟实验 - DevKit 在线万能工具箱</h1>
+</div>
 
-<div class="lab-container">
-  <div class="canvas-area">
-    <svg id="lab-svg" viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="weightShadow"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25"/></filter>
-        <linearGradient id="leverGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#D4A054"/>
-          <stop offset="20%" stop-color="#C8922E"/>
-          <stop offset="40%" stop-color="#A16207"/>
-          <stop offset="60%" stop-color="#B8860B"/>
-          <stop offset="80%" stop-color="#92400E"/>
-          <stop offset="100%" stop-color="#7C3A0A"/>
-        </linearGradient>
-        <!-- 1N 银灰金属 -->
-        <linearGradient id="weightGrad1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#E5E7EB"/>
-          <stop offset="15%" stop-color="#F9FAFB"/>
-          <stop offset="50%" stop-color="#9CA3AF"/>
-          <stop offset="85%" stop-color="#6B7280"/>
-          <stop offset="100%" stop-color="#4B5563"/>
-        </linearGradient>
-        <!-- 2N 铜金属 -->
-        <linearGradient id="weightGrad2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#FCD34D"/>
-          <stop offset="15%" stop-color="#FDE68A"/>
-          <stop offset="50%" stop-color="#D97706"/>
-          <stop offset="85%" stop-color="#B45309"/>
-          <stop offset="100%" stop-color="#92400E"/>
-        </linearGradient>
-        <!-- 5N 深铁金属 -->
-        <linearGradient id="weightGrad5" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9CA3AF"/>
-          <stop offset="15%" stop-color="#6B7280"/>
-          <stop offset="50%" stop-color="#4B5563"/>
-          <stop offset="85%" stop-color="#374151"/>
-          <stop offset="100%" stop-color="#1F2937"/>
-        </linearGradient>
-        <!-- 高光条 -->
-        <linearGradient id="weightSheen" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
-          <stop offset="40%" stop-color="rgba(255,255,255,0.3)"/>
-          <stop offset="60%" stop-color="rgba(255,255,255,0.3)"/>
-          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-        </linearGradient>
-      
-        <!-- V2 支架/底座渐变 -->
-        <linearGradient id="fulcrumGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9CA3AF"/><stop offset="50%" stop-color="#6B7280"/><stop offset="100%" stop-color="#4B5563"/>
-        </linearGradient>
-        <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/>
-        </linearGradient>
-        <filter id="beamShadow"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/></filter>
-      </defs>
-
-      <!-- Background ruler marks -->
-      <g id="ruler-marks"></g>
-
-      <!-- Fulcrum (triangle) -->
-      <polygon id="fulcrum" points="300,260 285,300 315,300" fill="url(#fulcrumGrad)" stroke="#4B5563" stroke-width="1"/>
-      <line x1="285" y1="300" x2="315" y2="300" stroke="#4B5563" stroke-width="2"/>
-
-      <!-- Base -->
-      <rect x="250" y="298" width="100" height="12" rx="3" fill="url(#baseGrad)" stroke="#9CA3AF" stroke-width="0.8"/>
-      <ellipse cx="300" cy="314" rx="60" ry="4" fill="rgba(0,0,0,0.06)"/>
-
-      <!-- Lever beam -->
-      <g id="lever-group" transform="rotate(0,300,260)">
-        <rect id="lever-beam" x="50" y="250" width="500" height="14" rx="4" fill="url(#leverGrad)" stroke="#78350F" stroke-width="0.8" filter="url(#beamShadow)"/>
-        <line x1="70" y1="254" x2="530" y2="254" stroke="#78350F" stroke-width="0.4" opacity="0.2" pointer-events="none"/>
-        <line x1="60" y1="258" x2="540" y2="258" stroke="#78350F" stroke-width="0.4" opacity="0.15" pointer-events="none"/>
-        <line x1="75" y1="261" x2="525" y2="261" stroke="#78350F" stroke-width="0.3" opacity="0.15" pointer-events="none"/>
-        <rect x="52" y="250" width="496" height="3" rx="2" fill="rgba(255,255,255,0.2)" pointer-events="none"/>
-        <!-- Hook points (5 on each side) -->
-        <g id="hook-points"></g>
-        <!-- Weights on lever -->
-        <g id="lever-weights"></g>
-      </g>
-
-      <!-- Fulcrum red marker (after lever-group so it renders on top) -->
-      <circle cx="300" cy="260" r="5" fill="#EF4444" stroke="#fff" stroke-width="1.5"/>
-
-      <!-- Weight box inside canvas -->
-      <rect x="60" y="360" width="480" height="80" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
-      <text x="80" y="378" font-size="10" fill="#9CA3AF" font-weight="700">砝码盒 — 拖到杠杆刻度上 ↑</text>
-      <g id="weight-box-svg"></g>
-
-      <!-- Reset button hidden from canvas -->
-      <g id="btn-reset-svg" cursor="pointer" visibility="hidden"></g>
-    </svg>
-  </div>
-
-  <div class="panel">
-    <div class="panel-card">
-      <div class="panel-title">📊 力矩分析</div>
-      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin:8px 0 4px">⬅️ 左侧</div>
-      <div class="reading"><span class="rl">力 F₁</span><span class="rv" id="r-f1">0 N</span></div>
-      <div class="reading"><span class="rl">力臂 L₁</span><span class="rv" id="r-l1">0 格</span></div>
-      <div class="reading"><span class="rl">力矩 F₁L₁</span><span class="rv" id="r-m1">0</span></div>
-      <hr style="border:none;border-top:1px solid #F3F4F6;margin:8px 0">
-      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin:0 0 4px">➡️ 右侧</div>
-      <div class="reading"><span class="rl">力 F₂</span><span class="rv" id="r-f2">0 N</span></div>
-      <div class="reading"><span class="rl">力臂 L₂</span><span class="rv" id="r-l2">0 格</span></div>
-      <div class="reading"><span class="rl">力矩 F₂L₂</span><span class="rv" id="r-m2">0</span></div>
-      <hr style="border:none;border-top:1px solid #F3F4F6;margin:8px 0">
-      <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-warn">空杠杆</span></span></div>
-      <div class="formula" id="formula-display"></div>
-    </div>
-    <button id="btn-reset-panel" style="width:100%;padding:10px;border:2px solid #EF4444;border-radius:10px;background:rgba(239,68,68,0.06);color:#DC2626;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s">🔄 清空重来</button>
+<!-- Purpose tag -->
+<div class="purpose-bar">
+  <div class="purpose-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    验证杠杆平衡条件 F₁L₁ = F₂L₂ · 初中力学
   </div>
 </div>
 
+<!-- Main layout -->
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <svg id="canvas" viewBox="0 0 680 510" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Wood grain pattern -->
+          <pattern id="woodGrain" x="0" y="0" width="8" height="14" patternUnits="userSpaceOnUse">
+            <rect width="8" height="14" fill="#A16207"/>
+            <line x1="0" y1="3" x2="8" y2="3" stroke="#92400E" stroke-width="0.4" opacity="0.3"/>
+            <line x1="0" y1="8" x2="8" y2="8" stroke="#92400E" stroke-width="0.3" opacity="0.25"/>
+            <line x1="0" y1="12" x2="8" y2="12" stroke="#92400E" stroke-width="0.3" opacity="0.2"/>
+          </pattern>
+          <!-- Beam gradient -->
+          <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D4A53A"/>
+            <stop offset="20%" stop-color="#B8892E"/>
+            <stop offset="50%" stop-color="#A16207"/>
+            <stop offset="80%" stop-color="#92400E"/>
+            <stop offset="100%" stop-color="#78350F"/>
+          </linearGradient>
+          <!-- Fulcrum gradient -->
+          <linearGradient id="fulcrumGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6B7280"/>
+            <stop offset="50%" stop-color="#4B5563"/>
+            <stop offset="100%" stop-color="#374151"/>
+          </linearGradient>
+          <!-- Base gradient -->
+          <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4B5563"/>
+            <stop offset="100%" stop-color="#374151"/>
+          </linearGradient>
+          <!-- Weight gradients (V2 trapezoid) -->
+          <linearGradient id="wSilver" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E5E7EB"/>
+            <stop offset="15%" stop-color="#D1D5DB"/>
+            <stop offset="50%" stop-color="#9CA3AF"/>
+            <stop offset="85%" stop-color="#6B7280"/>
+            <stop offset="100%" stop-color="#4B5563"/>
+          </linearGradient>
+          <linearGradient id="wCopper" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FDE68A"/>
+            <stop offset="15%" stop-color="#F59E0B"/>
+            <stop offset="50%" stop-color="#D97706"/>
+            <stop offset="85%" stop-color="#B45309"/>
+            <stop offset="100%" stop-color="#92400E"/>
+          </linearGradient>
+          <linearGradient id="wIron" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9CA3AF"/>
+            <stop offset="15%" stop-color="#6B7280"/>
+            <stop offset="50%" stop-color="#4B5563"/>
+            <stop offset="85%" stop-color="#374151"/>
+            <stop offset="100%" stop-color="#1F2937"/>
+          </linearGradient>
+          <!-- Shadow filter -->
+          <filter id="wShadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.15"/>
+          </filter>
+          <filter id="beamShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78350F" flood-opacity="0.15"/>
+          </filter>
+        </defs>
+
+        <!-- Background -->
+        <rect width="680" height="510" fill="#FAFBFE"/>
+
+        <!-- Grid lines (subtle) -->
+        <g opacity="0.04">
+          <line x1="340" y1="40" x2="340" y2="470" stroke="#000" stroke-width="0.5" stroke-dasharray="4,4"/>
+        </g>
+
+        <!-- Base platform -->
+        <rect x="298" y="332" width="84" height="10" rx="3" fill="url(#baseGrad)" stroke="#374151" stroke-width="0.5"/>
+
+        <!-- Fulcrum triangle -->
+        <polygon id="fulcrum" points="340,282 316,332 364,332" fill="url(#fulcrumGrad)" stroke="#4B5563" stroke-width="0.8" stroke-linejoin="round"/>
+        <!-- Red pivot marker -->
+        <circle cx="340" cy="282" r="3.5" fill="#DC2626" stroke="#fff" stroke-width="1"/>
+
+        <!-- Lever beam (rotates around pivot) -->
+        <g id="leverGroup" transform="rotate(0, 340, 278)">
+          <!-- Main beam with wood grain -->
+          <g filter="url(#beamShadow)">
+            <rect x="60" y="271" width="560" height="14" rx="4" fill="url(#beamGrad)"/>
+            <rect x="60" y="271" width="560" height="14" rx="4" fill="url(#woodGrain)" opacity="0.4"/>
+            <!-- Top highlight -->
+            <rect x="62" y="271" width="556" height="3" rx="2" fill="rgba(255,255,255,0.12)"/>
+          </g>
+
+          <!-- Tick marks (5 each side, spacing 56px) -->
+          <g id="tickMarks">
+            <!-- Left 5-4-3-2-1 -->
+            <line x1="116" y1="285" x2="116" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="116" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">5</text>
+            <line x1="172" y1="285" x2="172" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="172" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">4</text>
+            <line x1="228" y1="285" x2="228" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="228" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">3</text>
+            <line x1="284" y1="285" x2="284" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="284" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">2</text>
+            <line x1="322" y1="285" x2="322" y2="294" stroke="#78350F" stroke-width="1" stroke-linecap="round"/>
+            <text x="322" y="267" font-size="8" fill="#92400E" text-anchor="middle" font-weight="500">1</text>
+            <!-- Right 1-2-3-4-5 -->
+            <line x1="358" y1="285" x2="358" y2="294" stroke="#78350F" stroke-width="1" stroke-linecap="round"/>
+            <text x="358" y="267" font-size="8" fill="#92400E" text-anchor="middle" font-weight="500">1</text>
+            <line x1="396" y1="285" x2="396" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="396" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">2</text>
+            <line x1="452" y1="285" x2="452" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="452" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">3</text>
+            <line x1="508" y1="285" x2="508" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="508" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">4</text>
+            <line x1="564" y1="285" x2="564" y2="298" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="564" y="267" font-size="9" fill="#92400E" text-anchor="middle" font-weight="600">5</text>
+          </g>
+
+          <!-- Hung weights rendered by JS -->
+          <g id="weightsOnBeam"></g>
+        </g>
+
+        <!-- Labels: L1, L2, F1, F2 (rendered by JS) -->
+        <g id="forceLabels"></g>
+
+        <!-- Weight shelf -->
+        <rect x="170" y="430" width="340" height="60" rx="10" fill="#F8F9FC" stroke="#E5E7EB" stroke-width="1"/>
+        <text x="340" y="445" font-size="9" fill="#B0B3B8" text-anchor="middle" font-weight="500">砝码盒 · 点击杠杆挂点添加</text>
+
+        <!-- Shelf weights (visual only, interaction via JS) -->
+        <g id="shelfWeights">
+          <!-- 1N silver ×3 -->
+          <g class="shelf-w" data-w="1">
+            <path d="M200,454 L208,454 L210,476 L198,476 Z" fill="url(#wSilver)" stroke="#4B5563" stroke-width="0.4" rx="1"/>
+            <rect x="201" y="451" width="6" height="3" rx="1" fill="#9CA3AF"/>
+            <text x="204" y="468" font-size="9" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">1</text>
+            <text x="204" y="474" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <g class="shelf-w" data-w="1">
+            <path d="M224,454 L232,454 L234,476 L222,476 Z" fill="url(#wSilver)" stroke="#4B5563" stroke-width="0.4"/>
+            <rect x="225" y="451" width="6" height="3" rx="1" fill="#9CA3AF"/>
+            <text x="228" y="468" font-size="9" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">1</text>
+            <text x="228" y="474" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <g class="shelf-w" data-w="1">
+            <path d="M248,454 L256,454 L258,476 L246,476 Z" fill="url(#wSilver)" stroke="#4B5563" stroke-width="0.4"/>
+            <rect x="249" y="451" width="6" height="3" rx="1" fill="#9CA3AF"/>
+            <text x="252" y="468" font-size="9" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">1</text>
+            <text x="252" y="474" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <!-- 1N more -->
+          <g class="shelf-w" data-w="1">
+            <path d="M278,454 L286,454 L288,476 L276,476 Z" fill="url(#wSilver)" stroke="#4B5563" stroke-width="0.4"/>
+            <rect x="279" y="451" width="6" height="3" rx="1" fill="#9CA3AF"/>
+            <text x="282" y="468" font-size="9" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">1</text>
+            <text x="282" y="474" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <!-- 2N copper ×3 -->
+          <g class="shelf-w" data-w="2">
+            <path d="M316,452 L326,452 L328,478 L314,478 Z" fill="url(#wCopper)" stroke="#92400E" stroke-width="0.4"/>
+            <rect x="318" y="449" width="6" height="3" rx="1" fill="#D97706"/>
+            <text x="321" y="468" font-size="10" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">2</text>
+            <text x="321" y="475" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <g class="shelf-w" data-w="2">
+            <path d="M342,452 L352,452 L354,478 L340,478 Z" fill="url(#wCopper)" stroke="#92400E" stroke-width="0.4"/>
+            <rect x="344" y="449" width="6" height="3" rx="1" fill="#D97706"/>
+            <text x="347" y="468" font-size="10" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">2</text>
+            <text x="347" y="475" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <g class="shelf-w" data-w="2">
+            <path d="M368,452 L378,452 L380,478 L366,478 Z" fill="url(#wCopper)" stroke="#92400E" stroke-width="0.4"/>
+            <rect x="370" y="449" width="6" height="3" rx="1" fill="#D97706"/>
+            <text x="373" y="468" font-size="10" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">2</text>
+            <text x="373" y="475" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <!-- 5N iron ×2 -->
+          <g class="shelf-w" data-w="5">
+            <path d="M408,450 L420,450 L424,480 L404,480 Z" fill="url(#wIron)" stroke="#1F2937" stroke-width="0.4"/>
+            <rect x="411" y="447" width="6" height="3" rx="1" fill="#6B7280"/>
+            <text x="414" y="468" font-size="12" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">5</text>
+            <text x="414" y="477" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+          <g class="shelf-w" data-w="5">
+            <path d="M438,450 L450,450 L454,480 L434,480 Z" fill="url(#wIron)" stroke="#1F2937" stroke-width="0.4"/>
+            <rect x="441" y="447" width="6" height="3" rx="1" fill="#6B7280"/>
+            <text x="444" y="468" font-size="12" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif">5</text>
+            <text x="444" y="477" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600">N</text>
+          </g>
+        </g>
+      </svg>
+
+      <!-- First-time guide (hidden after first visit) -->
+      <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-label guide-left">点击挂点添加砝码</div>
+        <div class="guide-label guide-right">调节两侧力矩</div>
+        <div class="guide-label guide-bottom">砝码盒 · 银1N 铜2N 铁5N</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="panel">
+    <!-- Preset -->
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+        预设方案
+      </h3>
+      <div class="preset-group">
+        <button class="preset-pill active" onclick="loadPreset('equal')">等臂平衡</button>
+        <button class="preset-pill" onclick="loadPreset('unequal')">不等臂</button>
+        <button class="preset-pill" onclick="loadPreset('free')">自由实验</button>
+      </div>
+    </div>
+
+    <!-- Moment analysis -->
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg>
+        力矩分析
+      </h3>
+      <div class="data-row">
+        <span class="data-label">左力矩 F₁L₁</span>
+        <span class="data-value" id="leftMoment">4 N·格</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">右力矩 F₂L₂</span>
+        <span class="data-value" id="rightMoment">4 N·格</span>
+      </div>
+      <div id="balanceStatus"></div>
+    </div>
+
+    <!-- Hook details -->
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        挂载详情
+      </h3>
+      <div id="hookDetails" style="font-size:11px;color:#6B7280;line-height:1.8">
+      </div>
+    </div>
+
+    <!-- Formula -->
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg>
+        平衡条件
+      </h3>
+      <div class="formula-box" id="formulaBox"></div>
+      <div style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">
+        动力 × 动力臂 = 阻力 × 阻力臂
+      </div>
+    </div>
+
+    <!-- Data records -->
+    <div class="panel-section">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        实验记录
+      </h3>
+      <button class="record-btn" onclick="recordData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        记录本次数据
+      </button>
+      <div class="records-list" id="recordsList"></div>
+    </div>
+
+    <!-- Reset -->
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      清空重来
+    </button>
+  </div>
+</div>
+
+<!-- Related experiments bar -->
+<div class="related-bar">
+  <span>相关实验</span>
+  <a href="../refraction/">光的折射</a>
+  <a href="../lens/">凸透镜成像</a>
+  <a href="../pulley/">滑轮组</a>
+  <a href="../pendulum/">单摆运动</a>
+</div>
+
 <script>
-const svg = document.getElementById('lab-svg');
-const leverGroup = document.getElementById('lever-group');
-const hookPointsG = document.getElementById('hook-points');
-const leverWeightsG = document.getElementById('lever-weights');
-const rulerMarksG = document.getElementById('ruler-marks');
-const pivotX = 300, pivotY = 260;
-const hookSpacing = 45; // pixels between hooks
-const hooks = []; // { pos: -5 to 5, x, y }
-const placed = []; // { pos, weight, el }
+  // === Hook positions ===
+  const HOOK_X = {
+    L5: 116, L4: 172, L3: 228, L2: 284, L1: 322,
+    R1: 358, R2: 396, R3: 452, R4: 508, R5: 564
+  };
 
-// Create hook points
-for (let i = -5; i <= 5; i++) {
-  if (i === 0) continue; // skip center
-  const x = pivotX + i * hookSpacing;
-  const y = 264; // bottom of lever
-  hooks.push({ pos: i, x, y });
+  let hooks = { L5:[], L4:[], L3:[], L2:[], L1:[], R1:[], R2:[], R3:[], R4:[], R5:[] };
+  let records = [];
 
-  // Draw hook mark
-  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  line.setAttribute('x1', x); line.setAttribute('y1', 250);
-  line.setAttribute('x2', x); line.setAttribute('y2', 268);
-  line.setAttribute('stroke', '#57534E'); line.setAttribute('stroke-width', '1');
-  hookPointsG.appendChild(line);
+  // === Weight colors by value ===
+  function weightGrad(w) { return w <= 1 ? 'wSilver' : w <= 2 ? 'wCopper' : 'wIron'; }
+  function weightStroke(w) { return w <= 1 ? '#4B5563' : w <= 2 ? '#92400E' : '#1F2937'; }
 
-  // Label
-  const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  txt.setAttribute('x', x); txt.setAttribute('y', 248);
-  txt.setAttribute('font-size', '9'); txt.setAttribute('fill', '#9CA3AF');
-  txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '600');
-  txt.textContent = Math.abs(i);
-  hookPointsG.appendChild(txt);
-}
-
-// Background ruler
-for (let i = -5; i <= 5; i++) {
-  const x = pivotX + i * hookSpacing;
-  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  line.setAttribute('x1', x); line.setAttribute('y1', 255);
-  line.setAttribute('x2', x); line.setAttribute('y2', 320);
-  line.setAttribute('stroke', 'rgba(0,0,0,0.04)'); line.setAttribute('stroke-width', '1');
-  line.setAttribute('stroke-dasharray', '2 4');
-  rulerMarksG.appendChild(line);
-}
-
-function svgPoint(e) {
-  const rect = svg.getBoundingClientRect();
-  return { x: (e.clientX - rect.left) / rect.width * 600, y: (e.clientY - rect.top) / rect.height * 400 };
-}
-
-function findNearestHook(x) {
-  let best = null, bestDist = Infinity;
-  for (const h of hooks) {
-    const d = Math.abs(x - h.x);
-    if (d < bestDist) { bestDist = d; best = h; }
-  }
-  return bestDist < 30 ? best : null;
-}
-
-function getWeightsAtPos(pos) {
-  return placed.filter(p => p.pos === pos);
-}
-
-function calculate() {
-  let leftTorque = 0, rightTorque = 0;
-  let leftForce = 0, rightForce = 0;
-  let leftArm = 0, rightArm = 0;
-
-  // Group by position
-  const leftWeights = placed.filter(p => p.pos < 0);
-  const rightWeights = placed.filter(p => p.pos > 0);
-
-  // Calculate torques
-  for (const w of leftWeights) {
-    leftTorque += w.weight * Math.abs(w.pos);
-    leftForce += w.weight;
-  }
-  for (const w of rightWeights) {
-    rightTorque += w.weight * Math.abs(w.pos);
-    rightForce += w.weight;
-  }
-
-  // Average arm (weighted)
-  if (leftForce > 0) leftArm = (leftTorque / leftForce).toFixed(1);
-  if (rightForce > 0) rightArm = (rightTorque / rightForce).toFixed(1);
-
-  const balanced = placed.length > 0 && Math.abs(leftTorque - rightTorque) < 0.01;
-  const tiltAngle = placed.length === 0 ? 0 : balanced ? 0 : Math.min(15, Math.max(-15, (rightTorque - leftTorque) * 2));
-
-  // Animate lever tilt
-  leverGroup.style.transition = 'transform 0.4s ease-out';
-  leverGroup.setAttribute('transform', `rotate(${tiltAngle},${pivotX},${pivotY})`);
-
-  // Update readings
-  document.getElementById('r-f1').textContent = leftForce + ' N';
-  document.getElementById('r-l1').textContent = leftArm + ' 格';
-  document.getElementById('r-m1').textContent = leftTorque.toFixed(0);
-  document.getElementById('r-f2').textContent = rightForce + ' N';
-  document.getElementById('r-l2').textContent = rightArm + ' 格';
-  document.getElementById('r-m2').textContent = rightTorque.toFixed(0);
-
-  if (placed.length === 0) {
-    document.getElementById('r-status').innerHTML = '<span class="badge badge-warn">空杠杆</span>';
-    if(window.katex){katex.render('F_1 L_1 = F_2 L_2',document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent='F₁L₁ = F₂L₂';}
-  } else if (balanced) {
-    document.getElementById('r-status').innerHTML = '<span class="badge badge-ok">✅ 平衡！</span>';
-    if(window.katex){katex.render(`${leftTorque} = ${rightTorque} \\; ✅`,document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent=`${leftTorque} = ${rightTorque} ✅`;}
-  } else {
-    const side = leftTorque > rightTorque ? '左偏' : '右偏';
-    document.getElementById('r-status').innerHTML = `<span class="badge badge-warn">${side}</span>`;
-    if(window.katex){katex.render(`${leftTorque} \\neq ${rightTorque}`,document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent=`${leftTorque} ≠ ${rightTorque}`;}
-  }
-}
-
-// Create trapezoid weight SVG group at (cx, topY)
-function createWeightSVG(cx, topY, weight) {
-  const cfg = weight >= 5
-    ? { w:22, h:30, hw:10, hh:4, grad:'weightGrad5', stroke:'#374151', txtFill:'#D1D5DB', fs:14 }
-    : weight >= 2
-    ? { w:18, h:26, hw:8, hh:3.5, grad:'weightGrad2', stroke:'#92400E', txtFill:'#78350F', fs:12 }
-    : { w:14, h:22, hw:6, hh:3, grad:'weightGrad1', stroke:'#6B7280', txtFill:'#374151', fs:10 };
-
-  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  // Handle (提手)
-  const handle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  handle.setAttribute('x', cx - cfg.hw/2); handle.setAttribute('y', topY);
-  handle.setAttribute('width', cfg.hw); handle.setAttribute('height', cfg.hh);
-  handle.setAttribute('rx', cfg.hh/2); handle.setAttribute('fill', cfg.stroke);
-  handle.setAttribute('opacity', '0.7');
-  g.appendChild(handle);
-
-  // Trapezoid body
-  const by = topY + cfg.hh + 1;
-  const topW = cfg.w * 0.7, botW = cfg.w;
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  const d = `M${cx-botW/2},${by+cfg.h} Q${cx-botW/2},${by+cfg.h+3} ${cx-botW/2+3},${by+cfg.h+3} L${cx+botW/2-3},${by+cfg.h+3} Q${cx+botW/2},${by+cfg.h+3} ${cx+botW/2},${by+cfg.h} L${cx+topW/2+2},${by} L${cx-topW/2-2},${by} Z`;
-  path.setAttribute('d', d);
-  path.setAttribute('fill', `url(#${cfg.grad})`);
-  path.setAttribute('stroke', cfg.stroke); path.setAttribute('stroke-width', '0.6');
-  g.appendChild(path);
-
-  // Sheen highlight
-  const sheen = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  sheen.setAttribute('x', cx - topW/2); sheen.setAttribute('y', by+1);
-  sheen.setAttribute('width', topW); sheen.setAttribute('height', cfg.h * 0.3);
-  sheen.setAttribute('rx', '1'); sheen.setAttribute('fill', 'url(#weightSheen)');
-  sheen.setAttribute('opacity', '0.4'); sheen.setAttribute('pointer-events', 'none');
-  g.appendChild(sheen);
-
-  // Weight text (刻印)
-  const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  txt.setAttribute('x', cx); txt.setAttribute('y', by + cfg.h * 0.55);
-  txt.setAttribute('font-size', cfg.fs); txt.setAttribute('fill', cfg.txtFill);
-  txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '800');
-  txt.setAttribute('font-family', 'Georgia, serif'); txt.setAttribute('pointer-events', 'none');
-  txt.textContent = weight;
-  g.appendChild(txt);
-
-  const unit = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  unit.setAttribute('x', cx); unit.setAttribute('y', by + cfg.h * 0.85);
-  unit.setAttribute('font-size', cfg.fs * 0.55); unit.setAttribute('fill', cfg.txtFill);
-  unit.setAttribute('text-anchor', 'middle'); unit.setAttribute('font-weight', '600');
-  unit.setAttribute('pointer-events', 'none');
-  unit.textContent = 'N';
-  g.appendChild(unit);
-
-  g.totalH = cfg.hh + 1 + cfg.h + 3; // total height for stacking
-  return g;
-}
-
-function renderWeights() {
-  leverWeightsG.innerHTML = '';
-  const groups = {};
-  for (const p of placed) {
-    if (!groups[p.pos]) groups[p.pos] = [];
-    groups[p.pos].push(p);
-  }
-
-  for (const [pos, weights] of Object.entries(groups)) {
-    const hook = hooks.find(h => h.pos === parseInt(pos));
-    if (!hook) continue;
-
-    // Hook line
-    const totalH = weights.reduce((s, w) => s + (w.weight >= 5 ? 34 : w.weight >= 2 ? 31 : 27), 0);
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', hook.x); line.setAttribute('y1', 264);
-    line.setAttribute('x2', hook.x); line.setAttribute('y2', 270);
-    line.setAttribute('stroke', '#78716C'); line.setAttribute('stroke-width', '1');
-    leverWeightsG.appendChild(line);
-
-    let curY = 270;
-    for (let i = 0; i < weights.length; i++) {
-      const w = weights[i];
-      const wg = createWeightSVG(hook.x, curY, w.weight);
-      wg.style.cursor = 'grab';
-
-      wg.addEventListener('pointerdown', e => {
-        e.preventDefault(); e.stopPropagation();
-        const idx = placed.indexOf(w);
-        if (idx >= 0) {
-          placed.splice(idx, 1);
-          renderWeights();
-          calculate();
-        }
-      });
-
-      leverWeightsG.appendChild(wg);
-      curY += wg.totalH + 2;
+  // === Calc moments ===
+  function calcMoments() {
+    let leftM = 0, rightM = 0;
+    for (const [k, ws] of Object.entries(hooks)) {
+      const side = k[0], dist = parseInt(k[1]);
+      const totalF = ws.reduce((a, b) => a + b, 0);
+      if (side === 'L') leftM += totalF * dist;
+      else rightM += totalF * dist;
     }
+    return { leftM, rightM };
   }
-}
 
-// SVG weight box sources
-const weightBoxG = document.getElementById('weight-box-svg');
-const weightSources = [
-  {w:1},{w:1},{w:1},{w:1},{w:1},{w:1},
-  {w:2},{w:2},
-  {w:5}
-];
+  // === Render ===
+  function render() {
+    const { leftM, rightM } = calcMoments();
+    const diff = rightM - leftM;
 
-function renderWeightBox() {
-  weightBoxG.innerHTML = '';
-  weightSources.forEach((src, i) => {
-    const bx = 80 + i * 46;
-    const by = 388;
+    // Tilt: fixed 15° max, proportional
+    const maxTilt = 15;
+    const maxMom = 25;
+    const angle = Math.max(-maxTilt, Math.min(maxTilt, (diff / maxMom) * maxTilt));
+    document.getElementById('leverGroup').setAttribute('transform', `rotate(${angle}, 340, 278)`);
 
-    const g = createWeightSVG(bx, by, src.w);
-    g.style.cursor = 'grab';
-    g.addEventListener('pointerenter', () => g.setAttribute('filter', 'url(#weightShadow)'));
-    g.addEventListener('pointerleave', () => g.removeAttribute('filter'));
-    weightBoxG.appendChild(g);
+    // Data
+    document.getElementById('leftMoment').textContent = leftM + ' N·格';
+    document.getElementById('rightMoment').textContent = rightM + ' N·格';
 
-    // Drag interaction
-    let dragging = false, ghost = null;
-    g.addEventListener('pointerdown', e => {
-      e.preventDefault();
-      dragging = true;
-      ghost = createWeightSVG(0, 0, src.w);
-      ghost.setAttribute('opacity', '0.7');
-      ghost.setAttribute('pointer-events', 'none');
-      svg.appendChild(ghost);
-    });
-    document.addEventListener('pointermove', ev => {
-      if (!dragging || !ghost) return;
-      const pt = svgPoint(ev);
-      ghost.setAttribute('transform', `translate(${pt.x},${pt.y - 15})`);
-    });
-    document.addEventListener('pointerup', ev => {
-      if (!dragging) return;
-      dragging = false;
-      if (ghost) { ghost.remove(); ghost = null; }
-      const pt = svgPoint(ev);
-      const hook = findNearestHook(pt.x);
-      if (hook && pt.y > 200 && pt.y < 360) {
-        const existing = getWeightsAtPos(hook.pos);
-        if (existing.length < 3) {
-          placed.push({ pos: hook.pos, weight: src.w });
-          renderWeights();
-          calculate();
-        }
+    // Status
+    const s = document.getElementById('balanceStatus');
+    if (leftM === 0 && rightM === 0) {
+      s.innerHTML = '<div class="status-pill empty"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg> 空杠杆</div>';
+    } else if (Math.abs(diff) < 0.01) {
+      s.innerHTML = '<div class="status-pill balanced"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 平衡！</div>';
+    } else {
+      const h = diff > 0 ? '右' : '左';
+      s.innerHTML = `<div class="status-pill unbalanced"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> ${h}侧偏重</div>`;
+    }
+
+    // Hook details
+    const d = document.getElementById('hookDetails');
+    let html = '';
+    for (const [k, ws] of Object.entries(hooks)) {
+      if (ws.length === 0) continue;
+      const side = k[0] === 'L' ? '左' : '右';
+      const dist = k[1];
+      const total = ws.reduce((a, b) => a + b, 0);
+      html += `<div style="display:flex;justify-content:space-between"><span>${side}${dist}格</span><span style="font-family:JetBrains Mono,monospace;font-weight:600;color:#1D1D1F">${total}N × ${dist} = ${total*parseInt(dist)}</span></div>`;
+    }
+    if (!html) html = '<span style="color:#B0B3B8">暂无砝码挂载</span>';
+    d.innerHTML = html;
+
+    // Render weights on beam (V2 trapezoid style)
+    const wg = document.getElementById('weightsOnBeam');
+    let wHtml = '';
+    for (const [k, ws] of Object.entries(hooks)) {
+      if (ws.length === 0) continue;
+      const x = HOOK_X[k];
+      ws.forEach((w, i) => {
+        const y = 298 + i * 28;
+        const halfTop = w <= 1 ? 5 : w <= 2 ? 6 : 8;
+        const halfBot = w <= 1 ? 7 : w <= 2 ? 8 : 10;
+        const h = w <= 1 ? 22 : w <= 2 ? 24 : 28;
+        // Hanging line
+        wHtml += `<line x1="${x}" y1="298" x2="${x}" y2="${y}" stroke="#78350F" stroke-width="1" stroke-linecap="round"/>`;
+        // Handle
+        wHtml += `<rect x="${x-3}" y="${y-3}" width="6" height="3" rx="1" fill="#9CA3AF"/>`;
+        // Trapezoid body
+        wHtml += `<path d="M${x-halfTop},${y} L${x+halfTop},${y} L${x+halfBot},${y+h} L${x-halfBot},${y+h} Z" fill="url(#${weightGrad(w)})" stroke="${weightStroke(w)}" stroke-width="0.5" filter="url(#wShadow)" cursor="pointer" onclick="removeWeight('${k}',${i})"/>`;
+        // Label
+        wHtml += `<text x="${x}" y="${y+h*0.6}" font-size="${w>=5?10:9}" fill="#fff" text-anchor="middle" font-weight="800" font-family="Georgia,serif" pointer-events="none">${w}</text>`;
+        wHtml += `<text x="${x}" y="${y+h*0.6+7}" font-size="5" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="600" pointer-events="none">N</text>`;
+      });
+    }
+    wg.innerHTML = wHtml;
+  }
+
+  // === Interactions ===
+  let currentWeight = 1; // default add weight
+
+  const svg = document.getElementById('canvas');
+  svg.addEventListener('click', (e) => {
+    const rect = svg.getBoundingClientRect();
+    const sx = (e.clientX - rect.left) / rect.width * 680;
+    const sy = (e.clientY - rect.top) / rect.height * 510;
+    if (sy < 250 || sy > 310) return;
+    for (const [k, hx] of Object.entries(HOOK_X)) {
+      if (Math.abs(sx - hx) < 20 && hooks[k].length < 3) {
+        hooks[k].push(currentWeight);
+        render();
+        updatePresetState();
+        return;
       }
+    }
+  });
+  svg.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const rect = svg.getBoundingClientRect();
+    const sx = (e.clientX - rect.left) / rect.width * 680;
+    const sy = (e.clientY - rect.top) / rect.height * 510;
+    if (sy < 250 || sy > 310) return;
+    for (const [k, hx] of Object.entries(HOOK_X)) {
+      if (Math.abs(sx - hx) < 20 && hooks[k].length < 3) {
+        hooks[k].push(2);
+        render();
+        updatePresetState();
+        return;
+      }
+    }
+  });
+
+  function removeWeight(hook, idx) {
+    hooks[hook].splice(idx, 1);
+    render();
+    updatePresetState();
+  }
+
+  function resetAll() {
+    for (const k in hooks) hooks[k] = [];
+    render();
+    updatePresetState();
+  }
+
+  // === Presets ===
+  function loadPreset(name) {
+    resetAll();
+    if (name === 'equal') {
+      hooks.L2 = [2]; hooks.R2 = [2]; // 2N × 2格 each
+    } else if (name === 'unequal') {
+      hooks.L1 = [5]; hooks.R5 = [1]; // 5N×1格 = 1N×5格
+    }
+    // 'free' = empty
+    document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.preset-pill[onclick="loadPreset('${name}')"]`).classList.add('active');
+    render();
+  }
+
+  function updatePresetState() {
+    // If manually changed, deselect preset
+    document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+  }
+
+  // === Record data ===
+  function recordData() {
+    const { leftM, rightM } = calcMoments();
+    if (leftM === 0 && rightM === 0) return;
+    const balanced = Math.abs(leftM - rightM) < 0.01;
+    records.push({ leftM, rightM, balanced, id: records.length + 1 });
+
+    const list = document.getElementById('recordsList');
+    list.classList.add('open');
+    let html = '';
+    records.forEach(r => {
+      html += `<div class="record-item">
+        <span class="r-num">#${r.id}</span>
+        <span class="r-data">${r.leftM} : ${r.rightM}</span>
+        <span class="r-status ${r.balanced ? 'ok' : 'no'}">${r.balanced ? '平衡' : '不平衡'}</span>
+      </div>`;
+    });
+    list.innerHTML = html;
+  }
+
+  // === First-time guide ===
+  if (!localStorage.getItem('lever-guide-seen')) {
+    localStorage.setItem('lever-guide-seen', '1');
+  } else {
+    const g = document.getElementById('guideOverlay');
+    if (g) g.style.display = 'none';
+  }
+
+  // === Init ===
+  loadPreset('equal'); // Default: 等臂平衡
+  try {
+    function renderFormula(){try{katex.render('F_1 \\times L_1 = F_2 \\times L_2', document.getElementById('formulaBox'), { throwOnError: false, displayMode: true });
+  } catch(e) {
+    document.getElementById('formulaBox').textContent = 'F₁ × L₁ = F₂ × L₂';
+  }}
+  renderFormula();
+
+  // Panel weight selector (click shelf weights to change current weight)
+  document.querySelectorAll('.weight-item').forEach(el => {
+    el.addEventListener('click', () => {
+      currentWeight = parseInt(el.dataset.w);
+      document.querySelectorAll('.weight-item').forEach(e => e.style.outline = 'none');
+      el.style.outline = '2px solid #3B82F6';
+      el.style.outlineOffset = '2px';
     });
   });
-}
-
-renderWeightBox();
-
-// Reset (SVG button)
-function resetAll() {
-  placed.length = 0;
-  renderWeights();
-  calculate();
-}
-document.getElementById('btn-reset-svg').addEventListener('click', resetAll);
-document.getElementById('btn-reset-panel').addEventListener('click', resetAll);
-
-// Init
-calculate();
 </script>
+<script src="/shared/theme.js"></script>
 </body>
 </html>
