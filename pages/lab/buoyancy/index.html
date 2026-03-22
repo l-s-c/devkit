@@ -24,11 +24,11 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
 .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
 .purpose-tag svg{width:12px;height:12px}
-.lab-container{display:flex;min-height:calc(100vh - 48px - 29px)}
+.lab-container{display:flex;flex-wrap:wrap}
 .canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
 .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
 .canvas-wrapper svg{width:100%;height:100%}
-.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0;overflow-y:auto}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
 .panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
@@ -59,7 +59,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 @keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
 
 /* Knowledge section below canvas */
-.knowledge-section{padding:0 16px 40px 16px}
+.knowledge-section{width:100%;max-width:1200px;margin:0 auto;padding:0 24px 40px 24px}
 .knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:24px;margin-bottom:16px}
 .knowledge-card h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1D1D1F;display:flex;align-items:center;gap:8px}
 .knowledge-card h2 svg{width:18px;height:18px;color:#1D4ED8}
@@ -88,7 +88,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
       <div class="canvas-wrapper" id="canvasWrapper">
         <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <clipPath id="waterClip"><rect x="70" y="0" width="240" height="440"/></clipPath>
+            <clipPath id="waterClip"><rect x="110" y="0" width="180" height="440"/></clipPath>
             <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="rgba(59,130,246,0.15)"/>
               <stop offset="100%" stop-color="rgba(59,130,246,0.35)"/>
@@ -96,17 +96,21 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
             <linearGradient id="springGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#6B7280"/><stop offset="100%" stop-color="#9CA3AF"/>
             </linearGradient>
+          <linearGradient id="alGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#93C5FD"/><stop offset="40%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
+          <linearGradient id="feGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="40%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <linearGradient id="woodGrad" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stop-color="#FCD34D"/><stop offset="30%" stop-color="#FBBF24"/><stop offset="60%" stop-color="#D97706"/><stop offset="100%" stop-color="#B45309"/></linearGradient>
           </defs>
 
           <rect width="700" height="440" fill="#FAFBFE"/>
 
           <!-- ===== STAND (铁架台) ===== -->
-          <rect x="85" y="30" width="6" height="380" rx="2" fill="#6B7280"/>
-          <rect x="40" y="400" width="100" height="10" rx="3" fill="#6B7280"/>
-          <rect x="88" y="40" width="60" height="4" rx="2" fill="#9CA3AF"/>
+          <rect x="55" y="30" width="6" height="380" rx="2" fill="#6B7280"/>
+          <rect x="20" y="400" width="80" height="10" rx="3" fill="#6B7280"/>
+          <!-- Horizontal arm extending right over beaker -->
+          <rect x="58" y="40" width="160" height="4" rx="2" fill="#9CA3AF"/>
 
           <!-- ===== SPRING SCALE (弹簧秤) ===== -->
-          <g id="springScale" transform="translate(120, 44)">
+          <g id="springScale" transform="translate(200, 44)">
             <!-- Body -->
             <rect x="-16" y="0" width="32" height="100" rx="4" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
             <!-- Scale markings -->
@@ -134,29 +138,29 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
           </g>
 
           <!-- ===== WIRE from spring to object ===== -->
-          <line id="wireLine" x1="120" y1="160" x2="120" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="3,2"/>
+          <line id="wireLine" x1="200" y1="160" x2="200" y2="200" stroke="#6B7280" stroke-width="1" stroke-dasharray="3,2"/>
 
           <!-- ===== CONTAINER (烧杯) ===== -->
           <g id="container">
-            <!-- Beaker -->
-            <rect x="70" y="210" width="330" height="200" rx="3" fill="none" stroke="#93C5FD" stroke-width="2"/>
-            <rect x="65" y="206" width="340" height="8" rx="2" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
+            <!-- Beaker — centered under spring scale at x=200 -->
+            <rect x="110" y="210" width="180" height="200" rx="3" fill="none" stroke="#93C5FD" stroke-width="2"/>
+            <rect x="105" y="206" width="190" height="8" rx="2" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
             <!-- Water -->
-            <rect id="waterBody" x="72" y="230" width="326" height="178" fill="url(#waterGrad)"/>
+            <rect id="waterBody" x="112" y="225" width="176" height="183" fill="url(#waterGrad)"/>
             <!-- Water surface line -->
-            <line id="waterSurface" x1="72" y1="230" x2="398" y2="230" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
+            <line id="waterSurface" x1="112" y1="225" x2="288" y2="225" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
             <!-- Water level label -->
-            <text id="waterLabel" x="405" y="264" font-size="9" fill="#3B82F6" font-weight="600">水面</text>
+            <text id="waterLabel" x="295" y="229" font-size="9" fill="#3B82F6" font-weight="600">水面</text>
             <!-- Graduation marks on beaker -->
-            <line x1="390" y1="300" x2="398" y2="300" stroke="#93C5FD" stroke-width="0.8"/>
-            <line x1="390" y1="340" x2="398" y2="340" stroke="#93C5FD" stroke-width="0.8"/>
-            <line x1="390" y1="380" x2="398" y2="380" stroke="#93C5FD" stroke-width="0.8"/>
+            <line x1="280" y1="300" x2="288" y2="300" stroke="#93C5FD" stroke-width="0.8"/>
+            <line x1="280" y1="340" x2="288" y2="340" stroke="#93C5FD" stroke-width="0.8"/>
+            <line x1="280" y1="380" x2="288" y2="380" stroke="#93C5FD" stroke-width="0.8"/>
           </g>
 
           <!-- ===== DRAGGABLE OBJECT ===== -->
           <g id="objectGroup" style="cursor:grab;transition:none">
-            <rect id="objectBody" x="95" y="200" width="50" height="40" rx="4" fill="#60A5FA" stroke="#3B82F6" stroke-width="1.5"/>
-            <text id="objectLabel" x="120" y="224" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
+            <rect id="objectBody" x="175" y="200" width="50" height="40" rx="4" fill="#60A5FA" stroke="#3B82F6" stroke-width="1.5"/>
+            <text id="objectLabel" x="200" y="224" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
           </g>
 
           <!-- ===== FORCE ARROWS ===== -->
@@ -185,23 +189,29 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
           <g transform="translate(480, 50)">
             <rect x="0" y="0" width="180" height="130" rx="10" fill="#F8FAFC" stroke="#E5E7EB" stroke-width="1"/>
             <text x="90" y="18" font-size="10" fill="#9CA3AF" text-anchor="middle" font-weight="700">器材架</text>
-            <!-- Aluminum -->
+            <!-- Aluminum — metallic sheen -->
             <g id="shelfAl" style="cursor:pointer" onclick="selectMaterial('al')">
-              <rect x="10" y="30" width="46" height="36" rx="4" fill="#60A5FA" stroke="#3B82F6" stroke-width="1.5"/>
-              <text x="33" y="52" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
-              <text x="33" y="76" font-size="8" fill="#6B7280" text-anchor="middle">2.7g/cm³</text>
+              <rect x="10" y="28" width="46" height="40" rx="3" fill="url(#alGrad)" stroke="#2563EB" stroke-width="1"/>
+              <rect x="14" y="32" width="20" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
+              <text x="33" y="54" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">铝块</text>
+              <text x="33" y="78" font-size="8" fill="#6B7280" text-anchor="middle">2.7g/cm³</text>
             </g>
-            <!-- Iron -->
+            <!-- Iron — dark metallic -->
             <g id="shelfFe" style="cursor:pointer" onclick="selectMaterial('fe')">
-              <rect x="66" y="30" width="46" height="36" rx="4" fill="#9CA3AF" stroke="#6B7280" stroke-width="1.5"/>
-              <text x="89" y="52" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">铁块</text>
-              <text x="89" y="76" font-size="8" fill="#6B7280" text-anchor="middle">7.8g/cm³</text>
+              <rect x="66" y="28" width="46" height="40" rx="3" fill="url(#feGrad)" stroke="#4B5563" stroke-width="1"/>
+              <rect x="70" y="32" width="20" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <text x="89" y="54" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">铁块</text>
+              <text x="89" y="78" font-size="8" fill="#6B7280" text-anchor="middle">7.8g/cm³</text>
             </g>
-            <!-- Wood -->
+            <!-- Wood — grain texture -->
             <g id="shelfWood" style="cursor:pointer" onclick="selectMaterial('wood')">
-              <rect x="122" y="30" width="46" height="36" rx="4" fill="#FBBF24" stroke="#D97706" stroke-width="1.5"/>
-              <text x="145" y="52" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">木块</text>
-              <text x="145" y="76" font-size="8" fill="#6B7280" text-anchor="middle">0.6g/cm³</text>
+              <rect x="122" y="28" width="46" height="40" rx="3" fill="url(#woodGrad)" stroke="#92400E" stroke-width="1"/>
+              <line x1="126" y1="35" x2="164" y2="35" stroke="rgba(146,64,14,0.2)" stroke-width="0.5"/>
+              <line x1="126" y1="42" x2="164" y2="42" stroke="rgba(146,64,14,0.15)" stroke-width="0.5"/>
+              <line x1="126" y1="49" x2="164" y2="49" stroke="rgba(146,64,14,0.2)" stroke-width="0.5"/>
+              <line x1="126" y1="56" x2="164" y2="56" stroke="rgba(146,64,14,0.15)" stroke-width="0.5"/>
+              <text x="145" y="54" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">木块</text>
+              <text x="145" y="78" font-size="8" fill="#6B7280" text-anchor="middle">0.6g/cm³</text>
             </g>
             <!-- Selection indicator -->
             <rect id="shelfSelect" x="8" y="28" width="50" height="40" rx="5" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-dasharray="4,2"/>
@@ -239,45 +249,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
       </div>
     </div>
 
-    <!-- Knowledge section below canvas -->
-    <div class="knowledge-section">
-      <div class="knowledge-card">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 阿基米德原理</h2>
-        <div class="formula-lg" id="knowledgeFormula1"></div>
-        <p>浸在液体中的物体受到向上的浮力，浮力的大小等于物体排开的液体所受的重力。</p>
-        <ul>
-          <li>F浮 — 浮力（单位：N）</li>
-          <li>ρ液 — 液体密度（单位：kg/m³）</li>
-          <li>g — 重力加速度（约 9.8 N/kg，计算时常取 10）</li>
-          <li>V排 — 物体排开液体的体积（单位：m³）</li>
-        </ul>
-      </div>
-
-      <div class="knowledge-card">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/><circle cx="12" cy="12" r="10"/></svg> 浮沉条件</h2>
-        <p>物体的浮沉取决于重力 G 和浮力 F浮 的大小关系：</p>
-        <ul>
-          <li><strong>上浮</strong>：F浮 > G（ρ物 &lt; ρ液）</li>
-          <li><strong>悬浮</strong>：F浮 = G（ρ物 = ρ液）</li>
-          <li><strong>下沉</strong>：F浮 &lt; G（ρ物 > ρ液）</li>
-          <li><strong>漂浮</strong>：物体静止在液面上，F浮 = G，V排 &lt; V物</li>
-        </ul>
-      </div>
-
-      <div class="knowledge-card">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> 典型例题</h2>
-        <p><strong>题目：</strong>一个体积为 100cm³ 的铝块（密度 2.7g/cm³），挂在弹簧测力计下浸没在水中，求：</p>
-        <p>（1）铝块受到的浮力</p>
-        <p>（2）弹簧测力计的示数</p>
-        <p style="margin-top:8px;color:#1D4ED8;font-weight:600">解：</p>
-        <p>G = ρ铝 × g × V = 2.7×10³ × 10 × 100×10⁻⁶ = 2.7 N</p>
-        <p>F浮 = ρ水 × g × V排 = 1.0×10³ × 10 × 100×10⁻⁶ = 1.0 N</p>
-        <p>F示 = G - F浮 = 2.7 - 1.0 = 1.7 N</p>
-      </div>
-
-      <div class="ad-placeholder">广告位预留</div>
-    </div>
-  </div>
+  </div><!-- end left column -->
 
   <div class="panel">
     <div class="panel-section">
@@ -336,11 +308,50 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
     </button>
   </div>
 </div>
+
+<!-- Knowledge section - full width below experiment -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 阿基米德原理</h2>
+    <div class="formula-lg" id="knowledgeFormula1"></div>
+    <p>浸在液体中的物体受到向上的浮力，浮力的大小等于物体排开的液体所受的重力。</p>
+    <ul>
+      <li>F浮 — 浮力（单位：N）</li>
+      <li>ρ液 — 液体密度（单位：kg/m³）</li>
+      <li>g — 重力加速度（约 9.8 N/kg，计算时常取 10）</li>
+      <li>V排 — 物体排开液体的体积（单位：m³）</li>
+    </ul>
+  </div>
+
+  <div class="knowledge-card">
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/><circle cx="12" cy="12" r="10"/></svg> 浮沉条件</h2>
+    <p>物体的浮沉取决于重力 G 和浮力 F浮 的大小关系：</p>
+    <ul>
+      <li><strong>上浮</strong>：F浮 > G（ρ物 &lt; ρ液）</li>
+      <li><strong>悬浮</strong>：F浮 = G（ρ物 = ρ液）</li>
+      <li><strong>下沉</strong>：F浮 &lt; G（ρ物 > ρ液）</li>
+      <li><strong>漂浮</strong>：物体静止在液面上，F浮 = G，V排 &lt; V物</li>
+    </ul>
+  </div>
+
+  <div class="knowledge-card">
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> 典型例题</h2>
+    <p><strong>题目：</strong>一个体积为 100cm³ 的铝块（密度 2.7g/cm³），挂在弹簧测力计下浸没在水中，求：</p>
+    <p>（1）铝块受到的浮力</p>
+    <p>（2）弹簧测力计的示数</p>
+    <p style="margin-top:8px;color:#1D4ED8;font-weight:600">解：</p>
+    <p>G = ρ铝 × g × V = 2.7×10³ × 10 × 100×10⁻⁶ = 2.7 N</p>
+    <p>F浮 = ρ水 × g × V排 = 1.0×10³ × 10 × 100×10⁻⁶ = 1.0 N</p>
+    <p>F示 = G - F浮 = 2.7 - 1.0 = 1.7 N</p>
+  </div>
+
+  <!-- ad placeholder hidden for now -->
+</div>
 <script>
 const materials = {
-  al:   { name:'铝', rho: 2.7, color:'#60A5FA', stroke:'#3B82F6', vol:100 },
-  fe:   { name:'铁', rho: 7.8, color:'#9CA3AF', stroke:'#6B7280', vol:100 },
-  wood: { name:'木', rho: 0.6, color:'#FBBF24', stroke:'#D97706', vol:100 }
+  al:   { name:'铝', rho: 2.7, color:'url(#alGrad)', stroke:'#2563EB', vol:100 },
+  fe:   { name:'铁', rho: 7.8, color:'url(#feGrad)', stroke:'#4B5563', vol:100 },
+  wood: { name:'木', rho: 0.6, color:'url(#woodGrad)', stroke:'#92400E', vol:100 }
 };
 const liquids = {
   water: { name:'水', rho: 1.0 },
@@ -356,7 +367,7 @@ let records = [];
 
 const g = 10;
 const objH = 40, objW = 50;
-const waterTop0 = 230; // initial water surface y
+const waterTop0 = 225; // initial water surface y
 const containerTop = 210, containerBot = 408;
 
 function getG() { return materials[mat].rho * materials[mat].vol / 1000 * g; }
@@ -398,13 +409,11 @@ function updateDisplay() {
   document.getElementById('scalePointer').setAttribute('y1', pointerY);
   document.getElementById('scalePointer').setAttribute('y2', pointerY);
 
-  // Wire
-  document.getElementById('wireLine').setAttribute('y2', objY);
-
   // Object position
   const obj = document.getElementById('objectGroup');
   document.getElementById('objectBody').setAttribute('y', objY);
   document.getElementById('objectLabel').setAttribute('y', objY + 24);
+  document.getElementById('wireLine').setAttribute('y2', objY);
 
   // Immersion display
   if (frac > 0) {
@@ -511,7 +520,7 @@ const objEl = document.getElementById('objectGroup');
 
 function onStart(e) {
   const p = svgPoint(e);
-  if (p.x >= 95 && p.x <= 145 && p.y >= objY && p.y <= objY + objH) {
+  if (p.x >= 175 && p.x <= 225 && p.y >= objY && p.y <= objY + objH) {
     isDragging = true;
     dragOffsetY = p.y - objY;
     objEl.style.cursor = 'grabbing';
