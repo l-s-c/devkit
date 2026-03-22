@@ -66,7 +66,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <text x="20" y="24" font-size="12" fill="#9CA3AF" font-weight="600">空气 n₁=1.00</text>
 
       <!-- Medium region (bottom) -->
-      <rect id="medium-bg" x="0" y="250" width="600" height="250" fill="rgba(59,130,246,0.08)"/>
+      <defs>
+        <linearGradient id="mediumGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(59,130,246,0.02)"/>
+          <stop offset="15%" stop-color="rgba(59,130,246,0.06)"/>
+          <stop offset="100%" stop-color="rgba(59,130,246,0.12)"/>
+        </linearGradient>
+      </defs>
+      <rect id="medium-bg" x="0" y="250" width="600" height="250" fill="url(#mediumGrad)"/>
       <rect x="0" y="250" width="600" height="250" fill="url(#water-pattern)"/>
       <text id="medium-label" x="20" y="274" font-size="12" fill="#3B82F6" font-weight="600">水 n₂=1.33</text>
 

@@ -45,10 +45,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="canvas-area">
     <svg id="lab-svg" viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg">
       <defs>
+        <filter id="weightShadow"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25"/></filter>
         <linearGradient id="leverGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#D97706"/>
-          <stop offset="50%" stop-color="#A16207"/>
-          <stop offset="100%" stop-color="#92400E"/>
+          <stop offset="0%" stop-color="#D4A054"/>
+          <stop offset="20%" stop-color="#C8922E"/>
+          <stop offset="40%" stop-color="#A16207"/>
+          <stop offset="60%" stop-color="#B8860B"/>
+          <stop offset="80%" stop-color="#92400E"/>
+          <stop offset="100%" stop-color="#7C3A0A"/>
         </linearGradient>
         <linearGradient id="weightGrad1" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#9CA3AF"/>
@@ -305,6 +309,8 @@ function renderWeightBox() {
 
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.style.cursor = 'grab';
+    g.addEventListener('pointerenter', () => g.setAttribute('filter', 'url(#weightShadow)'));
+    g.addEventListener('pointerleave', () => g.removeAttribute('filter'));
     const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     r.setAttribute('x', bx - size/2); r.setAttribute('y', by);
     r.setAttribute('width', size); r.setAttribute('height', size);
