@@ -435,10 +435,10 @@ function getMeasuredMass() { return getTotalWeights() + riderValue; }
 function updateBalance() {
   const objMass = getMat().mass;
   const measured = getMeasuredMass();
-  const diff = objMass - measured; // positive = left heavy
+  const diff = objMass - measured; // positive = left heavy (object heavier)
 
-  // Beam tilt
-  const angle = Math.max(-8, Math.min(8, diff * 0.3));
+  // Beam tilt: diff>0 = left heavy → need negative angle (CCW) → left pan dips down
+  const angle = Math.max(-8, Math.min(8, -diff * 1.0));
   const beam = document.getElementById('beamGroup');
   beam.setAttribute('transform', `rotate(${angle},350,155)`);
 
@@ -449,7 +449,7 @@ function updateBalance() {
   // Status
   const bg = document.getElementById('balStatusBg');
   const txt = document.getElementById('balStatusText');
-  if (Math.abs(diff) < 0.3) {
+  if (Math.abs(diff) < 0.1) {
     txt.textContent = '天平平衡';
     bg.setAttribute('fill', 'rgba(5,150,105,0.1)');
     txt.setAttribute('fill', '#059669');
@@ -495,7 +495,8 @@ function updateBalance() {
     const el = document.getElementById(id);
     const w = weightStates[i];
     if (w.onPan) {
-      el.style.opacity = '0.2';
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
     } else {
       el.style.opacity = '1';
       const rect = el.querySelector('rect');
@@ -514,7 +515,7 @@ function updateBalance() {
   // Status badge
   const badge = document.getElementById('statusBadge');
   if (currentTab === 1) {
-    if (Math.abs(diff) < 0.3) {
+    if (Math.abs(diff) < 0.1) {
       badge.textContent = '天平平衡！m = ' + getMeasuredMass().toFixed(1) + 'g';
       badge.style.background = 'rgba(5,150,105,0.12)';
       badge.style.color = '#059669';
@@ -592,12 +593,58 @@ function onWeightUp(e) {
   updateBalance();
 }
 
-svgBal.addEventListener('mousedown', onWeightDown);
-svgBal.addEventListener('mousemove', onWeightMove);
-svgBal.addEventListener('mouseup', onWeightUp);
-svgBal.addEventListener('touchstart', onWeightDown, {passive:false});
-svgBal.addEventListener('touchmove', onWeightMove, {passive:false});
-svgBal.addEventListener('touchend', onWeightUp);
+// ===== RIDER DRAG on SVG =====
+let draggingRider = false;
+let riderDragOff = 0;
+const RIDER_MIN_X = 348;
+const RIDER_MAX_X = 468; // 348 + 120
+
+function onBalDown(e) {
+  if (currentTab !== 1) return;
+  const p = getSvgPt(svgBal, e);
+  // Check rider first (small target priority)
+  const riderEl = document.getElementById('rider');
+  const rx = parseFloat(riderEl.getAttribute('x'));
+  if (p.x >= rx - 5 && p.x <= rx + 15 && p.y >= 135 && p.y <= 160) {
+    e.preventDefault();
+    draggingRider = true;
+    riderDragOff = p.x - rx;
+    return;
+  }
+  onWeightDown(e);
+}
+
+function onBalMove(e) {
+  if (draggingRider) {
+    e.preventDefault();
+    const p = getSvgPt(svgBal, e);
+    let newX = p.x - riderDragOff;
+    newX = Math.max(RIDER_MIN_X, Math.min(RIDER_MAX_X, newX));
+    // Snap to 0.2g steps (120px / 25 steps = 4.8px per step)
+    const step = Math.round((newX - RIDER_MIN_X) / 4.8);
+    newX = RIDER_MIN_X + step * 4.8;
+    document.getElementById('rider').setAttribute('x', newX);
+    riderValue = (step * 0.2);
+    riderValue = Math.round(riderValue * 10) / 10;
+    document.getElementById('riderSlider').value = Math.round(riderValue * 10);
+    document.getElementById('valRider').textContent = riderValue.toFixed(1) + ' g';
+    updateBalance();
+    return;
+  }
+  onWeightMove(e);
+}
+
+function onBalUp(e) {
+  if (draggingRider) { draggingRider = false; return; }
+  onWeightUp(e);
+}
+
+svgBal.addEventListener('mousedown', onBalDown);
+svgBal.addEventListener('mousemove', onBalMove);
+svgBal.addEventListener('mouseup', onBalUp);
+svgBal.addEventListener('touchstart', onBalDown, {passive:false});
+svgBal.addEventListener('touchmove', onBalMove, {passive:false});
+svgBal.addEventListener('touchend', onBalUp);
 
 // ===== VOLUME DRAG =====
 const svgVol = document.getElementById('svgVolume');
