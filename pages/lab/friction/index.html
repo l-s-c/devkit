@@ -444,7 +444,7 @@ function setSurface(type) {
   document.getElementById('surfaceLabel').textContent = s.label;
   document.getElementById('valMu').textContent = s.mu.toFixed(2);
   document.querySelectorAll('.surface-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  event.target.closest('.surface-btn').classList.add('active');
   updateReading();
 }
 
