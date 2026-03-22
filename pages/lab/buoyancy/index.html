@@ -26,7 +26,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .purpose-tag svg{width:12px;height:12px}
 .lab-container{display:flex;flex-wrap:wrap}
 .canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
-.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;max-height:calc(100vh - 120px);user-select:none}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
 .canvas-wrapper svg{width:100%;height:100%}
 .panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
@@ -59,14 +59,18 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 @keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
 
 /* Knowledge section below canvas */
-.knowledge-section{width:100%;max-width:960px;margin:40px auto 0;padding:0 24px 40px 24px}
-.knowledge-card{background:linear-gradient(135deg,#fff 0%,#F8FAFC 100%);border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);border:1px solid rgba(59,130,246,0.08);padding:28px;margin-bottom:20px}
-.knowledge-card h2{font-size:16px;font-weight:700;margin-bottom:12px;color:#1D1D1F;display:flex;align-items:center;gap:8px}
-.knowledge-card h2 svg{width:18px;height:18px;color:#1D4ED8}
+.knowledge-section{width:100%;max-width:960px;margin:0 auto;padding:24px 24px 40px 24px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#1D4ED8;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
 .knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
-.knowledge-card .formula-lg{background:#EFF6FF;border-radius:10px;padding:16px;text-align:center;margin:12px 0}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,#EFF6FF,#F5F3FF);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #DBEAFE}
 .knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
-.ad-placeholder{background:#F9FAFB;border:2px dashed #E5E7EB;border-radius:14px;padding:30px;text-align:center;color:#9CA3AF;font-size:12px;margin-bottom:16px}
+.knowledge-card.example{background:linear-gradient(180deg,#FAFBFE,#F0F4FF)}
+.knowledge-card.example .card-header .accent{background:#059669}
+.knowledge-card.example .solve{background:#fff;border-radius:8px;padding:14px 16px;margin-top:10px;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#374151}
 </style>
 </head>
 <body>
@@ -312,37 +316,45 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 <!-- Knowledge section - full width below experiment -->
 <div class="knowledge-section">
   <div class="knowledge-card">
-    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 阿基米德原理</h2>
-    <div class="formula-lg" id="knowledgeFormula1"></div>
-    <p>浸在液体中的物体受到向上的浮力，浮力的大小等于物体排开的液体所受的重力。</p>
-    <ul>
-      <li>F浮 — 浮力（单位：N）</li>
-      <li>ρ液 — 液体密度（单位：kg/m³）</li>
-      <li>g — 重力加速度（约 9.8 N/kg，计算时常取 10）</li>
-      <li>V排 — 物体排开液体的体积（单位：m³）</li>
-    </ul>
+    <div class="card-header"><div class="accent"></div><h2>阿基米德原理</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="knowledgeFormula1"></div>
+      <p>浸在液体中的物体受到向上的浮力，浮力的大小等于物体排开的液体所受的重力。</p>
+      <ul>
+        <li><strong>F浮</strong> — 浮力（单位：N）</li>
+        <li><strong>ρ液</strong> — 液体密度（单位：kg/m³）</li>
+        <li><strong>g</strong> — 重力加速度（约 9.8 N/kg，计算时常取 10）</li>
+        <li><strong>V排</strong> — 物体排开液体的体积（单位：m³）</li>
+      </ul>
+      <p style="margin-top:12px;color:#6B7280;font-size:12px">实验方法：称量法测浮力 → F浮 = G - F示（弹簧测力计空气中读数 - 液体中读数）</p>
+    </div>
   </div>
 
   <div class="knowledge-card">
-    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/><circle cx="12" cy="12" r="10"/></svg> 浮沉条件</h2>
-    <p>物体的浮沉取决于重力 G 和浮力 F浮 的大小关系：</p>
-    <ul>
-      <li><strong>上浮</strong>：F浮 > G（ρ物 &lt; ρ液）</li>
-      <li><strong>悬浮</strong>：F浮 = G（ρ物 = ρ液）</li>
-      <li><strong>下沉</strong>：F浮 &lt; G（ρ物 > ρ液）</li>
-      <li><strong>漂浮</strong>：物体静止在液面上，F浮 = G，V排 &lt; V物</li>
-    </ul>
+    <div class="card-header"><div class="accent"></div><h2>浮沉条件</h2></div>
+    <div class="card-body">
+      <p>物体的浮沉取决于重力 G 和浮力 F浮 的大小关系：</p>
+      <ul>
+        <li><strong>上浮</strong>：F浮 > G（ρ物 &lt; ρ液）→ 最终漂浮</li>
+        <li><strong>悬浮</strong>：F浮 = G（ρ物 = ρ液）→ 停在液体中任意位置</li>
+        <li><strong>下沉</strong>：F浮 &lt; G（ρ物 > ρ液）→ 沉到容器底部</li>
+        <li><strong>漂浮</strong>：物体静止在液面上，F浮 = G，V排 &lt; V物</li>
+      </ul>
+      <p style="margin-top:8px;color:#1D4ED8;font-size:12px;font-weight:600">考点提醒：漂浮和悬浮都是 F浮 = G，但漂浮物体部分露出液面。</p>
+    </div>
   </div>
 
-  <div class="knowledge-card">
-    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> 典型例题</h2>
-    <p><strong>题目：</strong>一个体积为 100cm³ 的铝块（密度 2.7g/cm³），挂在弹簧测力计下浸没在水中，求：</p>
-    <p>（1）铝块受到的浮力</p>
-    <p>（2）弹簧测力计的示数</p>
-    <p style="margin-top:8px;color:#1D4ED8;font-weight:600">解：</p>
-    <p>G = ρ铝 × g × V = 2.7×10³ × 10 × 100×10⁻⁶ = 2.7 N</p>
-    <p>F浮 = ρ水 × g × V排 = 1.0×10³ × 10 × 100×10⁻⁶ = 1.0 N</p>
-    <p>F示 = G - F浮 = 2.7 - 1.0 = 1.7 N</p>
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>一个体积为 100cm³ 的铝块（密度 2.7g/cm³），挂在弹簧测力计下浸没在水中，求：</p>
+      <p>（1）铝块受到的浮力；（2）弹簧测力计的示数</p>
+      <div class="solve">
+        G = ρ铝 × g × V = 2.7×10³ × 10 × 100×10⁻⁶ = 2.7 N<br/>
+        F浮 = ρ水 × g × V排 = 1.0×10³ × 10 × 100×10⁻⁶ = 1.0 N<br/>
+        F示 = G - F浮 = 2.7 - 1.0 = <strong style="color:#1D4ED8">1.7 N</strong>
+      </div>
+    </div>
   </div>
 
   <!-- ad placeholder hidden for now -->
