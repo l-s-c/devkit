@@ -321,9 +321,6 @@
 
         <!-- Fulcrum triangle -->
         <polygon id="fulcrum" points="340,282 316,332 364,332" fill="url(#fulcrumGrad)" stroke="#4B5563" stroke-width="0.8" stroke-linejoin="round"/>
-        <!-- Red pivot marker -->
-        <circle cx="340" cy="282" r="5" fill="#DC2626" stroke="#fff" stroke-width="2"/>
-
         <!-- Lever beam (rotates around pivot) -->
         <g id="leverGroup" transform="rotate(0, 340, 278)">
           <!-- Main beam with wood grain -->
@@ -366,6 +363,9 @@
 
         <!-- Labels: L1, L2, F1, F2 (rendered by JS) -->
         <g id="forceLabels"></g>
+
+        <!-- Red pivot marker (after leverGroup to stay on top) -->
+        <circle cx="340" cy="282" r="5" fill="#DC2626" stroke="#fff" stroke-width="2"/>
 
         <!-- Weight shelf -->
         <rect x="170" y="430" width="340" height="60" rx="10" fill="#F8F9FC" stroke="#E5E7EB" stroke-width="1"/>
