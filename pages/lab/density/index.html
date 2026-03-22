@@ -507,7 +507,6 @@ function updateBalance() {
     const el = document.getElementById(id);
     const w = weightStates[i];
     if (w.onPan) {
-      // Hide shelf element (shown as stacked on pan above)
       el.style.opacity = '0';
     } else {
       el.style.opacity = '1';
@@ -579,14 +578,30 @@ function onWeightMove(e) {
   if (draggingWeight < 0) return;
   e.preventDefault();
   const p = getSvgPt(svgBal, e);
-  weightStates[draggingWeight].x = p.x - dragOff.x;
-  weightStates[draggingWeight].y = p.y - dragOff.y;
+  const w = weightStates[draggingWeight];
+  w.x = p.x - dragOff.x;
+  w.y = p.y - dragOff.y;
+  // Show the element during drag (even if it was on pan)
+  const el = document.getElementById(WEIGHT_IDS[draggingWeight]);
+  el.style.opacity = '0.8';
+  const rect = el.querySelector('rect');
+  const text = el.querySelector('text');
+  rect.setAttribute('x', w.x); rect.setAttribute('y', w.y);
+  const rw = parseFloat(rect.getAttribute('width'));
+  const rh = parseFloat(rect.getAttribute('height'));
+  text.setAttribute('x', w.x + rw/2); text.setAttribute('y', w.y + rh - 4);
+  // Update pan stack (remove this one visually if it was on pan)
+  if (w.onPan) {
+    w.onPan = false; // temporarily off pan during drag
+    w._wasPan = true;
+  }
   updateBalance();
 }
 
 function onWeightUp(e) {
   if (draggingWeight < 0) return;
   const w = weightStates[draggingWeight];
+  delete w._wasPan;
   // Check if dropped on right pan area (x: 455-565, y: 140-220)
   const cx = w.x + 15;
   const cy = w.y + 10;
@@ -625,9 +640,32 @@ function onBalDown(e) {
   if (stackRect.width > 0 && p.x > stackRect.x && p.x < stackRect.x + stackRect.width && p.y > stackRect.y && p.y < stackRect.y + stackRect.height) {
     for (let i = weightStates.length - 1; i >= 0; i--) {
       if (weightStates[i].onPan) {
-        weightStates[i].onPan = false;
-        weightStates[i].x = weightStates[i].origX;
-        weightStates[i].y = weightStates[i].origY;
+        const w = weightStates[i];
+        w.onPan = false;
+        // Animate fly-back: show el at pan pos, lerp to shelf
+        const el = document.getElementById(WEIGHT_IDS[i]);
+        const rect = el.querySelector('rect');
+        const text = el.querySelector('text');
+        const rw = parseFloat(rect.getAttribute('width'));
+        const rh = parseFloat(rect.getAttribute('height'));
+        el.style.opacity = '0.85';
+        const fromX = 495, fromY = 180;
+        const toX = w.origX, toY = w.origY;
+        const dur = 350;
+        const t0 = performance.now();
+        function animFlyback(now) {
+          const t = Math.min((now - t0) / dur, 1);
+          const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+          const cx = fromX + (toX - fromX) * ease;
+          const cy = fromY + (toY - fromY) * ease;
+          rect.setAttribute('x', cx); rect.setAttribute('y', cy);
+          text.setAttribute('x', cx + rw/2); text.setAttribute('y', cy + rh - 4);
+          el.style.opacity = String(0.85 + 0.15 * ease);
+          if (t < 1) requestAnimationFrame(animFlyback);
+        }
+        requestAnimationFrame(animFlyback);
+        w.x = w.origX;
+        w.y = w.origY;
         updateBalance();
         e.preventDefault();
         return;
