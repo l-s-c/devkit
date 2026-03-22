@@ -163,6 +163,7 @@ export default defineConfig({
         'lab-ohm': resolve(__dirname, 'pages/lab/ohm/index.html'),
         'lab-lens': resolve(__dirname, 'pages/lab/lens/index.html'),
         'lab-pulley': resolve(__dirname, 'pages/lab/pulley/index.html'),
+        'lab-spring': resolve(__dirname, 'pages/lab/spring/index.html'),
         'ion-equation': resolve(__dirname, 'pages/ion-equation/index.html'),
         'china-provinces': resolve(__dirname, 'pages/china-provinces/index.html'),
         'world-records': resolve(__dirname, 'pages/world-records/index.html'),
