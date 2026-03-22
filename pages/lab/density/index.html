@@ -447,7 +447,8 @@ function updateBalance() {
   const diff = objMass - measured; // positive = left heavy (object heavier)
 
   // Beam tilt: diff>0 = left heavy → need negative angle (CCW) → left pan dips down
-  const angle = Math.max(-8, Math.min(8, -diff * 1.0));
+  // Scale: 1g diff → ~2° tilt for visible response
+  const angle = Math.max(-8, Math.min(8, -diff * 2.0));
   const beam = document.getElementById('beamGroup');
   beam.setAttribute('transform', `rotate(${angle},350,155)`);
 
