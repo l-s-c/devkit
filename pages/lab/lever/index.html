@@ -67,7 +67,7 @@
     background: #fff; border-radius: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.04);
     overflow: hidden; width: 100%; max-width: 680px;
-    aspect-ratio: 4/3; position: relative;
+    aspect-ratio: 16/9; position: relative;
   }
   .canvas-wrapper svg { width: 100%; height: 100%; }
 
@@ -245,7 +245,7 @@
 <div class="lab-container">
   <div class="canvas-area">
     <div class="canvas-wrapper" id="canvasWrapper">
-      <svg id="canvas" viewBox="0 20 680 470" xmlns="http://www.w3.org/2000/svg">
+      <svg id="canvas" viewBox="30 180 620 330" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <!-- Wood grain pattern -->
           <pattern id="woodGrain" x="0" y="0" width="10" height="14" patternUnits="userSpaceOnUse">
@@ -625,36 +625,105 @@
 
   // === Interactions ===
   let currentWeight = 1; // default add weight
+  let dragging = null; // {weight, ghostEl}
 
   const svg = document.getElementById('canvas');
-  svg.addEventListener('click', (e) => {
+  const VB = {x:30,y:180,w:620,h:330}; // viewBox
+
+  function svgCoords(e) {
     const rect = svg.getBoundingClientRect();
-    const sx = (e.clientX - rect.left) / rect.width * 680;
-    const sy = (e.clientY - rect.top) / rect.height * 510;
-    if (sy < 250 || sy > 310) return;
+    return {
+      x: VB.x + (e.clientX - rect.left) / rect.width * VB.w,
+      y: VB.y + (e.clientY - rect.top) / rect.height * VB.h
+    };
+  }
+
+  function findHook(sx) {
     for (const [k, hx] of Object.entries(HOOK_X)) {
-      if (Math.abs(sx - hx) < 20 && hooks[k].length < 3) {
-        hooks[k].push(currentWeight);
-        render();
-        updatePresetState();
-        return;
-      }
+      if (Math.abs(sx - hx) < 25 && hooks[k].length < 3) return k;
     }
+    return null;
+  }
+
+  // Click to add (keep existing behavior)
+  svg.addEventListener('click', (e) => {
+    if (dragging) return;
+    const {x:sx, y:sy} = svgCoords(e);
+    if (sy < 250 || sy > 310) return;
+    const hook = findHook(sx);
+    if (hook) { hooks[hook].push(currentWeight); render(); updatePresetState(); }
   });
+
+  // Drag from shelf weights
+  svg.addEventListener('mousedown', (e) => {
+    const {x:sx, y:sy} = svgCoords(e);
+    // Check if clicking a shelf weight (y > 430)
+    if (sy < 430) return;
+    const ghost = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ghost.setAttribute('r','12');
+    ghost.setAttribute('fill', currentWeight<=1?'#9CA3AF':currentWeight<=2?'#D97706':'#4B5563');
+    ghost.setAttribute('opacity','0.7');
+    ghost.setAttribute('cx', sx); ghost.setAttribute('cy', sy);
+    ghost.setAttribute('pointer-events','none');
+    svg.appendChild(ghost);
+    dragging = {weight: currentWeight, ghost};
+  });
+  svg.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const {x:sx, y:sy} = svgCoords(e);
+    dragging.ghost.setAttribute('cx', sx);
+    dragging.ghost.setAttribute('cy', sy);
+  });
+  svg.addEventListener('mouseup', (e) => {
+    if (!dragging) return;
+    const {x:sx} = svgCoords(e);
+    dragging.ghost.remove();
+    const hook = findHook(sx);
+    if (hook) { hooks[hook].push(dragging.weight); render(); updatePresetState(); }
+    dragging = null;
+  });
+  svg.addEventListener('mouseleave', () => {
+    if (dragging) { dragging.ghost.remove(); dragging = null; }
+  });
+
+  // Touch support for mobile
+  svg.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    const {x:sx, y:sy} = svgCoords(t);
+    if (sy < 430) return;
+    e.preventDefault();
+    const ghost = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ghost.setAttribute('r','12');
+    ghost.setAttribute('fill', currentWeight<=1?'#9CA3AF':currentWeight<=2?'#D97706':'#4B5563');
+    ghost.setAttribute('opacity','0.7');
+    ghost.setAttribute('cx', sx); ghost.setAttribute('cy', sy);
+    ghost.setAttribute('pointer-events','none');
+    svg.appendChild(ghost);
+    dragging = {weight: currentWeight, ghost};
+  }, {passive:false});
+  svg.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const {x:sx, y:sy} = svgCoords(e.touches[0]);
+    dragging.ghost.setAttribute('cx', sx);
+    dragging.ghost.setAttribute('cy', sy);
+  }, {passive:false});
+  svg.addEventListener('touchend', (e) => {
+    if (!dragging) return;
+    const {x:sx} = svgCoords(e.changedTouches[0]);
+    dragging.ghost.remove();
+    const hook = findHook(sx);
+    if (hook) { hooks[hook].push(dragging.weight); render(); updatePresetState(); }
+    dragging = null;
+  });
+
+  // Right click to add 2N
   svg.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    const rect = svg.getBoundingClientRect();
-    const sx = (e.clientX - rect.left) / rect.width * 680;
-    const sy = (e.clientY - rect.top) / rect.height * 510;
+    const {x:sx, y:sy} = svgCoords(e);
     if (sy < 250 || sy > 310) return;
-    for (const [k, hx] of Object.entries(HOOK_X)) {
-      if (Math.abs(sx - hx) < 20 && hooks[k].length < 3) {
-        hooks[k].push(2);
-        render();
-        updatePresetState();
-        return;
-      }
-    }
+    const hook = findHook(sx);
+    if (hook) { hooks[hook].push(2); render(); updatePresetState(); }
   });
 
   function removeWeight(hook, idx) {
