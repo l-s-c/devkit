@@ -161,8 +161,36 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 .quiz-score { margin-top: 10px; font-size: 11px; color: var(--text-caption); text-align: center; }
 
 /* 侧边栏居中 */
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#059669}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
-<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}</style>
+<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#059669}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
+</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"单摆运动模拟","url":"https://l-s-c.github.io/devkit/pages/lab/pendulum/","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"在线单摆运动模拟实验，交互式物理动画，可调参数，能量守恒可视化","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
 </script>
@@ -968,5 +996,39 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 })();
 </script>
 <noscript><p>单摆运动模拟 — DevKit 在线万能工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>单摆周期公式</h2></div>
+  <div class="card-body">
+    <div class="formula-lg" id="knowledgeFormula1"></div>
+    <p>单摆的周期只与摆长和重力加速度有关，与摆球质量和摆角（小角度）无关。</p>
+    <ul>
+      <li><strong>T</strong> — 周期（s），摆球往返一次的时间</li>
+      <li><strong>L</strong> — 摆长（m），悬挂点到摆球重心的距离</li>
+      <li><strong>g</strong> — 重力加速度（m/s²），约 9.8 m/s²</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>单摆的等时性</h2></div>
+  <div class="card-body">
+    <ul>
+      <li><strong>摆长越长</strong> → 周期越大（摆得越慢）</li>
+      <li><strong>重力加速度越大</strong> → 周期越小（摆得越快）</li>
+      <li><strong>质量无关</strong>：换不同质量的摆球，周期不变</li>
+      <li><strong>摆角无关</strong>（小角度条件下，<15°）</li>
+    </ul>
+    <p style="color:#059669;font-size:12px;font-weight:600;margin-top:8px">考点提醒：摆长 = 悬挂点到球心的距离，不是绳长！</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>某摆钟走慢了（周期变大），应如何调整？</p>
+    <div class="solve">T = 2π√(L/g)<br/>走慢 → T 偏大 → L 偏大<br/>解决：<strong style="color:#059669">缩短摆长</strong>（往上调节摆球位置）<br/>L 减小 → T 减小 → 走准</div>
+  </div>
+</div>
+</div>
 </body>
 </html>

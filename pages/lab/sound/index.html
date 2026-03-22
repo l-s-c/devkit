@@ -62,6 +62,20 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
 .related-bar span{color:#9CA3AF;font-weight:600}
 .related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#7C3AED;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#7C3AED}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -403,5 +417,39 @@ renderFormulas();
 if (localStorage.getItem('sound-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('sound-guide-seen','1'); }
 </script>
 <script src="/shared/theme.js"></script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>声音的三个特性</h2></div>
+  <div class="card-body">
+    <ul>
+      <li><strong>响度</strong>：声音的大小 → 由振幅决定，振幅越大响度越大</li>
+      <li><strong>音调</strong>：声音的高低 → 由频率决定，频率越高音调越高</li>
+      <li><strong>音色</strong>：声音的品质特征 → 由发声体材料和结构决定</li>
+    </ul>
+    <p>声音产生条件：物体振动。传播条件：需要介质，真空不能传声。</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>声速与声的利用</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>15°C 空气中声速：<strong>340 m/s</strong></li>
+      <li>声速大小：固体 > 液体 > 气体</li>
+      <li><strong>回声</strong>：障碍物距声源 > 17m 能区分回声</li>
+      <li><strong>超声波</strong>（>20000Hz）：B超、声呐、清洗</li>
+      <li><strong>次声波</strong>（<20Hz）：监测地震、核爆</li>
+    </ul>
+    <p style="color:#7C3AED;font-size:12px;font-weight:600;margin-top:8px">考点提醒：音调看频率不看振幅！响度看振幅不看频率！</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>站在山谷中喊一声，2s 后听到回声，求山壁距你多远？（声速 340m/s）</p>
+    <div class="solve">声音走了一个来回，t = 2s<br/>单程时间 t₁ = 2/2 = 1s<br/>距离 s = v × t₁ = 340 × 1 = <strong style="color:#7C3AED">340 m</strong></div>
+  </div>
+</div>
+</div>
 </body>
 </html>

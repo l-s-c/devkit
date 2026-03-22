@@ -223,6 +223,20 @@
     .panel { width: 100%; }
     .related-bar { right: 0; }
   }
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#059669}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -837,5 +851,39 @@
   });
 </script>
 <script src="/shared/theme.js"></script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>杠杆平衡条件</h2></div>
+  <div class="card-body">
+    <div class="formula-lg" id="knowledgeFormula1"></div>
+    <p>杠杆在力的作用下处于平衡状态时，动力×动力臂 = 阻力×阻力臂。</p>
+    <ul>
+      <li><strong>F₁</strong> — 动力（N）</li>
+      <li><strong>L₁</strong> — 动力臂（m）：从支点到动力作用线的距离</li>
+      <li><strong>F₂</strong> — 阻力（N）</li>
+      <li><strong>L₂</strong> — 阻力臂（m）：从支点到阻力作用线的距离</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>杠杆分类</h2></div>
+  <div class="card-body">
+    <ul>
+      <li><strong>省力杠杆</strong>：L₁ > L₂，省力但费距离（如扳手、铡刀）</li>
+      <li><strong>费力杠杆</strong>：L₁ < L₂，费力但省距离（如筷子、钓鱼竿）</li>
+      <li><strong>等臂杠杆</strong>：L₁ = L₂，不省力也不省距离（如天平）</li>
+    </ul>
+    <p style="color:#059669;font-size:12px;font-weight:600;margin-top:8px">考点提醒：力臂是支点到力的作用线的垂直距离，不是支点到力的作用点的距离！</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>一根杠杆，动力臂 40cm，阻力臂 20cm，阻力为 100N，求动力至少多大？</p>
+    <div class="solve">F₁ × L₁ = F₂ × L₂<br/>F₁ × 0.4 = 100 × 0.2<br/>F₁ = 20 / 0.4 = <strong style="color:#059669">50 N</strong></div>
+  </div>
+</div>
+</div>
 </body>
 </html>

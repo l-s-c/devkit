@@ -40,6 +40,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .panel{width:100%;flex-direction:row;flex-wrap:wrap}
   .panel-card{flex:1;min-width:200px}
 }
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#C2410C;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#C2410C}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/refraction/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/refraction.png">
@@ -445,5 +459,40 @@ els.directionSelect.addEventListener('change', e => {
 // Init
 update();
 </script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>光的折射规律</h2></div>
+  <div class="card-body">
+    <p>光从一种介质斜射入另一种介质时，传播方向发生偏折。</p>
+    <ul>
+      <li>折射光线、入射光线、法线在同一平面内</li>
+      <li>折射光线和入射光线分居法线两侧</li>
+      <li><strong>光从空气斜射入水/玻璃</strong>：折射角 < 入射角</li>
+      <li><strong>光从水/玻璃斜射入空气</strong>：折射角 > 入射角</li>
+      <li>入射角增大，折射角也增大</li>
+      <li>垂直入射时，传播方向不变</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>折射现象与应用</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>水中看物体比实际浅（光从水射入空气，折射角>入射角）</li>
+      <li>海市蜃楼（空气密度不均匀导致光的折射）</li>
+      <li>透镜（凸透镜/凹透镜利用折射聚光或发散光）</li>
+    </ul>
+    <p style="color:#C2410C;font-size:12px;font-weight:600;margin-top:8px">考点提醒：折射时光路可逆！从水看空气中的物体，像的位置偏高。</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>一束光从空气斜射入水面，入射角为 60°。已知折射角小于入射角，下列哪个可能是折射角？A.70° B.60° C.40° D.0°</p>
+    <div class="solve">光从空气→水：折射角 < 入射角<br/>入射角 = 60°<br/>折射角 < 60° 且 > 0°<br/>答案：<strong style="color:#C2410C">C. 40°</strong></div>
+  </div>
+</div>
+</div>
 </body>
 </html>

@@ -36,6 +36,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .btn-pull:active{transform:scale(0.98)}
 .info-box{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;margin-top:8px;font-size:11px;color:#6B7280;line-height:1.6}
 @media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#059669}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/pulley/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/pulley.png">
@@ -359,5 +373,39 @@ document.getElementById('btn-pull').addEventListener('click', () => {
 // Init
 render();
 </script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>滑轮与滑轮组</h2></div>
+  <div class="card-body">
+    <div class="formula-lg" id="knowledgeFormula1"></div>
+    <ul>
+      <li><strong>定滑轮</strong>：轴固定不动，不省力但改变力的方向</li>
+      <li><strong>动滑轮</strong>：随物体一起移动，省一半力但不改变方向</li>
+      <li><strong>滑轮组</strong>：定滑轮+动滑轮组合，既省力又改变方向</li>
+      <li><strong>n</strong> — 承担物重的绳子段数，F = G/n</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>滑轮组机械效率</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>η = W有用/W总 = Gh/(Fs) × 100%</li>
+      <li><strong>有用功</strong>：W有用 = G × h（提升物体）</li>
+      <li><strong>额外功</strong>：克服动滑轮重力、绳重、摩擦</li>
+      <li><strong>绳子段数 n</strong> → s = n × h</li>
+    </ul>
+    <p style="color:#059669;font-size:12px;font-weight:600;margin-top:8px">考点提醒：数绳子段数看动滑轮上有几段绳子！</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>用滑轮组提升 600N 重物，动滑轮重 60N，承担物重绳子 3 段，忽略摩擦，求拉力。</p>
+    <div class="solve">F = (G物 + G动) / n<br/>F = (600 + 60) / 3<br/>F = <strong style="color:#059669">220 N</strong></div>
+  </div>
+</div>
+</div>
 </body>
 </html>
