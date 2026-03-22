@@ -626,6 +626,7 @@
   // === Interactions ===
   let currentWeight = 1; // default add weight
   let dragging = null; // {weight, ghostEl}
+  let justDragged = false; // prevent click after drag
 
   const svg = document.getElementById('canvas');
   const VB = {x:0,y:140,w:680,h:370}; // viewBox
@@ -647,7 +648,7 @@
 
   // Click to add (keep existing behavior)
   svg.addEventListener('click', (e) => {
-    if (dragging) return;
+    if (dragging || justDragged) { justDragged = false; return; }
     const {x:sx, y:sy} = svgCoords(e);
     if (sy < 250 || sy > 310) return;
     const hook = findHook(sx);
@@ -714,6 +715,7 @@
     const hook = findHook(sx);
     if (hook) { hooks[hook].push(dragging.weight); render(); updatePresetState(); }
     dragging = null;
+    justDragged = true;
   });
   svg.addEventListener('mouseleave', () => {
     if (dragging) { dragging.ghost.remove(); dragging = null; }
