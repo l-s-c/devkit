@@ -44,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/refraction/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/refraction.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous" onload="if(typeof render==='function')render()"></script>
 </head>
 <body>
 <header class="lab-header">
@@ -331,9 +331,9 @@ function update() {
   // Formula
   const lhs = (actualN1 * Math.sin(rad1)).toFixed(3);
   if (window.katex) {
-    katex.render(`n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2 \\quad (${actualN1} \\times \\sin${theta1}° = ${lhs})`, els.formula, {throwOnError:false});
+    katex.render(`n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2`, els.formula, {throwOnError:false});
   } else {
-    els.formula.textContent = `n₁sinθ₁ = n₂sinθ₂ (${actualN1}×sin${theta1}° = ${lhs})`;
+    els.formula.textContent = 'n₁ sin θ₁ = n₂ sin θ₂';
   }
 
   // Slider sync
