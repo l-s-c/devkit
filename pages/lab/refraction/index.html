@@ -31,7 +31,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .reading:last-child{border-bottom:none}
 .reading .rl{color:#8E8E93}
 .reading .rv{font-weight:700;font-family:'JetBrains Mono',monospace}
-.formula{background:rgba(59,130,246,0.05);border-radius:10px;padding:12px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px}
+.formula{background:rgba(59,130,246,0.06);border-radius:12px;padding:20px 16px;text-align:center;font-size:14px;font-weight:600;color:#3B82F6;font-family:'JetBrains Mono',monospace;margin-top:8px;border:1px solid rgba(59,130,246,0.1)}
 .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700}
 .badge-ok{background:rgba(34,197,94,0.1);color:#16A34A}
 .badge-warn{background:rgba(239,68,68,0.1);color:#DC2626}
@@ -95,18 +95,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <line id="incident-ray" x1="150" y1="100" x2="300" y2="250" stroke="#FBBF24" stroke-width="3" filter="url(#glow)"/>
 
       <!-- Angle arcs -->
-      <path id="arc-theta1" d="" fill="none" stroke="#EF4444" stroke-width="1.5"/>
-      <path id="arc-theta2" d="" fill="none" stroke="#3B82F6" stroke-width="1.5"/>
+      <path id="arc-theta1" d="" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+      <path id="arc-theta2" d="" fill="none" stroke="#6B7280" stroke-width="1.5"/>
 
       <!-- Angle labels -->
-      <text id="label-theta1" x="310" y="220" font-size="13" fill="#EF4444" font-weight="700">θ₁=30°</text>
-      <text id="label-theta2" x="310" y="290" font-size="13" fill="#3B82F6" font-weight="700">θ₂=22°</text>
+      <text id="label-theta1" x="310" y="220" font-size="13" fill="#6B7280" font-weight="600">θ₁=30°</text>
+      <text id="label-theta2" x="310" y="290" font-size="13" fill="#6B7280" font-weight="600">θ₂=22°</text>
 
       <!-- Total internal reflection badge -->
       <text id="tir-badge" x="300" y="350" font-size="16" fill="#DC2626" font-weight="800" text-anchor="middle" opacity="0">⚠️ 全反射</text>
 
       <!-- Draggable handle on incident ray -->
-      <circle id="drag-handle" cx="150" cy="100" r="10" fill="#FBBF24" stroke="#fff" stroke-width="2" cursor="grab" filter="url(#glow)"/>
+      <circle id="drag-handle" cx="150" cy="100" r="18" fill="transparent" stroke="transparent" stroke-width="0" cursor="grab"/>
       <text id="drag-hint" x="155" y="92" font-size="10" fill="#D97706" font-weight="600">← 拖动改变入射角</text>
 
       <!-- Arrow heads -->
@@ -121,10 +121,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="panel-title">⚙️ 实验参数</div>
       <div class="field">
         <label>介质选择</label>
-        <div id="medium-btns" style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="med-btn active" data-n="1.33" style="flex:1;padding:6px;border:2px solid #3B82F6;border-radius:8px;background:rgba(59,130,246,0.08);color:#3B82F6;font-weight:700;font-size:12px;cursor:pointer">水 1.33</button>
-          <button class="med-btn" data-n="1.50" style="flex:1;padding:6px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">玻璃 1.50</button>
-          <button class="med-btn" data-n="2.42" style="flex:1;padding:6px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">钻石 2.42</button>
+        <div id="medium-btns" style="display:flex;flex-direction:column;gap:6px">
+          <button class="med-btn active" data-n="1.33" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #3B82F6;border-radius:8px;background:rgba(59,130,246,0.08);color:#3B82F6;font-weight:700;font-size:12px;cursor:pointer">💧 水 n=1.33</button>
+          <button class="med-btn" data-n="1.50" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">🪟 玻璃 n=1.50</button>
+          <button class="med-btn" data-n="2.42" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">💎 钻石 n=2.42</button>
         </div>
       </div>
       <div class="field">

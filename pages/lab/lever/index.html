@@ -83,6 +83,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <!-- Lever beam -->
       <g id="lever-group" transform="rotate(0,300,260)">
         <rect id="lever-beam" x="50" y="250" width="500" height="14" rx="4" fill="url(#leverGrad)" stroke="#57534E" stroke-width="1"/>
+        <rect x="50" y="251" width="500" height="4" rx="2" fill="rgba(255,255,255,0.25)" pointer-events="none"/>
         <!-- Hook points (5 on each side) -->
         <g id="hook-points"></g>
         <!-- Weights on lever -->
@@ -104,14 +105,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
   <div class="panel">
     <div class="panel-card">
-      <div class="panel-title">📊 力矩分析</div>
-      <div class="reading"><span class="rl">左侧力 F₁</span><span class="rv" id="r-f1">0 N</span></div>
-      <div class="reading"><span class="rl">左侧力臂 L₁</span><span class="rv" id="r-l1">0 格</span></div>
-      <div class="reading"><span class="rl">左力矩 F₁L₁</span><span class="rv" id="r-m1">0</span></div>
-      <div class="reading"><span class="rl">右侧力 F₂</span><span class="rv" id="r-f2">0 N</span></div>
-      <div class="reading"><span class="rl">右侧力臂 L₂</span><span class="rv" id="r-l2">0 格</span></div>
-      <div class="reading"><span class="rl">右力矩 F₂L₂</span><span class="rv" id="r-m2">0</span></div>
-      <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-warn">空杠杆</span></span></div>
+      <div class="panel-title">⬅️ 左侧</div>
+      <div class="reading"><span class="rl">力 F₁</span><span class="rv" id="r-f1">0 N</span></div>
+      <div class="reading"><span class="rl">力臂 L₁</span><span class="rv" id="r-l1">0 格</span></div>
+      <div class="reading"><span class="rl">力矩 F₁L₁</span><span class="rv" id="r-m1">0</span></div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-title">➡️ 右侧</div>
+      <div class="reading"><span class="rl">力 F₂</span><span class="rv" id="r-f2">0 N</span></div>
+      <div class="reading"><span class="rl">力臂 L₂</span><span class="rv" id="r-l2">0 格</span></div>
+      <div class="reading"><span class="rl">力矩 F₂L₂</span><span class="rv" id="r-m2">0</span></div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-title">📊 状态</div>
+      <div class="reading"><span class="rl">平衡判定</span><span id="r-status"><span class="badge badge-warn">空杠杆</span></span></div>
+    </div>
+    <div class="panel-card">
       <div class="formula" id="formula-display"></div>
     </div>
   </div>
