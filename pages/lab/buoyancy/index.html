@@ -625,11 +625,14 @@
 
   // === Init ===
   loadPreset('aluminum');
-  try {
-    katex.render('F_{\\text{浮}} = \\rho_{\\text{液}} \\cdot g \\cdot V_{\\text{排}}', document.getElementById('formulaBox'), { throwOnError: false, displayMode: true });
-  } catch(e) {
-    document.getElementById('formulaBox').textContent = 'F浮 = ρ液 · g · V排';
+  function renderFormula() {
+    try {
+      katex.render('F_{\\text{浮}} = \\rho_{\\text{液}} \\cdot g \\cdot V_{\\text{排}}', document.getElementById('formulaBox'), { throwOnError: false, displayMode: true });
+    } catch(e) {
+      document.getElementById('formulaBox').textContent = 'F浮 = ρ液 · g · V排';
+    }
   }
+  renderFormula();
 
   // Guide
   if (localStorage.getItem('buoyancy-guide-seen')) {
