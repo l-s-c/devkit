@@ -30,6 +30,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 @media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="lab-header">
@@ -102,7 +104,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="reading"><span class="rl">右侧力臂 L₂</span><span class="rv" id="r-l2">0 格</span></div>
       <div class="reading"><span class="rl">右力矩 F₂L₂</span><span class="rv" id="r-m2">0</span></div>
       <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-warn">空杠杆</span></span></div>
-      <div class="formula" id="formula-display">F₁L₁ = F₂L₂</div>
+      <div class="formula" id="formula-display"></div>
     </div>
   </div>
 </div>
@@ -210,14 +212,14 @@ function calculate() {
 
   if (placed.length === 0) {
     document.getElementById('r-status').innerHTML = '<span class="badge badge-warn">空杠杆</span>';
-    document.getElementById('formula-display').textContent = 'F₁L₁ = F₂L₂';
+    if(window.katex){katex.render('F_1 L_1 = F_2 L_2',document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent='F₁L₁ = F₂L₂';}
   } else if (balanced) {
     document.getElementById('r-status').innerHTML = '<span class="badge badge-ok">✅ 平衡！</span>';
-    document.getElementById('formula-display').textContent = `${leftTorque} = ${rightTorque} ✅`;
+    if(window.katex){katex.render(`${leftTorque} = ${rightTorque} \\; ✅`,document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent=`${leftTorque} = ${rightTorque} ✅`;}
   } else {
     const side = leftTorque > rightTorque ? '左偏' : '右偏';
     document.getElementById('r-status').innerHTML = `<span class="badge badge-warn">${side}</span>`;
-    document.getElementById('formula-display').textContent = `${leftTorque} ≠ ${rightTorque}`;
+    if(window.katex){katex.render(`${leftTorque} \\neq ${rightTorque}`,document.getElementById('formula-display'),{throwOnError:false})}else{document.getElementById('formula-display').textContent=`${leftTorque} ≠ ${rightTorque}`;}
   }
 }
 

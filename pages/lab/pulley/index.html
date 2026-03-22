@@ -36,6 +36,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .info-box{background:rgba(59,130,246,0.05);border-radius:10px;padding:10px;margin-top:8px;font-size:11px;color:#6B7280;line-height:1.6}
 @media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="lab-header">
@@ -99,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="reading"><span class="rl">绳子段数 n</span><span class="rv" id="r-n">1</span></div>
       <div class="reading"><span class="rl">省力比</span><span class="rv" id="r-ratio">1:1</span></div>
       <div class="reading"><span class="rl">机械效率</span><span class="rv" id="r-eff">100%</span></div>
-      <div class="formula" id="formula-display">F = G（不省力）</div>
+      <div class="formula" id="formula-display"></div>
     </div>
 
     <div class="panel-card">
@@ -245,7 +247,17 @@ function render() {
   document.getElementById('r-n').textContent = n;
   document.getElementById('r-ratio').textContent = `1:${n}`;
   document.getElementById('r-eff').textContent = '100%'; // ideal
-  document.getElementById('formula-display').textContent = formula;
+  const fd = document.getElementById('formula-display');
+  if (window.katex) {
+    const katexFormulas = {
+      'F = G（不省力）': 'F = G',
+      'F = G/2（省一半力）': 'F = \\dfrac{G}{2}',
+    };
+    const kf = katexFormulas[formula] || `F = \\dfrac{G}{${n}} = ${pull.toFixed(1)}\\text{N}`;
+    katex.render(kf, fd, {throwOnError:false});
+  } else {
+    fd.textContent = formula;
+  }
   document.getElementById('info-text').innerHTML = info;
   document.getElementById('weight-val').textContent = weight + ' N';
 }

@@ -40,6 +40,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .panel-card{flex:1;min-width:200px}
 }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="lab-header">
@@ -140,7 +142,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="reading"><span class="rl">折射率 n₂</span><span class="rv" id="r-n2">1.33</span></div>
       <div class="reading"><span class="rl">临界角</span><span class="rv" id="r-critical">—</span></div>
       <div class="reading"><span class="rl">状态</span><span id="r-status"><span class="badge badge-ok">正常折射</span></span></div>
-      <div class="formula" id="formula-display">n₁sinθ₁ = n₂sinθ₂</div>
+      <div class="formula" id="formula-display"></div>
     </div>
   </div>
 </div>
@@ -318,7 +320,11 @@ function update() {
 
   // Formula
   const lhs = (actualN1 * Math.sin(rad1)).toFixed(3);
-  els.formula.textContent = `${actualN1}×sin${theta1}° = ${lhs}`;
+  if (window.katex) {
+    katex.render(`n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2`, els.formula, {throwOnError:false});
+  } else {
+    els.formula.textContent = `${actualN1}×sin${theta1}° = ${lhs}`;
+  }
 
   // Slider sync
   els.angleSlider.value = theta1;
