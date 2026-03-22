@@ -304,15 +304,24 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
     <div id="panel1">
       <div class="panel-section">
         <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg> STEP1：称质量</h3>
-        <div class="data-row"><span class="data-label">砝码总质量</span><span class="data-value" id="valWeights">0 g</span></div>
-        <div class="data-row"><span class="data-label">游码示数</span><span class="data-value" id="valRider">0.0 g</span></div>
-        <div class="data-row"><span class="data-label" style="color:#EA580C;font-weight:600">测量质量 m</span><span class="data-value" id="valMass" style="color:#EA580C">0.0 g</span></div>
+        <p style="font-size:12px;color:#6B7280;line-height:1.6;margin-top:4px">
+          拖砝码到右盘，拖游码调平衡。<br/>
+          自己看砝码上的标注和游码刻度来读数。
+        </p>
         <div class="slider-container" style="margin-top:6px">
           <div style="font-size:10px;color:#6B7280;margin-bottom:2px">游码 (0-5g，步长0.2g)</div>
           <input type="range" min="0" max="50" value="0" step="2" id="riderSlider" oninput="updateRider()"/>
         </div>
+        <div id="readingInput" style="display:none;margin-top:10px">
+          <div style="font-size:12px;color:#059669;font-weight:600;margin-bottom:6px">✓ 天平已平衡，请读数</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="userMassInput" step="0.1" placeholder="输入质量(g)" style="flex:1;padding:6px 10px;border:1.5px solid #D1D5DB;border-radius:6px;font-size:13px;font-family:inherit;outline:none"/>
+            <span style="font-size:13px;color:#6B7280">g</span>
+          </div>
+          <div id="readingFeedback" style="font-size:11px;margin-top:4px;min-height:16px"></div>
+        </div>
       </div>
-      <button class="step-btn" id="confirmMass" onclick="confirmMass()" disabled>确认质量，下一步</button>
+      <button class="step-btn" id="confirmMass" onclick="checkReading()" disabled>确认读数，下一步</button>
     </div>
 
     <!-- Tab 2 panel -->
@@ -453,16 +462,19 @@ function updateBalance() {
     txt.textContent = '天平平衡';
     bg.setAttribute('fill', 'rgba(5,150,105,0.1)');
     txt.setAttribute('fill', '#059669');
+    document.getElementById('readingInput').style.display = 'block';
     document.getElementById('confirmMass').disabled = false;
   } else if (diff > 0) {
     txt.textContent = '左偏重';
     bg.setAttribute('fill', 'rgba(234,88,12,0.1)');
     txt.setAttribute('fill', '#EA580C');
+    document.getElementById('readingInput').style.display = 'none';
     document.getElementById('confirmMass').disabled = true;
   } else {
     txt.textContent = '右偏重';
     bg.setAttribute('fill', 'rgba(234,88,12,0.1)');
     txt.setAttribute('fill', '#EA580C');
+    document.getElementById('readingInput').style.display = 'none';
     document.getElementById('confirmMass').disabled = true;
   }
 
@@ -507,10 +519,6 @@ function updateBalance() {
       text.setAttribute('x', w.x + rw/2); text.setAttribute('y', w.y + rh - 4);
     }
   });
-
-  // Panel
-  document.getElementById('valWeights').textContent = getTotalWeights() + ' g';
-  document.getElementById('valMass').textContent = getMeasuredMass().toFixed(1) + ' g';
 
   // Status badge
   const badge = document.getElementById('statusBadge');
@@ -772,6 +780,25 @@ function updateStatusForTab() {
   }
 }
 
+function checkReading() {
+  const userInput = parseFloat(document.getElementById('userMassInput').value);
+  const actual = getMeasuredMass();
+  const feedback = document.getElementById('readingFeedback');
+  if (isNaN(userInput)) {
+    feedback.textContent = '请输入质量读数';
+    feedback.style.color = '#EA580C';
+    return;
+  }
+  if (Math.abs(userInput - actual) <= 0.3) {
+    feedback.textContent = '✓ 读数正确！m = ' + actual.toFixed(1) + ' g';
+    feedback.style.color = '#059669';
+    confirmMass();
+  } else {
+    feedback.textContent = '✗ 读数不正确，请重新看砝码标注和游码刻度';
+    feedback.style.color = '#DC2626';
+  }
+}
+
 function confirmMass() {
   massConfirmed = true;
   document.getElementById('tab1').classList.add('done');
@@ -862,6 +889,9 @@ function resetAll() {
   document.getElementById('valDV').textContent = '— mL';
   document.getElementById('confirmVol').disabled = true;
   document.getElementById('confirmMass').disabled = true;
+  document.getElementById('readingInput').style.display = 'none';
+  document.getElementById('userMassInput').value = '';
+  document.getElementById('readingFeedback').textContent = '';
   document.getElementById('volStatusText').textContent = '拖物体放入量筒中';
   
   // Reset tabs
