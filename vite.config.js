@@ -158,6 +158,7 @@ export default defineConfig({
         'lab-refraction': resolve(__dirname, 'pages/lab/refraction/index.html'),
         'lab-buoyancy': resolve(__dirname, 'pages/lab/buoyancy/index.html'),
         'lab-bulb': resolve(__dirname, 'pages/lab/bulb/index.html'),
+        'lab-density': resolve(__dirname, 'pages/lab/density/index.html'),
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-mirror': resolve(__dirname, 'pages/lab/mirror/index.html'),
         'lab-ohm': resolve(__dirname, 'pages/lab/ohm/index.html'),
