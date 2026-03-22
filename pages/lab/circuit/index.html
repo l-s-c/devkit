@@ -126,7 +126,7 @@
 <body>
 <div class="topbar">
   <a class="topbar-logo" href="../../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
-  <span class="topbar-title">🔬 实验室</span>
+  <span class="topbar-title">◇ 实验室</span>
   <a href="../" style="margin-left:auto;font-size:12px;color:var(--text-caption,#8E8E93);text-decoration:none;padding:6px 14px;border-radius:8px;background:rgba(0,0,0,0.04);transition:all 200ms">← 返回实验室</a>
 </div>
 
@@ -134,26 +134,26 @@
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">电路模拟实验 — 在线欧姆定律串联并联电路模拟</h1>
 
 <div class="title-row">
-  <h2>🔌 电路模拟实验</h2>
+  <h2>⊟ 电路模拟实验</h2>
   <span class="badge">交互实验</span>
 </div>
 
 <!-- Circuit selector tabs -->
 <div class="circuit-tabs" id="tabs">
-  <div class="circuit-tab active" data-circuit="simple"><span>💡</span> 简单电路</div>
-  <div class="circuit-tab" data-circuit="series"><span>🔗</span> 串联电路</div>
-  <div class="circuit-tab" data-circuit="parallel"><span>🔀</span> 并联电路</div>
-  <div class="circuit-tab" data-circuit="mixed"><span>🔧</span> 混联电路</div>
-  <div class="circuit-tab" data-circuit="ohm"><span>📏</span> 欧姆定律</div>
-  <div class="circuit-tab" data-circuit="power"><span>⚡</span> 电功率</div>
+  <div class="circuit-tab active" data-circuit="simple"><span>◉</span> 简单电路</div>
+  <div class="circuit-tab" data-circuit="series"><span>⊞</span> 串联电路</div>
+  <div class="circuit-tab" data-circuit="parallel"><span>⇄</span> 并联电路</div>
+  <div class="circuit-tab" data-circuit="mixed"><span>⊘</span> 混联电路</div>
+  <div class="circuit-tab" data-circuit="ohm"><span>⊞</span> 欧姆定律</div>
+  <div class="circuit-tab" data-circuit="power"><span>↯</span> 电功率</div>
 </div>
 
-<div class="warning-bar" id="warning">⚠️ 电阻过低，电流过大！实际电路中可能烧毁元件。</div>
+<div class="warning-bar" id="warning">⚠ 电阻过低，电流过大！实际电路中可能烧毁元件。</div>
 
 <div class="experiment">
   <!-- Left panel -->
   <div class="panel" id="controlPanel">
-    <div class="panel-title">⚙️ 电路参数</div>
+    <div class="panel-title">⊕ 电路参数</div>
     <div id="sliders"></div>
     <div class="divider"></div>
     <div class="switch-row">
@@ -162,13 +162,13 @@
       <div class="switch-toggle on" id="switchToggle"><div class="switch-dot"></div></div>
     </div>
     <div class="divider"></div>
-    <div class="panel-title">📊 仪表读数</div>
+    <div class="panel-title">▦ 仪表读数</div>
     <div class="meters">
       <div class="meter meter-a"><div class="val" id="meterI">0.60</div><div class="lbl">电流 I (A)</div></div>
       <div class="meter meter-v"><div class="val" id="meterV">6.00</div><div class="lbl">电压 V (V)</div></div>
     </div>
     <div class="divider"></div>
-    <div class="panel-title">📋 元件参数</div>
+    <div class="panel-title">☰ 元件参数</div>
     <div class="elem-list" id="elemList"></div>
   </div>
 
@@ -183,48 +183,48 @@
       </div>
     </div>
     <canvas id="circuitCanvas" width="660" height="440"></canvas>
-    <div class="canvas-hint">💡 闭合开关后观察电流流动 · 拖动滑块改变电压和电阻</div>
+    <div class="canvas-hint">◉ 闭合开关后观察电流流动 · 拖动滑块改变电压和电阻</div>
   </div>
 </div>
 
 <!-- Formula section -->
 <div class="formula-section">
-  <div class="panel-title" style="margin-bottom:4px">📐 核心公式</div>
+  <div class="panel-title" style="margin-bottom:4px">∠ 核心公式</div>
 
   <div class="formula-card f-ohm">
     <div class="formula-expr">V = I × R</div>
     <div class="formula-body">
-      <div class="formula-name">⚡ 欧姆定律</div>
+      <div class="formula-name">↯ 欧姆定律</div>
       <div class="formula-explain">电路中的<strong>电压 V</strong>等于<strong>电流 I</strong>乘以<strong>电阻 R</strong>。电阻越大，通过的电流越小——就像水管越细，水流越小。</div>
       <div class="symbols"><span class="sym-tag">V — 电压 (V)</span><span class="sym-tag">I — 电流 (A)</span><span class="sym-tag">R — 电阻 (Ω)</span></div>
-      <div class="insight"><span>💡</span><span><strong>试一试：</strong>保持电压 6V 不变，把电阻从 10Ω 拉到 20Ω，看电流从 0.6A 变成 0.3A — 电阻翻倍，电流减半！</span></div>
+      <div class="insight"><span>◉</span><span><strong>试一试：</strong>保持电压 6V 不变，把电阻从 10Ω 拉到 20Ω，看电流从 0.6A 变成 0.3A — 电阻翻倍，电流减半！</span></div>
     </div>
   </div>
 
   <div class="formula-card f-series">
     <div class="formula-expr">I₁ = I₂ = I</div>
     <div class="formula-body">
-      <div class="formula-name">🔗 串联电路规律</div>
+      <div class="formula-name">⊞ 串联电路规律</div>
       <div class="formula-explain">串联电路中<strong>电流处处相等</strong>，电压按电阻分配：<strong>V = V₁ + V₂</strong>。电阻大的分到的电压多。就像一条路上的收费站，每个收费站都要经过。</div>
       <div class="symbols"><span class="sym-tag">I 处处相等</span><span class="sym-tag">V = V₁ + V₂</span><span class="sym-tag">R总 = R₁ + R₂</span></div>
-      <div class="insight"><span>💡</span><span><strong>切换到「串联电路」：</strong>两个电阻串联，调大 R₁ 看它分到的电压变大，R₂ 的电压变小。</span></div>
+      <div class="insight"><span>◉</span><span><strong>切换到「串联电路」：</strong>两个电阻串联，调大 R₁ 看它分到的电压变大，R₂ 的电压变小。</span></div>
     </div>
   </div>
 
   <div class="formula-card f-parallel">
     <div class="formula-expr">V₁ = V₂ = V</div>
     <div class="formula-body">
-      <div class="formula-name">🔀 并联电路规律</div>
+      <div class="formula-name">⇄ 并联电路规律</div>
       <div class="formula-explain">并联电路中<strong>电压处处相等</strong>，电流按电阻分配：<strong>I = I₁ + I₂</strong>。电阻小的分到的电流多。就像马路分叉，宽的路车多。</div>
       <div class="symbols"><span class="sym-tag">V 处处相等</span><span class="sym-tag">I = I₁ + I₂</span><span class="sym-tag">1/R总 = 1/R₁ + 1/R₂</span></div>
-      <div class="insight"><span>💡</span><span><strong>切换到「并联电路」：</strong>两个电阻并联，调小 R₁ 看流过它的电流变大，总电流也变大。</span></div>
+      <div class="insight"><span>◉</span><span><strong>切换到「并联电路」：</strong>两个电阻并联，调小 R₁ 看流过它的电流变大，总电流也变大。</span></div>
     </div>
   </div>
 </div>
 </div>
 
 <div class="statusbar">
-  <span>🔌 电路模拟实验</span>
+  <span>⊟ 电路模拟实验</span>
   <span>6 种电路 · 交互式教学</span>
 </div>
 
@@ -253,12 +253,12 @@ const CIRCUITS = {
     ],
     solve(p, on) {
       if (!on) return { I:0, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'💡 灯泡 L₁',v:`0 V · 0 A`},{n:'📏 R₁',v:`${p.R1} Ω`},{n:'⚡ 功率',v:'0 W'}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'◉ 灯泡 L₁',v:`0 V · 0 A`},{n:'⊞ R₁',v:`${p.R1} Ω`},{n:'↯ 功率',v:'0 W'}
       ]};
       const I = p.V / p.R1;
       const P = I * I * p.R1;
       return { I, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'💡 灯泡 L₁',v:`${p.V.toFixed(1)} V · ${I.toFixed(2)} A`},{n:'📏 R₁',v:`${p.R1} Ω`},{n:'⚡ 功率',v:`${P.toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'◉ 灯泡 L₁',v:`${p.V.toFixed(1)} V · ${I.toFixed(2)} A`},{n:'⊞ R₁',v:`${p.R1} Ω`},{n:'↯ 功率',v:`${P.toFixed(2)} W`}
       ]};
     }
   },
@@ -271,13 +271,13 @@ const CIRCUITS = {
     ],
     solve(p, on) {
       if (!on) return { I:0, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · 0 V`},{n:'📏 R₂',v:`${p.R2} Ω · 0 V`},{n:'总电阻',v:`${p.R1+p.R2} Ω`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁',v:`${p.R1} Ω · 0 V`},{n:'⊞ R₂',v:`${p.R2} Ω · 0 V`},{n:'总电阻',v:`${p.R1+p.R2} Ω`}
       ]};
       const Rt = p.R1 + p.R2;
       const I = p.V / Rt;
       const V1 = I * p.R1, V2 = I * p.R2;
       return { I, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · ${V1.toFixed(2)} V`},{n:'📏 R₂',v:`${p.R2} Ω · ${V2.toFixed(2)} V`},{n:'总电阻',v:`${Rt} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁',v:`${p.R1} Ω · ${V1.toFixed(2)} V`},{n:'⊞ R₂',v:`${p.R2} Ω · ${V2.toFixed(2)} V`},{n:'总电阻',v:`${Rt} Ω`},{n:'↯ 总功率',v:`${(I*p.V).toFixed(2)} W`}
       ]};
     }
   },
@@ -290,13 +290,13 @@ const CIRCUITS = {
     ],
     solve(p, on) {
       if (!on) return { I:0, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · 0 A`},{n:'📏 R₂',v:`${p.R2} Ω · 0 A`},{n:'总电阻',v:`${(p.R1*p.R2/(p.R1+p.R2)).toFixed(1)} Ω`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁',v:`${p.R1} Ω · 0 A`},{n:'⊞ R₂',v:`${p.R2} Ω · 0 A`},{n:'总电阻',v:`${(p.R1*p.R2/(p.R1+p.R2)).toFixed(1)} Ω`}
       ]};
       const I1 = p.V / p.R1, I2 = p.V / p.R2;
       const I = I1 + I2;
       const Rt = p.R1 * p.R2 / (p.R1 + p.R2);
       return { I, V_total:p.V, I1, I2, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁',v:`${p.R1} Ω · ${I1.toFixed(2)} A`},{n:'📏 R₂',v:`${p.R2} Ω · ${I2.toFixed(2)} A`},{n:'总电阻',v:`${Rt.toFixed(1)} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁',v:`${p.R1} Ω · ${I1.toFixed(2)} A`},{n:'⊞ R₂',v:`${p.R2} Ω · ${I2.toFixed(2)} A`},{n:'总电阻',v:`${Rt.toFixed(1)} Ω`},{n:'↯ 总功率',v:`${(I*p.V).toFixed(2)} W`}
       ]};
     }
   },
@@ -312,13 +312,13 @@ const CIRCUITS = {
       const Rp = p.R2 * p.R3 / (p.R2 + p.R3);
       const Rt = p.R1 + Rp;
       if (!on) return { I:0, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁(串)',v:`${p.R1} Ω`},{n:'📏 R₂(并)',v:`${p.R2} Ω`},{n:'📏 R₃(并)',v:`${p.R3} Ω`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁(串)',v:`${p.R1} Ω`},{n:'⊞ R₂(并)',v:`${p.R2} Ω`},{n:'⊞ R₃(并)',v:`${p.R3} Ω`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`}
       ]};
       const I = p.V / Rt;
       const V1 = I * p.R1, Vp = I * Rp;
       const I2 = Vp / p.R2, I3 = Vp / p.R3;
       return { I, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R₁(串)',v:`${p.R1} Ω · ${V1.toFixed(2)} V · ${I.toFixed(2)} A`},{n:'📏 R₂(并)',v:`${p.R2} Ω · ${Vp.toFixed(2)} V · ${I2.toFixed(2)} A`},{n:'📏 R₃(并)',v:`${p.R3} Ω · ${Vp.toFixed(2)} V · ${I3.toFixed(2)} A`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`},{n:'⚡ 总功率',v:`${(I*p.V).toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R₁(串)',v:`${p.R1} Ω · ${V1.toFixed(2)} V · ${I.toFixed(2)} A`},{n:'⊞ R₂(并)',v:`${p.R2} Ω · ${Vp.toFixed(2)} V · ${I2.toFixed(2)} A`},{n:'⊞ R₃(并)',v:`${p.R3} Ω · ${Vp.toFixed(2)} V · ${I3.toFixed(2)} A`},{n:'等效电阻',v:`${Rt.toFixed(1)} Ω`},{n:'↯ 总功率',v:`${(I*p.V).toFixed(2)} W`}
       ]};
     }
   },
@@ -329,10 +329,10 @@ const CIRCUITS = {
       { id:'R1', label:'电阻 R', min:1, max:100, step:1, val:10, unit:'Ω' }
     ],
     solve(p, on) {
-      if (!on) return { I:0, V_total:p.V, elems:[{n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`}]};
+      if (!on) return { I:0, V_total:p.V, elems:[{n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R',v:`${p.R1} Ω`}]};
       const I = p.V / p.R1;
       return { I, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`},{n:'🔴 I = V/R',v:`${I.toFixed(3)} A`},{n:'⚡ P = V×I',v:`${(p.V*I).toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R',v:`${p.R1} Ω`},{n:'● I = V/R',v:`${I.toFixed(3)} A`},{n:'↯ P = V×I',v:`${(p.V*I).toFixed(2)} W`}
       ]};
     }
   },
@@ -343,11 +343,11 @@ const CIRCUITS = {
       { id:'R1', label:'电阻 R', min:1, max:100, step:1, val:10, unit:'Ω' }
     ],
     solve(p, on) {
-      if (!on) return { I:0, V_total:p.V, elems:[{n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`}]};
+      if (!on) return { I:0, V_total:p.V, elems:[{n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R',v:`${p.R1} Ω`}]};
       const I = p.V / p.R1;
       const P = p.V * I;
       return { I, V_total:p.V, elems:[
-        {n:'🔋 电源',v:`${p.V.toFixed(1)} V`},{n:'📏 R',v:`${p.R1} Ω`},{n:'🔴 I',v:`${I.toFixed(3)} A`},{n:'⚡ P = V×I',v:`${P.toFixed(2)} W`},{n:'⚡ P = I²R',v:`${(I*I*p.R1).toFixed(2)} W`},{n:'⚡ P = V²/R',v:`${(p.V*p.V/p.R1).toFixed(2)} W`}
+        {n:'▮ 电源',v:`${p.V.toFixed(1)} V`},{n:'⊞ R',v:`${p.R1} Ω`},{n:'● I',v:`${I.toFixed(3)} A`},{n:'↯ P = V×I',v:`${P.toFixed(2)} W`},{n:'↯ P = I²R',v:`${(I*I*p.R1).toFixed(2)} W`},{n:'↯ P = V²/R',v:`${(p.V*p.V/p.R1).toFixed(2)} W`}
       ]};
     }
   }
