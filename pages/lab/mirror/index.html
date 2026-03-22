@@ -28,9 +28,9 @@
   .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
   .purpose-tag svg{width:12px;height:12px}
 
-  .lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+  .lab-container{display:flex;align-items:stretch;height:calc(100vh - 48px - 29px)}
   .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0}
-  .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
+  .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
   .canvas-wrapper svg{width:100%;height:100%}
 
   .panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
@@ -62,7 +62,7 @@
   .record-item .r-num{color:#9CA3AF;width:18px}
   .record-item .r-data{font-family:'JetBrains Mono',monospace;font-size:10px}
 
-  .reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+  .reset-btn{margin-top:auto;width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
   .reset-btn svg{width:13px;height:13px}
   .reset-btn:hover{background:#E5E7EB}
 
@@ -77,6 +77,19 @@
 
   /* Flame animation */
   @keyframes flicker{0%,100%{d:path("M0,-28 Q-6,-20 -7,-10 Q-8,0 -5,8 Q-2,14 0,16 Q2,14 5,8 Q8,0 7,-10 Q6,-20 0,-28Z")}50%{d:path("M0,-30 Q-7,-22 -8,-12 Q-9,-2 -6,6 Q-3,12 0,16 Q3,12 6,6 Q9,-2 8,-12 Q7,-22 0,-30Z")}}
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#EA580C;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#EA580C}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -566,5 +579,37 @@
   }
 </script>
 <script src="/shared/theme.js"></script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>平面镜成像规律</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>像与物<strong>等大</strong></li>
+      <li>像与物到镜面的距离<strong>相等</strong></li>
+      <li>像与物关于镜面<strong>对称</strong></li>
+      <li>平面镜成的是<strong>虚像</strong>（不能用光屏接收）</li>
+    </ul>
+    <p style="color:#EA580C;font-size:12px;font-weight:600;margin-top:8px">考点提醒：像的大小只与物体本身大小有关，与物距无关！</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>实验方法</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>用<strong>玻璃板</strong>代替平面镜（便于确定像的位置）</li>
+      <li>用<strong>两支相同的蜡烛</strong>（比较像与物的大小关系）</li>
+      <li>实验应在<strong>较暗</strong>环境中进行（像更清晰）</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>小明站在平面镜前 2m 处，他在镜中的像距镜面多远？他向镜面走近 0.5m，像的大小如何变化？</p>
+    <div class="solve">像距 = 物距 = 2m<br/>走近后物距 = 1.5m → 像距 = 1.5m<br/>像与物等大 → <strong style="color:#EA580C">像大小不变</strong></div>
+  </div>
+</div>
+</div>
 </body>
 </html>
