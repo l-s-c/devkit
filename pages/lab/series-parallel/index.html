@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>串并联电路规律验证 - 电流电压分配在线实验 | DevKit</title>
+<meta name="keywords" content="串联并联电路, 电流处处相等, 电压分配, 控制变量法, 初中物理电学">
+<meta name="description" content="在线验证串联并联电路电流电压规律，多电表同时显示，初中物理电学基础实验">
+<meta property="og:title" content="串并联电路规律验证 - 电流电压分配在线实验 | DevKit">
+<meta property="og:description" content="在线验证串联并联电路电流电压规律，多电表同时显示">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/series-parallel.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/series-parallel/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F;min-height:100vh;overflow:hidden}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#3B82F6;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.purpose-tag svg{width:12px;height:12px}
+.lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+.canvas-area{flex:1;display:flex;flex-direction:column;padding:16px;min-width:0;gap:8px}
+.exp-tabs{display:flex;gap:4px;background:#fff;border-radius:10px;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.exp-tab{flex:1;padding:8px 14px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;transition:all 0.2s;text-align:center}
+.exp-tab.active{background:#4338CA;color:#fff;box-shadow:0 2px 6px rgba(67,56,202,0.3)}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;flex:1;position:relative;user-select:none}
+.canvas-wrapper svg{width:100%;height:100%}
+.exp-view{display:none}
+.exp-view.active{display:block}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.verify-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:#ECFDF5;margin:3px 0;font-size:11px}
+.verify-row .check{color:#059669;font-weight:800}
+.verify-row .label{color:#065F46;font-weight:600}
+.formula-box{background:#EEF2FF;border-radius:8px;padding:10px;text-align:center;margin-top:6px}
+.slider-control{margin:6px 0}
+.slider-control label{font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px}
+.slider-control input[type=range]{width:100%;accent-color:#4338CA;height:6px}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#4338CA}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.reset-btn svg{width:13px;height:13px}
+.reset-btn:hover{background:#E5E7EB}
+.guide-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;animation:guideFade 4s ease-in-out forwards}
+.guide-label{position:absolute;font-size:12px;color:#4338CA;font-weight:600;background:rgba(238,242,255,0.92);padding:4px 10px;border-radius:6px;border:1px solid #C7D2FE;white-space:nowrap}
+@keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
+.related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
+.related-bar span{color:#9CA3AF;font-weight:600}
+.related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="/devkit/pages/lab/">实验室</a><span style="color:#D1D5DB">/</span><a href="/devkit/pages/lab/" style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</a><span style="color:#D1D5DB">/</span></div>
+  <h1>串并联电路规律验证</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    验证串联电流处处相等、并联电压处处相等 · 初中电学基础
+  </div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="exp-tabs">
+      <button class="exp-tab active" onclick="switchExp(0)">串联电路</button>
+      <button class="exp-tab" onclick="switchExp(1)">并联电路</button>
+    </div>
+    <div class="canvas-wrapper">
+      <!-- ===== SERIES ===== -->
+      <div class="exp-view active" id="exp0">
+        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="meterRing" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E5E7EB"/><stop offset="50%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/>
+            </linearGradient>
+          </defs>
+          <rect width="700" height="400" fill="#FAFBFE"/>
+
+          <!-- Main loop: top wire -->
+          <line x1="60" y1="80" x2="640" y2="80" stroke="#4338CA" stroke-width="2"/>
+          <!-- Right side down -->
+          <line x1="640" y1="80" x2="640" y2="300" stroke="#4338CA" stroke-width="2"/>
+          <!-- Bottom wire -->
+          <line x1="60" y1="300" x2="640" y2="300" stroke="#4338CA" stroke-width="2"/>
+          <!-- Left side up -->
+          <line x1="60" y1="80" x2="60" y2="300" stroke="#4338CA" stroke-width="2"/>
+
+          <!-- Battery (left) -->
+          <g transform="translate(60,170)">
+            <line x1="0" y1="-20" x2="0" y2="-8" stroke="#4338CA" stroke-width="2"/>
+            <line x1="-10" y1="-8" x2="10" y2="-8" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-10" y1="4" x2="10" y2="4" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-5" y1="10" x2="5" y2="10" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="0" y1="10" x2="0" y2="20" stroke="#4338CA" stroke-width="2"/>
+            <text x="-30" y="4" font-size="9" fill="#4338CA" font-weight="600">6V</text>
+          </g>
+
+          <!-- Switch (top-left) -->
+          <g transform="translate(140,80)">
+            <circle cx="-15" cy="0" r="2.5" fill="#4338CA"/>
+            <circle cx="15" cy="0" r="2.5" fill="none" stroke="#4338CA" stroke-width="1.5"/>
+            <line x1="-15" y1="0" x2="13" y2="-10" stroke="#4338CA" stroke-width="2" stroke-linecap="round"/>
+            <text x="0" y="-16" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">S</text>
+          </g>
+
+          <!-- A1 ammeter (before R1) -->
+          <g transform="translate(230,80)">
+            <circle cx="0" cy="0" r="18" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="sA1ptr" x1="0" y1="3" x2="0" y2="-12" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="12" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="0" y="-22" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">A₁</text>
+          </g>
+
+          <!-- R1 (resistor) -->
+          <g transform="translate(350,80)">
+            <rect x="-25" y="-8" width="50" height="16" rx="2" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.5"/>
+            <text x="0" y="4" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="700" id="sR1label">R₁=10Ω</text>
+          </g>
+
+          <!-- A2 ammeter (between R1 and R2) -->
+          <g transform="translate(460,80)">
+            <circle cx="0" cy="0" r="18" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="sA2ptr" x1="0" y1="3" x2="0" y2="-12" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="12" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="0" y="-22" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">A₂</text>
+          </g>
+
+          <!-- R2 (resistor) -->
+          <g transform="translate(560,80)">
+            <rect x="-25" y="-8" width="50" height="16" rx="2" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.5"/>
+            <text x="0" y="4" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="700" id="sR2label">R₂=20Ω</text>
+          </g>
+
+          <!-- A3 ammeter (bottom, after R2) -->
+          <g transform="translate(350,300)">
+            <circle cx="0" cy="0" r="18" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="sA3ptr" x1="0" y1="3" x2="0" y2="-12" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="12" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="0" y="-22" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">A₃</text>
+          </g>
+
+          <!-- V1 voltmeter (parallel to R1) -->
+          <g transform="translate(350,170)">
+            <line x1="-75" y1="-80" x2="-75" y2="0" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="75" y1="-80" x2="75" y2="0" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <circle cx="0" cy="0" r="16" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="sV1ptr" x1="0" y1="3" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-20,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="11" font-size="9" fill="#DC2626" text-anchor="middle" font-weight="800">V</text>
+            <text x="22" y="4" font-size="7" fill="#6B7280" font-weight="600">V₁</text>
+          </g>
+
+          <!-- V2 voltmeter (parallel to R2) -->
+          <g transform="translate(560,170)">
+            <line x1="-75" y1="-80" x2="-75" y2="0" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="75" y1="-80" x2="75" y2="0" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <circle cx="0" cy="0" r="16" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="sV2ptr" x1="0" y1="3" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-20,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="11" font-size="9" fill="#DC2626" text-anchor="middle" font-weight="800">V</text>
+            <text x="22" y="4" font-size="7" fill="#6B7280" font-weight="600">V₂</text>
+          </g>
+
+          <!-- V_total voltmeter (across both) -->
+          <g transform="translate(350,240)">
+            <line x1="-290" y1="0" x2="-290" y2="-150" stroke="#059669" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="290" y1="0" x2="290" y2="-150" stroke="#059669" stroke-width="1" stroke-dasharray="3,2"/>
+            <circle cx="0" cy="0" r="16" fill="#fff" stroke="#059669" stroke-width="2"/>
+            <line id="sVtptr" x1="0" y1="3" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-20,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="11" font-size="9" fill="#059669" text-anchor="middle" font-weight="800">V</text>
+            <text x="22" y="4" font-size="7" fill="#059669" font-weight="600">V总</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ===== PARALLEL ===== -->
+      <div class="exp-view" id="exp1">
+        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="400" fill="#FAFBFE"/>
+
+          <!-- Main loop -->
+          <line x1="80" y1="80" x2="620" y2="80" stroke="#4338CA" stroke-width="2"/>
+          <line x1="620" y1="80" x2="620" y2="320" stroke="#4338CA" stroke-width="2"/>
+          <line x1="80" y1="320" x2="620" y2="320" stroke="#4338CA" stroke-width="2"/>
+          <line x1="80" y1="80" x2="80" y2="320" stroke="#4338CA" stroke-width="2"/>
+
+          <!-- Branch split -->
+          <line x1="250" y1="80" x2="250" y2="140" stroke="#4338CA" stroke-width="2"/>
+          <line x1="250" y1="140" x2="250" y2="260" stroke="none"/>
+          <line x1="250" y1="260" x2="250" y2="320" stroke="#4338CA" stroke-width="2"/>
+          <line x1="500" y1="80" x2="500" y2="140" stroke="#4338CA" stroke-width="2"/>
+          <line x1="500" y1="260" x2="500" y2="320" stroke="#4338CA" stroke-width="2"/>
+
+          <!-- Branch 1 (top) -->
+          <line x1="250" y1="140" x2="500" y2="140" stroke="#4338CA" stroke-width="2"/>
+          <!-- Branch 2 (bottom) -->
+          <line x1="250" y1="260" x2="500" y2="260" stroke="#4338CA" stroke-width="2"/>
+
+          <!-- Battery -->
+          <g transform="translate(80,180)">
+            <line x1="0" y1="-20" x2="0" y2="-8" stroke="#4338CA" stroke-width="2"/>
+            <line x1="-10" y1="-8" x2="10" y2="-8" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-10" y1="4" x2="10" y2="4" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="-5" y1="10" x2="5" y2="10" stroke="#4338CA" stroke-width="2.5"/>
+            <line x1="0" y1="10" x2="0" y2="20" stroke="#4338CA" stroke-width="2"/>
+            <text x="-30" y="4" font-size="9" fill="#4338CA" font-weight="600">6V</text>
+          </g>
+
+          <!-- Switch -->
+          <g transform="translate(160,80)">
+            <circle cx="-15" cy="0" r="2.5" fill="#4338CA"/>
+            <circle cx="15" cy="0" r="2.5" fill="none" stroke="#4338CA" stroke-width="1.5"/>
+            <line x1="-15" y1="0" x2="13" y2="-10" stroke="#4338CA" stroke-width="2" stroke-linecap="round"/>
+            <text x="0" y="-16" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">S</text>
+          </g>
+
+          <!-- A_trunk (trunk ammeter, top left) -->
+          <g transform="translate(200,80)">
+            <circle cx="0" cy="0" r="18" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="pAtptr" x1="0" y1="3" x2="0" y2="-12" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="12" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="0" y="-22" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">A干</text>
+          </g>
+
+          <!-- R1 + A1 on branch 1 -->
+          <g transform="translate(340,140)">
+            <rect x="-25" y="-8" width="50" height="16" rx="2" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.5"/>
+            <text x="0" y="4" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="700" id="pR1label">R₁=10Ω</text>
+          </g>
+          <g transform="translate(450,140)">
+            <circle cx="0" cy="0" r="16" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="pA1ptr" x1="0" y1="3" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="11" font-size="9" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="20" y="4" font-size="7" fill="#6B7280" font-weight="600">A₁</text>
+          </g>
+
+          <!-- R2 + A2 on branch 2 -->
+          <g transform="translate(340,260)">
+            <rect x="-25" y="-8" width="50" height="16" rx="2" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.5"/>
+            <text x="0" y="4" font-size="10" fill="#4338CA" text-anchor="middle" font-weight="700" id="pR2label">R₂=20Ω</text>
+          </g>
+          <g transform="translate(450,260)">
+            <circle cx="0" cy="0" r="16" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="pA2ptr" x1="0" y1="3" x2="0" y2="-10" stroke="#DC2626" stroke-width="1" transform="rotate(-30,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="11" font-size="9" fill="#4338CA" text-anchor="middle" font-weight="800">A</text>
+            <text x="20" y="4" font-size="7" fill="#6B7280" font-weight="600">A₂</text>
+          </g>
+
+          <!-- V voltmeter (across both branches = U_total) -->
+          <g transform="translate(570,200)">
+            <line x1="0" y1="-60" x2="0" y2="-20" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="0" y1="20" x2="0" y2="60" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+            <circle cx="0" cy="0" r="18" fill="#fff" stroke="url(#meterRing)" stroke-width="2"/>
+            <line id="pVptr" x1="0" y1="3" x2="0" y2="-12" stroke="#DC2626" stroke-width="1" transform="rotate(-20,0,3)"/>
+            <circle cx="0" cy="3" r="1.5" fill="#DC2626"/>
+            <text x="0" y="12" font-size="10" fill="#DC2626" text-anchor="middle" font-weight="800">V</text>
+            <text x="0" y="-24" font-size="8" fill="#6B7280" text-anchor="middle" font-weight="600">电压表</text>
+          </g>
+
+          <!-- Labels -->
+          <text x="375" y="120" font-size="9" fill="#6B7280" text-anchor="middle">支路1</text>
+          <text x="375" y="240" font-size="9" fill="#6B7280" text-anchor="middle">支路2</text>
+        </svg>
+      </div>
+
+      <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-label" style="top:15%;left:5%">调节 R₁/R₂ 观察电表变化</div>
+        <div class="guide-label" style="top:15%;right:10%">切换串联/并联对比规律</div>
+        <div class="guide-label" style="bottom:20%;left:30%">验证区自动核验公式</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg> 电阻调节</h3>
+      <div class="data-row"><span class="data-label">电源电压</span><span class="data-value">6.0 V</span></div>
+      <div class="slider-control">
+        <label>R₁ = <span class="slider-val" id="r1Val">10 Ω</span></label>
+        <input type="range" id="r1Slider" min="5" max="30" step="1" value="10" oninput="update()">
+      </div>
+      <div class="slider-control">
+        <label>R₂ = <span class="slider-val" id="r2Val">20 Ω</span></label>
+        <input type="range" id="r2Slider" min="5" max="30" step="1" value="20" oninput="update()">
+      </div>
+    </div>
+
+    <div class="panel-section" id="seriesPanel">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 串联读数</h3>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I₁ (A₁)</span><span class="data-value" id="sI1">0.20 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I₂ (A₂)</span><span class="data-value" id="sI2">0.20 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I₃ (A₃)</span><span class="data-value" id="sI3">0.20 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#DC2626">U₁ (V₁)</span><span class="data-value" id="sU1">2.00 V</span></div>
+      <div class="data-row"><span class="data-label" style="color:#DC2626">U₂ (V₂)</span><span class="data-value" id="sU2">4.00 V</span></div>
+      <div class="data-row"><span class="data-label" style="color:#059669">U总 (V总)</span><span class="data-value" id="sUt">6.00 V</span></div>
+    </div>
+
+    <div class="panel-section" id="seriesVerify">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 串联验证</h3>
+      <div class="verify-row"><span class="label" id="svI">I₁ = I₂ = I₃ = 0.20A</span><span class="check">✓</span></div>
+      <div class="verify-row"><span class="label" id="svU">U₁ + U₂ = 2.00 + 4.00 = 6.00V = U总</span><span class="check">✓</span></div>
+      <div class="verify-row"><span class="label" id="svR">R = R₁ + R₂ = 10 + 20 = 30Ω</span><span class="check">✓</span></div>
+    </div>
+
+    <div class="panel-section" id="parallelPanel" style="display:none">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 并联读数</h3>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I干 (A干)</span><span class="data-value" id="pIt">0.90 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I₁ (A₁)</span><span class="data-value" id="pI1">0.60 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#4338CA">I₂ (A₂)</span><span class="data-value" id="pI2">0.30 A</span></div>
+      <div class="data-row"><span class="data-label" style="color:#DC2626">U (V)</span><span class="data-value" id="pU">6.00 V</span></div>
+    </div>
+
+    <div class="panel-section" id="parallelVerify" style="display:none">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 并联验证</h3>
+      <div class="verify-row"><span class="label" id="pvI">I干 = I₁ + I₂ = 0.60 + 0.30 = 0.90A</span><span class="check">✓</span></div>
+      <div class="verify-row"><span class="label" id="pvU">U₁ = U₂ = U总 = 6.00V</span><span class="check">✓</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 公式</h3>
+      <div class="formula-box" id="formula1"></div>
+      <div class="formula-box" id="formula2" style="margin-top:4px"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<div class="related-bar">
+  <span>相关实验</span>
+  <a href="/devkit/pages/lab/ohm/">欧姆定律</a>
+  <a href="/devkit/pages/lab/bulb/">小灯泡电功率</a>
+  <a href="/devkit/pages/lab/circuit-builder/">电路搭建</a>
+</div>
+<script>
+const E = 6;
+let exp = 0; // 0=series, 1=parallel
+
+function switchExp(e) {
+  exp = e;
+  document.querySelectorAll('.exp-tab').forEach((t, i) => t.classList.toggle('active', i === e));
+  document.querySelectorAll('.exp-view').forEach((v, i) => v.classList.toggle('active', i === e));
+  document.getElementById('seriesPanel').style.display = e === 0 ? 'block' : 'none';
+  document.getElementById('seriesVerify').style.display = e === 0 ? 'block' : 'none';
+  document.getElementById('parallelPanel').style.display = e === 1 ? 'block' : 'none';
+  document.getElementById('parallelVerify').style.display = e === 1 ? 'block' : 'none';
+  update();
+}
+
+function pointerAngle(val, maxVal) {
+  return -60 + (val / maxVal) * 120;
+}
+
+function update() {
+  const R1 = parseInt(document.getElementById('r1Slider').value);
+  const R2 = parseInt(document.getElementById('r2Slider').value);
+  document.getElementById('r1Val').textContent = R1 + ' Ω';
+  document.getElementById('r2Val').textContent = R2 + ' Ω';
+  document.getElementById('sR1label').textContent = `R₁=${R1}Ω`;
+  document.getElementById('sR2label').textContent = `R₂=${R2}Ω`;
+  document.getElementById('pR1label').textContent = `R₁=${R1}Ω`;
+  document.getElementById('pR2label').textContent = `R₂=${R2}Ω`;
+
+  // Series
+  const Is = E / (R1 + R2);
+  const U1s = Is * R1;
+  const U2s = Is * R2;
+  document.getElementById('sI1').textContent = Is.toFixed(2) + ' A';
+  document.getElementById('sI2').textContent = Is.toFixed(2) + ' A';
+  document.getElementById('sI3').textContent = Is.toFixed(2) + ' A';
+  document.getElementById('sU1').textContent = U1s.toFixed(2) + ' V';
+  document.getElementById('sU2').textContent = U2s.toFixed(2) + ' V';
+  document.getElementById('sUt').textContent = E.toFixed(2) + ' V';
+
+  // Series verify
+  document.getElementById('svI').textContent = `I₁ = I₂ = I₃ = ${Is.toFixed(2)}A`;
+  document.getElementById('svU').textContent = `U₁ + U₂ = ${U1s.toFixed(2)} + ${U2s.toFixed(2)} = ${(U1s+U2s).toFixed(2)}V = U总`;
+  document.getElementById('svR').textContent = `R = R₁ + R₂ = ${R1} + ${R2} = ${R1+R2}Ω`;
+
+  // Series pointers
+  const sAang = pointerAngle(Is, 0.6);
+  document.getElementById('sA1ptr').setAttribute('transform', `rotate(${sAang},0,3)`);
+  document.getElementById('sA2ptr').setAttribute('transform', `rotate(${sAang},0,3)`);
+  document.getElementById('sA3ptr').setAttribute('transform', `rotate(${sAang},0,3)`);
+  document.getElementById('sV1ptr').setAttribute('transform', `rotate(${pointerAngle(U1s,6)},0,3)`);
+  document.getElementById('sV2ptr').setAttribute('transform', `rotate(${pointerAngle(U2s,6)},0,3)`);
+  document.getElementById('sVtptr').setAttribute('transform', `rotate(${pointerAngle(E,6)},0,3)`);
+
+  // Parallel
+  const I1p = E / R1;
+  const I2p = E / R2;
+  const Itp = I1p + I2p;
+  document.getElementById('pIt').textContent = Itp.toFixed(2) + ' A';
+  document.getElementById('pI1').textContent = I1p.toFixed(2) + ' A';
+  document.getElementById('pI2').textContent = I2p.toFixed(2) + ' A';
+  document.getElementById('pU').textContent = E.toFixed(2) + ' V';
+
+  // Parallel verify
+  document.getElementById('pvI').textContent = `I干 = I₁ + I₂ = ${I1p.toFixed(2)} + ${I2p.toFixed(2)} = ${Itp.toFixed(2)}A`;
+  document.getElementById('pvU').textContent = `U₁ = U₂ = U总 = ${E.toFixed(2)}V`;
+
+  // Parallel pointers
+  document.getElementById('pAtptr').setAttribute('transform', `rotate(${pointerAngle(Itp,2)},0,3)`);
+  document.getElementById('pA1ptr').setAttribute('transform', `rotate(${pointerAngle(I1p,1)},0,3)`);
+  document.getElementById('pA2ptr').setAttribute('transform', `rotate(${pointerAngle(I2p,1)},0,3)`);
+  document.getElementById('pVptr').setAttribute('transform', `rotate(${pointerAngle(E,6)},0,3)`);
+}
+
+function resetAll() {
+  document.getElementById('r1Slider').value = 10;
+  document.getElementById('r2Slider').value = 20;
+  switchExp(0);
+}
+
+function renderFormulas() {
+  try {
+    katex.render('\\text{串联: } I_1 = I_2 = I_3,\\; U = U_1 + U_2', document.getElementById('formula1'), { throwOnError: false, displayMode: false });
+    katex.render('\\text{并联: } U_1 = U_2 = U,\\; I = I_1 + I_2', document.getElementById('formula2'), { throwOnError: false, displayMode: false });
+  } catch(e) {}
+}
+
+update();
+renderFormulas();
+if (localStorage.getItem('sp-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('sp-guide-seen','1'); }
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>

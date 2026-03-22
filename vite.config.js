@@ -160,6 +160,7 @@ export default defineConfig({
         'lab-bulb': resolve(__dirname, 'pages/lab/bulb/index.html'),
         'lab-density': resolve(__dirname, 'pages/lab/density/index.html'),
         'lab-friction': resolve(__dirname, 'pages/lab/friction/index.html'),
+        'lab-series-parallel': resolve(__dirname, 'pages/lab/series-parallel/index.html'),
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-mirror': resolve(__dirname, 'pages/lab/mirror/index.html'),
         'lab-ohm': resolve(__dirname, 'pages/lab/ohm/index.html'),
