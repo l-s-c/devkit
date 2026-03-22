@@ -507,8 +507,8 @@ function updateBalance() {
     const el = document.getElementById(id);
     const w = weightStates[i];
     if (w.onPan) {
+      // Hide shelf element (shown as stacked on pan above)
       el.style.opacity = '0';
-      el.style.pointerEvents = 'none';
     } else {
       el.style.opacity = '1';
       const rect = el.querySelector('rect');
@@ -560,7 +560,6 @@ function onWeightDown(e) {
   const p = getSvgPt(svgBal, e);
   for (let i = 0; i < weightStates.length; i++) {
     const w = weightStates[i];
-    if (w.onPan) continue;
     const el = document.getElementById(WEIGHT_IDS[i]);
     const rect = el.querySelector('rect');
     const rx = parseFloat(rect.getAttribute('x'));
@@ -594,6 +593,7 @@ function onWeightUp(e) {
   if (cx > 455 && cx < 565 && cy > 120 && cy < 230) {
     w.onPan = true;
   } else {
+    w.onPan = false;
     w.x = w.origX;
     w.y = w.origY;
   }
@@ -618,6 +618,21 @@ function onBalDown(e) {
     draggingRider = true;
     riderDragOff = p.x - rx;
     return;
+  }
+  // Click on stacked weights on right pan → remove top one
+  const stackEl = document.getElementById('stackedWeights');
+  const stackRect = stackEl.getBBox();
+  if (stackRect.width > 0 && p.x > stackRect.x && p.x < stackRect.x + stackRect.width && p.y > stackRect.y && p.y < stackRect.y + stackRect.height) {
+    for (let i = weightStates.length - 1; i >= 0; i--) {
+      if (weightStates[i].onPan) {
+        weightStates[i].onPan = false;
+        weightStates[i].x = weightStates[i].origX;
+        weightStates[i].y = weightStates[i].origY;
+        updateBalance();
+        e.preventDefault();
+        return;
+      }
+    }
   }
   onWeightDown(e);
 }
