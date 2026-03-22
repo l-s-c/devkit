@@ -718,11 +718,13 @@
 
   // === Init ===
   loadPreset('equal'); // Default: 等臂平衡
-  try {
-    function renderFormula(){try{katex.render('F_1 \\times L_1 = F_2 \\times L_2', document.getElementById('formulaBox'), { throwOnError: false, displayMode: true });
-  } catch(e) {
-    document.getElementById('formulaBox').textContent = 'F₁ × L₁ = F₂ × L₂';
-  }}
+  function renderFormula(){
+    try {
+      katex.render('F_1 \\times L_1 = F_2 \\times L_2', document.getElementById('formulaBox'), { throwOnError: false, displayMode: true });
+    } catch(e) {
+      document.getElementById('formulaBox').textContent = 'F₁ × L₁ = F₂ × L₂';
+    }
+  }
   renderFormula();
 
   // Panel weight selector (click shelf weights to change current weight)
