@@ -127,6 +127,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <text id="tir-badge" x="300" y="350" font-size="16" fill="#DC2626" font-weight="800" text-anchor="middle" opacity="0">⚠️ 全反射</text>
 
       <!-- Draggable handle on incident ray -->
+      <!-- 光源发光球体 -->
+      <circle id="light-source-glow" cx="150" cy="100" r="14" fill="url(#lightSource)" filter="url(#sourceGlow)"/>
+      <circle id="light-source-core" cx="150" cy="100" r="6" fill="#FDE68A"/>
       <circle id="drag-handle" cx="150" cy="100" r="18" fill="transparent" stroke="transparent" stroke-width="0" cursor="grab"/>
       <text id="drag-hint" x="155" y="92" font-size="10" fill="transparent" font-weight="600"></text>
 
@@ -236,6 +239,11 @@ function update() {
   // Drag handle
   els.dragHandle.setAttribute('cx', incX);
   els.dragHandle.setAttribute('cy', incY);
+  // Sync light source glow
+  const sg = document.getElementById('light-source-glow');
+  const sc = document.getElementById('light-source-core');
+  if(sg){sg.setAttribute('cx',incX);sg.setAttribute('cy',incY);}
+  if(sc){sc.setAttribute('cx',incX);sc.setAttribute('cy',incY);}
   els.dragHint.setAttribute('x', incX + 15);
   els.dragHint.setAttribute('y', incY - 8);
 
