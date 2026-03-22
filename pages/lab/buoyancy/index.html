@@ -88,7 +88,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
       <div class="canvas-wrapper" id="canvasWrapper">
         <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <clipPath id="waterClip"><rect x="160" y="0" width="240" height="440"/></clipPath>
+            <clipPath id="waterClip"><rect x="70" y="0" width="240" height="440"/></clipPath>
             <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="rgba(59,130,246,0.15)"/>
               <stop offset="100%" stop-color="rgba(59,130,246,0.35)"/>
@@ -139,12 +139,12 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
           <!-- ===== CONTAINER (烧杯) ===== -->
           <g id="container">
             <!-- Beaker -->
-            <rect x="160" y="210" width="240" height="200" rx="3" fill="none" stroke="#93C5FD" stroke-width="2"/>
-            <rect x="155" y="206" width="250" height="8" rx="2" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
+            <rect x="70" y="210" width="330" height="200" rx="3" fill="none" stroke="#93C5FD" stroke-width="2"/>
+            <rect x="65" y="206" width="340" height="8" rx="2" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
             <!-- Water -->
-            <rect id="waterBody" x="162" y="230" width="236" height="178" fill="url(#waterGrad)"/>
+            <rect id="waterBody" x="72" y="230" width="326" height="178" fill="url(#waterGrad)"/>
             <!-- Water surface line -->
-            <line id="waterSurface" x1="162" y1="230" x2="398" y2="230" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
+            <line id="waterSurface" x1="72" y1="230" x2="398" y2="230" stroke="#3B82F6" stroke-width="1.5" opacity="0.6"/>
             <!-- Water level label -->
             <text id="waterLabel" x="405" y="264" font-size="9" fill="#3B82F6" font-weight="600">水面</text>
             <!-- Graduation marks on beaker -->
