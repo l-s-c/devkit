@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>摩擦力实验模拟 - 探究影响摩擦力大小因素 | DevKit</title>
+<meta name="keywords" content="摩擦力实验模拟, f=μN, 控制变量法, 初中物理力学, 在线物理实验">
+<meta name="description" content="在线模拟摩擦力实验，切换不同接触面和压力，验证f=μN，控制变量法经典实验">
+<meta property="og:title" content="摩擦力实验模拟 - 探究影响摩擦力大小因素 | DevKit">
+<meta property="og:description" content="在线模拟摩擦力实验，切换不同接触面和压力，验证f=μN">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/friction.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/friction/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F;min-height:100vh;overflow:hidden}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#3B82F6;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.purpose-tag svg{width:12px;height:12px}
+.lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+.canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
+.canvas-wrapper svg{width:100%;height:100%}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.formula-box{background:#ECFDF5;border-radius:8px;padding:10px;text-align:center;margin-top:6px}
+.surface-btn{padding:6px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;flex:1;text-align:center}
+.surface-btn:hover{background:#ECFDF5;border-color:#A7F3D0;color:#059669}
+.surface-btn.active{background:#059669;color:#fff;border-color:#059669}
+.weight-pill{padding:5px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.weight-pill:hover{background:#ECFDF5;border-color:#A7F3D0}
+.weight-pill.added{background:#059669;color:#fff;border-color:#059669}
+.record-btn{width:100%;padding:7px;border-radius:6px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.record-btn svg{width:12px;height:12px}
+.record-btn:hover{background:#ECFDF5;border-color:#A7F3D0;color:#059669}
+.data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:10px}
+.data-table th{background:#F8F9FC;color:#6B7280;padding:4px 6px;text-align:center;font-weight:600;border:1px solid #E5E7EB}
+.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:10px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.reset-btn svg{width:13px;height:13px}
+.reset-btn:hover{background:#E5E7EB}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;margin-top:6px}
+.status-ok{background:#D1FAE5;color:#065F46}
+.guide-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;animation:guideFade 4s ease-in-out forwards}
+.guide-label{position:absolute;font-size:12px;color:#059669;font-weight:600;background:rgba(236,253,245,0.92);padding:4px 10px;border-radius:6px;border:1px solid #A7F3D0;white-space:nowrap}
+@keyframes guideFade{0%,70%{opacity:1}100%{opacity:0}}
+.related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
+.related-bar span{color:#9CA3AF;font-weight:600}
+.related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+.related-bar a:hover{background:#EFF6FF}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="/devkit/pages/lab/">实验室</a><span style="color:#D1D5DB">/</span><a href="/devkit/pages/lab/" style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</a><span style="color:#D1D5DB">/</span></div>
+  <h1>探究摩擦力因素</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    控制变量法探究 f=μN · 压力与接触面粗糙程度 · 初中力学
+  </div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Surface patterns -->
+          <pattern id="patSmooth" patternUnits="userSpaceOnUse" width="20" height="20">
+            <rect width="20" height="20" fill="#F5E6D3"/>
+            <line x1="0" y1="10" x2="20" y2="10" stroke="#E8D5BF" stroke-width="0.5"/>
+          </pattern>
+          <pattern id="patRough" patternUnits="userSpaceOnUse" width="12" height="12">
+            <rect width="12" height="12" fill="#D4B896"/>
+            <line x1="0" y1="6" x2="12" y2="6" stroke="#C4A882" stroke-width="1"/>
+            <line x1="3" y1="0" x2="3" y2="12" stroke="#C4A882" stroke-width="0.5"/>
+            <line x1="9" y1="0" x2="9" y2="12" stroke="#C4A882" stroke-width="0.5"/>
+          </pattern>
+          <pattern id="patTowel" patternUnits="userSpaceOnUse" width="8" height="8">
+            <rect width="8" height="8" fill="#B8A090"/>
+            <circle cx="2" cy="2" r="1" fill="#A8907E"/>
+            <circle cx="6" cy="6" r="1" fill="#A8907E"/>
+            <circle cx="2" cy="6" r="0.8" fill="#C4B0A0"/>
+            <circle cx="6" cy="2" r="0.8" fill="#C4B0A0"/>
+          </pattern>
+          <linearGradient id="blockGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F3F4F6"/><stop offset="100%" stop-color="#D1D5DB"/>
+          </linearGradient>
+          <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D1D5DB"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/>
+          </linearGradient>
+        </defs>
+
+        <rect width="700" height="440" fill="#FAFBFE"/>
+
+        <!-- ===== TABLE / SURFACE ===== -->
+        <rect x="40" y="300" width="440" height="25" rx="3" fill="url(#patSmooth)" stroke="#C4A882" stroke-width="1" id="surfaceRect"/>
+        <rect x="40" y="325" width="440" height="60" rx="0" fill="#78716C"/>
+        <rect x="60" y="345" width="10" height="40" rx="2" fill="#57534E"/>
+        <rect x="450" y="345" width="10" height="40" rx="2" fill="#57534E"/>
+        <text id="surfaceLabel" x="260" y="360" font-size="10" fill="#D6D3D1" text-anchor="middle" font-weight="600">光滑木板</text>
+
+        <!-- ===== BLOCK ===== -->
+        <g id="blockGroup">
+          <rect x="180" y="248" width="100" height="52" rx="4" fill="url(#blockGrad)" stroke="#9CA3AF" stroke-width="1.5"/>
+          <text x="230" y="280" font-size="11" fill="#374151" text-anchor="middle" font-weight="700">200g</text>
+          <!-- Weights on top -->
+          <g id="stackedWeights"></g>
+        </g>
+
+        <!-- ===== SPRING SCALE (horizontal) ===== -->
+        <g transform="translate(280, 274)">
+          <!-- Spring body -->
+          <rect x="0" y="-8" width="120" height="16" rx="4" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+          <!-- Spring coil -->
+          <path id="springCoil" d="" fill="none" stroke="#059669" stroke-width="2"/>
+          <!-- Scale markings -->
+          <g font-size="6" fill="#9CA3AF">
+            <line x1="5" y1="-8" x2="5" y2="-3" stroke="#9CA3AF" stroke-width="0.5"/>
+            <text x="5" y="-10" text-anchor="middle">0</text>
+            <line x1="30" y1="-8" x2="30" y2="-3" stroke="#9CA3AF" stroke-width="0.5"/>
+            <text x="30" y="-10" text-anchor="middle">1</text>
+            <line x1="55" y1="-8" x2="55" y2="-3" stroke="#9CA3AF" stroke-width="0.5"/>
+            <text x="55" y="-10" text-anchor="middle">2</text>
+            <line x1="80" y1="-8" x2="80" y2="-3" stroke="#9CA3AF" stroke-width="0.5"/>
+            <text x="80" y="-10" text-anchor="middle">3</text>
+            <line x1="105" y1="-8" x2="105" y2="-3" stroke="#9CA3AF" stroke-width="0.5"/>
+            <text x="105" y="-10" text-anchor="middle">4</text>
+          </g>
+          <!-- Pointer -->
+          <line id="scalePointer" x1="10" y1="3" x2="10" y2="-3" stroke="#DC2626" stroke-width="1.5"/>
+          <!-- Reading -->
+          <text id="scaleReading" x="60" y="22" font-size="11" fill="#059669" text-anchor="middle" font-weight="700" font-family="JetBrains Mono, monospace">0.39 N</text>
+          <!-- Hook -->
+          <circle cx="120" cy="0" r="3" fill="none" stroke="#6B7280" stroke-width="1.5"/>
+          <!-- Handle arrow -->
+          <line x1="123" y1="0" x2="160" y2="0" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        </g>
+        <defs>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="#059669"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+            <path d="M8,0 L0,3 L8,6" fill="#DC2626"/>
+          </marker>
+        </defs>
+
+        <!-- ===== FORCE ARROWS ===== -->
+        <!-- Pull force (right) -->
+        <g id="pullForce">
+          <line x1="280" y1="256" x2="350" y2="256" stroke="#059669" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+          <text x="320" y="248" font-size="10" fill="#059669" font-weight="700" text-anchor="middle">F拉</text>
+        </g>
+        <!-- Friction force (left) -->
+        <g id="frictionForce">
+          <line x1="180" y1="256" x2="130" y2="256" stroke="#DC2626" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+          <text x="150" y="248" font-size="10" fill="#DC2626" font-weight="700" text-anchor="middle">f</text>
+        </g>
+        <!-- Normal force (up) -->
+        <line x1="230" y1="300" x2="230" y2="330" stroke="#3B82F6" stroke-width="1.5"/>
+        <text x="238" y="322" font-size="8" fill="#3B82F6" font-weight="600">N</text>
+        <!-- Gravity (down) -->
+        <line x1="230" y1="248" x2="230" y2="218" stroke="#6B7280" stroke-width="1.5"/>
+        <text x="238" y="228" font-size="8" fill="#6B7280" font-weight="600">G</text>
+
+        <!-- ===== f-N GRAPH ===== -->
+        <g transform="translate(500, 40)">
+          <text x="80" y="-6" font-size="11" fill="#1D1D1F" text-anchor="middle" font-weight="700">f-N 关系图</text>
+          <rect x="0" y="0" width="170" height="170" fill="#FAFBFE" stroke="#E5E7EB" stroke-width="1" rx="4"/>
+          <!-- Grid -->
+          <g opacity="0.3">
+            <line x1="34" y1="0" x2="34" y2="170" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="68" y1="0" x2="68" y2="170" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="102" y1="0" x2="102" y2="170" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="136" y1="0" x2="136" y2="170" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="0" y1="34" x2="170" y2="34" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="0" y1="68" x2="170" y2="68" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="0" y1="102" x2="170" y2="102" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="0" y1="136" x2="170" y2="136" stroke="#E5E7EB" stroke-width="0.5"/>
+          </g>
+          <!-- Axes -->
+          <line x1="0" y1="170" x2="170" y2="170" stroke="#374151" stroke-width="1.5"/>
+          <line x1="0" y1="0" x2="0" y2="170" stroke="#374151" stroke-width="1.5"/>
+          <text x="85" y="188" font-size="9" fill="#374151" text-anchor="middle" font-weight="600">N / N</text>
+          <text x="-12" y="90" font-size="9" fill="#374151" text-anchor="middle" font-weight="600" transform="rotate(-90,-12,90)">f / N</text>
+          <!-- Ticks -->
+          <text x="34" y="183" font-size="7" fill="#9CA3AF" text-anchor="middle">1</text>
+          <text x="68" y="183" font-size="7" fill="#9CA3AF" text-anchor="middle">2</text>
+          <text x="102" y="183" font-size="7" fill="#9CA3AF" text-anchor="middle">3</text>
+          <text x="136" y="183" font-size="7" fill="#9CA3AF" text-anchor="middle">4</text>
+          <text x="170" y="183" font-size="7" fill="#9CA3AF" text-anchor="middle">5</text>
+          <text x="-5" y="139" font-size="7" fill="#9CA3AF" text-anchor="end">1</text>
+          <text x="-5" y="105" font-size="7" fill="#9CA3AF" text-anchor="end">2</text>
+          <text x="-5" y="71" font-size="7" fill="#9CA3AF" text-anchor="end">3</text>
+          <!-- Points -->
+          <g id="graphPoints"></g>
+          <line id="trendLine" x1="0" y1="170" x2="0" y2="170" stroke="#059669" stroke-width="1.5" opacity="0" stroke-dasharray="6,3"/>
+          <circle id="currentDot" cx="0" cy="170" r="4" fill="#059669" stroke="#fff" stroke-width="2" opacity="0.8"/>
+        </g>
+
+        <!-- Status label -->
+        <g transform="translate(120, 180)">
+          <rect x="-50" y="-12" width="100" height="24" rx="10" fill="rgba(209,250,229,0.9)" stroke="#A7F3D0" stroke-width="0.5"/>
+          <text x="0" y="4" font-size="10" fill="#065F46" text-anchor="middle" font-weight="700">匀速直线运动</text>
+        </g>
+      </svg>
+
+      <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-label" style="top:60%;left:5%">切换接触面观察摩擦力变化</div>
+        <div class="guide-label" style="top:40%;left:25%">叠加砝码增大压力</div>
+        <div class="guide-label" style="top:15%;right:15%">f-N 图验证线性关系</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg> 接触面选择</h3>
+      <div style="display:flex;gap:4px">
+        <button class="surface-btn active" onclick="setSurface('smooth')">光滑木板</button>
+        <button class="surface-btn" onclick="setSurface('rough')">粗糙木板</button>
+        <button class="surface-btn" onclick="setSurface('towel')">毛巾</button>
+      </div>
+      <div class="data-row" style="margin-top:8px"><span class="data-label">摩擦系数 μ</span><span class="data-value" id="muVal">0.20</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg> 压力控制</h3>
+      <div class="data-row"><span class="data-label">物体质量</span><span class="data-value">200 g</span></div>
+      <div style="display:flex;gap:4px;margin:8px 0">
+        <button class="weight-pill" id="w1" onclick="toggleW(1)">+100g</button>
+        <button class="weight-pill" id="w2" onclick="toggleW(2)">+100g</button>
+        <button class="weight-pill" id="w3" onclick="toggleW(3)">+100g</button>
+      </div>
+      <div class="data-row"><span class="data-label">砝码质量</span><span class="data-value" id="addedM">0 g</span></div>
+      <div class="data-row"><span class="data-label">总质量 m</span><span class="data-value" id="totalM">200 g</span></div>
+      <div class="data-row"><span class="data-label" style="color:#3B82F6">压力 N=mg</span><span class="data-value" id="normalN" style="color:#3B82F6">1.96 N</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实时数据</h3>
+      <div class="data-row"><span class="data-label" style="color:#DC2626">摩擦力 f</span><span class="data-value" id="valF" style="color:#DC2626">0.39 N</span></div>
+      <div class="data-row"><span class="data-label" style="color:#059669">拉力 F拉</span><span class="data-value" id="valPull" style="color:#059669">0.39 N</span></div>
+      <div class="data-row"><span class="data-label">f/N = μ</span><span class="data-value" id="valMuCheck">0.20</span></div>
+      <div class="status-pill status-ok">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        匀速直线运动 f = F拉
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 数据记录</h3>
+      <button class="record-btn" onclick="recordData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        记录本次数据
+      </button>
+      <div id="dataTableArea"></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h6M4 17h6M14 4l-4 16M18 7h2m-2 10h2"/></svg> 摩擦力公式</h3>
+      <div class="formula-box" id="formula1"></div>
+      <div style="margin-top:6px;font-size:10px;color:#8E8E93;line-height:1.5">
+        匀速直线运动时，弹簧测力计读数 = 摩擦力<br/>
+        摩擦力与压力成正比，与接触面粗糙程度有关
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<div class="related-bar">
+  <span>相关实验</span>
+  <a href="/devkit/pages/lab/spring/">弹簧测力计</a>
+  <a href="/devkit/pages/lab/buoyancy/">浮力实验</a>
+  <a href="/devkit/pages/lab/lever/">杠杆平衡</a>
+  <a href="/devkit/pages/lab/pulley/">滑轮组</a>
+</div>
+<script>
+const surfaces = {
+  smooth: { mu: 0.20, label: '光滑木板', pattern: 'url(#patSmooth)' },
+  rough:  { mu: 0.40, label: '粗糙木板', pattern: 'url(#patRough)' },
+  towel:  { mu: 0.60, label: '毛巾', pattern: 'url(#patTowel)' }
+};
+let currentSurface = 'smooth';
+let addedW = [false, false, false]; // 3 x 100g
+let records = [];
+const g = 9.8;
+const baseMass = 0.2; // kg
+
+function getTotalMass() {
+  return baseMass + addedW.filter(Boolean).length * 0.1;
+}
+
+function getN() { return getTotalMass() * g; }
+function getF() { return surfaces[currentSurface].mu * getN(); }
+
+function setSurface(key) {
+  currentSurface = key;
+  document.querySelectorAll('.surface-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['smooth','rough','towel'][i] === key);
+  });
+  document.getElementById('surfaceRect').setAttribute('fill', surfaces[key].pattern);
+  document.getElementById('surfaceLabel').textContent = surfaces[key].label;
+  updateDisplay();
+}
+
+function toggleW(n) {
+  addedW[n-1] = !addedW[n-1];
+  document.getElementById('w'+n).classList.toggle('added', addedW[n-1]);
+  updateDisplay();
+}
+
+function updateDisplay() {
+  const mu = surfaces[currentSurface].mu;
+  const totalMkg = getTotalMass();
+  const totalMg = totalMkg * 1000;
+  const addedMg = addedW.filter(Boolean).length * 100;
+  const N = getN();
+  const f = getF();
+
+  document.getElementById('muVal').textContent = mu.toFixed(2);
+  document.getElementById('addedM').textContent = addedMg + ' g';
+  document.getElementById('totalM').textContent = totalMg.toFixed(0) + ' g';
+  document.getElementById('normalN').textContent = N.toFixed(2) + ' N';
+  document.getElementById('valF').textContent = f.toFixed(2) + ' N';
+  document.getElementById('valPull').textContent = f.toFixed(2) + ' N';
+  document.getElementById('valMuCheck').textContent = (f / N).toFixed(2);
+
+  // Spring scale pointer
+  const pointerX = 10 + (f / 4) * 95;
+  document.getElementById('scalePointer').setAttribute('x1', pointerX);
+  document.getElementById('scalePointer').setAttribute('x2', pointerX);
+  document.getElementById('scaleReading').textContent = f.toFixed(2) + ' N';
+
+  // Spring coil
+  const coilLen = Math.min(100, 10 + f * 20);
+  let d = `M5,0`;
+  const segs = 8;
+  const segW = coilLen / segs;
+  for (let i = 1; i <= segs; i++) {
+    d += ` L${5 + segW*i},${i%2===1?-5:5}`;
+  }
+  d += ` L${5+coilLen+5},0`;
+  document.getElementById('springCoil').setAttribute('d', d);
+
+  // Force arrows length
+  const pullLen = 40 + f * 25;
+  document.querySelector('#pullForce line').setAttribute('x2', 280 + pullLen);
+  document.querySelector('#pullForce text').setAttribute('x', 280 + pullLen/2);
+  const fricLen = 40 + f * 25;
+  document.querySelector('#frictionForce line').setAttribute('x2', 180 - fricLen);
+  document.querySelector('#frictionForce text').setAttribute('x', 180 - fricLen/2);
+
+  // Stacked weights
+  const sw = document.getElementById('stackedWeights');
+  sw.innerHTML = '';
+  let wy = 248;
+  for (let i = 0; i < 3; i++) {
+    if (addedW[i]) {
+      wy -= 18;
+      const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      r.setAttribute('x','195');r.setAttribute('y',wy);
+      r.setAttribute('width','70');r.setAttribute('height','16');
+      r.setAttribute('rx','3');r.setAttribute('fill','url(#weightGrad)');
+      r.setAttribute('stroke','#6B7280');r.setAttribute('stroke-width','0.8');
+      sw.appendChild(r);
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x','230');t.setAttribute('y',wy+11);
+      t.setAttribute('text-anchor','middle');t.setAttribute('font-size','8');
+      t.setAttribute('fill','#fff');t.setAttribute('font-weight','600');
+      t.textContent='100g';
+      sw.appendChild(t);
+    }
+  }
+
+  // Graph dot
+  const gx = N / 5 * 170;
+  const gy = 170 - f / 3 * 170;
+  document.getElementById('currentDot').setAttribute('cx', Math.min(170, gx));
+  document.getElementById('currentDot').setAttribute('cy', Math.max(0, gy));
+}
+
+function recordData() {
+  const N = getN();
+  const f = getF();
+  const mu = surfaces[currentSurface].mu;
+  records.push({ surface: surfaces[currentSurface].label, N: N.toFixed(2), f: f.toFixed(2), mu: mu.toFixed(2) });
+
+  let html = '<table class="data-table"><tr><th>#</th><th>接触面</th><th>N/N</th><th>f/N</th><th>μ</th></tr>';
+  records.forEach((r, i) => {
+    html += `<tr><td>${i+1}</td><td>${r.surface}</td><td>${r.N}</td><td>${r.f}</td><td>${r.mu}</td></tr>`;
+  });
+  html += '</table>';
+  document.getElementById('dataTableArea').innerHTML = html;
+
+  // Graph point
+  const gx = parseFloat(records[records.length-1].N) / 5 * 170;
+  const gy = 170 - parseFloat(records[records.length-1].f) / 3 * 170;
+  const pts = document.getElementById('graphPoints');
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', Math.min(170,gx)); c.setAttribute('cy', Math.max(0,gy));
+  c.setAttribute('r', '3.5'); c.setAttribute('fill', '#059669');
+  c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-width', '1.5');
+  pts.appendChild(c);
+
+  if (records.length >= 2) {
+    const tl = document.getElementById('trendLine');
+    const lastMu = parseFloat(records[records.length-1].mu);
+    tl.setAttribute('x1', 0); tl.setAttribute('y1', 170);
+    tl.setAttribute('x2', 170); tl.setAttribute('y2', 170 - lastMu * 5 / 3 * 170);
+    tl.setAttribute('opacity', '0.4');
+  }
+}
+
+function resetAll() {
+  currentSurface = 'smooth';
+  addedW = [false, false, false];
+  records = [];
+  document.querySelectorAll('.surface-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.getElementById('surfaceRect').setAttribute('fill', 'url(#patSmooth)');
+  document.getElementById('surfaceLabel').textContent = '光滑木板';
+  [1,2,3].forEach(n => document.getElementById('w'+n).classList.remove('added'));
+  document.getElementById('dataTableArea').innerHTML = '';
+  document.getElementById('graphPoints').innerHTML = '';
+  document.getElementById('trendLine').setAttribute('opacity', '0');
+  updateDisplay();
+}
+
+function renderFormulas() {
+  try {
+    katex.render('f = \\mu N', document.getElementById('formula1'), { throwOnError: false, displayMode: true });
+  } catch(e) {
+    document.getElementById('formula1').textContent = 'f = μN';
+  }
+}
+
+updateDisplay();
+renderFormulas();
+if (localStorage.getItem('friction-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('friction-guide-seen','1'); }
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
