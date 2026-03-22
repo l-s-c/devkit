@@ -598,6 +598,7 @@ function onUp(e) {
 svg.addEventListener('mousedown', onDown);
 svg.addEventListener('mousemove', onMove);
 svg.addEventListener('mouseup', onUp);
+svg.addEventListener('mouseleave', onUp);
 svg.addEventListener('touchstart', onDown, { passive: false });
 svg.addEventListener('touchmove', onMove, { passive: false });
 svg.addEventListener('touchend', onUp);

@@ -704,6 +704,7 @@ function onBalUp(e) {
 svgBal.addEventListener('mousedown', onBalDown);
 svgBal.addEventListener('mousemove', onBalMove);
 svgBal.addEventListener('mouseup', onBalUp);
+svgBal.addEventListener('mouseleave', onBalUp);
 svgBal.addEventListener('touchstart', onBalDown, {passive:false});
 svgBal.addEventListener('touchmove', onBalMove, {passive:false});
 svgBal.addEventListener('touchend', onBalUp);
@@ -796,6 +797,7 @@ function dropObject() {
 svgVol.addEventListener('mousedown', onVolDown);
 svgVol.addEventListener('mousemove', onVolMove);
 svgVol.addEventListener('mouseup', onVolUp);
+svgVol.addEventListener('mouseleave', onVolUp);
 svgVol.addEventListener('touchstart', onVolDown, {passive:false});
 svgVol.addEventListener('touchmove', onVolMove, {passive:false});
 svgVol.addEventListener('touchend', onVolUp);

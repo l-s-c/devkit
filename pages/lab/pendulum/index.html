@@ -198,7 +198,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 <body>
 <div class="topbar">
   <a class="topbar-logo" href="../../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
-  <span class="topbar-title">🔬 单摆运动模拟</span>
+  <span class="topbar-title">◇ 单摆运动模拟</span>
 </div>
 
 <div class="main" style="max-width:1080px;margin:0 auto;padding:0 16px">
@@ -235,7 +235,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
         <button class="exp-btn exp-btn-primary" id="btnPlay">▶ 开始</button>
         <button class="exp-btn exp-btn-secondary" id="btnReset">↻ 重置</button>
       </div>
-      <div style="font-size:9px;color:var(--text-caption);text-align:center">💡 可直接拖拽摆球设置角度</div>
+      <div style="font-size:9px;color:var(--text-caption);text-align:center">◉ 可直接拖拽摆球设置角度</div>
     </div>
 
     <!-- 实时数据 -->
@@ -275,7 +275,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 <div class="echart-section" style="max-width:960px;margin:12px auto 0">
   <div class="exp-card echart-card">
     <div class="echart-header">
-      <div class="echart-title">📊 能量变化曲线</div>
+      <div class="echart-title">▦ 能量变化曲线</div>
       <div class="echart-legend"><span style="color:#EF4444">● 动能 Eₖ</span><span style="color:#10B981">● 势能 Eₚ</span><span style="color:#8B5CF6">● 总能量 E</span></div>
     </div>
     <div id="echartFull" class="echart-full">
@@ -283,7 +283,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
         <canvas id="energyChart"></canvas>
         <div class="echart-tooltip" id="echartTooltip"></div>
       </div>
-      <div class="echart-tip">💡 <b>观察：</b>红色动能和绿色势能像镜像一样此消彼长，而紫色总能量始终是一条水平线——这就是<b>机械能守恒</b>。开启阻尼后，紫色线会慢慢下降。</div>
+      <div class="echart-tip">◉ <b>观察：</b>红色动能和绿色势能像镜像一样此消彼长，而紫色总能量始终是一条水平线——这就是<b>机械能守恒</b>。开启阻尼后，紫色线会慢慢下降。</div>
     </div>
 
   </div>
@@ -297,10 +297,10 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   <div class="fml-card">
     <div class="fml-left" style="border-left:4px solid #3B82F6"><div id="formulaT"></div></div>
     <div class="fml-right">
-      <div class="fml-title" style="color:#3B82F6">⚙️ 周期公式</div>
+      <div class="fml-title" style="color:#3B82F6">⊕ 周期公式</div>
       <div class="fml-desc">摆球来回摆动一次的时间叫<b>周期 T</b>。它只跟<b>绳长 L</b> 和<b>重力加速度 g</b> 有关，跟摆球多重没关系——这是伽利略在 400 年前发现的。</div>
       <div class="fml-tags"><span>T — 周期（s）</span><span>L — 绳长（m）</span><span>g — 重力加速度（m/s²）</span><span>π = 3.14159</span></div>
-      <div class="fml-tip">💡 <b>试一试：</b>把绳长从 1m 拉到 4m，周期从 ~2s 变成 ~4s（√4 = 2 倍）。把重力改成 1.6（月球），看摆球是不是慢了很多？</div>
+      <div class="fml-tip">◉ <b>试一试：</b>把绳长从 1m 拉到 4m，周期从 ~2s 变成 ~4s（√4 = 2 倍）。把重力改成 1.6（月球），看摆球是不是慢了很多？</div>
     </div>
   </div>
 
@@ -308,10 +308,10 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   <div class="fml-card">
     <div class="fml-left" style="border-left:4px solid #EF4444"><div id="formulaEk"></div></div>
     <div class="fml-right">
-      <div class="fml-title" style="color:#EF4444">🔴 动能</div>
+      <div class="fml-title" style="color:#EF4444">● 动能</div>
       <div class="fml-desc">物体运动时具有的能量叫<b>动能</b>。速度 v 越大，动能越大。摆球经过<b>最低点</b>时速度最大，所以动能也最大。</div>
       <div class="fml-tags"><span>Eₖ — 动能（J）</span><span>m — 质量（kg）</span><span>v — 速度（m/s）</span></div>
-      <div class="fml-tip">💡 <b>观察：</b>看能量条——摆球荡到最低点时，红色动能条最长，绿色势能条最短。</div>
+      <div class="fml-tip">◉ <b>观察：</b>看能量条——摆球荡到最低点时，红色动能条最长，绿色势能条最短。</div>
     </div>
   </div>
 
@@ -319,10 +319,10 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   <div class="fml-card">
     <div class="fml-left" style="border-left:4px solid #10B981"><div id="formulaEp"></div></div>
     <div class="fml-right">
-      <div class="fml-title" style="color:#10B981">🟢 重力势能</div>
+      <div class="fml-title" style="color:#10B981">● 重力势能</div>
       <div class="fml-desc">物体在高处时具有的能量叫<b>重力势能</b>。θ 是摆球偏离竖直线的角度，角度越大，摆球越高，势能越大。摆球在<b>最高点</b>时势能最大。</div>
       <div class="fml-tags"><span>Eₚ — 势能（J）</span><span>m — 质量（kg）</span><span>g — 重力加速度</span><span>L — 绳长</span><span>θ — 偏角（rad）</span></div>
-      <div class="fml-tip">💡 <b>想一想：</b>为什么用 L(1-cosθ) 而不是直接用高度 h？因为 h = L − L·cosθ = L(1-cosθ)，这就是摆球相对最低点的高度。</div>
+      <div class="fml-tip">◉ <b>想一想：</b>为什么用 L(1-cosθ) 而不是直接用高度 h？因为 h = L − L·cosθ = L(1-cosθ)，这就是摆球相对最低点的高度。</div>
     </div>
   </div>
 
@@ -330,10 +330,10 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   <div class="fml-card">
     <div class="fml-left" style="border-left:4px solid #8B5CF6"><div id="formulaE"></div></div>
     <div class="fml-right">
-      <div class="fml-title" style="color:#8B5CF6">🟣 机械能守恒定律</div>
+      <div class="fml-title" style="color:#8B5CF6">● 机械能守恒定律</div>
       <div class="fml-desc">在没有阻力的情况下，<b>动能和势能可以互相转化</b>，但它们的总和始终不变。摆球从高处落下时，势能变成动能；荡上去时，动能又变回势能。</div>
       <div class="fml-tags"><span>Eₖ + Eₚ = E总</span><span>E总 不随时间变化</span></div>
-      <div class="fml-tip">💡 <b>试一试：</b>把阻尼设为 0，观察紫色总能量条——它始终不变！再把阻尼调大，看总能量慢慢减少——这就是能量被摩擦力"吃掉"了。</div>
+      <div class="fml-tip">◉ <b>试一试：</b>把阻尼设为 0，观察紫色总能量条——它始终不变！再把阻尼调大，看总能量慢慢减少——这就是能量被摩擦力"吃掉"了。</div>
     </div>
   </div>
 </div>
@@ -341,14 +341,14 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 <!-- 练习模式 -->
 <div class="quiz-section" style="max-width:960px;margin:16px auto 0">
   <div class="exp-card" style="padding:16px">
-    <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>🎯 练习模式</div>
+    <div class="exp-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>◎ 练习模式</div>
 
     <div id="quizArea">
       <div class="quiz-q" id="quizQuestion"></div>
       <div class="quiz-options" id="quizOptions"></div>
       <div class="quiz-feedback" id="quizFeedback" style="display:none"></div>
       <div class="quiz-btns" style="margin-top:10px">
-        <button class="exp-btn exp-btn-secondary" id="btnVerify" style="display:none">🔬 动画验证</button>
+        <button class="exp-btn exp-btn-secondary" id="btnVerify" style="display:none">◇ 动画验证</button>
         <button class="exp-btn exp-btn-primary" id="btnNext">下一题 →</button>
       </div>
       <div class="quiz-score" id="quizScore">第 <span id="qNum">1</span>/8 题　正确 <span id="qCorrect">0</span> 题</div>
@@ -359,7 +359,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 </div>
 
 <div class="statusbar">
-  <span>🔬 单摆运动模拟</span>
+  <span>◇ 单摆运动模拟</span>
   <span>物理蓝 · 交互实验</span>
 </div>
 
@@ -615,7 +615,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       }
       running = true;
       lastTime = 0;
-      btnPlay.textContent = '⏸ 暂停';
+      btnPlay.textContent = '‖ 暂停';
       requestAnimationFrame(loop);
     }
   });
@@ -698,7 +698,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     lastSign = 0;
     running = true;
     lastTime = 0;
-    btnPlay.textContent = '⏸ 暂停';
+    btnPlay.textContent = '‖ 暂停';
     requestAnimationFrame(loop);
   }
 
@@ -838,56 +838,56 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       q: '单摆的绳长从 1m 增加到 4m（其他条件不变），周期会怎样变化？',
       opts: ['变为原来的 2 倍', '变为原来的 4 倍', '不变', '变为原来的 ½'],
       ans: 0,
-      explain: '✅ T = 2π√(L/g)，L 变为 4 倍 → T 变为 √4 = 2 倍。',
+      explain: '✓ T = 2π√(L/g)，L 变为 4 倍 → T 变为 √4 = 2 倍。',
       verify: { L: 4, g: 9.8, theta: 10, damp: 0 }
     },
     {
       q: '把单摆从地球（g=9.8）搬到月球（g=1.6），周期会怎样？',
       opts: ['变长（摆得更慢）', '变短（摆得更快）', '不变', '先变长再变短'],
       ans: 0,
-      explain: '✅ g 减小 → √(L/g) 增大 → T 变长，摆得更慢。月球重力只有地球的 1/6！',
+      explain: '✓ g 减小 → √(L/g) 增大 → T 变长，摆得更慢。月球重力只有地球的 1/6！',
       verify: { L: 1.5, g: 1.6, theta: 15, damp: 0 }
     },
     {
       q: '摆球经过最低点时，它的能量状态是？',
       opts: ['动能最大，势能最小', '势能最大，动能最小', '动能和势能相等', '总能量最大'],
       ans: 0,
-      explain: '✅ 最低点速度最大 → 动能最大；高度最低 → 势能最小。观察能量条可以验证！',
+      explain: '✓ 最低点速度最大 → 动能最大；高度最低 → 势能最小。观察能量条可以验证！',
       verify: { L: 1.5, g: 9.8, theta: 45, damp: 0 }
     },
     {
       q: '增大摆球的质量（其他条件不变），周期会怎样？',
       opts: ['不变', '变长', '变短', '取决于绳长'],
       ans: 0,
-      explain: '✅ T = 2π√(L/g)，公式里根本没有质量 m！这是伽利略的发现：周期与质量无关。',
+      explain: '✓ T = 2π√(L/g)，公式里根本没有质量 m！这是伽利略的发现：周期与质量无关。',
       verify: { L: 1.5, g: 9.8, theta: 15, damp: 0 }
     },
     {
       q: '无阻尼的单摆运动中，机械能（动能+势能）会怎样？',
       opts: ['始终保持不变', '逐渐减小', '逐渐增大', '忽大忽小'],
       ans: 0,
-      explain: '✅ 没有阻力时，动能和势能互相转化，但总和（机械能）守恒，始终不变。看能量折线图中紫色总能量线！',
+      explain: '✓ 没有阻力时，动能和势能互相转化，但总和（机械能）守恒，始终不变。看能量折线图中紫色总能量线！',
       verify: { L: 1.5, g: 9.8, theta: 30, damp: 0 }
     },
     {
       q: '有空气阻力时，单摆的总机械能会怎样？',
       opts: ['逐渐减小', '始终不变', '逐渐增大', '先减小后不变'],
       ans: 0,
-      explain: '✅ 阻力做负功，机械能逐渐转化为内能（热量），所以总机械能减小，摆幅越来越小。把阻尼调大观察！',
+      explain: '✓ 阻力做负功，机械能逐渐转化为内能（热量），所以总机械能减小，摆幅越来越小。把阻尼调大观察！',
       verify: { L: 1.5, g: 9.8, theta: 45, damp: 0.05 }
     },
     {
       q: '绳长 L=1m，g=9.8m/s²，小角度下周期约为多少？',
       opts: ['约 2.0 秒', '约 1.0 秒', '约 3.14 秒', '约 0.5 秒'],
       ans: 0,
-      explain: '✅ T = 2π√(1/9.8) = 2π × 0.3194 ≈ 2.007 秒 ≈ 2.0 秒。',
+      explain: '✓ T = 2π√(1/9.8) = 2π × 0.3194 ≈ 2.007 秒 ≈ 2.0 秒。',
       verify: { L: 1, g: 9.8, theta: 10, damp: 0 }
     },
     {
       q: '把初始角度从 10° 增大到 80°（大角度），实际周期相比小角度公式计算值会？',
       opts: ['实际周期更大（公式偏小）', '实际周期更小（公式偏大）', '完全一样', '无法判断'],
       ans: 0,
-      explain: '✅ T = 2π√(L/g) 是小角度近似公式。大角度时真实运动更复杂，实际周期比公式算出来的大。本模拟用的精确方程能体现这个差异！',
+      explain: '✓ T = 2π√(L/g) 是小角度近似公式。大角度时真实运动更复杂，实际周期比公式算出来的大。本模拟用的精确方程能体现这个差异！',
       verify: { L: 1.5, g: 9.8, theta: 80, damp: 0 }
     }
   ];
@@ -952,7 +952,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
     var fb = document.getElementById('quizFeedback');
     fb.style.display = 'block';
     fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'wrong');
-    fb.innerHTML = (isCorrect ? '🎉 回答正确！' : '❌ 回答错误。') + '<br>' + qi.explain;
+    fb.innerHTML = (isCorrect ? '✦ 回答正确！' : '✗ 回答错误。') + '<br>' + qi.explain;
 
     // 显示动画验证按钮
     if (qi.verify) {
@@ -969,7 +969,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
         theta = theta0; omega = 0; swingCount = 0; lastSign = 0;
         accumulator = 0; lastTime = 0; clearEnergyHistory();
         running = true;
-        btnPlay.textContent = '⏸ 暂停';
+        btnPlay.textContent = '‖ 暂停';
         requestAnimationFrame(loop);
         // 滚动到 Canvas
         canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
