@@ -25,7 +25,7 @@
   .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
   .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
   .purpose-tag svg{width:12px;height:12px}
-  .lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+  .lab-container{display:flex;align-items:stretch;height:calc(100vh - 48px - 29px)}
   .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0}
   .canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;aspect-ratio:16/10;user-select:none}
   .canvas-wrapper svg{width:100%;height:100%}
@@ -68,6 +68,19 @@
   .related-bar span{color:#9CA3AF;font-weight:600}
   .related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
   .related-bar a:hover{background:#EFF6FF}
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#4338CA;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#4338CA}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -449,5 +462,38 @@ const E = 4.5;
   if (localStorage.getItem('bulb-guide-seen')) { const g = document.getElementById('guideOverlay'); if (g) g.style.display = 'none'; } else { localStorage.setItem('bulb-guide-seen', '1'); }
 </script>
 <script src="/shared/theme.js"></script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>电功率</h2></div>
+  <div class="card-body">
+    <p>电功率表示电流做功的快慢，即单位时间内电流所做的功。</p>
+    <ul>
+      <li><strong>P</strong> — 电功率（W）</li>
+      <li><strong>P = UI = I²R = U²/R</strong></li>
+      <li><strong>额定功率</strong>：在额定电压下工作时的功率</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>测小灯泡电功率</h2></div>
+  <div class="card-body">
+    <ul>
+      <li>用伏安法：P = UI，用电压表测 U，电流表测 I</li>
+      <li>调节变阻器使灯泡在额定电压下工作</li>
+      <li>高于额定电压 → 过亮 → 实际功率>额定功率 → 烧坏</li>
+      <li>低于额定电压 → 偏暗 → 实际功率<额定功率</li>
+    </ul>
+    <p style="color:#4338CA;font-size:12px;font-weight:600;margin-top:8px">考点提醒：灯泡电阻随温度变化！温度越高电阻越大。</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>小灯泡额定电压 3.8V，额定电流 0.3A。求额定功率。当实际电压为 3V 时灯泡亮度如何？</p>
+    <div class="solve">P额 = U额 × I额 = 3.8 × 0.3 = <strong style="color:#4338CA">1.14 W</strong><br/>实际电压 3V < 额定 3.8V<br/>灯泡<strong style="color:#4338CA">偏暗</strong>，实际功率 < 额定功率</div>
+  </div>
+</div>
+</div>
 </body>
 </html>

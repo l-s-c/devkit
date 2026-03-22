@@ -24,7 +24,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
 .purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
 .purpose-tag svg{width:12px;height:12px}
-.lab-container{display:flex;height:calc(100vh - 48px - 29px)}
+.lab-container{display:flex;align-items:stretch;height:calc(100vh - 48px - 29px)}
 .canvas-area{flex:1;display:flex;flex-direction:column;padding:16px;min-width:0;gap:8px}
 .exp-tabs{display:flex;gap:4px;background:#fff;border-radius:10px;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
 .exp-tab{flex:1;padding:8px 14px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;transition:all 0.2s;text-align:center}
@@ -58,6 +58,19 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .related-bar{position:fixed;bottom:0;left:0;right:280px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,0.06);padding:6px 24px;display:flex;align-items:center;gap:16px;font-size:11px}
 .related-bar span{color:#9CA3AF;font-weight:600}
 .related-bar a{color:#3B82F6;text-decoration:none;font-weight:500;padding:2px 8px;border-radius:4px}
+
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#4338CA;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
+.knowledge-card li::before{content:'•';position:absolute;left:0;color:#4338CA}
+.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -450,5 +463,43 @@ renderFormulas();
 if (localStorage.getItem('sp-guide-seen')) { const g = document.getElementById('guideOverlay'); if(g) g.style.display='none'; } else { localStorage.setItem('sp-guide-seen','1'); }
 </script>
 <script src="/shared/theme.js"></script>
+
+<div class="knowledge-section">
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>串联与并联电路</h2></div>
+  <div class="card-body">
+    <p><strong>串联电路：</strong></p>
+    <ul>
+      <li>电流处处相等：I = I₁ = I₂</li>
+      <li>总电压等于各部分电压之和：U = U₁ + U₂</li>
+      <li>总电阻等于各电阻之和：R = R₁ + R₂</li>
+    </ul>
+    <p style="margin-top:8px"><strong>并联电路：</strong></p>
+    <ul>
+      <li>各支路电压相等：U = U₁ = U₂</li>
+      <li>总电流等于各支路电流之和：I = I₁ + I₂</li>
+      <li>总电阻：1/R = 1/R₁ + 1/R₂</li>
+    </ul>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>串并联判断方法</h2></div>
+  <div class="card-body">
+    <ul>
+      <li><strong>串联</strong>：电流只有一条路径，一个断开全部不工作</li>
+      <li><strong>并联</strong>：电流有多条路径，一个断开不影响其他</li>
+      <li><strong>电流法</strong>：从正极出发，分叉就是并联，不分叉就是串联</li>
+    </ul>
+    <p style="color:#4338CA;font-size:12px;font-weight:600;margin-top:8px">考点提醒：串联分压（电阻大的分到的电压大）；并联分流（电阻小的通过的电流大）。</p>
+  </div>
+</div>
+<div class="knowledge-card">
+  <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+  <div class="card-body">
+    <p><strong>题目：</strong>R₁=10Ω，R₂=20Ω 串联接在 6V 电源上，求 R₁ 两端电压。</p>
+    <div class="solve">串联：R总 = R₁ + R₂ = 10 + 20 = 30Ω<br/>I = U/R总 = 6/30 = 0.2A<br/>U₁ = IR₁ = 0.2 × 10 = <strong style="color:#4338CA">2 V</strong><br/>（串联分压：U₁:U₂ = R₁:R₂ = 1:2）</div>
+  </div>
+</div>
+</div>
 </body>
 </html>
