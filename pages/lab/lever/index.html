@@ -654,25 +654,58 @@
     if (hook) { hooks[hook].push(currentWeight); render(); updatePresetState(); }
   });
 
-  // Drag from shelf weights
+  // Drag from specific shelf weight
+  function getShelfWeight(e) {
+    let el = e.target;
+    while(el && el !== svg) {
+      if(el.classList && el.classList.contains('shelf-w')) return parseInt(el.dataset.w);
+      el = el.parentElement;
+    }
+    return null;
+  }
+  function ghostColor(w) { return w<=1?'url(#wSilver)':w<=2?'url(#wCopper)':'url(#wIron)'; }
+  function createGhost(w, sx, sy) {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('pointer-events','none');
+    g.setAttribute('opacity','0.8');
+    const halfT = w<=1?5:w<=2?6:8, halfB = w<=1?7:w<=2?8:10, h = w<=1?22:w<=2?24:28;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${sx-halfT},${sy} L${sx+halfT},${sy} L${sx+halfB},${sy+h} L${sx-halfB},${sy+h} Z`);
+    path.setAttribute('fill', ghostColor(w));
+    path.setAttribute('stroke', w<=1?'#4B5563':w<=2?'#92400E':'#1F2937');
+    path.setAttribute('stroke-width','0.5');
+    g.appendChild(path);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',sx); txt.setAttribute('y',sy+h*0.6);
+    txt.setAttribute('font-size',w>=5?'10':'9'); txt.setAttribute('fill','#fff');
+    txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-weight','800');
+    txt.setAttribute('font-family','Georgia,serif');
+    txt.textContent = w+'N';
+    g.appendChild(txt);
+    g._sx = sx; g._sy = sy; g._halfT = halfT; g._halfB = halfB; g._h = h;
+    return g;
+  }
+  function moveGhost(g, sx, sy) {
+    const dx = sx - g._sx, dy = sy - g._sy;
+    g._sx = sx; g._sy = sy;
+    const path = g.querySelector('path');
+    const ht = g._halfT, hb = g._halfB, h = g._h;
+    path.setAttribute('d',`M${sx-ht},${sy} L${sx+ht},${sy} L${sx+hb},${sy+h} L${sx-hb},${sy+h} Z`);
+    const txt = g.querySelector('text');
+    txt.setAttribute('x',sx); txt.setAttribute('y',sy+h*0.6);
+  }
   svg.addEventListener('mousedown', (e) => {
+    const w = getShelfWeight(e);
+    if (!w) return;
     const {x:sx, y:sy} = svgCoords(e);
-    // Check if clicking a shelf weight (y > 430)
-    if (sy < 430) return;
-    const ghost = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ghost.setAttribute('r','12');
-    ghost.setAttribute('fill', currentWeight<=1?'#9CA3AF':currentWeight<=2?'#D97706':'#4B5563');
-    ghost.setAttribute('opacity','0.7');
-    ghost.setAttribute('cx', sx); ghost.setAttribute('cy', sy);
-    ghost.setAttribute('pointer-events','none');
+    const ghost = createGhost(w, sx, sy);
     svg.appendChild(ghost);
-    dragging = {weight: currentWeight, ghost};
+    dragging = {weight: w, ghost};
   });
   svg.addEventListener('mousemove', (e) => {
     if (!dragging) return;
     const {x:sx, y:sy} = svgCoords(e);
-    dragging.ghost.setAttribute('cx', sx);
-    dragging.ghost.setAttribute('cy', sy);
+    moveGhost(dragging.ghost, sx, sy);
   });
   svg.addEventListener('mouseup', (e) => {
     if (!dragging) return;
@@ -688,25 +721,19 @@
 
   // Touch support for mobile
   svg.addEventListener('touchstart', (e) => {
-    const t = e.touches[0];
-    const {x:sx, y:sy} = svgCoords(t);
-    if (sy < 430) return;
+    const w = getShelfWeight(e);
+    if (!w) return;
     e.preventDefault();
-    const ghost = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ghost.setAttribute('r','12');
-    ghost.setAttribute('fill', currentWeight<=1?'#9CA3AF':currentWeight<=2?'#D97706':'#4B5563');
-    ghost.setAttribute('opacity','0.7');
-    ghost.setAttribute('cx', sx); ghost.setAttribute('cy', sy);
-    ghost.setAttribute('pointer-events','none');
+    const {x:sx, y:sy} = svgCoords(e.touches[0]);
+    const ghost = createGhost(w, sx, sy);
     svg.appendChild(ghost);
-    dragging = {weight: currentWeight, ghost};
+    dragging = {weight: w, ghost};
   }, {passive:false});
   svg.addEventListener('touchmove', (e) => {
     if (!dragging) return;
     e.preventDefault();
     const {x:sx, y:sy} = svgCoords(e.touches[0]);
-    dragging.ghost.setAttribute('cx', sx);
-    dragging.ghost.setAttribute('cy', sy);
+    moveGhost(dragging.ghost, sx, sy);
   }, {passive:false});
   svg.addEventListener('touchend', (e) => {
     if (!dragging) return;
