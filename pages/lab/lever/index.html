@@ -245,7 +245,7 @@
 <div class="lab-container">
   <div class="canvas-area">
     <div class="canvas-wrapper" id="canvasWrapper">
-      <svg id="canvas" viewBox="30 180 620 330" xmlns="http://www.w3.org/2000/svg">
+      <svg id="canvas" viewBox="0 140 680 370" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <!-- Wood grain pattern -->
           <pattern id="woodGrain" x="0" y="0" width="10" height="14" patternUnits="userSpaceOnUse">
@@ -369,7 +369,7 @@
 
         <!-- Weight shelf -->
         <rect x="170" y="430" width="340" height="60" rx="10" fill="#F8F9FC" stroke="#E5E7EB" stroke-width="1"/>
-        <text x="340" y="445" font-size="9" fill="#B0B3B8" text-anchor="middle" font-weight="500">砝码盒 · 点击杠杆挂点添加</text>
+        <text x="340" y="445" font-size="9" fill="#B0B3B8" text-anchor="middle" font-weight="500">砝码盒 · 拖到杠杆刻度上</text>
 
         <!-- Shelf weights (visual only, interaction via JS) -->
         <g id="shelfWeights">
@@ -628,7 +628,7 @@
   let dragging = null; // {weight, ghostEl}
 
   const svg = document.getElementById('canvas');
-  const VB = {x:30,y:180,w:620,h:330}; // viewBox
+  const VB = {x:0,y:140,w:680,h:370}; // viewBox
 
   function svgCoords(e) {
     const rect = svg.getBoundingClientRect();
