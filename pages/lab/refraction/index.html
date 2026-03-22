@@ -49,7 +49,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <body>
 <header class="lab-header">
   <a href="../" style="display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span style="background:rgba(34,197,94,0.1);color:#16A34A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">物理实验</span>
-  <h1>🔬 光的折射实验</h1>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="15" r="3"/><path d="M10 12V2h4v10"/><path d="M14 12a7 7 0 11-4 0"/></svg> 光的折射实验</h1>
 </header>
 
 <div class="lab-container">
@@ -124,7 +124,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <text id="label-theta2" x="310" y="290" font-size="13" fill="#6B7280" font-weight="600">θ₂=22°</text>
 
       <!-- Total internal reflection badge -->
-      <text id="tir-badge" x="300" y="350" font-size="16" fill="#DC2626" font-weight="800" text-anchor="middle" opacity="0">⚠️ 全反射</text>
+      <text id="tir-badge" x="300" y="350" font-size="16" fill="#DC2626" font-weight="800" text-anchor="middle" opacity="0">⚠ 全反射</text>
 
       <!-- Draggable handle on incident ray -->
       <!-- 光源发光球体 -->
@@ -142,13 +142,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
   <div class="panel">
     <div class="panel-card">
-      <div class="panel-title">⚙️ 实验参数</div>
+      <div class="panel-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> 实验参数</div>
       <div class="field">
         <label>介质选择</label>
         <div id="medium-btns" style="display:flex;flex-direction:column;gap:6px">
-          <button class="med-btn active" data-n="1.33" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #3B82F6;border-radius:8px;background:rgba(59,130,246,0.08);color:#3B82F6;font-weight:700;font-size:12px;cursor:pointer">💧 水 n=1.33</button>
-          <button class="med-btn" data-n="1.50" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">🪟 玻璃 n=1.50</button>
-          <button class="med-btn" data-n="2.42" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer">💎 钻石 n=2.42</button>
+          <button class="med-btn active" data-n="1.33" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #3B82F6;border-radius:8px;background:rgba(59,130,246,0.08);color:#3B82F6;font-weight:700;font-size:12px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg> 水 n=1.33</button>
+          <button class="med-btn" data-n="1.50" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg> 玻璃 n=1.50</button>
+          <button class="med-btn" data-n="2.42" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:700;font-size:12px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/></svg> 钻石 n=2.42</button>
         </div>
       </div>
       <div class="field">
@@ -168,7 +168,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
 
     <div class="panel-card">
-      <div class="panel-title">📊 实验数据</div>
+      <div class="panel-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实验数据</div>
       <div class="reading"><span class="rl">入射角 θ₁</span><span class="rv" id="r-theta1">30.0°</span></div>
       <div class="reading"><span class="rl">折射角 θ₂</span><span class="rv" id="r-theta2">22.1°</span></div>
       <div class="reading"><span class="rl">反射角 θ₃</span><span class="rv" id="r-theta3">30.0°</span></div>
