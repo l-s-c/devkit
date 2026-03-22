@@ -159,6 +159,7 @@ export default defineConfig({
         'lab-buoyancy': resolve(__dirname, 'pages/lab/buoyancy/index.html'),
         'lab-bulb': resolve(__dirname, 'pages/lab/bulb/index.html'),
         'lab-density': resolve(__dirname, 'pages/lab/density/index.html'),
+        'lab-electromagnet': resolve(__dirname, 'pages/lab/electromagnet/index.html'),
         'lab-friction': resolve(__dirname, 'pages/lab/friction/index.html'),
         'lab-series-parallel': resolve(__dirname, 'pages/lab/series-parallel/index.html'),
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
