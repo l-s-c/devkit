@@ -54,7 +54,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/pulley/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/pulley.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 </head>
 <body>
 <header class="lab-header">
@@ -407,6 +407,10 @@ render();
   </div>
 </div>
 </div>
-<script src="/shared/theme.js"></script>
+<script src="/shared/theme.js">function renderFormulas(){
+  var el=document.getElementById('knowledgeFormula1');
+  if(el&&window.katex)katex.render('F = \\frac{G}{n}',el,{throwOnError:false,displayMode:true});
+}
+</script>
 </body>
 </html>
