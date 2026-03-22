@@ -361,7 +361,8 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
   function resizeCanvas() {
     const rect = canvas.parentElement.getBoundingClientRect();
     const w = rect.width;
-    const h = Math.max(400, Math.min(560, w * 0.875));
+    const maxH = window.innerHeight - 120; // 14寸适配: 留topbar+间距
+    const h = Math.max(320, Math.min(Math.min(480, maxH), w * 0.75));
     const dpr = window.devicePixelRatio || 1;
     canvas.width = w * dpr;
     canvas.height = h * dpr;
