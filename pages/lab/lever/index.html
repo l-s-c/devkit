@@ -55,17 +55,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <stop offset="80%" stop-color="#92400E"/>
           <stop offset="100%" stop-color="#7C3A0A"/>
         </linearGradient>
+        <!-- 1N 银灰金属 -->
         <linearGradient id="weightGrad1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9CA3AF"/>
-          <stop offset="100%" stop-color="#6B7280"/>
+          <stop offset="0%" stop-color="#E5E7EB"/>
+          <stop offset="15%" stop-color="#F9FAFB"/>
+          <stop offset="50%" stop-color="#9CA3AF"/>
+          <stop offset="85%" stop-color="#6B7280"/>
+          <stop offset="100%" stop-color="#4B5563"/>
         </linearGradient>
+        <!-- 2N 铜金属 -->
         <linearGradient id="weightGrad2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#60A5FA"/>
-          <stop offset="100%" stop-color="#2563EB"/>
+          <stop offset="0%" stop-color="#FCD34D"/>
+          <stop offset="15%" stop-color="#FDE68A"/>
+          <stop offset="50%" stop-color="#D97706"/>
+          <stop offset="85%" stop-color="#B45309"/>
+          <stop offset="100%" stop-color="#92400E"/>
         </linearGradient>
+        <!-- 5N 深铁金属 -->
         <linearGradient id="weightGrad5" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#F87171"/>
-          <stop offset="100%" stop-color="#DC2626"/>
+          <stop offset="0%" stop-color="#9CA3AF"/>
+          <stop offset="15%" stop-color="#6B7280"/>
+          <stop offset="50%" stop-color="#4B5563"/>
+          <stop offset="85%" stop-color="#374151"/>
+          <stop offset="100%" stop-color="#1F2937"/>
+        </linearGradient>
+        <!-- 高光条 -->
+        <linearGradient id="weightSheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+          <stop offset="40%" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="60%" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
         </linearGradient>
       </defs>
 
@@ -236,9 +255,64 @@ function calculate() {
   }
 }
 
+// Create trapezoid weight SVG group at (cx, topY)
+function createWeightSVG(cx, topY, weight) {
+  const cfg = weight >= 5
+    ? { w:22, h:30, hw:10, hh:4, grad:'weightGrad5', stroke:'#374151', txtFill:'#D1D5DB', fs:14 }
+    : weight >= 2
+    ? { w:18, h:26, hw:8, hh:3.5, grad:'weightGrad2', stroke:'#92400E', txtFill:'#78350F', fs:12 }
+    : { w:14, h:22, hw:6, hh:3, grad:'weightGrad1', stroke:'#6B7280', txtFill:'#374151', fs:10 };
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  // Handle (提手)
+  const handle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  handle.setAttribute('x', cx - cfg.hw/2); handle.setAttribute('y', topY);
+  handle.setAttribute('width', cfg.hw); handle.setAttribute('height', cfg.hh);
+  handle.setAttribute('rx', cfg.hh/2); handle.setAttribute('fill', cfg.stroke);
+  handle.setAttribute('opacity', '0.7');
+  g.appendChild(handle);
+
+  // Trapezoid body
+  const by = topY + cfg.hh + 1;
+  const topW = cfg.w * 0.7, botW = cfg.w;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  const d = `M${cx-botW/2},${by+cfg.h} Q${cx-botW/2},${by+cfg.h+3} ${cx-botW/2+3},${by+cfg.h+3} L${cx+botW/2-3},${by+cfg.h+3} Q${cx+botW/2},${by+cfg.h+3} ${cx+botW/2},${by+cfg.h} L${cx+topW/2+2},${by} L${cx-topW/2-2},${by} Z`;
+  path.setAttribute('d', d);
+  path.setAttribute('fill', `url(#${cfg.grad})`);
+  path.setAttribute('stroke', cfg.stroke); path.setAttribute('stroke-width', '0.6');
+  g.appendChild(path);
+
+  // Sheen highlight
+  const sheen = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  sheen.setAttribute('x', cx - topW/2); sheen.setAttribute('y', by+1);
+  sheen.setAttribute('width', topW); sheen.setAttribute('height', cfg.h * 0.3);
+  sheen.setAttribute('rx', '1'); sheen.setAttribute('fill', 'url(#weightSheen)');
+  sheen.setAttribute('opacity', '0.4'); sheen.setAttribute('pointer-events', 'none');
+  g.appendChild(sheen);
+
+  // Weight text (刻印)
+  const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  txt.setAttribute('x', cx); txt.setAttribute('y', by + cfg.h * 0.55);
+  txt.setAttribute('font-size', cfg.fs); txt.setAttribute('fill', cfg.txtFill);
+  txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '800');
+  txt.setAttribute('font-family', 'Georgia, serif'); txt.setAttribute('pointer-events', 'none');
+  txt.textContent = weight;
+  g.appendChild(txt);
+
+  const unit = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  unit.setAttribute('x', cx); unit.setAttribute('y', by + cfg.h * 0.85);
+  unit.setAttribute('font-size', cfg.fs * 0.55); unit.setAttribute('fill', cfg.txtFill);
+  unit.setAttribute('text-anchor', 'middle'); unit.setAttribute('font-weight', '600');
+  unit.setAttribute('pointer-events', 'none');
+  unit.textContent = 'N';
+  g.appendChild(unit);
+
+  g.totalH = cfg.hh + 1 + cfg.h + 3; // total height for stacking
+  return g;
+}
+
 function renderWeights() {
   leverWeightsG.innerHTML = '';
-  // Group by position
   const groups = {};
   for (const p of placed) {
     if (!groups[p.pos]) groups[p.pos] = [];
@@ -249,30 +323,21 @@ function renderWeights() {
     const hook = hooks.find(h => h.pos === parseInt(pos));
     if (!hook) continue;
 
+    // Hook line
+    const totalH = weights.reduce((s, w) => s + (w.weight >= 5 ? 34 : w.weight >= 2 ? 31 : 27), 0);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', hook.x); line.setAttribute('y1', 264);
+    line.setAttribute('x2', hook.x); line.setAttribute('y2', 270);
+    line.setAttribute('stroke', '#78716C'); line.setAttribute('stroke-width', '1');
+    leverWeightsG.appendChild(line);
+
+    let curY = 270;
     for (let i = 0; i < weights.length; i++) {
       const w = weights[i];
-      const wx = hook.x;
-      const wy = 270 + i * 22; // stack vertically
-      const size = w.weight === 2 ? 20 : 16;
+      const wg = createWeightSVG(hook.x, curY, w.weight);
+      wg.style.cursor = 'grab';
 
-      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      rect.setAttribute('x', wx - size / 2); rect.setAttribute('y', wy);
-      rect.setAttribute('width', size); rect.setAttribute('height', size);
-      const gradId = w.weight >= 5 ? 'weightGrad5' : w.weight >= 2 ? 'weightGrad2' : 'weightGrad1';
-      const strokeColor = w.weight >= 5 ? '#B91C1C' : w.weight >= 2 ? '#1D4ED8' : '#4B5563';
-      rect.setAttribute('rx', '3'); rect.setAttribute('fill', `url(#${gradId})`);
-      rect.setAttribute('stroke', strokeColor); rect.setAttribute('stroke-width', '1');
-      rect.style.cursor = 'grab';
-
-      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      txt.setAttribute('x', wx); txt.setAttribute('y', wy + size / 2 + 4);
-      txt.setAttribute('font-size', '9'); txt.setAttribute('fill', '#fff');
-      txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '800');
-      txt.setAttribute('pointer-events', 'none');
-      txt.textContent = w.weight + 'N';
-
-      // Drag to remove
-      rect.addEventListener('pointerdown', e => {
+      wg.addEventListener('pointerdown', e => {
         e.preventDefault(); e.stopPropagation();
         const idx = placed.indexOf(w);
         if (idx >= 0) {
@@ -282,17 +347,8 @@ function renderWeights() {
         }
       });
 
-      leverWeightsG.appendChild(rect);
-      leverWeightsG.appendChild(txt);
-
-      // Hook line
-      if (i === 0) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', wx); line.setAttribute('y1', 264);
-        line.setAttribute('x2', wx); line.setAttribute('y2', wy);
-        line.setAttribute('stroke', '#78716C'); line.setAttribute('stroke-width', '1');
-        leverWeightsG.insertBefore(line, leverWeightsG.firstChild);
-      }
+      leverWeightsG.appendChild(wg);
+      curY += wg.totalH + 2;
     }
   }
 }
@@ -309,27 +365,12 @@ function renderWeightBox() {
   weightBoxG.innerHTML = '';
   weightSources.forEach((src, i) => {
     const bx = 80 + i * 46;
-    const by = 390;
-    const size = src.w >= 5 ? 32 : src.w >= 2 ? 28 : 24;
-    const gradId = src.w >= 5 ? 'weightGrad5' : src.w >= 2 ? 'weightGrad2' : 'weightGrad1';
-    const strokeColor = src.w >= 5 ? '#B91C1C' : src.w >= 2 ? '#1D4ED8' : '#4B5563';
+    const by = 388;
 
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const g = createWeightSVG(bx, by, src.w);
     g.style.cursor = 'grab';
     g.addEventListener('pointerenter', () => g.setAttribute('filter', 'url(#weightShadow)'));
     g.addEventListener('pointerleave', () => g.removeAttribute('filter'));
-    const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    r.setAttribute('x', bx - size/2); r.setAttribute('y', by);
-    r.setAttribute('width', size); r.setAttribute('height', size);
-    r.setAttribute('rx', '4'); r.setAttribute('fill', `url(#${gradId})`);
-    r.setAttribute('stroke', strokeColor); r.setAttribute('stroke-width', '1.5');
-    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    t.setAttribute('x', bx); t.setAttribute('y', by + size/2 + 4);
-    t.setAttribute('font-size', src.w >= 5 ? '11' : '10'); t.setAttribute('fill', '#fff');
-    t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '800');
-    t.setAttribute('pointer-events', 'none');
-    t.textContent = src.w + 'N';
-    g.appendChild(r); g.appendChild(t);
     weightBoxG.appendChild(g);
 
     // Drag interaction
@@ -337,19 +378,15 @@ function renderWeightBox() {
     g.addEventListener('pointerdown', e => {
       e.preventDefault();
       dragging = true;
-      // Create ghost element
-      ghost = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      ghost.setAttribute('width', size); ghost.setAttribute('height', size);
-      ghost.setAttribute('rx', '4'); ghost.setAttribute('fill', `url(#${gradId})`);
-      ghost.setAttribute('stroke', strokeColor); ghost.setAttribute('stroke-width', '1.5');
-      ghost.setAttribute('opacity', '0.7'); ghost.setAttribute('pointer-events', 'none');
+      ghost = createWeightSVG(0, 0, src.w);
+      ghost.setAttribute('opacity', '0.7');
+      ghost.setAttribute('pointer-events', 'none');
       svg.appendChild(ghost);
     });
     document.addEventListener('pointermove', ev => {
       if (!dragging || !ghost) return;
       const pt = svgPoint(ev);
-      ghost.setAttribute('x', pt.x - size/2);
-      ghost.setAttribute('y', pt.y - size/2);
+      ghost.setAttribute('transform', `translate(${pt.x},${pt.y - 15})`);
     });
     document.addEventListener('pointerup', ev => {
       if (!dragging) return;
