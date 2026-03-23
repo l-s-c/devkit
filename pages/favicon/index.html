@@ -157,7 +157,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         </div>
       </div>
       <div class="panel">
-        <button class="action-btn" id="downloadBtn">💾 导出 PNG 多尺寸</button>
+        <button class="action-btn" id="downloadBtn">⊡ 导出 PNG 多尺寸</button>
         <div class="code-box" id="codeBox">
           <button class="copy-btn" id="copyBtn">复制</button>
 &lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"&gt;
@@ -170,11 +170,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右侧：控制 -->
     <div>
       <div class="panel">
-        <div class="section-title">🎨 生成模式</div>
+        <div class="section-title">◆ 生成模式</div>
         <div class="mode-tabs" id="modeTabs">
-          <button class="mode-tab active" data-mode="text">✏️ 文字</button>
-          <button class="mode-tab" data-mode="emoji">😀 Emoji</button>
-          <button class="mode-tab" data-mode="image">🖼️ 图片</button>
+          <button class="mode-tab active" data-mode="text">✎ 文字</button>
+          <button class="mode-tab" data-mode="emoji">◎ Emoji</button>
+          <button class="mode-tab" data-mode="image">⊞️ 图片</button>
         </div>
 
         <!-- 文字模式 -->
@@ -231,7 +231,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <div id="panelImage" style="display:none">
           <div class="upload-area">
             <input type="file" accept="image/*" id="imgInput">
-            <div style="font-size:32px;margin-bottom:4px">🖼️</div>
+            <div style="font-size:32px;margin-bottom:4px">⊞️</div>
             <div style="font-size:13px;color:var(--text-secondary);font-weight:600">上传图片，自动裁剪为正方形</div>
           </div>
           <div class="slider-row" style="margin-top:12px">
@@ -255,9 +255,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 
-let mode = 'text', selectedEmoji = '⚡', uploadedImg = null;
+let mode = 'text', selectedEmoji = '↯', uploadedImg = null;
 const COLORS = ['#6366F1','#EC4899','#EF4444','#F59E0B','#10B981','#3B82F6','#8B5CF6','#06B6D4','#1A1A2E','#F8F8FC'];
-const EMOJIS = ['⚡','🔥','💎','🚀','⭐','💡','🎯','🎨','💻','🌈','☀️','🌙','❤️','✨','🎵','🏆','📦','🔧','🌍','🎮','📱','🍀','🦄','🐱'];
+const EMOJIS = ['↯','◈','◆','◆','★','◉','◎','◆','⊞','◎','☀️','🌙','❤️','✦','♪','★','⊞','⊘','◎','◎','⊞','◎','◎','◎'];
 const SIZES = [16, 32, 48, 180, 512];
 
 /* ===== 圆角矩形（Architect: ctx.beginPath + ctx.arcTo）===== */
@@ -413,14 +413,14 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
       c.width = 0; c.height = 0;
     }, 'image/png');
   });
-  document.getElementById('statusInfo').textContent = '✅ 已导出 5 个尺寸（16/32/48/180/512px）';
+  document.getElementById('statusInfo').textContent = '✓ 已导出 5 个尺寸（16/32/48/180/512px）';
 });
 
 // 复制代码片段
 document.getElementById('copyBtn').addEventListener('click', () => {
   const code = `<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">\n<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`;
   navigator.clipboard.writeText(code).then(() => {
-    document.getElementById('copyBtn').textContent = '✅';
+    document.getElementById('copyBtn').textContent = '✓';
     setTimeout(() => document.getElementById('copyBtn').textContent = '复制', 1500);
   });
 });

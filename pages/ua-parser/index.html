@@ -45,12 +45,12 @@ textarea:focus{border-color:var(--brand-500)}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">🔍 User-Agent 字符串</div>
+    <div class="section-title">⊙ User-Agent 字符串</div>
     <textarea id="uaInput" placeholder="粘贴 UA 字符串..."></textarea>
-    <button class="btn" id="fillBtn">📱 填充当前浏览器 UA</button>
+    <button class="btn" id="fillBtn">⊞ 填充当前浏览器 UA</button>
   </div>
   <div class="panel">
-    <div class="section-title">📊 解析结果</div>
+    <div class="section-title">▦ 解析结果</div>
     <div class="info-grid" id="resultGrid"></div>
   </div>
 </div>
@@ -86,12 +86,12 @@ function parse(ua){
   if(/Mobile|Android/i.test(ua)&&!/iPad/i.test(ua))device='Mobile';
   else if(/iPad|Tablet/i.test(ua))device='Tablet';
   return[
-    ['🌐','浏览器',browser+(version?' '+version:'')],
-    ['🖥️','操作系统',os],
-    ['📱','设备类型',device],
-    ['⚙️','渲染引擎',engine],
-    ['🤖','爬虫',isBot?'是':'否'],
-    ['📏','UA 长度',ua.length+' 字符']
+    ['◎','浏览器',browser+(version?' '+version:'')],
+    ['⊞️','操作系统',os],
+    ['⊞','设备类型',device],
+    ['⊕','渲染引擎',engine],
+    ['◎','爬虫',isBot?'是':'否'],
+    ['⊞','UA 长度',ua.length+' 字符']
   ];
 }
 

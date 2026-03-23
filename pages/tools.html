@@ -130,7 +130,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="topbar">
   <a class="topbar-logo" href="./"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
   <div class="topbar-spacer"></div>
-  <a class="nav-count" id="toolCount" href="./team/" style="text-decoration:none;color:var(--brand-500)">🏆 关于团队</a>
+  <a class="nav-count" id="toolCount" href="./team/" style="text-decoration:none;color:var(--brand-500)">★ 关于团队</a>
   <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 </div>
 
@@ -141,35 +141,35 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   </div>
 
   <div class="search-wrap">
-    <span class="search-icon">🔍</span>
+    <span class="search-icon">⊙</span>
     <input class="search-input" id="searchInput" placeholder="搜索工具…（如 JSON、图片、计算器）">
     <button class="search-clear" id="searchClear">✕</button>
   </div>
 
   <div class="tags-wrap" id="tagsWrap">
     <span class="tag active" data-cat="all">全部</span>
-    <span class="tag" data-cat="text">📝 文本</span>
-    <span class="tag" data-cat="image">🖼️ 图片</span>
-    <span class="tag" data-cat="calc">🔢 计算</span>
-    <span class="tag" data-cat="dev">💻 开发</span>
-    <span class="tag" data-cat="design">🎨 设计</span>
-    <span class="tag" data-cat="encode">🔐 编码</span>
-    <span class="tag" data-cat="life">🏠 生活</span>
-    <span class="tag" data-cat="edu">📚 教育</span>
-    <span class="tag" data-cat="lab">🔬 实验室</span>
+    <span class="tag" data-cat="text">☰ 文本</span>
+    <span class="tag" data-cat="image">⊞️ 图片</span>
+    <span class="tag" data-cat="calc">⊞ 计算</span>
+    <span class="tag" data-cat="dev">⊞ 开发</span>
+    <span class="tag" data-cat="design">◆ 设计</span>
+    <span class="tag" data-cat="encode">⊕ 编码</span>
+    <span class="tag" data-cat="life">⌂ 生活</span>
+    <span class="tag" data-cat="edu">☰ 教育</span>
+    <span class="tag" data-cat="lab">◇ 实验室</span>
   </div>
 
   <div class="container">
     <div class="hot-section" id="hotSection">
-      <div class="hot-title">🔥 热门工具</div>
+      <div class="hot-title">◈ 热门工具</div>
       <div class="hot-grid" id="hotGrid"></div>
     </div>
     <div id="toolsSection">
-      <div class="section-title" id="sectionTitle">📦 全部工具</div>
+      <div class="section-title" id="sectionTitle">⊞ 全部工具</div>
       <div class="tools-grid" id="toolsGrid"></div>
     </div>
     <div class="empty" id="emptyState" style="display:none">
-      <div class="empty-icon">🔍</div>
+      <div class="empty-icon">⊙</div>
       <div class="empty-text">没有找到匹配的工具</div>
     </div>
   </div>
@@ -185,149 +185,149 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 import '../shared/theme.js';
 
 const TOOLS = [
-  { name:'JSON 格式化', desc:'格式化、压缩、验证 JSON', emoji:'📋', cat:'dev', url:'./json/', hot:false },
-  { name:'正则表达式测试', desc:'实时匹配、替换、分组', emoji:'🔣', cat:'dev', url:'./regex/', hot:false },
-  { name:'Base64 编解码', desc:'文本/图片 Base64 转换', emoji:'🔐', cat:'encode', url:'./base64/', hot:false },
-  { name:'URL 编解码', desc:'URL encode/decode', emoji:'🔗', cat:'encode', url:'./url-codec/', hot:false },
-  { name:'JWT 解析', desc:'解析 JWT Token 结构', emoji:'🎫', cat:'dev', url:'./jwt/', hot:false },
+  { name:'JSON 格式化', desc:'格式化、压缩、验证 JSON', emoji:'☰', cat:'dev', url:'./json/', hot:false },
+  { name:'正则表达式测试', desc:'实时匹配、替换、分组', emoji:'◎', cat:'dev', url:'./regex/', hot:false },
+  { name:'Base64 编解码', desc:'文本/图片 Base64 转换', emoji:'⊕', cat:'encode', url:'./base64/', hot:false },
+  { name:'URL 编解码', desc:'URL encode/decode', emoji:'⊞', cat:'encode', url:'./url-codec/', hot:false },
+  { name:'JWT 解析', desc:'解析 JWT Token 结构', emoji:'◎', cat:'dev', url:'./jwt/', hot:false },
   { name:'UUID 生成器', desc:'批量生成 UUID v4', emoji:'🆔', cat:'dev', url:'./uuid/', hot:false },
   { name:'Hash 计算', desc:'MD5/SHA-1/SHA-256', emoji:'#️⃣', cat:'encode', url:'./hash/', hot:false },
-  { name:'时间戳转换', desc:'Unix 时间戳 ↔ 日期', emoji:'⏰', cat:'dev', url:'./timestamp/', hot:false },
-  { name:'颜色转换', desc:'HEX/RGB/HSL 互转', emoji:'🎨', cat:'design', url:'./color/', hot:false },
-  { name:'Markdown 预览', desc:'实时渲染 Markdown', emoji:'📝', cat:'text', url:'./markdown/', hot:false },
-  { name:'文本对比', desc:'Diff 对比两段文本', emoji:'📊', cat:'text', url:'./text-diff/', hot:false },
-  { name:'代码格式化', desc:'HTML/CSS/JS 格式化', emoji:'💻', cat:'dev', url:'./code-formatter/', hot:false },
-  { name:'SQL 格式化', desc:'SQL 美化与压缩', emoji:'🗃️', cat:'dev', url:'./sql-formatter/', hot:false },
-  { name:'Cron 表达式', desc:'Cron 可视化解析', emoji:'⏱️', cat:'dev', url:'./cron/', hot:false },
-  { name:'密码生成器', desc:'自定义长度和字符集', emoji:'🔑', cat:'encode', url:'./password/', hot:true },
-  { name:'进制转换', desc:'2/8/10/16 进制互转', emoji:'🔢', cat:'dev', url:'./number-base/', hot:false },
-  { name:'单位换算', desc:'长度/重量/温度/面积', emoji:'📏', cat:'calc', url:'./unit-converter/', hot:false },
-  { name:'YAML 格式化', desc:'格式化/压缩/YAML↔JSON', emoji:'📄', cat:'dev', url:'./yaml/', hot:false },
-  { name:'TOML 编辑器', desc:'格式化/TOML↔JSON', emoji:'⚙️', cat:'dev', url:'./toml/', hot:false },
-  { name:'字数统计', desc:'字符/词/句/段落统计', emoji:'📊', cat:'text', url:'./word-counter/', hot:true },
-  { name:'HTML 实体转换', desc:'编码/解码 + 参考表', emoji:'🏷️', cat:'encode', url:'./html-entity/', hot:false },
-  { name:'大小写转换', desc:'8 种大小写转换模式', emoji:'🔤', cat:'text', url:'./case-converter/', hot:false },
-  { name:'文本去重', desc:'去重 + 排序 + 导出', emoji:'🧹', cat:'text', url:'./text-dedupe/', hot:false },
-  { name:'Lorem Ipsum', desc:'中英文占位文本生成', emoji:'📜', cat:'text', url:'./lorem/', hot:false },
-  { name:'随机数生成器', desc:'自定义范围随机数', emoji:'🎲', cat:'calc', url:'./random/', hot:false },
-  { name:'CSV 查看器', desc:'表格预览/排序/搜索', emoji:'📊', cat:'dev', url:'./csv-viewer/', hot:false },
+  { name:'时间戳转换', desc:'Unix 时间戳 ↔ 日期', emoji:'◷', cat:'dev', url:'./timestamp/', hot:false },
+  { name:'颜色转换', desc:'HEX/RGB/HSL 互转', emoji:'◆', cat:'design', url:'./color/', hot:false },
+  { name:'Markdown 预览', desc:'实时渲染 Markdown', emoji:'☰', cat:'text', url:'./markdown/', hot:false },
+  { name:'文本对比', desc:'Diff 对比两段文本', emoji:'▦', cat:'text', url:'./text-diff/', hot:false },
+  { name:'代码格式化', desc:'HTML/CSS/JS 格式化', emoji:'⊞', cat:'dev', url:'./code-formatter/', hot:false },
+  { name:'SQL 格式化', desc:'SQL 美化与压缩', emoji:'◎️', cat:'dev', url:'./sql-formatter/', hot:false },
+  { name:'Cron 表达式', desc:'Cron 可视化解析', emoji:'◷️', cat:'dev', url:'./cron/', hot:false },
+  { name:'密码生成器', desc:'自定义长度和字符集', emoji:'⊕', cat:'encode', url:'./password/', hot:true },
+  { name:'进制转换', desc:'2/8/10/16 进制互转', emoji:'⊞', cat:'dev', url:'./number-base/', hot:false },
+  { name:'单位换算', desc:'长度/重量/温度/面积', emoji:'⊞', cat:'calc', url:'./unit-converter/', hot:false },
+  { name:'YAML 格式化', desc:'格式化/压缩/YAML↔JSON', emoji:'☰', cat:'dev', url:'./yaml/', hot:false },
+  { name:'TOML 编辑器', desc:'格式化/TOML↔JSON', emoji:'⊕', cat:'dev', url:'./toml/', hot:false },
+  { name:'字数统计', desc:'字符/词/句/段落统计', emoji:'▦', cat:'text', url:'./word-counter/', hot:true },
+  { name:'HTML 实体转换', desc:'编码/解码 + 参考表', emoji:'◎️', cat:'encode', url:'./html-entity/', hot:false },
+  { name:'大小写转换', desc:'8 种大小写转换模式', emoji:'⊞', cat:'text', url:'./case-converter/', hot:false },
+  { name:'文本去重', desc:'去重 + 排序 + 导出', emoji:'◎', cat:'text', url:'./text-dedupe/', hot:false },
+  { name:'Lorem Ipsum', desc:'中英文占位文本生成', emoji:'☰', cat:'text', url:'./lorem/', hot:false },
+  { name:'随机数生成器', desc:'自定义范围随机数', emoji:'◎', cat:'calc', url:'./random/', hot:false },
+  { name:'CSV 查看器', desc:'表格预览/排序/搜索', emoji:'▦', cat:'dev', url:'./csv-viewer/', hot:false },
   { name:'BMI 计算器', desc:'身体质量指数计算', emoji:'⚖️', cat:'calc', url:'./bmi/', hot:false },
   { name:'倒计时计算', desc:'距离目标日期天数', emoji:'⏳', cat:'calc', url:'./countdown/', hot:false },
-  { name:'利息计算器', desc:'房贷/存款利息计算', emoji:'🏦', cat:'calc', url:'./interest/', hot:false },
-  { name:'二维码生成器', desc:'文本/URL 生成二维码', emoji:'📱', cat:'dev', url:'./qrcode/', hot:false },
-  { name:'图片压缩', desc:'批量压缩 JPG/PNG/WebP', emoji:'🗜️', cat:'image', url:'./image-compress/', hot:true },
-  { name:'图片格式转换', desc:'JPG/PNG/WebP 互转', emoji:'🖼️', cat:'image', url:'./image-format/', hot:false },
-  { name:'提前还款计算', desc:'多次提前还款模拟', emoji:'💰', cat:'calc', url:'./prepayment/', hot:true },
-  { name:'图片缩放', desc:'8 预设 + 批量缩放', emoji:'📐', cat:'image', url:'./image-resize/', hot:true },
-  { name:'个税计算器', desc:'累计预扣 + 年终奖', emoji:'💳', cat:'calc', url:'./tax/', hot:true },
-  { name:'图片加水印', desc:'文字/图片水印 + 平铺', emoji:'💧', cat:'image', url:'./watermark/', hot:false },
-  { name:'Favicon 生成', desc:'文字/emoji/图片生成图标', emoji:'🌐', cat:'design', url:'./favicon/', hot:false },
+  { name:'利息计算器', desc:'房贷/存款利息计算', emoji:'◎', cat:'calc', url:'./interest/', hot:false },
+  { name:'二维码生成器', desc:'文本/URL 生成二维码', emoji:'⊞', cat:'dev', url:'./qrcode/', hot:false },
+  { name:'图片压缩', desc:'批量压缩 JPG/PNG/WebP', emoji:'⊕️', cat:'image', url:'./image-compress/', hot:true },
+  { name:'图片格式转换', desc:'JPG/PNG/WebP 互转', emoji:'⊞️', cat:'image', url:'./image-format/', hot:false },
+  { name:'提前还款计算', desc:'多次提前还款模拟', emoji:'◈', cat:'calc', url:'./prepayment/', hot:true },
+  { name:'图片缩放', desc:'8 预设 + 批量缩放', emoji:'∠', cat:'image', url:'./image-resize/', hot:true },
+  { name:'个税计算器', desc:'累计预扣 + 年终奖', emoji:'◎', cat:'calc', url:'./tax/', hot:true },
+  { name:'图片加水印', desc:'文字/图片水印 + 平铺', emoji:'◆', cat:'image', url:'./watermark/', hot:false },
+  { name:'Favicon 生成', desc:'文字/emoji/图片生成图标', emoji:'◎', cat:'design', url:'./favicon/', hot:false },
   { name:'Unicode 转换', desc:'4 格式双向转换', emoji:'🔡', cat:'encode', url:'./unicode/', hot:false },
-  { name:'文本加密解密', desc:'AES-256/ROT13/Caesar', emoji:'🔒', cat:'encode', url:'./encrypt/', hot:false },
-  { name:'CSS 渐变生成', desc:'线性/径向/锥形渐变', emoji:'🌈', cat:'design', url:'./gradient/', hot:false },
-  { name:'证件照换底色', desc:'白/蓝/红底色替换', emoji:'📸', cat:'image', url:'./id-photo/', hot:false },
-  { name:'图片拼接', desc:'横向/纵向/网格拼接', emoji:'🧩', cat:'image', url:'./collage/', hot:false },
-  { name:'图片转 PDF', desc:'多图合并 PDF 导出', emoji:'📄', cat:'image', url:'./img-to-pdf/', hot:false },
-  { name:'汇率换算', desc:'实时汇率 11 种货币', emoji:'💱', cat:'life', url:'./currency/', hot:false },
-  { name:'万年历', desc:'农历/黄历/宜忌/节气', emoji:'📅', cat:'life', url:'./calendar/', hot:false },
+  { name:'文本加密解密', desc:'AES-256/ROT13/Caesar', emoji:'⊕', cat:'encode', url:'./encrypt/', hot:false },
+  { name:'CSS 渐变生成', desc:'线性/径向/锥形渐变', emoji:'◎', cat:'design', url:'./gradient/', hot:false },
+  { name:'证件照换底色', desc:'白/蓝/红底色替换', emoji:'◎', cat:'image', url:'./id-photo/', hot:false },
+  { name:'图片拼接', desc:'横向/纵向/网格拼接', emoji:'◎', cat:'image', url:'./collage/', hot:false },
+  { name:'图片转 PDF', desc:'多图合并 PDF 导出', emoji:'☰', cat:'image', url:'./img-to-pdf/', hot:false },
+  { name:'汇率换算', desc:'实时汇率 11 种货币', emoji:'◎', cat:'life', url:'./currency/', hot:false },
+  { name:'万年历', desc:'农历/黄历/宜忌/节气', emoji:'☰', cat:'life', url:'./calendar/', hot:false },
   { name:'电子签名', desc:'Canvas 手写签名导出', emoji:'✍️', cat:'life', url:'./signature/', hot:false },
-  { name:'图表生成器', desc:'柱状/折线/饼图导出', emoji:'📊', cat:'design', url:'./chart/', hot:false },
-  { name:'发票税额计算', desc:'含税⇄不含税 + 批量', emoji:'🧾', cat:'calc', url:'./invoice/', hot:false },
-  { name:'年龄计算器', desc:'生肖/星座/生日倒计时', emoji:'🎂', cat:'calc', url:'./age-calculator/', hot:false },
-  { name:'日期差计算', desc:'两日期间隔天数', emoji:'📅', cat:'calc', url:'./date-diff/', hot:false },
-  { name:'占位图生成', desc:'自定义尺寸/颜色 PNG/SVG', emoji:'🖼️', cat:'dev', url:'./placeholder/', hot:false },
-  { name:'JSON Schema', desc:'Schema 验证 Draft-07', emoji:'🔍', cat:'dev', url:'./json-schema/', hot:false },
-  { name:'文字转语音', desc:'浏览器 TTS 朗读', emoji:'🔊', cat:'life', url:'./tts/', hot:false },
-  { name:'在线计时器', desc:'倒计时+正计时+全屏', emoji:'⏱️', cat:'life', url:'./timer/', hot:false },
-  { name:'九宫格切图', desc:'9/6/4宫格切割打包', emoji:'✂️', cat:'image', url:'./grid-splitter/', hot:false },
-  { name:'HTTP 请求测试', desc:'GET/POST/PUT/DELETE', emoji:'🌐', cat:'dev', url:'./http-tester/', hot:false },
-  { name:'番茄钟', desc:'25/5专注循环计时', emoji:'🍅', cat:'life', url:'./pomodoro/', hot:false },
-  { name:'在线抽签', desc:'密码学级随机抽取', emoji:'🎲', cat:'life', url:'./random-picker/', hot:false },
-  { name:'CSS Box Shadow', desc:'可视化阴影生成器', emoji:'🎨', cat:'dev', url:'./box-shadow/', hot:false },
-  { name:'在线大转盘', desc:'Canvas转盘抽奖', emoji:'🎡', cat:'life', url:'./spin-wheel/', hot:false },
-  { name:'封面图生成器', desc:'公众号/小红书/博客封面', emoji:'🎨', cat:'image', url:'./cover-maker/', hot:true },
-  { name:'Emoji 搜索', desc:'表情符号搜索复制', emoji:'😀', cat:'text', url:'./emoji-search/', hot:true },
+  { name:'图表生成器', desc:'柱状/折线/饼图导出', emoji:'▦', cat:'design', url:'./chart/', hot:false },
+  { name:'发票税额计算', desc:'含税⇄不含税 + 批量', emoji:'◎', cat:'calc', url:'./invoice/', hot:false },
+  { name:'年龄计算器', desc:'生肖/星座/生日倒计时', emoji:'◎', cat:'calc', url:'./age-calculator/', hot:false },
+  { name:'日期差计算', desc:'两日期间隔天数', emoji:'☰', cat:'calc', url:'./date-diff/', hot:false },
+  { name:'占位图生成', desc:'自定义尺寸/颜色 PNG/SVG', emoji:'⊞️', cat:'dev', url:'./placeholder/', hot:false },
+  { name:'JSON Schema', desc:'Schema 验证 Draft-07', emoji:'⊙', cat:'dev', url:'./json-schema/', hot:false },
+  { name:'文字转语音', desc:'浏览器 TTS 朗读', emoji:'♪', cat:'life', url:'./tts/', hot:false },
+  { name:'在线计时器', desc:'倒计时+正计时+全屏', emoji:'◷️', cat:'life', url:'./timer/', hot:false },
+  { name:'九宫格切图', desc:'9/6/4宫格切割打包', emoji:'✂', cat:'image', url:'./grid-splitter/', hot:false },
+  { name:'HTTP 请求测试', desc:'GET/POST/PUT/DELETE', emoji:'◎', cat:'dev', url:'./http-tester/', hot:false },
+  { name:'番茄钟', desc:'25/5专注循环计时', emoji:'●', cat:'life', url:'./pomodoro/', hot:false },
+  { name:'在线抽签', desc:'密码学级随机抽取', emoji:'◎', cat:'life', url:'./random-picker/', hot:false },
+  { name:'CSS Box Shadow', desc:'可视化阴影生成器', emoji:'◆', cat:'dev', url:'./box-shadow/', hot:false },
+  { name:'在线大转盘', desc:'Canvas转盘抽奖', emoji:'◎', cat:'life', url:'./spin-wheel/', hot:false },
+  { name:'封面图生成器', desc:'公众号/小红书/博客封面', emoji:'◆', cat:'image', url:'./cover-maker/', hot:true },
+  { name:'Emoji 搜索', desc:'表情符号搜索复制', emoji:'◎', cat:'text', url:'./emoji-search/', hot:true },
   { name:'在线录屏', desc:'浏览器屏幕录制', emoji:'🎬', cat:'other', url:'./screen-recorder/', hot:true },
-  { name:'PDF 合并', desc:'多个PDF合并为一个', emoji:'📎', cat:'other', url:'./pdf-merge/', hot:true },
-  { name:'PDF 拆分', desc:'按页提取或范围拆分', emoji:'✂️', cat:'other', url:'./pdf-split/', hot:false },
-  { name:'PDF 压缩', desc:'减小PDF文件体积', emoji:'🗜️', cat:'other', url:'./pdf-compress/', hot:false },
-  { name:'取色器', desc:'图片取色 HEX/RGB/HSL', emoji:'🎯', cat:'css', url:'./color-picker/', hot:true },
-  { name:'在线记事本', desc:'多标签笔记自动保存', emoji:'📝', cat:'text', url:'./notepad/', hot:true },
-  { name:'IP 查询', desc:'查询公网IP和设备信息', emoji:'🌐', cat:'other', url:'./ip-lookup/', hot:true },
-  { name:'代码截图', desc:'代码生成精美截图', emoji:'📸', cat:'other', url:'./code-screenshot/', hot:true },
-  { name:'HTML 转 Markdown', desc:'HTML标签转Markdown', emoji:'🔄', cat:'text', url:'./html-to-markdown/', hot:false },
-  { name:'摩斯密码', desc:'文本⇄摩斯互转+声音', emoji:'📡', cat:'text', url:'./morse-code/', hot:true },
-  { name:'二维码识别', desc:'上传图片识别二维码', emoji:'📷', cat:'other', url:'./qr-scanner/', hot:true },
-  { name:'简繁体转换', desc:'简体⇄繁体双向转换', emoji:'🔤', cat:'text', url:'./chinese-convert/', hot:true },
-  { name:'随机头像', desc:'像素风对称头像生成', emoji:'🎭', cat:'image', url:'./avatar-generator/', hot:false },
-  { name:'坐标系转换', desc:'WGS84/GCJ02/BD09互转', emoji:'📍', cat:'other', url:'./coord-convert/', hot:false },
-  { name:'UA 分析', desc:'User-Agent解析', emoji:'🔍', cat:'other', url:'./ua-parser/', hot:false },
-  { name:'血型遗传', desc:'父母血型查子女血型', emoji:'🩸', cat:'other', url:'./blood-type/', hot:false },
-  { name:'生肖查询', desc:'十二生肖+天干地支', emoji:'🐲', cat:'other', url:'./zodiac/', hot:false },
-  { name:'取名器', desc:'宝宝起名+五行+寓意', emoji:'👶', cat:'other', url:'./name-generator/', hot:true },
-  { name:'计算题生成', desc:'小学数学题+打印', emoji:'📐', cat:'edu', url:'./math-practice/', hot:true },
-  { name:'拼音练习', desc:'看字写拼音+打印', emoji:'🔤', cat:'edu', url:'./pinyin-practice/', hot:true },
-  { name:'邮政编码', desc:'全国邮编双向查询', emoji:'📮', cat:'other', url:'./zipcode/', hot:false },
-  { name:'高校查询', desc:'985/211/双一流筛选', emoji:'🏫', cat:'edu', url:'./university/', hot:false },
+  { name:'PDF 合并', desc:'多个PDF合并为一个', emoji:'⊞', cat:'other', url:'./pdf-merge/', hot:true },
+  { name:'PDF 拆分', desc:'按页提取或范围拆分', emoji:'✂', cat:'other', url:'./pdf-split/', hot:false },
+  { name:'PDF 压缩', desc:'减小PDF文件体积', emoji:'⊕️', cat:'other', url:'./pdf-compress/', hot:false },
+  { name:'取色器', desc:'图片取色 HEX/RGB/HSL', emoji:'◎', cat:'css', url:'./color-picker/', hot:true },
+  { name:'在线记事本', desc:'多标签笔记自动保存', emoji:'☰', cat:'text', url:'./notepad/', hot:true },
+  { name:'IP 查询', desc:'查询公网IP和设备信息', emoji:'◎', cat:'other', url:'./ip-lookup/', hot:true },
+  { name:'代码截图', desc:'代码生成精美截图', emoji:'◎', cat:'other', url:'./code-screenshot/', hot:true },
+  { name:'HTML 转 Markdown', desc:'HTML标签转Markdown', emoji:'↻', cat:'text', url:'./html-to-markdown/', hot:false },
+  { name:'摩斯密码', desc:'文本⇄摩斯互转+声音', emoji:'◎', cat:'text', url:'./morse-code/', hot:true },
+  { name:'二维码识别', desc:'上传图片识别二维码', emoji:'◎', cat:'other', url:'./qr-scanner/', hot:true },
+  { name:'简繁体转换', desc:'简体⇄繁体双向转换', emoji:'⊞', cat:'text', url:'./chinese-convert/', hot:true },
+  { name:'随机头像', desc:'像素风对称头像生成', emoji:'◎', cat:'image', url:'./avatar-generator/', hot:false },
+  { name:'坐标系转换', desc:'WGS84/GCJ02/BD09互转', emoji:'◎', cat:'other', url:'./coord-convert/', hot:false },
+  { name:'UA 分析', desc:'User-Agent解析', emoji:'⊙', cat:'other', url:'./ua-parser/', hot:false },
+  { name:'血型遗传', desc:'父母血型查子女血型', emoji:'◎', cat:'other', url:'./blood-type/', hot:false },
+  { name:'生肖查询', desc:'十二生肖+天干地支', emoji:'◎', cat:'other', url:'./zodiac/', hot:false },
+  { name:'取名器', desc:'宝宝起名+五行+寓意', emoji:'◎', cat:'other', url:'./name-generator/', hot:true },
+  { name:'计算题生成', desc:'小学数学题+打印', emoji:'∠', cat:'edu', url:'./math-practice/', hot:true },
+  { name:'拼音练习', desc:'看字写拼音+打印', emoji:'⊞', cat:'edu', url:'./pinyin-practice/', hot:true },
+  { name:'邮政编码', desc:'全国邮编双向查询', emoji:'◎', cat:'other', url:'./zipcode/', hot:false },
+  { name:'高校查询', desc:'985/211/双一流筛选', emoji:'◎', cat:'edu', url:'./university/', hot:false },
   { name:'字帖生成器', desc:'田字格描红+打印', emoji:'✍️', cat:'edu', url:'./copybook/', hot:true },
   { name:'元素周期表', desc:'118元素8色分类', emoji:'⚗️', cat:'edu', url:'./periodic-table/', hot:true },
   { name:'乘法口诀表', desc:'九九表+语音+练习', emoji:'✖️', cat:'edu', url:'./multiplication/', hot:true },
-  { name:'古诗词填空', desc:'必背古诗+即时批改', emoji:'📜', cat:'edu', url:'./poetry-practice/', hot:true },
-  { name:'英语单词卡片', desc:'翻转卡片+发音', emoji:'🔤', cat:'edu', url:'./word-cards/' },
-  { name:'笔顺动画', desc:'9000+字笔顺+跟写', emoji:'✏️', cat:'edu', url:'./stroke-order/', hot:true },
-  { name:'组词练习', desc:'常用字组词+例句', emoji:'📝', cat:'edu', url:'./word-formation/' },
-  { name:'成语词典', desc:'释义出处+成语接龙', emoji:'📚', cat:'edu', url:'./idiom-dict/', hot:true },
-  { name:'看图写话素材', desc:'写作提示+范文', emoji:'🖼️', cat:'edu', url:'./writing-prompt/' },
-  { name:'身高体重生长曲线', desc:'WHO标准+Chart.js', emoji:'📏', cat:'edu', url:'./growth-chart/' },
-  { name:'高考倒计时', desc:'实时倒计时+名言', emoji:'🔴', cat:'edu', url:'./gaokao-countdown/', hot:true },
+  { name:'古诗词填空', desc:'必背古诗+即时批改', emoji:'☰', cat:'edu', url:'./poetry-practice/', hot:true },
+  { name:'英语单词卡片', desc:'翻转卡片+发音', emoji:'⊞', cat:'edu', url:'./word-cards/' },
+  { name:'笔顺动画', desc:'9000+字笔顺+跟写', emoji:'✎', cat:'edu', url:'./stroke-order/', hot:true },
+  { name:'组词练习', desc:'常用字组词+例句', emoji:'☰', cat:'edu', url:'./word-formation/' },
+  { name:'成语词典', desc:'释义出处+成语接龙', emoji:'☰', cat:'edu', url:'./idiom-dict/', hot:true },
+  { name:'看图写话素材', desc:'写作提示+范文', emoji:'⊞️', cat:'edu', url:'./writing-prompt/' },
+  { name:'身高体重生长曲线', desc:'WHO标准+Chart.js', emoji:'⊞', cat:'edu', url:'./growth-chart/' },
+  { name:'高考倒计时', desc:'实时倒计时+名言', emoji:'●', cat:'edu', url:'./gaokao-countdown/', hot:true },
   { name:'物理公式大全', desc:'力学电学热学+KaTeX', emoji:'⚛️', cat:'edu', url:'./physics-formulas/', hot:true },
-  { name:'数学公式速查', desc:'代数几何三角+KaTeX', emoji:'📐', cat:'edu', url:'./math-formulas/', hot:true },
-  { name:'中国历史年表', desc:'朝代时间轴+事件', emoji:'📜', cat:'edu', url:'./history-timeline/' },
-  { name:'疫苗接种时间表', desc:'国家免疫规划', emoji:'💉', cat:'edu', url:'./vaccine-schedule/' },
-  { name:'作文纸生成器', desc:'400/600/800格打印', emoji:'📝', cat:'edu', url:'./essay-paper/' },
-  { name:'英语语法速查', desc:'时态语态句型从句', emoji:'📖', cat:'edu', url:'./english-grammar/', hot:true },
-  { name:'数独生成器', desc:'4难度+计时+验证', emoji:'🧩', cat:'edu', url:'./sudoku/', hot:true },
-  { name:'汉字偏旁部首', desc:'24部首+例字拼音', emoji:'🔍', cat:'edu', url:'./radical-lookup/' },
-  { name:'考研倒计时', desc:'实时倒计时+名言', emoji:'🎓', cat:'edu', url:'./kaoyan-countdown/' },
+  { name:'数学公式速查', desc:'代数几何三角+KaTeX', emoji:'∠', cat:'edu', url:'./math-formulas/', hot:true },
+  { name:'中国历史年表', desc:'朝代时间轴+事件', emoji:'☰', cat:'edu', url:'./history-timeline/' },
+  { name:'疫苗接种时间表', desc:'国家免疫规划', emoji:'◎', cat:'edu', url:'./vaccine-schedule/' },
+  { name:'作文纸生成器', desc:'400/600/800格打印', emoji:'☰', cat:'edu', url:'./essay-paper/' },
+  { name:'英语语法速查', desc:'时态语态句型从句', emoji:'⊞', cat:'edu', url:'./english-grammar/', hot:true },
+  { name:'数独生成器', desc:'4难度+计时+验证', emoji:'◎', cat:'edu', url:'./sudoku/', hot:true },
+  { name:'汉字偏旁部首', desc:'24部首+例字拼音', emoji:'⊙', cat:'edu', url:'./radical-lookup/' },
+  { name:'考研倒计时', desc:'实时倒计时+名言', emoji:'◎', cat:'edu', url:'./kaoyan-countdown/' },
   { name:'化学方程式配平', desc:'自动配平+原子守恒', emoji:'⚗️', cat:'edu', url:'./chem-balance/' },
-  { name:'英语音标表', desc:'48音标+点击发音', emoji:'🔊', cat:'edu', url:'./phonetic-chart/', hot:true },
+  { name:'英语音标表', desc:'48音标+点击发音', emoji:'♪', cat:'edu', url:'./phonetic-chart/', hot:true },
   { name:'视力表', desc:'标准E字表+打印', emoji:'👁️', cat:'life', url:'./eye-chart/' },
-  { name:'高考分数线查询', desc:'历年各省分数线', emoji:'📊', cat:'edu', url:'./score-lookup/' },
-  { name:'古诗词朗诵', desc:'拼音注音+朗读', emoji:'📖', cat:'edu', url:'./poetry-recite/' },
+  { name:'高考分数线查询', desc:'历年各省分数线', emoji:'▦', cat:'edu', url:'./score-lookup/' },
+  { name:'古诗词朗诵', desc:'拼音注音+朗读', emoji:'⊞', cat:'edu', url:'./poetry-recite/' },
   { name:'身份证归属地查询', desc:'前6位→省市区', emoji:'🪪', cat:'life', url:'./id-lookup/' },
-  { name:'近义词反义词查询', desc:'500组词汇+拼音例句', emoji:'📖', cat:'edu', url:'./synonym/', hot:true },
-  { name:'分数计算器', desc:'四则运算+约分+步骤', emoji:'🔢', cat:'edu', url:'./fraction-calc/' },
-  { name:'方程求解器', desc:'一元二次+二元一次', emoji:'📐', cat:'edu', url:'./equation-solver/', hot:true },
-  { name:'拼音声母韵母表', desc:'三色63音节+发音', emoji:'🔤', cat:'edu', url:'./pinyin-table/' },
-  { name:'作文素材库', desc:'名言好词好句+复制', emoji:'📚', cat:'edu', url:'./writing-material/' },
-  { name:'汉字笔画数查询', desc:'多字查询+部首拼音', emoji:'✏️', cat:'edu', url:'./stroke-count/' },
+  { name:'近义词反义词查询', desc:'500组词汇+拼音例句', emoji:'⊞', cat:'edu', url:'./synonym/', hot:true },
+  { name:'分数计算器', desc:'四则运算+约分+步骤', emoji:'⊞', cat:'edu', url:'./fraction-calc/' },
+  { name:'方程求解器', desc:'一元二次+二元一次', emoji:'∠', cat:'edu', url:'./equation-solver/', hot:true },
+  { name:'拼音声母韵母表', desc:'三色63音节+发音', emoji:'⊞', cat:'edu', url:'./pinyin-table/' },
+  { name:'作文素材库', desc:'名言好词好句+复制', emoji:'☰', cat:'edu', url:'./writing-material/' },
+  { name:'汉字笔画数查询', desc:'多字查询+部首拼音', emoji:'✎', cat:'edu', url:'./stroke-count/' },
   { name:'化学分子量计算', desc:'分子式→摩尔质量', emoji:'⚗️', cat:'edu', url:'./molar-mass/' },
-  { name:'英语时态表', desc:'4×4矩阵+信号词', emoji:'⏰', cat:'edu', url:'./tense-chart/', hot:true },
-  { name:'CSR证书生成', desc:'RSA密钥对+本地生成', emoji:'🔐', cat:'dev', url:'./csr-generator/' },
-  { name:'几何图形计算器', desc:'10种图形面积周长体积', emoji:'📐', cat:'edu', url:'./geometry-calc/', hot:true },
-  { name:'函数图像绘制', desc:'安全parser+Canvas画图', emoji:'📈', cat:'edu', url:'./function-plot/', hot:true },
-  { name:'拼音声调标注', desc:'汉字自动标注四声', emoji:'🔤', cat:'edu', url:'./pinyin-tone/' },
-  { name:'世界国旗查询', desc:'30+国家emoji+详情', emoji:'🌍', cat:'edu', url:'./world-flags/' },
-  { name:'天文星座查询', desc:'12星座+暗夜星空主题', emoji:'🌌', cat:'life', url:'./constellation/' },
+  { name:'英语时态表', desc:'4×4矩阵+信号词', emoji:'◷', cat:'edu', url:'./tense-chart/', hot:true },
+  { name:'CSR证书生成', desc:'RSA密钥对+本地生成', emoji:'⊕', cat:'dev', url:'./csr-generator/' },
+  { name:'几何图形计算器', desc:'10种图形面积周长体积', emoji:'∠', cat:'edu', url:'./geometry-calc/', hot:true },
+  { name:'函数图像绘制', desc:'安全parser+Canvas画图', emoji:'▦', cat:'edu', url:'./function-plot/', hot:true },
+  { name:'拼音声调标注', desc:'汉字自动标注四声', emoji:'⊞', cat:'edu', url:'./pinyin-tone/' },
+  { name:'世界国旗查询', desc:'30+国家emoji+详情', emoji:'◎', cat:'edu', url:'./world-flags/' },
+  { name:'天文星座查询', desc:'12星座+暗夜星空主题', emoji:'◎', cat:'life', url:'./constellation/' },
   { name:'英语作文模板', desc:'万能句型+连接词', emoji:'✍️', cat:'edu', url:'./essay-template/' },
-  { name:'错题本生成器', desc:'记录+打印+分类统计', emoji:'📕', cat:'edu', url:'./mistake-book/' },
-  { name:'古诗词默写', desc:'上句写下句+即时判对错', emoji:'📝', cat:'edu', url:'./poetry-dictation/', hot:true },
-  { name:'汉字结构分析', desc:'6种结构+部件拆分', emoji:'🔍', cat:'edu', url:'./char-structure/' },
-  { name:'同音字查询', desc:'按声调分组+组词', emoji:'🔊', cat:'edu', url:'./homophone/' },
-  { name:'作文评分器', desc:'五维度评分+改进建议', emoji:'📝', cat:'edu', url:'./essay-scorer/' },
-  { name:'数列求和', desc:'等差等比+解题步骤', emoji:'📊', cat:'edu', url:'./sequence-sum/' },
-  { name:'排列组合计算', desc:'A(n,m)/C(n,m)+BigInt', emoji:'🔢', cat:'edu', url:'./combination/' },
-  { name:'单位换算教育版', desc:'进率表+练习模式', emoji:'📏', cat:'edu', url:'./unit-convert-edu/' },
-  { name:'英语不规则动词', desc:'100+动词+练习+发音', emoji:'📖', cat:'edu', url:'./irregular-verbs/', hot:true },
-  { name:'自然拼读', desc:'50+规则+例词发音', emoji:'🔊', cat:'edu', url:'./phonics/' },
-  { name:'句子成分分析', desc:'五色标注+50例句', emoji:'🔍', cat:'edu', url:'./sentence-parse/' },
-  { name:'物理实验模拟', desc:'欧姆定律+滑动条联动', emoji:'🔬', cat:'lab', url:'./physics-lab/', hot:true },
-  { name:'单摆运动模拟', desc:'交互式物理实验动画', emoji:'🔬', cat:'lab', url:'./lab/pendulum/' },
-  { name:'电路模拟实验', desc:'欧姆定律+串并联交互', emoji:'🔌', cat:'lab', url:'./lab/circuit/' },
-  { name:'🔬 实验室', desc:'互动物理化学数学实验', emoji:'🔬', cat:'lab', url:'./lab/', hot:true },
+  { name:'错题本生成器', desc:'记录+打印+分类统计', emoji:'◎', cat:'edu', url:'./mistake-book/' },
+  { name:'古诗词默写', desc:'上句写下句+即时判对错', emoji:'☰', cat:'edu', url:'./poetry-dictation/', hot:true },
+  { name:'汉字结构分析', desc:'6种结构+部件拆分', emoji:'⊙', cat:'edu', url:'./char-structure/' },
+  { name:'同音字查询', desc:'按声调分组+组词', emoji:'♪', cat:'edu', url:'./homophone/' },
+  { name:'作文评分器', desc:'五维度评分+改进建议', emoji:'☰', cat:'edu', url:'./essay-scorer/' },
+  { name:'数列求和', desc:'等差等比+解题步骤', emoji:'▦', cat:'edu', url:'./sequence-sum/' },
+  { name:'排列组合计算', desc:'A(n,m)/C(n,m)+BigInt', emoji:'⊞', cat:'edu', url:'./combination/' },
+  { name:'单位换算教育版', desc:'进率表+练习模式', emoji:'⊞', cat:'edu', url:'./unit-convert-edu/' },
+  { name:'英语不规则动词', desc:'100+动词+练习+发音', emoji:'⊞', cat:'edu', url:'./irregular-verbs/', hot:true },
+  { name:'自然拼读', desc:'50+规则+例词发音', emoji:'♪', cat:'edu', url:'./phonics/' },
+  { name:'句子成分分析', desc:'五色标注+50例句', emoji:'⊙', cat:'edu', url:'./sentence-parse/' },
+  { name:'物理实验模拟', desc:'欧姆定律+滑动条联动', emoji:'◇', cat:'lab', url:'./physics-lab/', hot:true },
+  { name:'单摆运动模拟', desc:'交互式物理实验动画', emoji:'◇', cat:'lab', url:'./lab/pendulum/' },
+  { name:'电路模拟实验', desc:'欧姆定律+串并联交互', emoji:'⊟', cat:'lab', url:'./lab/circuit/' },
+  { name:'◇ 实验室', desc:'互动物理化学数学实验', emoji:'◇', cat:'lab', url:'./lab/', hot:true },
   { name:'离子方程式', desc:'强弱电解质+四步转化', emoji:'⚗️', cat:'edu', url:'./ion-equation/' },
   { name:'中国省会城市', desc:'34省详情展开', emoji:'🇨🇳', cat:'edu', url:'./china-provinces/' },
-  { name:'世界之最百科', desc:'60+条+趣味事实', emoji:'🏆', cat:'edu', url:'./world-records/' },
+  { name:'世界之最百科', desc:'60+条+趣味事实', emoji:'★', cat:'edu', url:'./world-records/' },
 ];
 
 function getIconHtml(tool, size) {
@@ -339,7 +339,7 @@ function getIconHtml(tool, size) {
 }
 
 let currentCat = 'all', searchQuery = '';
-const CAT_NAMES = { all:'全部', text:'📝 文本', image:'🖼️ 图片', calc:'🔢 计算', dev:'💻 开发', design:'🎨 设计', encode:'🔐 编码', life:'🏠 生活' };
+const CAT_NAMES = { all:'全部', text:'☰ 文本', image:'⊞️ 图片', calc:'⊞ 计算', dev:'⊞ 开发', design:'◆ 设计', encode:'⊕ 编码', life:'⌂ 生活' };
 
 function renderHot() {
   const hots = TOOLS.filter(t => t.hot);
@@ -360,8 +360,8 @@ function render() {
   document.getElementById('hotSection').style.display = hotVisible ? 'block' : 'none';
 
   document.getElementById('sectionTitle').textContent = searchQuery
-    ? `🔍 搜索结果（${list.length}）`
-    : `📦 ${CAT_NAMES[currentCat] || '全部'}工具（${list.length}）`;
+    ? `⊙ 搜索结果（${list.length}）`
+    : `⊞ ${CAT_NAMES[currentCat] || '全部'}工具（${list.length}）`;
 
   if (!list.length) {
     document.getElementById('toolsSection').style.display = 'none';

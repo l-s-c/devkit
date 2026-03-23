@@ -21,7 +21,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
 .section-title{font-size:13px;font-weight:800;margin-bottom:14px}
 .search-wrap{position:relative;margin-bottom:12px}
-.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-wrap::before{content:'⊙';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
 .search-input{width:100%;padding:14px 16px 14px 42px;border-radius:10px;border:2px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;color:var(--text-primary);outline:none}
 .search-input:focus{border-color:var(--brand-500)}
 .pill-row{display:flex;gap:4px;flex-wrap:wrap}
@@ -51,11 +51,11 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">近义词反义词查询</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📖 近义词反义词查询</div>
+    <div class="section-title">⊞ 近义词反义词查询</div>
     <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="输入一个词语，查询近义词和反义词"></div>
     <div class="pill-row" id="quickPills"></div>
   </div>
-  <div class="panel" id="resultPanel"><div class="empty-msg">👆 输入词语开始查询</div></div>
+  <div class="panel" id="resultPanel"><div class="empty-msg">↑ 输入词语开始查询</div></div>
 </div>
 <div class="statusbar"><span id="statusInfo">近义词反义词查询</span><div class="statusbar-spacer"></div><span>加载中...</span></div>
 <script type="module">
@@ -73,15 +73,15 @@ fetch('../../data/synonyms.json').then(r=>r.json()).then(d=>{
 }).catch(()=>{document.getElementById('statusInfo').textContent='数据加载失败';});
 function render(word){
   const p=document.getElementById('resultPanel');
-  if(!word){p.innerHTML='<div class="empty-msg">👆 输入词语开始查询</div>';return}
+  if(!word){p.innerHTML='<div class="empty-msg">↑ 输入词语开始查询</div>';return}
   const d=DATA.find(x=>x.w===word);
   if(!d){p.innerHTML=`<div class="empty-msg">暂无「${word}」的近义词反义词数据</div>`;return}
   p.innerHTML=`<div class="word-hero"><div class="word-char">${d.w}</div><div class="word-pinyin">${d.py}</div></div>
   <div class="two-col">
-    <div class="col-syn"><div class="col-title">✅ 近义词</div><div class="word-list">${d.syn.map(([w,py])=>`<div class="word-item"><span class="word-text">${w}</span><span class="word-py">${py}</span></div>`).join('')}</div></div>
-    <div class="col-ant"><div class="col-title">❌ 反义词</div><div class="word-list">${d.ant.map(([w,py])=>`<div class="word-item"><span class="word-text">${w}</span><span class="word-py">${py}</span></div>`).join('')}</div></div>
+    <div class="col-syn"><div class="col-title">✓ 近义词</div><div class="word-list">${d.syn.map(([w,py])=>`<div class="word-item"><span class="word-text">${w}</span><span class="word-py">${py}</span></div>`).join('')}</div></div>
+    <div class="col-ant"><div class="col-title">✗ 反义词</div><div class="word-list">${d.ant.map(([w,py])=>`<div class="word-item"><span class="word-text">${w}</span><span class="word-py">${py}</span></div>`).join('')}</div></div>
   </div>
-  <div class="example">💬 <strong>例句：</strong>${d.ex}</div>`;
+  <div class="example">☰ <strong>例句：</strong>${d.ex}</div>`;
   document.getElementById('statusInfo').textContent=`「${d.w}」近义词 ${d.syn.length} 个 · 反义词 ${d.ant.length} 个`;
 }
 document.getElementById('searchInput').addEventListener('input',function(){render(this.value.trim())});

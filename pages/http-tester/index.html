@@ -196,9 +196,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <option value="PATCH">PATCH</option>
       </select>
       <input class="url-input" id="urlInput" placeholder="https://jsonplaceholder.typicode.com/posts/1" value="https://jsonplaceholder.typicode.com/posts/1">
-      <button class="send-btn" id="sendBtn">🚀 发送</button>
+      <button class="send-btn" id="sendBtn">◆ 发送</button>
     </div>
-    <div class="section-title">⚡ 示例 API</div>
+    <div class="section-title">↯ 示例 API</div>
     <div class="example-row" id="exampleRow">
       <span class="example-pill" data-ex="get">GET /posts/1</span>
       <span class="example-pill" data-ex="list">GET /posts</span>
@@ -212,9 +212,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- Request config -->
   <div class="panel">
     <div class="tab-row" id="reqTabRow">
-      <div class="tab" data-tab="query">🔗 Query 参数</div>
-      <div class="tab active" data-tab="headers">📋 请求头</div>
-      <div class="tab" data-tab="body">📦 请求体</div>
+      <div class="tab" data-tab="query">⊞ Query 参数</div>
+      <div class="tab active" data-tab="headers">☰ 请求头</div>
+      <div class="tab" data-tab="body">⊞ 请求体</div>
     </div>
     <div id="reqQuery" style="display:none">
       <div class="kv-list" id="queryList"></div>
@@ -237,7 +237,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- CORS Warning -->
   <div class="cors-warn">
-    ⚠️ <strong>跨域限制</strong>：浏览器安全策略（CORS）限制，仅支持允许跨域的 API。如目标服务器未配置 CORS，请求会被浏览器拦截。示例 API（jsonplaceholder / httpbin）已开启跨域，可直接测试。
+    ⚠ <strong>跨域限制</strong>：浏览器安全策略（CORS）限制，仅支持允许跨域的 API。如目标服务器未配置 CORS，请求会被浏览器拦截。示例 API（jsonplaceholder / httpbin）已开启跨域，可直接测试。
   </div>
 
   <!-- Response -->
@@ -245,8 +245,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="section-title">📨 响应</div>
     <div class="res-status" id="resStatus"></div>
     <div class="tab-row" id="resTabRow">
-      <div class="tab active" data-tab="body">📄 响应体</div>
-      <div class="tab" data-tab="headers">📋 响应头</div>
+      <div class="tab active" data-tab="body">☰ 响应体</div>
+      <div class="tab" data-tab="headers">☰ 响应头</div>
     </div>
     <div id="resBodyWrap"><div class="res-body" id="resBody"></div></div>
     <div id="resHeadersWrap" style="display:none"><div class="res-headers" id="resHeaders"></div></div>
@@ -260,7 +260,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- History -->
   <div class="panel">
-    <div class="section-title">📜 请求历史 <button class="history-clear" id="clearHistoryBtn">🗑️ 清空</button></div>
+    <div class="section-title">☰ 请求历史 <button class="history-clear" id="clearHistoryBtn">✕ 清空</button></div>
     <div id="historyList">
       <div style="text-align:center;padding:20px;color:var(--text-caption);font-size:12px">暂无历史记录</div>
     </div>
@@ -403,9 +403,9 @@ async function sendRequest() {
   } catch (e) {
     const elapsed = Date.now() - startTime;
     document.getElementById('resStatus').innerHTML =
-      `<span class="status-badge status-err">❌ 请求失败</span><span class="res-meta">${elapsed}ms</span>`;
+      `<span class="status-badge status-err">✗ 请求失败</span><span class="res-meta">${elapsed}ms</span>`;
     document.getElementById('resBody').innerHTML =
-      esc(e.message) + '\n\n💡 可能原因：\n1. 目标服务器未配置 CORS（跨域资源共享）\n2. URL 格式错误\n3. 网络连接问题\n\n建议使用示例 API（jsonplaceholder / httpbin）测试';
+      esc(e.message) + '\n\n◉ 可能原因：\n1. 目标服务器未配置 CORS（跨域资源共享）\n2. URL 格式错误\n3. 网络连接问题\n\n建议使用示例 API（jsonplaceholder / httpbin）测试';
     document.getElementById('resHeaders').innerHTML = '';
     document.getElementById('responseSection').style.display = 'block';
     document.getElementById('statusInfo').textContent = `${method} 失败 · ${elapsed}ms`;

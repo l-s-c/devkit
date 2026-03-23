@@ -158,7 +158,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="panel" id="uploadPanel">
         <div class="upload-area" id="dropZone">
           <input type="file" accept="image/*" multiple class="upload-input" id="fileInput">
-          <div class="upload-icon">🖼️</div>
+          <div class="upload-icon">⊞️</div>
           <div class="upload-text">拖拽图片到这里，或点击上传</div>
           <div class="upload-hint">支持 JPG / PNG / WebP，可多选批量</div>
         </div>
@@ -178,7 +178,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel" id="batchPanel" style="display:none">
-        <div class="section-title">📦 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
+        <div class="section-title">⊞ 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
         <div id="batchList"></div>
       </div>
     </div>
@@ -186,7 +186,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右侧：设置 -->
     <div>
       <div class="panel">
-        <div class="section-title">📐 尺寸设置</div>
+        <div class="section-title">∠ 尺寸设置</div>
         <div class="radio-row">
           <button class="radio-btn active" id="btnPixel">像素 px</button>
           <button class="radio-btn" id="btnPercent">百分比 %</button>
@@ -198,7 +198,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
               <div class="field-label">宽度</div>
               <input type="number" class="field-input" id="inputW" value="960">
             </div>
-            <button class="lock-btn locked" id="lockBtn">🔗</button>
+            <button class="lock-btn locked" id="lockBtn">⊞</button>
             <div class="field">
               <div class="field-label">高度</div>
               <input type="number" class="field-input" id="inputH" value="540">
@@ -214,9 +214,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           </div>
         </div>
 
-        <div class="upscale-warn" id="upscaleWarn">⚠️ 放大图片可能导致模糊，建议使用原始尺寸或缩小</div>
+        <div class="upscale-warn" id="upscaleWarn">⚠ 放大图片可能导致模糊，建议使用原始尺寸或缩小</div>
 
-        <div class="field-label" style="margin-top:14px;margin-bottom:8px">📱 预设尺寸</div>
+        <div class="field-label" style="margin-top:14px;margin-bottom:8px">⊞ 预设尺寸</div>
         <div class="presets" id="presets">
           <button class="preset-btn" data-w="100" data-h="100">头像 100²</button>
           <button class="preset-btn" data-w="800" data-h="800">淘宝主图 800²</button>
@@ -230,7 +230,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">💾 导出设置</div>
+        <div class="section-title">⊡ 导出设置</div>
         <div class="format-row">
           <button class="format-btn active" id="fmtJPG" data-fmt="jpg">JPG</button>
           <button class="format-btn" id="fmtPNG" data-fmt="png">PNG</button>
@@ -240,7 +240,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="field-label">质量 <span id="qualityVal">85</span>%</div>
           <input type="range" id="quality" min="10" max="100" value="85" style="width:100%">
         </div>
-        <button class="action-btn" id="resizeBtn" disabled>📐 调整并下载</button>
+        <button class="action-btn" id="resizeBtn" disabled>∠ 调整并下载</button>
       </div>
     </div>
   </div>
@@ -297,7 +297,7 @@ function renderBatchList() {
   const list = document.getElementById('batchList');
   list.innerHTML = files.map((f, i) => `
     <div class="batch-item">
-      <div class="batch-thumb" style="background:var(--brand-500);border-radius:6px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">🖼️</div>
+      <div class="batch-thumb" style="background:var(--brand-500);border-radius:6px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">⊞️</div>
       <div class="batch-name">${f.name}</div>
       <div class="batch-size">${fmtSize(f.size)}</div>
       <div class="batch-status" id="batchStatus${i}">⏳</div>
@@ -335,8 +335,8 @@ function doResize() {
   function processNext() {
     if (idx >= files.length) {
       document.getElementById('resizeBtn').disabled = false;
-      document.getElementById('resizeBtn').textContent = '📐 调整并下载';
-      document.getElementById('statusInfo').textContent = `✅ ${files.length} 张图片处理完成`;
+      document.getElementById('resizeBtn').textContent = '∠ 调整并下载';
+      document.getElementById('statusInfo').textContent = `✓ ${files.length} 张图片处理完成`;
       return;
     }
     const file = files[idx];
@@ -361,7 +361,7 @@ function doResize() {
         canvas.width = 0; canvas.height = 0; // 内存释放
         // 更新批量状态
         const statusEl = document.getElementById('batchStatus' + idx);
-        if (statusEl) statusEl.textContent = '✅';
+        if (statusEl) statusEl.textContent = '✓';
         idx++;
         setTimeout(processNext, 300);
       }, mime, q);
@@ -412,7 +412,7 @@ document.getElementById('lockBtn').addEventListener('click', () => {
   locked = !locked;
   const btn = document.getElementById('lockBtn');
   btn.classList.toggle('locked', locked);
-  btn.textContent = locked ? '🔗' : '🔓';
+  btn.textContent = locked ? '⊞' : '⊘';
 });
 
 // 宽高输入
@@ -447,7 +447,7 @@ document.getElementById('presets').addEventListener('click', e => {
   // 预设时解锁比例
   locked = false;
   document.getElementById('lockBtn').classList.remove('locked');
-  document.getElementById('lockBtn').textContent = '🔓';
+  document.getElementById('lockBtn').textContent = '⊘';
   // 切回像素模式
   if (mode === 'percent') {
     mode = 'pixel';

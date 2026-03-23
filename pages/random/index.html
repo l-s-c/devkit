@@ -162,9 +162,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="mode-tabs" id="modeTabs">
-    <button class="mode-tab active" data-mode="integer">🔢 整数</button>
-    <button class="mode-tab" data-mode="float">📊 浮点数</button>
-    <button class="mode-tab" data-mode="dice">🎲 骰子</button>
+    <button class="mode-tab active" data-mode="integer">⊞ 整数</button>
+    <button class="mode-tab" data-mode="float">▦ 浮点数</button>
+    <button class="mode-tab" data-mode="dice">◎ 骰子</button>
   </div>
 
   <!-- 整数/浮点面板 -->
@@ -172,8 +172,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="result-display">
       <div class="result-number" id="mainResult">—</div>
       <div class="result-actions">
-        <button class="result-btn primary" id="btnGenerate">🎲 生成</button>
-        <button class="result-btn" id="btnCopy">📋 复制</button>
+        <button class="result-btn primary" id="btnGenerate">◎ 生成</button>
+        <button class="result-btn" id="btnCopy">☰ 复制</button>
       </div>
     </div>
 
@@ -231,9 +231,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="dice">5</div>
     </div>
     <div class="result-actions" style="justify-content:center;margin-top:12px">
-      <button class="result-btn primary" id="btnRollAll">🎲 掷骰子</button>
-      <button class="result-btn" id="btnAddDice">➕ 加骰子</button>
-      <button class="result-btn" id="btnRemoveDice">➖ 减骰子</button>
+      <button class="result-btn primary" id="btnRollAll">◎ 掷骰子</button>
+      <button class="result-btn" id="btnAddDice">+ 加骰子</button>
+      <button class="result-btn" id="btnRemoveDice">- 减骰子</button>
     </div>
     <div class="dice-total">总计：<span class="dice-total-num" id="diceTotal">8</span></div>
   </div>
@@ -241,7 +241,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- 历史记录 -->
   <div class="panel">
     <div class="history-title">
-      <span>📋 历史记录</span>
+      <span>☰ 历史记录</span>
       <span class="history-clear" id="btnClearHistory">清空</span>
     </div>
     <div class="history-list" id="historyList">

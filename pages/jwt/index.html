@@ -108,7 +108,7 @@ function decode() {
   if (parts.length !== 3) {
     document.getElementById('headerBody').textContent = '无效的 JWT 格式（应有 3 段）';
     document.getElementById('payloadBody').textContent = '';
-    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '❌ 格式错误';
+    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '✗ 格式错误';
     expireBar.style.display = 'none'; return;
   }
   try {
@@ -129,7 +129,7 @@ function decode() {
       const diffDays = Math.ceil((expDate - new Date()) / 86400000);
       badge.style.display = ''; 
       badge.className = 'badge ' + (isExpired ? 'badge-error' : 'badge-success');
-      badge.textContent = isExpired ? '🔴 已过期' : '🟢 未过期';
+      badge.textContent = isExpired ? '● 已过期' : '● 未过期';
       
       let html = `<span class="expire-dot ${isExpired?'expired':'ok'}"></span>`;
       html += `<span>${isExpired?'已过期':'未过期'}</span>`;
@@ -145,7 +145,7 @@ function decode() {
   } catch (e) {
     document.getElementById('headerBody').textContent = '解码失败：' + e.message;
     document.getElementById('payloadBody').textContent = '';
-    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '❌ 解码失败';
+    badge.style.display = ''; badge.className = 'badge badge-error'; badge.textContent = '✗ 解码失败';
     expireBar.style.display = 'none';
   }
 }

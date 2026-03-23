@@ -59,7 +59,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">🔤 拼音练习生成器</div>
+    <div class="section-title">⊞ 拼音练习生成器</div>
     <div class="config-row" id="modeRow">
       <span class="config-label">模式</span>
       <div class="pill active" data-v="char2py">看字写拼音</div>
@@ -77,14 +77,14 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <span style="font-size:10px;color:var(--text-caption)">道（5-50）</span>
     </div>
     <div class="btn-row">
-      <button class="btn btn-primary" id="genBtn">🎲 生成题目</button>
+      <button class="btn btn-primary" id="genBtn">◎ 生成题目</button>
       <button class="btn btn-secondary" id="ansBtn">👁️ 显示答案</button>
-      <button class="btn btn-secondary" id="checkBtn">✅ 检查答案</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+      <button class="btn btn-secondary" id="checkBtn">✓ 检查答案</button>
+      <button class="btn btn-secondary" onclick="window.print()">⊞️ 打印</button>
     </div>
   </div>
   <div class="panel">
-    <div class="section-title">📝 <span id="modeTitle">看字写拼音</span> <span class="grade-desc" id="gradeDesc">一年级 · 20 题</span></div>
+    <div class="section-title">☰ <span id="modeTitle">看字写拼音</span> <span class="grade-desc" id="gradeDesc">一年级 · 20 题</span></div>
     <div class="py-grid" id="pyGrid"></div>
   </div>
 </div>
@@ -161,7 +161,7 @@ document.getElementById('genBtn').addEventListener('click',generate);
 document.getElementById('ansBtn').addEventListener('click',()=>{
   showAns=!showAns;
   document.querySelectorAll('.py-answer').forEach(el=>el.style.display=showAns?'block':'none');
-  document.getElementById('ansBtn').textContent=showAns?'✏️ 隐藏答案':'👁️ 显示答案';
+  document.getElementById('ansBtn').textContent=showAns?'✎ 隐藏答案':'👁️ 显示答案';
 });
 document.getElementById('checkBtn').addEventListener('click',()=>{
   let correct=0,total=0;
@@ -174,7 +174,7 @@ document.getElementById('checkBtn').addEventListener('click',()=>{
     if(val===ans){input.classList.add('correct');correct++}
     else{input.classList.add('wrong')}
   });
-  document.getElementById('statusInfo').textContent=total?`✅ ${correct}/${total} 正确`:'请先填写答案';
+  document.getElementById('statusInfo').textContent=total?`✓ ${correct}/${total} 正确`:'请先填写答案';
 });
 generate();
 </script>

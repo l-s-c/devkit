@@ -147,12 +147,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Left: Controls -->
     <div>
       <div class="panel">
-        <div class="section-title">✨ 预设模板</div>
+        <div class="section-title">✦ 预设模板</div>
         <div class="preset-grid" id="presetGrid"></div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📐 阴影图层</div>
+        <div class="section-title">∠ 阴影图层</div>
         <div class="layer-list" id="layerList"></div>
         <button class="add-layer" id="addLayerBtn">+ 添加阴影图层</button>
       </div>
@@ -166,9 +166,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📋 CSS 代码</div>
+        <div class="section-title">☰ CSS 代码</div>
         <div class="code-block" id="codeBlock">
-          <span class="code-copy" id="codeCopy">📋 复制</span>
+          <span class="code-copy" id="codeCopy">☰ 复制</span>
           <span class="code-prop">box-shadow</span>: <span class="code-val" id="codeVal">0px 4px 12px 0px rgba(0,0,0,0.15)</span>;
         </div>
       </div>
@@ -298,8 +298,8 @@ document.getElementById('addLayerBtn').addEventListener('click', () => {
 document.getElementById('codeBlock').addEventListener('click', () => {
   navigator.clipboard.writeText(`box-shadow: ${getCSS()};`);
   const cp = document.getElementById('codeCopy');
-  cp.textContent = '✅ 已复制';
-  setTimeout(() => cp.textContent = '📋 复制', 1500);
+  cp.textContent = '✓ 已复制';
+  setTimeout(() => cp.textContent = '☰ 复制', 1500);
 });
 
 renderPresets(); renderLayers(); update();

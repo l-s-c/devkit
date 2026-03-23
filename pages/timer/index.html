@@ -131,7 +131,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <div class="panel">
     <div class="mode-tabs" id="modeTabs">
       <div class="mode-tab active" data-mode="countdown">⏳ 倒计时</div>
-      <div class="mode-tab" data-mode="stopwatch">⏱️ 正计时</div>
+      <div class="mode-tab" data-mode="stopwatch">◷️ 正计时</div>
     </div>
     <div class="display-wrap">
       <div class="time-display" id="timeDisplay">00:00:00</div>
@@ -141,7 +141,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   </div>
 
   <div class="panel" id="countdownSettings">
-    <div class="section-title">⚡ 快捷预设</div>
+    <div class="section-title">↯ 快捷预设</div>
     <div class="preset-grid" id="presetGrid">
       <div class="preset-btn" data-min="1">1 分钟</div>
       <div class="preset-btn" data-min="3">3 分钟</div>
@@ -150,7 +150,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="preset-btn" data-min="15">15 分钟</div>
       <div class="preset-btn" data-min="30">30 分钟</div>
     </div>
-    <div class="section-title">🔢 自定义时间</div>
+    <div class="section-title">⊞ 自定义时间</div>
     <div class="time-inputs">
       <div class="time-field"><input type="number" id="inputH" value="0" min="0" max="99"><label>时</label></div>
       <span class="time-sep">:</span>
@@ -162,9 +162,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <div class="panel">
     <div class="controls">
-      <button class="ctrl-btn btn-start" id="startBtn">▶️ 开始</button>
-      <button class="ctrl-btn btn-reset" id="resetBtn">🔄 重置</button>
-      <button class="ctrl-btn btn-fullscreen" id="fsBtn">🖥️ 全屏</button>
+      <button class="ctrl-btn btn-start" id="startBtn">▸ 开始</button>
+      <button class="ctrl-btn btn-reset" id="resetBtn">↻ 重置</button>
+      <button class="ctrl-btn btn-fullscreen" id="fsBtn">⊞️ 全屏</button>
     </div>
   </div>
 </div>
@@ -228,10 +228,10 @@ function tickCountdown() {
   if (remain <= 0) {
     clearInterval(timer); timer = null; running = false;
     updateDisplay(0);
-    document.getElementById('timeLabel').textContent = '⏰ 时间到！';
-    document.getElementById('startBtn').innerHTML = '▶️ 开始';
+    document.getElementById('timeLabel').textContent = '◷ 时间到！';
+    document.getElementById('startBtn').innerHTML = '▸ 开始';
     document.getElementById('startBtn').className = 'ctrl-btn btn-start';
-    document.getElementById('statusInfo').textContent = '⏰ 时间到！';
+    document.getElementById('statusInfo').textContent = '◷ 时间到！';
     playBeep();
     return;
   }
@@ -249,7 +249,7 @@ function startTimer() {
 
   if (paused) {
     paused = false; running = true;
-    btn.innerHTML = '⏸️ 暂停'; btn.className = 'ctrl-btn btn-pause';
+    btn.innerHTML = '‖ 暂停'; btn.className = 'ctrl-btn btn-pause';
     startTime = Date.now();
     if (mode === 'countdown') {
       timer = setInterval(tickCountdown, 200);
@@ -270,7 +270,7 @@ function startTimer() {
     } else {
       pauseElapsed = Date.now() - startTime;
     }
-    btn.innerHTML = '▶️ 继续'; btn.className = 'ctrl-btn btn-start';
+    btn.innerHTML = '▸ 继续'; btn.className = 'ctrl-btn btn-start';
     document.getElementById('timeLabel').textContent = '已暂停';
     return;
   }
@@ -290,7 +290,7 @@ function startTimer() {
     timer = setInterval(tickStopwatch, 30);
   }
   running = true;
-  btn.innerHTML = '⏸️ 暂停'; btn.className = 'ctrl-btn btn-pause';
+  btn.innerHTML = '‖ 暂停'; btn.className = 'ctrl-btn btn-pause';
   document.getElementById('timeLabel').textContent = mode === 'countdown' ? '倒计时中…' : '计时中…';
   document.getElementById('statusInfo').textContent = mode === 'countdown' ? '倒计时中…' : '计时中…';
 }
@@ -302,7 +302,7 @@ function resetTimer() {
   document.getElementById('timeMs').textContent = '.00';
   document.getElementById('timeDisplay').classList.remove('finished');
   document.getElementById('fsTime').classList.remove('finished');
-  document.getElementById('startBtn').innerHTML = '▶️ 开始';
+  document.getElementById('startBtn').innerHTML = '▸ 开始';
   document.getElementById('startBtn').className = 'ctrl-btn btn-start';
   document.getElementById('timeLabel').textContent = mode === 'countdown' ? '设定时间后点击开始' : '点击开始计时';
   document.getElementById('statusInfo').textContent = '在线计时器';

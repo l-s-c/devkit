@@ -61,9 +61,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel">
-    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="security-badge">⊕ 文件不上传服务器，全部本地处理</div>
     <div class="upload-zone" id="dropZone">
-      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:32px;margin-bottom:8px">☰</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽 PDF 文件到此处</div>
       <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600;cursor:pointer">点击选择文件</span>（支持多选）</div>
       <div style="font-size:10px;color:var(--text-caption);margin-top:8px">单文件最大 50MB</div>
@@ -74,16 +74,16 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <span id="fileCount">0 个文件</span>
       <span id="totalSize">0 KB</span>
     </div>
-    <button class="merge-btn" id="mergeBtn" disabled>📎 合并 PDF</button>
+    <button class="merge-btn" id="mergeBtn" disabled>⊞ 合并 PDF</button>
     <div class="progress-bar" id="progressBar" style="display:none"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
   <div class="panel" id="resultPanel" style="display:none">
     <div class="result-card">
-      <div class="icon">✅</div>
+      <div class="icon">✓</div>
       <div style="font-size:16px;font-weight:800;margin-bottom:4px">合并完成！</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-bottom:16px" id="resultInfo"></div>
-      <button class="btn-download" id="downloadBtn">📥 下载合并后的 PDF</button>
+      <button class="btn-download" id="downloadBtn">↓ 下载合并后的 PDF</button>
     </div>
   </div>
 </div>
@@ -117,7 +117,7 @@ fileInput.addEventListener('change', () => { addFiles(Array.from(fileInput.files
 function addFiles(newFiles) {
   for (const f of newFiles) {
     if (f.size > 50 * 1024 * 1024) {
-      document.getElementById('statusInfo').textContent = `⚠️ ${f.name} 超过 50MB 限制`;
+      document.getElementById('statusInfo').textContent = `⚠ ${f.name} 超过 50MB 限制`;
       continue;
     }
     files.push(f);
@@ -136,7 +136,7 @@ function renderList() {
   list.innerHTML = files.map((f, i) => `
     <div class="file-item" draggable="true" data-idx="${i}">
       <span class="drag-handle">⠿</span>
-      <span class="name">📄 ${f.name}</span>
+      <span class="name">☰ ${f.name}</span>
       <span class="meta">${(f.size / 1024).toFixed(1)} KB</span>
       <span class="remove" data-idx="${i}">✕</span>
     </div>`).join('');
@@ -194,12 +194,12 @@ document.getElementById('mergeBtn').addEventListener('click', async () => {
     const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
     document.getElementById('resultInfo').textContent = `${files.length} 个文件 · ${totalPages} 页 · ${sizeMB} MB`;
     document.getElementById('resultPanel').style.display = 'block';
-    document.getElementById('statusInfo').textContent = `✅ 合并完成 ${totalPages} 页`;
+    document.getElementById('statusInfo').textContent = `✓ 合并完成 ${totalPages} 页`;
   } catch (e) {
-    document.getElementById('statusInfo').textContent = '❌ 合并失败：' + e.message;
+    document.getElementById('statusInfo').textContent = '✗ 合并失败：' + e.message;
   }
 
-  btn.disabled = false; btn.textContent = '📎 合并 PDF';
+  btn.disabled = false; btn.textContent = '⊞ 合并 PDF';
   document.getElementById('progressBar').style.display = 'none';
   document.getElementById('progressFill').style.width = '0';
 });

@@ -60,7 +60,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">👶 取名器</div>
+    <div class="section-title">◎ 取名器</div>
     <div class="config-grid">
       <div>
         <div class="field-label">姓氏</div>
@@ -69,9 +69,9 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <div>
         <div class="field-label">性别偏好</div>
         <div class="pill-row" id="genderRow">
-          <div class="pill active" data-v="male">👦 男</div>
-          <div class="pill" data-v="female">👧 女</div>
-          <div class="pill" data-v="neutral">🌟 中性</div>
+          <div class="pill active" data-v="male">◎ 男</div>
+          <div class="pill" data-v="female">◎ 女</div>
+          <div class="pill" data-v="neutral">★ 中性</div>
         </div>
       </div>
       <div>
@@ -82,19 +82,19 @@ body{min-height:100vh;display:flex;flex-direction:column}
         </div>
       </div>
     </div>
-    <button class="btn-gen" id="genBtn">🎲 生成名字</button>
+    <button class="btn-gen" id="genBtn">◎ 生成名字</button>
   </div>
   <div class="panel">
-    <div class="section-title">✨ 推荐名字 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400">点击 ❤️ 收藏</span></div>
+    <div class="section-title">✦ 推荐名字 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400">点击 ❤️ 收藏</span></div>
     <div class="name-grid" id="nameGrid"></div>
-    <div class="note">⚠️ 笔画数参考康熙字典，五行属性仅供参考，不作起名决策依据</div>
+    <div class="note">⚠ 笔画数参考康熙字典，五行属性仅供参考，不作起名决策依据</div>
   </div>
 </div>
 <div class="statusbar"><span id="statusInfo">取名器</span><div class="statusbar-spacer"></div><span>姓名库 · 纯本地</span></div>
 <script type="module">
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
-const WX_ICON={'金':'⚙️','木':'🌲','水':'💧','火':'🔥','土':'🌍'};
+const WX_ICON={'金':'⊕','木':'◎','水':'◆','火':'◈','土':'◎'};
 const MALE_CHARS=[
   {c:'明',wx:'火',st:8,m:'光明、聪慧'},{c:'轩',wx:'土',st:10,m:'气宇轩昂'},{c:'泽',wx:'水',st:17,m:'恩泽润物'},
   {c:'宇',wx:'土',st:6,m:'宇宙广阔'},{c:'博',wx:'水',st:12,m:'博学多才'},{c:'浩',wx:'水',st:11,m:'浩然正气'},
@@ -133,7 +133,7 @@ const NEUTRAL_CHARS=[
 
 let gender='male',nameLen=2;
 function getPool(){return gender==='male'?MALE_CHARS:gender==='female'?FEMALE_CHARS:NEUTRAL_CHARS}
-function genderLabel(){return gender==='male'?'👦 男':gender==='female'?'👧 女':'🌟 中性'}
+function genderLabel(){return gender==='male'?'◎ 男':gender==='female'?'◎ 女':'★ 中性'}
 
 function pickRandom(arr,n){const s=[...arr];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s.slice(0,n)}
 

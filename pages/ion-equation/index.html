@@ -61,8 +61,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div class="glass">
     <div class="section-title">⚗️ 化学离子方程式</div>
     <div class="tab-row">
-      <div class="tab active" data-view="reactions">🧪 反应示例</div>
-      <div class="tab" data-view="table">📋 强弱电解质判断表</div>
+      <div class="tab active" data-view="reactions">◇ 反应示例</div>
+      <div class="tab" data-view="table">☰ 强弱电解质判断表</div>
     </div>
   </div>
   <div id="reactionsView">
@@ -71,14 +71,14 @@ body{min-height:100vh;display:flex;flex-direction:column}
         <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>强电解质（拆）</div>
         <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>弱电解质/沉淀/气体（不拆）</div>
       </div>
-      <div class="section-title">📖 常见反应 <span style="font-size:11px;color:var(--text-caption);margin-left:auto" id="rxnCount"></span></div>
+      <div class="section-title">⊞ 常见反应 <span style="font-size:11px;color:var(--text-caption);margin-left:auto" id="rxnCount"></span></div>
       <div class="reaction-list" id="reactionList"></div>
     </div>
     <div class="glass" id="stepsSection" style="display:none"></div>
   </div>
   <div id="tableView" class="hidden">
     <div class="glass">
-      <div class="section-title">📋 强弱电解质判断规则</div>
+      <div class="section-title">☰ 强弱电解质判断规则</div>
       <table class="electrolyte-table">
         <thead><tr><th>类型</th><th>强电解质（拆）</th><th>弱电解质（不拆）</th></tr></thead>
         <tbody>
@@ -90,10 +90,10 @@ body{min-height:100vh;display:flex;flex-direction:column}
         </tbody>
       </table>
       <div style="margin-top:16px;padding:12px;border-radius:8px;background:rgba(16,185,129,0.04);font-size:12px;color:var(--text-secondary);line-height:1.8">
-        <strong>🔑 核心口诀：</strong><br>
-        ✅ <strong>拆：</strong>强酸、强碱、可溶性盐 → 拆成离子<br>
-        ❌ <strong>不拆：</strong>弱酸、弱碱、难溶盐、沉淀↓、气体↑、水、氧化物、单质 → 保留分子式<br>
-        📌 <strong>特别注意：</strong>微溶物作反应物（稀溶液）时拆，作生成物时不拆
+        <strong>⊕ 核心口诀：</strong><br>
+        ✓ <strong>拆：</strong>强酸、强碱、可溶性盐 → 拆成离子<br>
+        ✗ <strong>不拆：</strong>弱酸、弱碱、难溶盐、沉淀↓、气体↑、水、氧化物、单质 → 保留分子式<br>
+        ◎ <strong>特别注意：</strong>微溶物作反应物（稀溶液）时拆，作生成物时不拆
       </div>
     </div>
   </div>
@@ -219,7 +219,7 @@ function showSteps(r){
     <div class="step-card"><div class="step-header"><div class="step-num">1</div><div class="step-title">化学方程式</div></div><div class="step-content">${r.eq}</div></div>
     <div class="step-card"><div class="step-header"><div class="step-num">2</div><div class="step-title">判断强弱电解质</div></div><div class="step-content">${judgeHtml}</div></div>
     <div class="step-card"><div class="step-header"><div class="step-num">3</div><div class="step-title">完全离子方程式</div></div><div class="step-content">${r.full}</div></div>
-    <div class="step-card"><div class="step-header"><div class="step-num">4</div><div class="step-title">✅ 净离子方程式</div></div><div class="step-content final">${r.net}</div><div class="step-note">💡 ${r.note}</div></div>`;
+    <div class="step-card"><div class="step-header"><div class="step-num">4</div><div class="step-title">✓ 净离子方程式</div></div><div class="step-content final">${r.net}</div><div class="step-note">◉ ${r.note}</div></div>`;
   stepsSection.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 

@@ -149,8 +149,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="mode-tabs" id="modeTabs">
-    <button class="mode-tab active" data-mode="loan">🏠 贷款/房贷</button>
-    <button class="mode-tab" data-mode="deposit">💰 存款利息</button>
+    <button class="mode-tab active" data-mode="loan">⌂ 贷款/房贷</button>
+    <button class="mode-tab" data-mode="deposit">◈ 存款利息</button>
   </div>
 
   <!-- 贷款模式 -->
@@ -158,18 +158,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="dual">
       <div class="panel">
         <div class="field">
-          <div class="field-label">💰 贷款金额</div>
+          <div class="field-label">◈ 贷款金额</div>
           <input type="number" class="field-input" id="loanAmount" value="1000000">
           <div class="field-unit">元（100 万）</div>
         </div>
         <div class="field-row">
           <div class="field">
-            <div class="field-label">📊 年利率</div>
+            <div class="field-label">▦ 年利率</div>
             <input type="number" class="field-input" id="loanRate" value="3.5" step="0.01">
             <div class="field-unit">%</div>
           </div>
           <div class="field">
-            <div class="field-label">📅 贷款期限</div>
+            <div class="field-label">☰ 贷款期限</div>
             <input type="number" class="field-input" id="loanYears" value="30">
             <div class="field-unit">年</div>
           </div>
@@ -207,7 +207,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
     <div class="panel">
       <div class="schedule-title">
-        <span>📋 还款明细表</span>
+        <span>☰ 还款明细表</span>
         <span class="schedule-toggle" id="scheduleToggle">展开 ↓</span>
       </div>
       <div class="schedule-wrap" id="scheduleWrap" style="display:none">
@@ -220,18 +220,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
     <div class="panel">
       <div class="prepay-header">
-        <span>⚡ 提前还款计算</span>
+        <span>↯ 提前还款计算</span>
         <span class="prepay-toggle" id="prepayToggle">展开 ↓</span>
       </div>
       <div class="prepay-content" id="prepayContent">
         <div class="field-row">
           <div class="field">
-            <div class="field-label">📅 已还月数</div>
+            <div class="field-label">☰ 已还月数</div>
             <input type="number" class="field-input" id="prepayMonth" value="24">
             <div class="field-unit">期（第 N 个月后）</div>
           </div>
           <div class="field">
-            <div class="field-label">💰 提前还款金额</div>
+            <div class="field-label">◈ 提前还款金额</div>
             <input type="number" class="field-input" id="prepayAmount" value="200000">
             <div class="field-unit">元</div>
           </div>
@@ -253,7 +253,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             </div>
             <div class="prepay-card">
               <div class="prepay-card-value prepay-save" id="prepaySave">—</div>
-              <div class="prepay-card-label">🎉 节省利息</div>
+              <div class="prepay-card-label">✦ 节省利息</div>
             </div>
           </div>
           <div class="prepay-compare">
@@ -280,18 +280,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="dual">
       <div class="panel">
         <div class="field">
-          <div class="field-label">💰 本金</div>
+          <div class="field-label">◈ 本金</div>
           <input type="number" class="field-input" id="depositAmount" value="100000">
           <div class="field-unit">元</div>
         </div>
         <div class="field-row">
           <div class="field">
-            <div class="field-label">📊 年利率</div>
+            <div class="field-label">▦ 年利率</div>
             <input type="number" class="field-input" id="depositRate" value="2.5" step="0.01">
             <div class="field-unit">%</div>
           </div>
           <div class="field">
-            <div class="field-label">📅 存期</div>
+            <div class="field-label">☰ 存期</div>
             <input type="number" class="field-input" id="depositYears" value="3">
             <div class="field-unit">年</div>
           </div>
@@ -426,7 +426,7 @@ function calcPrepay() {
 
   // AC-11: 提前还款时间 > 总期限
   if (prepayMonth >= n) {
-    errEl.textContent = '⚠️ 已还月数不能大于等于总期限';
+    errEl.textContent = '⚠ 已还月数不能大于等于总期限';
     errEl.style.display = 'block';
     resultArea.style.display = 'none';
     return;
@@ -459,7 +459,7 @@ function calcPrepay() {
 
   // AC-12: 提前还款金额 > 剩余本金
   if (prepayAmount >= balance) {
-    errEl.textContent = '⚠️ 提前还款金额不能大于等于剩余本金（' + fmtInt(balance) + '）';
+    errEl.textContent = '⚠ 提前还款金额不能大于等于剩余本金（' + fmtInt(balance) + '）';
     errEl.style.display = 'block';
     resultArea.style.display = 'none';
     return;
@@ -497,7 +497,7 @@ function calcPrepay() {
       // newBalance = newMonthly * ((1-(1+r)^-newN) / r)
       // solve for newN: newN = -ln(1 - newBalance*r/newMonthly) / ln(1+r)
       const x = 1 - newBalance * r / newMonthly;
-      if (x <= 0) { errEl.textContent = '⚠️ 参数无效'; errEl.style.display = 'block'; resultArea.style.display = 'none'; return; }
+      if (x <= 0) { errEl.textContent = '⚠ 参数无效'; errEl.style.display = 'block'; resultArea.style.display = 'none'; return; }
       newTerm = Math.ceil(-Math.log(x) / Math.log(1 + r));
       // 新总利息 = 已还利息 + 新期限月供总额 - 新剩余本金
       newTotalInt = paidInterest + newMonthly * newTerm - newBalance;

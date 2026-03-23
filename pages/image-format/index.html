@@ -206,12 +206,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 </div>
 
 <div class="main">
-  <div class="privacy-badge">🔒 本地处理 · 零上传</div>
+  <div class="privacy-badge">⊕ 本地处理 · 零上传</div>
 
   <!-- 上传区 -->
   <div class="upload-zone" id="uploadZone">
     <input type="file" class="upload-input" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp" multiple>
-    <div class="upload-icon">🖼️</div>
+    <div class="upload-icon">⊞️</div>
     <div class="upload-title">拖拽图片到此处，或点击选择</div>
     <div class="upload-hint">支持批量上传，最多 20 张</div>
     <div class="upload-formats">JPG · PNG · WebP · GIF · BMP</div>
@@ -222,25 +222,25 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="format-label">选择目标格式</div>
     <div class="format-grid" id="formatGrid">
       <div class="format-card" data-format="image/jpeg" data-ext="jpg">
-        <div class="format-icon">📸</div>
+        <div class="format-icon">◎</div>
         <div class="format-name">JPG</div>
         <div class="format-desc">通用照片格式</div>
         <div class="format-badge badge-compat">兼容性最强</div>
       </div>
       <div class="format-card active" data-format="image/png" data-ext="png">
-        <div class="format-icon">🎨</div>
+        <div class="format-icon">◆</div>
         <div class="format-name">PNG</div>
         <div class="format-desc">无损 + 透明通道</div>
         <div class="format-badge badge-quality">无损画质</div>
       </div>
       <div class="format-card" data-format="image/webp" data-ext="webp">
-        <div class="format-icon">⚡</div>
+        <div class="format-icon">↯</div>
         <div class="format-name">WebP</div>
         <div class="format-desc">体积最小</div>
         <div class="format-badge badge-small">体积最小</div>
       </div>
       <div class="format-card" data-format="image/bmp" data-ext="bmp" id="bmpCard">
-        <div class="format-icon">🖥️</div>
+        <div class="format-icon">⊞️</div>
         <div class="format-name">BMP</div>
         <div class="format-desc">无压缩位图</div>
         <div class="format-badge badge-raw">原始数据</div>
@@ -276,20 +276,20 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- 底部操作 -->
   <div class="bottom-actions" id="bottomActions">
-    <button class="btn-convert" id="btnConvert">🔄 开始转换</button>
-    <button class="btn-download" id="btnDownload" style="display:none">📦 全部下载 (ZIP)</button>
-    <button class="btn-add-more" id="btnAddMore">➕ 继续添加</button>
+    <button class="btn-convert" id="btnConvert">↻ 开始转换</button>
+    <button class="btn-download" id="btnDownload" style="display:none">⊞ 全部下载 (ZIP)</button>
+    <button class="btn-add-more" id="btnAddMore">+ 继续添加</button>
   </div>
 
   <!-- 格式对比表 -->
   <div class="formats-info">
-    <div class="formats-title">📋 格式对比</div>
+    <div class="formats-title">☰ 格式对比</div>
     <table class="formats-table">
       <tr><th>格式</th><th>透明</th><th>动画</th><th>体积</th><th>适用场景</th></tr>
-      <tr><td>JPG</td><td>❌</td><td>❌</td><td>小</td><td>照片、实景图</td></tr>
-      <tr><td>PNG</td><td>✅</td><td>❌</td><td>大</td><td>图标、截图、需要透明</td></tr>
-      <tr><td>WebP</td><td>✅</td><td>✅</td><td>最小</td><td>网页图片、现代浏览器</td></tr>
-      <tr><td>BMP</td><td>❌</td><td>❌</td><td>最大</td><td>原始数据、无损存储</td></tr>
+      <tr><td>JPG</td><td>✗</td><td>✗</td><td>小</td><td>照片、实景图</td></tr>
+      <tr><td>PNG</td><td>✓</td><td>✗</td><td>大</td><td>图标、截图、需要透明</td></tr>
+      <tr><td>WebP</td><td>✓</td><td>✓</td><td>最小</td><td>网页图片、现代浏览器</td></tr>
+      <tr><td>BMP</td><td>✗</td><td>✗</td><td>最大</td><td>原始数据、无损存储</td></tr>
     </table>
   </div>
 </div>
@@ -410,11 +410,11 @@ function renderFileList() {
       const savText = diff === 0 ? '同大小' : (diff > 0 ? '+' : '') + pct + '%';
       sizeHtml = `${formatSize(f.file.size)} → <span class="file-size-new ${cls}">${formatSize(f.convertedBlob.size)}</span>
         <span class="file-savings ${savCls}">${savText}</span>`;
-      statusIcon = '✅';
+      statusIcon = '✓';
     } else if (f.status === 'converting') {
       statusIcon = '⏳';
     } else if (f.status === 'error') {
-      statusIcon = '❌';
+      statusIcon = '✗';
     }
 
     const progress = f.status === 'converting' ? 50 : f.status === 'done' ? 100 : 0;
@@ -431,12 +431,12 @@ function renderFileList() {
         </div>
         <div class="file-size-info">${sizeHtml}</div>
         ${progress > 0 ? `<div class="file-progress"><div class="file-progress-bar" style="width:${progress}%"></div></div>` : ''}
-        ${isGif ? `<div style="font-size:10px;color:#F59E0B;margin-top:4px">⚠️ GIF 仅保留第一帧</div>` : ''}
+        ${isGif ? `<div style="font-size:10px;color:#F59E0B;margin-top:4px">⚠ GIF 仅保留第一帧</div>` : ''}
       </div>
       ${statusIcon ? `<span class="file-status">${statusIcon}</span>` : ''}
       <div class="file-actions">
         ${f.status === 'done' ? `<button class="file-action-btn" data-action="download" data-idx="${i}" title="下载">⬇️</button>` : ''}
-        <button class="file-action-btn" data-action="remove" data-idx="${i}" title="删除">🗑️</button>
+        <button class="file-action-btn" data-action="remove" data-idx="${i}" title="删除">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -489,7 +489,7 @@ function convertImage(file) {
 async function convertAll() {
   const btn = document.getElementById('btnConvert');
   btn.disabled = true;
-  btn.textContent = '🔄 转换中...';
+  btn.textContent = '↻ 转换中...';
 
   for (let i = 0; i < files.length; i++) {
     if (files[i].status === 'done') continue;
@@ -510,7 +510,7 @@ async function convertAll() {
   }
 
   btn.disabled = false;
-  btn.textContent = '🔄 重新转换';
+  btn.textContent = '↻ 重新转换';
   document.getElementById('btnDownload').style.display = '';
   updateStats();
 }

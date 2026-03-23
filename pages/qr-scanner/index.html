@@ -46,22 +46,22 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="security-badge">⊕ 文件不上传服务器，全部本地处理</div>
     <div class="upload-zone" id="dropZone">
-      <div style="font-size:32px;margin-bottom:8px">📷</div>
+      <div style="font-size:32px;margin-bottom:8px">◎</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽二维码图片到此处</div>
       <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择图片</span></div>
       <input type="file" id="fileInput" accept="image/*">
     </div>
-    <div id="compatWarn" style="display:none;font-size:10px;color:#F59E0B;margin-top:8px">⚠️ 当前浏览器不支持 BarcodeDetector，已使用 jsQR 替代方案</div>
+    <div id="compatWarn" style="display:none;font-size:10px;color:#F59E0B;margin-top:8px">⚠ 当前浏览器不支持 BarcodeDetector，已使用 jsQR 替代方案</div>
   </div>
   <div class="panel" id="resultPanel" style="display:none">
-    <div class="section-title">✅ 识别结果</div>
+    <div class="section-title">✓ 识别结果</div>
     <div class="result-card">
       <div class="result-text" id="resultText"></div>
       <div class="result-actions">
-        <button id="copyResult">📋 复制</button>
-        <button id="openLink" style="display:none">🔗 打开链接</button>
+        <button id="copyResult">☰ 复制</button>
+        <button id="openLink" style="display:none">⊞ 打开链接</button>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@ dropZone.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[
 fileInput.addEventListener('change',()=>{if(fileInput.files[0])scanFile(fileInput.files[0]);fileInput.value=''});
 
 async function scanFile(file){
-  document.getElementById('statusInfo').textContent='🔍 识别中...';
+  document.getElementById('statusInfo').textContent='⊙ 识别中...';
   const img=new Image();const url=URL.createObjectURL(file);
   img.onload=async()=>{
     URL.revokeObjectURL(url);
@@ -103,9 +103,9 @@ async function scanFile(file){
       const isUrl=/^https?:\/\//i.test(result);
       document.getElementById('openLink').style.display=isUrl?'inline-flex':'none';
       if(isUrl)document.getElementById('openLink').onclick=()=>window.open(result,'_blank');
-      document.getElementById('statusInfo').textContent='✅ 识别成功';
+      document.getElementById('statusInfo').textContent='✓ 识别成功';
     }else{
-      document.getElementById('statusInfo').textContent='❌ 未识别到二维码';
+      document.getElementById('statusInfo').textContent='✗ 未识别到二维码';
       document.getElementById('resultPanel').style.display='none';
     }
   };
@@ -113,7 +113,7 @@ async function scanFile(file){
 }
 document.getElementById('copyResult').addEventListener('click',()=>{
   navigator.clipboard.writeText(document.getElementById('resultText').textContent);
-  document.getElementById('statusInfo').textContent='✅ 已复制';
+  document.getElementById('statusInfo').textContent='✓ 已复制';
 });
 </script>
 <noscript><p>二维码识别 — DevKit。请启用 JavaScript。</p></noscript>

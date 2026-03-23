@@ -59,7 +59,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">🔊 英语自然拼读 Phonics</div>
+    <div class="section-title">♪ 英语自然拼读 Phonics</div>
     <div class="tab-row" id="tabs"></div>
   </div>
   <div class="detail-overlay" id="detail"></div>
@@ -142,8 +142,8 @@ function speak(word){
 }
 
 function renderTabs(){
-  const icons=['🔤','🅰️','🔇','📏','⭐'];
-  tabsEl.innerHTML=categories.map((c,i)=>`<div class="tab${c===currentCat?' active':''}" data-cat="${c}">${icons[i]||'📌'} ${c}</div>`).join('');
+  const icons=['⊞','🅰️','◎','⊞','★'];
+  tabsEl.innerHTML=categories.map((c,i)=>`<div class="tab${c===currentCat?' active':''}" data-cat="${c}">${icons[i]||'◎'} ${c}</div>`).join('');
   tabsEl.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
     currentCat=t.dataset.cat;renderTabs();renderGrid();detail.classList.remove('show');
   }));

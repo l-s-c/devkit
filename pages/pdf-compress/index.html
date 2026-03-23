@@ -61,9 +61,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel">
-    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="security-badge">⊕ 文件不上传服务器，全部本地处理</div>
     <div class="upload-zone" id="dropZone">
-      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:32px;margin-bottom:8px">☰</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽 PDF 文件到此处</div>
       <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择文件</span>（最大 50MB）</div>
       <input type="file" id="fileInput" accept=".pdf">
@@ -71,10 +71,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   </div>
 
   <div class="panel" id="optionsPanel" style="display:none">
-    <div class="section-title">📄 <span id="fileName"></span></div>
+    <div class="section-title">☰ <span id="fileName"></span></div>
     <div class="quality-row" id="qualityRow">
       <div class="quality-card" data-quality="low">
-        <div class="quality-icon">🏎️</div>
+        <div class="quality-icon">◎️</div>
         <div class="quality-name">极限压缩</div>
         <div class="quality-desc">最小体积，画质较低</div>
       </div>
@@ -84,25 +84,25 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <div class="quality-desc">平衡体积与画质</div>
       </div>
       <div class="quality-card" data-quality="high">
-        <div class="quality-icon">💎</div>
+        <div class="quality-icon">◆</div>
         <div class="quality-name">高质量</div>
         <div class="quality-desc">保持较好画质</div>
       </div>
     </div>
-    <button class="compress-btn" id="compressBtn">🗜️ 开始压缩</button>
-    <div class="limit-warn">⚠️ 纯前端压缩能力有限，主要通过移除冗余元数据实现。对纯文字 PDF 效果有限，对含图片的 PDF 效果较好。</div>
+    <button class="compress-btn" id="compressBtn">⊕️ 开始压缩</button>
+    <div class="limit-warn">⚠ 纯前端压缩能力有限，主要通过移除冗余元数据实现。对纯文字 PDF 效果有限，对含图片的 PDF 效果较好。</div>
   </div>
 
   <div class="panel" id="resultPanel" style="display:none">
     <div style="text-align:center;padding:16px">
-      <div style="font-size:48px;margin-bottom:8px">✅</div>
+      <div style="font-size:48px;margin-bottom:8px">✓</div>
       <div class="result-compare">
         <div class="size-box"><div class="size-num" id="origSize">0</div><div class="size-label">原始大小</div></div>
         <div class="arrow">→</div>
         <div class="size-box"><div class="size-num" id="compSize">0</div><div class="size-label">压缩后</div></div>
       </div>
       <div class="savings" id="savings"></div>
-      <div style="margin-top:16px"><button class="btn-download" id="downloadBtn">📥 下载压缩后的 PDF</button></div>
+      <div style="margin-top:16px"><button class="btn-download" id="downloadBtn">↓ 下载压缩后的 PDF</button></div>
     </div>
   </div>
 </div>
@@ -129,7 +129,7 @@ dropZone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadPDF(fileInput.files[0]); });
 
 async function loadPDF(file) {
-  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠️ 文件超过 50MB'; return; }
+  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠ 文件超过 50MB'; return; }
   origBytes = await file.arrayBuffer();
   origSize = file.size;
   document.getElementById('fileName').textContent = `${file.name} (${fmtSize(file.size)})`;
@@ -191,11 +191,11 @@ document.getElementById('compressBtn').addEventListener('click', async () => {
     }
 
     document.getElementById('resultPanel').style.display = 'block';
-    document.getElementById('statusInfo').textContent = `✅ 压缩完成 ${fmtSize(origSize)} → ${fmtSize(blob.size)}`;
+    document.getElementById('statusInfo').textContent = `✓ 压缩完成 ${fmtSize(origSize)} → ${fmtSize(blob.size)}`;
   } catch (e) {
-    document.getElementById('statusInfo').textContent = '❌ 压缩失败：' + e.message;
+    document.getElementById('statusInfo').textContent = '✗ 压缩失败：' + e.message;
   }
-  btn.disabled = false; btn.textContent = '🗜️ 开始压缩';
+  btn.disabled = false; btn.textContent = '⊕️ 开始压缩';
 });
 
 document.getElementById('downloadBtn').addEventListener('click', () => {

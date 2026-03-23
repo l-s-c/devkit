@@ -67,23 +67,23 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div class="panel">
     <div class="notepad">
       <div class="sidebar">
-        <div class="sidebar-title">📝 笔记</div>
+        <div class="sidebar-title">☰ 笔记</div>
         <div class="tab-list" id="tabList"></div>
         <div class="tab-add" id="addBtn">+ 新建笔记</div>
       </div>
       <div class="editor-area">
         <div class="toolbar">
           <button class="tool-btn" id="mdToggle">👁️ 预览</button>
-          <button class="tool-btn" id="exportTxt">📥 .txt</button>
-          <button class="tool-btn" id="exportMd">📥 .md</button>
-          <div class="save-status" id="saveStatus">✅ 已自动保存</div>
+          <button class="tool-btn" id="exportTxt">↓ .txt</button>
+          <button class="tool-btn" id="exportMd">↓ .md</button>
+          <div class="save-status" id="saveStatus">✓ 已自动保存</div>
         </div>
         <textarea id="editor" placeholder="开始写点什么..."></textarea>
         <div class="md-preview" id="mdPreview"></div>
         <div class="editor-footer">
-          <span>📝 <span id="charCount">0</span> 字</span>
-          <span>📄 <span id="wordCount">0</span> 词</span>
-          <span>📃 <span id="lineCount">1</span> 行</span>
+          <span>☰ <span id="charCount">0</span> 字</span>
+          <span>☰ <span id="wordCount">0</span> 词</span>
+          <span>☰ <span id="lineCount">1</span> 行</span>
         </div>
       </div>
     </div>
@@ -122,9 +122,9 @@ document.getElementById('addBtn').addEventListener('click',()=>{tabs.push({name:
 document.getElementById('editor').addEventListener('input',()=>{
   tabs[activeIdx].content=document.getElementById('editor').value;
   updateStats();
-  document.getElementById('saveStatus').textContent='💾 保存中...';
+  document.getElementById('saveStatus').textContent='⊡ 保存中...';
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{save();document.getElementById('saveStatus').textContent='✅ 已自动保存'},500);
+  saveTimer=setTimeout(()=>{save();document.getElementById('saveStatus').textContent='✓ 已自动保存'},500);
 });
 
 document.getElementById('mdToggle').addEventListener('click',()=>{

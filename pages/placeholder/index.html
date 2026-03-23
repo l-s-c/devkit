@@ -127,24 +127,24 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Left: Controls -->
     <div>
       <div class="panel">
-        <div class="section-title">📐 尺寸</div>
+        <div class="section-title">∠ 尺寸</div>
         <div class="size-row">
           <input type="number" class="size-input" id="widthInput" value="300" min="1" max="4096">
           <span class="size-x">×</span>
           <input type="number" class="size-input" id="heightInput" value="200" min="1" max="4096">
         </div>
         <div class="preset-grid" id="presetGrid">
-          <div class="preset-chip" data-w="1920" data-h="1080"><div class="preset-name">🖥️ 16:9</div><div class="preset-dim">1920×1080</div></div>
-          <div class="preset-chip" data-w="800" data-h="600"><div class="preset-name">📺 4:3</div><div class="preset-dim">800×600</div></div>
+          <div class="preset-chip" data-w="1920" data-h="1080"><div class="preset-name">⊞️ 16:9</div><div class="preset-dim">1920×1080</div></div>
+          <div class="preset-chip" data-w="800" data-h="600"><div class="preset-name">◎ 4:3</div><div class="preset-dim">800×600</div></div>
           <div class="preset-chip" data-w="1080" data-h="1080"><div class="preset-name">⬛ 1:1</div><div class="preset-dim">1080×1080</div></div>
-          <div class="preset-chip" data-w="200" data-h="200"><div class="preset-name">👤 头像</div><div class="preset-dim">200×200</div></div>
-          <div class="preset-chip" data-w="1200" data-h="400"><div class="preset-name">🏞️ Banner</div><div class="preset-dim">1200×400</div></div>
-          <div class="preset-chip" data-w="375" data-h="812"><div class="preset-name">📱 手机</div><div class="preset-dim">375×812</div></div>
+          <div class="preset-chip" data-w="200" data-h="200"><div class="preset-name">◎ 头像</div><div class="preset-dim">200×200</div></div>
+          <div class="preset-chip" data-w="1200" data-h="400"><div class="preset-name">◎️ Banner</div><div class="preset-dim">1200×400</div></div>
+          <div class="preset-chip" data-w="375" data-h="812"><div class="preset-name">⊞ 手机</div><div class="preset-dim">375×812</div></div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">🎨 颜色</div>
+        <div class="section-title">◆ 颜色</div>
         <div class="color-row">
           <span class="color-label">背景</span>
           <input type="color" class="color-input" id="bgColor" value="#CCCCCC">
@@ -158,17 +158,17 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">✏️ 文字</div>
+        <div class="section-title">✎ 文字</div>
         <input class="text-input" id="customText" placeholder="留空默认显示尺寸（如 300×200）">
         <div class="text-hint">留空时自动显示「宽×高」</div>
       </div>
 
       <div class="panel">
         <div class="action-grid">
-          <button class="action-btn btn-primary" id="btnPNG">💾 导出 PNG</button>
-          <button class="action-btn btn-primary" id="btnSVG">💾 导出 SVG</button>
-          <button class="action-btn btn-secondary" id="btnImgTag">📋 复制 img 标签</button>
-          <button class="action-btn btn-secondary" id="btnDataURL">📋 复制 Data URL</button>
+          <button class="action-btn btn-primary" id="btnPNG">⊡ 导出 PNG</button>
+          <button class="action-btn btn-primary" id="btnSVG">⊡ 导出 SVG</button>
+          <button class="action-btn btn-secondary" id="btnImgTag">☰ 复制 img 标签</button>
+          <button class="action-btn btn-secondary" id="btnDataURL">☰ 复制 Data URL</button>
         </div>
       </div>
     </div>
@@ -185,9 +185,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📋 代码</div>
+        <div class="section-title">☰ 代码</div>
         <div class="code-block" id="codeBlock">
-          <span class="code-copy">📋 点击复制</span>
+          <span class="code-copy">☰ 点击复制</span>
           &lt;img src="placeholder.png" width="300" height="200" alt="300×200"&gt;
         </div>
       </div>
@@ -231,7 +231,7 @@ function generate() {
   const g = gcd(w, h);
   document.getElementById('statSize').textContent = `${w} × ${h}`;
   document.getElementById('statRatio').textContent = `${w / g}:${h / g}`;
-  document.getElementById('codeBlock').innerHTML = `<span class="code-copy">📋 点击复制</span>&lt;img src="placeholder.png" width="${w}" height="${h}" alt="${text}"&gt;`;
+  document.getElementById('codeBlock').innerHTML = `<span class="code-copy">☰ 点击复制</span>&lt;img src="placeholder.png" width="${w}" height="${h}" alt="${text}"&gt;`;
   document.getElementById('bgHex').textContent = bg;
   document.getElementById('textHex').textContent = tc;
   document.getElementById('statusInfo').textContent = `${w} × ${h} · ${w / g}:${h / g}`;

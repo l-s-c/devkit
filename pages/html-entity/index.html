@@ -120,16 +120,16 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- 编码/解码 -->
   <div class="dual-wrap">
     <div class="mode-toggle">
-      <button class="mode-btn active" data-mode="encode">📝 编码 → 实体</button>
-      <button class="mode-btn" data-mode="decode">🔓 实体 → 解码</button>
+      <button class="mode-btn active" data-mode="encode">☰ 编码 → 实体</button>
+      <button class="mode-btn" data-mode="decode">⊘ 实体 → 解码</button>
     </div>
 
     <div class="dual">
       <div>
         <div class="col-header">
-          <span class="col-title" id="leftTitle">📥 原始文本</span>
+          <span class="col-title" id="leftTitle">↓ 原始文本</span>
           <div class="col-actions">
-            <button class="col-btn" id="btnPaste">📋 粘贴</button>
+            <button class="col-btn" id="btnPaste">☰ 粘贴</button>
             <button class="col-btn" id="btnClear">✕ 清空</button>
           </div>
         </div>
@@ -138,9 +138,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <button class="swap-btn" id="btnSwap" title="交换">⇄</button>
       <div>
         <div class="col-header">
-          <span class="col-title" id="rightTitle">📤 编码结果</span>
+          <span class="col-title" id="rightTitle">↑ 编码结果</span>
           <div class="col-actions">
-            <button class="col-btn" id="btnCopy">📋 复制</button>
+            <button class="col-btn" id="btnCopy">☰ 复制</button>
           </div>
         </div>
         <textarea class="text-area" id="outputText" readonly></textarea>
@@ -150,7 +150,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- 参考表 -->
   <div class="ref-section">
-    <div class="ref-title">📖 常用 HTML 实体参考</div>
+    <div class="ref-title">⊞ 常用 HTML 实体参考</div>
     <div class="cat-tabs" id="catTabs">
       <button class="cat-tab active" data-cat="common">常用符号</button>
       <button class="cat-tab" data-cat="math">数学符号</button>
@@ -205,7 +205,7 @@ const entities = {
     ['♠','&spades;','黑桃'],['♥','&hearts;','红心'],['♦','&diams;','方块'],
     ['♣','&clubs;','梅花'],['★','&#9733;','实心星'],['☆','&#9734;','空心星'],
     ['♪','&#9834;','音符'],['✓','&#10003;','对勾'],['✗','&#10007;','叉号'],
-    ['☎','&#9742;','电话'],['✉','&#9993;','邮件'],['⚡','&#9889;','闪电'],
+    ['☎','&#9742;','电话'],['✉','&#9993;','邮件'],['↯','&#9889;','闪电'],
   ],
 };
 
@@ -238,8 +238,8 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     mode = btn.dataset.mode;
-    document.getElementById('leftTitle').textContent = mode === 'encode' ? '📥 原始文本' : '📥 实体文本';
-    document.getElementById('rightTitle').textContent = mode === 'encode' ? '📤 编码结果' : '📤 解码结果';
+    document.getElementById('leftTitle').textContent = mode === 'encode' ? '↓ 原始文本' : '↓ 实体文本';
+    document.getElementById('rightTitle').textContent = mode === 'encode' ? '↑ 编码结果' : '↑ 解码结果';
     convert();
   });
 });

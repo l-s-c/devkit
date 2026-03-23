@@ -121,9 +121,9 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 <!-- 工具栏 -->
 <div class="tool-toolbar-yaml">
-  <button class="tool-btn-yaml primary" id="btnFormat">✨ 格式化</button>
-  <button class="tool-btn-yaml" id="btnMinify">📦 压缩</button>
-  <button class="tool-btn-yaml" id="btnValidate">✅ 校验</button>
+  <button class="tool-btn-yaml primary" id="btnFormat">✦ 格式化</button>
+  <button class="tool-btn-yaml" id="btnMinify">⊞ 压缩</button>
+  <button class="tool-btn-yaml" id="btnValidate">✓ 校验</button>
   <div class="tool-sep"></div>
   <button class="tool-btn-yaml" id="btnToJSON">YAML → JSON</button>
   <button class="tool-btn-yaml" id="btnToYAML">JSON → YAML</button>
@@ -133,7 +133,7 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
       <option value="4">4 空格</option>
       <option value="8">8 空格</option>
     </select>
-    <button class="tool-btn-yaml" id="btnClear">🗑️ 清空</button>
+    <button class="tool-btn-yaml" id="btnClear">✕ 清空</button>
   </div>
 </div>
 
@@ -142,14 +142,14 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
   <div class="editor-pane">
     <div class="pane-header">
       <span class="pane-label"><span class="pane-badge yaml">YAML</span> 输入</span>
-      <button class="pane-action" id="btnSample">📋 示例</button>
+      <button class="pane-action" id="btnSample">☰ 示例</button>
     </div>
     <textarea class="yaml-editor" id="inputEditor" placeholder="在此粘贴 YAML 或 JSON..." spellcheck="false"></textarea>
   </div>
   <div class="editor-pane">
     <div class="pane-header">
       <span class="pane-label"><span class="pane-badge yaml" id="outputBadge">YAML</span> 输出</span>
-      <button class="pane-action" id="btnCopy">📋 复制</button>
+      <button class="pane-action" id="btnCopy">☰ 复制</button>
     </div>
     <textarea class="yaml-editor" id="outputEditor" readonly placeholder="格式化结果将显示在这里..." spellcheck="false"></textarea>
   </div>
@@ -180,12 +180,12 @@ const LABELS = {
   empty: '请输入 YAML 或 JSON',
   formatOk: '格式化成功',
   minifyOk: '压缩完成',
-  validateOk: '校验通过 ✅',
+  validateOk: '校验通过 ✓',
   toJsonOk: 'YAML → JSON 转换完成',
   toYamlOk: 'JSON → YAML 转换完成',
   parseError: '解析失败',
-  copied: '✅ 已复制',
-  copy: '📋 复制',
+  copied: '✓ 已复制',
+  copy: '☰ 复制',
 };
 
 /* ===== YAML 示例 ===== */
@@ -312,7 +312,7 @@ function doValidate() {
 
   try {
     safeLoadYAML(input);
-    outputEl.value = '✅ YAML 语法校验通过';
+    outputEl.value = '✓ YAML 语法校验通过';
     setBadge('YAML');
     setStatus('ok', LABELS.validateOk);
   } catch (e) {

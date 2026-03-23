@@ -116,7 +116,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左侧 -->
     <div>
       <div class="panel">
-        <div class="input-label">🎂 出生日期</div>
+        <div class="input-label">◎ 出生日期</div>
         <input type="date" class="date-input" id="birthDate" value="1995-06-15">
       </div>
 
@@ -129,13 +129,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             <div class="age-part"><div class="age-part-val" id="ageDays">—</div><div class="age-part-label">日</div></div>
           </div>
         </div>
-        <div class="error-msg" id="errorMsg">⚠️ 出生日期不能是未来</div>
+        <div class="error-msg" id="errorMsg">⚠ 出生日期不能是未来</div>
       </div>
 
       <div class="panel">
         <div class="zodiac-row">
           <div class="zodiac-card">
-            <div class="zodiac-icon" id="zodiacAnimal">🐷</div>
+            <div class="zodiac-icon" id="zodiacAnimal">◎</div>
             <div class="zodiac-name" id="zodiacAnimalName">猪</div>
             <div class="zodiac-label">生肖</div>
           </div>
@@ -152,7 +152,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div>
       <div class="panel">
         <div class="bday-card" id="bdayCard">
-          <div class="bday-icon">🎉</div>
+          <div class="bday-icon">✦</div>
           <div class="bday-days" id="bdayDays">—</div>
           <div class="bday-label" id="bdayLabel">天后是你的生日</div>
           <div class="bday-date" id="bdayDate"></div>
@@ -160,7 +160,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="live-title">⏱ 已活时间（实时）</div>
+        <div class="live-title">◷ 已活时间（实时）</div>
         <div class="live-grid">
           <div class="live-card"><div class="live-value" id="liveDays">—</div><div class="live-label">天</div></div>
           <div class="live-card"><div class="live-value" id="liveWeeks">—</div><div class="live-label">周</div></div>
@@ -187,7 +187,7 @@ import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 
 const ANIMALS = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-const ANIMAL_EMOJI = ['🐭','🐂','🐯','🐰','🐲','🐍','🐴','🐑','🐵','🐔','🐶','🐷'];
+const ANIMAL_EMOJI = ['◎','◎','◎','◎','◎','◎','◎','◎','◎','◎','◎','◎'];
 const STARS = [
   [1,20,'摩羯座','♑'],[2,19,'水瓶座','♒'],[3,21,'双鱼座','♓'],[4,20,'白羊座','♈'],
   [5,21,'金牛座','♉'],[6,22,'双子座','♊'],[7,23,'巨蟹座','♋'],[8,23,'狮子座','♌'],
@@ -264,7 +264,7 @@ function calculate() {
 
   if (bdayDiff === 0 || (now.getMonth() === birth.getMonth() && now.getDate() === birth.getDate())) {
     // 今天生日（AC-07）
-    document.getElementById('bdayDays').textContent = '🎂';
+    document.getElementById('bdayDays').textContent = '◎';
     document.getElementById('bdayLabel').textContent = '今天是你的生日！';
     document.getElementById('bdayLabel').classList.add('bday-today');
     document.getElementById('bdayDate').textContent = '';

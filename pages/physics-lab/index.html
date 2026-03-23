@@ -46,11 +46,11 @@ input[type=range]{width:100%;accent-color:#3B82F6;height:6px;cursor:pointer}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">⚡ 欧姆定律实验 · V = I × R</div>
+    <div class="section-title">↯ 欧姆定律实验 · V = I × R</div>
     <div class="canvas-wrap">
       <canvas id="circuit"></canvas>
     </div>
-    <div class="short-circuit" id="shortCircuit">⚠️ 短路警告！电阻为 0Ω，电路短路！</div>
+    <div class="short-circuit" id="shortCircuit">⚠ 短路警告！电阻为 0Ω，电路短路！</div>
     <div class="slider-row">
       <div class="slider-item">
         <div class="slider-label"><span>电压 V</span><span class="slider-value" id="vLabel">6 V</span></div>
@@ -124,7 +124,7 @@ function draw(){
   ctx.strokeStyle='#EF4444';ctx.lineWidth=1.5;
   ctx.strokeRect(batX-30,batY-20,60,40);
   ctx.fillStyle='#EF4444';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
-  ctx.fillText('🔋 电源',batX,batY-6);
+  ctx.fillText('▮ 电源',batX,batY-6);
   ctx.font='bold 10px monospace';
   ctx.fillText(`V = ${V}V`,batX,batY+10);
 
@@ -135,7 +135,7 @@ function draw(){
   ctx.strokeStyle='#3B82F6';ctx.lineWidth=1.5;
   ctx.strokeRect(resX-30,resY-20,60,40);
   ctx.fillStyle='#3B82F6';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
-  ctx.fillText('⚡ 电阻',resX,resY-6);
+  ctx.fillText('↯ 电阻',resX,resY-6);
   ctx.font='bold 10px monospace';
   ctx.fillText(`R = ${R}Ω`,resX,resY+10);
 
@@ -146,9 +146,9 @@ function draw(){
   ctx.strokeStyle='#F59E0B';ctx.lineWidth=1.5;
   ctx.strokeRect(amX-35,amY-18,70,36);
   ctx.fillStyle='#F59E0B';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
-  ctx.fillText('📊 电流表',amX,amY-3);
+  ctx.fillText('▦ 电流表',amX,amY-3);
   ctx.font='bold 10px monospace';
-  ctx.fillText(isShort?'⚠️ 短路':`I = ${I.toFixed(2)}A`,amX,amY+12);
+  ctx.fillText(isShort?'⚠ 短路':`I = ${I.toFixed(2)}A`,amX,amY+12);
 
   // Voltmeter (top center)
   const vmX=mx,vmY=y1;
@@ -157,7 +157,7 @@ function draw(){
   ctx.strokeStyle='#8B5CF6';ctx.lineWidth=1.5;
   ctx.strokeRect(vmX-35,vmY-18,70,36);
   ctx.fillStyle='#8B5CF6';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
-  ctx.fillText('📏 电压表',vmX,vmY-3);
+  ctx.fillText('⊞ 电压表',vmX,vmY-3);
   ctx.font='bold 10px monospace';
   ctx.fillText(`V = ${V}V`,vmX,vmY+12);
 
@@ -171,7 +171,7 @@ function draw(){
   ctx.strokeStyle=brightness>0.3?'#F59E0B':wireColor;
   ctx.lineWidth=1.5;ctx.stroke();
   ctx.fillStyle=textColor;ctx.font='bold 10px sans-serif';
-  ctx.fillText('💡',bulbX-7,bulbY+4);
+  ctx.fillText('◉',bulbX-7,bulbY+4);
 
   // Glow effect
   if(brightness>0.1&&!isShort){

@@ -60,7 +60,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📐 计算题生成器</div>
+    <div class="section-title">∠ 计算题生成器</div>
     <div class="config-row">
       <span class="config-label">年级</span>
       <div class="pill active" data-g="1">一年级</div>
@@ -72,8 +72,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
     </div>
     <div class="config-row" id="opRow">
       <span class="config-label">运算</span>
-      <div class="pill active" data-op="+">➕ 加</div>
-      <div class="pill active" data-op="-">➖ 减</div>
+      <div class="pill active" data-op="+">+ 加</div>
+      <div class="pill active" data-op="-">- 减</div>
       <div class="pill" data-op="×">✖️ 乘</div>
       <div class="pill" data-op="÷">➗ 除</div>
     </div>
@@ -83,13 +83,13 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <span style="font-size:10px;color:var(--text-caption)">道（5-100）</span>
     </div>
     <div class="btn-row">
-      <button class="btn btn-primary" id="genBtn">🎲 生成题目</button>
+      <button class="btn btn-primary" id="genBtn">◎ 生成题目</button>
       <button class="btn btn-secondary" id="ansBtn">👁️ 显示答案</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+      <button class="btn btn-secondary" onclick="window.print()">⊞️ 打印</button>
     </div>
   </div>
   <div class="panel" id="qPanel">
-    <div class="section-title">📝 练习题 <span class="grade-desc" id="gradeDesc">一年级 · 20以内加减</span></div>
+    <div class="section-title">☰ 练习题 <span class="grade-desc" id="gradeDesc">一年级 · 20以内加减</span></div>
     <div class="q-grid" id="qGrid"></div>
   </div>
 </div>
@@ -169,7 +169,7 @@ document.getElementById('ansBtn').addEventListener('click',()=>{
   showAns=!showAns;
   document.querySelectorAll('.q-answer').forEach(el=>el.style.display=showAns?'inline':'none');
   document.querySelectorAll('.q-blank').forEach(el=>el.style.display=showAns?'none':'');
-  document.getElementById('ansBtn').textContent=showAns?'✏️ 隐藏答案':'👁️ 显示答案';
+  document.getElementById('ansBtn').textContent=showAns?'✎ 隐藏答案':'👁️ 显示答案';
 });
 
 generate();

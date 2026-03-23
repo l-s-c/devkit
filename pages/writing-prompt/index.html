@@ -51,11 +51,11 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">看图写话素材</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">🖼️ 看图写话素材</div>
+    <div class="section-title">⊞️ 看图写话素材</div>
     <div class="theme-grid" id="themeGrid"></div>
     <div class="btn-row">
-      <button class="btn btn-primary" id="randomBtn">🎲 换一个主题</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+      <button class="btn btn-primary" id="randomBtn">◎ 换一个主题</button>
+      <button class="btn btn-secondary" onclick="window.print()">⊞️ 打印</button>
     </div>
   </div>
   <div class="panel" id="contentPanel"></div>
@@ -65,43 +65,43 @@ body{min-height:100vh;display:flex;flex-direction:column}
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 const THEMES=[
-{emoji:'🌸',name:'春天来了',grade:'一二年级',
+{emoji:'◎',name:'春天来了',grade:'一二年级',
  prompts:['春天到了，外面有什么变化？','你看到了什么花？什么颜色？','小动物们在做什么？','你和谁一起去看春天？心情怎么样？'],
  words:['春暖花开','万物复苏','鸟语花香','绿油油','五颜六色','生机勃勃','微风','嫩芽'],
  sample:'春天来了，天气变得暖和了。公园里的花儿都开了，有红色的桃花，黄色的迎春花，白色的梨花，<strong>五颜六色</strong>真好看！\n\n小草从地里探出头来，<strong>绿油油</strong>的，像给大地铺上了一层绿色的地毯。小鸟在树上叽叽喳喳地唱歌，好像在说："春天来啦！春天来啦！"\n\n我和妈妈一起去公园放风筝，心里别提多高兴了。我最喜欢春天！'},
-{emoji:'🏃',name:'运动会',grade:'二三年级',
+{emoji:'◎',name:'运动会',grade:'二三年级',
  prompts:['运动会上有哪些比赛项目？','你参加了什么项目？','同学们是怎么加油的？','你的心情怎么样？'],
  words:['生龙活虎','奋力拼搏','摩拳擦掌','一马当先','加油助威','欢呼雀跃','汗流浃背','坚持不懈'],
  sample:'今天学校举行运动会，操场上热闹极了。\n\n跑步比赛开始了，只听"砰"的一声枪响，运动员们像离弦的箭一样冲了出去。我们班的小明<strong>一马当先</strong>，同学们在旁边<strong>加油助威</strong>，喊得嗓子都哑了。\n\n最后小明得了第一名，我们<strong>欢呼雀跃</strong>，开心极了！运动会真有趣！'},
-{emoji:'🦁',name:'动物园',grade:'一二年级',
+{emoji:'◎',name:'动物园',grade:'一二年级',
  prompts:['你去了动物园看到了什么动物？','最喜欢哪个动物？为什么？','动物们在做什么？','你有什么感受？'],
  words:['活泼可爱','憨态可掬','威风凛凛','毛茸茸','懒洋洋','张牙舞爪','挠痒痒','玩耍'],
  sample:'星期天，爸爸带我去动物园玩。\n\n我先看了大熊猫，它黑白相间，<strong>憨态可掬</strong>，正在<strong>懒洋洋</strong>地吃竹子。然后我看了猴子，它们上蹿下跳，<strong>活泼可爱</strong>极了。\n\n最威风的是老虎，它<strong>威风凛凛</strong>地走来走去，真像百兽之王！今天真开心！'},
-{emoji:'🎂',name:'生日派对',grade:'一二年级',
+{emoji:'◎',name:'生日派对',grade:'一二年级',
  prompts:['谁过生日？在哪里过的？','来了哪些人？','有什么好吃的和好玩的？','你送了什么礼物？'],
  words:['兴高采烈','欢天喜地','甜蜜蜜','五彩缤纷','津津有味','哈哈大笑','许愿','祝福'],
  sample:'今天是我的好朋友小红的生日，我<strong>兴高采烈</strong>地去参加她的生日派对。\n\n桌子上摆着一个<strong>五彩缤纷</strong>的大蛋糕，上面插着8根蜡烛。我们一起唱生日歌，小红闭上眼睛<strong>许愿</strong>，然后"呼"地一口气把蜡烛全吹灭了。\n\n大家<strong>津津有味</strong>地吃着蛋糕，<strong>哈哈大笑</strong>，玩得可开心了！'},
-{emoji:'🌧️',name:'下雨天',grade:'二三年级',
+{emoji:'◎️',name:'下雨天',grade:'二三年级',
  prompts:['下雨了，外面变成什么样？','你在干什么？','雨停了以后怎么样？','你的心情变化？'],
  words:['哗哗啦啦','淅淅沥沥','乌云密布','电闪雷鸣','水花四溅','雨过天晴','彩虹','清新'],
  sample:'放学的时候，天空突然<strong>乌云密布</strong>，紧接着就下起了大雨。\n\n雨水<strong>哗哗啦啦</strong>地落下来，打在屋顶上、窗户上，像是在演奏一首交响乐。我站在窗前看着外面，路上的人们撑着花花绿绿的雨伞，匆匆忙忙地走着。\n\n过了一会儿，雨停了。空气变得<strong>清新</strong>极了，天边还出现了一道美丽的<strong>彩虹</strong>！'},
-{emoji:'🏖️',name:'暑假生活',grade:'三四年级',
+{emoji:'◎️',name:'暑假生活',grade:'三四年级',
  prompts:['暑假你去了哪里？','那里有什么好玩的？','发生了什么有趣的事？','你学到了什么？'],
  words:['兴致勃勃','流连忘返','大开眼界','不亦乐乎','晴空万里','波光粼粼','金灿灿','难忘'],
  sample:'暑假里，我和爸爸妈妈去了海边。\n\n那天<strong>晴空万里</strong>，大海<strong>波光粼粼</strong>，美极了。<strong>金灿灿</strong>的沙滩上有许多贝壳，我<strong>兴致勃勃</strong>地捡了一大袋。我还在海里学游泳，虽然喝了好几口海水，但最后终于学会了。\n\n这次旅行让我<strong>大开眼界</strong>，真是一个<strong>难忘</strong>的暑假！'},
-{emoji:'🧹',name:'大扫除',grade:'二三年级',
+{emoji:'◎',name:'大扫除',grade:'二三年级',
  prompts:['为什么要大扫除？','你做了什么？同学/家人做了什么？','遇到了什么困难？','扫除后变成什么样？'],
  words:['干干净净','焕然一新','齐心协力','满头大汗','一尘不染','井井有条','忙忙碌碌','窗明几净'],
  sample:'今天老师说要大扫除，大家<strong>齐心协力</strong>干了起来。\n\n我负责擦窗户，小明扫地，小红擦桌子。我踩在凳子上，使劲擦啊擦，擦得<strong>满头大汗</strong>。小明把地扫得<strong>干干净净</strong>，没有一点纸屑。\n\n大扫除结束了，教室变得<strong>窗明几净</strong>、<strong>焕然一新</strong>。看着整洁的教室，我们心里美滋滋的！'},
-{emoji:'🐱',name:'我的宠物',grade:'一二年级',
+{emoji:'◎',name:'我的宠物',grade:'一二年级',
  prompts:['你养了什么宠物？它叫什么名字？','它长什么样子？','它喜欢做什么？','你怎么照顾它？'],
  words:['毛茸茸','胖乎乎','摇头摆尾','撒娇','调皮捣蛋','乖巧可爱','形影不离','忠诚'],
  sample:'我家有一只小猫，名字叫咪咪。\n\n咪咪全身<strong>毛茸茸</strong>的，像一个小绒球。它的眼睛圆圆的，像两颗玻璃球。\n\n咪咪很<strong>调皮捣蛋</strong>，它最喜欢追着毛线球跑。有时候它会跳到我的膝盖上<strong>撒娇</strong>，"喵喵喵"地叫，<strong>乖巧可爱</strong>极了。\n\n我每天给它喂猫粮、换水，我和咪咪是<strong>形影不离</strong>的好朋友！'},
-{emoji:'🎄',name:'过年了',grade:'一二年级',
+{emoji:'◎',name:'过年了',grade:'一二年级',
  prompts:['过年了，家里怎么准备的？','年夜饭吃了什么？','你收到了什么礼物或红包？','放了什么烟花？'],
  words:['张灯结彩','喜气洋洋','热热闹闹','团团圆圆','红红火火','噼里啪啦','欢声笑语','辞旧迎新'],
  sample:'过年了！家家户户<strong>张灯结彩</strong>，到处<strong>喜气洋洋</strong>。\n\n除夕晚上，我们一家人<strong>团团圆圆</strong>地坐在一起吃年夜饭。桌上有鱼、有鸡、有饺子，可丰盛了。爷爷奶奶给我发了红包，我开心极了。\n\n吃完饭，外面<strong>噼里啪啦</strong>响起了鞭炮声，天空中绽放着<strong>五颜六色</strong>的烟花，真漂亮！新的一年，我要好好学习，天天向上！'},
-{emoji:'🌻',name:'校园一角',grade:'二三年级',
+{emoji:'◎',name:'校园一角',grade:'二三年级',
  prompts:['你最喜欢校园的哪个角落？','那里有什么？长什么样？','你经常在那里做什么？','那个地方有什么特别的？'],
  words:['郁郁葱葱','生机勃勃','书声琅琅','鸟语花香','整整齐齐','充满活力','温馨','美丽'],
  sample:'我们学校有一个小花园，那是我最喜欢的地方。\n\n花园里种着各种各样的花：春天有<strong>鸟语花香</strong>的桃花，夏天有<strong>生机勃勃</strong>的向日葵，秋天有金黄的菊花。花园中间有一条小路，两旁的树木<strong>郁郁葱葱</strong>。\n\n下课后，我经常和同学来这里看书、聊天。听着远处<strong>书声琅琅</strong>，闻着花香，真是太美了！我爱我们的校园！'},
@@ -113,9 +113,9 @@ function renderGrid(){
 function renderContent(){
   const t=THEMES[currentIdx];
   let html=`<div class="section-title">${t.emoji} ${t.name}</div><div class="content-area"><div>`;
-  html+=`<div class="prompt-card"><div class="prompt-label">💡 写作提示</div><ul class="prompt-list">${t.prompts.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;
-  html+=`<div class="prompt-card"><div class="prompt-label">🌟 好词推荐</div><div class="word-chips">${t.words.map(w=>`<span class="word-chip">${w}</span>`).join('')}</div></div>`;
-  html+=`</div><div><div class="prompt-card"><div class="prompt-label">📝 范文参考</div><div class="sample-text">${t.sample.replace(/\n/g,'<br>')}</div></div></div></div>`;
+  html+=`<div class="prompt-card"><div class="prompt-label">◉ 写作提示</div><ul class="prompt-list">${t.prompts.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;
+  html+=`<div class="prompt-card"><div class="prompt-label">★ 好词推荐</div><div class="word-chips">${t.words.map(w=>`<span class="word-chip">${w}</span>`).join('')}</div></div>`;
+  html+=`</div><div><div class="prompt-card"><div class="prompt-label">☰ 范文参考</div><div class="sample-text">${t.sample.replace(/\n/g,'<br>')}</div></div></div></div>`;
   document.getElementById('contentPanel').innerHTML=html;
   document.getElementById('statusInfo').textContent=t.name+' — '+t.grade;
 }

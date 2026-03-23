@@ -55,27 +55,27 @@ body{min-height:100vh;display:flex;flex-direction:column;background:radial-gradi
 <div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">天文星座查询</span><div class="topbar-spacer"></div></div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">🌌 十二星座</div>
+    <div class="section-title">◎ 十二星座</div>
     <div class="zodiac-grid" id="zodiacGrid"></div>
   </div>
   <div class="panel" id="detailPanel"></div>
 </div>
-<div class="statusbar"><span>天文星座查询</span><div class="statusbar-spacer"></div><span>🌌 暗夜星空</span></div>
+<div class="statusbar"><span>天文星座查询</span><div class="statusbar-spacer"></div><span>◎ 暗夜星空</span></div>
 <script type="module">
 // No theme.js import — this page is always dark
 const Z=[
-{icon:'♈',n:'白羊座',en:'Aries',d:'3.21-4.19',el:'🔥 火象',star:'火星 Mars',gem:'钻石',color:'红色',pro:'热情、勇敢、直率',con:'冲动、急躁、自我'},
-{icon:'♉',n:'金牛座',en:'Taurus',d:'4.20-5.20',el:'🌍 土象',star:'金星 Venus',gem:'祖母绿',color:'绿色',pro:'稳重、务实、耐心',con:'固执、贪婪、占有欲'},
-{icon:'♊',n:'双子座',en:'Gemini',d:'5.21-6.21',el:'💨 风象',star:'水星 Mercury',gem:'玛瑙',color:'黄色',pro:'聪明、灵活、善言',con:'善变、肤浅、紧张'},
-{icon:'♋',n:'巨蟹座',en:'Cancer',d:'6.22-7.22',el:'💧 水象',star:'月亮 Moon',gem:'珍珠',color:'白色',pro:'温柔、体贴、顾家',con:'敏感、多疑、情绪化'},
-{icon:'♌',n:'狮子座',en:'Leo',d:'7.23-8.22',el:'🔥 火象',star:'太阳 Sun',gem:'琥珀',color:'金色',pro:'自信、大方、领导力',con:'骄傲、自负、爱面子'},
-{icon:'♍',n:'处女座',en:'Virgo',d:'8.23-9.22',el:'🌍 土象',star:'水星 Mercury',gem:'蓝宝石',color:'灰色',pro:'细心、完美主义、分析',con:'挑剔、神经质、洁癖'},
-{icon:'♎',n:'天秤座',en:'Libra',d:'9.23-10.23',el:'💨 风象',star:'金星 Venus',gem:'橄榄石',color:'粉色',pro:'公正、优雅、社交',con:'犹豫、依赖、逃避'},
-{icon:'♏',n:'天蝎座',en:'Scorpio',d:'10.24-11.22',el:'💧 水象',star:'冥王星 Pluto',gem:'黄玉',color:'深红',pro:'深沉、洞察力、执着',con:'嫉妒、多疑、报复'},
-{icon:'♐',n:'射手座',en:'Sagittarius',d:'11.23-12.21',el:'🔥 火象',star:'木星 Jupiter',gem:'绿松石',color:'紫色',pro:'乐观、自由、哲学',con:'粗心、不负责、直白'},
-{icon:'♑',n:'摩羯座',en:'Capricorn',d:'12.22-1.19',el:'🌍 土象',star:'土星 Saturn',gem:'石榴石',color:'黑色',pro:'踏实、有责任感、耐力',con:'悲观、冷漠、工作狂'},
-{icon:'♒',n:'水瓶座',en:'Aquarius',d:'1.20-2.18',el:'💨 风象',star:'天王星 Uranus',gem:'紫水晶',color:'蓝色',pro:'独立、创新、人道',con:'叛逆、冷淡、不合群'},
-{icon:'♓',n:'双鱼座',en:'Pisces',d:'2.19-3.20',el:'💧 水象',star:'海王星 Neptune',gem:'海蓝宝',color:'海蓝',pro:'浪漫、直觉、善良',con:'逃避、幻想、软弱'},
+{icon:'♈',n:'白羊座',en:'Aries',d:'3.21-4.19',el:'◈ 火象',star:'火星 Mars',gem:'钻石',color:'红色',pro:'热情、勇敢、直率',con:'冲动、急躁、自我'},
+{icon:'♉',n:'金牛座',en:'Taurus',d:'4.20-5.20',el:'◎ 土象',star:'金星 Venus',gem:'祖母绿',color:'绿色',pro:'稳重、务实、耐心',con:'固执、贪婪、占有欲'},
+{icon:'♊',n:'双子座',en:'Gemini',d:'5.21-6.21',el:'◎ 风象',star:'水星 Mercury',gem:'玛瑙',color:'黄色',pro:'聪明、灵活、善言',con:'善变、肤浅、紧张'},
+{icon:'♋',n:'巨蟹座',en:'Cancer',d:'6.22-7.22',el:'◆ 水象',star:'月亮 Moon',gem:'珍珠',color:'白色',pro:'温柔、体贴、顾家',con:'敏感、多疑、情绪化'},
+{icon:'♌',n:'狮子座',en:'Leo',d:'7.23-8.22',el:'◈ 火象',star:'太阳 Sun',gem:'琥珀',color:'金色',pro:'自信、大方、领导力',con:'骄傲、自负、爱面子'},
+{icon:'♍',n:'处女座',en:'Virgo',d:'8.23-9.22',el:'◎ 土象',star:'水星 Mercury',gem:'蓝宝石',color:'灰色',pro:'细心、完美主义、分析',con:'挑剔、神经质、洁癖'},
+{icon:'♎',n:'天秤座',en:'Libra',d:'9.23-10.23',el:'◎ 风象',star:'金星 Venus',gem:'橄榄石',color:'粉色',pro:'公正、优雅、社交',con:'犹豫、依赖、逃避'},
+{icon:'♏',n:'天蝎座',en:'Scorpio',d:'10.24-11.22',el:'◆ 水象',star:'冥王星 Pluto',gem:'黄玉',color:'深红',pro:'深沉、洞察力、执着',con:'嫉妒、多疑、报复'},
+{icon:'♐',n:'射手座',en:'Sagittarius',d:'11.23-12.21',el:'◈ 火象',star:'木星 Jupiter',gem:'绿松石',color:'紫色',pro:'乐观、自由、哲学',con:'粗心、不负责、直白'},
+{icon:'♑',n:'摩羯座',en:'Capricorn',d:'12.22-1.19',el:'◎ 土象',star:'土星 Saturn',gem:'石榴石',color:'黑色',pro:'踏实、有责任感、耐力',con:'悲观、冷漠、工作狂'},
+{icon:'♒',n:'水瓶座',en:'Aquarius',d:'1.20-2.18',el:'◎ 风象',star:'天王星 Uranus',gem:'紫水晶',color:'蓝色',pro:'独立、创新、人道',con:'叛逆、冷淡、不合群'},
+{icon:'♓',n:'双鱼座',en:'Pisces',d:'2.19-3.20',el:'◆ 水象',star:'海王星 Neptune',gem:'海蓝宝',color:'海蓝',pro:'浪漫、直觉、善良',con:'逃避、幻想、软弱'},
 ];
 let active=0;
 function renderGrid(){
@@ -83,7 +83,7 @@ function renderGrid(){
 }
 function renderDetail(){
   const z=Z[active];
-  document.getElementById('detailPanel').innerHTML=`<div class="detail-card"><div class="detail-header"><div class="detail-icon">${z.icon}</div><div><div class="detail-name">${z.n}</div><div class="detail-en">${z.en}</div><div class="detail-date">📅 ${z.d}</div></div></div><div class="trait-grid"><div class="trait-item"><div class="trait-label">🔥 元素</div><div class="trait-value">${z.el}</div></div><div class="trait-item"><div class="trait-label">🌟 守护星</div><div class="trait-value">${z.star}</div></div><div class="trait-item"><div class="trait-label">💎 幸运宝石</div><div class="trait-value">${z.gem}</div></div><div class="trait-item"><div class="trait-label">🎨 幸运色</div><div class="trait-value">${z.color}</div></div><div class="trait-item"><div class="trait-label">✅ 优点</div><div class="trait-value">${z.pro}</div></div><div class="trait-item"><div class="trait-label">⚠️ 缺点</div><div class="trait-value">${z.con}</div></div></div></div>`;
+  document.getElementById('detailPanel').innerHTML=`<div class="detail-card"><div class="detail-header"><div class="detail-icon">${z.icon}</div><div><div class="detail-name">${z.n}</div><div class="detail-en">${z.en}</div><div class="detail-date">☰ ${z.d}</div></div></div><div class="trait-grid"><div class="trait-item"><div class="trait-label">◈ 元素</div><div class="trait-value">${z.el}</div></div><div class="trait-item"><div class="trait-label">★ 守护星</div><div class="trait-value">${z.star}</div></div><div class="trait-item"><div class="trait-label">◆ 幸运宝石</div><div class="trait-value">${z.gem}</div></div><div class="trait-item"><div class="trait-label">◆ 幸运色</div><div class="trait-value">${z.color}</div></div><div class="trait-item"><div class="trait-label">✓ 优点</div><div class="trait-value">${z.pro}</div></div><div class="trait-item"><div class="trait-label">⚠ 缺点</div><div class="trait-value">${z.con}</div></div></div></div>`;
 }
 document.getElementById('zodiacGrid').addEventListener('click',e=>{const c=e.target.closest('.zc');if(!c)return;active=+c.dataset.idx;renderGrid();renderDetail()});
 // Stars

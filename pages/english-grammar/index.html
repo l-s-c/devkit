@@ -21,7 +21,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
 .section-title{font-size:13px;font-weight:800;margin-bottom:14px}
 .search-wrap{position:relative;margin-bottom:12px}
-.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-wrap::before{content:'⊙';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
 .search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
 .search-input:focus{border-color:var(--brand-500)}
 .tab-row{display:flex;gap:4px;overflow-x:auto;margin-bottom:12px}
@@ -46,7 +46,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">英语语法速查</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📖 英语语法速查</div>
+    <div class="section-title">⊞ 英语语法速查</div>
     <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索语法知识点..."></div>
     <div class="tab-row" id="tabRow"></div>
   </div>
@@ -58,32 +58,32 @@ import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 const G=[
 // 时态
-{n:'一般现在时',en:'Simple Present',s:'主语 + <em>do/does</em> + 其他',cat:'时态',tag:'基础',d:'表示经常性、习惯性的动作或客观事实。',ex:['✅ I <b>go</b> to school every day.','✅ The earth <b>moves</b> around the sun.','❌ I goes → I <b>go</b>']},
-{n:'现在进行时',en:'Present Continuous',s:'主语 + <em>am/is/are</em> + <em>V-ing</em>',cat:'时态',tag:'基础',d:'表示正在进行的动作。',ex:['✅ She <b>is reading</b> a book now.','✅ We <b>are learning</b> English.']},
-{n:'一般过去时',en:'Simple Past',s:'主语 + <em>V-ed</em> / 不规则动词',cat:'时态',tag:'基础',d:'表示过去某个时间发生的动作或状态。',ex:['✅ I <b>went</b> to school yesterday.','✅ She <b>watched</b> TV last night.']},
-{n:'一般将来时',en:'Simple Future',s:'主语 + <em>will</em> + V原 / <em>be going to</em> + V原',cat:'时态',tag:'基础',d:'表示将来某个时间要发生的动作。',ex:['✅ I <b>will go</b> tomorrow.','✅ She <b>is going to</b> study abroad.']},
-{n:'现在完成时',en:'Present Perfect',s:'主语 + <em>have/has</em> + <em>V-ed(过去分词)</em>',cat:'时态',tag:'重要',d:'表示过去发生但对现在有影响的动作，或从过去持续到现在的状态。',ex:['✅ I <b>have finished</b> my homework.','✅ She <b>has lived</b> here for 5 years.']},
-{n:'过去进行时',en:'Past Continuous',s:'主语 + <em>was/were</em> + <em>V-ing</em>',cat:'时态',tag:'重要',d:'表示过去某时正在进行的动作。',ex:['✅ I <b>was sleeping</b> when you called.']},
-{n:'过去完成时',en:'Past Perfect',s:'主语 + <em>had</em> + <em>V-ed</em>',cat:'时态',tag:'进阶',d:'表示在过去某一动作之前已完成的动作（过去的过去）。',ex:['✅ I <b>had left</b> before he arrived.']},
-{n:'将来进行时',en:'Future Continuous',s:'主语 + <em>will be</em> + <em>V-ing</em>',cat:'时态',tag:'进阶',d:'表示将来某时正在进行的动作。',ex:['✅ I <b>will be studying</b> at 8 tonight.']},
+{n:'一般现在时',en:'Simple Present',s:'主语 + <em>do/does</em> + 其他',cat:'时态',tag:'基础',d:'表示经常性、习惯性的动作或客观事实。',ex:['✓ I <b>go</b> to school every day.','✓ The earth <b>moves</b> around the sun.','✗ I goes → I <b>go</b>']},
+{n:'现在进行时',en:'Present Continuous',s:'主语 + <em>am/is/are</em> + <em>V-ing</em>',cat:'时态',tag:'基础',d:'表示正在进行的动作。',ex:['✓ She <b>is reading</b> a book now.','✓ We <b>are learning</b> English.']},
+{n:'一般过去时',en:'Simple Past',s:'主语 + <em>V-ed</em> / 不规则动词',cat:'时态',tag:'基础',d:'表示过去某个时间发生的动作或状态。',ex:['✓ I <b>went</b> to school yesterday.','✓ She <b>watched</b> TV last night.']},
+{n:'一般将来时',en:'Simple Future',s:'主语 + <em>will</em> + V原 / <em>be going to</em> + V原',cat:'时态',tag:'基础',d:'表示将来某个时间要发生的动作。',ex:['✓ I <b>will go</b> tomorrow.','✓ She <b>is going to</b> study abroad.']},
+{n:'现在完成时',en:'Present Perfect',s:'主语 + <em>have/has</em> + <em>V-ed(过去分词)</em>',cat:'时态',tag:'重要',d:'表示过去发生但对现在有影响的动作，或从过去持续到现在的状态。',ex:['✓ I <b>have finished</b> my homework.','✓ She <b>has lived</b> here for 5 years.']},
+{n:'过去进行时',en:'Past Continuous',s:'主语 + <em>was/were</em> + <em>V-ing</em>',cat:'时态',tag:'重要',d:'表示过去某时正在进行的动作。',ex:['✓ I <b>was sleeping</b> when you called.']},
+{n:'过去完成时',en:'Past Perfect',s:'主语 + <em>had</em> + <em>V-ed</em>',cat:'时态',tag:'进阶',d:'表示在过去某一动作之前已完成的动作（过去的过去）。',ex:['✓ I <b>had left</b> before he arrived.']},
+{n:'将来进行时',en:'Future Continuous',s:'主语 + <em>will be</em> + <em>V-ing</em>',cat:'时态',tag:'进阶',d:'表示将来某时正在进行的动作。',ex:['✓ I <b>will be studying</b> at 8 tonight.']},
 // 语态
-{n:'被动语态',en:'Passive Voice',s:'主语 + <em>be</em> + <em>V-ed(过去分词)</em> + (by ...)',cat:'语态',tag:'重要',d:'当主语是动作的承受者时使用被动语态。',ex:['✅ The book <b>was written</b> by him.','✅ English <b>is spoken</b> worldwide.','❌ The cake ate → The cake <b>was eaten</b>.']},
+{n:'被动语态',en:'Passive Voice',s:'主语 + <em>be</em> + <em>V-ed(过去分词)</em> + (by ...)',cat:'语态',tag:'重要',d:'当主语是动作的承受者时使用被动语态。',ex:['✓ The book <b>was written</b> by him.','✓ English <b>is spoken</b> worldwide.','✗ The cake ate → The cake <b>was eaten</b>.']},
 // 句型
-{n:'There be 句型',en:'There be',s:'<em>There is/are</em> + 名词 + 地点',cat:'句型',tag:'基础',d:'表示"某处存在某物/某人"。',ex:['✅ <b>There is</b> a book on the desk.','✅ <b>There are</b> many students in the room.']},
-{n:'祈使句',en:'Imperative',s:'<em>V原</em> + 其他 / <em>Don\'t</em> + V原',cat:'句型',tag:'基础',d:'表示请求、命令、建议。',ex:['✅ <b>Open</b> the door.','✅ <b>Don\'t be</b> late.']},
-{n:'感叹句',en:'Exclamatory',s:'<em>What</em> + a/an + adj + n + 主+谓！/ <em>How</em> + adj + 主+谓！',cat:'句型',tag:'基础',d:'表示强烈感情。',ex:['✅ <b>What a</b> beautiful flower!','✅ <b>How</b> clever you are!']},
+{n:'There be 句型',en:'There be',s:'<em>There is/are</em> + 名词 + 地点',cat:'句型',tag:'基础',d:'表示"某处存在某物/某人"。',ex:['✓ <b>There is</b> a book on the desk.','✓ <b>There are</b> many students in the room.']},
+{n:'祈使句',en:'Imperative',s:'<em>V原</em> + 其他 / <em>Don\'t</em> + V原',cat:'句型',tag:'基础',d:'表示请求、命令、建议。',ex:['✓ <b>Open</b> the door.','✓ <b>Don\'t be</b> late.']},
+{n:'感叹句',en:'Exclamatory',s:'<em>What</em> + a/an + adj + n + 主+谓！/ <em>How</em> + adj + 主+谓！',cat:'句型',tag:'基础',d:'表示强烈感情。',ex:['✓ <b>What a</b> beautiful flower!','✓ <b>How</b> clever you are!']},
 // 从句
-{n:'定语从句',en:'Attributive Clause',s:'先行词 + <em>who/which/that</em> + 从句',cat:'从句',tag:'重要',d:'修饰名词的从句。关系代词在从句中充当主语或宾语。',ex:['✅ The boy <b>who</b> is reading is my brother.','✅ The book <b>that</b> I bought is interesting.']},
-{n:'宾语从句',en:'Object Clause',s:'主句 + <em>that/if/wh-</em> + 从句（陈述语序）',cat:'从句',tag:'重要',d:'在句中作宾语的从句。注意：从句用陈述语序。',ex:['✅ I know <b>that</b> he is a teacher.','✅ I wonder <b>if</b> she will come.','❌ I wonder if will she → <b>if she will</b>']},
-{n:'状语从句',en:'Adverbial Clause',s:'<em>when/because/if/although</em> + 从句',cat:'从句',tag:'重要',d:'表示时间、原因、条件、让步等。',ex:['✅ <b>When</b> I got home, it was raining.','✅ <b>If</b> it rains, I\'ll stay home.']},
+{n:'定语从句',en:'Attributive Clause',s:'先行词 + <em>who/which/that</em> + 从句',cat:'从句',tag:'重要',d:'修饰名词的从句。关系代词在从句中充当主语或宾语。',ex:['✓ The boy <b>who</b> is reading is my brother.','✓ The book <b>that</b> I bought is interesting.']},
+{n:'宾语从句',en:'Object Clause',s:'主句 + <em>that/if/wh-</em> + 从句（陈述语序）',cat:'从句',tag:'重要',d:'在句中作宾语的从句。注意：从句用陈述语序。',ex:['✓ I know <b>that</b> he is a teacher.','✓ I wonder <b>if</b> she will come.','✗ I wonder if will she → <b>if she will</b>']},
+{n:'状语从句',en:'Adverbial Clause',s:'<em>when/because/if/although</em> + 从句',cat:'从句',tag:'重要',d:'表示时间、原因、条件、让步等。',ex:['✓ <b>When</b> I got home, it was raining.','✓ <b>If</b> it rains, I\'ll stay home.']},
 // 词性
-{n:'可数与不可数名词',en:'Countable & Uncountable',s:'可数：加 -s/-es | 不可数：不能加 -s',cat:'词性',tag:'基础',d:'可数名词有单复数，不可数名词无复数形式。',ex:['✅ two <b>books</b> / much <b>water</b>','❌ two waters → two <b>glasses of</b> water']},
-{n:'形容词比较级',en:'Comparative',s:'<em>-er</em> / <em>more</em> + adj + <em>than</em>',cat:'词性',tag:'基础',d:'两者之间的比较。',ex:['✅ She is <b>taller than</b> me.','✅ This book is <b>more interesting than</b> that one.']},
-{n:'形容词最高级',en:'Superlative',s:'<em>the -est</em> / <em>the most</em> + adj',cat:'词性',tag:'基础',d:'三者及以上的比较。',ex:['✅ He is <b>the tallest</b> in our class.']},
+{n:'可数与不可数名词',en:'Countable & Uncountable',s:'可数：加 -s/-es | 不可数：不能加 -s',cat:'词性',tag:'基础',d:'可数名词有单复数，不可数名词无复数形式。',ex:['✓ two <b>books</b> / much <b>water</b>','✗ two waters → two <b>glasses of</b> water']},
+{n:'形容词比较级',en:'Comparative',s:'<em>-er</em> / <em>more</em> + adj + <em>than</em>',cat:'词性',tag:'基础',d:'两者之间的比较。',ex:['✓ She is <b>taller than</b> me.','✓ This book is <b>more interesting than</b> that one.']},
+{n:'形容词最高级',en:'Superlative',s:'<em>the -est</em> / <em>the most</em> + adj',cat:'词性',tag:'基础',d:'三者及以上的比较。',ex:['✓ He is <b>the tallest</b> in our class.']},
 // 特殊句式
-{n:'倒装句',en:'Inversion',s:'<em>否定词/Only/So</em> + 助动词 + 主语 + ...',cat:'特殊句式',tag:'进阶',d:'为了强调或满足语法要求而颠倒正常语序。',ex:['✅ <b>Never have</b> I seen such a view.','✅ <b>So</b> do I.']},
-{n:'强调句',en:'Cleft Sentence',s:'<em>It is/was</em> + 被强调部分 + <em>that/who</em> + 其余',cat:'特殊句式',tag:'进阶',d:'用 It is...that 结构强调某个成分。',ex:['✅ <b>It was</b> Tom <b>who</b> broke the window.']},
-{n:'虚拟语气',en:'Subjunctive Mood',s:'If + 过去式, 主语 + <em>would/could</em> + V原',cat:'特殊句式',tag:'进阶',d:'表示与事实相反的假设。',ex:['✅ If I <b>were</b> you, I <b>would</b> study harder.','✅ I wish I <b>could</b> fly.']},
+{n:'倒装句',en:'Inversion',s:'<em>否定词/Only/So</em> + 助动词 + 主语 + ...',cat:'特殊句式',tag:'进阶',d:'为了强调或满足语法要求而颠倒正常语序。',ex:['✓ <b>Never have</b> I seen such a view.','✓ <b>So</b> do I.']},
+{n:'强调句',en:'Cleft Sentence',s:'<em>It is/was</em> + 被强调部分 + <em>that/who</em> + 其余',cat:'特殊句式',tag:'进阶',d:'用 It is...that 结构强调某个成分。',ex:['✓ <b>It was</b> Tom <b>who</b> broke the window.']},
+{n:'虚拟语气',en:'Subjunctive Mood',s:'If + 过去式, 主语 + <em>would/could</em> + V原',cat:'特殊句式',tag:'进阶',d:'表示与事实相反的假设。',ex:['✓ If I <b>were</b> you, I <b>would</b> study harder.','✓ I wish I <b>could</b> fly.']},
 ];
 const CATS=['全部','时态','语态','句型','从句','词性','特殊句式'];
 let currentCat='全部';

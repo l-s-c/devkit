@@ -104,22 +104,22 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="main">
   <div class="editor-panel">
     <div class="toolbar">
-      <button class="tool-btn primary" id="btnFormat">✨ 格式化</button>
-      <button class="tool-btn" id="btnMinify">🗜️ 压缩</button>
-      <button class="tool-btn" id="btnValidate">✅ 校验</button>
+      <button class="tool-btn primary" id="btnFormat">✦ 格式化</button>
+      <button class="tool-btn" id="btnMinify">⊕️ 压缩</button>
+      <button class="tool-btn" id="btnValidate">✓ 校验</button>
       <div class="tool-sep"></div>
-      <button class="tool-btn" id="btnToJson">📤 TOML → JSON</button>
-      <button class="tool-btn" id="btnToToml">📥 JSON → TOML</button>
+      <button class="tool-btn" id="btnToJson">↑ TOML → JSON</button>
+      <button class="tool-btn" id="btnToToml">↓ JSON → TOML</button>
       <div class="tool-sep"></div>
-      <button class="tool-btn" id="btnSample">📋 示例</button>
+      <button class="tool-btn" id="btnSample">☰ 示例</button>
       <button class="tool-btn" id="btnClear">✕ 清空</button>
     </div>
 
     <div class="dual">
       <div>
         <div class="panel-header">
-          <span class="panel-title">📝 输入 <span class="panel-badge" id="leftBadge">TOML</span></span>
-          <button class="panel-btn" id="btnPaste">📋 粘贴</button>
+          <span class="panel-title">☰ 输入 <span class="panel-badge" id="leftBadge">TOML</span></span>
+          <button class="panel-btn" id="btnPaste">☰ 粘贴</button>
         </div>
         <textarea class="text-area" id="inputText" placeholder='[package]
 name = "my-app"
@@ -130,15 +130,15 @@ serde = "1.0"'></textarea>
       </div>
       <div>
         <div class="panel-header">
-          <span class="panel-title">📤 输出 <span class="panel-badge" id="rightBadge">TOML</span></span>
-          <button class="panel-btn" id="btnCopy">📋 复制</button>
+          <span class="panel-title">↑ 输出 <span class="panel-badge" id="rightBadge">TOML</span></span>
+          <button class="panel-btn" id="btnCopy">☰ 复制</button>
         </div>
         <textarea class="text-area" id="outputText" readonly></textarea>
       </div>
     </div>
 
     <div class="status-bar status-ok" id="statusBar">
-      <span>✅ 就绪 — 输入 TOML 后点击操作按钮</span>
+      <span>✓ 就绪 — 输入 TOML 后点击操作按钮</span>
       <span id="statusRight"></span>
     </div>
   </div>
@@ -187,7 +187,7 @@ const outputEl = document.getElementById('outputText');
 function setStatus(ok, msg, right = '') {
   const bar = document.getElementById('statusBar');
   bar.className = 'status-bar ' + (ok ? 'status-ok' : 'status-error');
-  bar.innerHTML = `<span>${ok ? '✅' : '❌'} ${msg}</span><span>${right}</span>`;
+  bar.innerHTML = `<span>${ok ? '✓' : '✗'} ${msg}</span><span>${right}</span>`;
 }
 
 function setBadges(left, right) {
@@ -237,7 +237,7 @@ document.getElementById('btnValidate').addEventListener('click', () => {
   try {
     const parsed = TOML.parse(input);
     const keys = Object.keys(parsed).length;
-    outputEl.value = `✅ TOML 语法正确\n\n解析成功，共 ${keys} 个顶级键。`;
+    outputEl.value = `✓ TOML 语法正确\n\n解析成功，共 ${keys} 个顶级键。`;
     setBadges('TOML', '结果');
     setStatus(true, '校验通过 — TOML 语法正确');
   } catch (e) { showError(e); }

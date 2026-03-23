@@ -131,7 +131,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左：单条计算 -->
     <div>
       <div class="panel">
-        <div class="section-title">🔄 计算方向</div>
+        <div class="section-title">↻ 计算方向</div>
         <div class="dir-tabs" id="dirTabs">
           <button class="dir-tab active" data-dir="toEx">含税 → 不含税</button>
           <button class="dir-tab" data-dir="toIn">不含税 → 含税</button>
@@ -139,7 +139,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📊 税率</div>
+        <div class="section-title">▦ 税率</div>
         <div class="rate-row" id="rateRow">
           <span class="rate-pill active" data-rate="13">13%</span>
           <span class="rate-pill" data-rate="9">9%</span>
@@ -151,13 +151,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">💰 金额输入</div>
+        <div class="section-title">◈ 金额输入</div>
         <div class="input-label" id="inputLabel">含税金额（元）</div>
         <input type="number" class="input-field" id="amountInput" value="11300" placeholder="请输入金额">
       </div>
 
       <div class="panel">
-        <div class="section-title">📋 计算结果</div>
+        <div class="section-title">☰ 计算结果</div>
         <div class="result-grid">
           <div class="result-card">
             <div class="result-label">不含税金额</div>
@@ -172,14 +172,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             <div class="result-val" id="resTotal">—</div>
           </div>
         </div>
-        <div style="text-align:right"><button class="copy-btn" id="copyResultBtn">📋 复制结果</button></div>
+        <div style="text-align:right"><button class="copy-btn" id="copyResultBtn">☰ 复制结果</button></div>
       </div>
     </div>
 
     <!-- 右：批量 -->
     <div>
       <div class="panel">
-        <div class="section-title">📦 批量计算</div>
+        <div class="section-title">⊞ 批量计算</div>
         <textarea class="batch-area" id="batchInput" placeholder="每行一个金额，如：&#10;11300&#10;5650&#10;22600">11300
 5650
 22600</textarea>
@@ -187,7 +187,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <thead><tr><th>含税</th><th>不含税</th><th>税额</th></tr></thead>
           <tbody id="batchBody"></tbody>
         </table>
-        <div style="text-align:right;margin-top:8px"><button class="copy-btn" id="copyBatchBtn">📋 复制表格</button></div>
+        <div style="text-align:right;margin-top:8px"><button class="copy-btn" id="copyBatchBtn">☰ 复制表格</button></div>
       </div>
     </div>
   </div>

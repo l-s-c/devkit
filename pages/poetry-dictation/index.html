@@ -58,15 +58,15 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">📝 古诗词默写</div>
+    <div class="section-title">☰ 古诗词默写</div>
     <div class="tab-row">
-      <div class="tab active" onclick="setMode(0)">📖 上句写下句</div>
-      <div class="tab" onclick="setMode(1)">📖 下句写上句</div>
-      <div class="tab" onclick="setMode(2)">🎲 随机默写</div>
+      <div class="tab active" onclick="setMode(0)">⊞ 上句写下句</div>
+      <div class="tab" onclick="setMode(1)">⊞ 下句写上句</div>
+      <div class="tab" onclick="setMode(2)">◎ 随机默写</div>
     </div>
     <div class="score-bar">
-      <div class="score-item"><div class="score-num" id="correctNum" style="color:#10B981">0</div><div class="score-label">✅ 正确</div></div>
-      <div class="score-item"><div class="score-num" id="wrongNum" style="color:#EF4444">0</div><div class="score-label">❌ 错误</div></div>
+      <div class="score-item"><div class="score-num" id="correctNum" style="color:#10B981">0</div><div class="score-label">✓ 正确</div></div>
+      <div class="score-item"><div class="score-num" id="wrongNum" style="color:#EF4444">0</div><div class="score-label">✗ 错误</div></div>
       <div class="score-item"><div class="score-num" id="progressNum" style="color:#F59E0B">0/10</div><div class="score-label">进度</div></div>
       <div class="score-item"><div class="score-num" id="accuracyNum" style="color:#8B5CF6">0%</div><div class="score-label">正确率</div></div>
     </div>
@@ -77,7 +77,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
     <h2 id="resultTitle"></h2>
     <p id="resultDetail" style="color:var(--text-secondary);margin-bottom:16px"></p>
   </div>
-  <div class="btn-row"><button class="btn" id="startBtn" onclick="startQuiz()">🚀 开始默写</button></div>
+  <div class="btn-row"><button class="btn" id="startBtn" onclick="startQuiz()">◆ 开始默写</button></div>
 </div>
 <script src="../../shared/theme.js"></script>
 <script>
@@ -178,7 +178,7 @@ function startQuiz(){
   questions=pairs.slice(0,10);
   current=0;correct=0;wrong=0;answered=[];
   document.getElementById('resultSummary').style.display='none';
-  document.getElementById('startBtn').textContent='🔄 重新开始';
+  document.getElementById('startBtn').textContent='↻ 重新开始';
   renderQuestion();
   updateScore();
 }
@@ -200,7 +200,7 @@ function renderQuestion(){
       const ok=v===a;
       this.classList.add(ok?'correct':'wrong');
       this.disabled=true;
-      if(ok){correct++}else{wrong++;document.getElementById('answerHint').style.display='flex';document.getElementById('answerHint').innerHTML=`✅ 正确答案：${answer}`}
+      if(ok){correct++}else{wrong++;document.getElementById('answerHint').style.display='flex';document.getElementById('answerHint').innerHTML=`✓ 正确答案：${answer}`}
       answered.push(ok);
       updateScore();
       setTimeout(()=>{current++;renderQuestion()},1200);
@@ -223,7 +223,7 @@ function showResult(){
   const s=document.getElementById('resultSummary');
   s.style.display='block';
   const pct=Math.round(correct/10*100);
-  document.getElementById('resultTitle').textContent=pct>=80?'🎉 太棒了！':pct>=60?'👍 继续加油！':'📚 多多练习！';
+  document.getElementById('resultTitle').textContent=pct>=80?'✦ 太棒了！':pct>=60?'👍 继续加油！':'☰ 多多练习！';
   document.getElementById('resultDetail').textContent=`正确 ${correct} 题，错误 ${wrong} 题，正确率 ${pct}%`;
   updateScore();
 }

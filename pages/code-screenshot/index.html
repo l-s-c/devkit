@@ -53,7 +53,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📸 代码截图</div>
+    <div class="section-title">◎ 代码截图</div>
     <div class="config-row">
       <span class="config-label">背景</span>
       <div class="pill-row" id="bgRow">
@@ -80,7 +80,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
       </div>
     </div>
     <textarea class="code-input" id="codeInput" placeholder="粘贴代码...">function hello() {
-  console.log('Hello, DevKit! 🚀');
+  console.log('Hello, DevKit! ◆');
   return 42;
 }</textarea>
   </div>
@@ -90,8 +90,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <canvas id="cvs"></canvas>
     </div>
     <div class="action-row">
-      <button class="btn btn-primary" id="exportBtn">📥 导出 PNG</button>
-      <button class="btn btn-secondary" id="copyBtn">📋 复制图片</button>
+      <button class="btn btn-primary" id="exportBtn">↓ 导出 PNG</button>
+      <button class="btn btn-secondary" id="copyBtn">☰ 复制图片</button>
     </div>
   </div>
 </div>
@@ -184,8 +184,8 @@ document.getElementById('copyBtn').addEventListener('click',async()=>{
   try{
     const blob=await new Promise(r=>cvs.toBlob(r,'image/png'));
     await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-    document.getElementById('statusInfo').textContent='✅ 已复制到剪贴板';
-  }catch(e){document.getElementById('statusInfo').textContent='❌ 复制失败，请用导出'}
+    document.getElementById('statusInfo').textContent='✓ 已复制到剪贴板';
+  }catch(e){document.getElementById('statusInfo').textContent='✗ 复制失败，请用导出'}
 });
 
 render();

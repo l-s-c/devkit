@@ -127,12 +127,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel">
-    <div class="section-title">🔧 加密算法</div>
+    <div class="section-title">⊘ 加密算法</div>
     <div class="tabs" id="algoTabs">
-      <button class="tab active" data-algo="aes">🔐 AES</button>
-      <button class="tab" data-algo="rot13">🔄 ROT13</button>
-      <button class="tab" data-algo="caesar">🏛️ Caesar</button>
-      <button class="tab" data-algo="hash">🔒 哈希</button>
+      <button class="tab active" data-algo="aes">⊕ AES</button>
+      <button class="tab" data-algo="rot13">↻ ROT13</button>
+      <button class="tab" data-algo="caesar">◎️ Caesar</button>
+      <button class="tab" data-algo="hash">⊕ 哈希</button>
     </div>
   </div>
 
@@ -141,15 +141,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div>
       <div class="panel">
         <div class="field-label">
-          <span>📝 输入文本</span>
+          <span>☰ 输入文本</span>
           <button class="copy-btn" id="copyInput">复制</button>
         </div>
-        <textarea class="text-area" id="inputText" placeholder="输入要加密的文本...">Hello World 你好世界 😀</textarea>
+        <textarea class="text-area" id="inputText" placeholder="输入要加密的文本...">Hello World 你好世界 ◎</textarea>
       </div>
 
       <!-- AES 密码面板 -->
       <div class="panel" id="aesPanel">
-        <div class="section-title">🔑 密码</div>
+        <div class="section-title">⊕ 密码</div>
         <div class="field">
           <div class="pwd-wrap">
             <input type="password" class="field-input" id="password" placeholder="输入加密密码...">
@@ -189,8 +189,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <div class="panel">
         <div class="action-row">
-          <button class="action-btn btn-encrypt" id="encryptBtn">🔒 加密</button>
-          <button class="action-btn btn-decrypt" id="decryptBtn">🔓 解密</button>
+          <button class="action-btn btn-encrypt" id="encryptBtn">⊕ 加密</button>
+          <button class="action-btn btn-decrypt" id="decryptBtn">⊘ 解密</button>
         </div>
       </div>
     </div>
@@ -199,7 +199,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div>
       <div class="panel">
         <div class="field-label">
-          <span>🔢 输出结果</span>
+          <span>⊞ 输出结果</span>
           <button class="copy-btn" id="copyOutput">复制</button>
         </div>
         <textarea class="text-area" id="outputText" placeholder="加密/解密结果..." readonly style="min-height:200px"></textarea>
@@ -285,7 +285,7 @@ async function hashText(text, algorithm) {
 function showStatus(msg, type) {
   const el = document.getElementById('status');
   el.className = 'status ' + type;
-  el.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + msg;
+  el.innerHTML = (type === 'success' ? '✓ ' : '✗ ') + msg;
 }
 function clearStatus() { document.getElementById('status').className = 'status'; }
 

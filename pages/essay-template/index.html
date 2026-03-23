@@ -48,39 +48,39 @@ body{min-height:100vh;display:flex;flex-direction:column}
   </div>
   <div class="panel"><div class="tpl-list" id="tplList"></div></div>
 </div>
-<div class="statusbar"><span id="statusInfo">英语作文模板</span><div class="statusbar-spacer"></div><span>📋 一键复制</span></div>
+<div class="statusbar"><span id="statusInfo">英语作文模板</span><div class="statusbar-spacer"></div><span>☰ 一键复制</span></div>
 <script type="module">
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
-const TABS=['🎯 万能句型','📝 开头模板','📝 结尾模板','🔗 连接词'];
+const TABS=['◎ 万能句型','☰ 开头模板','☰ 结尾模板','⊞ 连接词'];
 // t=tab, title, cn, content, badge
 const DATA=[
-{t:0,title:'引出话题',cn:'引出讨论话题，适用于议论文开头',content:'<b>Nowadays</b>, <b>there is a growing concern about</b> [话题].\n<b>With the development of</b> [背景], <b>more and more people</b> [现象].',badge:'🎓 高考+四六级'},
-{t:0,title:'表达观点',cn:'表达个人立场',content:'<b>As far as I am concerned</b>, I firmly believe that [观点].\n<b>There are several reasons accounting for</b> my point of view.',badge:'💬 议论文'},
-{t:0,title:'举例论证',cn:'用例子支撑观点',content:'<b>Take ... for example</b>, [例子].\n<b>A good case in point is</b> [具体事例].',badge:'💬 通用'},
-{t:0,title:'对比分析',cn:'正反两面分析',content:'<b>On the one hand</b>, [正面]. <b>On the other hand</b>, [反面].\n<b>While some people hold the view that</b> [观点A], <b>others argue that</b> [观点B].',badge:'💬 议论文'},
-{t:0,title:'因果关系',cn:'分析原因和结果',content:'<b>The reason why ... is that</b> [原因].\n<b>As a result / Consequently</b>, [结果].',badge:'💬 通用'},
-{t:1,title:'现象描述开头',cn:'描述社会现象引入',content:'<b>In recent years</b>, [现象] <b>has become a hot topic</b> among people.\n<b>It is commonly believed that</b> [普遍观点].',badge:'🎓 高考'},
-{t:1,title:'引用名言开头',cn:'用名人名言引出话题',content:'<b>As the famous saying goes</b>, "[名言]".\n<b>This reminds us that</b> [启示].',badge:'📝 四六级'},
-{t:1,title:'数据引入开头',cn:'用数据引出话题',content:'<b>According to a recent survey</b>, [数据].\n<b>This shows that</b> [结论].',badge:'📊 图表'},
-{t:2,title:'总结呼吁结尾',cn:'总结全文，发出呼吁',content:'<b>In conclusion</b>, [总结]. <b>Only in this way can we</b> [目标].\n<b>I sincerely hope that</b> [期望].',badge:'📝 万能'},
-{t:2,title:'展望未来结尾',cn:'展望未来发展',content:'<b>I am firmly convinced that</b> [信念].\n<b>With the joint efforts of</b> [各方], <b>we will surely</b> [美好愿景].',badge:'📝 万能'},
-{t:2,title:'建议措施结尾',cn:'提出具体建议',content:'<b>In order to</b> [目标], <b>we should take the following measures</b>.\n<b>First and foremost</b>, [措施1]. <b>Furthermore</b>, [措施2].',badge:'💬 议论文'},
-{t:3,title:'递进关系',cn:'层层递进',content:'<b>Moreover / Furthermore / In addition / Besides / What\'s more</b>',badge:'🔗'},
-{t:3,title:'转折关系',cn:'表示转折',content:'<b>However / Nevertheless / On the contrary / In contrast / Although</b>',badge:'🔗'},
-{t:3,title:'因果关系',cn:'表示因果',content:'<b>Therefore / Thus / Hence / As a result / Consequently / Due to</b>',badge:'🔗'},
-{t:3,title:'总结关系',cn:'表示总结',content:'<b>In conclusion / To sum up / All in all / In a word / In brief</b>',badge:'🔗'},
-{t:3,title:'举例关系',cn:'表示举例',content:'<b>For example / For instance / Such as / Take ... for example / A case in point is</b>',badge:'🔗'},
+{t:0,title:'引出话题',cn:'引出讨论话题，适用于议论文开头',content:'<b>Nowadays</b>, <b>there is a growing concern about</b> [话题].\n<b>With the development of</b> [背景], <b>more and more people</b> [现象].',badge:'◎ 高考+四六级'},
+{t:0,title:'表达观点',cn:'表达个人立场',content:'<b>As far as I am concerned</b>, I firmly believe that [观点].\n<b>There are several reasons accounting for</b> my point of view.',badge:'☰ 议论文'},
+{t:0,title:'举例论证',cn:'用例子支撑观点',content:'<b>Take ... for example</b>, [例子].\n<b>A good case in point is</b> [具体事例].',badge:'☰ 通用'},
+{t:0,title:'对比分析',cn:'正反两面分析',content:'<b>On the one hand</b>, [正面]. <b>On the other hand</b>, [反面].\n<b>While some people hold the view that</b> [观点A], <b>others argue that</b> [观点B].',badge:'☰ 议论文'},
+{t:0,title:'因果关系',cn:'分析原因和结果',content:'<b>The reason why ... is that</b> [原因].\n<b>As a result / Consequently</b>, [结果].',badge:'☰ 通用'},
+{t:1,title:'现象描述开头',cn:'描述社会现象引入',content:'<b>In recent years</b>, [现象] <b>has become a hot topic</b> among people.\n<b>It is commonly believed that</b> [普遍观点].',badge:'◎ 高考'},
+{t:1,title:'引用名言开头',cn:'用名人名言引出话题',content:'<b>As the famous saying goes</b>, "[名言]".\n<b>This reminds us that</b> [启示].',badge:'☰ 四六级'},
+{t:1,title:'数据引入开头',cn:'用数据引出话题',content:'<b>According to a recent survey</b>, [数据].\n<b>This shows that</b> [结论].',badge:'▦ 图表'},
+{t:2,title:'总结呼吁结尾',cn:'总结全文，发出呼吁',content:'<b>In conclusion</b>, [总结]. <b>Only in this way can we</b> [目标].\n<b>I sincerely hope that</b> [期望].',badge:'☰ 万能'},
+{t:2,title:'展望未来结尾',cn:'展望未来发展',content:'<b>I am firmly convinced that</b> [信念].\n<b>With the joint efforts of</b> [各方], <b>we will surely</b> [美好愿景].',badge:'☰ 万能'},
+{t:2,title:'建议措施结尾',cn:'提出具体建议',content:'<b>In order to</b> [目标], <b>we should take the following measures</b>.\n<b>First and foremost</b>, [措施1]. <b>Furthermore</b>, [措施2].',badge:'☰ 议论文'},
+{t:3,title:'递进关系',cn:'层层递进',content:'<b>Moreover / Furthermore / In addition / Besides / What\'s more</b>',badge:'⊞'},
+{t:3,title:'转折关系',cn:'表示转折',content:'<b>However / Nevertheless / On the contrary / In contrast / Although</b>',badge:'⊞'},
+{t:3,title:'因果关系',cn:'表示因果',content:'<b>Therefore / Thus / Hence / As a result / Consequently / Due to</b>',badge:'⊞'},
+{t:3,title:'总结关系',cn:'表示总结',content:'<b>In conclusion / To sum up / All in all / In a word / In brief</b>',badge:'⊞'},
+{t:3,title:'举例关系',cn:'表示举例',content:'<b>For example / For instance / Such as / Take ... for example / A case in point is</b>',badge:'⊞'},
 ];
 let curTab=0;
 function renderTabs(){document.getElementById('tabRow').innerHTML=TABS.map((t,i)=>`<div class="tab${i===curTab?' active':''}" data-tab="${i}">${t}</div>`).join('')}
 function renderList(){
   const list=DATA.filter(d=>d.t===curTab);
-  document.getElementById('tplList').innerHTML=list.map(d=>`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${d.title}</div><div class="tpl-badge">${d.badge}</div></div><div class="tpl-cn">${d.cn}</div><div class="tpl-content">${d.content.replace(/\n/g,'<br>')}</div><button class="copy-btn" data-text="${d.content.replace(/<[^>]+>/g,'').replace(/\n/g,' ').replace(/"/g,'&quot;')}">📋 复制</button></div>`).join('');
+  document.getElementById('tplList').innerHTML=list.map(d=>`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${d.title}</div><div class="tpl-badge">${d.badge}</div></div><div class="tpl-cn">${d.cn}</div><div class="tpl-content">${d.content.replace(/\n/g,'<br>')}</div><button class="copy-btn" data-text="${d.content.replace(/<[^>]+>/g,'').replace(/\n/g,' ').replace(/"/g,'&quot;')}">☰ 复制</button></div>`).join('');
   document.getElementById('statusInfo').textContent=`${list.length} 个模板`;
 }
 document.getElementById('tabRow').addEventListener('click',e=>{if(!e.target.classList.contains('tab'))return;curTab=+e.target.dataset.tab;renderTabs();renderList()});
-document.getElementById('tplList').addEventListener('click',e=>{const btn=e.target.closest('.copy-btn');if(!btn)return;navigator.clipboard.writeText(btn.dataset.text).then(()=>{btn.textContent='✅ 已复制';setTimeout(()=>btn.textContent='📋 复制',1500)})});
+document.getElementById('tplList').addEventListener('click',e=>{const btn=e.target.closest('.copy-btn');if(!btn)return;navigator.clipboard.writeText(btn.dataset.text).then(()=>{btn.textContent='✓ 已复制';setTimeout(()=>btn.textContent='☰ 复制',1500)})});
 renderTabs();renderList();
 </script>
 <noscript><p>英语作文模板 — DevKit。请启用 JavaScript。</p></noscript>

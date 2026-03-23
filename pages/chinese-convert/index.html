@@ -52,17 +52,17 @@ textarea:focus{border-color:var(--brand-500)}
   <div class="panel" id="mainPanel">
     <div class="dual">
       <div>
-        <div class="pane-title" id="leftTitle">📝 简体中文 <span class="badge">输入</span></div>
+        <div class="pane-title" id="leftTitle">☰ 简体中文 <span class="badge">输入</span></div>
         <textarea id="inputText" placeholder="输入文字...">中华人民共和国万岁，世界人民大团结万岁。科学技术是第一生产力。</textarea>
         <div class="stats"><span id="charCount">0</span> 字</div>
       </div>
       <button class="swap-btn" id="swapBtn">⇄</button>
       <div>
-        <div class="pane-title" id="rightTitle">📄 繁體中文 <span class="badge">輸出</span></div>
+        <div class="pane-title" id="rightTitle">☰ 繁體中文 <span class="badge">輸出</span></div>
         <textarea id="outputText" readonly placeholder="转换结果..."></textarea>
         <div class="action-row">
-          <button class="btn btn-primary" id="copyBtn">📋 复制</button>
-          <button class="btn btn-secondary" id="clearBtn">🗑️ 清空</button>
+          <button class="btn btn-primary" id="copyBtn">☰ 复制</button>
+          <button class="btn btn-secondary" id="clearBtn">✕ 清空</button>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@ try{
   t2s=OpenCC.Converter({from:'twp',to:'cn'});
   loading.style.display='none';
 }catch(e){
-  loading.textContent='❌ OpenCC 加载失败';
+  loading.textContent='✗ OpenCC 加载失败';
 }
 
 function convert(){
@@ -97,8 +97,8 @@ function convert(){
 document.getElementById('inputText').addEventListener('input',convert);
 document.getElementById('swapBtn').addEventListener('click',()=>{
   mode=mode==='s2t'?'t2s':'s2t';
-  document.getElementById('leftTitle').innerHTML=mode==='s2t'?'📝 简体中文 <span class="badge">输入</span>':'📝 繁體中文 <span class="badge">輸入</span>';
-  document.getElementById('rightTitle').innerHTML=mode==='s2t'?'📄 繁體中文 <span class="badge">輸出</span>':'📄 简体中文 <span class="badge">输出</span>';
+  document.getElementById('leftTitle').innerHTML=mode==='s2t'?'☰ 简体中文 <span class="badge">输入</span>':'☰ 繁體中文 <span class="badge">輸入</span>';
+  document.getElementById('rightTitle').innerHTML=mode==='s2t'?'☰ 繁體中文 <span class="badge">輸出</span>':'☰ 简体中文 <span class="badge">输出</span>';
   const tmp=document.getElementById('inputText').value;
   document.getElementById('inputText').value=document.getElementById('outputText').value;
   document.getElementById('outputText').value=tmp;

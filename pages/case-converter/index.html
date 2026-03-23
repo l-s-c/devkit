@@ -101,14 +101,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- 8 种模式 -->
   <div style="padding:24px;border-radius:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)">
     <div class="convert-grid" id="convertGrid">
-      <button class="convert-btn active" data-mode="upper"><div class="convert-icon">🔠</div><div class="convert-name">全部大写</div><div class="convert-example">HELLO WORLD</div></button>
+      <button class="convert-btn active" data-mode="upper"><div class="convert-icon">◎</div><div class="convert-name">全部大写</div><div class="convert-example">HELLO WORLD</div></button>
       <button class="convert-btn" data-mode="lower"><div class="convert-icon">🔡</div><div class="convert-name">全部小写</div><div class="convert-example">hello world</div></button>
-      <button class="convert-btn" data-mode="title"><div class="convert-icon">🔤</div><div class="convert-name">首字母大写</div><div class="convert-example">Hello World</div></button>
-      <button class="convert-btn" data-mode="sentence"><div class="convert-icon">📝</div><div class="convert-name">句首大写</div><div class="convert-example">Hello world. Foo bar.</div></button>
-      <button class="convert-btn" data-mode="camel"><div class="convert-icon">🐪</div><div class="convert-name">camelCase</div><div class="convert-example">helloWorld</div></button>
-      <button class="convert-btn" data-mode="pascal"><div class="convert-icon">📐</div><div class="convert-name">PascalCase</div><div class="convert-example">HelloWorld</div></button>
-      <button class="convert-btn" data-mode="snake"><div class="convert-icon">🐍</div><div class="convert-name">snake_case</div><div class="convert-example">hello_world</div></button>
-      <button class="convert-btn" data-mode="kebab"><div class="convert-icon">🍢</div><div class="convert-name">kebab-case</div><div class="convert-example">hello-world</div></button>
+      <button class="convert-btn" data-mode="title"><div class="convert-icon">⊞</div><div class="convert-name">首字母大写</div><div class="convert-example">Hello World</div></button>
+      <button class="convert-btn" data-mode="sentence"><div class="convert-icon">☰</div><div class="convert-name">句首大写</div><div class="convert-example">Hello world. Foo bar.</div></button>
+      <button class="convert-btn" data-mode="camel"><div class="convert-icon">◎</div><div class="convert-name">camelCase</div><div class="convert-example">helloWorld</div></button>
+      <button class="convert-btn" data-mode="pascal"><div class="convert-icon">∠</div><div class="convert-name">PascalCase</div><div class="convert-example">HelloWorld</div></button>
+      <button class="convert-btn" data-mode="snake"><div class="convert-icon">◎</div><div class="convert-name">snake_case</div><div class="convert-example">hello_world</div></button>
+      <button class="convert-btn" data-mode="kebab"><div class="convert-icon">◎</div><div class="convert-name">kebab-case</div><div class="convert-example">hello-world</div></button>
     </div>
   </div>
 
@@ -116,9 +116,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <div class="dual">
     <div class="col-card">
       <div class="col-title">
-        <span>📥 输入文本</span>
+        <span>↓ 输入文本</span>
         <div class="col-actions">
-          <button class="col-btn" id="btnPaste">📋 粘贴</button>
+          <button class="col-btn" id="btnPaste">☰ 粘贴</button>
           <button class="col-btn" id="btnClear">✕ 清空</button>
         </div>
       </div>
@@ -127,9 +127,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     </div>
     <div class="col-card">
       <div class="col-title">
-        <span>📤 转换结果</span>
+        <span>↑ 转换结果</span>
         <div class="col-actions">
-          <button class="col-btn" id="btnCopy">📋 复制</button>
+          <button class="col-btn" id="btnCopy">☰ 复制</button>
         </div>
       </div>
       <textarea class="text-area" id="outputText" readonly></textarea>

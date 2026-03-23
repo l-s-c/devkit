@@ -140,7 +140,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="panel" id="uploadPanel">
         <div class="upload-area" id="dropZone">
           <input type="file" accept="image/*" multiple class="upload-input" id="fileInput">
-          <div class="upload-icon">🖼️</div>
+          <div class="upload-icon">⊞️</div>
           <div class="upload-text">拖拽图片到这里，或点击上传</div>
         </div>
       </div>
@@ -150,7 +150,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         </div>
       </div>
       <div class="panel" id="batchPanel" style="display:none">
-        <div class="section-title">📦 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
+        <div class="section-title">⊞ 批量处理 <span style="font-size:11px;color:var(--text-caption);font-weight:400" id="batchCount"></span></div>
         <div id="batchList"></div>
       </div>
     </div>
@@ -158,10 +158,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右侧：控制 -->
     <div>
       <div class="panel">
-        <div class="section-title">💧 水印类型</div>
+        <div class="section-title">◆ 水印类型</div>
         <div class="radio-row">
-          <button class="radio-btn active" id="btnText">✏️ 文字水印</button>
-          <button class="radio-btn" id="btnLogo">🖼️ 图片水印</button>
+          <button class="radio-btn active" id="btnText">✎ 文字水印</button>
+          <button class="radio-btn" id="btnLogo">⊞️ 图片水印</button>
         </div>
 
         <!-- 文字水印 -->
@@ -196,7 +196,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <div id="logoPanel" style="display:none">
           <div class="logo-upload" id="logoUpload">
             <input type="file" accept="image/*" id="logoInput">
-            <div id="logoPreviewWrap">📁 上传 Logo / 水印图片</div>
+            <div id="logoPreviewWrap">☰ 上传 Logo / 水印图片</div>
           </div>
           <div class="slider-row" style="margin-top:10px">
             <span class="slider-label">大小</span>
@@ -212,10 +212,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📍 水印位置</div>
+        <div class="section-title">◎ 水印位置</div>
         <div class="radio-row">
-          <button class="radio-btn active" id="btnPos">📍 固定位置</button>
-          <button class="radio-btn" id="btnTile">🔲 平铺</button>
+          <button class="radio-btn active" id="btnPos">◎ 固定位置</button>
+          <button class="radio-btn" id="btnTile">◎ 平铺</button>
         </div>
         <div id="posPanel">
           <div class="grid9" id="grid9">
@@ -240,7 +240,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <button class="action-btn" id="downloadBtn" disabled>💾 导出水印图片</button>
+        <button class="action-btn" id="downloadBtn" disabled>⊡ 导出水印图片</button>
       </div>
     </div>
   </div>
@@ -464,8 +464,8 @@ function doDownload() {
   function processNext() {
     if (idx >= files.length) {
       document.getElementById('downloadBtn').disabled = false;
-      document.getElementById('downloadBtn').textContent = '💾 导出水印图片';
-      document.getElementById('statusInfo').textContent = `✅ ${files.length} 张图片处理完成`;
+      document.getElementById('downloadBtn').textContent = '⊡ 导出水印图片';
+      document.getElementById('statusInfo').textContent = `✓ ${files.length} 张图片处理完成`;
       return;
     }
     const file = files[idx];
@@ -489,7 +489,7 @@ function doDownload() {
         URL.revokeObjectURL(url);
         canvas.width = 0; canvas.height = 0;
         const statusEl = document.getElementById('batchS' + idx);
-        if (statusEl) statusEl.textContent = '✅';
+        if (statusEl) statusEl.textContent = '✓';
         idx++;
         setTimeout(processNext, 300);
       }, 'image/png');

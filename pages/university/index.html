@@ -22,7 +22,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .panel{padding:20px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
 .section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .search-wrap{position:relative;margin-bottom:12px}
-.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
+.search-wrap::before{content:'⊙';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px}
 .search-input{width:100%;padding:12px 16px 12px 40px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:14px;color:var(--text-primary);outline:none}
 .search-input:focus{border-color:var(--brand-500)}
 .filter-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
@@ -58,7 +58,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">🏫 高校查询</div>
+    <div class="section-title">◎ 高校查询</div>
     <div class="search-wrap"><input class="search-input" id="searchInput" placeholder="搜索高校名称..."></div>
     <div class="filter-row" id="typeFilter">
       <div class="fp active" data-v="">全部</div>
@@ -177,7 +177,7 @@ function render(){
     if(u[7])tags.push('<span class="uni-tag tag-211">211</span>');
     if(u[8])tags.push('<span class="uni-tag tag-double">双一流</span>');
     if(!u[6]&&!u[7]&&!u[8])tags.push(`<span class="uni-tag tag-type">${u[3]}</span>`);
-    return `<div class="uni-card"><div class="uni-header"><div><div class="uni-name">${u[0]}</div><div class="uni-location">📍 ${u[1]} · ${u[2]}</div></div><div class="uni-tags">${tags.join('')}</div></div><div class="uni-info"><span>🏛️ ${u[3]}</span><span>📋 ${u[4]}</span><span>🎓 ${u[5]}</span></div></div>`;
+    return `<div class="uni-card"><div class="uni-header"><div><div class="uni-name">${u[0]}</div><div class="uni-location">◎ ${u[1]} · ${u[2]}</div></div><div class="uni-tags">${tags.join('')}</div></div><div class="uni-info"><span>◎️ ${u[3]}</span><span>☰ ${u[4]}</span><span>◎ ${u[5]}</span></div></div>`;
   }).join('');
 }
 render();

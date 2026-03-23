@@ -63,13 +63,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel" id="recentArea" style="display:none">
-    <div class="section-title">🕐 最近使用</div>
+    <div class="section-title">◷ 最近使用</div>
     <div class="recent-row" id="recentList"></div>
   </div>
 
   <div class="panel">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">⊙</span>
       <input class="search-input" id="searchInput" placeholder="搜索 Emoji... 试试「笑」「心」「cat」「火」">
       <span class="search-count" id="searchCount"></span>
     </div>
@@ -81,7 +81,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="cat-pill" data-cat="food">🍔 食物</div>
       <div class="cat-pill" data-cat="travel">🚗 旅行</div>
       <div class="cat-pill" data-cat="activities">⚽ 活动</div>
-      <div class="cat-pill" data-cat="objects">💡 物品</div>
+      <div class="cat-pill" data-cat="objects">◉ 物品</div>
       <div class="cat-pill" data-cat="symbols">❤️ 符号</div>
       <div class="cat-pill" data-cat="flags">🏁 旗帜</div>
     </div>
@@ -169,9 +169,9 @@ const EMOJIS = [
   {e:'✊',n:'拳头 fist bump',c:'people'},{e:'👊',n:'出拳 punch',c:'people'},
   {e:'🤛',n:'左拳 left fist',c:'people'},{e:'🤜',n:'右拳 right fist',c:'people'},
   {e:'👌',n:'OK perfect',c:'people'},{e:'🤌',n:'意大利手势 pinched',c:'people'},
-  {e:'🤏',n:'一点点 pinching small',c:'people'},{e:'👈',n:'左 pointing left',c:'people'},
-  {e:'👉',n:'右 pointing right',c:'people'},{e:'👆',n:'上 pointing up',c:'people'},
-  {e:'👇',n:'下 pointing down',c:'people'},{e:'☝️',n:'指上 index up',c:'people'},
+  {e:'🤏',n:'一点点 pinching small',c:'people'},{e:'←',n:'左 pointing left',c:'people'},
+  {e:'→',n:'右 pointing right',c:'people'},{e:'↑',n:'上 pointing up',c:'people'},
+  {e:'↓',n:'下 pointing down',c:'people'},{e:'☝️',n:'指上 index up',c:'people'},
   {e:'🖐️',n:'手掌 hand splayed',c:'people'},{e:'✋',n:'举手 raised hand stop',c:'people'},
   {e:'🤚',n:'手背 back hand',c:'people'},{e:'🖖',n:'Vulcan 手势',c:'people'},
   {e:'🫰',n:'爱心手势 index thumb',c:'people'},{e:'🤙',n:'打电话 call me',c:'people'},
@@ -181,17 +181,17 @@ const EMOJIS = [
   {e:'🫲',n:'左伸手 leftward hand',c:'people'},{e:'🫳',n:'手心向下 palm down',c:'people'},
   {e:'🫴',n:'手心向上 palm up',c:'people'},{e:'🫷',n:'左推 leftward push',c:'people'},
   {e:'🫸',n:'右推 rightward push',c:'people'},
-  {e:'🧑‍💻',n:'程序员 coder developer',c:'people'},{e:'👩‍💻',n:'女程序员 woman coder',c:'people'},
-  {e:'👨‍💻',n:'男程序员 man coder',c:'people'},{e:'🧑‍🎨',n:'艺术家 artist',c:'people'},
+  {e:'🧑‍⊞',n:'程序员 coder developer',c:'people'},{e:'👩‍⊞',n:'女程序员 woman coder',c:'people'},
+  {e:'👨‍⊞',n:'男程序员 man coder',c:'people'},{e:'🧑‍◆',n:'艺术家 artist',c:'people'},
   {e:'👩‍🍳',n:'厨师 chef cook',c:'people'},{e:'🧑‍🚀',n:'宇航员 astronaut',c:'people'},
   {e:'🧑‍🏫',n:'老师 teacher',c:'people'},{e:'🧑‍⚕️',n:'医生 doctor health',c:'people'},
-  {e:'🧑‍🔬',n:'科学家 scientist',c:'people'},{e:'🧑‍🚒',n:'消防员 firefighter',c:'people'},
+  {e:'🧑‍◇',n:'科学家 scientist',c:'people'},{e:'🧑‍🚒',n:'消防员 firefighter',c:'people'},
   {e:'👮',n:'警察 police officer',c:'people'},{e:'🕵️',n:'侦探 detective spy',c:'people'},
   {e:'💂',n:'卫兵 guard',c:'people'},{e:'🥷',n:'忍者 ninja',c:'people'},
   {e:'👷',n:'工人 construction worker',c:'people'},{e:'🧑‍🌾',n:'农民 farmer',c:'people'},
   {e:'🧑‍🍳',n:'厨师 cook chef',c:'people'},{e:'🧑‍🎤',n:'歌手 singer',c:'people'},
   {e:'🧑‍🎓',n:'学生 graduate student',c:'people'},{e:'🧑‍💼',n:'白领 office worker',c:'people'},
-  {e:'🧑‍🔧',n:'机械师 mechanic',c:'people'},{e:'🧑‍✈️',n:'飞行员 pilot',c:'people'},
+  {e:'🧑‍⊘',n:'机械师 mechanic',c:'people'},{e:'🧑‍✈️',n:'飞行员 pilot',c:'people'},
   {e:'🧑‍🦯',n:'视障 white cane',c:'people'},{e:'🧑‍🦼',n:'轮椅 wheelchair motorized',c:'people'},
   {e:'🧑‍🦽',n:'手动轮椅 manual wheelchair',c:'people'},
   {e:'👶',n:'婴儿 baby',c:'people'},{e:'🧒',n:'儿童 child',c:'people'},
@@ -289,11 +289,11 @@ const EMOJIS = [
   {e:'🚲',n:'自行车 bicycle bike',c:'travel'},{e:'🏍️',n:'摩托 motorcycle',c:'travel'},{e:'🛵',n:'电动车 scooter',c:'travel'},
   {e:'🛴',n:'滑板车 kick scooter',c:'travel'},{e:'🛺',n:'三轮车 auto rickshaw',c:'travel'},{e:'🚁',n:'直升机 helicopter',c:'travel'},
   {e:'🛸',n:'飞碟 flying saucer UFO',c:'travel'},{e:'🛶',n:'独木舟 canoe',c:'travel'},
-  {e:'🏠',n:'房子 house home',c:'travel'},{e:'🏡',n:'花园房 house garden',c:'travel'},{e:'🏢',n:'办公楼 office building',c:'travel'},
+  {e:'⌂',n:'房子 house home',c:'travel'},{e:'🏡',n:'花园房 house garden',c:'travel'},{e:'🏢',n:'办公楼 office building',c:'travel'},
   {e:'🏣',n:'邮局 post office',c:'travel'},{e:'🏥',n:'医院 hospital',c:'travel'},{e:'🏦',n:'银行 bank',c:'travel'},
   {e:'🏨',n:'酒店 hotel',c:'travel'},{e:'🏩',n:'爱情酒店 love hotel',c:'travel'},{e:'🏪',n:'便利店 convenience store',c:'travel'},
   {e:'🏫',n:'学校 school',c:'travel'},{e:'🏬',n:'百货商店 department store',c:'travel'},{e:'🏭',n:'工厂 factory',c:'travel'},
-  {e:'🏗️',n:'建筑工地 construction',c:'travel'},{e:'🏰',n:'城堡 castle',c:'travel'},{e:'🏯',n:'日本城堡 Japanese castle',c:'travel'},
+  {e:'⊞️',n:'建筑工地 construction',c:'travel'},{e:'🏰',n:'城堡 castle',c:'travel'},{e:'🏯',n:'日本城堡 Japanese castle',c:'travel'},
   {e:'🏖️',n:'沙滩 beach',c:'travel'},{e:'🏔️',n:'雪山 mountain snow',c:'travel'},{e:'🌍',n:'地球 earth globe Europe',c:'travel'},
   {e:'🌎',n:'地球 earth Americas',c:'travel'},{e:'🌏',n:'地球 earth Asia',c:'travel'},{e:'🗺️',n:'地图 world map',c:'travel'},
   {e:'🏝️',n:'岛 island desert',c:'travel'},{e:'🌋',n:'火山 volcano',c:'travel'},{e:'🗽',n:'自由女神 statue liberty',c:'travel'},
@@ -316,21 +316,21 @@ const EMOJIS = [
   {e:'🥋',n:'柔道 martial arts',c:'activities'},{e:'⛳',n:'高尔夫 golf',c:'activities'},{e:'🏒',n:'冰球 ice hockey',c:'activities'},
   {e:'🥅',n:'球门 goal net',c:'activities'},{e:'🥎',n:'垒球 softball',c:'activities'},{e:'🥏',n:'飞盘 frisbee disc',c:'activities'},
   {e:'🪃',n:'回旋镖 boomerang',c:'activities'},{e:'🏹',n:'弓箭 bow arrow archery',c:'activities'},
-  {e:'🎮',n:'游戏 game controller',c:'activities'},{e:'🎯',n:'靶心 dart target bullseye',c:'activities'},
+  {e:'🎮',n:'游戏 game controller',c:'activities'},{e:'◎',n:'靶心 dart target bullseye',c:'activities'},
   {e:'🏆',n:'奖杯 trophy champion',c:'activities'},{e:'🥇',n:'金牌 gold medal first',c:'activities'},
   {e:'🥈',n:'银牌 silver medal second',c:'activities'},{e:'🥉',n:'铜牌 bronze medal third',c:'activities'},
   {e:'🏅',n:'奖牌 sports medal',c:'activities'},{e:'🎖️',n:'军功章 military medal',c:'activities'},
-  {e:'🎵',n:'音乐 music note',c:'activities'},{e:'🎶',n:'音符 musical notes',c:'activities'},
+  {e:'♪',n:'音乐 music note',c:'activities'},{e:'♫',n:'音符 musical notes',c:'activities'},
   {e:'🎤',n:'麦克风 microphone karaoke',c:'activities'},{e:'🎧',n:'耳机 headphone',c:'activities'},
   {e:'🎸',n:'吉他 guitar',c:'activities'},{e:'🎹',n:'钢琴 piano keyboard',c:'activities'},
   {e:'🪗',n:'手风琴 accordion',c:'activities'},{e:'🥁',n:'鼓 drum',c:'activities'},
   {e:'🎷',n:'萨克斯 saxophone',c:'activities'},{e:'🎺',n:'小号 trumpet',c:'activities'},
   {e:'🎻',n:'小提琴 violin',c:'activities'},{e:'🪕',n:'班卓琴 banjo',c:'activities'},
-  {e:'🎨',n:'调色板 art palette paint',c:'activities'},{e:'🎬',n:'电影 clapper movie film',c:'activities'},
+  {e:'◆',n:'调色板 art palette paint',c:'activities'},{e:'🎬',n:'电影 clapper movie film',c:'activities'},
   {e:'📸',n:'闪光相机 camera flash photo',c:'activities'},{e:'📹',n:'摄像机 video camera',c:'activities'},
-  {e:'🎲',n:'骰子 dice game',c:'activities'},{e:'🧩',n:'拼图 puzzle jigsaw',c:'activities'},
+  {e:'◎',n:'骰子 dice game',c:'activities'},{e:'◎',n:'拼图 puzzle jigsaw',c:'activities'},
   {e:'♟️',n:'国际象棋 chess pawn',c:'activities'},{e:'🎰',n:'老虎机 slot machine',c:'activities'},
-  {e:'🎪',n:'马戏团 circus tent',c:'activities'},{e:'🎭',n:'表演 performing arts drama',c:'activities'},
+  {e:'🎪',n:'马戏团 circus tent',c:'activities'},{e:'◎',n:'表演 performing arts drama',c:'activities'},
   {e:'🏊',n:'游泳 swimming swimmer',c:'activities'},{e:'🚴',n:'骑车 cycling biking',c:'activities'},
   {e:'🧘',n:'瑜伽 yoga meditation',c:'activities'},{e:'🏋️',n:'举重 weight lifting gym',c:'activities'},
   {e:'🤸',n:'体操 cartwheel gymnastics',c:'activities'},{e:'🤼',n:'摔跤 wrestling',c:'activities'},
@@ -342,81 +342,81 @@ const EMOJIS = [
   {e:'🎱',n:'台球 billiards pool 8ball',c:'activities'},{e:'🪀',n:'悠悠球 yo yo',c:'activities'},
   {e:'🪁',n:'风筝 kite',c:'activities'},
   // ===== Objects (95) =====
-  {e:'💡',n:'灯泡 idea light bulb',c:'objects'},{e:'📱',n:'手机 phone mobile',c:'objects'},{e:'💻',n:'电脑 laptop computer',c:'objects'},
-  {e:'🖥️',n:'台式机 desktop computer',c:'objects'},{e:'⌨️',n:'键盘 keyboard',c:'objects'},{e:'🖱️',n:'鼠标 mouse',c:'objects'},
-  {e:'🖨️',n:'打印机 printer',c:'objects'},{e:'📷',n:'相机 camera',c:'objects'},{e:'📹',n:'摄像机 video camera',c:'objects'},
-  {e:'🔑',n:'钥匙 key',c:'objects'},{e:'🗝️',n:'老钥匙 old key',c:'objects'},{e:'📦',n:'包裹 package box',c:'objects'},
+  {e:'◉',n:'灯泡 idea light bulb',c:'objects'},{e:'⊞',n:'手机 phone mobile',c:'objects'},{e:'⊞',n:'电脑 laptop computer',c:'objects'},
+  {e:'⊞️',n:'台式机 desktop computer',c:'objects'},{e:'⌨️',n:'键盘 keyboard',c:'objects'},{e:'⊡',n:'鼠标 mouse',c:'objects'},
+  {e:'⊞️',n:'打印机 printer',c:'objects'},{e:'📷',n:'相机 camera',c:'objects'},{e:'📹',n:'摄像机 video camera',c:'objects'},
+  {e:'⊕',n:'钥匙 key',c:'objects'},{e:'🗝️',n:'老钥匙 old key',c:'objects'},{e:'⊞',n:'包裹 package box',c:'objects'},
   {e:'📧',n:'邮件 email envelope',c:'objects'},{e:'📨',n:'来信 incoming envelope',c:'objects'},{e:'📩',n:'信封 envelope arrow',c:'objects'},
-  {e:'📝',n:'备忘录 memo note write',c:'objects'},{e:'📖',n:'书 book open',c:'objects'},{e:'📚',n:'书堆 books stack',c:'objects'},
+  {e:'☰',n:'备忘录 memo note write',c:'objects'},{e:'⊞',n:'书 book open',c:'objects'},{e:'📚',n:'书堆 books stack',c:'objects'},
   {e:'📕',n:'红书 closed book',c:'objects'},{e:'📗',n:'绿书 green book',c:'objects'},{e:'📘',n:'蓝书 blue book',c:'objects'},
   {e:'📓',n:'笔记本 notebook',c:'objects'},{e:'📒',n:'账本 ledger',c:'objects'},{e:'📔',n:'装饰笔记 notebook decorative',c:'objects'},
   {e:'📰',n:'报纸 newspaper',c:'objects'},{e:'🗞️',n:'卷报纸 rolled newspaper',c:'objects'},
   {e:'🔔',n:'铃铛 bell notification',c:'objects'},{e:'🔕',n:'静音 bell mute',c:'objects'},
-  {e:'💰',n:'钱袋 money bag',c:'objects'},{e:'💵',n:'美元 dollar bill',c:'objects'},{e:'💴',n:'日元 yen',c:'objects'},
+  {e:'◈',n:'钱袋 money bag',c:'objects'},{e:'💵',n:'美元 dollar bill',c:'objects'},{e:'💴',n:'日元 yen',c:'objects'},
   {e:'💶',n:'欧元 euro',c:'objects'},{e:'💷',n:'英镑 pound',c:'objects'},{e:'💳',n:'信用卡 credit card',c:'objects'},
   {e:'🪙',n:'硬币 coin',c:'objects'},{e:'💸',n:'飞钱 money wings',c:'objects'},
-  {e:'🔒',n:'锁 lock locked secure',c:'objects'},{e:'🔓',n:'开锁 unlock unlocked',c:'objects'},
-  {e:'🔧',n:'扳手 wrench tool fix',c:'objects'},{e:'🔨',n:'锤子 hammer',c:'objects'},{e:'⚙️',n:'齿轮 gear settings',c:'objects'},
+  {e:'⊕',n:'锁 lock locked secure',c:'objects'},{e:'⊘',n:'开锁 unlock unlocked',c:'objects'},
+  {e:'⊘',n:'扳手 wrench tool fix',c:'objects'},{e:'🔨',n:'锤子 hammer',c:'objects'},{e:'⊕',n:'齿轮 gear settings',c:'objects'},
   {e:'🔩',n:'螺丝 nut bolt',c:'objects'},{e:'🪛',n:'螺丝刀 screwdriver',c:'objects'},{e:'🪚',n:'锯子 saw',c:'objects'},
-  {e:'💎',n:'钻石 gem diamond',c:'objects'},{e:'🧲',n:'磁铁 magnet',c:'objects'},{e:'🔋',n:'电池 battery',c:'objects'},
-  {e:'🔌',n:'插头 electric plug',c:'objects'},{e:'🪫',n:'低电量 low battery',c:'objects'},
+  {e:'💎',n:'钻石 gem diamond',c:'objects'},{e:'◎',n:'磁铁 magnet',c:'objects'},{e:'▮',n:'电池 battery',c:'objects'},
+  {e:'⊟',n:'插头 electric plug',c:'objects'},{e:'🪫',n:'低电量 low battery',c:'objects'},
   {e:'💊',n:'药丸 pill medicine',c:'objects'},{e:'🩹',n:'创可贴 bandage',c:'objects'},{e:'🩺',n:'听诊器 stethoscope',c:'objects'},
-  {e:'🧪',n:'试管 test tube lab',c:'objects'},{e:'🔬',n:'显微镜 microscope',c:'objects'},{e:'🔭',n:'望远镜 telescope',c:'objects'},
+  {e:'◇',n:'试管 test tube lab',c:'objects'},{e:'◇',n:'显微镜 microscope',c:'objects'},{e:'🔭',n:'望远镜 telescope',c:'objects'},
   {e:'🛒',n:'购物车 shopping cart',c:'objects'},{e:'🎁',n:'礼物 gift present',c:'objects'},{e:'🏷️',n:'标签 label tag',c:'objects'},
-  {e:'🎀',n:'蝴蝶结 ribbon bow',c:'objects'},{e:'🎈',n:'气球 balloon party',c:'objects'},{e:'🎉',n:'庆祝 party popper confetti',c:'objects'},
+  {e:'🎀',n:'蝴蝶结 ribbon bow',c:'objects'},{e:'🎈',n:'气球 balloon party',c:'objects'},{e:'✦',n:'庆祝 party popper confetti',c:'objects'},
   {e:'🎊',n:'彩球 confetti ball',c:'objects'},{e:'🎋',n:'七夕 tanabata tree',c:'objects'},
   {e:'🎍',n:'门松 pine decoration',c:'objects'},{e:'🎎',n:'人偶 Japanese dolls',c:'objects'},
   {e:'🎏',n:'鲤鱼旗 carp streamer',c:'objects'},{e:'🎐',n:'风铃 wind chime',c:'objects'},
   {e:'🧧',n:'红包 red envelope',c:'objects'},{e:'🎑',n:'月亮 moon viewing ceremony',c:'objects'},
-  {e:'✏️',n:'铅笔 pencil',c:'objects'},{e:'🖊️',n:'钢笔 pen',c:'objects'},{e:'🖋️',n:'墨水笔 fountain pen',c:'objects'},
-  {e:'✒️',n:'黑笔 black nib',c:'objects'},{e:'📐',n:'三角尺 ruler triangular',c:'objects'},
-  {e:'📏',n:'直尺 ruler straight',c:'objects'},{e:'📎',n:'回形针 paperclip',c:'objects'},
-  {e:'🗑️',n:'垃圾桶 trash bin waste',c:'objects'},{e:'📌',n:'图钉 pushpin',c:'objects'},
-  {e:'📍',n:'图钉 round pushpin',c:'objects'},{e:'✂️',n:'剪刀 scissors cut',c:'objects'},
-  {e:'🗂️',n:'文件夹 card index dividers',c:'objects'},{e:'📁',n:'文件夹 folder',c:'objects'},
-  {e:'📋',n:'剪贴板 clipboard',c:'objects'},{e:'🗃️',n:'卡片盒 card file box',c:'objects'},
-  {e:'📅',n:'日历 calendar',c:'objects'},{e:'📆',n:'撕页日历 tear off calendar',c:'objects'},
+  {e:'✎',n:'铅笔 pencil',c:'objects'},{e:'✎️',n:'钢笔 pen',c:'objects'},{e:'🖋️',n:'墨水笔 fountain pen',c:'objects'},
+  {e:'✒️',n:'黑笔 black nib',c:'objects'},{e:'∠',n:'三角尺 ruler triangular',c:'objects'},
+  {e:'⊞',n:'直尺 ruler straight',c:'objects'},{e:'⊞',n:'回形针 paperclip',c:'objects'},
+  {e:'✕',n:'垃圾桶 trash bin waste',c:'objects'},{e:'◎',n:'图钉 pushpin',c:'objects'},
+  {e:'📍',n:'图钉 round pushpin',c:'objects'},{e:'✂',n:'剪刀 scissors cut',c:'objects'},
+  {e:'☰️',n:'文件夹 card index dividers',c:'objects'},{e:'☰',n:'文件夹 folder',c:'objects'},
+  {e:'☰',n:'剪贴板 clipboard',c:'objects'},{e:'🗃️',n:'卡片盒 card file box',c:'objects'},
+  {e:'☰',n:'日历 calendar',c:'objects'},{e:'📆',n:'撕页日历 tear off calendar',c:'objects'},
   {e:'🗓️',n:'螺旋日历 spiral calendar',c:'objects'},
-  {e:'🕰️',n:'壁炉钟 mantelpiece clock',c:'objects'},{e:'⏰',n:'闹钟 alarm clock',c:'objects'},
-  {e:'⌚',n:'手表 watch',c:'objects'},{e:'⏱️',n:'秒表 stopwatch',c:'objects'},{e:'⏳',n:'沙漏 hourglass',c:'objects'},
-  {e:'🔍',n:'放大镜 magnifying glass search',c:'objects'},{e:'🔎',n:'放大镜右 magnifying right',c:'objects'},
+  {e:'🕰️',n:'壁炉钟 mantelpiece clock',c:'objects'},{e:'◷',n:'闹钟 alarm clock',c:'objects'},
+  {e:'⌚',n:'手表 watch',c:'objects'},{e:'◷️',n:'秒表 stopwatch',c:'objects'},{e:'⏳',n:'沙漏 hourglass',c:'objects'},
+  {e:'⊙',n:'放大镜 magnifying glass search',c:'objects'},{e:'⊙',n:'放大镜右 magnifying right',c:'objects'},
   {e:'💉',n:'注射器 syringe needle',c:'objects'},{e:'🩸',n:'血 blood drop',c:'objects'},
   // ===== Symbols (75) =====
   {e:'❤️',n:'红心 red heart love',c:'symbols'},{e:'🧡',n:'橙心 orange heart',c:'symbols'},{e:'💛',n:'黄心 yellow heart',c:'symbols'},
   {e:'💚',n:'绿心 green heart',c:'symbols'},{e:'💙',n:'蓝心 blue heart',c:'symbols'},{e:'💜',n:'紫心 purple heart',c:'symbols'},
   {e:'🖤',n:'黑心 black heart',c:'symbols'},{e:'🤍',n:'白心 white heart',c:'symbols'},{e:'🤎',n:'棕心 brown heart',c:'symbols'},
-  {e:'❤️‍🔥',n:'燃烧心 heart fire',c:'symbols'},{e:'❤️‍🩹',n:'治愈心 mending heart',c:'symbols'},
+  {e:'❤️‍◈',n:'燃烧心 heart fire',c:'symbols'},{e:'❤️‍🩹',n:'治愈心 mending heart',c:'symbols'},
   {e:'💔',n:'心碎 broken heart',c:'symbols'},{e:'💕',n:'两颗心 two hearts',c:'symbols'},
   {e:'💞',n:'旋转心 revolving hearts',c:'symbols'},{e:'💓',n:'心跳 beating heart',c:'symbols'},
   {e:'💗',n:'成长心 growing heart',c:'symbols'},{e:'💖',n:'闪耀心 sparkling heart',c:'symbols'},
   {e:'💘',n:'丘比特 cupid arrow heart',c:'symbols'},{e:'💝',n:'缎带心 heart ribbon gift',c:'symbols'},
-  {e:'⭐',n:'星星 star',c:'symbols'},{e:'🌟',n:'闪烁星 glowing star',c:'symbols'},{e:'✨',n:'闪光 sparkles magic',c:'symbols'},
-  {e:'⚡',n:'闪电 lightning zap',c:'symbols'},{e:'🔥',n:'火 fire hot trending',c:'symbols'},
-  {e:'💯',n:'满分 hundred perfect',c:'symbols'},{e:'💢',n:'怒气 anger',c:'symbols'},{e:'💥',n:'爆炸 collision boom',c:'symbols'},
+  {e:'★',n:'星星 star',c:'symbols'},{e:'★',n:'闪烁星 glowing star',c:'symbols'},{e:'✦',n:'闪光 sparkles magic',c:'symbols'},
+  {e:'↯',n:'闪电 lightning zap',c:'symbols'},{e:'◈',n:'火 fire hot trending',c:'symbols'},
+  {e:'💯',n:'满分 hundred perfect',c:'symbols'},{e:'💢',n:'怒气 anger',c:'symbols'},{e:'✱',n:'爆炸 collision boom',c:'symbols'},
   {e:'💫',n:'头晕 dizzy star',c:'symbols'},{e:'💦',n:'汗水 sweat droplets',c:'symbols'},{e:'💨',n:'风 dashing away',c:'symbols'},
-  {e:'✅',n:'对号 check mark done',c:'symbols'},{e:'❌',n:'叉号 cross mark wrong',c:'symbols'},
+  {e:'✓',n:'对号 check mark done',c:'symbols'},{e:'✗',n:'叉号 cross mark wrong',c:'symbols'},
   {e:'❓',n:'问号 question',c:'symbols'},{e:'❗',n:'感叹号 exclamation',c:'symbols'},
   {e:'‼️',n:'双感叹号 double exclamation',c:'symbols'},{e:'⁉️',n:'感叹问号 exclamation question',c:'symbols'},
-  {e:'⭕',n:'大圈 hollow circle',c:'symbols'},{e:'🔴',n:'红圈 red circle',c:'symbols'},
-  {e:'🟠',n:'橙圈 orange circle',c:'symbols'},{e:'🟡',n:'黄圈 yellow circle',c:'symbols'},
-  {e:'🟢',n:'绿圈 green circle',c:'symbols'},{e:'🔵',n:'蓝圈 blue circle',c:'symbols'},
-  {e:'🟣',n:'紫圈 purple circle',c:'symbols'},{e:'🟤',n:'棕圈 brown circle',c:'symbols'},
+  {e:'⭕',n:'大圈 hollow circle',c:'symbols'},{e:'●',n:'红圈 red circle',c:'symbols'},
+  {e:'🟠',n:'橙圈 orange circle',c:'symbols'},{e:'●',n:'黄圈 yellow circle',c:'symbols'},
+  {e:'●',n:'绿圈 green circle',c:'symbols'},{e:'🔵',n:'蓝圈 blue circle',c:'symbols'},
+  {e:'●',n:'紫圈 purple circle',c:'symbols'},{e:'🟤',n:'棕圈 brown circle',c:'symbols'},
   {e:'⚫',n:'黑圈 black circle',c:'symbols'},{e:'⚪',n:'白圈 white circle',c:'symbols'},
   {e:'🟥',n:'红方 red square',c:'symbols'},{e:'🟧',n:'橙方 orange square',c:'symbols'},
   {e:'🟨',n:'黄方 yellow square',c:'symbols'},{e:'🟩',n:'绿方 green square',c:'symbols'},
   {e:'🟦',n:'蓝方 blue square',c:'symbols'},{e:'🟪',n:'紫方 purple square',c:'symbols'},
   {e:'⬛',n:'黑方 black square',c:'symbols'},{e:'⬜',n:'白方 white square',c:'symbols'},
   {e:'🔺',n:'红三角 red triangle up',c:'symbols'},{e:'🔻',n:'红倒三角 red triangle down',c:'symbols'},
-  {e:'♻️',n:'回收 recycling',c:'symbols'},{e:'☮️',n:'和平 peace',c:'symbols'},{e:'☯️',n:'阴阳 yin yang',c:'symbols'},
+  {e:'↻',n:'回收 recycling',c:'symbols'},{e:'☮️',n:'和平 peace',c:'symbols'},{e:'☯️',n:'阴阳 yin yang',c:'symbols'},
   {e:'♾️',n:'无限 infinity',c:'symbols'},{e:'🏳️‍🌈',n:'彩虹旗 rainbow flag pride',c:'symbols'},
-  {e:'⚠️',n:'警告 warning',c:'symbols'},{e:'🚫',n:'禁止 prohibited no',c:'symbols'},
+  {e:'⚠',n:'警告 warning',c:'symbols'},{e:'🚫',n:'禁止 prohibited no',c:'symbols'},
   {e:'🚭',n:'禁止吸烟 no smoking',c:'symbols'},{e:'📵',n:'禁止手机 no mobile phone',c:'symbols'},
   {e:'🔞',n:'未成年禁止 no one under 18',c:'symbols'},{e:'☢️',n:'放射性 radioactive',c:'symbols'},
   {e:'☣️',n:'生物危害 biohazard',c:'symbols'},
-  {e:'💤',n:'睡觉 zzz sleep',c:'symbols'},{e:'💬',n:'对话 speech bubble chat',c:'symbols'},
-  {e:'💭',n:'想法 thought bubble think',c:'symbols'},{e:'🗯️',n:'怒吼 anger bubble',c:'symbols'},
-  {e:'🔊',n:'音量高 loud speaker',c:'symbols'},{e:'🔇',n:'静音 mute speaker',c:'symbols'},
-  {e:'🔈',n:'音量低 speaker low',c:'symbols'},{e:'📢',n:'喇叭 loudspeaker megaphone',c:'symbols'},
+  {e:'💤',n:'睡觉 zzz sleep',c:'symbols'},{e:'☰',n:'对话 speech bubble chat',c:'symbols'},
+  {e:'☰',n:'想法 thought bubble think',c:'symbols'},{e:'🗯️',n:'怒吼 anger bubble',c:'symbols'},
+  {e:'♪',n:'音量高 loud speaker',c:'symbols'},{e:'🔇',n:'静音 mute speaker',c:'symbols'},
+  {e:'♪',n:'音量低 speaker low',c:'symbols'},{e:'📢',n:'喇叭 loudspeaker megaphone',c:'symbols'},
   {e:'📣',n:'号角 megaphone cheering',c:'symbols'},
   // ===== Flags (55) =====
   {e:'🏁',n:'格子旗 checkered flag finish',c:'flags'},{e:'🚩',n:'三角旗 triangular flag',c:'flags'},
@@ -490,7 +490,7 @@ document.getElementById('emojiGrid').addEventListener('click', e => {
   if (recent.length > 20) recent.pop();
   localStorage.setItem('devkit-emoji-recent', JSON.stringify(recent));
   renderRecent();
-  document.getElementById('statusInfo').textContent = `✅ ${emoji} 已复制`;
+  document.getElementById('statusInfo').textContent = `✓ ${emoji} 已复制`;
   setTimeout(() => { document.getElementById('statusInfo').textContent = 'Emoji 搜索'; }, 1500);
 });
 
@@ -506,7 +506,7 @@ document.getElementById('recentList').addEventListener('click', e => {
   const item = e.target.closest('[data-emoji]');
   if (!item) return;
   navigator.clipboard.writeText(item.dataset.emoji);
-  document.getElementById('statusInfo').textContent = `✅ ${item.dataset.emoji} 已复制`;
+  document.getElementById('statusInfo').textContent = `✓ ${item.dataset.emoji} 已复制`;
   setTimeout(() => { document.getElementById('statusInfo').textContent = 'Emoji 搜索'; }, 1500);
 });
 

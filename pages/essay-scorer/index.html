@@ -57,7 +57,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
     <div class="section-title">✍️ 作文评分器</div>
     <textarea class="essay-input" id="essayInput" placeholder="请在此粘贴或输入作文内容..."></textarea>
     <div class="char-count">已输入 <span id="charCount">0</span> 字</div>
-    <button class="btn" onclick="scoreEssay()">📊 开始评分</button>
+    <button class="btn" onclick="scoreEssay()">▦ 开始评分</button>
   </div>
   <div class="score-section" id="scoreSection">
     <div class="glass">
@@ -71,10 +71,10 @@ body{min-height:100vh;display:flex;flex-direction:column}
       </div>
     </div>
     <div class="glass suggestions">
-      <div class="section-title">💡 改进建议</div>
+      <div class="section-title">◉ 改进建议</div>
       <div id="sugList"></div>
     </div>
-    <div class="disclaimer">⚠️ 本工具仅供参考，不代表实际考试评分。评分基于文本统计分析，无法替代教师的专业判断。</div>
+    <div class="disclaimer">⚠ 本工具仅供参考，不代表实际考试评分。评分基于文本统计分析，无法替代教师的专业判断。</div>
   </div>
 </div>
 <script src="../../shared/theme.js"></script>
@@ -148,21 +148,21 @@ function scoreEssay(){
 
   // Suggestions
   const sugs=[];
-  if(wcScore>=16)sugs.push({type:'good',text:'✅ 字数充足，篇幅合理'});
-  else if(len<200)sugs.push({type:'warn',text:'⚠️ 字数偏少（'+len+'字），建议充实内容，目标400字以上'});
-  else sugs.push({type:'warn',text:'⚠️ 字数可再增加（'+len+'字），丰富细节描写'});
+  if(wcScore>=16)sugs.push({type:'good',text:'✓ 字数充足，篇幅合理'});
+  else if(len<200)sugs.push({type:'warn',text:'⚠ 字数偏少（'+len+'字），建议充实内容，目标400字以上'});
+  else sugs.push({type:'warn',text:'⚠ 字数可再增加（'+len+'字），丰富细节描写'});
 
-  if(vocabScore>=14)sugs.push({type:'good',text:'✅ 用词丰富，词汇多样'});
-  else sugs.push({type:'warn',text:'⚠️ 用词重复较多，尝试使用近义词替换，丰富词汇量'});
+  if(vocabScore>=14)sugs.push({type:'good',text:'✓ 用词丰富，词汇多样'});
+  else sugs.push({type:'warn',text:'⚠ 用词重复较多，尝试使用近义词替换，丰富词汇量'});
 
-  if(sentScore>=14)sugs.push({type:'good',text:'✅ 句式多样，长短句搭配得当'});
-  else sugs.push({type:'warn',text:'⚠️ 句式较单一，可加入疑问句、感叹句、排比句等'});
+  if(sentScore>=14)sugs.push({type:'good',text:'✓ 句式多样，长短句搭配得当'});
+  else sugs.push({type:'warn',text:'⚠ 句式较单一，可加入疑问句、感叹句、排比句等'});
 
-  if(rhetScore>=10)sugs.push({type:'good',text:'✅ 运用了修辞手法，增强表达效果'});
-  else sugs.push({type:'warn',text:'⚠️ 缺少修辞手法，可尝试比喻（像...一样）、排比、反问等'});
+  if(rhetScore>=10)sugs.push({type:'good',text:'✓ 运用了修辞手法，增强表达效果'});
+  else sugs.push({type:'warn',text:'⚠ 缺少修辞手法，可尝试比喻（像...一样）、排比、反问等'});
 
-  if(structScore>=14)sugs.push({type:'good',text:'✅ 文章结构完整，层次分明'});
-  else sugs.push({type:'warn',text:'⚠️ 注意文章结构：开头引入→中间展开→结尾总结，分段书写'});
+  if(structScore>=14)sugs.push({type:'good',text:'✓ 文章结构完整，层次分明'});
+  else sugs.push({type:'warn',text:'⚠ 注意文章结构：开头引入→中间展开→结尾总结，分段书写'});
 
   document.getElementById('sugList').innerHTML=sugs.map(s=>`<div class="sug-item ${s.type}">${s.text}</div>`).join('');
 }

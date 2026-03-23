@@ -100,13 +100,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="main">
   <!-- 模板选择 -->
   <div class="panel">
-    <div class="section-title">📐 选择模板</div>
+    <div class="section-title">∠ 选择模板</div>
     <div class="tpl-row" id="tplRow">
-      <div class="tpl-pill active" data-tpl="0">📱 公众号封面 <span class="tpl-size">900×383</span></div>
-      <div class="tpl-pill" data-tpl="1">📕 小红书封面 <span class="tpl-size">1242×1660</span></div>
-      <div class="tpl-pill" data-tpl="2">🌐 博客 Banner <span class="tpl-size">1200×630</span></div>
-      <div class="tpl-pill" data-tpl="3">▶️ YouTube <span class="tpl-size">1280×720</span></div>
-      <div class="tpl-pill" data-tpl="4">📐 自定义</div>
+      <div class="tpl-pill active" data-tpl="0">⊞ 公众号封面 <span class="tpl-size">900×383</span></div>
+      <div class="tpl-pill" data-tpl="1">◎ 小红书封面 <span class="tpl-size">1242×1660</span></div>
+      <div class="tpl-pill" data-tpl="2">◎ 博客 Banner <span class="tpl-size">1200×630</span></div>
+      <div class="tpl-pill" data-tpl="3">▸ YouTube <span class="tpl-size">1280×720</span></div>
+      <div class="tpl-pill" data-tpl="4">∠ 自定义</div>
     </div>
     <div id="customSize" style="display:none" class="config-row">
       <span style="font-size:11px;font-weight:700">宽</span>
@@ -124,7 +124,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="config-dual">
       <!-- 左：背景 -->
       <div>
-        <div class="section-title">🖼️ 背景</div>
+        <div class="section-title">⊞️ 背景</div>
         <div class="radio-row">
           <div class="radio-pill active" data-bg="solid">纯色</div>
           <div class="radio-pill" data-bg="gradient">渐变</div>
@@ -157,7 +157,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <!-- 图片 -->
         <div id="bgImgConf" class="config-group" style="display:none">
           <div class="upload-zone" id="bgUpload">
-            📷 点击或拖入背景图片
+            ◎ 点击或拖入背景图片
             <input type="file" id="bgFile" accept="image/*" style="display:none">
           </div>
         </div>
@@ -165,7 +165,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <!-- 右：文字 -->
       <div>
-        <div class="section-title">📝 文字</div>
+        <div class="section-title">☰ 文字</div>
         <div class="config-group">
           <div class="config-label">标题</div>
           <input class="input" id="titleText" value="输入你的标题" placeholder="主标题">
@@ -201,11 +201,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="section-title">👁️ 预览 <span style="font-size:10px;color:var(--text-caption);font-weight:400;margin-left:auto" id="sizeLabel">900 × 383</span></div>
     <div class="canvas-wrap" id="canvasWrap">
       <canvas id="cvs" width="900" height="383"></canvas>
-      <div class="canvas-hint">💡 拖拽文字调整位置</div>
+      <div class="canvas-hint">◉ 拖拽文字调整位置</div>
     </div>
     <div class="export-row">
-      <button class="btn-export btn-export-primary" id="exportPng">📥 导出 PNG</button>
-      <button class="btn-export btn-export-secondary" id="exportJpg">📥 导出 JPG</button>
+      <button class="btn-export btn-export-primary" id="exportPng">↓ 导出 PNG</button>
+      <button class="btn-export btn-export-secondary" id="exportJpg">↓ 导出 JPG</button>
     </div>
   </div>
 </div>
@@ -309,7 +309,7 @@ function loadBgImage(file) {
   const img = new Image();
   img.onload = () => { bgImg = img; URL.revokeObjectURL(bgImgUrl); bgImgUrl = null; render(); };
   img.src = bgImgUrl;
-  bgUpload.innerHTML = `✅ ${file.name}<input type="file" id="bgFile" accept="image/*" style="display:none">`;
+  bgUpload.innerHTML = `✓ ${file.name}<input type="file" id="bgFile" accept="image/*" style="display:none">`;
 }
 
 /* === Live re-render on input === */
@@ -445,7 +445,7 @@ function exportImg(fmt) {
   link.download = `cover-${cvs.width}x${cvs.height}.${fmt === 'jpeg' ? 'jpg' : 'png'}`;
   link.href = cvs.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined);
   link.click();
-  document.getElementById('statusInfo').textContent = `✅ 已导出 ${fmt.toUpperCase()} ${cvs.width}×${cvs.height}`;
+  document.getElementById('statusInfo').textContent = `✓ 已导出 ${fmt.toUpperCase()} ${cvs.width}×${cvs.height}`;
 }
 
 render();

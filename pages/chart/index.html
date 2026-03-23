@@ -112,18 +112,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- 上：配置区（紧凑通栏） -->
   <div class="panel" style="margin-bottom:12px">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-      <div class="section-title" style="margin-bottom:0">📋 类型</div>
+      <div class="section-title" style="margin-bottom:0">☰ 类型</div>
       <div class="tabs" id="typeTabs" style="flex:none">
-        <button class="tab active" data-type="bar">📊 柱状图</button>
-        <button class="tab" data-type="line">📈 折线图</button>
-        <button class="tab" data-type="pie">🥧 饼图</button>
-        <button class="tab" data-type="doughnut">🍩 环形图</button>
+        <button class="tab active" data-type="bar">▦ 柱状图</button>
+        <button class="tab" data-type="line">▦ 折线图</button>
+        <button class="tab" data-type="pie">◎ 饼图</button>
+        <button class="tab" data-type="doughnut">◎ 环形图</button>
       </div>
       <div class="tpl-row" id="tplRow" style="margin-left:auto;gap:4px">
-        <span class="tpl-chip" data-tpl="0">📈 季度销售</span>
-        <span class="tpl-chip" data-tpl="1">💰 月度支出</span>
-        <span class="tpl-chip" data-tpl="2">📱 市场份额</span>
-        <span class="tpl-chip" data-tpl="3">👥 部门人数</span>
+        <span class="tpl-chip" data-tpl="0">▦ 季度销售</span>
+        <span class="tpl-chip" data-tpl="1">◈ 月度支出</span>
+        <span class="tpl-chip" data-tpl="2">⊞ 市场份额</span>
+        <span class="tpl-chip" data-tpl="3">◎ 部门人数</span>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -173,14 +173,14 @@ Q4, 210</textarea>
       </div>
     </div>
     <div class="action-row" style="margin-top:12px">
-      <button class="gen-btn" id="genBtn">🔄 生成图表</button>
-      <button class="action-btn" id="downloadBtn">💾 导出 PNG</button>
+      <button class="gen-btn" id="genBtn">↻ 生成图表</button>
+      <button class="action-btn" id="downloadBtn">⊡ 导出 PNG</button>
     </div>
   </div>
 
   <!-- 下：图表预览（全宽） -->
   <div class="panel">
-    <div class="section-title">👁️ 图表预览 <button id="fsBtn" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border-glass);background:transparent;font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer">🔍 放大</button></div>
+    <div class="section-title">👁️ 图表预览 <button id="fsBtn" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border-glass);background:transparent;font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer">⊙ 放大</button></div>
     <div class="chart-wrap">
       <canvas id="chartCanvas"></canvas>
     </div>

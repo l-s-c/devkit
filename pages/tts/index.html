@@ -140,18 +140,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Left: Input -->
     <div>
       <div class="panel">
-        <div class="section-title">✏️ 输入文字</div>
+        <div class="section-title">✎ 输入文字</div>
         <div class="example-row" id="exampleRow">
           <span class="example-pill" data-ex="zh">🇨🇳 中文示例</span>
           <span class="example-pill" data-ex="en">🇺🇸 英文示例</span>
-          <span class="example-pill" data-ex="mix">🌐 中英混合</span>
+          <span class="example-pill" data-ex="mix">◎ 中英混合</span>
         </div>
         <textarea class="text-area" id="textInput" placeholder="在此输入要朗读的文字…">你好，欢迎使用 DevKit 文字转语音工具。输入任意文字，点击播放即可朗读。</textarea>
         <div class="char-count"><span id="charCount">0</span> 字</div>
       </div>
 
       <div class="panel">
-        <div class="section-title">🎤 语音设置</div>
+        <div class="section-title">◎ 语音设置</div>
         <div class="lang-row" id="langRow">
           <span class="lang-pill active" data-lang="all">全部</span>
           <span class="lang-pill" data-lang="zh">🇨🇳 中文</span>
@@ -159,43 +159,43 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <span class="lang-pill" data-lang="ja">🇯🇵 日文</span>
         </div>
         <select class="voice-select" id="voiceSelect"><option>加载语音列表…</option></select>
-        <div class="voice-hint">⚠️ 可用语音取决于您的浏览器和操作系统</div>
+        <div class="voice-hint">⚠ 可用语音取决于您的浏览器和操作系统</div>
       </div>
     </div>
 
     <!-- Right: Controls -->
     <div>
       <div class="panel">
-        <div class="section-title">⚙️ 参数调节</div>
+        <div class="section-title">⊕ 参数调节</div>
         <div class="slider-group">
-          <div class="slider-label"><span class="slider-name">🏃 语速</span><span class="slider-val" id="rateVal">1.0x</span></div>
+          <div class="slider-label"><span class="slider-name">◎ 语速</span><span class="slider-val" id="rateVal">1.0x</span></div>
           <input type="range" class="slider" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
         </div>
         <div class="slider-group">
-          <div class="slider-label"><span class="slider-name">🎵 音调</span><span class="slider-val" id="pitchVal">1.0</span></div>
+          <div class="slider-label"><span class="slider-name">♪ 音调</span><span class="slider-val" id="pitchVal">1.0</span></div>
           <input type="range" class="slider" id="pitchSlider" min="0.5" max="2" step="0.1" value="1">
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">🎮 播放控制</div>
+        <div class="section-title">◎ 播放控制</div>
         <div class="controls">
-          <button class="ctrl-btn btn-play" id="playBtn">▶️ 播放</button>
-          <button class="ctrl-btn btn-pause" id="pauseBtn">⏸️ 暂停</button>
+          <button class="ctrl-btn btn-play" id="playBtn">▸ 播放</button>
+          <button class="ctrl-btn btn-pause" id="pauseBtn">‖ 暂停</button>
           <button class="ctrl-btn btn-stop" id="stopBtn">⏹️ 停止</button>
         </div>
         <div class="status-bar status-idle" id="statusBar">
-          <span class="status-icon" id="statusIcon">💤</span>
+          <span class="status-icon" id="statusIcon">◎</span>
           <span class="status-text" id="statusText">就绪 — 输入文字后点击播放</span>
         </div>
       </div>
 
       <div class="compat">
-        ⚠️ <strong>浏览器限制暂不支持导出音频文件</strong> — Web Speech API 仅支持实时播放，无法输出音频流。<br>
-        <span style="font-size:10px;color:var(--text-caption)">💡 如需保存：可使用系统录屏 / 语音备忘录录制播放内容</span>
+        ⚠ <strong>浏览器限制暂不支持导出音频文件</strong> — Web Speech API 仅支持实时播放，无法输出音频流。<br>
+        <span style="font-size:10px;color:var(--text-caption)">◉ 如需保存：可使用系统录屏 / 语音备忘录录制播放内容</span>
       </div>
       <div class="compat">
-        💡 <strong>兼容性提示</strong>：Web Speech API 为浏览器原生功能。Chrome/Edge 语音较丰富，Safari 内置高质量语音，Firefox 支持有限。语音列表因设备而异。
+        ◉ <strong>兼容性提示</strong>：Web Speech API 为浏览器原生功能。Chrome/Edge 语音较丰富，Safari 内置高质量语音，Firefox 支持有限。语音列表因设备而异。
       </div>
     </div>
   </div>
@@ -235,7 +235,7 @@ function renderVoices() {
   sel.innerHTML = filtered.length
     ? filtered.map(v => {
         const idx = voices.indexOf(v);
-        return `<option value="${idx}">${v.name} (${v.lang})${v.default ? ' ⭐' : ''}</option>`;
+        return `<option value="${idx}">${v.name} (${v.lang})${v.default ? ' ★' : ''}</option>`;
       }).join('')
     : '<option>无可用语音</option>';
 }
@@ -249,9 +249,9 @@ function setStatus(type, icon, text) {
 
 function playTTS() {
   const text = document.getElementById('textInput').value.trim();
-  if (!text) { setStatus('idle', '⚠️', '请先输入文字'); return; }
+  if (!text) { setStatus('idle', '⚠', '请先输入文字'); return; }
 
-  if (isPaused) { speechSynthesis.resume(); isPaused = false; setStatus('playing', '🔊', '正在朗读…'); return; }
+  if (isPaused) { speechSynthesis.resume(); isPaused = false; setStatus('playing', '♪', '正在朗读…'); return; }
 
   speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
@@ -260,11 +260,11 @@ function playTTS() {
   utter.rate = parseFloat(document.getElementById('rateSlider').value);
   utter.pitch = parseFloat(document.getElementById('pitchSlider').value);
 
-  utter.onstart = () => { setStatus('playing', '🔊', '正在朗读…'); document.getElementById('statusInfo').textContent = '正在朗读…'; };
-  utter.onend = () => { setStatus('idle', '✅', '朗读完成'); document.getElementById('statusInfo').textContent = '朗读完成'; };
-  utter.onerror = () => setStatus('idle', '❌', '朗读出错');
-  utter.onpause = () => setStatus('paused', '⏸️', '已暂停');
-  utter.onresume = () => setStatus('playing', '🔊', '正在朗读…');
+  utter.onstart = () => { setStatus('playing', '♪', '正在朗读…'); document.getElementById('statusInfo').textContent = '正在朗读…'; };
+  utter.onend = () => { setStatus('idle', '✓', '朗读完成'); document.getElementById('statusInfo').textContent = '朗读完成'; };
+  utter.onerror = () => setStatus('idle', '✗', '朗读出错');
+  utter.onpause = () => setStatus('paused', '‖', '已暂停');
+  utter.onresume = () => setStatus('playing', '♪', '正在朗读…');
 
   speechSynthesis.speak(utter);
 }
@@ -272,7 +272,7 @@ function playTTS() {
 function pauseTTS() {
   if (speechSynthesis.speaking && !speechSynthesis.paused) {
     speechSynthesis.pause(); isPaused = true;
-    setStatus('paused', '⏸️', '已暂停 — 再次点击播放继续');
+    setStatus('paused', '‖', '已暂停 — 再次点击播放继续');
   }
 }
 

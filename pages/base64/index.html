@@ -42,8 +42,8 @@
   <label class="checkbox-label"><input type="checkbox" id="urlSafe"> URL 安全模式</label>
   <div class="toolbar-spacer"></div>
   <span class="badge badge-success" id="statusBadge" style="display:none">✓ 已编码</span>
-  <button class="btn-tool" id="btnCopy">📋 复制结果</button>
-  <button class="btn-tool" id="btnSwap">🔄 交换</button>
+  <button class="btn-tool" id="btnCopy">☰ 复制结果</button>
+  <button class="btn-tool" id="btnSwap">↻ 交换</button>
   <button class="btn-tool" id="btnSample">示例</button>
   <button class="btn-tool" id="btnClear">✕ 清空</button>
 </div>
@@ -100,7 +100,7 @@ function process() {
     statusBadge.style.display = '';
   } catch (e) {
     output.value = (mode === 'encode' ? '编码' : '解码') + '失败：' + e.message;
-    statusBadge.textContent = '❌ 无效输入';
+    statusBadge.textContent = '✗ 无效输入';
     statusBadge.className = 'badge badge-error';
     statusBadge.style.display = '';
   }
@@ -135,7 +135,7 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   if (output.value) navigator.clipboard.writeText(output.value);
 });
 document.getElementById('btnSample').addEventListener('click', () => {
-  input.value = '你好，DevKit！Base64 编解码工具 🚀\nHello World! 1234 #$%^&*';
+  input.value = '你好，DevKit！Base64 编解码工具 ◆\nHello World! 1234 #$%^&*';
   process();
 });
 document.getElementById('btnClear').addEventListener('click', () => {

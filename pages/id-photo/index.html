@@ -130,7 +130,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="panel" id="uploadPanel">
         <div class="upload-area" id="uploadArea">
           <input type="file" accept="image/*" id="fileInput">
-          <div style="font-size:40px;margin-bottom:6px">📸</div>
+          <div style="font-size:40px;margin-bottom:6px">◎</div>
           <div style="font-size:14px;font-weight:600;color:var(--text-secondary)">上传证件照</div>
           <div style="font-size:11px;color:var(--text-caption);margin-top:4px">建议使用纯色背景照片效果最佳</div>
         </div>
@@ -148,7 +148,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             <div class="compare-label">效果</div>
           </div>
         </div>
-        <div class="section-title">📐 多尺寸预览</div>
+        <div class="section-title">∠ 多尺寸预览</div>
         <div class="preview-wrap">
           <div class="preview-card"><canvas id="p1" width="74" height="104"></canvas><div class="preview-label">一寸</div></div>
           <div class="preview-card"><canvas id="p2" width="86" height="120"></canvas><div class="preview-label">二寸</div></div>
@@ -160,44 +160,44 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右：控件 -->
     <div>
       <div class="panel">
-        <div class="section-title">🎨 底色选择</div>
+        <div class="section-title">◆ 底色选择</div>
         <div class="color-row" id="colorRow">
           <div class="color-btn active" style="background:#FFFFFF;color:#333;border-color:#ddd" data-color="#FFFFFF">白</div>
           <div class="color-btn" style="background:#438EDB" data-color="#438EDB">蓝</div>
           <div class="color-btn" style="background:#D9363E" data-color="#D9363E">红</div>
           <div class="color-btn-custom">
-            🎨
+            ◆
             <input type="color" id="customColor" value="#438EDB">
           </div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📐 证件照尺寸</div>
+        <div class="section-title">∠ 证件照尺寸</div>
         <div class="size-grid" id="sizeGrid">
-          <div class="size-chip active" data-w="295" data-h="413" data-name="一寸"><div class="size-name">📋 一寸</div><div class="size-dim">25×35mm / 295×413px</div></div>
-          <div class="size-chip" data-w="413" data-h="579" data-name="二寸"><div class="size-name">📋 二寸</div><div class="size-dim">35×49mm / 413×579px</div></div>
-          <div class="size-chip" data-w="390" data-h="567" data-name="小二寸"><div class="size-name">📋 小二寸</div><div class="size-dim">33×48mm / 390×567px</div></div>
-          <div class="size-chip" data-w="390" data-h="567" data-name="护照"><div class="size-name">🛂 护照</div><div class="size-dim">33×48mm / 390×567px</div></div>
+          <div class="size-chip active" data-w="295" data-h="413" data-name="一寸"><div class="size-name">☰ 一寸</div><div class="size-dim">25×35mm / 295×413px</div></div>
+          <div class="size-chip" data-w="413" data-h="579" data-name="二寸"><div class="size-name">☰ 二寸</div><div class="size-dim">35×49mm / 413×579px</div></div>
+          <div class="size-chip" data-w="390" data-h="567" data-name="小二寸"><div class="size-name">☰ 小二寸</div><div class="size-dim">33×48mm / 390×567px</div></div>
+          <div class="size-chip" data-w="390" data-h="567" data-name="护照"><div class="size-name">◎ 护照</div><div class="size-dim">33×48mm / 390×567px</div></div>
           <div class="size-chip" data-w="600" data-h="600" data-name="美国签证"><div class="size-name">🇺🇸 美国签证</div><div class="size-dim">51×51mm / 600×600px</div></div>
           <div class="size-chip" data-w="354" data-h="472" data-name="日本签证"><div class="size-name">🇯🇵 日本签证</div><div class="size-dim">30×40mm / 354×472px</div></div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">⚙️ 换色参数</div>
+        <div class="section-title">⊕ 换色参数</div>
         <div class="slider-row">
           <span class="slider-label">容差阈值</span>
           <input type="range" class="slider-input" id="threshold" min="30" max="150" value="80">
           <span class="slider-val" id="thresholdVal">80</span>
         </div>
         <div class="warning-box">
-          ⚠️ 纯前端颜色替换，适用于纯色背景照片。复杂背景或头发丝边缘可能不够精细。
+          ⚠ 纯前端颜色替换，适用于纯色背景照片。复杂背景或头发丝边缘可能不够精细。
         </div>
       </div>
 
       <div class="panel">
-        <button class="action-btn" id="downloadBtn" disabled>💾 导出证件照（300dpi）</button>
+        <button class="action-btn" id="downloadBtn" disabled>⊡ 导出证件照（300dpi）</button>
       </div>
     </div>
   </div>

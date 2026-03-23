@@ -166,15 +166,15 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
   <div class="pwd-display" id="singleMode">
     <div class="pwd-output" id="pwdOutput"></div>
     <div class="pwd-actions">
-      <button class="pwd-action-btn" id="copyBtn" title="复制密码">📋</button>
-      <button class="pwd-action-btn" id="refreshBtn" title="重新生成">🔄</button>
+      <button class="pwd-action-btn" id="copyBtn" title="复制密码">☰</button>
+      <button class="pwd-action-btn" id="refreshBtn" title="重新生成">↻</button>
     </div>
   </div>
   <!-- 批量模式列表 -->
   <div class="batch-list" id="batchMode" style="display:none">
     <div class="batch-header">
       <span class="batch-title" id="batchTitle"></span>
-      <button class="pwd-action-btn" id="batchCopyAll" title="复制全部">📋</button>
+      <button class="pwd-action-btn" id="batchCopyAll" title="复制全部">☰</button>
     </div>
     <div class="batch-items" id="batchItems"></div>
   </div>
@@ -258,8 +258,8 @@ const LABELS = {
   fair: '一般',
   strong: '强',
   excellent: '非常强',
-  copied: '✅',
-  copyIcon: '📋',
+  copied: '✓',
+  copyIcon: '☰',
   historyEmpty: '生成密码后自动记录',
   statusReady: '就绪',
   statusGenerated: (n) => n === 1 ? '已生成 1 个密码' : `已生成 ${n} 个密码`,

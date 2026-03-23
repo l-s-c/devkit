@@ -49,7 +49,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div class="panel">
     <div class="dual">
       <div class="pane">
-        <div class="pane-title">📝 HTML 输入 <span class="badge">粘贴或输入</span></div>
+        <div class="pane-title">☰ HTML 输入 <span class="badge">粘贴或输入</span></div>
         <textarea id="htmlInput" placeholder="粘贴 HTML 代码..."><h1>Hello World</h1>
 <p>这是一段<strong>加粗</strong>和<em>斜体</em>文字。</p>
 <ul>
@@ -60,12 +60,12 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <img src="logo.png" alt="Logo"></textarea>
       </div>
       <div class="pane">
-        <div class="pane-title">📄 Markdown 输出 <span class="badge">自动转换</span></div>
+        <div class="pane-title">☰ Markdown 输出 <span class="badge">自动转换</span></div>
         <textarea id="mdOutput" readonly placeholder="转换结果..."></textarea>
         <div class="action-row">
-          <button class="btn btn-primary" id="copyBtn">📋 复制</button>
-          <button class="btn btn-secondary" id="exportBtn">📥 .md</button>
-          <button class="btn btn-secondary" id="clearBtn">🗑️ 清空</button>
+          <button class="btn btn-primary" id="copyBtn">☰ 复制</button>
+          <button class="btn btn-secondary" id="exportBtn">↓ .md</button>
+          <button class="btn btn-secondary" id="clearBtn">✕ 清空</button>
         </div>
       </div>
     </div>
@@ -85,14 +85,14 @@ function convert(){
   try{
     document.getElementById('mdOutput').value=td.turndown(html);
   }catch(e){
-    document.getElementById('mdOutput').value='⚠️ 转换出错：'+e.message;
+    document.getElementById('mdOutput').value='⚠ 转换出错：'+e.message;
   }
 }
 
 document.getElementById('htmlInput').addEventListener('input',convert);
 document.getElementById('copyBtn').addEventListener('click',()=>{
   navigator.clipboard.writeText(document.getElementById('mdOutput').value);
-  document.getElementById('statusInfo').textContent='✅ 已复制';
+  document.getElementById('statusInfo').textContent='✓ 已复制';
   setTimeout(()=>{document.getElementById('statusInfo').textContent='HTML 转 Markdown'},1500);
 });
 document.getElementById('exportBtn').addEventListener('click',()=>{

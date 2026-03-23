@@ -123,12 +123,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="main">
   <!-- 类别 Tab -->
   <div class="cat-tabs" id="catTabs">
-    <button class="cat-tab active" data-cat="length">📏 长度</button>
+    <button class="cat-tab active" data-cat="length">⊞ 长度</button>
     <button class="cat-tab" data-cat="weight">⚖️ 重量</button>
-    <button class="cat-tab" data-cat="temperature">🌡️ 温度</button>
-    <button class="cat-tab" data-cat="css">🎨 CSS</button>
-    <button class="cat-tab" data-cat="data">💾 数据</button>
-    <button class="cat-tab" data-cat="time">⏱️ 时间</button>
+    <button class="cat-tab" data-cat="temperature">◎️ 温度</button>
+    <button class="cat-tab" data-cat="css">◆ CSS</button>
+    <button class="cat-tab" data-cat="data">⊡ 数据</button>
+    <button class="cat-tab" data-cat="time">◷️ 时间</button>
   </div>
 
   <!-- 输入区 -->
@@ -282,7 +282,7 @@ function convert() {
         <span class="result-unit">${r.unit}</span>
         <span class="result-name">${r.name}</span>
       </div>
-      <button class="result-copy">📋</button>
+      <button class="result-copy">☰</button>
     </div>`;
   }).join('');
 
@@ -328,9 +328,9 @@ document.getElementById('results').addEventListener('click', (e) => {
   const text = card.dataset.copy;
   navigator.clipboard.writeText(text);
   const btn = card.querySelector('.result-copy');
-  btn.textContent = '✅';
+  btn.textContent = '✓';
   btn.classList.add('ok');
-  setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('ok'); }, 1200);
+  setTimeout(() => { btn.textContent = '☰'; btn.classList.remove('ok'); }, 1200);
 });
 
 // 初始化

@@ -121,21 +121,21 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <!-- 选项 -->
   <div class="options-panel">
     <div class="options-bar">
-      <button class="opt-btn active" id="optDedupe">🔁 按行去重</button>
-      <button class="opt-btn" id="optEmpty">🚫 去空行</button>
-      <button class="opt-btn" id="optTrim">✂️ 去首尾空格</button>
+      <button class="opt-btn active" id="optDedupe">◎ 按行去重</button>
+      <button class="opt-btn" id="optEmpty">◎ 去空行</button>
+      <button class="opt-btn" id="optTrim">✂ 去首尾空格</button>
       <button class="opt-btn" id="optCase">Aa 忽略大小写</button>
     </div>
     <div class="options-bar">
       <button class="opt-btn sort-btn" data-sort="asc">↑ 升序排列</button>
       <button class="opt-btn sort-btn" data-sort="desc">↓ 降序排列</button>
-      <button class="opt-btn sort-btn" data-sort="shuffle">🔀 随机打乱</button>
+      <button class="opt-btn sort-btn" data-sort="shuffle">⇄ 随机打乱</button>
     </div>
     <div class="action-row">
-      <button class="action-btn primary" id="btnProcess">🧹 处理</button>
+      <button class="action-btn primary" id="btnProcess">◎ 处理</button>
       <button class="action-btn secondary" id="btnClear">✕ 清空</button>
       <button class="action-btn secondary" id="btnSwap">⇄ 结果回填</button>
-      <button class="action-btn secondary" id="btnExport">📥 导出 .txt</button>
+      <button class="action-btn secondary" id="btnExport">↓ 导出 .txt</button>
     </div>
   </div>
 
@@ -143,8 +143,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <div class="dual">
     <div class="col-card">
       <div class="col-header">
-        <span class="col-title">📥 输入文本</span>
-        <button class="col-btn" id="btnPaste">📋 粘贴</button>
+        <span class="col-title">↓ 输入文本</span>
+        <button class="col-btn" id="btnPaste">☰ 粘贴</button>
       </div>
       <textarea class="text-area" id="inputText" placeholder="每行一条文本，粘贴后点击「处理」...
 苹果
@@ -156,8 +156,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     </div>
     <div class="col-card">
       <div class="col-header">
-        <span class="col-title">📤 处理结果</span>
-        <button class="col-btn" id="btnCopy">📋 复制</button>
+        <span class="col-title">↑ 处理结果</span>
+        <button class="col-btn" id="btnCopy">☰ 复制</button>
       </div>
       <textarea class="text-area" id="outputText" readonly placeholder="处理结果将显示在这里..."></textarea>
     </div>

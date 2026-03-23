@@ -59,9 +59,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel" id="uploadPanel">
-    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="security-badge">⊕ 文件不上传服务器，全部本地处理</div>
     <div class="upload-zone" id="dropZone">
-      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:32px;margin-bottom:8px">☰</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">拖拽 PDF 文件到此处</div>
       <div style="font-size:12px">或 <span style="color:var(--brand-500);font-weight:600">点击选择文件</span>（最大 50MB）</div>
       <input type="file" id="fileInput" accept=".pdf">
@@ -69,12 +69,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   </div>
 
   <div class="panel" id="splitPanel" style="display:none">
-    <div class="section-title">📄 <span id="fileName"></span> <span style="font-weight:400;font-size:11px;color:var(--text-caption)" id="pageInfo"></span></div>
+    <div class="section-title">☰ <span id="fileName"></span> <span style="font-weight:400;font-size:11px;color:var(--text-caption)" id="pageInfo"></span></div>
 
     <div class="mode-tabs" id="modeTabs">
-      <div class="mode-tab active" data-mode="select">🖱️ 点选页面</div>
-      <div class="mode-tab" data-mode="range">📐 输入范围</div>
-      <div class="mode-tab" data-mode="each">📑 逐页拆分</div>
+      <div class="mode-tab active" data-mode="select">⊡ 点选页面</div>
+      <div class="mode-tab" data-mode="range">∠ 输入范围</div>
+      <div class="mode-tab" data-mode="each">◎ 逐页拆分</div>
     </div>
 
     <!-- Select mode -->
@@ -97,19 +97,19 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Each mode -->
     <div id="eachMode" style="display:none">
       <div style="font-size:12px;color:var(--text-secondary);padding:16px;text-align:center">
-        📑 将每一页拆分为独立的 PDF 文件并打包下载
+        ◎ 将每一页拆分为独立的 PDF 文件并打包下载
       </div>
     </div>
 
-    <button class="split-btn" id="splitBtn">✂️ 拆分 PDF</button>
+    <button class="split-btn" id="splitBtn">✂ 拆分 PDF</button>
   </div>
 
   <div class="panel" id="resultPanel" style="display:none">
     <div style="text-align:center;padding:16px">
-      <div style="font-size:48px;margin-bottom:8px">✅</div>
+      <div style="font-size:48px;margin-bottom:8px">✓</div>
       <div style="font-size:16px;font-weight:800;margin-bottom:4px">拆分完成！</div>
       <div style="font-size:12px;color:var(--text-secondary);margin-bottom:16px" id="resultInfo"></div>
-      <button class="btn-download" id="downloadBtn">📥 下载</button>
+      <button class="btn-download" id="downloadBtn">↓ 下载</button>
     </div>
   </div>
 </div>
@@ -139,7 +139,7 @@ dropZone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadPDF(fileInput.files[0]); });
 
 async function loadPDF(file) {
-  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠️ 文件超过 50MB'; return; }
+  if (file.size > 50 * 1024 * 1024) { document.getElementById('statusInfo').textContent = '⚠ 文件超过 50MB'; return; }
   pdfBytes = await file.arrayBuffer();
   const { PDFDocument } = PDFLib;
   pdfDoc = await PDFDocument.load(pdfBytes);
@@ -213,10 +213,10 @@ document.getElementById('splitBtn').addEventListener('click', async () => {
 
     if (mode === 'select') {
       pages = Array.from(selectedPages).sort((a, b) => a - b);
-      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠️ 请选择至少一页'; btn.disabled = false; btn.textContent = '✂️ 拆分 PDF'; return; }
+      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠ 请选择至少一页'; btn.disabled = false; btn.textContent = '✂ 拆分 PDF'; return; }
     } else if (mode === 'range') {
       pages = parseRange(document.getElementById('rangeInput').value);
-      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠️ 请输入有效页码范围'; btn.disabled = false; btn.textContent = '✂️ 拆分 PDF'; return; }
+      if (!pages.length) { document.getElementById('statusInfo').textContent = '⚠ 请输入有效页码范围'; btn.disabled = false; btn.textContent = '✂ 拆分 PDF'; return; }
     } else {
       // Each page → download multiple
       for (let i = 0; i < totalPages; i++) {
@@ -232,8 +232,8 @@ document.getElementById('splitBtn').addEventListener('click', async () => {
       document.getElementById('resultInfo').textContent = `${totalPages} 个 PDF 文件已下载`;
       document.getElementById('resultPanel').style.display = 'block';
       document.getElementById('downloadBtn').style.display = 'none';
-      btn.disabled = false; btn.textContent = '✂️ 拆分 PDF';
-      document.getElementById('statusInfo').textContent = `✅ 逐页拆分完成 ${totalPages} 页`;
+      btn.disabled = false; btn.textContent = '✂ 拆分 PDF';
+      document.getElementById('statusInfo').textContent = `✓ 逐页拆分完成 ${totalPages} 页`;
       return;
     }
 
@@ -248,11 +248,11 @@ document.getElementById('splitBtn').addEventListener('click', async () => {
     document.getElementById('resultInfo').textContent = `提取 ${pages.length} 页 · ${(blob.size / 1024).toFixed(1)} KB`;
     document.getElementById('resultPanel').style.display = 'block';
     document.getElementById('downloadBtn').style.display = 'inline-flex';
-    document.getElementById('statusInfo').textContent = `✅ 拆分完成 ${pages.length} 页`;
+    document.getElementById('statusInfo').textContent = `✓ 拆分完成 ${pages.length} 页`;
   } catch (e) {
-    document.getElementById('statusInfo').textContent = '❌ 拆分失败：' + e.message;
+    document.getElementById('statusInfo').textContent = '✗ 拆分失败：' + e.message;
   }
-  btn.disabled = false; btn.textContent = '✂️ 拆分 PDF';
+  btn.disabled = false; btn.textContent = '✂ 拆分 PDF';
 });
 
 document.getElementById('downloadBtn').addEventListener('click', () => {

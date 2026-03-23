@@ -62,7 +62,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">🔍 英语句子成分分析</div>
+    <div class="section-title">⊙ 英语句子成分分析</div>
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>主语 Subject</div>
       <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>谓语 Predicate</div>
@@ -71,7 +71,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <div class="legend-item"><div class="legend-dot" style="background:#EC4899"></div>状语 Adverbial</div>
     </div>
     <div class="tab-row">
-      <div class="tab active" data-cat="all">📋 全部</div>
+      <div class="tab active" data-cat="all">☰ 全部</div>
       <div class="tab" data-cat="simple">简单句</div>
       <div class="tab" data-cat="compound">并列句</div>
       <div class="tab" data-cat="complex">复合句</div>
@@ -79,7 +79,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   </div>
   <div class="glass" id="parseResult" style="display:none"></div>
   <div class="glass">
-    <div class="section-title">📖 例句列表 <span class="count-info" id="countInfo"></span></div>
+    <div class="section-title">⊞ 例句列表 <span class="count-info" id="countInfo"></span></div>
     <div class="sentence-list" id="sentenceList"></div>
   </div>
 </div>
@@ -177,7 +177,7 @@ function showParse(s){
   parseResult.style.display='block';
   parseResult.innerHTML=`<div class="parsed">${s.parts.map(p=>`<span class="word-wrap ${roleMap[p.r]}"><span class="word-text">${p.w}</span><span class="word-label">${p.l}</span></span>`).join(' ')}</div>
   <div class="pattern-box"><div class="pattern-label">句型结构</div><div class="pattern-text">${s.pattern}</div></div>
-  <div class="grammar-note">💡 ${s.note}</div>`;
+  <div class="grammar-note">◉ ${s.note}</div>`;
   parseResult.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 

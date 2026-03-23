@@ -117,16 +117,16 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div>
       <div class="panel">
         <div class="text-label">
-          <span>📝 文本</span>
+          <span>☰ 文本</span>
           <button class="copy-btn" id="copyInput">复制</button>
         </div>
-        <textarea class="text-area" id="inputText" placeholder="输入文本，如：你好世界 Hello 😀">你好世界 Hello 😀</textarea>
+        <textarea class="text-area" id="inputText" placeholder="输入文本，如：你好世界 Hello ◎">你好世界 Hello ◎</textarea>
       </div>
     </div>
     <div>
       <div class="panel">
         <div class="text-label">
-          <span>🔢 编码结果</span>
+          <span>⊞ 编码结果</span>
           <button class="copy-btn" id="copyOutput">复制</button>
         </div>
         <textarea class="text-area" id="outputText" placeholder="编码结果..."></textarea>
@@ -135,7 +135,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   </div>
 
   <div class="panel">
-    <div class="section-title">📊 字符详情</div>
+    <div class="section-title">▦ 字符详情</div>
     <div style="max-height:300px;overflow-y:auto">
       <table class="char-table">
         <thead><tr><th>字符</th><th>码点</th><th>\uXXXX</th><th>HTML</th><th>UTF-8</th></tr></thead>
@@ -207,7 +207,7 @@ function encodedToText(encoded) {
         const bytes = encoded.trim().split(/\s+/).map(h => parseInt(h, 16)).filter(n => !isNaN(n));
         return new TextDecoder().decode(new Uint8Array(bytes));
     }
-  } catch (e) { return '⚠️ 解码错误'; }
+  } catch (e) { return '⚠ 解码错误'; }
 }
 
 /* ===== 转换 ===== */

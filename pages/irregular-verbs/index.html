@@ -69,15 +69,15 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">📖 英语不规则动词表 <span class="count-info" id="countInfo"></span></div>
-    <input class="search-input" id="searchInput" placeholder="🔍 搜索动词（英文或中文均可）...">
+    <div class="section-title">⊞ 英语不规则动词表 <span class="count-info" id="countInfo"></span></div>
+    <input class="search-input" id="searchInput" placeholder="⊙ 搜索动词（英文或中文均可）...">
     <div class="tab-row">
-      <div class="tab active" data-filter="all">📋 全部</div>
+      <div class="tab active" data-filter="all">☰ 全部</div>
       <div class="tab" data-filter="AAA">AAA 型</div>
       <div class="tab" data-filter="ABB">ABB 型</div>
       <div class="tab" data-filter="ABC">ABC 型</div>
       <div class="tab" data-filter="ABA">ABA 型</div>
-      <div class="tab" data-filter="practice">🎯 练习</div>
+      <div class="tab" data-filter="practice">◎ 练习</div>
     </div>
   </div>
   <div id="tableSection" class="glass">
@@ -87,7 +87,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
     </table>
   </div>
   <div id="practiceSection" class="glass hidden">
-    <div class="section-title">🎯 填空练习</div>
+    <div class="section-title">◎ 填空练习</div>
     <div class="practice-card">
       <div class="practice-word" id="practiceWord">—</div>
       <div class="practice-cn" id="practiceCn"></div>
@@ -95,7 +95,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
         <div class="practice-field"><input class="practice-input" id="pastInput" placeholder="过去式"><div class="practice-label">Past Tense</div></div>
         <div class="practice-field"><input class="practice-input" id="ppInput" placeholder="过去分词"><div class="practice-label">Past Participle</div></div>
       </div>
-      <div><button class="btn-sm" id="checkBtn">✅ 检查</button><button class="btn-outline" id="nextBtn">下一题 →</button><button class="btn-outline speak-btn" id="practiceSpeak">🔊</button></div>
+      <div><button class="btn-sm" id="checkBtn">✓ 检查</button><button class="btn-outline" id="nextBtn">下一题 →</button><button class="btn-outline speak-btn" id="practiceSpeak">♪</button></div>
       <div class="result-msg" id="resultMsg"></div>
     </div>
     <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-caption)">
@@ -135,7 +135,7 @@ function render(filter,query=''){
   if(filter!=='all')list=list.filter(v=>v.t===filter);
   if(q)list=list.filter(v=>v.b.includes(q)||v.p.includes(q)||v.pp.includes(q)||v.cn.includes(q));
   body.innerHTML=list.map(v=>`<tr>
-    <td onclick="speak('${v.b}')">${v.b} <button class="speak-btn">🔊</button></td>
+    <td onclick="speak('${v.b}')">${v.b} <button class="speak-btn">♪</button></td>
     <td onclick="speak('${v.p}')">${v.p}</td>
     <td onclick="speak('${v.pp}')">${v.pp}</td>
     <td><span class="verb-cn">${v.cn}</span><span class="pattern-badge pat-${v.t}">${v.t}</span></td>
@@ -186,8 +186,8 @@ document.getElementById('checkBtn').addEventListener('click',()=>{
   pastInput.className='practice-input '+(pOk?'correct':'wrong');
   ppInput.className='practice-input '+(ppOk?'correct':'wrong');
   total++;
-  if(pOk&&ppOk){score++;resultMsg.innerHTML='<span style="color:#10B981">✅ 正确！</span>';}
-  else resultMsg.innerHTML=`<span style="color:#EF4444">❌ 答案：${currentVerb.p} / ${currentVerb.pp}</span>`;
+  if(pOk&&ppOk){score++;resultMsg.innerHTML='<span style="color:#10B981">✓ 正确！</span>';}
+  else resultMsg.innerHTML=`<span style="color:#EF4444">✗ 答案：${currentVerb.p} / ${currentVerb.pp}</span>`;
   scoreDisplay.textContent=`${score}/${total}`;
 });
 

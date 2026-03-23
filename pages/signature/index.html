@@ -125,14 +125,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左：画板 -->
     <div>
       <div class="panel">
-        <div class="section-title">🖊️ 签名画板</div>
+        <div class="section-title">✎️ 签名画板</div>
         <div class="canvas-wrap canvas-checkerboard" id="canvasWrap">
           <canvas id="sigCanvas" height="300"></canvas>
           <div class="canvas-hint" id="hint">在此处签名<br>支持鼠标和触屏</div>
         </div>
         <div class="toolbar">
           <button class="tool-btn" id="undoBtn">↩️ 撤销</button>
-          <button class="tool-btn danger" id="clearBtn">🗑️ 清空</button>
+          <button class="tool-btn danger" id="clearBtn">✕ 清空</button>
         </div>
       </div>
       <div class="panel" id="previewPanel" style="display:none">
@@ -144,7 +144,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右：控件 -->
     <div>
       <div class="panel">
-        <div class="section-title">🎨 画笔颜色</div>
+        <div class="section-title">◆ 画笔颜色</div>
         <div class="color-row" id="colorRow">
           <div class="color-opt active" style="background:#1A1A2E" data-color="#1A1A2E"></div>
           <div class="color-opt" style="background:#6366F1" data-color="#6366F1"></div>
@@ -156,17 +156,17 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📏 画笔粗细</div>
+        <div class="section-title">⊞ 画笔粗细</div>
         <div class="ctrl-row">
           <span class="ctrl-label">粗细</span>
           <input type="range" class="ctrl-slider" id="lineWidth" min="1" max="10" value="3">
           <span class="ctrl-val" id="widthVal">3px</span>
         </div>
-        <div style="font-size:10px;color:var(--text-caption);margin-top:4px">💡 拖动滑块调整笔画粗细（1-10px）</div>
+        <div style="font-size:10px;color:var(--text-caption);margin-top:4px">◉ 拖动滑块调整笔画粗细（1-10px）</div>
       </div>
 
       <div class="panel">
-        <div class="section-title">🖼️ 背景</div>
+        <div class="section-title">⊞️ 背景</div>
         <div class="bg-toggle" id="bgToggle">
           <button class="bg-opt active" data-bg="transparent">透明底</button>
           <button class="bg-opt" data-bg="white">白色底</button>
@@ -174,7 +174,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <button class="action-btn" id="downloadBtn">💾 导出签名 PNG</button>
+        <button class="action-btn" id="downloadBtn">⊡ 导出签名 PNG</button>
       </div>
     </div>
   </div>

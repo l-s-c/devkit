@@ -139,7 +139,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <div class="preview-box" id="preview"></div>
       </div>
       <div class="panel">
-        <div class="section-title">🎨 预设模板</div>
+        <div class="section-title">◆ 预设模板</div>
         <div class="preset-grid" id="presetGrid"></div>
       </div>
     </div>
@@ -147,11 +147,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右：控件 -->
     <div>
       <div class="panel">
-        <div class="section-title">📐 渐变类型</div>
+        <div class="section-title">∠ 渐变类型</div>
         <div class="tabs" id="typeTabs">
           <button class="tab active" data-type="linear">↗️ 线性</button>
           <button class="tab" data-type="radial">◎ 径向</button>
-          <button class="tab" data-type="conic">🌀 锥形</button>
+          <button class="tab" data-type="conic">◎ 锥形</button>
         </div>
         <div class="angle-row" id="angleRow">
           <span class="angle-label">角度</span>
@@ -161,7 +161,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">🎨 色标</div>
+        <div class="section-title">◆ 色标</div>
         <div class="gradient-bar-wrap">
           <div class="gradient-bar" id="gradientBar"></div>
           <div id="handles"></div>
@@ -172,8 +172,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <div class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="section-title" style="margin-bottom:0">📋 CSS 代码</div>
-          <button class="copy-btn" id="copyBtn">📋 复制</button>
+          <div class="section-title" style="margin-bottom:0">☰ CSS 代码</div>
+          <button class="copy-btn" id="copyBtn">☰ 复制</button>
         </div>
         <div class="css-output" id="cssOutput"></div>
       </div>
@@ -356,7 +356,7 @@ document.getElementById('addStopBtn').addEventListener('click', addStop);
 document.getElementById('copyBtn').addEventListener('click', function() {
   navigator.clipboard.writeText(`background: ${getGradientCSS()};`).then(() => {
     this.textContent = '已复制 ✓';
-    setTimeout(() => this.textContent = '📋 复制', 1500);
+    setTimeout(() => this.textContent = '☰ 复制', 1500);
   });
 });
 

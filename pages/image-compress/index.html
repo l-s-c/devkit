@@ -218,12 +218,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 </div>
 
 <div class="main">
-  <div class="privacy-badge">🔒 本地处理 · 零上传</div>
+  <div class="privacy-badge">⊕ 本地处理 · 零上传</div>
 
   <!-- 上传区 -->
   <div class="upload-zone" id="uploadZone">
     <input type="file" class="upload-input" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp" multiple>
-    <div class="upload-icon">📸</div>
+    <div class="upload-icon">◎</div>
     <div class="upload-title">拖拽图片到此处，或点击选择</div>
     <div class="upload-hint">支持批量上传，最多 20 张</div>
     <div class="upload-formats">JPG · PNG · WebP · GIF · BMP</div>
@@ -263,7 +263,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
         <input type="number" class="size-input" id="maxWidth" placeholder="宽">
         <span class="size-x">×</span>
         <input type="number" class="size-input" id="maxHeight" placeholder="高">
-        <button class="size-lock locked" id="lockRatio" title="锁定比例">🔗</button>
+        <button class="size-lock locked" id="lockRatio" title="锁定比例">⊞</button>
       </div>
     </div>
   </div>
@@ -295,9 +295,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- 底部操作 -->
   <div class="bottom-actions" id="bottomActions">
-    <button class="btn-compress" id="btnCompress">🗜️ 开始压缩</button>
-    <button class="btn-download" id="btnDownload" style="display:none">📦 全部下载 (ZIP)</button>
-    <button class="btn-add-more" id="btnAddMore">➕ 继续添加</button>
+    <button class="btn-compress" id="btnCompress">⊕️ 开始压缩</button>
+    <button class="btn-download" id="btnDownload" style="display:none">⊞ 全部下载 (ZIP)</button>
+    <button class="btn-add-more" id="btnAddMore">+ 继续添加</button>
   </div>
 </div>
 
@@ -414,7 +414,7 @@ function renderFileList() {
       <div class="file-actions">
         ${f.status === 'done' ? `<button class="file-action-btn" data-action="compare" data-idx="${i}" title="对比">👁️</button>` : ''}
         ${f.status === 'done' ? `<button class="file-action-btn" data-action="download" data-idx="${i}" title="下载">⬇️</button>` : ''}
-        <button class="file-action-btn" data-action="remove" data-idx="${i}" title="删除">🗑️</button>
+        <button class="file-action-btn" data-action="remove" data-idx="${i}" title="删除">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -475,7 +475,7 @@ async function compressAll() {
   const maxH = parseInt(document.getElementById('maxHeight').value) || 0;
 
   document.getElementById('btnCompress').disabled = true;
-  document.getElementById('btnCompress').textContent = '🗜️ 压缩中...';
+  document.getElementById('btnCompress').textContent = '⊕️ 压缩中...';
 
   for (let i = 0; i < files.length; i++) {
     if (files[i].status === 'done') continue;
@@ -496,7 +496,7 @@ async function compressAll() {
   }
 
   document.getElementById('btnCompress').disabled = false;
-  document.getElementById('btnCompress').textContent = '🗜️ 重新压缩';
+  document.getElementById('btnCompress').textContent = '⊕️ 重新压缩';
   document.getElementById('btnDownload').style.display = '';
   updateStats();
 

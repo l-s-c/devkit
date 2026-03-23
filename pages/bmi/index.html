@@ -143,7 +143,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左侧结果 -->
     <div class="result-hero">
       <div class="bmi-number" id="bmiNumber">22.5</div>
-      <div class="bmi-label" id="bmiLabel">正常 ✅</div>
+      <div class="bmi-label" id="bmiLabel">正常 ✓</div>
       <div class="bmi-desc" id="bmiDesc">BMI 18.5-24 为正常范围</div>
 
       <div class="gauge">
@@ -167,7 +167,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="input-section">
       <div class="input-row">
         <div class="input-group">
-          <div class="input-name">📏 身高</div>
+          <div class="input-name">⊞ 身高</div>
           <input type="number" class="value-input" id="heightInput" value="175" min="100" max="250" step="1">
           <div class="input-unit">厘米 (cm)</div>
         </div>
@@ -202,7 +202,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
   <!-- 底部参考表 5 格横排 -->
   <div class="ref-section">
-    <div class="ref-title">📋 中国成人 BMI 标准</div>
+    <div class="ref-title">☰ 中国成人 BMI 标准</div>
     <div class="ref-grid" id="refGrid">
       <div class="ref-card" data-cat="underweight"><div class="ref-dot" style="background:#3B82F6"></div><div class="ref-name">偏瘦</div><div class="ref-range">&lt; 18.5</div></div>
       <div class="ref-card" data-cat="normal"><div class="ref-dot" style="background:#10B981"></div><div class="ref-name">正常</div><div class="ref-range">18.5 - 24</div></div>
@@ -230,7 +230,7 @@ const wSlider = document.getElementById('wSlider');
 
 const BMI_CATEGORIES = [
   { key: 'underweight', max: 18.5, label: '偏瘦', color: '#3B82F6', desc: 'BMI < 18.5，建议适当增重' },
-  { key: 'normal', max: 24, label: '正常 ✅', color: '#10B981', desc: 'BMI 18.5-24 为正常范围' },
+  { key: 'normal', max: 24, label: '正常 ✓', color: '#10B981', desc: 'BMI 18.5-24 为正常范围' },
   { key: 'overweight', max: 28, label: '偏胖', color: '#F59E0B', desc: 'BMI 24-28，建议控制饮食' },
   { key: 'obese', max: 32, label: '肥胖', color: '#EF4444', desc: 'BMI 28-32，建议减重' },
   { key: 'severe', max: Infinity, label: '重度肥胖', color: '#DC2626', desc: 'BMI ≥ 32，建议就医咨询' },
@@ -271,7 +271,7 @@ function calc() {
   const diff = (w - 24 * h * h).toFixed(1);
   document.getElementById('weightDiff').textContent = (diff > 0 ? '+' : '') + diff;
 
-  document.getElementById('statusInfo').textContent = `BMI ${bmi.toFixed(1)} · ${cat.label.replace(' ✅', '')} · 身高 ${heightInput.value}cm 体重 ${weightInput.value}kg`;
+  document.getElementById('statusInfo').textContent = `BMI ${bmi.toFixed(1)} · ${cat.label.replace(' ✓', '')} · 身高 ${heightInput.value}cm 体重 ${weightInput.value}kg`;
 }
 
 heightInput.addEventListener('input', () => { hSlider.value = heightInput.value; document.getElementById('hSliderVal').textContent = heightInput.value + ' cm'; calc(); });

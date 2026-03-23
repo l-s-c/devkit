@@ -141,21 +141,21 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左侧：输入 -->
     <div>
       <div class="panel">
-        <div class="section-title">💼 收入信息</div>
+        <div class="section-title">◎ 收入信息</div>
         <div class="field">
-          <div class="field-label">💰 税前月薪</div>
+          <div class="field-label">◈ 税前月薪</div>
           <input type="number" class="field-input" id="salary" value="15000">
           <div class="field-unit">元/月</div>
         </div>
         <div class="field">
-          <div class="field-label">🎁 年终奖</div>
+          <div class="field-label">◎ 年终奖</div>
           <input type="number" class="field-input" id="bonus" value="30000">
           <div class="field-unit">元/年（可选）</div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="toggle-title" id="insToggle">🏥 五险一金 <span class="toggle-arrow" id="insArrow">▼</span></div>
+        <div class="toggle-title" id="insToggle">◎ 五险一金 <span class="toggle-arrow" id="insArrow">▼</span></div>
         <div id="insPanel">
           <div class="field-row-3">
             <div class="field"><div class="field-label">养老 %</div><input type="number" class="field-input ins-input" id="pension" value="8" step="0.1"></div>
@@ -170,14 +170,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <div class="section-title">📋 专项附加扣除</div>
+        <div class="section-title">☰ 专项附加扣除</div>
         <div class="deduction-grid" id="deductionGrid">
-          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">👶</span><span class="chip-text">子女教育</span><span class="chip-amount">2000/月</span></label>
-          <label class="deduction-chip"><input type="checkbox" data-amount="1000"><span class="chip-icon">🏠</span><span class="chip-text">房贷利息</span><span class="chip-amount">1000/月</span></label>
-          <label class="deduction-chip"><input type="checkbox" data-amount="1500"><span class="chip-icon">🏢</span><span class="chip-text">住房租金</span><span class="chip-amount">1500/月</span></label>
-          <label class="deduction-chip"><input type="checkbox" data-amount="3000"><span class="chip-icon">👴</span><span class="chip-text">赡养老人</span><span class="chip-amount">3000/月</span></label>
-          <label class="deduction-chip"><input type="checkbox" data-amount="400"><span class="chip-icon">📚</span><span class="chip-text">继续教育</span><span class="chip-amount">400/月</span></label>
-          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">👶</span><span class="chip-text">3岁以下婴幼儿</span><span class="chip-amount">2000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">◎</span><span class="chip-text">子女教育</span><span class="chip-amount">2000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="1000"><span class="chip-icon">⌂</span><span class="chip-text">房贷利息</span><span class="chip-amount">1000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="1500"><span class="chip-icon">◎</span><span class="chip-text">住房租金</span><span class="chip-amount">1500/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="3000"><span class="chip-icon">◎</span><span class="chip-text">赡养老人</span><span class="chip-amount">3000/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="400"><span class="chip-icon">☰</span><span class="chip-text">继续教育</span><span class="chip-amount">400/月</span></label>
+          <label class="deduction-chip"><input type="checkbox" data-amount="2000"><span class="chip-icon">◎</span><span class="chip-text">3岁以下婴幼儿</span><span class="chip-amount">2000/月</span></label>
         </div>
         <div style="font-size:11px;color:var(--text-caption)">专项扣除合计 <strong id="deductionTotal" style="color:var(--brand-500)">¥0</strong>/月</div>
       </div>
@@ -187,7 +187,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div>
       <div class="panel">
         <div class="hero-result">
-          <div class="hero-label">💰 每月到手</div>
+          <div class="hero-label">◈ 每月到手</div>
           <div class="hero-value" id="takeHome">—</div>
         </div>
 
@@ -212,7 +212,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <!-- 年终奖对比 -->
       <div class="panel" id="bonusPanel">
-        <div class="section-title">🎁 年终奖计税方式对比</div>
+        <div class="section-title">◎ 年终奖计税方式对比</div>
         <div class="bonus-grid">
           <div class="bonus-card" id="bonusSeparate">
             <div class="bonus-card-title">单独计税</div>
@@ -228,14 +228,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           </div>
         </div>
         <div class="bonus-advice">
-          <span>💡</span>
+          <span>◉</span>
           <span id="bonusAdviceText"></span>
         </div>
       </div>
 
       <!-- 税率表 -->
       <div class="panel">
-        <div class="toggle-title" id="tableToggle">📊 七级税率表 <span class="toggle-arrow" id="tableArrow">▶</span></div>
+        <div class="toggle-title" id="tableToggle">▦ 七级税率表 <span class="toggle-arrow" id="tableArrow">▶</span></div>
         <div id="tablePanel" style="display:none">
           <table class="tax-table">
             <thead><tr><th>级数</th><th>年应纳税所得额</th><th>税率</th><th>速算扣除数</th></tr></thead>

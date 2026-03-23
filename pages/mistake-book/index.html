@@ -61,23 +61,23 @@ body{min-height:100vh;display:flex;flex-direction:column}
 <div class="topbar"><a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a><span class="topbar-tool-name">错题本</span><div class="topbar-spacer"></div><button class="theme-btn" onclick="toggleTheme()">🌙</button></div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📕 添加错题</div>
+    <div class="section-title">◎ 添加错题</div>
     <div class="form-grid">
-      <div class="form-item"><div class="form-label">📚 科目</div><select class="form-select" id="fSubject"><option>数学</option><option>语文</option><option>英语</option><option>物理</option><option>化学</option><option>生物</option></select></div>
-      <div class="form-item"><div class="form-label">📅 日期</div><input class="form-input" type="date" id="fDate"></div>
+      <div class="form-item"><div class="form-label">☰ 科目</div><select class="form-select" id="fSubject"><option>数学</option><option>语文</option><option>英语</option><option>物理</option><option>化学</option><option>生物</option></select></div>
+      <div class="form-item"><div class="form-label">☰ 日期</div><input class="form-input" type="date" id="fDate"></div>
       <div class="form-item full"><div class="form-label">❓ 题目</div><textarea class="form-textarea" id="fQuestion" placeholder="输入错题内容"></textarea></div>
-      <div class="form-item"><div class="form-label">❌ 我的错误答案</div><textarea class="form-textarea" id="fWrong" style="height:60px" placeholder="输入错误答案"></textarea></div>
-      <div class="form-item"><div class="form-label">✅ 正确答案</div><textarea class="form-textarea" id="fRight" style="height:60px" placeholder="输入正确答案"></textarea></div>
-      <div class="form-item full"><div class="form-label">💡 错因分析</div><textarea class="form-textarea" id="fNote" style="height:50px" placeholder="分析错误原因"></textarea></div>
+      <div class="form-item"><div class="form-label">✗ 我的错误答案</div><textarea class="form-textarea" id="fWrong" style="height:60px" placeholder="输入错误答案"></textarea></div>
+      <div class="form-item"><div class="form-label">✓ 正确答案</div><textarea class="form-textarea" id="fRight" style="height:60px" placeholder="输入正确答案"></textarea></div>
+      <div class="form-item full"><div class="form-label">◉ 错因分析</div><textarea class="form-textarea" id="fNote" style="height:50px" placeholder="分析错误原因"></textarea></div>
     </div>
-    <div class="btn-row"><button class="btn" id="addBtn">➕ 添加错题</button><button class="btn-sec" id="printBtn">🖨️ 打印错题本</button><button class="btn-sec" id="clearBtn">🗑️ 清空</button></div>
+    <div class="btn-row"><button class="btn" id="addBtn">+ 添加错题</button><button class="btn-sec" id="printBtn">⊞️ 打印错题本</button><button class="btn-sec" id="clearBtn">✕ 清空</button></div>
   </div>
   <div class="panel">
-    <div class="section-title">📊 统计</div>
+    <div class="section-title">▦ 统计</div>
     <div class="stats-row" id="statsRow"></div>
   </div>
   <div class="panel">
-    <div class="section-title" id="listTitle">📝 我的错题</div>
+    <div class="section-title" id="listTitle">☰ 我的错题</div>
     <div class="mistake-list" id="mistakeList"></div>
   </div>
 </div>
@@ -95,9 +95,9 @@ function renderStats(){
   document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-num" style="color:var(--brand-500)">${mistakes.length}</div><div class="stat-label">总错题</div></div>`+Object.entries(counts).map(([s,c])=>`<div class="stat-card"><div class="stat-num" style="color:${COLORS[s]||'#6366F1'}">${c}</div><div class="stat-label">${s}</div></div>`).join('');
 }
 function renderList(){
-  document.getElementById('listTitle').textContent=`📝 我的错题 (${mistakes.length}题)`;
-  if(!mistakes.length){document.getElementById('mistakeList').innerHTML='<div class="empty-msg">还没有错题，添加一个吧 ✏️</div>';renderStats();return}
-  document.getElementById('mistakeList').innerHTML=mistakes.map((m,i)=>`<div class="mc"><div class="mc-header"><span class="mc-num">#${i+1} · ${m.date}</span><span class="mc-subject" style="background:${COLORS[m.subject]||'#6366F1'}20;color:${COLORS[m.subject]||'#6366F1'}">📐 ${m.subject}</span><button class="mc-del" data-idx="${i}">🗑️</button></div><div class="mc-q">${m.question}</div><div class="mc-answers"><div class="ans-box ans-wrong"><div class="ans-label">❌ 我的答案</div>${m.wrong}</div><div class="ans-box ans-right"><div class="ans-label">✅ 正确答案</div>${m.right}</div></div>${m.note?`<div class="mc-note">💡 ${m.note}</div>`:''}</div>`).join('');
+  document.getElementById('listTitle').textContent=`☰ 我的错题 (${mistakes.length}题)`;
+  if(!mistakes.length){document.getElementById('mistakeList').innerHTML='<div class="empty-msg">还没有错题，添加一个吧 ✎</div>';renderStats();return}
+  document.getElementById('mistakeList').innerHTML=mistakes.map((m,i)=>`<div class="mc"><div class="mc-header"><span class="mc-num">#${i+1} · ${m.date}</span><span class="mc-subject" style="background:${COLORS[m.subject]||'#6366F1'}20;color:${COLORS[m.subject]||'#6366F1'}">∠ ${m.subject}</span><button class="mc-del" data-idx="${i}">✕</button></div><div class="mc-q">${m.question}</div><div class="mc-answers"><div class="ans-box ans-wrong"><div class="ans-label">✗ 我的答案</div>${m.wrong}</div><div class="ans-box ans-right"><div class="ans-label">✓ 正确答案</div>${m.right}</div></div>${m.note?`<div class="mc-note">◉ ${m.note}</div>`:''}</div>`).join('');
   renderStats();
 }
 document.getElementById('addBtn').addEventListener('click',()=>{

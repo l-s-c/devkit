@@ -148,7 +148,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <div class="panel">
         <div class="upload-area">
           <input type="file" accept="image/*" multiple id="fileInput">
-          <div style="font-size:36px;margin-bottom:6px">📄</div>
+          <div style="font-size:36px;margin-bottom:6px">☰</div>
           <div style="font-size:13px;font-weight:600;color:var(--text-secondary)">拖拽或点击上传图片</div>
           <div style="font-size:11px;color:var(--text-caption);margin-top:4px">支持 JPG / PNG / WebP，多选</div>
         </div>
@@ -167,25 +167,25 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 右 -->
     <div>
       <div class="panel">
-        <div class="section-title">📐 页面方向</div>
+        <div class="section-title">∠ 页面方向</div>
         <div class="tabs" id="orientTabs">
-          <button class="tab active" data-orient="portrait">📄 纵向</button>
-          <button class="tab" data-orient="landscape">📃 横向</button>
+          <button class="tab active" data-orient="portrait">☰ 纵向</button>
+          <button class="tab" data-orient="landscape">☰ 横向</button>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📏 页面尺寸</div>
+        <div class="section-title">⊞ 页面尺寸</div>
         <div class="opt-grid" id="sizeGrid">
-          <div class="opt-chip active" data-size="a4"><div class="opt-name">📋 A4</div><div class="opt-dim">210 × 297mm</div></div>
-          <div class="opt-chip" data-size="letter"><div class="opt-name">📋 Letter</div><div class="opt-dim">216 × 279mm</div></div>
-          <div class="opt-chip" data-size="a3"><div class="opt-name">📋 A3</div><div class="opt-dim">297 × 420mm</div></div>
-          <div class="opt-chip" data-size="fit"><div class="opt-name">🔲 自适应</div><div class="opt-dim">按图片尺寸</div></div>
+          <div class="opt-chip active" data-size="a4"><div class="opt-name">☰ A4</div><div class="opt-dim">210 × 297mm</div></div>
+          <div class="opt-chip" data-size="letter"><div class="opt-name">☰ Letter</div><div class="opt-dim">216 × 279mm</div></div>
+          <div class="opt-chip" data-size="a3"><div class="opt-name">☰ A3</div><div class="opt-dim">297 × 420mm</div></div>
+          <div class="opt-chip" data-size="fit"><div class="opt-name">◎ 自适应</div><div class="opt-dim">按图片尺寸</div></div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">⚙️ 参数</div>
+        <div class="section-title">⊕ 参数</div>
         <div class="slider-row">
           <span class="slider-label">边距</span>
           <input type="range" class="slider-input" id="margin" min="0" max="30" value="10">
@@ -201,7 +201,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       </div>
 
       <div class="panel">
-        <button class="action-btn" id="genBtn" disabled>📥 生成 PDF 并下载</button>
+        <button class="action-btn" id="genBtn" disabled>↓ 生成 PDF 并下载</button>
       </div>
     </div>
   </div>

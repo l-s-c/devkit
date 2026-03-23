@@ -67,21 +67,21 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div class="panel">
     <div class="section-title">✖️ 乘法口诀表</div>
     <div class="tab-row" id="modeTab">
-      <div class="tab active" data-v="table">📋 口诀表</div>
-      <div class="tab" data-v="practice">🎯 练习模式</div>
+      <div class="tab active" data-v="table">☰ 口诀表</div>
+      <div class="tab" data-v="practice">◎ 练习模式</div>
     </div>
     <div class="btn-row">
-      <button class="btn btn-secondary" id="speakBtn">🔊 语音朗读</button>
+      <button class="btn btn-secondary" id="speakBtn">♪ 语音朗读</button>
       <button class="btn btn-secondary" id="stopBtn" style="display:none">⏹️ 停止</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+      <button class="btn btn-secondary" onclick="window.print()">⊞️ 打印</button>
     </div>
   </div>
   <div class="panel" id="tableArea">
-    <div class="section-title">📖 九九乘法表</div>
+    <div class="section-title">⊞ 九九乘法表</div>
     <div class="table-area" id="mulTable"></div>
   </div>
   <div class="panel practice-area" id="practiceArea">
-    <div class="section-title">🎯 随机练习</div>
+    <div class="section-title">◎ 随机练习</div>
     <div class="practice-card">
       <div class="practice-expr" id="practiceExpr">7 × 8 =</div>
       <input class="practice-input" id="practiceInput" type="number">
@@ -128,7 +128,7 @@ document.getElementById('modeTab').addEventListener('click',e=>{
 // Speech
 let speaking=false;
 document.getElementById('speakBtn').addEventListener('click',()=>{
-  if(!('speechSynthesis' in window)){document.getElementById('statusInfo').textContent='⚠️ 浏览器不支持语音';return}
+  if(!('speechSynthesis' in window)){document.getElementById('statusInfo').textContent='⚠ 浏览器不支持语音';return}
   speechSynthesis.cancel();speaking=true;
   document.getElementById('speakBtn').style.display='none';
   document.getElementById('stopBtn').style.display='flex';

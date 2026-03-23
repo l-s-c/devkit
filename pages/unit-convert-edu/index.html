@@ -66,27 +66,27 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="glass">
-    <div class="section-title">📏 单位换算教育版</div>
+    <div class="section-title">⊞ 单位换算教育版</div>
     <div class="tab-row" id="catTabs">
-      <div class="tab active" onclick="setCat(0)">📏 长度</div>
-      <div class="tab" onclick="setCat(1)">📐 面积</div>
-      <div class="tab" onclick="setCat(2)">📦 体积</div>
+      <div class="tab active" onclick="setCat(0)">⊞ 长度</div>
+      <div class="tab" onclick="setCat(1)">∠ 面积</div>
+      <div class="tab" onclick="setCat(2)">⊞ 体积</div>
       <div class="tab" onclick="setCat(3)">⚖️ 重量</div>
     </div>
     <div class="mode-tabs">
-      <span class="mode-tab active" onclick="setMode(0)">📊 进率表</span>
-      <span class="mode-tab" onclick="setMode(1)">🔄 转换计算</span>
-      <span class="mode-tab" onclick="setMode(2)">✏️ 练习模式</span>
+      <span class="mode-tab active" onclick="setMode(0)">▦ 进率表</span>
+      <span class="mode-tab" onclick="setMode(1)">↻ 转换计算</span>
+      <span class="mode-tab" onclick="setMode(2)">✎ 练习模式</span>
     </div>
   </div>
 
   <div id="ratePanel" class="glass">
-    <div class="section-title">📊 进率关系</div>
+    <div class="section-title">▦ 进率关系</div>
     <div class="rate-chain" id="rateChain"></div>
   </div>
 
   <div id="convertPanel" class="glass" style="display:none">
-    <div class="section-title">🔄 转换计算</div>
+    <div class="section-title">↻ 转换计算</div>
     <div class="convert-row">
       <input class="convert-input" id="convertVal" type="number" value="1" oninput="doConvert()">
       <select class="unit-select" id="fromUnit" onchange="doConvert()"></select>
@@ -99,8 +99,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div id="practicePanel" style="display:none">
     <div class="glass">
       <div class="score-bar">
-        <div class="score-item"><div class="score-num" id="pCorrect" style="color:#10B981">0</div><div class="score-label">✅ 正确</div></div>
-        <div class="score-item"><div class="score-num" id="pWrong" style="color:#EF4444">0</div><div class="score-label">❌ 错误</div></div>
+        <div class="score-item"><div class="score-num" id="pCorrect" style="color:#10B981">0</div><div class="score-label">✓ 正确</div></div>
+        <div class="score-item"><div class="score-num" id="pWrong" style="color:#EF4444">0</div><div class="score-label">✗ 错误</div></div>
         <div class="score-item"><div class="score-num" id="pTotal" style="color:#F59E0B">0</div><div class="score-label">总题数</div></div>
       </div>
       <div class="practice-card" id="practiceCard">
@@ -181,10 +181,10 @@ function nextPractice(){
       pTotal++;
       if(Math.abs(ans-curAnswer)<0.001){
         pCorrect++;this.classList.add('correct');
-        document.getElementById('practiceFb').innerHTML='<span style="color:#10B981">✅ 正确！</span>';
+        document.getElementById('practiceFb').innerHTML='<span style="color:#10B981">✓ 正确！</span>';
       }else{
         pWrong++;this.classList.add('wrong');
-        document.getElementById('practiceFb').innerHTML=`<span style="color:#EF4444">❌ 正确答案：${curAnswer}</span>`;
+        document.getElementById('practiceFb').innerHTML=`<span style="color:#EF4444">✗ 正确答案：${curAnswer}</span>`;
       }
       this.disabled=true;
       document.getElementById('pCorrect').textContent=pCorrect;

@@ -48,26 +48,26 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 </div>
 <div class="main">
-  <div class="warn-bar">⚠️ IP 查询需要发送网络请求到 api.ipify.org，其他信息均为浏览器本地获取</div>
+  <div class="warn-bar">⚠ IP 查询需要发送网络请求到 api.ipify.org，其他信息均为浏览器本地获取</div>
   <div class="panel">
-    <div class="section-title">🌐 你的 IP 地址</div>
+    <div class="section-title">◎ 你的 IP 地址</div>
     <div class="ip-hero">
       <div class="ip-label">IPv4</div>
       <div class="ip-value" id="ipv4">查询中...</div>
-      <button class="ip-copy" id="copyBtn">📋 复制 IP</button>
+      <button class="ip-copy" id="copyBtn">☰ 复制 IP</button>
     </div>
   </div>
   <div class="panel">
-    <div class="section-title">💻 设备信息（本地获取）</div>
+    <div class="section-title">⊞ 设备信息（本地获取）</div>
     <div class="info-grid">
-      <div class="info-card"><div class="info-icon">🖥️</div><div class="info-label">操作系统</div><div class="info-value" id="infoOS">-</div></div>
-      <div class="info-card"><div class="info-icon">🌐</div><div class="info-label">浏览器</div><div class="info-value" id="infoBrowser">-</div></div>
-      <div class="info-card"><div class="info-icon">📐</div><div class="info-label">屏幕分辨率</div><div class="info-value" id="infoScreen">-</div></div>
-      <div class="info-card"><div class="info-icon">📱</div><div class="info-label">窗口大小</div><div class="info-value" id="infoWindow">-</div></div>
-      <div class="info-card"><div class="info-icon">🌍</div><div class="info-label">语言</div><div class="info-value" id="infoLang">-</div></div>
-      <div class="info-card"><div class="info-icon">🕐</div><div class="info-label">时区</div><div class="info-value" id="infoTZ">-</div></div>
-      <div class="info-card"><div class="info-icon">🧠</div><div class="info-label">CPU 核心</div><div class="info-value" id="infoCPU">-</div></div>
-      <div class="info-card"><div class="info-icon">💾</div><div class="info-label">内存</div><div class="info-value" id="infoMem">-</div></div>
+      <div class="info-card"><div class="info-icon">⊞️</div><div class="info-label">操作系统</div><div class="info-value" id="infoOS">-</div></div>
+      <div class="info-card"><div class="info-icon">◎</div><div class="info-label">浏览器</div><div class="info-value" id="infoBrowser">-</div></div>
+      <div class="info-card"><div class="info-icon">∠</div><div class="info-label">屏幕分辨率</div><div class="info-value" id="infoScreen">-</div></div>
+      <div class="info-card"><div class="info-icon">⊞</div><div class="info-label">窗口大小</div><div class="info-value" id="infoWindow">-</div></div>
+      <div class="info-card"><div class="info-icon">◎</div><div class="info-label">语言</div><div class="info-value" id="infoLang">-</div></div>
+      <div class="info-card"><div class="info-icon">◷</div><div class="info-label">时区</div><div class="info-value" id="infoTZ">-</div></div>
+      <div class="info-card"><div class="info-icon">◎</div><div class="info-label">CPU 核心</div><div class="info-value" id="infoCPU">-</div></div>
+      <div class="info-card"><div class="info-icon">⊡</div><div class="info-label">内存</div><div class="info-value" id="infoMem">-</div></div>
     </div>
   </div>
 </div>
@@ -77,8 +77,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
 fetch('https://api.ipify.org?format=json',{signal:AbortSignal.timeout(8000)})
-  .then(r=>r.json()).then(d=>{document.getElementById('ipv4').textContent=d.ip;document.getElementById('statusInfo').textContent=`✅ ${d.ip}`})
-  .catch(()=>{document.getElementById('ipv4').textContent='获取失败（网络不可用）';document.getElementById('statusInfo').textContent='❌ IP 获取失败'});
+  .then(r=>r.json()).then(d=>{document.getElementById('ipv4').textContent=d.ip;document.getElementById('statusInfo').textContent=`✓ ${d.ip}`})
+  .catch(()=>{document.getElementById('ipv4').textContent='获取失败（网络不可用）';document.getElementById('statusInfo').textContent='✗ IP 获取失败'});
 
 document.getElementById('copyBtn').addEventListener('click',()=>{
   const ip=document.getElementById('ipv4').textContent;

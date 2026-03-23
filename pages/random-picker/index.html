@@ -145,11 +145,11 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Left: Input -->
     <div>
       <div class="panel">
-        <div class="section-title">📝 输入名单</div>
+        <div class="section-title">☰ 输入名单</div>
         <div class="example-row" id="exampleRow">
-          <span class="example-pill" data-ex="class">👨‍🎓 班级名单</span>
-          <span class="example-pill" data-ex="team">👥 团队成员</span>
-          <span class="example-pill" data-ex="food">🍔 今天吃什么</span>
+          <span class="example-pill" data-ex="class">◎‍◎ 班级名单</span>
+          <span class="example-pill" data-ex="team">◎ 团队成员</span>
+          <span class="example-pill" data-ex="food">◎ 今天吃什么</span>
         </div>
         <textarea class="name-ta" id="nameInput" placeholder="每行输入一个名字&#10;张三&#10;李四&#10;王五&#10;赵六&#10;…">张三
 李四
@@ -164,17 +164,17 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <div class="panel">
         <div class="pick-row">
-          <span class="pick-label">🎯 抽取人数</span>
+          <span class="pick-label">◎ 抽取人数</span>
           <input type="number" class="pick-input" id="pickCount" value="1" min="1">
           <span class="pick-unit">人</span>
         </div>
-        <button class="draw-btn" id="drawBtn">🎲 开始抽签</button>
-        <button class="reset-btn" id="resetBtn">🔄 重置（恢复全部名单）</button>
-        <div class="crypto-badge">🔒 crypto.getRandomValues — 密码学级随机</div>
+        <button class="draw-btn" id="drawBtn">◎ 开始抽签</button>
+        <button class="reset-btn" id="resetBtn">↻ 重置（恢复全部名单）</button>
+        <div class="crypto-badge">⊕ crypto.getRandomValues — 密码学级随机</div>
       </div>
 
       <div class="panel">
-        <div class="section-title">👥 候选池</div>
+        <div class="section-title">◎ 候选池</div>
         <div class="pool-wrap" id="poolWrap"></div>
       </div>
     </div>
@@ -182,15 +182,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- Right: Result -->
     <div>
       <div class="panel">
-        <div class="section-title">🎉 抽签结果</div>
+        <div class="section-title">✦ 抽签结果</div>
         <div class="result-stage" id="resultStage">
-          <div class="result-emoji">🎲</div>
+          <div class="result-emoji">◎</div>
           <div style="font-size:14px;color:var(--text-caption)">输入名单后点击「开始抽签」</div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📜 抽签历史</div>
+        <div class="section-title">☰ 抽签历史</div>
         <ul class="winner-list" id="winnerList">
           <li style="text-align:center;padding:20px;color:var(--text-caption);font-size:12px">暂无记录</li>
         </ul>
@@ -275,13 +275,13 @@ document.getElementById('drawBtn').addEventListener('click', () => {
   initPool();
   const stage = document.getElementById('resultStage');
   if (!pool.length) {
-    stage.innerHTML = '<div class="result-emoji">😅</div><div style="color:var(--text-caption)">候选池已空，请重置</div>';
+    stage.innerHTML = '<div class="result-emoji">◎</div><div style="color:var(--text-caption)">候选池已空，请重置</div>';
     return;
   }
 
   const count = Math.min(parseInt(document.getElementById('pickCount').value) || 1, pool.length);
   const btn = document.getElementById('drawBtn');
-  btn.disabled = true; btn.classList.add('drawing'); btn.textContent = '🎲 抽签中…';
+  btn.disabled = true; btn.classList.add('drawing'); btn.textContent = '◎ 抽签中…';
 
   let tick = 0, maxTicks = 20 + cryptoRandom(10);
 
@@ -302,9 +302,9 @@ document.getElementById('drawBtn').addEventListener('click', () => {
       drawCount++;
 
       if (count === 1) {
-        stage.innerHTML = `<div class="result-emoji">🎉</div><div class="result-final">${esc(winners[0])}</div><div class="result-hint">恭喜中签！</div>`;
+        stage.innerHTML = `<div class="result-emoji">✦</div><div class="result-final">${esc(winners[0])}</div><div class="result-hint">恭喜中签！</div>`;
       } else {
-        stage.innerHTML = `<div class="result-emoji">🎉</div><div class="result-final">${winners.map(w => esc(w)).join('、')}</div><div class="result-hint">共 ${count} 人中签！</div>`;
+        stage.innerHTML = `<div class="result-emoji">✦</div><div class="result-final">${winners.map(w => esc(w)).join('、')}</div><div class="result-hint">共 ${count} 人中签！</div>`;
       }
 
       const now = new Date();
@@ -313,7 +313,7 @@ document.getElementById('drawBtn').addEventListener('click', () => {
       renderHistory(); renderPool();
 
       document.getElementById('statusInfo').textContent = `已抽 ${picked.length} 人 · 剩余 ${getNames().length - picked.length} 人`;
-      btn.disabled = false; btn.classList.remove('drawing'); btn.textContent = '🎲 继续抽签';
+      btn.disabled = false; btn.classList.remove('drawing'); btn.textContent = '◎ 继续抽签';
     }
   }, 60 + tick * 8);
 });
@@ -323,8 +323,8 @@ document.getElementById('resetBtn').addEventListener('click', resetAll);
 
 function resetAll() {
   picked = []; history = []; drawCount = 0;
-  document.getElementById('resultStage').innerHTML = '<div class="result-emoji">🎲</div><div style="font-size:14px;color:var(--text-caption)">输入名单后点击「开始抽签」</div>';
-  document.getElementById('drawBtn').textContent = '🎲 开始抽签';
+  document.getElementById('resultStage').innerHTML = '<div class="result-emoji">◎</div><div style="font-size:14px;color:var(--text-caption)">输入名单后点击「开始抽签」</div>';
+  document.getElementById('drawBtn').textContent = '◎ 开始抽签';
   document.getElementById('statusInfo').textContent = '在线抽签';
   renderHistory(); initPool();
 }

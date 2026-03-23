@@ -64,18 +64,18 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="panel" id="recordPanel">
-    <div class="security-badge">🔒 文件不上传服务器，全部本地处理</div>
+    <div class="security-badge">⊕ 文件不上传服务器，全部本地处理</div>
     <div id="idleState">
       <button class="record-btn idle" id="startBtn">⏺</button>
       <div class="status-text">点击开始录制屏幕</div>
-      <div class="compat-warn" id="compatWarn" style="display:none">⚠️ 当前浏览器不支持屏幕录制，请使用 Chrome / Edge / Firefox</div>
+      <div class="compat-warn" id="compatWarn" style="display:none">⚠ 当前浏览器不支持屏幕录制，请使用 Chrome / Edge / Firefox</div>
     </div>
     <div id="recordingState" style="display:none">
       <button class="record-btn recording" id="recordingBtn">⏺</button>
       <div class="timer" id="timer">00:00</div>
-      <div class="status-text" id="recordStatus">🔴 录制中...</div>
+      <div class="status-text" id="recordStatus">● 录制中...</div>
       <div class="controls">
-        <button class="ctrl-btn" id="pauseBtn">⏸️ 暂停</button>
+        <button class="ctrl-btn" id="pauseBtn">‖ 暂停</button>
         <button class="ctrl-btn danger" id="stopBtn">⏹️ 停止录制</button>
       </div>
     </div>
@@ -87,8 +87,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
       <video id="previewVideo" controls></video>
     </div>
     <div class="download-row">
-      <button class="btn-download" id="downloadBtn">📥 下载 WebM</button>
-      <button class="ctrl-btn" id="newBtn">🔄 重新录制</button>
+      <button class="btn-download" id="downloadBtn">↓ 下载 WebM</button>
+      <button class="ctrl-btn" id="newBtn">↻ 重新录制</button>
     </div>
     <div style="font-size:10px;color:var(--text-caption);margin-top:8px" id="fileInfo"></div>
   </div>
@@ -132,7 +132,7 @@ document.getElementById('startBtn').addEventListener('click', async () => {
       audio: true
     });
   } catch (e) {
-    document.getElementById('statusInfo').textContent = '❌ 用户取消了屏幕共享';
+    document.getElementById('statusInfo').textContent = '✗ 用户取消了屏幕共享';
     return;
   }
 
@@ -153,8 +153,8 @@ document.getElementById('startBtn').addEventListener('click', async () => {
   document.getElementById('idleState').style.display = 'none';
   document.getElementById('recordingState').style.display = 'block';
   document.getElementById('previewPanel').style.display = 'none';
-  document.getElementById('statusInfo').textContent = '🔴 录制中';
-  document.getElementById('pauseBtn').innerHTML = '⏸️ 暂停';
+  document.getElementById('statusInfo').textContent = '● 录制中';
+  document.getElementById('pauseBtn').innerHTML = '‖ 暂停';
 });
 
 document.getElementById('pauseBtn').addEventListener('click', () => {
@@ -164,17 +164,17 @@ document.getElementById('pauseBtn').addEventListener('click', () => {
     pauseStart = Date.now();
     clearInterval(timerInterval);
     document.getElementById('recordingBtn').className = 'record-btn paused';
-    document.getElementById('recordStatus').textContent = '⏸️ 已暂停';
-    document.getElementById('pauseBtn').innerHTML = '▶️ 继续';
-    document.getElementById('statusInfo').textContent = '⏸️ 已暂停';
+    document.getElementById('recordStatus').textContent = '‖ 已暂停';
+    document.getElementById('pauseBtn').innerHTML = '▸ 继续';
+    document.getElementById('statusInfo').textContent = '‖ 已暂停';
   } else if (mediaRecorder.state === 'paused') {
     mediaRecorder.resume();
     pausedDuration += Date.now() - pauseStart;
     timerInterval = setInterval(updateTimer, 500);
     document.getElementById('recordingBtn').className = 'record-btn recording';
-    document.getElementById('recordStatus').textContent = '🔴 录制中...';
-    document.getElementById('pauseBtn').innerHTML = '⏸️ 暂停';
-    document.getElementById('statusInfo').textContent = '🔴 录制中';
+    document.getElementById('recordStatus').textContent = '● 录制中...';
+    document.getElementById('pauseBtn').innerHTML = '‖ 暂停';
+    document.getElementById('statusInfo').textContent = '● 录制中';
   }
 });
 
@@ -195,12 +195,12 @@ function onRecordingStop() {
 
   const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
   const duration = document.getElementById('timer').textContent;
-  document.getElementById('fileInfo').textContent = `📁 ${sizeMB} MB · ${duration} · WebM`;
+  document.getElementById('fileInfo').textContent = `☰ ${sizeMB} MB · ${duration} · WebM`;
 
   document.getElementById('idleState').style.display = 'none';
   document.getElementById('recordingState').style.display = 'none';
   document.getElementById('previewPanel').style.display = 'block';
-  document.getElementById('statusInfo').textContent = `✅ 录制完成 ${duration}`;
+  document.getElementById('statusInfo').textContent = `✓ 录制完成 ${duration}`;
 }
 
 document.getElementById('downloadBtn').addEventListener('click', () => {

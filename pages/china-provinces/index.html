@@ -25,7 +25,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
 .search-input{width:100%;padding:10px 14px 10px 36px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:13px;color:var(--text-primary);outline:none;margin-bottom:12px}
 .search-input:focus{border-color:#EF4444}
 .search-wrap{position:relative;margin-bottom:12px}
-.search-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px}
+.search-wrap::before{content:'⊙';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px}
 .region-pills{display:flex;gap:4px;flex-wrap:wrap}
 .region-pill{padding:5px 12px;border-radius:12px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:10px;font-weight:700;cursor:pointer;transition:all 150ms;color:var(--text-secondary)}
 .region-pill:hover{border-color:#EF4444;color:#EF4444}
@@ -149,7 +149,7 @@ function render() {
   filtered.forEach(p => {
     const card = document.createElement('div');
     card.className = 'prov-card' + (activeProvince === p.name ? ' active' : '');
-    card.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-abbr">${p.abbr} · ${p.type}</div><div class="prov-capital">📍 ${p.capital}</div>`;
+    card.innerHTML = `<div class="prov-name">${p.name}</div><div class="prov-abbr">${p.abbr} · ${p.type}</div><div class="prov-capital">◎ ${p.capital}</div>`;
     card.onclick = () => showDetail(p);
     grid.appendChild(card);
   });
@@ -162,14 +162,14 @@ function showDetail(p) {
     <div class="detail-name">${p.name}</div>
     <div class="detail-abbr">${p.abbr} · ${p.type}</div>
     <div class="detail-grid">
-      <div class="detail-item"><div class="detail-label">🏛️ 省会/首府</div><div class="detail-value">${p.capital}</div></div>
-      <div class="detail-item"><div class="detail-label">📐 面积</div><div class="detail-value">${p.area}</div></div>
-      <div class="detail-item"><div class="detail-label">👥 人口</div><div class="detail-value">${p.pop}</div></div>
-      <div class="detail-item"><div class="detail-label">💰 GDP</div><div class="detail-value">${p.gdp}</div></div>
-      <div class="detail-item"><div class="detail-label">🍜 特产</div><div class="detail-value">${p.specialties.join('、')}</div></div>
-      <div class="detail-item"><div class="detail-label">📜 历史</div><div class="detail-value">${p.history}</div></div>
+      <div class="detail-item"><div class="detail-label">◎️ 省会/首府</div><div class="detail-value">${p.capital}</div></div>
+      <div class="detail-item"><div class="detail-label">∠ 面积</div><div class="detail-value">${p.area}</div></div>
+      <div class="detail-item"><div class="detail-label">◎ 人口</div><div class="detail-value">${p.pop}</div></div>
+      <div class="detail-item"><div class="detail-label">◈ GDP</div><div class="detail-value">${p.gdp}</div></div>
+      <div class="detail-item"><div class="detail-label">◎ 特产</div><div class="detail-value">${p.specialties.join('、')}</div></div>
+      <div class="detail-item"><div class="detail-label">☰ 历史</div><div class="detail-value">${p.history}</div></div>
     </div>
-    <div class="detail-spots"><span style="font-size:10px;font-weight:700;color:var(--text-caption)">🏔️ 景点：</span>${p.spots.map(s=>'<span class="spot-tag">'+s+'</span>').join('')}</div>`;
+    <div class="detail-spots"><span style="font-size:10px;font-weight:700;color:var(--text-caption)">◎️ 景点：</span>${p.spots.map(s=>'<span class="spot-tag">'+s+'</span>').join('')}</div>`;
   render();
   detailCard.scrollIntoView({behavior:'smooth',block:'nearest'});
 }

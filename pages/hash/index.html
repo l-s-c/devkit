@@ -76,7 +76,7 @@ body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 <div style="padding:0 16px 16px">
   <div style="background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass);border-radius:12px;padding:16px">
-    <div style="font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px">📁 文件 Hash 校验</div>
+    <div style="font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px">☰ 文件 Hash 校验</div>
     <div id="fileDropZone" style="border:2px dashed var(--border-glass);border-radius:10px;padding:20px;text-align:center;color:var(--text-caption);font-size:12px;cursor:pointer;transition:all 200ms">
       拖拽文件到此处 或 <span style="color:var(--brand-500);font-weight:600;cursor:pointer" id="filePick">点击选择文件</span>
       <input type="file" id="fileInput" style="display:none">
@@ -119,7 +119,7 @@ async function calculate() {
     return { algo: a, hash: h };
   }));
   document.getElementById('results').innerHTML = results.map(r =>
-    `<div class="hash-row"><span class="hash-algo" data-algo="${r.algo}">${r.algo}</span><span class="hash-value">${r.hash}</span><span style="font-size:11px;color:var(--text-caption)">${r.hash.length*4} bit</span><button class="btn-tool hash-copy" data-hash="${r.hash}">📋</button></div>`
+    `<div class="hash-row"><span class="hash-algo" data-algo="${r.algo}">${r.algo}</span><span class="hash-value">${r.hash}</span><span style="font-size:11px;color:var(--text-caption)">${r.hash.length*4} bit</span><button class="btn-tool hash-copy" data-hash="${r.hash}">☰</button></div>`
   ).join('') + '<div style="font-size:11px;color:var(--text-caption);padding:4px 14px">⚠ MD5 不安全，仅供兼容需要，推荐使用 SHA-256</div>';
   document.getElementById('charCount').textContent = `${text.length} 字符 · ${algos.length} 种算法`;
 }
@@ -151,7 +151,7 @@ dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.bord
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) hashFile(fileInput.files[0]); });
 
 async function hashFile(file) {
-  document.getElementById('fileName').textContent = `📄 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+  document.getElementById('fileName').textContent = `☰ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
   document.getElementById('fileResult').style.display = 'block';
   const buf = await file.arrayBuffer();
   const fileAlgos = ['SHA-1','SHA-256','SHA-512'];
@@ -162,7 +162,7 @@ async function hashFile(file) {
     return { algo, hash: Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('') };
   }));
   container.innerHTML = results.map(r =>
-    `<div class="hash-row"><span class="hash-algo" data-algo="${r.algo}">${r.algo}</span><span class="hash-value">${r.hash}</span><button class="btn-tool hash-copy" data-hash="${r.hash}" style="font-size:11px">📋</button></div>`
+    `<div class="hash-row"><span class="hash-algo" data-algo="${r.algo}">${r.algo}</span><span class="hash-value">${r.hash}</span><button class="btn-tool hash-copy" data-hash="${r.hash}" style="font-size:11px">☰</button></div>`
   ).join('');
 }
 </script>

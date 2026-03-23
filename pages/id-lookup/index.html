@@ -51,12 +51,12 @@ body{min-height:100vh;display:flex;flex-direction:column}
     <div class="id-struct" id="idStruct"></div>
   </div>
   <div class="panel" id="resultPanel" style="display:none">
-    <div class="section-title">📍 查询结果</div>
+    <div class="section-title">◎ 查询结果</div>
     <div class="result-grid" id="resultGrid"></div>
-    <div class="security"><div class="security-icon">🔒</div><div><strong>隐私安全：</strong>所有查询均在浏览器本地完成，身份证号码不会上传至任何服务器。</div></div>
+    <div class="security"><div class="security-icon">⊕</div><div><strong>隐私安全：</strong>所有查询均在浏览器本地完成，身份证号码不会上传至任何服务器。</div></div>
   </div>
 </div>
-<div class="statusbar"><span>身份证归属地查询</span><div class="statusbar-spacer"></div><span>🔒 纯本地 · 不上传</span></div>
+<div class="statusbar"><span>身份证归属地查询</span><div class="statusbar-spacer"></div><span>⊕ 纯本地 · 不上传</span></div>
 <script type="module">
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
@@ -84,7 +84,7 @@ document.getElementById('queryBtn').addEventListener('click',()=>{
   const structEl=document.getElementById('idStruct');
   if(v.length===18){
     const valid=verifyChecksum(v);
-    structEl.innerHTML=`<div class="seg seg-region">${v.slice(0,6)}<span class="seg-label">地区码</span></div><div class="seg seg-birth">${v.slice(6,14)}<span class="seg-label">出生日期</span></div><div class="seg seg-seq">${v.slice(14,17)}<span class="seg-label">顺序码</span></div><div class="seg seg-check">${v[17]}<span class="seg-label">校验${valid?'✅':'❌'}</span></div>`;
+    structEl.innerHTML=`<div class="seg seg-region">${v.slice(0,6)}<span class="seg-label">地区码</span></div><div class="seg seg-birth">${v.slice(6,14)}<span class="seg-label">出生日期</span></div><div class="seg seg-seq">${v.slice(14,17)}<span class="seg-label">顺序码</span></div><div class="seg seg-check">${v[17]}<span class="seg-label">校验${valid?'✓':'✗'}</span></div>`;
   } else {
     structEl.innerHTML=`<div class="seg seg-region">${code6}<span class="seg-label">地区码</span></div>`;
   }

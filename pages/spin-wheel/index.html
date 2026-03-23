@@ -168,13 +168,13 @@ canvas#wheel { display: block; }
           </div>
         </div>
         <div class="result-banner win" id="resultBanner">
-          <div class="result-text" id="resultText">🎉</div>
+          <div class="result-text" id="resultText">✦</div>
           <div class="result-sub">恭喜中奖！</div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📜 抽奖记录</div>
+        <div class="section-title">☰ 抽奖记录</div>
         <div class="history-list" id="historyList">
           <div style="text-align:center;padding:16px;color:var(--text-caption);font-size:12px">转动转盘开始抽奖</div>
         </div>
@@ -184,30 +184,30 @@ canvas#wheel { display: block; }
     <!-- Right: Controls -->
     <div>
       <div class="panel">
-        <div class="section-title">🎡 转盘管理</div>
+        <div class="section-title">◎ 转盘管理</div>
         <div class="wheel-tabs" id="wheelTabs"></div>
       </div>
 
       <div class="panel">
-        <div class="section-title">📝 选项列表</div>
+        <div class="section-title">☰ 选项列表</div>
         <div class="preset-row" style="margin-bottom:10px" id="presetRow">
-          <span class="preset-pill" data-preset="lunch">🍔 今天吃啥</span>
-          <span class="preset-pill" data-preset="class">👨‍🎓 课堂点名</span>
-          <span class="preset-pill" data-preset="dare">🎭 真心话大冒险</span>
-          <span class="preset-pill" data-preset="weekend">🏖️ 周末活动</span>
+          <span class="preset-pill" data-preset="lunch">◎ 今天吃啥</span>
+          <span class="preset-pill" data-preset="class">◎‍◎ 课堂点名</span>
+          <span class="preset-pill" data-preset="dare">◎ 真心话大冒险</span>
+          <span class="preset-pill" data-preset="weekend">◎️ 周末活动</span>
         </div>
         <div class="item-list" id="itemList"></div>
         <button class="add-item-btn" id="addItemBtn">+ 添加选项</button>
       </div>
 
       <div class="panel">
-        <div class="section-title">⚙️ 设置</div>
+        <div class="section-title">⊕ 设置</div>
         <div class="opt-row">
-          <div class="opt-label">🚫 淘汰模式<span style="font-size:10px;color:var(--text-caption);font-weight:400">（抽中自动移除）</span></div>
+          <div class="opt-label">◎ 淘汰模式<span style="font-size:10px;color:var(--text-caption);font-weight:400">（抽中自动移除）</span></div>
           <div class="toggle" id="toggleElim"><div class="toggle-dot"></div></div>
         </div>
         <div class="opt-row">
-          <div class="opt-label">🔊 声音效果</div>
+          <div class="opt-label">♪ 声音效果</div>
           <div class="toggle on" id="toggleSound"><div class="toggle-dot"></div></div>
         </div>
       </div>
@@ -325,7 +325,7 @@ document.getElementById('spinBtn').addEventListener('click', () => {
     else {
       spinning = false; btn.disabled = false; btn.classList.remove('spinning');
       const winner = active[winnerIdx];
-      document.getElementById('resultText').textContent = '🎉 ' + winner.label;
+      document.getElementById('resultText').textContent = '✦ ' + winner.label;
       document.getElementById('resultBanner').classList.add('show');
 
       const now = new Date();
@@ -339,7 +339,7 @@ document.getElementById('spinBtn').addEventListener('click', () => {
         renderItems(); drawWheel(); save();
       }
       if (soundOn) playBeep();
-      document.getElementById('statusInfo').textContent = `🎉 ${winner.label}`;
+      document.getElementById('statusInfo').textContent = `✦ ${winner.label}`;
     }
   }
   requestAnimationFrame(animate);

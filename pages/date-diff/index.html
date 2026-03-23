@@ -142,8 +142,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 <div class="main">
   <div class="mode-tabs" id="modeTabs">
-    <button class="mode-tab active" data-mode="diff">📅 日期差值</button>
-    <button class="mode-tab" data-mode="addsub">➕ 日期加减</button>
+    <button class="mode-tab active" data-mode="diff">☰ 日期差值</button>
+    <button class="mode-tab" data-mode="addsub">+ 日期加减</button>
   </div>
 
   <!-- 日期差值模式 -->
@@ -151,12 +151,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <div class="panel">
       <div class="input-row">
         <div>
-          <div class="input-label">📅 开始日期</div>
+          <div class="input-label">☰ 开始日期</div>
           <input type="date" class="date-input" id="startDate" value="2025-01-01">
         </div>
         <button class="swap-btn" id="btnSwap">⇄</button>
         <div>
-          <div class="input-label">📅 结束日期</div>
+          <div class="input-label">☰ 结束日期</div>
           <input type="date" class="date-input" id="endDate">
         </div>
       </div>
@@ -176,7 +176,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     </div>
 
     <div class="panel">
-      <div class="work-title">📊 工作日 / 周末统计</div>
+      <div class="work-title">▦ 工作日 / 周末统计</div>
       <div class="work-row">
         <div class="work-card"><div class="work-value workday" id="workdays">—</div><div class="work-label">工作日</div></div>
         <div class="work-card"><div class="work-value weekend" id="weekends">—</div><div class="work-label">周末</div></div>
@@ -194,7 +194,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   <div id="addsubPanel" style="display:none">
     <div class="panel">
       <div style="margin-bottom:16px">
-        <div class="input-label">📅 起始日期</div>
+        <div class="input-label">☰ 起始日期</div>
         <input type="date" class="date-input" id="baseDate">
       </div>
       <div class="addsub-row">
@@ -203,12 +203,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <input type="number" class="num-input" id="addDays" value="30">
         </div>
         <div class="addsub-btns">
-          <button class="addsub-btn active" id="btnAdd">➕ 加</button>
-          <button class="addsub-btn" id="btnSub">➖ 减</button>
+          <button class="addsub-btn active" id="btnAdd">+ 加</button>
+          <button class="addsub-btn" id="btnSub">- 减</button>
         </div>
       </div>
       <div class="result-card">
-        <div style="font-size:12px;color:var(--text-caption);margin-bottom:4px">📅 目标日期</div>
+        <div style="font-size:12px;color:var(--text-caption);margin-bottom:4px">☰ 目标日期</div>
         <div class="result-date" id="resultDate">—</div>
         <div class="result-weekday" id="resultWeekday"></div>
       </div>

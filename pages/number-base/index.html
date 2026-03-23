@@ -154,7 +154,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="output-value" id="binOutput"></div>
         </div>
       </div>
-      <button class="output-copy" data-type="bin" title="复制">📋</button>
+      <button class="output-copy" data-type="bin" title="复制">☰</button>
     </div>
     <div class="output-card" data-type="oct">
       <div class="output-left">
@@ -164,7 +164,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="output-value" id="octOutput"></div>
         </div>
       </div>
-      <button class="output-copy" data-type="oct" title="复制">📋</button>
+      <button class="output-copy" data-type="oct" title="复制">☰</button>
     </div>
     <div class="output-card" data-type="dec">
       <div class="output-left">
@@ -174,7 +174,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="output-value" id="decOutput"></div>
         </div>
       </div>
-      <button class="output-copy" data-type="dec" title="复制">📋</button>
+      <button class="output-copy" data-type="dec" title="复制">☰</button>
     </div>
     <div class="output-card" data-type="hex">
       <div class="output-left">
@@ -184,7 +184,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <div class="output-value" id="hexOutput"></div>
         </div>
       </div>
-      <button class="output-copy" data-type="hex" title="复制">📋</button>
+      <button class="output-copy" data-type="hex" title="复制">☰</button>
     </div>
   </div>
 
@@ -367,9 +367,9 @@ document.querySelectorAll('.output-copy').forEach(btn => {
     const text = rawValues[type];
     if (!text) return;
     navigator.clipboard.writeText(text);
-    btn.textContent = '✅';
+    btn.textContent = '✓';
     btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('ok'); }, 1200);
+    setTimeout(() => { btn.textContent = '☰'; btn.classList.remove('ok'); }, 1200);
   });
 });
 

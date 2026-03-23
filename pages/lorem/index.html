@@ -132,19 +132,19 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
     <!-- 左侧：控制 -->
     <div>
       <div class="panel">
-        <div class="section-title">🌐 语言</div>
+        <div class="section-title">◎ 语言</div>
         <div class="tabs" id="langTabs">
           <button class="tab active" data-lang="en">🇺🇸 English</button>
           <button class="tab" data-lang="zh">🇨🇳 中文</button>
         </div>
       </div>
       <div class="panel">
-        <div class="section-title">📐 生成模式</div>
+        <div class="section-title">∠ 生成模式</div>
         <div class="mode-row" id="modeRow">
-          <button class="mode-chip active" data-unit="paragraphs">📄 段落</button>
-          <button class="mode-chip" data-unit="sentences">💬 句子</button>
-          <button class="mode-chip" data-unit="words">📝 单词</button>
-          <button class="mode-chip" data-unit="chars">🔤 字符</button>
+          <button class="mode-chip active" data-unit="paragraphs">☰ 段落</button>
+          <button class="mode-chip" data-unit="sentences">☰ 句子</button>
+          <button class="mode-chip" data-unit="words">☰ 单词</button>
+          <button class="mode-chip" data-unit="chars">⊞ 字符</button>
         </div>
         <div class="num-row">
           <span class="num-label">数量</span>
@@ -152,14 +152,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
           <input type="range" class="num-slider" id="countSlider" min="1" max="20" value="3">
         </div>
         <div class="toggle-row">
-          <span class="toggle-label">📎 首段经典开头</span>
+          <span class="toggle-label">⊞ 首段经典开头</span>
           <div class="toggle on" id="toggleClassic"><div class="toggle-knob"></div></div>
         </div>
         <div class="toggle-row">
           <span class="toggle-label">&lt;p&gt; HTML 标签包裹</span>
           <div class="toggle" id="toggleHtml"><div class="toggle-knob"></div></div>
         </div>
-        <button class="gen-btn" id="genBtn">🎲 生成</button>
+        <button class="gen-btn" id="genBtn">◎ 生成</button>
       </div>
     </div>
 
@@ -171,7 +171,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
             <div class="stat-chip" id="statWords">0 词</div>
             <div class="stat-chip" id="statChars">0 字符</div>
           </div>
-          <button class="copy-btn" id="copyBtn">📋 复制</button>
+          <button class="copy-btn" id="copyBtn">☰ 复制</button>
         </div>
         <textarea class="output-text" id="output" readonly></textarea>
       </div>
@@ -351,7 +351,7 @@ document.getElementById('genBtn').addEventListener('click', generate);
 document.getElementById('copyBtn').addEventListener('click', function() {
   navigator.clipboard.writeText(document.getElementById('output').value).then(() => {
     this.textContent = '已复制 ✓';
-    setTimeout(() => this.textContent = '📋 复制', 1500);
+    setTimeout(() => this.textContent = '☰ 复制', 1500);
   });
 });
 

@@ -53,18 +53,18 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 <div class="main">
   <div class="panel">
-    <div class="section-title">📮 邮政编码查询</div>
+    <div class="section-title">◎ 邮政编码查询</div>
     <div class="tab-row">
-      <div class="tab active" id="tabArea">🔍 按地区查邮编</div>
-      <div class="tab" id="tabCode">🔢 按邮编查地区</div>
+      <div class="tab active" id="tabArea">⊙ 按地区查邮编</div>
+      <div class="tab" id="tabCode">⊞ 按邮编查地区</div>
     </div>
     <div class="search-box">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">⊙</span>
       <input class="search-input" id="searchInput" placeholder="输入省/市/区名称...">
     </div>
   </div>
   <div class="panel">
-    <div class="section-title">📋 查询结果 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400" id="resultCount"></span></div>
+    <div class="section-title">☰ 查询结果 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400" id="resultCount"></span></div>
     <div class="stat" id="totalStat"></div>
     <div class="result-list" id="resultList"><div class="empty-state">输入关键词开始搜索</div></div>
   </div>
@@ -165,7 +165,7 @@ function search(){
   document.getElementById('resultCount').textContent=results.length+' 条结果';
   if(!results.length){document.getElementById('resultList').innerHTML='<div class="empty-state">未找到匹配结果</div>';return}
   document.getElementById('resultList').innerHTML=results.map(([prov,dist,code])=>
-    `<div class="result-item"><div><div class="result-location">${dist}</div><div class="result-path">${prov} → ${dist}</div></div><div style="display:flex;align-items:center"><span class="result-code">${code}</span><button class="copy-btn" onclick="navigator.clipboard.writeText('${code}')">📋</button></div></div>`
+    `<div class="result-item"><div><div class="result-location">${dist}</div><div class="result-path">${prov} → ${dist}</div></div><div style="display:flex;align-items:center"><span class="result-code">${code}</span><button class="copy-btn" onclick="navigator.clipboard.writeText('${code}')">☰</button></div></div>`
   ).join('');
 }
 document.getElementById('searchInput').addEventListener('input',search);

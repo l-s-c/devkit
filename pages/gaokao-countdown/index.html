@@ -72,11 +72,11 @@ body{min-height:100vh;display:flex;flex-direction:column}
     <div class="quote-card">
       <div class="quote-text" id="quoteText"></div>
       <div class="quote-author" id="quoteAuthor"></div>
-      <button class="quote-btn" id="quoteBtn">🔄 换一句</button>
+      <button class="quote-btn" id="quoteBtn">↻ 换一句</button>
     </div>
   </div>
   <div class="panel">
-    <div class="section-title">🎯 目标分数</div>
+    <div class="section-title">◎ 目标分数</div>
     <div class="goal-area">
       <div class="goal-card"><div class="goal-label">语文</div><input class="goal-input" id="g1" value="120"><div class="goal-total">/ 150</div></div>
       <div class="goal-card"><div class="goal-label">数学</div><input class="goal-input" id="g2" value="130"><div class="goal-total">/ 150</div></div>
@@ -86,7 +86,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
     <div style="text-align:center;margin-top:12px;font-size:14px;font-weight:800;color:var(--brand-500)" id="goalTotal"></div>
   </div>
 </div>
-<div class="statusbar"><span id="statusInfo">高考倒计时</span><div class="statusbar-spacer"></div><span>加油！🔥</span></div>
+<div class="statusbar"><span id="statusInfo">高考倒计时</span><div class="statusbar-spacer"></div><span>加油！◈</span></div>
 <script type="module">
 import '../../shared/theme.js';
 import '../../shared/sidebar.js';
@@ -146,7 +146,7 @@ function showQuote(){
 }
 function calcGoal(){
   const t=[1,2,3,4].reduce((s,i)=>s+(+document.getElementById('g'+i).value||0),0);
-  document.getElementById('goalTotal').textContent='🎯 目标总分：'+t+' / 750';
+  document.getElementById('goalTotal').textContent='◎ 目标总分：'+t+' / 750';
 }
 document.getElementById('quoteBtn').addEventListener('click',showQuote);
 document.querySelectorAll('.goal-input').forEach(i=>i.addEventListener('input',calcGoal));

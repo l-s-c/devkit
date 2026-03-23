@@ -51,18 +51,18 @@ textarea:focus{border-color:var(--brand-500)}
 <div class="main">
   <div class="panel">
     <div class="dual">
-      <div><div class="pane-title">📝 文本</div><textarea id="textInput" placeholder="输入文本...">HELLO DEVKIT</textarea></div>
-      <div><div class="pane-title">📡 摩斯密码</div><textarea id="morseInput" placeholder="输入摩斯密码（用 . 和 -）..."></textarea></div>
+      <div><div class="pane-title">☰ 文本</div><textarea id="textInput" placeholder="输入文本...">HELLO DEVKIT</textarea></div>
+      <div><div class="pane-title">◎ 摩斯密码</div><textarea id="morseInput" placeholder="输入摩斯密码（用 . 和 -）..."></textarea></div>
     </div>
     <div class="action-row">
-      <button class="btn btn-primary" id="playBtn">🔊 播放声音</button>
-      <button class="btn btn-secondary" id="flashBtn">💡 灯光闪烁</button>
-      <button class="btn btn-secondary" id="copyBtn">📋 复制摩斯</button>
-      <button class="btn btn-secondary" id="clearBtn">🗑️ 清空</button>
+      <button class="btn btn-primary" id="playBtn">♪ 播放声音</button>
+      <button class="btn btn-secondary" id="flashBtn">◉ 灯光闪烁</button>
+      <button class="btn btn-secondary" id="copyBtn">☰ 复制摩斯</button>
+      <button class="btn btn-secondary" id="clearBtn">✕ 清空</button>
     </div>
   </div>
   <div class="panel">
-    <div class="section-title">💡 灯光信号</div>
+    <div class="section-title">◉ 灯光信号</div>
     <div class="light-area"><div class="light-bulb" id="bulb"></div><div class="light-label">播放时灯光同步闪烁</div></div>
   </div>
 </div>
@@ -105,7 +105,7 @@ async function playMorse(){
     const delay=(ms-audioCtx.currentTime*1000)+(audioCtx.currentTime*1000-base);
     setTimeout(()=>{bulb.classList.add('on');setTimeout(()=>bulb.classList.remove('on'),dur)},ms*1000>0?ms-audioCtx.currentTime*1000+50:0);
   }
-  document.getElementById('statusInfo').textContent='🔊 播放中...';
+  document.getElementById('statusInfo').textContent='♪ 播放中...';
   setTimeout(()=>{document.getElementById('statusInfo').textContent='摩斯密码'},(t-audioCtx.currentTime)*1000+200);
 }
 
