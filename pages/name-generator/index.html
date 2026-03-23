@@ -14,7 +14,7 @@
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/name-generator/">
 <link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#FDFBF7;color:#2D2015;min-height:100vh}
@@ -192,6 +192,7 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
 </div>
 
 <script src="/devkit/data/name-generator/name-engine.js"></script>
+<!-- name-engine.js provides: calcWuge, checkTones, strokeToWuxing -->
 <script>
 let CHARS=[], SURNAMES={}, POEMS=[], COMMON_NAMES=[], FAVORITES=[];
 
@@ -280,7 +281,7 @@ function generateNames() {
   const top = candidates.slice(0, 8);
 
   // Render
-  const gLabel = gender==='male'?'男':'female'?'女':'';
+  const gLabel = gender==='male'?'男':(gender==='female'?'女':'');
   document.getElementById('resultsTitle').textContent = '为「'+surname+'」姓'+gLabel+'孩推荐';
   document.getElementById('resultsCount').textContent = '共 '+top.length+' 个名字 · 按综合评分排序';
   document.getElementById('resultsArea').style.display = 'block';
