@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物质熔化凝固实验 - 温度时间曲线模拟 | DevKit</title>
+<meta name="keywords" content="熔化,凝固,晶体,非晶体,熔点,温度时间曲线,海波,初中物理">
+<meta name="description" content="在线模拟物质熔化凝固实验，观察晶体与非晶体温度-时间曲线差异，初中物理热学必考实验">
+<meta property="og:title" content="物质熔化凝固实验 - 温度时间曲线模拟 | DevKit">
+<meta property="og:description" content="在线模拟物质熔化凝固实验，观察晶体与非晶体温度-时间曲线差异">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/melting.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/melting/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#F5F0EB;color:#1D1D1F;min-height:100vh;overflow-x:hidden}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#EA580C;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(234,88,12,0.08);color:#EA580C;border:1px solid rgba(234,88,12,0.2);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.lab-container{display:flex;align-items:flex-start;max-width:1080px;margin:16px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;position:relative;user-select:none}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:280px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.btn-row{display:flex;gap:6px}
+.pill-btn{flex:1;padding:7px;border-radius:8px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.pill-btn:hover{background:rgba(234,88,12,0.06);border-color:rgba(234,88,12,0.3);color:#EA580C}
+.pill-btn.active{background:#EA580C;color:#fff;border-color:#EA580C}
+.ctrl-btn{flex:1;padding:8px;border-radius:8px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.ctrl-btn:hover{background:rgba(234,88,12,0.06);border-color:rgba(234,88,12,0.3);color:#EA580C}
+.ctrl-btn.active{background:#EA580C;color:#fff;border-color:#EA580C}
+.data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:10px}
+.data-table th{background:#FFF7ED;color:#9A3412;padding:4px 6px;text-align:center;font-weight:600;border:1px solid #FDBA74}
+.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:10px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+.reset-btn:hover{background:#E5E7EB}
+.temp-card{background:linear-gradient(135deg,#FFF7ED,#FFEDD5);border-radius:8px;padding:10px 14px;margin-bottom:8px;text-align:center}
+.temp-card .label{font-size:10px;color:#9A3412;font-weight:600;margin-bottom:2px}
+.temp-card .value{font-size:28px;font-weight:800;color:#EA580C;font-family:'JetBrains Mono',monospace}
+.status-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.status-badge.solid{background:rgba(107,114,128,0.1);color:#6B7280}
+.status-badge.melting{background:rgba(234,88,12,0.1);color:#EA580C;animation:pulse-m 1.2s ease-in-out infinite}
+.status-badge.liquid{background:rgba(59,130,246,0.1);color:#2563EB}
+.status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
+@keyframes pulse-m{0%,100%{box-shadow:0 0 0 0 rgba(234,88,12,0.2)}50%{box-shadow:0 0 0 6px rgba(234,88,12,0)}}
+.knowledge-section{max-width:1080px;margin:24px auto;padding:0 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:14px 20px;background:linear-gradient(135deg,#FFF7ED,#FFEDD5);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(234,88,12,0.1)}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#EA580C;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:15px;font-weight:700;color:#9A3412}
+.knowledge-card .card-body{padding:20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0;margin:0 0 8px 0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0 2px 16px;position:relative}
+.knowledge-card li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:#EA580C;opacity:0.5}
+.formula-box{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:10px;padding:14px 20px;text-align:center;margin:12px 0;border:1px solid rgba(234,88,12,0.1)}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="location.href='/devkit/pages/lab/'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb">
+    <a href="/devkit/pages/lab/">实验室</a>
+    <span style="color:#D1D5DB">&rsaquo;</span>
+    <span style="background:rgba(234,88,12,0.08);color:#EA580C;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">热学实验</span>
+  </div>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0a4 4 0 014 4v6a2 2 0 01-2 2h-4a2 2 0 01-2-2v-6a4 4 0 014-4z"/><path d="M8 16h8"/></svg> 物质熔化凝固实验</h1>
+</div>
+<div class="purpose-bar">
+  <span class="purpose-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 探究固体熔化时温度的变化规律</span>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="canvas" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="waterBathGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(59,130,246,0.1)"/>
+          <stop offset="100%" stop-color="rgba(59,130,246,0.3)"/>
+        </linearGradient>
+        <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#EA580C"/>
+          <stop offset="40%" stop-color="#F59E0B"/>
+          <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.3"/>
+        </linearGradient>
+        <linearGradient id="mercuryGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#DC2626"/>
+          <stop offset="100%" stop-color="#EF4444"/>
+        </linearGradient>
+      </defs>
+      <rect width="700" height="420" fill="#FAFBFE"/>
+
+      <!-- Iron stand -->
+      <rect x="100" y="60" width="6" height="320" rx="3" fill="#9CA3AF"/>
+      <rect x="80" y="375" width="120" height="8" rx="4" fill="#6B7280"/>
+      <rect x="106" y="100" width="45" height="4" rx="2" fill="#9CA3AF"/>
+
+      <!-- Wire gauze -->
+      <rect x="120" y="290" width="180" height="4" rx="2" fill="#D1D5DB"/>
+
+      <!-- Beaker (outer, water bath) -->
+      <rect x="130" y="160" width="160" height="130" rx="4" fill="none" stroke="#94A3B8" stroke-width="2"/>
+      <rect x="123" y="156" width="174" height="8" rx="2" fill="#CBD5E1" opacity="0.5"/>
+      <!-- Water bath fill -->
+      <rect x="132" y="185" width="156" height="103" fill="url(#waterBathGrad)"/>
+      <text x="145" y="280" font-size="7" fill="rgba(59,130,246,0.5)">热水</text>
+
+      <!-- Test tube -->
+      <rect x="185" y="130" width="50" height="120" rx="8" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+      <rect x="180" y="126" width="60" height="8" rx="2" fill="#CBD5E1" opacity="0.5"/>
+      <!-- Substance inside test tube -->
+      <rect id="substance" x="187" y="190" width="46" height="58" rx="6" fill="#F59E0B" opacity="0.8"/>
+      <!-- Substance state overlay (liquid portion) -->
+      <rect id="liquidPortion" x="187" y="220" width="46" height="28" rx="6" fill="#FBBF24" opacity="0"/>
+      <!-- Substance label -->
+      <text id="substanceLabel" x="210" y="215" font-size="8" fill="#92400E" text-anchor="middle" font-weight="600">海波(固)</text>
+
+      <!-- Thermometer -->
+      <g>
+        <rect x="207" y="80" width="4" height="115" rx="2" fill="#E5E7EB"/>
+        <rect id="mercury" x="207.5" y="160" width="3" height="35" rx="1.5" fill="url(#mercuryGrad)"/>
+        <circle cx="209" cy="197" r="5" fill="#DC2626"/>
+        <text x="218" y="95" font-size="7" fill="#6B7280">80</text>
+        <text x="218" y="115" font-size="7" fill="#6B7280">60</text>
+        <text x="218" y="135" font-size="7" fill="#6B7280">40</text>
+        <text x="218" y="155" font-size="7" fill="#6B7280">20</text>
+        <text x="218" y="172" font-size="7" fill="#6B7280">0</text>
+        <text id="tempLabel" x="209" y="72" font-size="11" fill="#EA580C" text-anchor="middle" font-weight="800">20.0&#176;C</text>
+      </g>
+
+      <!-- Alcohol lamp -->
+      <g id="lamp" transform="translate(210,310)">
+        <path d="M-20,0 L-22,18 Q0,24 22,18 L20,0 Z" fill="#C084FC" stroke="#A855F7" stroke-width="1"/>
+        <rect x="-3" y="-12" width="6" height="14" rx="2" fill="#9CA3AF"/>
+        <g id="flame" style="display:none">
+          <ellipse cx="0" cy="-22" rx="6" ry="14" fill="url(#flameGrad)" opacity="0.9">
+            <animate attributeName="ry" values="14;12;15;13;14" dur="0.4s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse cx="0" cy="-20" rx="3" ry="8" fill="#FDE68A" opacity="0.7">
+            <animate attributeName="ry" values="8;6;9;7;8" dur="0.3s" repeatCount="indefinite"/>
+          </ellipse>
+        </g>
+      </g>
+
+      <!-- T-t chart -->
+      <g transform="translate(420,60)">
+        <text x="110" y="-8" font-size="11" fill="#1D1D1F" text-anchor="middle" font-weight="700">温度-时间图像</text>
+        <line x1="30" y1="0" x2="30" y2="220" stroke="#D1D5DB" stroke-width="1"/>
+        <line x1="30" y1="220" x2="250" y2="220" stroke="#D1D5DB" stroke-width="1"/>
+        <!-- Y axis: -10 to 80 -->
+        <text x="25" y="5" font-size="8" fill="#9CA3AF" text-anchor="end">80</text>
+        <text x="25" y="54" font-size="8" fill="#9CA3AF" text-anchor="end">60</text>
+        <text x="25" y="103" font-size="8" fill="#9CA3AF" text-anchor="end">40</text>
+        <text x="25" y="152" font-size="8" fill="#9CA3AF" text-anchor="end">20</text>
+        <text x="25" y="196" font-size="8" fill="#9CA3AF" text-anchor="end">0</text>
+        <text x="25" y="220" font-size="8" fill="#9CA3AF" text-anchor="end">-10</text>
+        <!-- Grid -->
+        <line x1="30" y1="49" x2="250" y2="49" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="98" x2="250" y2="98" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="147" x2="250" y2="147" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="196" x2="250" y2="196" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <!-- Axes labels -->
+        <text x="140" y="238" font-size="9" fill="#6B7280" text-anchor="middle">时间 / min</text>
+        <text x="8" y="110" font-size="9" fill="#6B7280" text-anchor="middle" transform="rotate(-90,8,110)">温度 / &#176;C</text>
+        <!-- Melting point line -->
+        <line id="mpLine" x1="30" y1="98" x2="250" y2="98" stroke="#EA580C" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.5"/>
+        <text id="mpLabel" x="252" y="102" font-size="8" fill="#EA580C">48&#176;C</text>
+        <!-- Data polyline -->
+        <polyline id="ttLine" points="" fill="none" stroke="#EA580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="ttDots"></g>
+      </g>
+
+      <!-- Guide -->
+      <text id="guideText" x="210" y="405" font-size="12" fill="#EA580C" font-weight="700" text-anchor="middle">
+        选择物质，点击「开始加热」观察温度变化
+      </text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0a4 4 0 014 4v6a2 2 0 01-2 2h-4a2 2 0 01-2-2v-6a4 4 0 014-4z"/></svg> 实验数据</h3>
+      <div class="temp-card">
+        <div class="label">当前温度</div>
+        <div class="value" id="valTemp">20.0 &#176;C</div>
+      </div>
+      <div class="data-row"><span class="data-label">物质</span><span class="data-value" id="valSubst">海波（晶体）</span></div>
+      <div class="data-row"><span class="data-label">熔点</span><span class="data-value" id="valMP">48 &#176;C</span></div>
+      <div class="data-row"><span class="data-label">时间</span><span class="data-value" id="valTime">0:00</span></div>
+      <div class="data-row"><span class="data-label">状态</span><span id="valStatus"><span class="status-badge idle">未加热</span></span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> 物质选择</h3>
+      <div class="btn-row">
+        <button class="pill-btn active" id="btnHaibo" onclick="setSubstance('haibo')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#F59E0B;margin-right:3px;vertical-align:middle"></span>海波</button>
+        <button class="pill-btn" id="btnIce" onclick="setSubstance('ice')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#93C5FD;margin-right:3px;vertical-align:middle"></span>冰</button>
+        <button class="pill-btn" id="btnWax" onclick="setSubstance('wax')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D4A574;margin-right:3px;vertical-align:middle"></span>蜡</button>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:4px;text-align:center">海波/冰=晶体（有熔点） 蜡=非晶体</div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 实验控制</h3>
+      <div class="btn-row">
+        <button class="ctrl-btn" id="btnPlay" onclick="togglePlay()">开始加热</button>
+        <button class="ctrl-btn" id="btnSpeed" onclick="toggleSpeed()">1x</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg> 数据记录</h3>
+      <div style="max-height:150px;overflow-y:auto">
+        <table class="data-table">
+          <thead><tr><th>时间(min)</th><th>温度(&#176;C)</th><th>状态</th></tr></thead>
+          <tbody id="dataBody"><tr><td>0</td><td>20.0</td><td>固态</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetExperiment()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> 重置实验</button>
+  </div>
+</div>
+
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验知识</h2></div>
+    <div class="card-body">
+      <p><strong>熔化</strong>是物质从固态变为液态的过程，需要吸热。<strong>凝固</strong>是熔化的逆过程。</p>
+      <ul>
+        <li><strong>晶体</strong>（冰、海波、食盐等）：有固定熔点，熔化时温度不变</li>
+        <li><strong>非晶体</strong>（蜡、玻璃、松香等）：没有固定熔点，熔化时温度持续上升</li>
+        <li><strong>熔化条件</strong>：达到熔点 + 持续吸热</li>
+        <li><strong>凝固点 = 熔点</strong>（晶体）</li>
+        <li><strong>水浴加热</strong>的好处：使物质受热均匀</li>
+      </ul>
+      <div style="display:flex;gap:24px;justify-content:center;margin:16px 0">
+        <div style="text-align:center">
+          <svg width="100" height="70" viewBox="0 0 100 70">
+            <rect width="100" height="70" rx="4" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+            <polyline points="10,60 30,35 50,35 70,10" fill="none" stroke="#EA580C" stroke-width="2"/>
+            <line x1="10" y1="35" x2="90" y2="35" stroke="#EA580C" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+            <text x="50" y="10" font-size="7" fill="#9A3412" text-anchor="middle">晶体</text>
+            <text x="85" y="38" font-size="6" fill="#EA580C">熔点</text>
+          </svg>
+          <div style="font-size:10px;color:#EA580C;margin-top:4px;font-weight:600">有水平段</div>
+        </div>
+        <div style="text-align:center">
+          <svg width="100" height="70" viewBox="0 0 100 70">
+            <rect width="100" height="70" rx="4" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+            <path d="M10,60 Q40,40 70,15" fill="none" stroke="#6B7280" stroke-width="2"/>
+            <text x="50" y="10" font-size="7" fill="#374151" text-anchor="middle">非晶体</text>
+          </svg>
+          <div style="font-size:10px;color:#6B7280;margin-top:4px;font-weight:600">无水平段</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>公式与计算</h2></div>
+    <div class="card-body">
+      <div class="formula-box"><span class="formula">Q = cm\Delta t</span></div>
+      <p>加热阶段（温度升高时）吸收的热量：Q = cm&Delta;t。</p>
+      <p><strong>注意</strong>：晶体熔化过程中虽然持续吸热，但温度不变（&Delta;t = 0），热量用于破坏晶体结构。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>1.</strong> 下图是某物质熔化时的温度-时间图像，由图可知（　）</p>
+      <p>A. 该物质是非晶体<br/>B. 该物质在 BC 段没有吸热<br/>C. 该物质的熔点是 48&#176;C<br/>D. 该物质在 BC 段是液态</p>
+      <p style="font-size:11px;color:#6B7280;margin-top:4px">解析：有水平段说明是晶体，排除 A。BC 段温度不变但持续吸热，排除 B。BC 段温度 48&#176;C 即熔点，C 正确。BC 段是固液共存态，排除 D。答案选 C。</p>
+
+      <p style="margin-top:16px"><strong>2.</strong> 冬天北方用盐水腌菜不容易结冰，这是因为（　）</p>
+      <p>A. 盐水的凝固点低于 0&#176;C<br/>B. 盐水不会凝固<br/>C. 盐水的沸点高<br/>D. 盐水是非晶体</p>
+      <p style="font-size:11px;color:#6B7280;margin-top:4px">解析：在水中加盐会降低凝固点（低于 0&#176;C），所以在 0&#176;C 左右不会结冰。答案选 A。</p>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/theme.js"></script>
+<script>
+// === State ===
+const substances = {
+  haibo: {name:'海波', type:'晶体', mp:48, initT:20, color:'#F59E0B', liquidColor:'#FBBF24', label:'海波(固)'},
+  ice:   {name:'冰',   type:'晶体', mp:0,  initT:-10, color:'#93C5FD', liquidColor:'#60A5FA', label:'冰(固)'},
+  wax:   {name:'蜡',   type:'非晶体', mp:null, initT:20, color:'#D4A574', liquidColor:'#C4956A', label:'蜡(固)'}
+};
+let current = 'haibo';
+let temp, time = 0, isHeating = false, isPaused = true, speed = 1;
+let meltProgress = 0; // 0→1 for crystal melting
+let dataPoints = [];
+let lastRecordMin = 0;
+
+// Chart range: -10 to 80 → 220px height
+const chartMinT = -10, chartMaxT = 80, chartH = 220;
+function tempToY(t) { return chartH - ((t - chartMinT) / (chartMaxT - chartMinT)) * chartH; }
+
+function init() {
+  const s = substances[current];
+  temp = s.initT;
+  time = 0; meltProgress = 0; lastRecordMin = 0;
+  dataPoints = [{t:0, T:temp}];
+}
+init();
+
+// === Substance Switch ===
+function setSubstance(key) {
+  if (isHeating) return;
+  current = key;
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  const capKey = key.charAt(0).toUpperCase() + key.slice(1);
+  document.getElementById('btn' + capKey).classList.add('active');
+  const s = substances[key];
+  document.getElementById('valSubst').textContent = s.name + '（' + s.type + '）';
+  document.getElementById('valMP').textContent = s.mp !== null ? s.mp + ' \u00B0C' : '无固定熔点';
+  document.getElementById('substance').setAttribute('fill', s.color);
+  // Update melting point line
+  if (s.mp !== null) {
+    const mpY = tempToY(s.mp);
+    document.getElementById('mpLine').setAttribute('y1', mpY);
+    document.getElementById('mpLine').setAttribute('y2', mpY);
+    document.getElementById('mpLine').setAttribute('opacity', '0.5');
+    document.getElementById('mpLabel').textContent = s.mp + '\u00B0C';
+    document.getElementById('mpLabel').setAttribute('y', mpY + 4);
+    document.getElementById('mpLabel').setAttribute('opacity', '1');
+  } else {
+    document.getElementById('mpLine').setAttribute('opacity', '0');
+    document.getElementById('mpLabel').setAttribute('opacity', '0');
+  }
+  resetExperiment();
+}
+
+// === Controls ===
+function togglePlay() {
+  if (!isHeating) {
+    isHeating = true; isPaused = false;
+    document.getElementById('flame').style.display = 'block';
+    document.getElementById('guideText').setAttribute('opacity', '0');
+    document.getElementById('btnPlay').textContent = '暂停';
+    document.getElementById('btnPlay').classList.add('active');
+  } else {
+    isPaused = !isPaused;
+    document.getElementById('btnPlay').textContent = isPaused ? '继续' : '暂停';
+    document.getElementById('btnPlay').classList.toggle('active', !isPaused);
+  }
+}
+
+function toggleSpeed() {
+  const ss = [1,2,4];
+  speed = ss[(ss.indexOf(speed)+1) % ss.length];
+  document.getElementById('btnSpeed').textContent = speed + 'x';
+}
+
+function resetExperiment() {
+  isHeating = false; isPaused = true;
+  init();
+  document.getElementById('flame').style.display = 'none';
+  document.getElementById('guideText').setAttribute('opacity', '1');
+  document.getElementById('btnPlay').textContent = '开始加热';
+  document.getElementById('btnPlay').classList.remove('active');
+  document.getElementById('btnSpeed').textContent = '1x'; speed = 1;
+  document.getElementById('ttLine').setAttribute('points', '');
+  document.getElementById('ttDots').innerHTML = '';
+  document.getElementById('liquidPortion').setAttribute('opacity', '0');
+  const s = substances[current];
+  document.getElementById('substanceLabel').textContent = s.label;
+  document.getElementById('dataBody').innerHTML = `<tr><td>0</td><td>${s.initT.toFixed(1)}</td><td>固态</td></tr>`;
+  updateDisplay();
+}
+
+// === Main Loop ===
+let lastTS = 0;
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if (!lastTS) { lastTS = ts; return; }
+  if (isPaused) { lastTS = ts; return; }
+  const elapsed = (ts - lastTS) / 1000;
+  lastTS = ts;
+  const simDt = elapsed * 10 * speed; // 1s real = 10s sim
+  time += simDt;
+
+  const s = substances[current];
+  const heatRate = 5 / 60; // 5°C per sim-minute = 5/60 per sim-second
+
+  if (s.mp !== null) {
+    // Crystal
+    if (temp < s.mp) {
+      temp = Math.min(s.mp, temp + heatRate * simDt);
+    } else if (meltProgress < 1) {
+      // Melting: temp stays at mp, progress increases
+      meltProgress = Math.min(1, meltProgress + simDt / 240); // ~4 min to melt
+    } else {
+      // Liquid heating
+      temp += heatRate * simDt;
+      if (temp > 75) temp = 75; // cap
+    }
+  } else {
+    // Amorphous: continuous rise with slight curve
+    temp += heatRate * simDt * 0.8;
+    if (temp > 75) temp = 75;
+    // Gradual "softening" around 50-60°C
+    meltProgress = Math.min(1, Math.max(0, (temp - 40) / 30));
+  }
+
+  // Record
+  const curMin = Math.floor(time / 60);
+  if (curMin > lastRecordMin && curMin <= 16) {
+    lastRecordMin = curMin;
+    dataPoints.push({t: curMin, T: temp});
+    addRow(curMin, temp);
+  }
+
+  updateDisplay();
+}
+
+function updateDisplay() {
+  const s = substances[current];
+  document.getElementById('valTemp').textContent = temp.toFixed(1) + ' \u00B0C';
+  const mn = Math.floor(time/60), sc = Math.floor(time%60);
+  document.getElementById('valTime').textContent = mn + ':' + String(sc).padStart(2,'0');
+
+  // Status
+  let stateText, badgeClass;
+  if (!isHeating) { stateText = '未加热'; badgeClass = 'idle'; }
+  else if (meltProgress <= 0) { stateText = '固态'; badgeClass = 'solid'; }
+  else if (meltProgress < 1) { stateText = s.mp !== null ? '固液共存' : '软化中'; badgeClass = 'melting'; }
+  else { stateText = '液态'; badgeClass = 'liquid'; }
+  document.getElementById('valStatus').innerHTML = `<span class="status-badge ${badgeClass}">${stateText}</span>`;
+
+  // Mercury
+  // Range: -10→0px(bottom) to 80→80px(top). thermometer visual: y=170(-10) to y=90(80)
+  const mercuryBottom = 195;
+  const mercuryMaxH = 80;
+  const fraction = (temp - chartMinT) / (chartMaxT - chartMinT);
+  const mH = Math.max(2, fraction * mercuryMaxH);
+  document.getElementById('mercury').setAttribute('y', mercuryBottom - mH);
+  document.getElementById('mercury').setAttribute('height', mH);
+  document.getElementById('tempLabel').textContent = temp.toFixed(1) + '\u00B0C';
+
+  // Substance visual
+  if (meltProgress > 0) {
+    document.getElementById('liquidPortion').setAttribute('opacity', meltProgress * 0.8);
+    document.getElementById('liquidPortion').setAttribute('fill', s.liquidColor);
+    if (meltProgress < 1) {
+      document.getElementById('substanceLabel').textContent = s.name + '(固液)';
+    } else {
+      document.getElementById('substanceLabel').textContent = s.name + '(液)';
+    }
+  }
+
+  // Chart
+  updateChart();
+}
+
+function updateChart() {
+  const maxMin = Math.max(12, lastRecordMin + 2);
+  let pts = '', dots = '';
+  dataPoints.forEach(d => {
+    const x = 30 + (d.t / maxMin) * 220;
+    const y = tempToY(d.T);
+    pts += x + ',' + y + ' ';
+    dots += `<circle cx="${x}" cy="${y}" r="2.5" fill="#EA580C"/>`;
+  });
+  // Current point
+  const cx = 30 + ((time/60) / maxMin) * 220;
+  const cy = tempToY(temp);
+  pts += cx + ',' + cy;
+  document.getElementById('ttLine').setAttribute('points', pts);
+  document.getElementById('ttDots').innerHTML = dots;
+}
+
+function addRow(min, T) {
+  const s = substances[current];
+  let state;
+  if (meltProgress <= 0) state = '固态';
+  else if (meltProgress < 1) state = s.mp !== null ? '固液共存' : '软化';
+  else state = '液态';
+  const tr = document.createElement('tr');
+  if (s.mp !== null && state === '固液共存') tr.style.background = '#FFF7ED';
+  tr.innerHTML = `<td>${min}</td><td>${T.toFixed(1)}</td><td style="${state==='固液共存'?'color:#EA580C;font-weight:700':''}">${state}</td>`;
+  document.getElementById('dataBody').appendChild(tr);
+}
+
+function renderFormulas() {
+  document.querySelectorAll('.formula').forEach(el => {
+    katex.render(el.textContent, el, {throwOnError: false});
+  });
+}
+
+setSubstance('haibo');
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
