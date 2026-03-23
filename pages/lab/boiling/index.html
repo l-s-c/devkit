@@ -119,9 +119,11 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
         <rect x="212" y="80" width="4" height="120" rx="2" fill="#E5E7EB"/>
         <rect id="mercury" x="212.5" y="160" width="3" height="40" rx="1.5" fill="url(#mercuryGrad)"/>
         <circle cx="214" cy="202" r="5" fill="#DC2626"/>
-        <text x="222" y="100" font-size="7" fill="#6B7280">100</text>
-        <text x="222" y="125" font-size="7" fill="#6B7280">60</text>
-        <text x="222" y="155" font-size="7" fill="#6B7280">20</text>
+        <text x="222" y="97" font-size="7" fill="#6B7280">100</text>
+        <text x="222" y="112" font-size="7" fill="#6B7280">80</text>
+        <text x="222" y="127" font-size="7" fill="#6B7280">60</text>
+        <text x="222" y="142" font-size="7" fill="#6B7280">40</text>
+        <text x="222" y="157" font-size="7" fill="#6B7280">20</text>
         <text id="tempLabel" x="214" y="72" font-size="11" fill="#EA580C" text-anchor="middle" font-weight="800">20.0&#176;C</text>
       </g>
       <!-- Bubbles -->
@@ -172,7 +174,10 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
   <div class="panel">
     <div class="panel-section">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0a4 4 0 014 4v6a2 2 0 01-2 2h-4a2 2 0 01-2-2v-6a4 4 0 014-4z"/></svg> 实验数据</h3>
-      <div class="data-row"><span class="data-label">当前温度</span><span class="data-value" id="valTemp" style="color:#EA580C;font-size:16px">20.0 &#176;C</span></div>
+      <div style="background:linear-gradient(135deg,#FFF7ED,#FFEDD5);border-radius:8px;padding:10px 14px;margin-bottom:8px;text-align:center">
+        <div style="font-size:10px;color:#9A3412;font-weight:600;margin-bottom:2px">当前温度</div>
+        <div id="valTemp" style="font-size:28px;font-weight:800;color:#EA580C;font-family:'JetBrains Mono',monospace">20.0 &#176;C</div>
+      </div>
       <div class="data-row"><span class="data-label">时间</span><span class="data-value" id="valTime">0:00</span></div>
       <div class="data-row"><span class="data-label">状态</span><span id="valStatus"><span class="status-badge idle">未加热</span></span></div>
       <div class="data-row"><span class="data-label">沸点</span><span class="data-value" id="valBP">100.0 &#176;C</span></div>
@@ -270,6 +275,7 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
   </div>
 </div>
 
+<script src="/shared/theme.js"></script>
 <script>
 // Physics State
 let temp = 20, time = 0, boilingPoint = 100;
@@ -294,6 +300,7 @@ function pressureToBP(p) {
 function setPressure(v) {
   document.getElementById('pressureSlider').value=v;
   updatePressure();
+  if(isHeating) resetExperiment();
 }
 function updatePressure() {
   const p = parseFloat(document.getElementById('pressureSlider').value);
