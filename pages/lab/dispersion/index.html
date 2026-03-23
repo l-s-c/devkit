@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光的色散实验 - 三棱镜彩虹在线模拟 | DevKit</title>
+<meta name="keywords" content="光的色散,三棱镜,彩虹,七色光,白光,折射,初中物理">
+<meta name="description" content="在线模拟光的色散实验，白光通过三棱镜分解为七色光谱，初中物理光学基础实验">
+<meta property="og:title" content="光的色散实验 - 三棱镜彩虹在线模拟 | DevKit">
+<meta property="og:description" content="在线模拟光的色散实验，白光通过三棱镜分解为七色光谱">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/dispersion.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/dispersion/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#1A1A2E;color:#E5E7EB;min-height:100vh;overflow-x:hidden}
+.topbar{background:rgba(26,26,46,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.06);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#9CA3AF}
+.breadcrumb{font-size:13px;color:#9CA3AF;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#F59E0B;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700;color:#F5F5F5}
+.purpose-bar{background:rgba(26,26,46,0.8);border-bottom:1px solid rgba(255,255,255,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,0.1);color:#F59E0B;border:1px solid rgba(245,158,11,0.25);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.lab-container{display:flex;align-items:flex-start;max-width:1080px;margin:16px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:rgba(0,0,0,0.4);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.3);overflow:hidden;position:relative;user-select:none}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:280px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
+.panel-section h3{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#9CA3AF}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#9CA3AF}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#F5F5F5;font-size:12px}
+.btn-row{display:flex;gap:6px}
+.ctrl-btn{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#E5E7EB;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.ctrl-btn:hover{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#F59E0B}
+.ctrl-btn.active{background:#F59E0B;color:#1A1A2E;border-color:#F59E0B}
+.slider-control{margin:8px 0}
+.slider-control label{font-size:11px;color:#9CA3AF;font-weight:600;display:block;margin-bottom:4px}
+.slider-control input[type=range]{width:100%;accent-color:#F59E0B;height:6px}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#F59E0B}
+.spectrum-bar{height:24px;border-radius:6px;background:linear-gradient(90deg,#FF0000,#FF7F00,#FFFF00,#00FF00,#0000FF,#4B0082,#8B00FF);margin:8px 0;position:relative}
+.spectrum-labels{display:flex;justify-content:space-between;font-size:8px;color:#9CA3AF;margin-top:2px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#E5E7EB;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+.reset-btn:hover{background:rgba(255,255,255,0.1)}
+.knowledge-section{max-width:1080px;margin:24px auto;padding:0 16px}
+.knowledge-card{background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.06);padding:0;margin-bottom:20px;overflow:hidden}
+.knowledge-card .card-header{padding:14px 20px;background:rgba(245,158,11,0.06);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(245,158,11,0.1)}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#F59E0B;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:15px;font-weight:700;color:#F59E0B}
+.knowledge-card .card-body{padding:20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#D1D5DB;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0;margin:0 0 8px 0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#D1D5DB;padding:2px 0 2px 16px;position:relative}
+.knowledge-card li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:#F59E0B;opacity:0.5}
+.formula-box{background:rgba(245,158,11,0.06);border-radius:10px;padding:14px 20px;text-align:center;margin:12px 0;border:1px solid rgba(245,158,11,0.1);color:#F5F5F5}
+.primary-colors{display:flex;gap:16px;justify-content:center;margin:16px 0}
+.color-circle{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="location.href='/devkit/pages/lab/'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb">
+    <a href="/devkit/pages/lab/">实验室</a>
+    <span style="color:#4B5563">&rsaquo;</span>
+    <span style="background:rgba(245,158,11,0.1);color:#F59E0B;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">光学实验</span>
+  </div>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m-7.07-2.93l.71-.71M5.64 5.64l-.71-.71M3 12h1m16 0h1m-2.93 7.07l-.71-.71M18.36 5.64l.71-.71"/><circle cx="12" cy="12" r="4"/></svg> 光的色散实验</h1>
+</div>
+<div class="purpose-bar">
+  <span class="purpose-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 探究白光的色散现象</span>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="canvas" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="prismGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+          <stop offset="50%" stop-color="rgba(255,255,255,0.06)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.15)"/>
+        </linearGradient>
+        <linearGradient id="spectrumGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FF0000"/>
+          <stop offset="16%" stop-color="#FF7F00"/>
+          <stop offset="33%" stop-color="#FFFF00"/>
+          <stop offset="50%" stop-color="#00FF00"/>
+          <stop offset="66%" stop-color="#0000FF"/>
+          <stop offset="83%" stop-color="#4B0082"/>
+          <stop offset="100%" stop-color="#8B00FF"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glowStrong">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect width="700" height="380" fill="#0D0D1A"/>
+
+      <!-- Light source -->
+      <g id="lightSource">
+        <rect x="20" y="160" width="60" height="40" rx="6" fill="#374151" stroke="#4B5563" stroke-width="1"/>
+        <circle cx="80" cy="180" r="8" fill="#FDE68A" opacity="0.8" filter="url(#glow)"/>
+        <text x="50" y="215" font-size="9" fill="#9CA3AF" text-anchor="middle">光源</text>
+      </g>
+
+      <!-- Incident white beam -->
+      <g id="whiteBeam">
+        <line x1="88" y1="180" x2="250" y2="180" stroke="#FFFFFF" stroke-width="3" opacity="0.9" filter="url(#glow)"/>
+        <line x1="88" y1="180" x2="250" y2="180" stroke="#FFFFFF" stroke-width="1.5" opacity="1"/>
+      </g>
+
+      <!-- Prism -->
+      <g id="prism">
+        <polygon points="270,100 350,280 190,280" fill="url(#prismGrad)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <!-- Prism highlights -->
+        <line x1="195" y1="275" x2="268" y2="105" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <text x="270" y="300" font-size="9" fill="#9CA3AF" text-anchor="middle">三棱镜</text>
+      </g>
+
+      <!-- Dispersed rays (7 color beams) -->
+      <g id="rays">
+        <line x1="310" y1="175" x2="620" y2="110" stroke="#FF0000" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="312" y1="178" x2="620" y2="130" stroke="#FF7F00" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="314" y1="181" x2="620" y2="150" stroke="#FFFF00" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="316" y1="184" x2="620" y2="175" stroke="#00FF00" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="318" y1="187" x2="620" y2="200" stroke="#0000FF" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="319" y1="189" x2="620" y2="225" stroke="#4B0082" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+        <line x1="320" y1="192" x2="620" y2="250" stroke="#8B00FF" stroke-width="2.5" opacity="0.85" filter="url(#glow)"/>
+      </g>
+
+      <!-- Screen -->
+      <g id="screen">
+        <rect x="620" y="90" width="8" height="180" rx="2" fill="#1F2937" stroke="#4B5563" stroke-width="1"/>
+        <!-- Spectrum on screen -->
+        <rect x="622" y="105" width="4" height="150" rx="1" fill="url(#spectrumGrad)"/>
+        <text x="644" y="115" font-size="7" fill="#FF6666">红</text>
+        <text x="644" y="135" font-size="7" fill="#FFB366">橙</text>
+        <text x="644" y="155" font-size="7" fill="#FFFF66">黄</text>
+        <text x="644" y="178" font-size="7" fill="#66FF66">绿</text>
+        <text x="644" y="200" font-size="7" fill="#6666FF">蓝</text>
+        <text x="644" y="225" font-size="7" fill="#9966CC">靛</text>
+        <text x="644" y="250" font-size="7" fill="#CC66FF">紫</text>
+        <text x="640" y="290" font-size="9" fill="#9CA3AF" text-anchor="start">光屏</text>
+      </g>
+
+      <!-- Annotations -->
+      <g id="annotations">
+        <!-- Red: least refraction -->
+        <text x="500" y="100" font-size="8" fill="#FF6666">偏折最小</text>
+        <line x1="500" y1="103" x2="500" y2="110" stroke="#FF6666" stroke-width="0.5" stroke-dasharray="2,2"/>
+        <!-- Violet: most refraction -->
+        <text x="500" y="268" font-size="8" fill="#CC66FF">偏折最大</text>
+        <line x1="500" y1="258" x2="500" y2="250" stroke="#CC66FF" stroke-width="0.5" stroke-dasharray="2,2"/>
+        <!-- Angle bracket -->
+        <path d="M350,165 L370,155" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <path d="M350,195 L370,210" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <text x="380" y="185" font-size="8" fill="rgba(255,255,255,0.5)">色散角</text>
+      </g>
+
+      <!-- Guide -->
+      <text id="guideText" x="350" y="360" font-size="12" fill="#F59E0B" font-weight="700" text-anchor="middle">
+        调节入射角和棱镜材质，观察色散效果
+      </text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v1m0 16v1m-7.07-2.93l.71-.71M5.64 5.64l-.71-.71M3 12h1m16 0h1"/></svg> 实验数据</h3>
+      <div class="data-row"><span class="data-label">入射角</span><span class="data-value" id="valAngle" style="color:#F59E0B">45.0&#176;</span></div>
+      <div class="data-row"><span class="data-label">红光折射角</span><span class="data-value" id="valRed">24.5&#176;</span></div>
+      <div class="data-row"><span class="data-label">紫光折射角</span><span class="data-value" id="valViolet">26.8&#176;</span></div>
+      <div class="data-row"><span class="data-label">色散角</span><span class="data-value" id="valDispersion" style="color:#F59E0B">2.3&#176;</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 入射角调节</h3>
+      <div class="slider-control">
+        <label>入射角 = <span class="slider-val" id="angleVal">45&#176;</span></label>
+        <input type="range" id="angleSlider" min="20" max="70" step="1" value="45" oninput="updateAngle()">
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/></svg> 棱镜材质</h3>
+      <div class="btn-row">
+        <button class="ctrl-btn active" id="btnGlass" onclick="setMaterial('glass')">玻璃</button>
+        <button class="ctrl-btn" id="btnCrystal" onclick="setMaterial('crystal')">水晶</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg> 七色光光谱</h3>
+      <div class="spectrum-bar"></div>
+      <div class="spectrum-labels">
+        <span>红 620nm</span>
+        <span>黄 580nm</span>
+        <span>绿 530nm</span>
+        <span>蓝 470nm</span>
+        <span>紫 400nm</span>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 光源控制</h3>
+      <div class="btn-row">
+        <button class="ctrl-btn active" id="btnLight" onclick="toggleLight()">光源开启</button>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetExperiment()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> 重置实验</button>
+  </div>
+</div>
+
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验知识</h2></div>
+    <div class="card-body">
+      <p><strong>光的色散</strong>：白光通过三棱镜后被分解为红、橙、黄、绿、蓝、靛、紫七种色光的现象。</p>
+      <ul>
+        <li><strong>白光是复色光</strong>，由多种色光混合而成</li>
+        <li><strong>紫光偏折最大</strong>，红光偏折最小（紫光折射率更大）</li>
+        <li><strong>牛顿</strong>最早用三棱镜实验证明白光不是单色光</li>
+        <li><strong>彩虹</strong>是自然界中的色散现象（水滴起棱镜作用）</li>
+      </ul>
+      <div class="primary-colors">
+        <div class="color-circle" style="background:#FF0000;box-shadow:0 0 12px rgba(255,0,0,0.5)">红</div>
+        <div class="color-circle" style="background:#00FF00;box-shadow:0 0 12px rgba(0,255,0,0.5)">绿</div>
+        <div class="color-circle" style="background:#0000FF;box-shadow:0 0 12px rgba(0,0,255,0.5)">蓝</div>
+      </div>
+      <p style="text-align:center;font-size:11px;color:#9CA3AF">色光的三原色：红、绿、蓝</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>公式与原理</h2></div>
+    <div class="card-body">
+      <div class="formula-box"><span class="formula">n_1 \sin\theta_1 = n_2 \sin\theta_2</span></div>
+      <p>折射定律（斯涅尔定律）。不同色光在玻璃中折射率不同：</p>
+      <ul>
+        <li>红光 n = 1.513（折射率小，偏折小）</li>
+        <li>紫光 n = 1.532（折射率大，偏折大）</li>
+      </ul>
+      <p>这就是白光能被分解的原因——不同色光的折射角不同，经过棱镜后各色光走向不同方向。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>1.</strong> 一束白光通过三棱镜后，在光屏上形成彩色光带。下列说法正确的是（　）</p>
+      <p>A. 白光是单色光<br/>B. 光带最上方是紫光<br/>C. 红光的偏折角比紫光大<br/>D. 白光由多种色光组成</p>
+      <p style="font-size:11px;color:#9CA3AF;margin-top:4px">解析：白光是复色光（排除A），紫光偏折最大在最下方（排除B），红光偏折最小（排除C）。答案选 D。</p>
+
+      <p style="margin-top:16px"><strong>2.</strong> 雨后天空出现彩虹，这是光的（　）现象。</p>
+      <p>A. 反射<br/>B. 折射<br/>C. 色散<br/>D. 直线传播</p>
+      <p style="font-size:11px;color:#9CA3AF;margin-top:4px">解析：彩虹是太阳光经过水滴折射和反射后发生色散形成的。答案选 C。</p>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/theme.js"></script>
+<script>
+// === State ===
+const materials = {
+  glass:   {name:'玻璃', nRed:1.513, nViolet:1.532},
+  crystal: {name:'水晶', nRed:1.544, nViolet:1.567}
+};
+let currentMat = 'glass';
+let incidentAngle = 45; // degrees
+let lightOn = true;
+
+// 7 colors with interpolated refractive indices
+const colors = [
+  {name:'红', hex:'#FF0000', nFrac:0},
+  {name:'橙', hex:'#FF7F00', nFrac:0.167},
+  {name:'黄', hex:'#FFFF00', nFrac:0.333},
+  {name:'绿', hex:'#00FF00', nFrac:0.5},
+  {name:'蓝', hex:'#0000FF', nFrac:0.667},
+  {name:'靛', hex:'#4B0082', nFrac:0.833},
+  {name:'紫', hex:'#8B00FF', nFrac:1.0}
+];
+
+function getN(colorFrac) {
+  const m = materials[currentMat];
+  return m.nRed + (m.nViolet - m.nRed) * colorFrac;
+}
+
+// Simplified deviation angle for equilateral prism (60° apex)
+// Using minimum deviation approximation: δ = 2*arcsin(n*sin(30°)) - 60°
+// But we use actual two-surface Snell's law for accuracy
+function calcDeviation(n, incAngleDeg) {
+  const A = 60 * Math.PI / 180; // apex angle
+  const i1 = incAngleDeg * Math.PI / 180;
+  const sinR1 = Math.sin(i1) / n;
+  if (Math.abs(sinR1) > 1) return null;
+  const r1 = Math.asin(sinR1);
+  const r2 = A - r1;
+  const sinI2 = n * Math.sin(r2);
+  if (Math.abs(sinI2) > 1) return null; // total internal reflection
+  const i2 = Math.asin(sinI2);
+  const deviation = (i1 + i2 - A) * 180 / Math.PI;
+  return deviation;
+}
+
+function updateAngle() {
+  incidentAngle = parseFloat(document.getElementById('angleSlider').value);
+  document.getElementById('angleVal').textContent = incidentAngle + '\u00B0';
+  render();
+}
+
+function setMaterial(key) {
+  currentMat = key;
+  document.querySelectorAll('.panel-section .ctrl-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn' + key.charAt(0).toUpperCase() + key.slice(1)).classList.add('active');
+  render();
+}
+
+function toggleLight() {
+  lightOn = !lightOn;
+  document.getElementById('btnLight').textContent = lightOn ? '光源开启' : '光源关闭';
+  document.getElementById('btnLight').classList.toggle('active', lightOn);
+  render();
+}
+
+function resetExperiment() {
+  incidentAngle = 45; currentMat = 'glass'; lightOn = true;
+  document.getElementById('angleSlider').value = 45;
+  document.getElementById('angleVal').textContent = '45\u00B0';
+  setMaterial('glass');
+  document.getElementById('btnLight').textContent = '光源开启';
+  document.getElementById('btnLight').classList.add('active');
+  render();
+}
+
+function render() {
+  const beamG = document.getElementById('whiteBeam');
+  const raysG = document.getElementById('rays');
+  const screenSpectrum = document.querySelector('#screen rect:nth-child(2)');
+
+  if (!lightOn) {
+    beamG.style.display = 'none';
+    raysG.style.display = 'none';
+    if (screenSpectrum) screenSpectrum.setAttribute('opacity', '0');
+    document.getElementById('valAngle').textContent = '--';
+    document.getElementById('valRed').textContent = '--';
+    document.getElementById('valViolet').textContent = '--';
+    document.getElementById('valDispersion').textContent = '--';
+    return;
+  }
+
+  beamG.style.display = 'block';
+  raysG.style.display = 'block';
+  if (screenSpectrum) screenSpectrum.setAttribute('opacity', '1');
+
+  // Calculate deviations for all 7 colors
+  const deviations = colors.map(c => {
+    const n = getN(c.nFrac);
+    return calcDeviation(n, incidentAngle);
+  });
+
+  const redDev = deviations[0];
+  const violetDev = deviations[6];
+
+  if (redDev === null || violetDev === null) {
+    document.getElementById('valAngle').textContent = incidentAngle.toFixed(1) + '\u00B0';
+    document.getElementById('valRed').textContent = '全反射';
+    document.getElementById('valViolet').textContent = '全反射';
+    document.getElementById('valDispersion').textContent = '--';
+    raysG.style.display = 'none';
+    return;
+  }
+
+  // Update data panel
+  document.getElementById('valAngle').textContent = incidentAngle.toFixed(1) + '\u00B0';
+  document.getElementById('valRed').textContent = redDev.toFixed(1) + '\u00B0';
+  document.getElementById('valViolet').textContent = violetDev.toFixed(1) + '\u00B0';
+  document.getElementById('valDispersion').textContent = (violetDev - redDev).toFixed(1) + '\u00B0';
+
+  // Update ray positions
+  const prismExitX = 310;
+  const prismExitY = 180;
+  const screenX = 620;
+  const raySpread = 8; // visual spread multiplier
+
+  const lines = raysG.querySelectorAll('line');
+  deviations.forEach((dev, i) => {
+    if (dev === null || !lines[i]) return;
+    // Map deviation angle to screen Y position
+    // Center deviation maps to prismExitY, larger deviation = lower on screen
+    const avgDev = (redDev + violetDev) / 2;
+    const offsetDeg = dev - avgDev;
+    const screenY = 180 + offsetDeg * raySpread * 8;
+
+    lines[i].setAttribute('x1', prismExitX + i * 1.5);
+    lines[i].setAttribute('y1', prismExitY + (i - 3) * 2.5);
+    lines[i].setAttribute('x2', screenX);
+    lines[i].setAttribute('y2', screenY);
+  });
+}
+
+function renderFormulas() {
+  document.querySelectorAll('.formula').forEach(el => {
+    katex.render(el.textContent, el, {throwOnError: false});
+  });
+}
+
+render();
+</script>
+</body>
+</html>

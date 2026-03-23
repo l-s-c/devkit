@@ -166,6 +166,7 @@ export default defineConfig({
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-mirror': resolve(__dirname, 'pages/lab/mirror/index.html'),
         'lab-boiling': resolve(__dirname, 'pages/lab/boiling/index.html'),
+        'lab-dispersion': resolve(__dirname, 'pages/lab/dispersion/index.html'),
         'lab-liquid-pressure': resolve(__dirname, 'pages/lab/liquid-pressure/index.html'),
         'lab-melting': resolve(__dirname, 'pages/lab/melting/index.html'),
         'lab-newton-first-law': resolve(__dirname, 'pages/lab/newton-first-law/index.html'),
