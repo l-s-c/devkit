@@ -93,7 +93,7 @@
     +'<div class="dk-ad-promo-badge">推广</div>'
     +'<div class="dk-ad-promo-logo"><svg width="28" height="28" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg></div>'
     +'<div class="dk-ad-promo-title">DevKit 工具箱</div>'
-    +'<div class="dk-ad-promo-desc">141 个免费在线工具<br>你的在线万能工具箱 🧰</div>'
+    +'<div class="dk-ad-promo-desc">141 个免费在线工具<br>你的在线万能工具箱 ◈</div>'
     +'<button class="dk-ad-promo-btn" id="dkAdFav">⭐ 收藏本站</button>'
     +'</div>'
     +'</div>'
