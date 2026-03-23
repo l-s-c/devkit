@@ -236,7 +236,9 @@ function generateNames() {
   if (!surnameStrokes) { alert('暂不支持该姓氏，请换一个试试'); return; }
 
   // Filter chars by gender
+  // Only use chars with pinyin+meaning for name generation
   const pool = CHARS.filter(c => {
+    if (!c.py || !c.m) return false;
     if (gender==='male') return c.g==='男'||c.g==='中';
     if (gender==='female') return c.g==='女'||c.g==='中';
     return true;
