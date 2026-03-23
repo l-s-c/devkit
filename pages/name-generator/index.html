@@ -3,191 +3,497 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>取名器 - 宝宝起名五行寓意查询 \</title>
-<meta name="description" content="DevKit">
-<meta name="keywords" content="起名, 取名器, 宝宝起名, 名字生成器, 五行取名, DevKit">
+<title>宝宝取名 - 诗词起名·三才五格·声调搭配 | DevKit</title>
+<meta name="description" content="输入姓氏智能推荐好名字，诗词典故出处、三才五格评分、声调搭配检测，科学取名不玄学">
+<meta name="keywords" content="取名,起名,宝宝取名,诗词起名,三才五格,声调搭配,五行取名,姓名测试">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/shared/og-image.png">
-<meta property="og:title" content="取名器 - 宝宝起名五行寓意查询 \">
-<meta property="og:description" content="DevKit">
+<meta property="og:title" content="宝宝取名 - 诗词起名·三才五格·声调搭配 | DevKit">
+<meta property="og:description" content="输入姓氏智能推荐好名字，诗词典故出处、三才五格评分、声调搭配检测，科学取名不玄学">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://l-s-c.github.io/devkit/pages/name-generator/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"取名器","url":"https://l-s-c.github.io/devkit/pages/name-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/name-generator/">
 <link rel="icon" type="image/svg+xml" href="/devkit/favicon.svg">
-<link rel="stylesheet" href="../../shared/liquid-glass.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-body{min-height:100vh;display:flex;flex-direction:column}
-.main{flex:1;position:relative;z-index:1;padding:24px 24px 24px;max-width:960px;margin:0 auto;width:100%}
-.panel{padding:24px;border-radius:16px;margin-bottom:16px;background:var(--bg-glass);backdrop-filter:blur(20px);border:0.5px solid var(--border-glass)}
-.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
-.config-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end}
-@media(max-width:640px){.config-grid{grid-template-columns:1fr}}
-.field-label{font-size:10px;font-weight:700;color:var(--text-caption);margin-bottom:4px}
-.field-input{width:100%;padding:10px 12px;border-radius:6px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:16px;font-weight:800;color:var(--text-primary);outline:none;text-align:center}
-.field-input:focus{border-color:var(--brand-500)}
-.pill-row{display:flex;gap:4px}
-.pill{padding:6px 14px;border-radius:14px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);font-size:11px;font-weight:700;cursor:pointer;transition:all 150ms;flex:1;text-align:center}
-.pill:hover{border-color:var(--brand-500);color:var(--brand-500)}
-.pill.active{background:var(--brand-500);color:#fff;border-color:var(--brand-500)}
-.btn-gen{width:100%;padding:14px;border-radius:10px;border:none;background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:16px;transition:all 200ms}
-.btn-gen:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.3)}
-.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.name-grid{grid-template-columns:1fr}}
-.name-card{padding:20px;border-radius:10px;border:1.5px solid var(--border-glass);background:var(--bg-glass-input);text-align:center;cursor:pointer;transition:all 200ms;position:relative}
-.name-card:hover{border-color:var(--brand-500);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
-.name-full{font-size:32px;font-weight:800;margin-bottom:8px;letter-spacing:8px}
-.name-meta{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
-.meta-tag{padding:3px 8px;border-radius:8px;font-size:9px;font-weight:700}
-.tag-wuxing{background:rgba(245,158,11,0.1);color:#D97706}
-.tag-strokes{background:rgba(99,102,241,0.08);color:#6366F1}
-.tag-gender{background:rgba(16,185,129,0.08);color:#059669}
-.name-meaning{font-size:11px;color:var(--text-secondary);line-height:1.5}
-.name-fav{position:absolute;top:8px;right:8px;font-size:16px;cursor:pointer;opacity:0.3;transition:opacity 150ms;background:none;border:none}
-.name-fav:hover,.name-fav.liked{opacity:1}
-.note{font-size:10px;color:var(--text-caption);text-align:center;margin-top:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#FDFBF7;color:#2D2015;min-height:100vh}
+.topbar{background:rgba(253,251,247,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(139,90,43,0.08);padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(139,90,43,0.06);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:16px;height:16px;color:#8B5A2B}
+.topbar .logo{font-size:16px;font-weight:800;color:#8B5A2B;letter-spacing:1px}
+.topbar .logo span{color:#C0392B}
+.hero{text-align:center;padding:48px 24px 36px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(192,57,43,0.04) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:28px;font-weight:900;color:#2D2015;letter-spacing:2px;line-height:1.4;margin-bottom:8px;font-family:'Noto Serif SC',serif}
+.hero h1 em{font-style:normal;color:#C0392B}
+.hero p{font-size:14px;color:#8B7355;max-width:400px;margin:0 auto;line-height:1.6}
+.tab-bar{display:flex;max-width:500px;margin:0 auto 24px;background:rgba(139,90,43,0.06);border-radius:10px;padding:3px;gap:3px}
+.tab-btn{flex:1;padding:10px;text-align:center;border-radius:8px;border:none;background:none;font-size:13px;font-weight:600;color:#8B7355;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.tab-btn:hover{color:#C0392B}
+.tab-btn.active{background:#fff;color:#C0392B;box-shadow:0 1px 4px rgba(139,90,43,0.1)}
+.tab-btn .icon{display:block;font-size:18px;margin-bottom:2px}
+.form-card{max-width:600px;margin:0 auto 32px;background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(139,90,43,0.06);border:1px solid rgba(139,90,43,0.06)}
+.form-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.form-group{flex:1;min-width:120px}
+.form-group label{display:block;font-size:11px;font-weight:700;color:#8B7355;margin-bottom:6px;letter-spacing:0.5px}
+.form-group input,.form-group select{width:100%;padding:10px 14px;border:1px solid rgba(139,90,43,0.12);border-radius:8px;font-size:14px;font-family:inherit;color:#2D2015;background:#FDFBF7;transition:all 0.15s;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,0.08)}
+.form-group input::placeholder{color:#BFB09A}
+.gen-btn{width:100%;padding:14px;border:none;border-radius:10px;background:linear-gradient(135deg,#C0392B,#A93226);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:inherit;letter-spacing:1px}
+.gen-btn:hover{background:linear-gradient(135deg,#A93226,#922B21);transform:translateY(-1px);box-shadow:0 4px 16px rgba(192,57,43,0.25)}
+.pref-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.pref-tag{padding:5px 12px;border-radius:100px;border:1px solid rgba(139,90,43,0.15);background:#FDFBF7;font-size:11px;color:#8B7355;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.pref-tag:hover{border-color:#C0392B;color:#C0392B}
+.pref-tag.active{background:rgba(192,57,43,0.08);border-color:#C0392B;color:#C0392B;font-weight:600}
+.results{max-width:900px;margin:0 auto;padding:0 16px 40px}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.results-header h2{font-size:16px;font-weight:700;color:#2D2015}
+.results-header span{font-size:12px;color:#8B7355}
+.name-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.name-card{background:#fff;border-radius:14px;padding:0;overflow:hidden;border:1px solid rgba(139,90,43,0.06);box-shadow:0 2px 8px rgba(139,90,43,0.04);transition:all 0.2s;cursor:pointer}
+.name-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,90,43,0.1);border-color:rgba(192,57,43,0.15)}
+.name-card .card-top{padding:20px 20px 16px;display:flex;align-items:flex-start;gap:16px}
+.name-char{display:flex;gap:4px}
+.name-char .char{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#FDFBF7,#F5EDE0);border:1px solid rgba(139,90,43,0.1);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#2D2015;font-family:'Noto Serif SC',serif}
+.name-meta{flex:1}
+.name-meta .full-name{font-size:18px;font-weight:800;color:#2D2015;margin-bottom:4px}
+.name-meta .pinyin{font-size:12px;color:#8B7355;font-style:italic;margin-bottom:6px}
+.name-meta .source{font-size:11px;color:#C0392B;background:rgba(192,57,43,0.06);padding:3px 10px;border-radius:100px;display:inline-block;font-weight:600}
+.card-scores{padding:0 20px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.score-item{text-align:center}
+.score-item .score-label{font-size:9px;color:#8B7355;margin-bottom:2px}
+.score-bar{height:4px;border-radius:2px;background:rgba(139,90,43,0.08);overflow:hidden}
+.score-bar-fill{height:100%;border-radius:2px;transition:width 0.5s}
+.score-bar-fill.high{background:linear-gradient(90deg,#27AE60,#2ECC71)}
+.score-bar-fill.mid{background:linear-gradient(90deg,#F39C12,#F1C40F)}
+.score-bar-fill.low{background:linear-gradient(90deg,#E74C3C,#C0392B)}
+.card-bottom{padding:12px 20px;background:rgba(139,90,43,0.02);border-top:1px solid rgba(139,90,43,0.04);display:flex;justify-content:space-between;align-items:center}
+.card-bottom .meaning{font-size:11px;color:#8B7355;line-height:1.5;flex:1}
+.card-bottom .fav-btn{width:28px;height:28px;border-radius:50%;border:1px solid rgba(139,90,43,0.12);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.card-bottom .fav-btn:hover{border-color:#C0392B;background:rgba(192,57,43,0.06)}
+.card-bottom .fav-btn svg{width:14px;height:14px;color:#8B7355}
+.card-bottom .fav-btn.saved svg{color:#C0392B;fill:#C0392B}
+.analysis-card{max-width:600px;margin:0 auto 32px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(139,90,43,0.06);box-shadow:0 2px 12px rgba(139,90,43,0.06)}
+.analysis-header{background:linear-gradient(135deg,#2D2015,#4A3728);padding:28px;text-align:center;color:#F5EDE0}
+.analysis-header .big-name{font-size:42px;font-weight:900;letter-spacing:8px;margin-bottom:8px;font-family:'Noto Serif SC',serif}
+.analysis-header .pinyin-big{font-size:14px;color:rgba(245,237,224,0.7);font-style:italic;letter-spacing:4px}
+.analysis-body{padding:24px}
+.analysis-section{margin-bottom:20px}
+.analysis-section h3{font-size:13px;font-weight:700;color:#8B7355;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.analysis-section h3 .dot{width:6px;height:6px;border-radius:50%;background:#C0392B}
+.wuge-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.wuge-item{text-align:center;background:rgba(139,90,43,0.03);border-radius:8px;padding:10px 4px}
+.wuge-item .wuge-name{font-size:10px;color:#8B7355;margin-bottom:4px}
+.wuge-item .wuge-num{font-size:20px;font-weight:800;color:#2D2015}
+.wuge-item .wuge-luck{font-size:10px;font-weight:600;margin-top:4px;padding:2px 8px;border-radius:4px;display:inline-block}
+.wuge-item .wuge-luck.ji{background:rgba(39,174,96,0.1);color:#27AE60}
+.wuge-item .wuge-luck.xiong{background:rgba(231,76,60,0.1);color:#E74C3C}
+.wuge-item .wuge-luck.ban{background:rgba(243,156,18,0.1);color:#F39C12}
+.tone-visual{display:flex;align-items:flex-end;gap:8px;height:80px;padding:8px 0}
+.tone-bar{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(to top,rgba(192,57,43,0.15),rgba(192,57,43,0.4));position:relative;min-height:20px;transition:height 0.3s}
+.tone-bar .tone-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:#8B7355;white-space:nowrap}
+.tone-bar .tone-num{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:#C0392B}
+.poetry-quote{background:linear-gradient(135deg,#FDFBF7,#F5EDE0);border-radius:10px;padding:16px 20px;border-left:3px solid #C0392B;margin-top:8px}
+.poetry-quote .verse{font-size:15px;font-weight:600;color:#2D2015;line-height:1.8;font-family:'Noto Serif SC',serif}
+.poetry-quote .verse em{font-style:normal;color:#C0392B;text-decoration:underline;text-decoration-color:rgba(192,57,43,0.3);text-underline-offset:3px}
+.poetry-quote .author{font-size:11px;color:#8B7355;margin-top:6px}
+.poetry-section{max-width:900px;margin:0 auto;padding:0 16px 40px}
+.dynasty-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.dynasty-tab{padding:6px 16px;border-radius:100px;border:1px solid rgba(139,90,43,0.12);background:#fff;font-size:12px;color:#8B7355;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.dynasty-tab:hover{border-color:#C0392B;color:#C0392B}
+.dynasty-tab.active{background:#C0392B;color:#fff;border-color:#C0392B}
+.poem-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:12px;border:1px solid rgba(139,90,43,0.06);box-shadow:0 1px 4px rgba(139,90,43,0.03)}
+.poem-card .poem-title{font-size:15px;font-weight:700;color:#2D2015;margin-bottom:4px;font-family:'Noto Serif SC',serif}
+.poem-card .poem-author{font-size:11px;color:#8B7355;margin-bottom:10px}
+.poem-card .poem-text{font-size:13px;line-height:2;color:#4A3728;font-family:'Noto Serif SC',serif}
+.poem-card .poem-text em{font-style:normal;color:#C0392B;font-weight:700;background:rgba(192,57,43,0.06);padding:0 2px;border-radius:2px}
+.poem-card .name-picks{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.poem-card .pick{padding:4px 12px;border-radius:6px;background:rgba(192,57,43,0.06);color:#C0392B;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent}
+.poem-card .pick:hover{border-color:#C0392B;background:rgba(192,57,43,0.12)}
+.no-result{text-align:center;padding:60px 20px;color:#8B7355;font-size:14px}
+.loading{text-align:center;padding:40px;color:#8B7355}
+.common-warn{font-size:10px;color:#E74C3C;background:rgba(231,76,60,0.06);padding:2px 8px;border-radius:4px;margin-left:8px}
+@media(max-width:640px){
+  .hero h1{font-size:22px}
+  .name-grid{grid-template-columns:1fr}
+  .wuge-grid{grid-template-columns:repeat(3,1fr)}
+  .form-row{flex-direction:column}
+}
 </style>
 <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?bbc2c451520fe871702237e9d83943db";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
-<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}</style></head>
+</head>
 <body>
-<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">取名器 — DevKit 在线万能工具箱</h1>
-<div class="mesh-bg"><div class="mesh-blob"></div><div class="mesh-blob"></div><div class="mesh-blob"></div></div>
 <div class="topbar">
-  <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
-  <span class="topbar-tool-name">取名器</span>
-  <div class="topbar-spacer"></div>
-  <button class="theme-btn" onclick="toggleTheme()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  <button class="back" onclick="location.href='/devkit/'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="logo">Dev<span>Kit</span></div>
 </div>
-<div class="main">
-  <div class="panel">
-    <div class="section-title">◎ 取名器</div>
-    <div class="config-grid">
-      <div>
-        <div class="field-label">姓氏</div>
-        <input class="field-input" id="surname" value="李" maxlength="2">
-      </div>
-      <div>
-        <div class="field-label">性别偏好</div>
-        <div class="pill-row" id="genderRow">
-          <div class="pill active" data-v="male">◎ 男</div>
-          <div class="pill" data-v="female">◎ 女</div>
-          <div class="pill" data-v="neutral">★ 中性</div>
-        </div>
-      </div>
-      <div>
-        <div class="field-label">字数</div>
-        <div class="pill-row" id="lenRow">
-          <div class="pill" data-v="1">单字</div>
-          <div class="pill active" data-v="2">双字</div>
-        </div>
+<div class="hero">
+  <h1>给孩子取一个<br/><em>有典故</em>的好名字</h1>
+  <p>诗词典故 · 三才五格 · 声调搭配 · 科学取名</p>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('generate')">
+    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></span>
+    智能取名
+  </button>
+  <button class="tab-btn" onclick="switchTab('analyze')">
+    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+    名字分析
+  </button>
+  <button class="tab-btn" onclick="switchTab('poetry')">
+    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
+    诗词取名
+  </button>
+</div>
+
+<div id="tab-generate">
+  <div class="form-card">
+    <div class="form-row">
+      <div class="form-group"><label>姓氏</label><input type="text" placeholder="如：李" maxlength="2" id="surname"/></div>
+      <div class="form-group"><label>性别</label><select id="gender"><option value="male">男孩</option><option value="female">女孩</option><option value="neutral">不限</option></select></div>
+      <div class="form-group"><label>字数</label><select id="charCount"><option value="1">两字名</option><option value="2" selected>三字名</option></select></div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>诗词偏好</label>
+      <div class="pref-tags" id="prefTags">
+        <span class="pref-tag active" data-src="诗经">诗经</span>
+        <span class="pref-tag" data-src="楚辞">楚辞</span>
+        <span class="pref-tag active" data-src="唐诗">唐诗</span>
+        <span class="pref-tag" data-src="宋词">宋词</span>
       </div>
     </div>
-    <button class="btn-gen" id="genBtn">◎ 生成名字</button>
+    <button class="gen-btn" onclick="generateNames()">开始取名</button>
   </div>
-  <div class="panel">
-    <div class="section-title">✦ 推荐名字 <span style="font-size:10px;color:var(--text-caption);margin-left:auto;font-weight:400">点击 ❤️ 收藏</span></div>
+  <div class="results" id="resultsArea" style="display:none">
+    <div class="results-header">
+      <h2 id="resultsTitle"></h2>
+      <span id="resultsCount"></span>
+    </div>
     <div class="name-grid" id="nameGrid"></div>
-    <div class="note">⚠ 笔画数参考康熙字典，五行属性仅供参考，不作起名决策依据</div>
   </div>
 </div>
-<div class="statusbar"><span id="statusInfo">取名器</span><div class="statusbar-spacer"></div><span>姓名库 · 纯本地</span></div>
-<script type="module">
-import '../../shared/theme.js';
-import '../../shared/sidebar.js';
-const WX_ICON={'金':'⊕','木':'◎','水':'◆','火':'◈','土':'◎'};
-const MALE_CHARS=[
-  {c:'明',wx:'火',st:8,m:'光明、聪慧'},{c:'轩',wx:'土',st:10,m:'气宇轩昂'},{c:'泽',wx:'水',st:17,m:'恩泽润物'},
-  {c:'宇',wx:'土',st:6,m:'宇宙广阔'},{c:'博',wx:'水',st:12,m:'博学多才'},{c:'浩',wx:'水',st:11,m:'浩然正气'},
-  {c:'睿',wx:'金',st:14,m:'聪睿通达'},{c:'铭',wx:'金',st:14,m:'铭记于心'},{c:'辰',wx:'土',st:7,m:'星辰北极'},
-  {c:'翰',wx:'水',st:16,m:'翰墨书香'},{c:'瑞',wx:'金',st:14,m:'祥瑞吉兆'},{c:'骏',wx:'金',st:17,m:'骏马奔腾'},
-  {c:'峰',wx:'土',st:10,m:'山峰巍峨'},{c:'昊',wx:'火',st:8,m:'昊天广大'},{c:'逸',wx:'土',st:15,m:'飘逸洒脱'},
-  {c:'煜',wx:'火',st:13,m:'光煜照耀'},{c:'晨',wx:'金',st:11,m:'清晨朝气'},{c:'恒',wx:'水',st:10,m:'恒久不变'},
-  {c:'志',wx:'火',st:7,m:'志存高远'},{c:'杰',wx:'木',st:12,m:'英杰出众'},{c:'鸿',wx:'水',st:17,m:'鸿鹄之志'},
-  {c:'彦',wx:'木',st:9,m:'有才德者'},{c:'楠',wx:'木',st:13,m:'楠木坚韧'},{c:'旭',wx:'火',st:6,m:'旭日东升'},
-  {c:'霆',wx:'水',st:15,m:'雷霆万钧'},{c:'毅',wx:'木',st:15,m:'坚毅果敢'},{c:'磊',wx:'土',st:15,m:'光明磊落'},
-  {c:'承',wx:'金',st:8,m:'承前启后'},{c:'皓',wx:'木',st:12,m:'皓月当空'},{c:'韬',wx:'火',st:19,m:'文韬武略'},
-  {c:'安',wx:'土',st:6,m:'安定祥和'},{c:'然',wx:'金',st:12,m:'怡然自得'},{c:'凯',wx:'木',st:12,m:'凯旋而归'},
-  {c:'文',wx:'水',st:4,m:'文采斐然'},{c:'天',wx:'火',st:4,m:'天资聪颖'},{c:'伟',wx:'土',st:11,m:'伟大宏图'},
-];
-const FEMALE_CHARS=[
-  {c:'语',wx:'木',st:14,m:'言语温柔'},{c:'晗',wx:'火',st:11,m:'天将明、希望'},{c:'诗',wx:'金',st:13,m:'诗情画意'},
-  {c:'涵',wx:'水',st:12,m:'涵养包容'},{c:'萱',wx:'木',st:15,m:'萱草忘忧'},{c:'雨',wx:'水',st:8,m:'润物细雨'},
-  {c:'欣',wx:'木',st:8,m:'欣欣向荣'},{c:'怡',wx:'土',st:9,m:'怡然自乐'},{c:'琳',wx:'木',st:13,m:'美玉琳琅'},
-  {c:'婉',wx:'土',st:11,m:'温婉贤淑'},{c:'瑶',wx:'火',st:15,m:'美玉如瑶'},{c:'梦',wx:'木',st:14,m:'梦想成真'},
-  {c:'若',wx:'木',st:11,m:'若兮淡雅'},{c:'薇',wx:'木',st:19,m:'蔷薇花开'},{c:'颖',wx:'木',st:16,m:'聪颖出众'},
-  {c:'思',wx:'金',st:9,m:'思维敏捷'},{c:'悦',wx:'金',st:11,m:'喜悦心情'},{c:'雪',wx:'水',st:11,m:'冰雪聪明'},
-  {c:'馨',wx:'金',st:20,m:'温馨芬芳'},{c:'静',wx:'金',st:16,m:'宁静致远'},{c:'妍',wx:'水',st:7,m:'美丽妍丽'},
-  {c:'芷',wx:'木',st:10,m:'芷兰之化'},{c:'珺',wx:'木',st:12,m:'美玉珺琪'},{c:'澜',wx:'水',st:21,m:'波澜壮阔'},
-  {c:'曦',wx:'火',st:20,m:'晨曦微光'},{c:'蕊',wx:'木',st:18,m:'花蕊吐芳'},{c:'岚',wx:'土',st:12,m:'山岚缥缈'},
-  {c:'依',wx:'土',st:8,m:'温柔可依'},{c:'舒',wx:'金',st:12,m:'舒心畅快'},{c:'心',wx:'金',st:4,m:'心灵纯净'},
-  {c:'月',wx:'木',st:4,m:'皎月生辉'},{c:'清',wx:'水',st:12,m:'清新脱俗'},{c:'柔',wx:'金',st:9,m:'温柔似水'},
-];
-const NEUTRAL_CHARS=[
-  {c:'安',wx:'土',st:6,m:'安定祥和'},{c:'然',wx:'金',st:12,m:'怡然自得'},{c:'文',wx:'水',st:4,m:'文采斐然'},
-  {c:'思',wx:'金',st:9,m:'思维敏捷'},{c:'宇',wx:'土',st:6,m:'宇宙广阔'},{c:'晨',wx:'金',st:11,m:'清晨朝气'},
-  {c:'乐',wx:'火',st:15,m:'快乐欢欣'},{c:'瑞',wx:'金',st:14,m:'祥瑞吉兆'},{c:'嘉',wx:'木',st:14,m:'嘉言懿行'},
-  {c:'辰',wx:'土',st:7,m:'星辰北极'},{c:'禹',wx:'土',st:9,m:'大禹治水'},{c:'可',wx:'木',st:5,m:'可爱可亲'},
-  {c:'言',wx:'木',st:7,m:'一言九鼎'},{c:'一',wx:'土',st:1,m:'一心一意'},{c:'知',wx:'火',st:8,m:'求知若渴'},
-  {c:'书',wx:'金',st:10,m:'书香门第'},{c:'羽',wx:'土',st:6,m:'羽翼丰满'},{c:'恬',wx:'火',st:10,m:'恬淡自然'},
-];
 
-let gender='male',nameLen=2;
-function getPool(){return gender==='male'?MALE_CHARS:gender==='female'?FEMALE_CHARS:NEUTRAL_CHARS}
-function genderLabel(){return gender==='male'?'◎ 男':gender==='female'?'◎ 女':'★ 中性'}
+<div id="tab-analyze" style="display:none">
+  <div class="form-card">
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label>输入完整姓名</label><input type="text" placeholder="如：李承泽" maxlength="4" id="analyzeName"/></div>
+    </div>
+    <button class="gen-btn" onclick="analyzeName()">分析名字</button>
+  </div>
+  <div id="analysisResult" style="display:none"></div>
+</div>
 
-function pickRandom(arr,n){const s=[...arr];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s.slice(0,n)}
+<div id="tab-poetry" style="display:none">
+  <div class="poetry-section">
+    <div class="dynasty-tabs" id="dynastyTabs"></div>
+    <div id="poemList"></div>
+  </div>
+</div>
 
-function generate(){
-  const surname=document.getElementById('surname').value.trim()||'李';
-  const pool=getPool();
-  const grid=document.getElementById('nameGrid');
-  const cards=[];
-  const count=6;
-  if(nameLen===1){
-    const picks=pickRandom(pool,count);
-    picks.forEach(p=>{
-      const strokes=p.st;
-      cards.push(makeCard(surname,p.c,'',p.wx,'',strokes,p.m,''));
+<script src="/devkit/data/name-generator/name-engine.js"></script>
+<script>
+let CHARS=[], SURNAMES={}, POEMS=[], COMMON_NAMES=[], FAVORITES=[];
+
+// Load data
+async function loadData() {
+  const base = '/devkit/data/name-generator/';
+  const [chars, surnames, poems, common] = await Promise.all([
+    fetch(base+'chars.json').then(r=>r.json()),
+    fetch(base+'surnames.json').then(r=>r.json()),
+    fetch(base+'poems.json').then(r=>r.json()),
+    fetch(base+'common-names.json').then(r=>r.json())
+  ]);
+  CHARS=chars; SURNAMES=surnames; POEMS=poems; COMMON_NAMES=common;
+  FAVORITES=JSON.parse(localStorage.getItem('name-favs')||'[]');
+  initPoetryTab();
+}
+loadData();
+
+function switchTab(tab) {
+  document.getElementById('tab-generate').style.display = tab==='generate'?'block':'none';
+  document.getElementById('tab-analyze').style.display = tab==='analyze'?'block':'none';
+  document.getElementById('tab-poetry').style.display = tab==='poetry'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (i===0&&tab==='generate')||(i===1&&tab==='analyze')||(i===2&&tab==='poetry'));
+  });
+}
+
+document.querySelectorAll('.pref-tag').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('active')));
+
+// ===== TAB 1: 智能取名 =====
+function generateNames() {
+  const surname = document.getElementById('surname').value.trim();
+  if (!surname) { alert('请输入姓氏'); return; }
+  const gender = document.getElementById('gender').value;
+  const nameLen = parseInt(document.getElementById('charCount').value);
+  const surnameStrokes = getSurnameStrokes(surname);
+  if (!surnameStrokes) { alert('暂不支持该姓氏，请换一个试试'); return; }
+
+  // Filter chars by gender
+  const pool = CHARS.filter(c => {
+    if (gender==='male') return c.g==='男'||c.g==='中';
+    if (gender==='female') return c.g==='女'||c.g==='中';
+    return true;
+  });
+
+  // Generate candidates
+  const candidates = [];
+  const seen = new Set();
+  for (let i=0; i<500 && candidates.length<20; i++) {
+    let nameChars;
+    if (nameLen===1) {
+      const c1 = pool[Math.floor(Math.random()*pool.length)];
+      nameChars = [c1];
+    } else {
+      const c1 = pool[Math.floor(Math.random()*pool.length)];
+      const c2 = pool[Math.floor(Math.random()*pool.length)];
+      if (c1.ch===c2.ch) continue;
+      nameChars = [c1,c2];
+    }
+    const nameStr = nameChars.map(c=>c.ch).join('');
+    if (seen.has(nameStr)) continue;
+    seen.add(nameStr);
+
+    const nameStrokes = nameChars.map(c=>c.kx);
+    const wuge = calcWuge(surnameStrokes, nameStrokes);
+    const pinyinArr = [getSurnamePinyin(surname), ...nameChars.map(c=>c.py)];
+    const toneResult = checkTones(pinyinArr);
+    const poemMatch = findPoemMatch(nameChars);
+
+    // Score
+    const wugeScore = calcWugeScore(wuge);
+    const toneScore = toneResult.score;
+    const meaningScore = 70 + Math.floor(Math.random()*25);
+    const totalScore = Math.round(wugeScore*0.35 + toneScore*0.3 + meaningScore*0.35);
+
+    const isCommon = COMMON_NAMES.includes(nameStr) || COMMON_NAMES.includes(surname+nameStr);
+
+    candidates.push({
+      surname, nameChars, nameStr, wuge, pinyinArr, toneResult,
+      poemMatch, wugeScore, toneScore, meaningScore, totalScore, isCommon
     });
-  }else{
-    for(let i=0;i<count;i++){
-      const [a,b]=pickRandom(pool,2);
-      const strokes=a.st+b.st;
-      cards.push(makeCard(surname,a.c,b.c,a.wx,b.wx,strokes,a.m+'；'+b.m.split('、')[0],''));
+  }
+
+  // Sort by total score
+  candidates.sort((a,b) => b.totalScore - a.totalScore);
+  const top = candidates.slice(0, 8);
+
+  // Render
+  const gLabel = gender==='male'?'男':'female'?'女':'';
+  document.getElementById('resultsTitle').textContent = '为「'+surname+'」姓'+gLabel+'孩推荐';
+  document.getElementById('resultsCount').textContent = '共 '+top.length+' 个名字 · 按综合评分排序';
+  document.getElementById('resultsArea').style.display = 'block';
+
+  const grid = document.getElementById('nameGrid');
+  grid.innerHTML = top.map(c => renderNameCard(c)).join('');
+  bindFavButtons();
+}
+
+function renderNameCard(c) {
+  const fullName = c.surname + c.nameStr;
+  const pinyin = c.pinyinArr.join(' ');
+  const sourceText = c.poemMatch ? '《'+c.poemMatch.a+'》' : '';
+  const isFav = FAVORITES.includes(fullName);
+  const meaning = c.nameChars.map(ch => ch.ch+'：'+ch.m).join('；');
+
+  function scoreClass(s) { return s>=80?'high':s>=60?'mid':'low'; }
+
+  return '<div class="name-card">'
+    +'<div class="card-top"><div class="name-char">'
+    +c.nameChars.map(ch=>'<div class="char">'+ch.ch+'</div>').join('')
+    +'</div><div class="name-meta">'
+    +'<div class="full-name">'+fullName+(c.isCommon?'<span class="common-warn">高频名</span>':'')+'</div>'
+    +'<div class="pinyin">'+pinyin+'</div>'
+    +(sourceText?'<div class="source">'+sourceText+'</div>':'')
+    +'</div></div>'
+    +'<div class="card-scores">'
+    +scoreItem('五格',c.wugeScore)+scoreItem('声调',c.toneScore)
+    +scoreItem('寓意',c.meaningScore)+scoreItem('综合',c.totalScore)
+    +'</div>'
+    +'<div class="card-bottom"><div class="meaning">'+meaning+'</div>'
+    +'<button class="fav-btn'+(isFav?' saved':'')+'" data-name="'+fullName+'">'
+    +'<svg viewBox="0 0 24 24" fill="'+(isFav?'currentColor':'none')+'" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+    +'</button></div></div>';
+}
+
+function scoreItem(label, score) {
+  const cls = score>=80?'high':score>=60?'mid':'low';
+  return '<div class="score-item"><div class="score-label">'+label+'</div>'
+    +'<div class="score-bar"><div class="score-bar-fill '+cls+'" style="width:'+score+'%"></div></div>'
+    +'<div class="score-num">'+score+'</div></div>';
+}
+
+function calcWugeScore(wuge) {
+  let s = 60;
+  const items = [wuge.tian, wuge.ren, wuge.di, wuge.wai, wuge.zong];
+  items.forEach(it => {
+    if (it.lucky==='吉') s += 6;
+    else if (it.lucky==='半吉') s += 2;
+    else s -= 4;
+  });
+  s += Math.floor(wuge.sanCai * 0.1);
+  return Math.min(100, Math.max(0, s));
+}
+
+function getSurnameStrokes(surname) {
+  const v = SURNAMES[surname];
+  if (!v) return null;
+  return Array.isArray(v) ? v : [v];
+}
+
+function getSurnamePinyin(surname) {
+  // Simple lookup from chars or hardcoded common ones
+  const map = {"李":"lǐ","王":"wáng","张":"zhāng","刘":"liú","陈":"chén","杨":"yáng","黄":"huáng","赵":"zhào","周":"zhōu","吴":"wú","徐":"xú","孙":"sūn","马":"mǎ","胡":"hú","朱":"zhū","郭":"guō","何":"hé","林":"lín","罗":"luó","高":"gāo","梁":"liáng","郑":"zhèng","谢":"xiè","宋":"sòng","唐":"táng","韩":"hán","冯":"féng","董":"dǒng","程":"chéng","曹":"cáo","袁":"yuán","邓":"dèng","许":"xǔ","傅":"fù","沈":"shěn","曾":"zēng","彭":"péng","吕":"lǚ","苏":"sū","卢":"lú","蒋":"jiǎng","蔡":"cài","贾":"jiǎ","丁":"dīng","魏":"wèi","薛":"xuē","叶":"yè","阎":"yán","余":"yú","潘":"pān","杜":"dù","戴":"dài","夏":"xià","钟":"zhōng","汪":"wāng","田":"tián","任":"rèn","姜":"jiāng","范":"fàn","方":"fāng","石":"shí","姚":"yáo","谭":"tán","廖":"liào","邹":"zōu","熊":"xióng","金":"jīn","陆":"lù","郝":"hǎo","孔":"kǒng","白":"bái","崔":"cuī","康":"kāng","毛":"máo","邱":"qiū","秦":"qín","江":"jiāng","史":"shǐ","顾":"gù","侯":"hóu","邵":"shào","孟":"mèng","龙":"lóng","万":"wàn","段":"duàn","雷":"léi","钱":"qián","汤":"tāng","尹":"yǐn","黎":"lí","易":"yì","常":"cháng","武":"wǔ","乔":"qiáo","贺":"hè","赖":"lài","龚":"gōng","文":"wén"};
+  return map[surname] || surname;
+}
+
+function findPoemMatch(nameChars) {
+  for (const p of POEMS) {
+    for (const ch of nameChars) {
+      if (p.chars && p.chars.includes(ch.ch)) return p;
     }
   }
-  grid.innerHTML=cards.join('');
+  return null;
 }
 
-function makeCard(surname,c1,c2,wx1,wx2,strokes,meaning){
-  const wxText=wx2?`${WX_ICON[wx1]} ${wx1} + ${WX_ICON[wx2]} ${wx2}`:`${WX_ICON[wx1]} ${wx1}`;
-  const fullName=c2?`${surname} ${c1} ${c2}`:`${surname} ${c1}`;
-  return `<div class="name-card">
-    <button class="name-fav" onclick="this.classList.toggle('liked')">❤️</button>
-    <div class="name-full">${fullName}</div>
-    <div class="name-meta">
-      <span class="meta-tag tag-wuxing">${wxText}</span>
-      <span class="meta-tag tag-strokes">${strokes} 画</span>
-      <span class="meta-tag tag-gender">${genderLabel()}</span>
-    </div>
-    <div class="name-meaning">${meaning}</div>
-  </div>`;
+function bindFavButtons() {
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const name = btn.dataset.name;
+      const idx = FAVORITES.indexOf(name);
+      if (idx >= 0) { FAVORITES.splice(idx,1); btn.classList.remove('saved'); btn.querySelector('svg').setAttribute('fill','none'); }
+      else { FAVORITES.push(name); btn.classList.add('saved'); btn.querySelector('svg').setAttribute('fill','currentColor'); }
+      localStorage.setItem('name-favs', JSON.stringify(FAVORITES));
+    });
+  });
 }
 
-// pill click handlers
-document.getElementById('genderRow').addEventListener('click',e=>{
-  const p=e.target.closest('.pill');if(!p)return;
-  gender=p.dataset.v;
-  document.querySelectorAll('#genderRow .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
-});
-document.getElementById('lenRow').addEventListener('click',e=>{
-  const p=e.target.closest('.pill');if(!p)return;
-  nameLen=parseInt(p.dataset.v);
-  document.querySelectorAll('#lenRow .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');
-});
-document.getElementById('genBtn').addEventListener('click',generate);
-generate();
+// ===== TAB 2: 名字分析 =====
+function analyzeName() {
+  const name = document.getElementById('analyzeName').value.trim();
+  if (name.length < 2 || name.length > 4) { alert('请输入2-4字的完整姓名'); return; }
+
+  // Try to split surname (1 or 2 chars)
+  let surname, givenChars;
+  const twoCharSurname = name.substring(0,2);
+  if (SURNAMES[twoCharSurname]) {
+    surname = twoCharSurname;
+    givenChars = name.substring(2).split('');
+  } else {
+    surname = name.substring(0,1);
+    givenChars = name.substring(1).split('');
+  }
+
+  if (!SURNAMES[surname]) { alert('未识别姓氏「'+surname+'」'); return; }
+  if (givenChars.length === 0) { alert('请输入完整姓名（姓+名）'); return; }
+
+  const surnameStrokes = getSurnameStrokes(surname);
+  const givenCharData = givenChars.map(ch => CHARS.find(c=>c.ch===ch));
+  const hasAllData = givenCharData.every(c=>c);
+
+  if (!hasAllData) { alert('名字中有未收录的字，暂无法分析'); return; }
+
+  const nameStrokes = givenCharData.map(c=>c.kx);
+  const wuge = calcWuge(surnameStrokes, nameStrokes);
+  const pinyinArr = [getSurnamePinyin(surname), ...givenCharData.map(c=>c.py)];
+  const toneResult = checkTones(pinyinArr);
+  const poemMatch = findPoemMatch(givenCharData);
+  const toneNames = ['','阴平','阳平','上声','去声'];
+
+  const container = document.getElementById('analysisResult');
+  container.style.display = 'block';
+  container.innerHTML = '<div class="analysis-card">'
+    +'<div class="analysis-header">'
+    +'<div class="big-name">'+name.split('').join(' ')+'</div>'
+    +'<div class="pinyin-big">'+pinyinArr.join(' ')+'</div>'
+    +'</div>'
+    +'<div class="analysis-body">'
+    // 三才五格
+    +'<div class="analysis-section"><h3><span class="dot"></span> 三才五格</h3>'
+    +'<div class="wuge-grid">'
+    +wugeItem('天格',wuge.tian)+wugeItem('人格',wuge.ren)+wugeItem('地格',wuge.di)
+    +wugeItem('外格',wuge.wai)+wugeItem('总格',wuge.zong)
+    +'</div></div>'
+    // 声调
+    +'<div class="analysis-section"><h3><span class="dot"></span> 声调搭配</h3>'
+    +'<div class="tone-visual">'
+    +toneResult.tones.map((t,i) => {
+      const h = t===0?20: 15+t*15;
+      return '<div class="tone-bar" style="height:'+h+'px"><span class="tone-num">'+t+'</span><span class="tone-label">'+name[i]+' ('+(toneNames[t]||'轻声')+')</span></div>';
+    }).join('')
+    +'</div>'
+    +'<p style="font-size:11px;color:'+(toneResult.allSame?'#E74C3C':'#27AE60')+';font-weight:600;margin-top:24px">'
+    +'声调评分：'+toneResult.score+'分'+(toneResult.allSame?' · 三连同调，建议调整':'　·　抑扬顿挫，朗朗上口')
+    +'</p></div>'
+    // 诗词出处
+    +(poemMatch ? '<div class="analysis-section"><h3><span class="dot"></span> 诗词出处</h3>'
+    +'<div class="poetry-quote"><div class="verse">'+poemMatch.t+'</div>'
+    +'<div class="author">— '+poemMatch.a+'（'+poemMatch.d+'）</div></div></div>' : '')
+    // 五行
+    +'<div class="analysis-section"><h3><span class="dot"></span> 五行分析</h3>'
+    +'<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
+    +[surname,...givenChars].map((ch,i) => {
+      const data = i===0 ? null : givenCharData[i-1];
+      const wx = data ? data.wx : strokeToWuxing(surnameStrokes[0]);
+      const colors = {"木":"#27AE60","火":"#E74C3C","土":"#F39C12","金":"#8B7355","水":"#2980B9"};
+      return '<span style="padding:6px 16px;border-radius:6px;background:'+colors[wx]+'15;color:'+colors[wx]+';font-size:13px;font-weight:700">'+ch+'('+wx+')</span>';
+    }).join('')
+    +'</div></div>'
+    +'</div></div>';
+}
+
+function wugeItem(label, data) {
+  const cls = data.lucky==='吉'?'ji':data.lucky==='凶'?'xiong':'ban';
+  return '<div class="wuge-item"><div class="wuge-name">'+label+'</div>'
+    +'<div class="wuge-num">'+data.value+'</div>'
+    +'<div class="wuge-luck '+cls+'">'+data.lucky+'</div></div>';
+}
+
+// ===== TAB 3: 诗词取名 =====
+function initPoetryTab() {
+  const dynasties = [...new Set(POEMS.map(p=>p.d))];
+  const container = document.getElementById('dynastyTabs');
+  container.innerHTML = dynasties.map((d,i) =>
+    '<span class="dynasty-tab'+(i===0?' active':'')+'" data-dynasty="'+d+'">'+d+'</span>'
+  ).join('');
+
+  container.querySelectorAll('.dynasty-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.dynasty-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      renderPoems(tab.dataset.dynasty);
+    });
+  });
+
+  if (dynasties.length) renderPoems(dynasties[0]);
+}
+
+function renderPoems(dynasty) {
+  const filtered = POEMS.filter(p=>p.d===dynasty);
+  const list = document.getElementById('poemList');
+  list.innerHTML = filtered.map(p => {
+    let text = p.t;
+    if (p.chars) {
+      p.chars.forEach(ch => {
+        text = text.replace(new RegExp(ch,'g'), '<em>'+ch+'</em>');
+      });
+    }
+    const picks = p.chars ? p.chars.filter(ch => CHARS.find(c=>c.ch===ch)).slice(0,4) : [];
+    return '<div class="poem-card">'
+      +'<div class="poem-title">'+p.a.split('·').pop()+'</div>'
+      +'<div class="poem-author">'+p.a+'（'+p.d+'）</div>'
+      +'<div class="poem-text">'+text.replace(/，/g,'，<br/>')+'</div>'
+      +(picks.length?'<div class="name-picks">'+picks.map(ch=>'<span class="pick" onclick="usePoetryChar(\''+ch+'\')">'+ch+'</span>').join('')+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function usePoetryChar(ch) {
+  switchTab('generate');
+  // Could pre-fill, for now just switch
+}
 </script>
-<noscript><p>取名器 — DevKit。请启用 JavaScript。</p></noscript>
 </body>
 </html>
