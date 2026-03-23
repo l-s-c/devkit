@@ -166,6 +166,7 @@ export default defineConfig({
         'lab-lever': resolve(__dirname, 'pages/lab/lever/index.html'),
         'lab-mirror': resolve(__dirname, 'pages/lab/mirror/index.html'),
         'lab-boiling': resolve(__dirname, 'pages/lab/boiling/index.html'),
+        'lab-liquid-pressure': resolve(__dirname, 'pages/lab/liquid-pressure/index.html'),
         'lab-ohm': resolve(__dirname, 'pages/lab/ohm/index.html'),
         'lab-lens': resolve(__dirname, 'pages/lab/lens/index.html'),
         'lab-pulley': resolve(__dirname, 'pages/lab/pulley/index.html'),
