@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水的沸腾实验 - 温度时间图像·沸点与气压关系 | DevKit</title>
+<meta name="keywords" content="水的沸腾,沸腾实验,温度时间图像,沸点,气压与沸点,初中物理,热学实验">
+<meta name="description" content="在线模拟水的沸腾实验，观察加热过程温度变化和气泡特征，实时生成温度-时间图像，探究沸点与气压关系，初中物理必考实验">
+<meta property="og:title" content="水的沸腾实验 - 温度时间图像·沸点与气压关系 | DevKit">
+<meta property="og:description" content="在线模拟水的沸腾实验，观察加热过程温度变化和气泡特征，实时生成温度-时间图像，探究沸点与气压关系">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/boiling.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/boiling/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#F5F0EB;color:#1D1D1F;min-height:100vh;overflow-x:hidden}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#EA580C;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(234,88,12,0.08);color:#EA580C;border:1px solid rgba(234,88,12,0.2);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.lab-container{display:flex;align-items:flex-start;max-width:1080px;margin:16px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;position:relative;user-select:none}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:280px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.slider-control{margin:8px 0}
+.slider-control label{font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px}
+.slider-control input[type=range]{width:100%;accent-color:#EA580C;height:6px}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#EA580C}
+.btn-row{display:flex;gap:6px}
+.ctrl-btn{flex:1;padding:8px;border-radius:8px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.ctrl-btn:hover{background:rgba(234,88,12,0.06);border-color:rgba(234,88,12,0.3);color:#EA580C}
+.ctrl-btn.active{background:#EA580C;color:#fff;border-color:#EA580C}
+.data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:10px}
+.data-table th{background:#FFF7ED;color:#9A3412;padding:4px 6px;text-align:center;font-weight:600;border:1px solid #FDBA74}
+.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:10px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+.reset-btn:hover{background:#E5E7EB}
+.knowledge-section{max-width:1080px;margin:24px auto;padding:0 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:14px 20px;background:linear-gradient(135deg,#FFF7ED,#FFEDD5);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(234,88,12,0.1)}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#EA580C;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:15px;font-weight:700;color:#9A3412}
+.knowledge-card .card-body{padding:20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0;margin:0 0 8px 0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0 2px 16px;position:relative}
+.knowledge-card li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:#EA580C;opacity:0.5}
+.formula-box{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:10px;padding:14px 20px;text-align:center;margin:12px 0;border:1px solid rgba(234,88,12,0.1)}
+.status-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.status-badge.heating{background:rgba(234,88,12,0.1);color:#EA580C}
+.status-badge.boiling{background:rgba(220,38,38,0.1);color:#DC2626}
+.status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="location.href='/devkit/pages/lab/'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb">
+    <a href="/devkit/pages/lab/">实验室</a>
+    <span style="color:#D1D5DB">&rsaquo;</span>
+    <span style="background:rgba(234,88,12,0.08);color:#EA580C;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">热学实验</span>
+  </div>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0a4 4 0 014 4v6a2 2 0 01-2 2h-4a2 2 0 01-2-2v-6a4 4 0 014-4z"/><path d="M8 16h8"/></svg> 水的沸腾实验</h1>
+</div>
+<div class="purpose-bar">
+  <span class="purpose-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 探究水的沸腾特点</span>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="canvas" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(59,130,246,0.15)"/>
+          <stop offset="100%" stop-color="rgba(59,130,246,0.35)"/>
+        </linearGradient>
+        <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#EA580C"/>
+          <stop offset="40%" stop-color="#F59E0B"/>
+          <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.3"/>
+        </linearGradient>
+        <linearGradient id="mercuryGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#DC2626"/>
+          <stop offset="100%" stop-color="#EF4444"/>
+        </linearGradient>
+      </defs>
+      <rect width="700" height="420" fill="#FAFBFE"/>
+      <!-- Iron stand -->
+      <rect x="120" y="60" width="6" height="320" rx="3" fill="#9CA3AF"/>
+      <rect x="100" y="375" width="120" height="8" rx="4" fill="#6B7280"/>
+      <rect x="126" y="90" width="40" height="4" rx="2" fill="#9CA3AF"/>
+      <rect x="126" y="180" width="50" height="4" rx="2" fill="#9CA3AF"/>
+      <!-- Wire gauze -->
+      <rect x="140" y="290" width="160" height="4" rx="2" fill="#D1D5DB"/>
+      <!-- Beaker -->
+      <rect x="155" y="160" width="130" height="130" rx="4" fill="none" stroke="#94A3B8" stroke-width="2"/>
+      <rect x="148" y="156" width="144" height="8" rx="2" fill="#CBD5E1" opacity="0.5"/>
+      <!-- Water -->
+      <rect id="water" x="157" y="195" width="126" height="93" fill="url(#waterGrad)"/>
+      <!-- Cardboard cover -->
+      <rect x="155" y="155" width="130" height="6" rx="2" fill="#D4A574" opacity="0.7"/>
+      <rect x="210" y="152" width="8" height="10" rx="2" fill="#F5F0EB"/>
+      <!-- Thermometer -->
+      <g id="thermometer">
+        <rect x="212" y="80" width="4" height="120" rx="2" fill="#E5E7EB"/>
+        <rect id="mercury" x="212.5" y="160" width="3" height="40" rx="1.5" fill="url(#mercuryGrad)"/>
+        <circle cx="214" cy="202" r="5" fill="#DC2626"/>
+        <text x="222" y="100" font-size="7" fill="#6B7280">100</text>
+        <text x="222" y="125" font-size="7" fill="#6B7280">60</text>
+        <text x="222" y="155" font-size="7" fill="#6B7280">20</text>
+        <text id="tempLabel" x="214" y="72" font-size="11" fill="#EA580C" text-anchor="middle" font-weight="800">20.0&#176;C</text>
+      </g>
+      <!-- Bubbles -->
+      <g id="bubbles"></g>
+      <!-- Alcohol lamp -->
+      <g id="lamp" cursor="grab" transform="translate(400, 340)">
+        <ellipse cx="0" cy="20" rx="28" ry="8" fill="#6B7280" opacity="0.15"/>
+        <path d="M-20,0 L-22,18 Q0,24 22,18 L20,0 Z" fill="#C084FC" stroke="#A855F7" stroke-width="1"/>
+        <rect x="-3" y="-12" width="6" height="14" rx="2" fill="#9CA3AF"/>
+        <g id="flame" style="display:none">
+          <ellipse cx="0" cy="-22" rx="6" ry="14" fill="url(#flameGrad)" opacity="0.9">
+            <animate attributeName="ry" values="14;12;15;13;14" dur="0.4s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse cx="0" cy="-20" rx="3" ry="8" fill="#FDE68A" opacity="0.7">
+            <animate attributeName="ry" values="8;6;9;7;8" dur="0.3s" repeatCount="indefinite"/>
+          </ellipse>
+        </g>
+        <text x="0" y="36" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">酒精灯</text>
+      </g>
+      <!-- T-t chart -->
+      <g transform="translate(420, 60)">
+        <text x="110" y="-8" font-size="11" fill="#1D1D1F" text-anchor="middle" font-weight="700">温度-时间图像</text>
+        <line x1="30" y1="0" x2="30" y2="200" stroke="#D1D5DB" stroke-width="1"/>
+        <line x1="30" y1="200" x2="240" y2="200" stroke="#D1D5DB" stroke-width="1"/>
+        <text x="25" y="5" font-size="8" fill="#9CA3AF" text-anchor="end">100</text>
+        <text x="25" y="55" font-size="8" fill="#9CA3AF" text-anchor="end">80</text>
+        <text x="25" y="105" font-size="8" fill="#9CA3AF" text-anchor="end">60</text>
+        <text x="25" y="155" font-size="8" fill="#9CA3AF" text-anchor="end">40</text>
+        <text x="25" y="200" font-size="8" fill="#9CA3AF" text-anchor="end">20</text>
+        <line x1="30" y1="0" x2="240" y2="0" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="50" x2="240" y2="50" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="100" x2="240" y2="100" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="150" x2="240" y2="150" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="135" y="218" font-size="9" fill="#6B7280" text-anchor="middle">时间 / min</text>
+        <text x="8" y="100" font-size="9" fill="#6B7280" text-anchor="middle" transform="rotate(-90,8,100)">温度 / &#176;C</text>
+        <line id="bpLine" x1="30" y1="0" x2="240" y2="0" stroke="#EA580C" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.5"/>
+        <text id="bpLabel" x="242" y="4" font-size="8" fill="#EA580C">沸点</text>
+        <polyline id="ttLine" points="" fill="none" stroke="#EA580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="ttDots"></g>
+      </g>
+      <!-- Guide -->
+      <text id="guideText" x="400" y="390" font-size="13" fill="#EA580C" font-weight="700" text-anchor="middle" opacity="1">
+        &larr; 拖拽酒精灯到烧杯下方开始加热
+      </text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0a4 4 0 014 4v6a2 2 0 01-2 2h-4a2 2 0 01-2-2v-6a4 4 0 014-4z"/></svg> 实验数据</h3>
+      <div class="data-row"><span class="data-label">当前温度</span><span class="data-value" id="valTemp" style="color:#EA580C;font-size:16px">20.0 &#176;C</span></div>
+      <div class="data-row"><span class="data-label">时间</span><span class="data-value" id="valTime">0:00</span></div>
+      <div class="data-row"><span class="data-label">状态</span><span id="valStatus"><span class="status-badge idle">未加热</span></span></div>
+      <div class="data-row"><span class="data-label">沸点</span><span class="data-value" id="valBP">100.0 &#176;C</span></div>
+    </div>
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 气压调节</h3>
+      <div class="slider-control">
+        <label>大气压 = <span class="slider-val" id="pressureVal">1.0 atm</span></label>
+        <input type="range" id="pressureSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updatePressure()">
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">低气压(高原) &larr; &rarr; 高气压(高压锅)</div>
+    </div>
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 实验控制</h3>
+      <div class="btn-row">
+        <button class="ctrl-btn" id="btnPlay" onclick="togglePlay()">开始加热</button>
+        <button class="ctrl-btn" id="btnSpeed" onclick="toggleSpeed()">1x</button>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg> 数据记录</h3>
+      <div style="max-height:150px;overflow-y:auto">
+        <table class="data-table">
+          <thead><tr><th>时间(min)</th><th>温度(&#176;C)</th><th>状态</th></tr></thead>
+          <tbody id="dataBody"><tr><td>0</td><td>20.0</td><td>未加热</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetExperiment()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> 重置实验</button>
+  </div>
+</div>
+
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验知识</h2></div>
+    <div class="card-body">
+      <p><strong>沸腾</strong>是液体内部和表面同时发生的剧烈汽化现象。</p>
+      <ul>
+        <li><strong>沸腾条件</strong>：达到沸点 + 持续吸热</li>
+        <li><strong>沸腾特点</strong>：继续吸热，但温度不变</li>
+        <li><strong>气泡变化</strong>：沸腾前气泡上升变小（遇冷水收缩），沸腾后气泡上升变大</li>
+        <li><strong>沸点与气压</strong>：气压越高，沸点越高。高原上水不到100&#176;C就沸腾，高压锅内沸点超过100&#176;C</li>
+      </ul>
+    </div>
+  </div>
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>公式与计算</h2></div>
+    <div class="card-body">
+      <div class="formula-box"><span class="formula">Q = cm\Delta t</span></div>
+      <p>其中 Q 为吸收的热量，c 为水的比热容（4.2&times;10&sup3; J/(kg&middot;&#176;C)），m 为水的质量，&Delta;t 为温度变化量。</p>
+      <p>注意：沸腾过程中虽然持续吸热（Q &gt; 0），但温度不变（&Delta;t = 0），此阶段的热量用于克服分子间作用力，完成液态&rarr;气态的相变。</p>
+    </div>
+  </div>
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>1.</strong> 在标准大气压下，对水加热，当水温升到 90&#176;C 时，每隔 1 分钟记录一次温度（如下表），下列说法正确的是（　）</p>
+      <table class="data-table" style="margin:8px 0;font-size:11px">
+        <tr><th>时间/min</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+        <tr><th>温度/&#176;C</th><td>90</td><td>92</td><td>94</td><td>96</td><td>98</td><td>98</td><td>98</td></tr>
+      </table>
+      <p>A. 水的沸点是 100&#176;C<br/>B. 水在沸腾过程中温度保持不变<br/>C. 从表中数据可知水的沸点是 98&#176;C<br/>D. 以上都不对</p>
+      <p style="font-size:11px;color:#6B7280;margin-top:4px">解析：从数据看，4-6 分钟温度恒定在 98&#176;C，说明沸点为 98&#176;C（气压略低于标准大气压）。B 正确（沸腾时温度不变），C 正确。答案选 B 和 C（若单选则选 C）。</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Physics State
+let temp = 20, time = 0, boilingPoint = 100;
+let isHeating = false, isPaused = true, speed = 1;
+let lampDocked = false;
+let dataPoints = [{t:0, T:20}];
+let bubbles = [];
+let lastRecordMin = 0;
+
+// Pressure to Boiling Point
+const bpTable = [[0.5,82],[0.7,90],[1.0,100],[1.5,112],[2.0,120]];
+function pressureToBP(p) {
+  for (let i = 0; i < bpTable.length-1; i++) {
+    if (p >= bpTable[i][0] && p <= bpTable[i+1][0]) {
+      const r = (p - bpTable[i][0]) / (bpTable[i+1][0] - bpTable[i][0]);
+      return bpTable[i][1] + r * (bpTable[i+1][1] - bpTable[i][1]);
+    }
+  }
+  return 100;
+}
+
+function updatePressure() {
+  const p = parseFloat(document.getElementById('pressureSlider').value);
+  document.getElementById('pressureVal').textContent = p.toFixed(1) + ' atm';
+  boilingPoint = pressureToBP(p);
+  document.getElementById('valBP').textContent = boilingPoint.toFixed(1) + ' \u00B0C';
+  const bpY = 200 - (boilingPoint - 20) * 200 / 80;
+  document.getElementById('bpLine').setAttribute('y1', bpY);
+  document.getElementById('bpLine').setAttribute('y2', bpY);
+  document.getElementById('bpLabel').setAttribute('y', bpY + 4);
+}
+
+// Lamp Drag
+const lampEl = document.getElementById('lamp');
+const svgEl = document.getElementById('canvas');
+let ldrag = false, loff = {x:0, y:0};
+const dockPos = {x:220, y:310};
+
+function svgPt(e) {
+  const r = svgEl.getBoundingClientRect();
+  const cx = e.touches ? e.touches[0].clientX : e.clientX;
+  const cy = e.touches ? e.touches[0].clientY : e.clientY;
+  return {x: (cx-r.left)/r.width*700, y: (cy-r.top)/r.height*420};
+}
+
+lampEl.addEventListener('mousedown', e => { if(lampDocked) return; e.preventDefault(); ldrag=true; const p=svgPt(e); loff.x=p.x-400; loff.y=p.y-340; });
+lampEl.addEventListener('touchstart', e => { if(lampDocked) return; e.preventDefault(); ldrag=true; const p=svgPt(e); loff.x=p.x-400; loff.y=p.y-340; }, {passive:false});
+document.addEventListener('mousemove', e => { if(!ldrag) return; const p=svgPt(e); lampEl.setAttribute('transform',`translate(${p.x-loff.x},${p.y-loff.y})`); });
+document.addEventListener('touchmove', e => { if(!ldrag) return; e.preventDefault(); const p=svgPt(e); lampEl.setAttribute('transform',`translate(${p.x-loff.x},${p.y-loff.y})`); }, {passive:false});
+document.addEventListener('mouseup', endDrag);
+document.addEventListener('touchend', endDrag);
+
+function endDrag() {
+  if(!ldrag) return; ldrag=false;
+  const t=lampEl.getAttribute('transform');
+  const m=t.match(/translate\(([\d.+-]+),\s*([\d.+-]+)\)/);
+  if(m) {
+    const x=parseFloat(m[1]), y=parseFloat(m[2]);
+    if(Math.abs(x-dockPos.x)<60 && Math.abs(y-dockPos.y)<50) dockLamp();
+  }
+}
+
+function dockLamp() {
+  lampDocked=true;
+  lampEl.setAttribute('transform',`translate(${dockPos.x},${dockPos.y})`);
+  lampEl.style.cursor='default';
+  document.getElementById('flame').style.display='block';
+  const g=document.getElementById('guideText'); if(g) g.setAttribute('opacity','0');
+  isHeating=true; isPaused=false;
+  document.getElementById('btnPlay').textContent='暂停';
+  document.getElementById('btnPlay').classList.add('active');
+}
+
+function togglePlay() {
+  if(!lampDocked){alert('请先将酒精灯拖到烧杯下方'); return;}
+  isPaused=!isPaused;
+  document.getElementById('btnPlay').textContent=isPaused?'继续':'暂停';
+  document.getElementById('btnPlay').classList.toggle('active',!isPaused);
+}
+
+function toggleSpeed() {
+  const ss=[1,2,4]; const i=ss.indexOf(speed);
+  speed=ss[(i+1)%ss.length];
+  document.getElementById('btnSpeed').textContent=speed+'x';
+}
+
+function resetExperiment() {
+  temp=20; time=0; isHeating=false; isPaused=true; lampDocked=false;
+  speed=1; dataPoints=[{t:0,T:20}]; bubbles=[]; lastRecordMin=0;
+  lampEl.setAttribute('transform','translate(400,340)');
+  lampEl.style.cursor='grab';
+  document.getElementById('flame').style.display='none';
+  const g=document.getElementById('guideText'); if(g) g.setAttribute('opacity','1');
+  document.getElementById('btnPlay').textContent='开始加热';
+  document.getElementById('btnPlay').classList.remove('active');
+  document.getElementById('btnSpeed').textContent='1x';
+  updatePressure(); updateDisplay();
+  document.getElementById('ttLine').setAttribute('points','');
+  document.getElementById('ttDots').innerHTML='';
+  document.getElementById('dataBody').innerHTML='<tr><td>0</td><td>20.0</td><td>未加热</td></tr>';
+}
+
+// Main Loop
+let lastTS=0;
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if(!lastTS){lastTS=ts;return;}
+  if(isPaused){lastTS=ts;return;}
+  const elapsed=(ts-lastTS)/1000; lastTS=ts;
+  const simDt=elapsed*10*speed;
+  time+=simDt;
+  if(isHeating && temp<boilingPoint) {
+    temp=Math.min(boilingPoint, temp+0.167*simDt);
+  }
+  const curMin=Math.floor(time/60);
+  if(curMin>lastRecordMin && curMin<=15) {
+    lastRecordMin=curMin;
+    dataPoints.push({t:curMin,T:temp});
+    addRow(curMin,temp);
+  }
+  updateBubbles(simDt);
+  updateDisplay();
+}
+
+function updateBubbles(dt) {
+  if(!isHeating) return;
+  const boiling=temp>=boilingPoint-0.5;
+  const rate=boiling?0.15:(temp>50?0.03:0.01);
+  if(Math.random()<rate*dt*60) {
+    bubbles.push({x:170+Math.random()*100, y:285, r:boiling?2:3, vy:-(20+Math.random()*30), growing:boiling, life:0});
+  }
+  for(let i=bubbles.length-1;i>=0;i--) {
+    const b=bubbles[i];
+    b.y+=b.vy*dt; b.life+=dt; b.x+=(Math.random()-0.5)*2;
+    if(b.growing) b.r=Math.min(8,2+b.life*4);
+    else b.r=Math.max(0.5,3-b.life*2);
+    if(b.y<200||b.r<0.3) bubbles.splice(i,1);
+  }
+  document.getElementById('bubbles').innerHTML=bubbles.map(b=>
+    `<circle cx="${b.x}" cy="${b.y}" r="${b.r}" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>`
+  ).join('');
+}
+
+function updateDisplay() {
+  document.getElementById('valTemp').textContent=temp.toFixed(1)+' \u00B0C';
+  const mn=Math.floor(time/60), sc=Math.floor(time%60);
+  document.getElementById('valTime').textContent=mn+':'+String(sc).padStart(2,'0');
+  let sh;
+  if(!isHeating) sh='<span class="status-badge idle">未加热</span>';
+  else if(temp>=boilingPoint-0.5) sh='<span class="status-badge boiling">沸腾中</span>';
+  else if(temp>85) sh='<span class="status-badge heating">即将沸腾</span>';
+  else sh='<span class="status-badge heating">加热中</span>';
+  document.getElementById('valStatus').innerHTML=sh;
+  const mH=10+(temp-20)/80*70, mY=200-mH;
+  document.getElementById('mercury').setAttribute('y',mY);
+  document.getElementById('mercury').setAttribute('height',mH);
+  document.getElementById('tempLabel').textContent=temp.toFixed(1)+'\u00B0C';
+  updateChart();
+}
+
+function updateChart() {
+  const maxMin=Math.max(10,lastRecordMin+2);
+  let pts='', dots='';
+  dataPoints.forEach(d => {
+    const x=30+(d.t/maxMin)*210, y=200-((d.T-20)/80)*200;
+    pts+=x+','+y+' ';
+    dots+=`<circle cx="${x}" cy="${y}" r="2.5" fill="#EA580C"/>`;
+  });
+  const cx=30+((time/60)/maxMin)*210, cy=200-((temp-20)/80)*200;
+  pts+=cx+','+cy;
+  document.getElementById('ttLine').setAttribute('points',pts);
+  document.getElementById('ttDots').innerHTML=dots;
+}
+
+function addRow(min,T) {
+  const s=T>=boilingPoint-0.5?'沸腾':'加热';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${min}</td><td>${T.toFixed(1)}</td><td>${s}</td>`;
+  document.getElementById('dataBody').appendChild(tr);
+}
+
+function renderFormulas() {
+  document.querySelectorAll('.formula').forEach(el => {
+    katex.render(el.textContent, el, {throwOnError:false});
+  });
+}
+
+updatePressure();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
