@@ -306,7 +306,7 @@ function renderNameCard(c) {
     +'</div><div class="name-meta">'
     +'<div class="full-name">'+fullName+(c.isCommon?'<span class="common-warn">高频名</span>':'')+'</div>'
     +'<div class="pinyin">'+pinyin+'</div>'
-    +(sourceText?'<div class="source">'+sourceText+'</div>':'')
+    +'<div class="source">'+(sourceText||'寓意取名')+'</div>'
     +'</div></div>'
     +'<div class="card-scores">'
     +scoreItem('五格',c.wugeScore)+scoreItem('声调',c.toneScore)
