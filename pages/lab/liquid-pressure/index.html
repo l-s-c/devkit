@@ -83,7 +83,7 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
 
 <div class="lab-container">
   <div class="canvas-area">
-    <svg id="canvas" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
+    <svg id="canvas" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <clipPath id="containerClip"><rect x="80" y="100" width="200" height="260"/></clipPath>
       </defs>
@@ -154,7 +154,7 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
       </g>
 
       <!-- Guide text -->
-      <text id="guideText" x="180" y="420" font-size="12" fill="#059669" font-weight="700" text-anchor="middle" opacity="1">
+      <text id="guideText" x="180" y="370" font-size="12" fill="#059669" font-weight="700" text-anchor="middle" opacity="1">
         &uarr;&darr; 拖拽探头上下移动，观察 U 形管液面差变化
       </text>
     </svg>
@@ -303,7 +303,7 @@ let pdrag = false, poff = 0;
 function svgY(e) {
   const r = svgEl.getBoundingClientRect();
   const cy = e.touches ? e.touches[0].clientY : e.clientY;
-  return (cy - r.top) / r.height * 440;
+  return (cy - r.top) / r.height * 380;
 }
 
 probeEl.addEventListener('mousedown', e => { e.preventDefault(); pdrag=true; poff=svgY(e)-probeY; });
