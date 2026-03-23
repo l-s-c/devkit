@@ -291,7 +291,7 @@ function generateNames() {
 
   const grid = document.getElementById('nameGrid');
   grid.innerHTML = top.map(c => renderNameCard(c)).join('');
-  bindFavButtons();
+
 }
 
 function renderNameCard(c) {
@@ -361,18 +361,18 @@ function findPoemMatch(nameChars) {
   return null;
 }
 
-function bindFavButtons() {
-  document.querySelectorAll('.fav-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const name = btn.dataset.name;
-      const idx = FAVORITES.indexOf(name);
-      if (idx >= 0) { FAVORITES.splice(idx,1); btn.classList.remove('saved'); btn.querySelector('svg').setAttribute('fill','none'); }
-      else { FAVORITES.push(name); btn.classList.add('saved'); btn.querySelector('svg').setAttribute('fill','currentColor'); }
-      localStorage.setItem('name-favs', JSON.stringify(FAVORITES));
-    });
-  });
-}
+// Event delegation for fav buttons
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.fav-btn');
+  if (!btn) return;
+  e.stopPropagation();
+  const name = btn.dataset.name;
+  if (!name) return;
+  const idx = FAVORITES.indexOf(name);
+  if (idx >= 0) { FAVORITES.splice(idx,1); btn.classList.remove('saved'); btn.querySelector('svg').setAttribute('fill','none'); }
+  else { FAVORITES.push(name); btn.classList.add('saved'); btn.querySelector('svg').setAttribute('fill','currentColor'); }
+  localStorage.setItem('name-favs', JSON.stringify(FAVORITES));
+});
 
 // ===== TAB 2: 名字分析 =====
 function analyzeName() {
