@@ -154,6 +154,9 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
       <div class="form-group"><label>性别</label><select id="gender"><option value="male">男孩</option><option value="female">女孩</option><option value="neutral">不限</option></select></div>
       <div class="form-group"><label>字数</label><select id="charCount"><option value="1">两字名</option><option value="2" selected>三字名</option></select></div>
     </div>
+    <div class="form-row">
+      <div class="form-group"><label>出生日期（可选）</label><input type="date" id="birthdate"/></div>
+    </div>
     <div class="form-group" style="margin-bottom:16px">
       <label>诗词偏好</label>
       <div class="pref-tags" id="prefTags">
@@ -429,9 +432,10 @@ function analyzeName() {
     +'声调评分：'+toneResult.score+'分'+(toneResult.allSame?' · 三连同调，建议调整':'　·　抑扬顿挫，朗朗上口')
     +'</p></div>'
     // 诗词出处
-    +(poemMatch ? '<div class="analysis-section"><h3><span class="dot"></span> 诗词出处</h3>'
-    +'<div class="poetry-quote"><div class="verse">'+poemMatch.t+'</div>'
-    +'<div class="author">— '+poemMatch.a+'（'+poemMatch.d+'）</div></div></div>' : '')
+    +'<div class="analysis-section"><h3><span class="dot"></span> 诗词出处</h3>'
+    +(poemMatch ? '<div class="poetry-quote"><div class="verse">'+poemMatch.t+'</div>'
+    +'<div class="author">— '+poemMatch.a+'（'+poemMatch.d+'）</div></div>' : '<p style="font-size:12px;color:#8B7355">暂无匹配的诗词典故记录</p>')
+    +'</div>'
     // 五行
     +'<div class="analysis-section"><h3><span class="dot"></span> 五行分析</h3>'
     +'<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
