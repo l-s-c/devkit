@@ -61,7 +61,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <a class="topbar-logo" href="../index.html"><svg class="topbar-logo-icon" width="24" height="24" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#bg)"/><g transform="translate(256,256) rotate(-45) translate(-256,-256)"><path d="M352 108c-35.3 0-67.3 14.3-90.5 37.5L175 232c-5.6-1.3-11.5-2-17.5-2C111 230 72 269 72 315.5S111 401 157.5 401 243 362 243 315.5c0-6-0.7-11.9-2-17.5l86.5-86.5C350.7 235 383 249 418 249c8 0 15.8-0.7 23.3-2l-0.1 0.1C465 223.3 480 190.8 480 155c0-8.5-0.8-16.8-2.2-24.8L410 198l-56-14-14-56 68-67.8C400 59 391 58 382 58c-10 0-20 0.7-30 2zm-194.5 248a40 40 0 1 1 0-80 40 40 0 0 1 0 80z" fill="#fff" fill-opacity="0.95"/></g></svg><span class="topbar-logo-text">DevKit</span></a>
   <span class="topbar-tool-name">世界之最百科</span>
   <div class="topbar-spacer"></div>
-  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+  <button class="theme-btn" onclick="toggleTheme()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 </div>
 <div class="main">
   <div class="panel">
@@ -145,7 +145,7 @@ const records=[
   {emoji:"◎",title:"最大的互联网公司",answer:"谷歌（Alphabet）",cat:"科技",data:"每天处理约 85 亿次搜索",loc:"美国加利福尼亚",detail:"1998年创立，现已成为全球最大的搜索引擎。",fun:["'Google'来自数学术语'Googol'（10的100次方）","YouTube每分钟上传500小时视频","数据中心用电量相当于一座城市"]},
   {emoji:"⊞",title:"销量最高的手机",answer:"iPhone",cat:"科技",data:"累计销量超 24 亿部",loc:"美国（苹果公司）",detail:"2007年乔布斯发布首款iPhone，彻底改变了手机行业。",fun:["初代iPhone存储仅4GB","现代iPhone的算力超过阿波罗登月计算机百万倍","每秒全球售出约6部iPhone"]},
   {emoji:"◎",title:"最大的科学工程",answer:"人类基因组计划",cat:"科技",data:"耗资约 30 亿美元，历时 13 年",loc:"全球多国合作",detail:"1990年启动，2003年完成人类DNA全序列测定。",fun:["人类DNA链展开约2米长","人类基因99.9%相同","人类与香蕉共享约60%的DNA"]},
-  {emoji:"🔭",title:"最大的望远镜",answer:"中国天眼（FAST）",cat:"科技",data:"口径 500 米",loc:"中国贵州",detail:"2016年落成，是世界上最大的单口径射电望远镜。",fun:["面积相当于30个足球场","能接收137亿光年外的信号","选址在天然喀斯特洼地中"]},
+  {emoji:"◎",title:"最大的望远镜",answer:"中国天眼（FAST）",cat:"科技",data:"口径 500 米",loc:"中国贵州",detail:"2016年落成，是世界上最大的单口径射电望远镜。",fun:["面积相当于30个足球场","能接收137亿光年外的信号","选址在天然喀斯特洼地中"]},
   {emoji:"↯",title:"最大的发电站",answer:"三峡水电站",cat:"科技",data:"装机容量 22,500 兆瓦",loc:"中国湖北宜昌",detail:"2006年大坝主体完工，是世界上最大的水力发电站。",fun:["大坝长2335米，高185米","年发电量约1000亿度","水库蓄水使地球自转略微变慢"]},
   {emoji:"◎",title:"最快的列车",answer:"上海磁浮列车",cat:"科技",data:"最高运营时速 431 km/h",loc:"中国上海",detail:"连接上海浦东机场与市区，全程仅需7分20秒。",fun:["使用德国磁悬浮技术","列车不接触轨道，悬浮约10毫米","日本实验型磁浮列车曾达603km/h"]},
   {emoji:"◎️",title:"最低的陆地",answer:"死海",cat:"地理",data:"海拔 -430.5 米",loc:"以色列/约旦边境",detail:"盐度是普通海水的10倍，人可以轻松漂浮。",fun:["每年水位下降约1米","是地球上最咸的水体之一","古罗马人称其为'沥青湖'"]},
