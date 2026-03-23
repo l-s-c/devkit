@@ -407,10 +407,12 @@ render();
   </div>
 </div>
 </div>
-<script src="/shared/theme.js">function renderFormulas(){
+<script>
+function renderFormulas(){
   var el=document.getElementById('knowledgeFormula1');
   if(el&&window.katex)katex.render('F = \\frac{G}{n}',el,{throwOnError:false,displayMode:true});
 }
 </script>
+<script src="/shared/theme.js"></script>
 </body>
 </html>
