@@ -300,16 +300,16 @@ const probeEl = document.getElementById('probe');
 const svgEl = document.getElementById('canvas');
 let pdrag = false, poff = 0;
 
-function svgPt(e) {
+function svgY(e) {
   const r = svgEl.getBoundingClientRect();
   const cy = e.touches ? e.touches[0].clientY : e.clientY;
   return (cy - r.top) / r.height * 440;
 }
 
-probeEl.addEventListener('mousedown', e => { e.preventDefault(); pdrag=true; poff=svgPt(e)-probeY; });
-probeEl.addEventListener('touchstart', e => { e.preventDefault(); pdrag=true; poff=svgPt(e)-probeY; }, {passive:false});
-document.addEventListener('mousemove', e => { if(!pdrag) return; moveProbe(svgPt(e)-poff); });
-document.addEventListener('touchmove', e => { if(!pdrag) return; e.preventDefault(); moveProbe(svgPt(e)-poff); }, {passive:false});
+probeEl.addEventListener('mousedown', e => { e.preventDefault(); pdrag=true; poff=svgY(e)-probeY; });
+probeEl.addEventListener('touchstart', e => { e.preventDefault(); pdrag=true; poff=svgY(e)-probeY; }, {passive:false});
+document.addEventListener('mousemove', e => { if(!pdrag) return; moveProbe(svgY(e)-poff); });
+document.addEventListener('touchmove', e => { if(!pdrag) return; e.preventDefault(); moveProbe(svgY(e)-poff); }, {passive:false});
 document.addEventListener('mouseup', () => pdrag=false);
 document.addEventListener('touchend', () => pdrag=false);
 
