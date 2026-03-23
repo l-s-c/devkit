@@ -60,7 +60,8 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
 .formula-box{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:10px;padding:14px 20px;text-align:center;margin:12px 0;border:1px solid rgba(234,88,12,0.1)}
 .status-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
 .status-badge.heating{background:rgba(234,88,12,0.1);color:#EA580C}
-.status-badge.boiling{background:rgba(220,38,38,0.1);color:#DC2626}
+.status-badge.boiling{background:rgba(220,38,38,0.1);color:#DC2626;animation:pulse-boil 1.2s ease-in-out infinite}
+@keyframes pulse-boil{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.2)}50%{box-shadow:0 0 0 6px rgba(220,38,38,0)}}
 .status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
 @media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
 </style>
@@ -182,7 +183,12 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
         <label>大气压 = <span class="slider-val" id="pressureVal">1.0 atm</span></label>
         <input type="range" id="pressureSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updatePressure()">
       </div>
-      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">低气压(高原) &larr; &rarr; 高气压(高压锅)</div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="ctrl-btn" onclick="setPressure(0.7)" style="font-size:10px">高原 0.7</button>
+        <button class="ctrl-btn" onclick="setPressure(1.0)" style="font-size:10px">标准 1.0</button>
+        <button class="ctrl-btn" onclick="setPressure(1.5)" style="font-size:10px">高压锅 1.5</button>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:4px">低气压(高原) &larr; &rarr; 高气压(高压锅)</div>
     </div>
     <div class="panel-section">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 实验控制</h3>
@@ -213,6 +219,31 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
         <li><strong>沸腾条件</strong>：达到沸点 + 持续吸热</li>
         <li><strong>沸腾特点</strong>：继续吸热，但温度不变</li>
         <li><strong>气泡变化</strong>：沸腾前气泡上升变小（遇冷水收缩），沸腾后气泡上升变大</li>
+      </ul>
+      <div style="display:flex;gap:24px;justify-content:center;margin:16px 0">
+        <div style="text-align:center">
+          <svg width="80" height="100" viewBox="0 0 80 100"><rect width="80" height="100" rx="4" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+            <circle cx="30" cy="85" r="5" fill="rgba(59,130,246,0.3)" stroke="rgba(59,130,246,0.5)" stroke-width="0.5"/>
+            <circle cx="50" cy="70" r="4" fill="rgba(59,130,246,0.25)" stroke="rgba(59,130,246,0.4)" stroke-width="0.5"/>
+            <circle cx="35" cy="50" r="3" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>
+            <circle cx="45" cy="30" r="1.5" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="0.5"/>
+            <text x="40" y="12" font-size="7" fill="#6B7280" text-anchor="middle">上升变小</text>
+          </svg>
+          <div style="font-size:11px;color:#6B7280;margin-top:4px;font-weight:600">沸腾前</div>
+        </div>
+        <div style="text-align:center">
+          <svg width="80" height="100" viewBox="0 0 80 100"><rect width="80" height="100" rx="4" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+            <circle cx="30" cy="85" r="3" fill="rgba(234,88,12,0.2)" stroke="rgba(234,88,12,0.4)" stroke-width="0.5"/>
+            <circle cx="50" cy="80" r="3.5" fill="rgba(234,88,12,0.2)" stroke="rgba(234,88,12,0.4)" stroke-width="0.5"/>
+            <circle cx="35" cy="60" r="5" fill="rgba(234,88,12,0.25)" stroke="rgba(234,88,12,0.4)" stroke-width="0.5"/>
+            <circle cx="50" cy="45" r="6" fill="rgba(234,88,12,0.3)" stroke="rgba(234,88,12,0.5)" stroke-width="0.5"/>
+            <circle cx="40" cy="25" r="8" fill="rgba(234,88,12,0.3)" stroke="rgba(234,88,12,0.5)" stroke-width="0.5"/>
+            <text x="40" y="12" font-size="7" fill="#9A3412" text-anchor="middle">上升变大</text>
+          </svg>
+          <div style="font-size:11px;color:#EA580C;margin-top:4px;font-weight:600">沸腾时</div>
+        </div>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0">
         <li><strong>沸点与气压</strong>：气压越高，沸点越高。高原上水不到100&#176;C就沸腾，高压锅内沸点超过100&#176;C</li>
       </ul>
     </div>
@@ -260,6 +291,10 @@ function pressureToBP(p) {
   return 100;
 }
 
+function setPressure(v) {
+  document.getElementById('pressureSlider').value=v;
+  updatePressure();
+}
 function updatePressure() {
   const p = parseFloat(document.getElementById('pressureSlider').value);
   document.getElementById('pressureVal').textContent = p.toFixed(1) + ' atm';
@@ -416,7 +451,8 @@ function updateChart() {
 function addRow(min,T) {
   const s=T>=boilingPoint-0.5?'沸腾':'加热';
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td>${min}</td><td>${T.toFixed(1)}</td><td>${s}</td>`;
+  if(s==='沸腾') tr.style.background='#FFF7ED';
+  tr.innerHTML=`<td>${min}</td><td>${T.toFixed(1)}</td><td style="${s==='沸腾'?'color:#EA580C;font-weight:700':''}">${s}</td>`;
   document.getElementById('dataBody').appendChild(tr);
 }
 
