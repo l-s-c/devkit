@@ -197,18 +197,19 @@ body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;backgro
 <script src="/devkit/data/name-generator/name-engine.js"></script>
 <!-- name-engine.js provides: calcWuge, checkTones, strokeToWuxing -->
 <script>
-let CHARS=[], SURNAMES={}, POEMS=[], COMMON_NAMES=[], FAVORITES=[];
+let CHARS=[], SURNAMES={}, POEMS=[], COMMON_NAMES=[], FAVORITES=[], KANGXI={};
 
 // Load data
 async function loadData() {
   const base = '/devkit/data/name-generator/';
-  const [chars, surnames, poems, common] = await Promise.all([
+  const [chars, surnames, poems, common, kangxi] = await Promise.all([
     fetch(base+'chars.json').then(r=>r.json()),
     fetch(base+'surnames.json').then(r=>r.json()),
     fetch(base+'poems.json').then(r=>r.json()),
-    fetch(base+'common-names.json').then(r=>r.json())
+    fetch(base+'common-names.json').then(r=>r.json()),
+    fetch(base+'kangxi-strokes.json').then(r=>r.json())
   ]);
-  CHARS=chars; SURNAMES=surnames; POEMS=poems; COMMON_NAMES=common;
+  CHARS=chars; SURNAMES=surnames; POEMS=poems; COMMON_NAMES=common; KANGXI=kangxi;
   FAVORITES=JSON.parse(localStorage.getItem('name-favs')||'[]');
   initPoetryTab();
 }
@@ -394,10 +395,20 @@ function analyzeName() {
   if (givenChars.length === 0) { alert('请输入完整姓名（姓+名）'); return; }
 
   const surnameStrokes = getSurnameStrokes(surname);
-  const givenCharData = givenChars.map(ch => CHARS.find(c=>c.ch===ch));
+  // Use KANGXI table for strokes (broader coverage), fall back to CHARS data
+  const givenCharData = givenChars.map(ch => {
+    const fromChars = CHARS.find(c=>c.ch===ch);
+    const kxStrokes = KANGXI[ch];
+    if (fromChars) return fromChars;
+    if (kxStrokes) return {ch, py:ch, kx:kxStrokes, wx:strokeToWuxing(kxStrokes), m:'', g:'中'};
+    return null;
+  });
   const hasAllData = givenCharData.every(c=>c);
 
-  if (!hasAllData) { alert('名字中有未收录的字，暂无法分析'); return; }
+  if (!hasAllData) {
+    const missing = givenChars.filter((_,i)=>!givenCharData[i]).join('、');
+    alert('「'+missing+'」为生僻字，暂无康熙笔画数据'); return;
+  }
 
   const nameStrokes = givenCharData.map(c=>c.kx);
   const wuge = calcWuge(surnameStrokes, nameStrokes);
