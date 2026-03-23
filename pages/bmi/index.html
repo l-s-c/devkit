@@ -239,7 +239,14 @@ const BMI_CATEGORIES = [
 function calc() {
   const h = parseFloat(heightInput.value) / 100;
   const w = parseFloat(weightInput.value);
-  if (!h || !w || h <= 0 || w <= 0) return;
+  if (!h || !w || h <= 0 || w <= 0) {
+    document.getElementById('bmiNumber').textContent = '--';
+    document.getElementById('bmiNumber').style.color = '#999';
+    document.getElementById('bmiLabel').textContent = '请输入有效数值';
+    document.getElementById('bmiLabel').style.color = '#999';
+    document.getElementById('bmiDesc').textContent = '身高和体重须大于 0';
+    return;
+  }
 
   const bmi = w / (h * h);
   const cat = BMI_CATEGORIES.find(c => bmi < c.max) || BMI_CATEGORIES[BMI_CATEGORIES.length - 1];
