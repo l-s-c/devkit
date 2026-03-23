@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>牛顿第一定律实验 - 惯性斜面小车模拟 | DevKit</title>
+<meta name="keywords" content="牛顿第一定律,惯性,斜面实验,小车,摩擦力,控制变量法,初中物理">
+<meta name="description" content="在线模拟牛顿第一定律实验，斜面小车在不同接触面上滑行距离对比，理解惯性与力的关系，初中物理必考">
+<meta property="og:title" content="牛顿第一定律实验 - 惯性斜面小车模拟 | DevKit">
+<meta property="og:description" content="在线模拟牛顿第一定律实验，斜面小车在不同接触面上滑行距离对比，理解惯性与力的关系">
+<meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/newton-first-law.png">
+<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/newton-first-law/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;background:#F5F0EB;color:#1D1D1F;min-height:100vh;overflow-x:hidden}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#059669;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(5,150,105,0.08);color:#059669;border:1px solid rgba(5,150,105,0.2);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.lab-container{display:flex;align-items:flex-start;max-width:1080px;margin:16px auto;gap:16px;padding:0 16px}
+.canvas-area{flex:1;background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;position:relative;user-select:none}
+.canvas-area svg{width:100%;height:100%;display:block}
+.panel{width:280px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.btn-row{display:flex;gap:6px}
+.pill-btn{flex:1;padding:7px;border-radius:8px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.pill-btn:hover{background:rgba(5,150,105,0.06);border-color:rgba(5,150,105,0.3);color:#059669}
+.pill-btn.active{background:#059669;color:#fff;border-color:#059669}
+.ctrl-btn{flex:1;padding:8px;border-radius:8px;border:1px solid #E5E7EB;background:#FAFBFC;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.ctrl-btn:hover{background:rgba(5,150,105,0.06);border-color:rgba(5,150,105,0.3);color:#059669}
+.ctrl-btn.active{background:#059669;color:#fff;border-color:#059669}
+.data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:10px}
+.data-table th{background:#ECFDF5;color:#065F46;padding:4px 6px;text-align:center;font-weight:600;border:1px solid #A7F3D0}
+.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:10px}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+.reset-btn:hover{background:#E5E7EB}
+.temp-card{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:8px;padding:10px 14px;margin-bottom:8px;text-align:center}
+.temp-card .label{font-size:10px;color:#065F46;font-weight:600;margin-bottom:2px}
+.temp-card .value{font-size:28px;font-weight:800;color:#059669;font-family:'JetBrains Mono',monospace}
+.status-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.status-badge.ready{background:rgba(107,114,128,0.1);color:#6B7280}
+.status-badge.moving{background:rgba(5,150,105,0.1);color:#059669;animation:pulse-move 1.2s ease-in-out infinite}
+.status-badge.stopped{background:rgba(220,38,38,0.1);color:#DC2626}
+@keyframes pulse-move{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,0.2)}50%{box-shadow:0 0 0 6px rgba(5,150,105,0)}}
+.knowledge-section{max-width:1080px;margin:24px auto;padding:0 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:14px 20px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(5,150,105,0.1)}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:15px;font-weight:700;color:#065F46}
+.knowledge-card .card-body{padding:20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card ul{list-style:none;padding:0;margin:0 0 8px 0}
+.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0 2px 16px;position:relative}
+.knowledge-card li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:#059669;opacity:0.5}
+.formula-box{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:10px;padding:14px 20px;text-align:center;margin:12px 0;border:1px solid rgba(5,150,105,0.15)}
+@media(max-width:768px){.lab-container{flex-direction:column}.panel{width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="location.href='/devkit/pages/lab/'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb">
+    <a href="/devkit/pages/lab/">实验室</a>
+    <span style="color:#D1D5DB">&rsaquo;</span>
+    <span style="background:rgba(5,150,105,0.08);color:#059669;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700">力学实验</span>
+  </div>
+  <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> 牛顿第一定律实验</h1>
+</div>
+<div class="purpose-bar">
+  <span class="purpose-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 探究阻力对物体运动的影响</span>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <svg id="canvas" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Surface patterns -->
+        <pattern id="patTowel" width="6" height="6" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill="#A78B6D"/>
+          <line x1="0" y1="2" x2="6" y2="2" stroke="#8B7355" stroke-width="0.8"/>
+          <line x1="0" y1="5" x2="6" y2="5" stroke="#8B7355" stroke-width="0.8"/>
+        </pattern>
+        <pattern id="patCloth" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#D1D5DB"/>
+          <line x1="0" y1="4" x2="8" y2="4" stroke="#B8BCC4" stroke-width="0.5"/>
+        </pattern>
+        <pattern id="patWood" width="10" height="10" patternUnits="userSpaceOnUse">
+          <rect width="10" height="10" fill="#DEB887"/>
+          <line x1="0" y1="3" x2="10" y2="3" stroke="#C4A06A" stroke-width="0.3" opacity="0.5"/>
+          <line x1="0" y1="7" x2="10" y2="7" stroke="#C4A06A" stroke-width="0.3" opacity="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="700" height="400" fill="#FAFBFE"/>
+
+      <!-- Ramp (斜面) -->
+      <polygon points="60,280 180,280 60,180" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.5"/>
+      <!-- Ramp surface line -->
+      <line x1="60" y1="180" x2="180" y2="280" stroke="#9CA3AF" stroke-width="2"/>
+      <!-- Height label -->
+      <line x1="55" y1="180" x2="55" y2="280" stroke="#059669" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="45" y="235" font-size="9" fill="#059669" text-anchor="middle" transform="rotate(-90,45,235)">h=20cm</text>
+
+      <!-- Horizontal surface -->
+      <rect id="surface" x="180" y="280" width="480" height="12" rx="2" fill="url(#patTowel)"/>
+      <!-- Surface label -->
+      <text id="surfaceLabel" x="420" y="306" font-size="9" fill="#6B7280" text-anchor="middle">毛巾表面</text>
+
+      <!-- Distance ruler -->
+      <g id="ruler">
+        <line x1="180" y1="296" x2="660" y2="296" stroke="#D1D5DB" stroke-width="0.5"/>
+        <text x="180" y="310" font-size="7" fill="#9CA3AF" text-anchor="middle">0</text>
+        <text x="300" y="310" font-size="7" fill="#9CA3AF" text-anchor="middle">20</text>
+        <text x="420" y="310" font-size="7" fill="#9CA3AF" text-anchor="middle">40</text>
+        <text x="540" y="310" font-size="7" fill="#9CA3AF" text-anchor="middle">60</text>
+        <text x="660" y="310" font-size="7" fill="#9CA3AF" text-anchor="middle">80cm</text>
+      </g>
+
+      <!-- Cart (小车) -->
+      <g id="cart" transform="translate(90,215)">
+        <!-- Body -->
+        <rect x="-20" y="-16" width="40" height="14" rx="3" fill="#059669" stroke="#047857" stroke-width="1"/>
+        <!-- Wheels -->
+        <circle cx="-12" cy="2" r="4" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+        <circle cx="12" cy="2" r="4" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+        <circle cx="-12" cy="2" r="1.5" fill="#6B7280"/>
+        <circle cx="12" cy="2" r="1.5" fill="#6B7280"/>
+      </g>
+
+      <!-- Distance flag (hidden initially) -->
+      <g id="distFlag" style="display:none">
+        <line id="flagLine" x1="200" y1="260" x2="200" y2="280" stroke="#DC2626" stroke-width="1.5"/>
+        <rect id="flagBg" x="185" y="252" width="36" height="14" rx="4" fill="#DC2626"/>
+        <text id="flagText" x="203" y="262" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">15cm</text>
+      </g>
+
+      <!-- Comparison chart area -->
+      <g transform="translate(440,30)">
+        <text x="110" y="0" font-size="11" fill="#1D1D1F" text-anchor="middle" font-weight="700">滑行距离对比</text>
+        <!-- Chart -->
+        <line x1="30" y1="10" x2="30" y2="160" stroke="#D1D5DB" stroke-width="1"/>
+        <line x1="30" y1="160" x2="230" y2="160" stroke="#D1D5DB" stroke-width="1"/>
+        <!-- Y axis labels -->
+        <text x="25" y="160" font-size="7" fill="#9CA3AF" text-anchor="end">0</text>
+        <text x="25" y="122" font-size="7" fill="#9CA3AF" text-anchor="end">20</text>
+        <text x="25" y="84" font-size="7" fill="#9CA3AF" text-anchor="end">40</text>
+        <text x="25" y="47" font-size="7" fill="#9CA3AF" text-anchor="end">60</text>
+        <text x="25" y="15" font-size="7" fill="#9CA3AF" text-anchor="end">80</text>
+        <!-- Grid -->
+        <line x1="30" y1="122" x2="230" y2="122" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="84" x2="230" y2="84" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="47" x2="230" y2="47" stroke="#F3F4F6" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <!-- Bars -->
+        <rect id="bar1" x="50" y="160" width="30" height="0" fill="#A78B6D" rx="2" opacity="0.3"/>
+        <text id="barL1" x="65" y="172" font-size="7" fill="#6B7280" text-anchor="middle">毛巾</text>
+        <rect id="bar2" x="100" y="160" width="30" height="0" fill="#9CA3AF" rx="2" opacity="0.3"/>
+        <text id="barL2" x="115" y="172" font-size="7" fill="#6B7280" text-anchor="middle">棉布</text>
+        <rect id="bar3" x="150" y="160" width="30" height="0" fill="#DEB887" rx="2" opacity="0.3"/>
+        <text id="barL3" x="165" y="172" font-size="7" fill="#6B7280" text-anchor="middle">木板</text>
+        <!-- Ideal bar (dashed) -->
+        <rect id="bar4" x="200" y="12" width="26" height="148" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="4,3" rx="2" opacity="0"/>
+        <text id="barL4" x="213" y="172" font-size="7" fill="#059669" text-anchor="middle" font-weight="600" opacity="0">无摩擦</text>
+        <text id="barInf" x="213" y="8" font-size="10" fill="#059669" text-anchor="middle" font-weight="800" opacity="0">&infin;</text>
+      </g>
+
+      <!-- Guide text -->
+      <text id="guideText" x="350" y="380" font-size="12" fill="#059669" font-weight="700" text-anchor="middle">
+        选择表面材质，点击「释放小车」观察滑行距离
+      </text>
+    </svg>
+  </div>
+
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实验数据</h3>
+      <div class="temp-card">
+        <div class="label">滑行距离</div>
+        <div class="value" id="valDist">-- cm</div>
+      </div>
+      <div class="data-row"><span class="data-label">表面材质</span><span class="data-value" id="valSurface">毛巾</span></div>
+      <div class="data-row"><span class="data-label">释放高度</span><span class="data-value">20 cm</span></div>
+      <div class="data-row"><span class="data-label">状态</span><span id="valStatus"><span class="status-badge ready">待释放</span></span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> 表面材质</h3>
+      <div class="btn-row">
+        <button class="pill-btn active" id="btnTowel" onclick="setSurface('towel')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#A78B6D;margin-right:3px;vertical-align:middle"></span>毛巾</button>
+        <button class="pill-btn" id="btnCloth" onclick="setSurface('cloth')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9CA3AF;margin-right:3px;vertical-align:middle"></span>棉布</button>
+        <button class="pill-btn" id="btnWood" onclick="setSurface('wood')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#DEB887;margin-right:3px;vertical-align:middle"></span>木板</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 实验控制</h3>
+      <div class="btn-row">
+        <button class="ctrl-btn" id="btnRelease" onclick="releaseCar()">释放小车</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg> 实验记录</h3>
+      <div style="max-height:140px;overflow-y:auto">
+        <table class="data-table">
+          <thead><tr><th>表面</th><th>摩擦力</th><th>距离(cm)</th></tr></thead>
+          <tbody id="dataBody"></tbody>
+        </table>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:4px;text-align:center">完成 3 组实验后显示推理结论</div>
+    </div>
+
+    <button class="reset-btn" onclick="resetExperiment()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> 重置实验</button>
+  </div>
+</div>
+
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验知识</h2></div>
+    <div class="card-body">
+      <p><strong>牛顿第一定律</strong>（惯性定律）：一切物体在没有受到力的作用时，总保持静止状态或匀速直线运动状态。</p>
+      <ul>
+        <li><strong>实验目的</strong>：探究阻力对物体运动的影响</li>
+        <li><strong>控制变量</strong>：同一斜面、同一高度释放（保证初速度相同）</li>
+        <li><strong>实验现象</strong>：表面越光滑（摩擦力越小），小车滑行距离越远</li>
+        <li><strong>理想推理</strong>：如果没有摩擦力，物体将永远运动下去（理想实验法）</li>
+        <li><strong>惯性</strong>：物体保持运动状态不变的性质，只与质量有关，与速度无关</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>公式与概念</h2></div>
+    <div class="card-body">
+      <div class="formula-box"><span class="formula">F = 0 \Rightarrow \text{静止或匀速直线运动}</span></div>
+      <p>牛顿第一定律不是通过实验直接得出的，而是在实验基础上通过<strong>理想实验法</strong>推理得出。</p>
+      <p><strong>惯性的应用：</strong></p>
+      <ul>
+        <li>刹车时人体前倾 — 惯性保持原来的运动状态</li>
+        <li>跳远前助跑 — 利用惯性增大水平距离</li>
+        <li>拍打衣服上的灰尘 — 灰尘由于惯性留在原处</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>1.</strong> 在探究"阻力对物体运动的影响"实验中，为什么要让小车从斜面同一高度由静止释放？</p>
+      <p style="font-size:11px;color:#6B7280;margin-top:4px">解析：控制变量法。同一高度释放，保证小车到达水平面时的初速度相同，这样滑行距离的差异只由摩擦力（表面材质）决定。</p>
+
+      <p style="margin-top:16px"><strong>2.</strong> 小明坐在行驶的公共汽车上，当汽车突然刹车时，小明的身体会向前倾。这是因为（　）</p>
+      <p>A. 小明受到向前的力<br/>B. 小明具有惯性<br/>C. 汽车具有惯性<br/>D. 小明的脚受到向后的摩擦力</p>
+      <p style="font-size:11px;color:#6B7280;margin-top:4px">解析：刹车时汽车和脚停止，但身体上半部分由于惯性保持原来的运动状态，所以向前倾。答案选 B。</p>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/theme.js"></script>
+<script>
+// === State ===
+const surfaces = {
+  towel: {name:'毛巾', friction:'大', mu:0.5, dist:15, pattern:'url(#patTowel)', label:'毛巾表面', color:'#A78B6D', barId:'bar1'},
+  cloth: {name:'棉布', friction:'中', mu:0.25, dist:30, pattern:'url(#patCloth)', label:'棉布表面', color:'#9CA3AF', barId:'bar2'},
+  wood:  {name:'木板', friction:'小', mu:0.1, dist:60, pattern:'url(#patWood)', label:'光滑木板', color:'#DEB887', barId:'bar3'}
+};
+let currentSurface = 'towel';
+let animating = false;
+let completed = new Set();
+
+// Ramp geometry
+const rampEndX = 180, rampEndY = 274; // bottom of ramp (cart center)
+const rampStartX = 90, rampStartY = 215; // top of ramp (cart center)
+
+// === Surface Switch ===
+function setSurface(key) {
+  if (animating) return;
+  currentSurface = key;
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn' + key.charAt(0).toUpperCase() + key.slice(1)).classList.add('active');
+  document.getElementById('surface').setAttribute('fill', surfaces[key].pattern);
+  document.getElementById('surfaceLabel').textContent = surfaces[key].label;
+  document.getElementById('valSurface').textContent = surfaces[key].name;
+  // Reset cart position
+  resetCart();
+}
+
+function resetCart() {
+  const cart = document.getElementById('cart');
+  cart.setAttribute('transform', `translate(${rampStartX},${rampStartY})`);
+  document.getElementById('distFlag').style.display = 'none';
+  document.getElementById('valDist').textContent = '-- cm';
+  document.getElementById('valStatus').innerHTML = '<span class="status-badge ready">待释放</span>';
+}
+
+// === Release Car ===
+function releaseCar() {
+  if (animating) return;
+  animating = true;
+  document.getElementById('guideText').setAttribute('opacity', '0');
+  document.getElementById('valStatus').innerHTML = '<span class="status-badge moving">滑行中</span>';
+
+  const s = surfaces[currentSurface];
+  const totalDist = s.dist; // cm
+  const distPx = totalDist * 4; // 1cm = 4px on canvas
+
+  // Phase 1: Slide down ramp
+  const rampDist = Math.sqrt((rampEndX-rampStartX)**2 + (rampEndY-rampStartY)**2);
+  let rampProgress = 0;
+  const rampDuration = 400; // ms
+  let startTime = null;
+
+  function animateRamp(ts) {
+    if (!startTime) startTime = ts;
+    rampProgress = Math.min(1, (ts - startTime) / rampDuration);
+    // Ease in (accelerating)
+    const t = rampProgress * rampProgress;
+    const cx = rampStartX + (rampEndX - rampStartX) * t;
+    const cy = rampStartY + (rampEndY - rampStartY) * t;
+    document.getElementById('cart').setAttribute('transform', `translate(${cx},${cy})`);
+
+    if (rampProgress < 1) {
+      requestAnimationFrame(animateRamp);
+    } else {
+      // Phase 2: Slide on horizontal surface
+      startTime = null;
+      requestAnimationFrame(animateHorizontal);
+    }
+  }
+
+  function animateHorizontal(ts) {
+    if (!startTime) startTime = ts;
+    const slideDuration = 600 + totalDist * 12; // longer for longer distances
+    const progress = Math.min(1, (ts - startTime) / slideDuration);
+    // Ease out (decelerating)
+    const t = 1 - (1 - progress) * (1 - progress);
+    const cx = rampEndX + distPx * t;
+    const cy = rampEndY;
+    document.getElementById('cart').setAttribute('transform', `translate(${cx},${cy})`);
+
+    // Update distance display
+    const currentDist = totalDist * t;
+    document.getElementById('valDist').textContent = currentDist.toFixed(0) + ' cm';
+
+    if (progress < 1) {
+      requestAnimationFrame(animateHorizontal);
+    } else {
+      // Done
+      animating = false;
+      document.getElementById('valDist').textContent = totalDist + ' cm';
+      document.getElementById('valStatus').innerHTML = '<span class="status-badge stopped">已停止</span>';
+
+      // Show distance flag
+      const flagX = rampEndX + distPx;
+      showFlag(flagX, totalDist);
+
+      // Record data
+      recordResult(currentSurface, totalDist);
+    }
+  }
+
+  requestAnimationFrame(animateRamp);
+}
+
+function showFlag(x, dist) {
+  const flag = document.getElementById('distFlag');
+  flag.style.display = 'block';
+  document.getElementById('flagLine').setAttribute('x1', x);
+  document.getElementById('flagLine').setAttribute('x2', x);
+  document.getElementById('flagBg').setAttribute('x', x - 18);
+  document.getElementById('flagText').setAttribute('x', x);
+  document.getElementById('flagText').textContent = dist + 'cm';
+}
+
+function recordResult(key, dist) {
+  if (completed.has(key)) return;
+  completed.add(key);
+
+  const s = surfaces[key];
+  // Add table row
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${s.name}</td><td>${s.friction}</td><td>${dist}</td>`;
+  document.getElementById('dataBody').appendChild(tr);
+
+  // Update bar chart
+  const barH = dist / 80 * 150; // max 80cm → 150px
+  const bar = document.getElementById(s.barId);
+  bar.setAttribute('y', 160 - barH);
+  bar.setAttribute('height', barH);
+  bar.setAttribute('opacity', '0.8');
+
+  // If all 3 done, show ideal bar + inference row
+  if (completed.size === 3) {
+    showIdealInference();
+  }
+}
+
+function showIdealInference() {
+  // Show dashed "infinite" bar
+  document.getElementById('bar4').setAttribute('opacity', '0.8');
+  document.getElementById('barL4').setAttribute('opacity', '1');
+  document.getElementById('barInf').setAttribute('opacity', '1');
+
+  // Add inference row to table
+  const tr = document.createElement('tr');
+  tr.style.background = '#ECFDF5';
+  tr.innerHTML = '<td style="color:#059669;font-weight:700">无摩擦</td><td style="color:#059669">无</td><td style="color:#059669;font-weight:700">&infin;</td>';
+  document.getElementById('dataBody').appendChild(tr);
+}
+
+// === Reset ===
+function resetExperiment() {
+  if (animating) return;
+  completed.clear();
+  setSurface('towel');
+  document.getElementById('dataBody').innerHTML = '';
+  // Reset bars
+  ['bar1','bar2','bar3'].forEach(id => {
+    document.getElementById(id).setAttribute('height', '0');
+    document.getElementById(id).setAttribute('opacity', '0.3');
+  });
+  document.getElementById('bar4').setAttribute('opacity', '0');
+  document.getElementById('barL4').setAttribute('opacity', '0');
+  document.getElementById('barInf').setAttribute('opacity', '0');
+  document.getElementById('guideText').setAttribute('opacity', '1');
+}
+
+// === KaTeX ===
+function renderFormulas() {
+  document.querySelectorAll('.formula').forEach(el => {
+    katex.render(el.textContent, el, {throwOnError: false});
+  });
+}
+</script>
+</body>
+</html>
