@@ -28,7 +28,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .purpose-tag.highlight{background:#FEF3C7;color:#B45309;border-color:#FDE68A}
 
 /* Lab container — locks to viewport */
-.lab-container{display:flex;height:calc(100vh - 80px)}
+.lab-container{display:flex;height:calc(100vh - 80px);overflow:hidden}
 
 /* Canvas area */
 .canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}

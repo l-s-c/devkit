@@ -43,7 +43,7 @@
   <h1>测量电源电动势和内阻</h1>
 </div>
 <div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>闭合电路欧姆定律 · U-I 图 · 拟合求 E 和 r</div>
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>闭合电路欧姆定律 · U-I 图 · 拟合求 E 和 r · 高中电学</div>
   <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
 </div>
 
@@ -336,6 +336,31 @@
       <p><strong>斜率绝对值</strong> = r（内阻）</p>
       <p><strong>横截距</strong> = E/r = I<sub>短路</sub>（短路电流，不可实测）</p>
       <p class="highlight-tip">高考常考：从 U-I 图读取 E 和 r，以及图像不过原点的原因分析。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>系统误差（安培表外接法）：</strong></p>
+      <ul>
+        <li>电压表有分流作用，测得电流 I 偏大（包含电压表分流）</li>
+        <li>导致测得内阻 r 偏大、电动势 E 偏大</li>
+        <li>当电源内阻 r 远小于电压表内阻时，误差较小</li>
+      </ul>
+      <p style="margin-top:8px"><strong>偶然误差：</strong></p>
+      <ul>
+        <li>电表读数估读不准</li>
+        <li>电池使用过程中内阻和电动势可能变化（电流不宜太大、通电时间不宜太长）</li>
+        <li>接线柱接触不良导致附加电阻</li>
+      </ul>
+      <p style="margin-top:8px"><strong>U-I 图异常原因：</strong></p>
+      <ul>
+        <li>图线不过纵轴截距 → 电表零点未校准</li>
+        <li>数据点分散 → 操作不规范或电池老化</li>
+        <li>图线弯曲 → 电池内阻随温度变化（大电流时发热）</li>
+      </ul>
+      <p class="highlight-tip">考点：高考常考"安培表外接法的系统误差方向"和"减小误差的措施"。</p>
     </div>
   </div>
 
