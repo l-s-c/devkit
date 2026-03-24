@@ -1,5 +1,14 @@
 /* lab-base.css — Shared layout & dark mode for all lab experiments */
 
+/* CSS Variables */
+:root{
+  --lab-accent:#059669;
+  --lab-accent-bg:#ECFDF5;
+  --lab-accent-border:#A7F3D0;
+  --lab-accent-dark-bg:#0A1A0F;
+  --lab-accent-dark-border:#065F46;
+}
+
 /* Reset */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F}
@@ -10,11 +19,11 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .topbar .back svg{width:14px;height:14px;color:#374151}
 .topbar h1{font-size:15px;font-weight:700}
 .breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
-.breadcrumb a{color:#059669;text-decoration:none;font-weight:500}
+.breadcrumb a{color:var(--lab-accent);text-decoration:none;font-weight:500}
 
 /* Purpose bar */
 .purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
-.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:var(--lab-accent-bg);color:var(--lab-accent);border:1px solid var(--lab-accent-border);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
 .purpose-tag svg{width:12px;height:12px}
 .purpose-tag.highlight{background:#FEF3C7;color:#B45309;border-color:#FDE68A}
 
@@ -30,7 +39,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .status-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:100px;font-size:12px;font-weight:700;pointer-events:none;z-index:10;transition:all 0.3s}
 .status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
 .status-badge.progress{background:rgba(234,179,8,0.15);color:#B45309}
-.status-badge.success{background:rgba(5,150,105,0.15);color:#059669}
+.status-badge.success{background:rgba(5,150,105,0.15);color:var(--lab-accent)}
 
 /* Panel */
 .panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0;overflow-y:auto}
@@ -63,11 +72,11 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .knowledge-section{width:100%;padding:24px 16px 40px 16px}
 .knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
 .knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
-.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:var(--lab-accent);flex-shrink:0}
 .knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
 .knowledge-card .card-body{padding:16px 24px 20px}
 .knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
-.knowledge-card .formula-lg{background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #A7F3D0}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,var(--lab-accent-bg),#F0FDF4);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid var(--lab-accent-border)}
 .knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
 .knowledge-card.example{background:linear-gradient(180deg,#FAFFFE,#F0FDF4)}
 .knowledge-card.example .card-header .accent{background:#2563EB}
@@ -96,6 +105,6 @@ html[data-theme="dark"] .knowledge-card .card-header{border-bottom-color:rgba(25
 html[data-theme="dark"] .knowledge-card .card-header h2{color:#E5E7EB}
 html[data-theme="dark"] .knowledge-card p{color:#9CA3AF}
 html[data-theme="dark"] .knowledge-card ul{color:#9CA3AF}
-html[data-theme="dark"] .knowledge-card .formula-lg{background:linear-gradient(135deg,#0A1A0F,#0F1F14);border-color:#065F46}
-html[data-theme="dark"] .knowledge-card.example{background:linear-gradient(180deg,#0F0F1A,#0A1A0F)}
+html[data-theme="dark"] .knowledge-card .formula-lg{background:linear-gradient(135deg,var(--lab-accent-dark-bg),#0F1F14);border-color:var(--lab-accent-dark-border)}
+html[data-theme="dark"] .knowledge-card.example{background:linear-gradient(180deg,#0F0F1A,var(--lab-accent-dark-bg))}
 html[data-theme="dark"] .knowledge-card.example .solve{background:#0A0A0F;border-color:#374151;color:#D1D5DB}
