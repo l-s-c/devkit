@@ -195,7 +195,17 @@
             <circle cx="30" cy="280" r="3" fill="#93C5FD" stroke="#2563EB" stroke-width="0.5"/>
             <circle cx="90" cy="280" r="3" fill="#93C5FD" stroke="#2563EB" stroke-width="0.5"/>
           </g>
-          <text x="60" y="298" font-size="6.5" fill="#059669" text-anchor="middle" font-weight="600">拖导线连接器材</text>
+          <g class="dock-wire" data-wire="4" style="cursor:grab">
+            <line x1="30" y1="296" x2="90" y2="296" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="296" r="3" fill="#FCA5A5" stroke="#DC2626" stroke-width="0.5"/>
+            <circle cx="90" cy="296" r="3" fill="#FCA5A5" stroke="#DC2626" stroke-width="0.5"/>
+          </g>
+          <g class="dock-wire" data-wire="5" style="cursor:grab">
+            <line x1="30" y1="312" x2="90" y2="312" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="312" r="3" fill="#93C5FD" stroke="#2563EB" stroke-width="0.5"/>
+            <circle cx="90" cy="312" r="3" fill="#93C5FD" stroke="#2563EB" stroke-width="0.5"/>
+          </g>
+          <text x="60" y="328" font-size="6.5" fill="#059669" text-anchor="middle" font-weight="600">拖导线连接器材</text>
         </g>
 
         <!-- Small circuit diagram (reference) -->
@@ -349,6 +359,7 @@
   </div>
 </div>
 
+<script src="/shared/lab-utils.js"></script>
 <script>
 // ===== PHYSICS =====
 const EMF = 1.50; // V
@@ -362,10 +373,11 @@ const SLIDER_RIGHT = 629;
 let resistance = 10; // current rheostat resistance
 let switchClosed = false;
 let wires = []; // [{fromPort, toPort, color, pathEl}]
-let wireAvail = [true, true, true, true]; // 4 dock wires
+let wireAvail = [true, true, true, true, true, true]; // 6 dock wires
 let records = []; // [{U, I, R}]
 let lastRecordR = null;
 let showDiagram = false;
+let currentU = 0, currentI = 0; // live readings displayed on panel
 
 // Port definitions: id → {x, y, component, polarity}
 const PORTS = {
@@ -393,12 +405,7 @@ const CORRECT_VM = [['vm+', 'bat+'], ['vm-', 'rh-a']]; // or equivalent nodes
 // ===== SVG =====
 const svg = document.getElementById('canvas');
 function getSvgPoint(e) {
-  return window.labUtils ? window.labUtils.getSvgPoint(svg, e) : (() => {
-    const pt = svg.createSVGPoint();
-    const src = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
-    pt.x = src.clientX; pt.y = src.clientY;
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
-  })();
+  return labUtils.getSvgPoint(svg, e);
 }
 
 // ===== WIRE CONNECTION =====
@@ -426,7 +433,7 @@ function startWireDrag(e, wireIdx) {
   e.preventDefault();
   if (!wireAvail[wireIdx]) return;
   const p = getSvgPoint(e);
-  const color = wireIdx < 2 ? '#EF4444' : '#3B82F6';
+  const color = [0,1,4].includes(wireIdx) ? '#EF4444' : '#3B82F6';
 
   // Find starting port
   const startPort = findNearestPort(p.x, p.y, null);
@@ -549,8 +556,28 @@ function checkErrors() {
   if (wires.some(w => w.fromPort === 'rh-b' || w.toPort === 'rh-b')) {
     return '变阻器接法错误，请使用 A 和 D 端子';
   }
-  // Check ammeter in parallel (vm ports connected to ammeter)
-  // Check voltmeter in series (simplified check)
+  // Voltmeter in series (connected in main loop — vm port connected to ammeter or switch)
+  const vmPorts = ['vm+', 'vm-'];
+  const mainPorts = ['bat+', 'bat-', 'sw1', 'sw2', 'am+', 'am-', 'rh-a', 'rh-d'];
+  for (const w of wires) {
+    const hasVm = vmPorts.includes(w.fromPort) || vmPorts.includes(w.toPort);
+    if (!hasVm) continue;
+    // Voltmeter should only connect to battery or rheostat-A nodes (parallel)
+    // If voltmeter connects to ammeter or switch, it's likely in series
+    const other = vmPorts.includes(w.fromPort) ? w.toPort : w.fromPort;
+    if (['am+', 'am-', 'sw1', 'sw2'].includes(other)) {
+      return '接线错误：电压表不能串联在主回路中';
+    }
+  }
+  // Ammeter in parallel with battery (ammeter directly across battery terminals)
+  const amDirect = wires.some(w =>
+    (w.fromPort === 'am+' && w.toPort === 'bat+') || (w.fromPort === 'bat+' && w.toPort === 'am+')
+  ) && wires.some(w =>
+    (w.fromPort === 'am-' && w.toPort === 'bat-') || (w.fromPort === 'bat-' && w.toPort === 'am-')
+  );
+  if (amDirect) {
+    return '接线错误：电流表不能直接并联在电源两端';
+  }
   return null;
 }
 
@@ -621,14 +648,14 @@ function updatePhysics() {
   const I = EMF / (resistance + INT_R);
   const U = EMF - I * INT_R;
   // Add small random error
-  const Ierr = I * (1 + (Math.random() - 0.5) * 0.01);
-  const Uerr = U * (1 + (Math.random() - 0.5) * 0.01);
+  currentI = I * (1 + (Math.random() - 0.5) * 0.01);
+  currentU = U * (1 + (Math.random() - 0.5) * 0.01);
 
-  setNeedle('ammeterNeedle', Ierr, 420, 72, 25, 0, 0.6);
-  setNeedle('voltmeterNeedle', Uerr, 270, 242, 25, 0, 3);
+  animateNeedle('ammeterNeedle', currentI, 420, 72, 25, 0, 0.6);
+  animateNeedle('voltmeterNeedle', currentU, 270, 242, 25, 0, 3);
 
-  document.getElementById('valU').innerHTML = Uerr.toFixed(2) + '<span class="unit"> V</span>';
-  document.getElementById('valI').innerHTML = Ierr.toFixed(2) + '<span class="unit"> A</span>';
+  document.getElementById('valU').innerHTML = currentU.toFixed(2) + '<span class="unit"> V</span>';
+  document.getElementById('valI').innerHTML = currentI.toFixed(2) + '<span class="unit"> A</span>';
 
   // Enable record button if circuit complete + switch closed + R changed enough
   const btn = document.getElementById('recordBtn');
@@ -639,28 +666,46 @@ function updatePhysics() {
   }
 }
 
-function setNeedle(id, value, cx, cy, radius, min, max) {
+// Needle animation state
+const needleState = {};
+function animateNeedle(id, value, cx, cy, radius, min, max) {
   const needle = document.getElementById(id);
-  const fraction = Math.max(0, Math.min(1, (value - min) / (max - min)));
-  // Angle: 0 at left (180°), full at right (0°). Arc goes from left to right.
-  const angle = Math.PI - fraction * Math.PI;
-  const nx = cx + radius * Math.cos(angle);
-  const ny = cy - radius * Math.sin(angle);
-  // Smooth animation
-  needle.style.transition = 'all 0.2s ease-out';
-  needle.setAttribute('x2', nx.toFixed(1));
-  needle.setAttribute('y2', ny.toFixed(1));
+  const targetFrac = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  if (!needleState[id]) needleState[id] = { frac: 0, animId: null };
+  const ns = needleState[id];
+  if (ns.animId) cancelAnimationFrame(ns.animId);
+
+  const startFrac = ns.frac;
+  const startTime = performance.now();
+  const duration = 200; // ms
+
+  function step(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+    ns.frac = startFrac + (targetFrac - startFrac) * ease;
+    const angle = Math.PI - ns.frac * Math.PI;
+    needle.setAttribute('x2', (cx + radius * Math.cos(angle)).toFixed(1));
+    needle.setAttribute('y2', (cy - radius * Math.sin(angle)).toFixed(1));
+    if (t < 1) ns.animId = requestAnimationFrame(step);
+    else ns.animId = null;
+  }
+  ns.animId = requestAnimationFrame(step);
+}
+// Static set (for reset)
+function setNeedle(id, value, cx, cy, radius, min, max) {
+  const frac = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  const angle = Math.PI - frac * Math.PI;
+  const needle = document.getElementById(id);
+  needle.setAttribute('x2', (cx + radius * Math.cos(angle)).toFixed(1));
+  needle.setAttribute('y2', (cy - radius * Math.sin(angle)).toFixed(1));
+  if (needleState[id]) needleState[id].frac = frac;
 }
 
 // ===== RECORD DATA =====
 function recordData() {
   if (!switchClosed || !isMainLoopComplete()) return;
-  const I = EMF / (resistance + INT_R);
-  const U = EMF - I * INT_R;
-  const Ierr = I * (1 + (Math.random() - 0.5) * 0.01);
-  const Uerr = U * (1 + (Math.random() - 0.5) * 0.01);
-
-  records.push({ U: Uerr, I: Ierr, R: resistance });
+  // Record the exact values currently displayed on panel
+  records.push({ U: currentU, I: currentI, R: resistance });
   lastRecordR = resistance;
   document.getElementById('recordBtn').disabled = true;
   updateRecordTable();
@@ -695,7 +740,7 @@ function updateChart() {
     g.appendChild(c);
   });
   // Fit line
-  if (records.length >= 2) {
+  if (records.length >= 3) {
     let sX = 0, sY = 0, sXY = 0, sXX = 0, n = records.length;
     records.forEach(r => { sX += r.I; sY += r.U; sXY += r.I * r.U; sXX += r.I * r.I; });
     const slope = (n * sXY - sX * sY) / (n * sXX - sX * sX);
@@ -744,7 +789,7 @@ function resetAll() {
   resistance = 10;
   wires.forEach(w => w.pathEl.remove());
   wires = [];
-  wireAvail = [true, true, true, true];
+  wireAvail = [true, true, true, true, true, true];
   records = [];
   lastRecordR = null;
 
@@ -797,7 +842,7 @@ document.querySelectorAll('[data-port]').forEach(el => {
     // Already connected?
     if (wires.some(w => w.fromPort === portId || w.toPort === portId)) return;
 
-    const color = idx < 2 ? '#EF4444' : '#3B82F6';
+    const color = [0,1,4].includes(idx) ? '#EF4444' : '#3B82F6';
     const sp = PORTS[portId];
     const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     tempPath.setAttribute('class', 'wire-temp');
@@ -860,7 +905,6 @@ if (window.katex) renderFormulas();
 // ===== INIT =====
 updatePanel();
 </script>
-<script src="/shared/lab-utils.js"></script>
 <script src="/shared/theme.js"></script>
 </body>
 </html>
