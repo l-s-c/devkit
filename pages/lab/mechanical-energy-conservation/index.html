@@ -355,18 +355,29 @@ document.getElementById('powerSwitch').addEventListener('click', () => {
 let weightDrag = false;
 const weight = document.getElementById('weightGroup');
 
+let dragStartY = 0;
 weight.addEventListener('pointerdown', e => {
   if (experimentDone) return;
   e.preventDefault();
   weightDrag = true;
+  dragStartY = getSvgPoint(e).y;
   weight.style.cursor = 'grabbing';
   document.getElementById('guideLabel').style.opacity = '0';
+});
+
+document.addEventListener('pointermove', e => {
+  if (!weightDrag) return;
+  const pt = getSvgPoint(e);
+  // Allow small upward movement (max -15 SVG units) for visual feedback
+  const dy = Math.min(0, Math.max(-15, pt.y - dragStartY));
+  weight.setAttribute('transform', `translate(0, ${dy})`);
 });
 
 document.addEventListener('pointerup', () => {
   if (!weightDrag) return;
   weightDrag = false;
   weight.style.cursor = 'grab';
+  weight.setAttribute('transform', '');
 
   if (!powerOn) {
     // Show error
@@ -429,6 +440,17 @@ function showExpandedTape() {
 
   dotPositions.forEach((pos, i) => {
     const cx = tapeStartX + pos * scale;
+    // Transparent hit area (r=8) for easier clicking on 13" screens
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    hit.setAttribute('cx', cx.toFixed(1));
+    hit.setAttribute('cy', '62');
+    hit.setAttribute('r', '8');
+    hit.setAttribute('fill', 'transparent');
+    hit.setAttribute('style', 'cursor:pointer');
+    hit.setAttribute('data-idx', i);
+    hit.addEventListener('click', () => toggleDotSelection(i));
+    hDots.appendChild(hit);
+    // Visual dot (r=2)
     const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     dot.setAttribute('cx', cx.toFixed(1));
     dot.setAttribute('cy', '62');
@@ -436,7 +458,7 @@ function showExpandedTape() {
     dot.setAttribute('fill', '#1F2937');
     dot.setAttribute('class', 'tape-dot');
     dot.setAttribute('data-idx', i);
-    dot.addEventListener('click', () => toggleDotSelection(i));
+    dot.setAttribute('pointer-events', 'none');
     hDots.appendChild(dot);
   });
 
@@ -543,10 +565,22 @@ function updateSelectionVisuals() {
   // Update count display
   document.getElementById('valCount').textContent = selectedDots.length + ' 个';
 
-  // Warning
+  // Warnings
   const warn = document.getElementById('warnTip');
-  if (selectedDots.length >= 3 && selectedDots.length < 6) {
-    warn.style.display = 'block';
+  if (selectedDots.length >= 3) {
+    // Check if spacing is non-uniform (dot index gaps differ)
+    const gaps = [];
+    for (let i = 1; i < selectedDots.length; i++) gaps.push(selectedDots[i] - selectedDots[i - 1]);
+    const nonUniform = gaps.length > 1 && gaps.some(g => g !== gaps[0]);
+    if (nonUniform) {
+      warn.textContent = '建议选取等间距的计数点';
+      warn.style.display = 'block';
+    } else if (selectedDots.length < 6) {
+      warn.textContent = '建议选取更多计数点以提高精度';
+      warn.style.display = 'block';
+    } else {
+      warn.style.display = 'none';
+    }
   } else {
     warn.style.display = 'none';
   }
@@ -604,18 +638,20 @@ function updateCalculations() {
     const h = heights[i] / 100; // m
     const mgh = MASS * G * h;
     const halfmv2 = 0.5 * MASS * v * v;
-    totalEp = mgh;
-    totalEk = halfmv2;
-
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${i + 1}</td><td>${heights[i].toFixed(2)}</td><td>${v.toFixed(3)}</td><td>${mgh.toFixed(4)}</td><td>${halfmv2.toFixed(4)}</td>`;
     tbody.appendChild(tr);
   });
 
-  // Update energy cards
+  // Energy cards: show cumulative Δmgh and Δ½mv² from first to last interior point
   if (velocities.length > 0) {
-    document.getElementById('valEp').innerHTML = totalEp.toFixed(4) + '<span class="unit"> J</span>';
-    document.getElementById('valEk').innerHTML = totalEk.toFixed(4) + '<span class="unit"> J</span>';
+    const lastH = heights[heights.length - 1] / 100; // m
+    const lastV = velocities[velocities.length - 1];
+    const firstV = velocities[0];
+    const cumEp = MASS * G * lastH; // Δmgh from point 0 to last
+    const cumEk = 0.5 * MASS * (lastV * lastV - firstV * firstV); // Δ½mv²
+    document.getElementById('valEp').innerHTML = cumEp.toFixed(4) + '<span class="unit"> J</span>';
+    document.getElementById('valEk').innerHTML = cumEk.toFixed(4) + '<span class="unit"> J</span>';
   }
 
   // Update chart: v² vs h
@@ -652,9 +688,10 @@ function updateCalculations() {
     line.setAttribute('y2', Math.max(5, Math.min(95, y2)));
     line.setAttribute('opacity', '1');
 
-    // slope in (m/s²)/cm = slope * 100 in m/s²
-    // Expected: 2g/100 = 0.196 per cm, or slope≈0.196
-    const slopeMs2 = slope * 100; // convert cm to m
+    // slope unit: (m/s)² per cm → multiply by 100 to get (m/s)² per m = m/s²
+    // v² = slope_cm * h_cm + intercept → slope_cm has unit (m/s)²/cm
+    // slope_m = slope_cm * 100 → unit (m/s)²/m = m/s², expected ≈ 2g = 19.6
+    const slopeMs2 = slope * 100;
     const expectedSlope = 2 * G;
     document.getElementById('statusBadge').textContent = `斜率 = ${slopeMs2.toFixed(1)} m/s²（理论值 2g = ${expectedSlope.toFixed(1)}）`;
   }
