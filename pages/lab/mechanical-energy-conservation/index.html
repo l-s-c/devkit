@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>验证机械能守恒定律 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="机械能守恒, mgh, 动能, 势能, 自由落体, 打点纸带, 高中物理">
+<meta name="description" content="自由落体打点纸带，选取计数点分析，验证 mgh = ½mv²">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+/* Force lab-accent back to default green (same as lab-base.css default) */
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
+.tape-dot{cursor:pointer;transition:all 0.15s}
+.tape-dot:hover{r:3.5;stroke:#059669;stroke-width:1.5}
+.tape-dot.selected{fill:#059669}
+.count-ring{pointer-events:none}
+.warn-tip{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;margin-top:4px;text-align:center;display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>验证机械能守恒定律</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>自由落体 · mgh = ½mv² · 打点纸带 · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖住重物松手释放 · 纸带打点后选计数点分析</div>
+      <svg id="canvas" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="standGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <linearGradient id="timerGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E5E7EB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#374151"/><stop offset="50%" stop-color="#1F2937"/><stop offset="100%" stop-color="#111827"/></linearGradient>
+          <radialGradient id="clampMetal" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#6B7280"/></radialGradient>
+        </defs>
+
+        <!-- Background -->
+        <rect x="0" y="0" width="700" height="340" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect x="0" y="0" width="700" height="340" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- Divider -->
+        <line x1="280" y1="15" x2="280" y2="325" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- ====== LEFT: EXPERIMENT SETUP ====== -->
+        <!-- Iron stand base -->
+        <rect x="80" y="310" width="120" height="8" rx="2" fill="#4B5563"/>
+        <rect x="82" y="308" width="116" height="4" rx="1" fill="#6B7280"/>
+        <!-- Vertical pole -->
+        <rect x="136" y="18" width="8" height="292" rx="2" fill="url(#standGrad)"/>
+        <line x1="139" y1="20" x2="139" y2="308" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <!-- Horizontal arm + clamp -->
+        <rect x="144" y="28" width="60" height="6" rx="1.5" fill="#6B7280"/>
+        <circle cx="144" cy="31" r="5" fill="url(#clampMetal)" stroke="#4B5563" stroke-width="0.8"/>
+        <circle cx="144" cy="31" r="1.5" fill="#374151"/>
+        <circle cx="150" cy="31" r="3" fill="#F59E0B" stroke="#D97706" stroke-width="0.5"/>
+
+        <!-- Timer -->
+        <g id="timer">
+          <rect x="185" y="22" width="38" height="48" rx="4" fill="url(#timerGrad)" stroke="#6B7280" stroke-width="1"/>
+          <rect x="189" y="26" width="30" height="40" rx="2" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <rect x="191" y="28" width="26" height="9" rx="1.5" fill="#1F2937"/>
+          <text x="204" y="35" font-size="5" fill="#4ADE80" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-weight="700">50.0Hz</text>
+          <circle id="powerLed" cx="194" cy="42" r="1.5" fill="#6B7280"/>
+          <text x="198" y="44" font-size="3" fill="#6B7280">电源</text>
+          <rect x="192" y="47" width="22" height="8" rx="1.5" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.4"/>
+          <path d="M195,51 Q197,48 199,51 Q201,54 203,51 Q205,48 207,51 Q209,54 211,51" fill="none" stroke="#6B7280" stroke-width="0.6"/>
+          <circle cx="195" cy="62" r="2" fill="#B45309" stroke="#92400E" stroke-width="0.5"/>
+          <circle cx="213" cy="62" r="2" fill="#B45309" stroke="#92400E" stroke-width="0.5"/>
+          <rect x="200" y="70" width="8" height="3" rx="0.5" fill="#374151"/>
+          <text x="204" y="20" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">打点计时器</text>
+        </g>
+
+        <!-- Power switch -->
+        <g id="powerSwitch" style="cursor:pointer">
+          <rect x="240" y="40" width="28" height="14" rx="3" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="0.6"/>
+          <circle id="pwrDot" cx="248" cy="47" r="4" fill="#D1D5DB"/>
+          <text x="254" y="50" font-size="5" fill="#6B7280" font-weight="600">OFF</text>
+          <text id="pwrLabel" x="254" y="58" font-size="4" fill="#059669" font-weight="600">点击开启</text>
+        </g>
+
+        <!-- Paper tape (vertical) -->
+        <g id="verticalTape">
+          <rect x="201" y="73" width="6" height="170" rx="0.5" fill="#FFFBEB" stroke="#E5E0D0" stroke-width="0.4"/>
+          <line x1="204" y1="73" x2="204" y2="243" stroke="#F5E6C8" stroke-width="0.3"/>
+        </g>
+        <!-- Vertical tape dots (drawn dynamically after experiment) -->
+        <g id="vertDots"></g>
+
+        <!-- Weight (draggable) -->
+        <g id="weightGroup" style="cursor:grab">
+          <rect x="198" y="243" width="12" height="6" rx="1" fill="#6B7280" stroke="#4B5563" stroke-width="0.4"/>
+          <ellipse cx="204" cy="252" rx="14" ry="3" fill="#374151"/>
+          <rect x="190" y="252" width="28" height="40" rx="3" fill="url(#weightGrad)" stroke="#374151" stroke-width="0.6"/>
+          <ellipse cx="204" cy="292" rx="14" ry="3" fill="#111827"/>
+          <rect x="192" y="255" width="5" height="2" rx="0.5" fill="rgba(255,255,255,0.15)"/>
+          <line x1="190" y1="265" x2="218" y2="265" stroke="rgba(255,255,255,0.06)" stroke-width="0.4"/>
+          <line x1="190" y1="275" x2="218" y2="275" stroke="rgba(255,255,255,0.06)" stroke-width="0.4"/>
+          <line x1="190" y1="285" x2="218" y2="285" stroke="rgba(255,255,255,0.06)" stroke-width="0.4"/>
+          <text x="204" y="280" font-size="7" fill="rgba(255,255,255,0.7)" text-anchor="middle" font-weight="700">200g</text>
+        </g>
+
+        <!-- Guide label -->
+        <g id="guideLabel" opacity="1">
+          <rect x="220" y="260" width="55" height="16" rx="4" fill="rgba(5,150,105,0.9)"/>
+          <text x="247" y="271" font-size="6" fill="#fff" text-anchor="middle" font-weight="600">拖住松手释放</text>
+        </g>
+
+        <!-- mg arrow -->
+        <g id="forceArrow">
+          <line x1="175" y1="270" x2="175" y2="306" stroke="#059669" stroke-width="2"/>
+          <polygon points="175,308 172,302 178,302" fill="#059669"/>
+          <text x="168" y="290" font-size="7" fill="#059669" font-weight="700" font-style="italic">mg</text>
+        </g>
+
+        <!-- Height reference -->
+        <g id="heightRef">
+          <line x1="230" y1="82" x2="230" y2="292" stroke="#059669" stroke-width="0.5" stroke-dasharray="3,2" opacity="0.6"/>
+          <text x="236" y="190" font-size="9" fill="#059669" font-weight="700" font-style="italic">h</text>
+          <line x1="226" y1="82" x2="234" y2="82" stroke="#059669" stroke-width="0.8" opacity="0.6"/>
+          <line x1="226" y1="292" x2="234" y2="292" stroke="#059669" stroke-width="0.8" opacity="0.6"/>
+        </g>
+
+        <!-- ====== RIGHT: TAPE ANALYSIS ====== -->
+        <text x="490" y="22" font-size="10" fill="#374151" text-anchor="middle" font-weight="700">纸带分析</text>
+        <text id="analyzeHint" x="490" y="34" font-size="6.5" fill="#059669" text-anchor="middle" font-weight="600">释放重物后，点击纸带上的点选为计数点</text>
+
+        <!-- Ruler -->
+        <g id="rulerGroup" opacity="0">
+          <rect x="310" y="42" width="370" height="4" rx="1" fill="#FDE68A" stroke="#D97706" stroke-width="0.3" opacity="0.6"/>
+          <line x1="325" y1="42" x2="325" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="325" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">0</text>
+          <line x1="358" y1="42" x2="358" y2="46" stroke="#D97706" stroke-width="0.3"/>
+          <line x1="391" y1="42" x2="391" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="391" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">2</text>
+          <line x1="424" y1="42" x2="424" y2="46" stroke="#D97706" stroke-width="0.3"/>
+          <line x1="457" y1="42" x2="457" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="457" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">4</text>
+          <line x1="490" y1="42" x2="490" y2="46" stroke="#D97706" stroke-width="0.3"/>
+          <line x1="523" y1="42" x2="523" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="523" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">6</text>
+          <line x1="556" y1="42" x2="556" y2="46" stroke="#D97706" stroke-width="0.3"/>
+          <line x1="589" y1="42" x2="589" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="589" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">8</text>
+          <line x1="622" y1="42" x2="622" y2="46" stroke="#D97706" stroke-width="0.3"/>
+          <line x1="655" y1="42" x2="655" y2="46" stroke="#D97706" stroke-width="0.3"/><text x="655" y="40" font-size="3.5" fill="#D97706" text-anchor="middle">10</text>
+          <text x="670" y="44" font-size="4" fill="#D97706">cm</text>
+        </g>
+
+        <!-- Expanded tape (horizontal, shown after experiment) -->
+        <g id="hTapeGroup" opacity="0">
+          <rect x="310" y="50" width="370" height="24" rx="2" fill="#FFFBEB" stroke="#E5E0D0" stroke-width="0.6"/>
+          <line x1="310" y1="62" x2="680" y2="62" stroke="#F5E6C8" stroke-width="0.3"/>
+        </g>
+        <!-- Horizontal tape dots (dynamic) -->
+        <g id="hDots"></g>
+        <!-- Count point rings + labels (dynamic) -->
+        <g id="countPoints"></g>
+        <!-- Distance annotations (dynamic) -->
+        <g id="distAnnotations"></g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div class="guide-step"><span class="guide-num">1</span><span><strong>开启电源</strong>：点击电源开关</span></div>
+      <div class="guide-step"><span class="guide-num">2</span><span><strong>释放重物</strong>：拖住重物松手自由下落</span></div>
+      <div class="guide-step"><span class="guide-num">3</span><span><strong>选计数点</strong>：在纸带上点击选 5~6 个计数点</span></div>
+      <div class="guide-step"><span class="guide-num">4</span><span><strong>分析数据</strong>：自动计算 v，对比 mgh 与 ½mv²</span></div>
+      <div class="guide-step"><span class="guide-num">5</span><span><strong>拟合验证</strong>：v²-h 图斜率 ≈ 2g 则守恒成立</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实时数据</h3>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <div class="reading-card" style="background:#ECFDF5"><div class="label">势能减少 Δmgh</div><div class="val" id="valEp" style="color:#059669">—<span class="unit"> J</span></div></div>
+        <div class="reading-card" style="background:#F9FAFB"><div class="label">动能增加 Δ½mv²</div><div class="val" id="valEk" style="color:#1D1D1F">—<span class="unit"> J</span></div></div>
+      </div>
+      <div class="data-row"><span class="data-label">重物 m</span><span class="data-value">200.0 g</span></div>
+      <div class="data-row"><span class="data-label">已选计数点</span><span class="data-value" id="valCount">0 个</span></div>
+      <div class="data-row"><span class="data-label">纸带状态</span><span class="data-value" id="valTape" style="color:#D1D5DB">待打点</span></div>
+      <div class="warn-tip" id="warnTip">建议选取更多计数点以提高精度</div>
+    </div>
+
+    <div class="panel-section" style="flex:1;display:flex;flex-direction:column">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 验证结果</h3>
+      <table class="data-table">
+        <thead><tr><th>点</th><th>h(cm)</th><th>v(m/s)</th><th>mgh(J)</th><th>½mv²(J)</th></tr></thead>
+        <tbody id="resultBody"><tr><td class="empty" colspan="5">选计数点后自动填充</td></tr></tbody>
+      </table>
+      <div class="chart-area" id="chartArea" style="flex:1;min-height:80px">
+        <svg id="chartSvg" viewBox="0 0 240 110">
+          <line x1="30" y1="5" x2="30" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <line x1="30" y1="95" x2="235" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="132" y="108" font-size="8" fill="#9CA3AF" text-anchor="middle">h / cm</text>
+          <text x="10" y="50" font-size="8" fill="#9CA3AF" text-anchor="middle" transform="rotate(-90,10,50)">v² / (m/s)²</text>
+          <text x="30" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0</text>
+          <text x="71" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">5</text>
+          <text x="112" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">10</text>
+          <text x="153" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">15</text>
+          <text x="194" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">20</text>
+          <text x="26" y="97" font-size="6" fill="#9CA3AF" text-anchor="end">0</text>
+          <text x="26" y="75" font-size="6" fill="#9CA3AF" text-anchor="end">1</text>
+          <text x="26" y="53" font-size="6" fill="#9CA3AF" text-anchor="end">2</text>
+          <text x="26" y="31" font-size="6" fill="#9CA3AF" text-anchor="end">3</text>
+          <text x="26" y="9" font-size="6" fill="#9CA3AF" text-anchor="end">4</text>
+          <g id="chartPoints"></g>
+          <line id="fitLine" x1="0" y1="0" x2="0" y2="0" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 显示选项</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px">
+        <span class="data-label">力箭头</span>
+        <div id="forceToggle" class="toggle-switch on" onclick="toggleForce()" style="width:30px;height:16px;border-radius:8px;background:#059669;cursor:pointer;position:relative;transition:background 0.2s"><div class="toggle-dot" style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.15)"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px">
+        <span class="data-label">高度标注</span>
+        <div id="heightToggle" class="toggle-switch on" onclick="toggleHeight()" style="width:30px;height:16px;border-radius:8px;background:#059669;cursor:pointer;position:relative;transition:background 0.2s"><div class="toggle-dot" style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.15)"></div></div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>机械能守恒定律</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>在只有重力做功的系统中，物体的动能和重力势能可以相互转化，但总机械能保持不变。</p>
+      <ul>
+        <li><strong>mgh</strong> — 重力势能减少量（选起始点为参考点）</li>
+        <li><strong>½mv²</strong> — 动能增加量</li>
+        <li>若 mgh ≈ ½mv²，则验证了机械能守恒</li>
+      </ul>
+      <p class="highlight-tip">实际实验中 mgh 略大于 ½mv²，因为纸带与限位孔间有摩擦力。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>速度的求法（中间时刻法）</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula2"></div>
+      <p>某计数点的瞬时速度等于相邻两计数点间距之和除以 2T。</p>
+      <ul>
+        <li>T 为相邻计数点的时间间隔</li>
+        <li>s<sub>n</sub> 和 s<sub>n+1</sub> 为该点前后的间距</li>
+      </ul>
+      <p class="highlight-tip">考点：中间时刻法求瞬时速度，是所有纸带类实验的通用方法。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>mgh > ½mv²？</strong> 正常！纸带穿过限位孔有摩擦，重力势能一部分转化为内能。</p>
+      <p><strong>mgh < ½mv²？</strong> 异常！可能是纸带未夹紧、计数点选取有误、或测量读数错误。</p>
+      <p><strong>v²-h 图斜率 ≠ 2g？</strong> 斜率偏小 → 摩擦较大；斜率偏大 → 数据有系统误差。</p>
+      <p class="highlight-tip">高考常考：分析实验误差来源及对结果的影响方向。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>m=200g，纸带上相邻计数点间距依次为 s₁=2.40, s₂=3.20, s₃=4.00, s₄=4.80 cm（T=0.04s）。验证第 2 点到第 3 点过程中机械能是否守恒。</p>
+      <div class="solve">
+v₂ = (s₂+s₃)/(2T) = (3.20+4.00)/(2×0.04) = 90.0 cm/s = 0.900 m/s<br/>
+v₃ = (s₃+s₄)/(2T) = (4.00+4.80)/(2×0.04) = 110.0 cm/s = 1.100 m/s<br/>
+h = s₃ = 4.00 cm = 0.0400 m<br/>
+mgh = 0.200×9.8×0.0400 = <strong style="color:#2563EB">0.0784 J</strong><br/>
+½mv₃² - ½mv₂² = ½×0.200×(1.100²-0.900²) = <strong style="color:#2563EB">0.0760 J</strong><br/>
+误差 = (0.0784-0.0760)/0.0784 = 3.1% → 守恒成立
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const MASS = 0.200; // kg
+const G = 9.80; // m/s²
+const T_INTERVAL = 0.02; // s (50Hz)
+const COUNT_T = 0.04; // s per counting interval (every other dot)
+const FRICTION = 0.003; // small friction factor for realism
+const NUM_DOTS = 15; // total dots on tape
+
+// ===== STATE =====
+let powerOn = false;
+let experimentDone = false;
+let dotPositions = []; // cm, cumulative from first dot
+let selectedDots = []; // indices of selected counting points
+let showForce = true;
+let showHeight = true;
+
+// ===== SVG =====
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
+
+// ===== GENERATE TAPE DATA =====
+function generateTapeData() {
+  dotPositions = [0];
+  let t = 0;
+  for (let i = 1; i < NUM_DOTS; i++) {
+    t += T_INTERVAL;
+    // h = ½g*t² with small friction loss
+    const h = 0.5 * G * (1 - FRICTION) * t * t * 100; // cm
+    // Add small random error ±0.3%
+    dotPositions.push(h * (1 + (Math.random() - 0.5) * 0.006));
+  }
+}
+
+// ===== POWER SWITCH =====
+document.getElementById('powerSwitch').addEventListener('click', () => {
+  powerOn = !powerOn;
+  const led = document.getElementById('powerLed');
+  const dot = document.getElementById('pwrDot');
+  const label = document.getElementById('pwrLabel');
+  if (powerOn) {
+    led.setAttribute('fill', '#EF4444');
+    dot.setAttribute('fill', '#4ADE80');
+    document.querySelector('#powerSwitch text:nth-child(3)').textContent = 'ON';
+    label.textContent = '已开启';
+  } else {
+    led.setAttribute('fill', '#6B7280');
+    dot.setAttribute('fill', '#D1D5DB');
+    document.querySelector('#powerSwitch text:nth-child(3)').textContent = 'OFF';
+    label.textContent = '点击开启';
+  }
+});
+
+// ===== WEIGHT DRAG + DROP =====
+let weightDrag = false;
+const weight = document.getElementById('weightGroup');
+
+weight.addEventListener('pointerdown', e => {
+  if (experimentDone) return;
+  e.preventDefault();
+  weightDrag = true;
+  weight.style.cursor = 'grabbing';
+  document.getElementById('guideLabel').style.opacity = '0';
+});
+
+document.addEventListener('pointerup', () => {
+  if (!weightDrag) return;
+  weightDrag = false;
+  weight.style.cursor = 'grab';
+
+  if (!powerOn) {
+    // Show error
+    const badge = document.getElementById('statusBadge');
+    badge.textContent = '请先接通电源！';
+    badge.className = 'status-badge progress';
+    setTimeout(() => {
+      badge.textContent = '拖住重物松手释放 · 纸带打点后选计数点分析';
+      badge.className = 'status-badge idle';
+    }, 2000);
+    return;
+  }
+
+  if (!experimentDone) runFallAnimation();
+});
+
+// ===== FALL ANIMATION =====
+function runFallAnimation() {
+  experimentDone = true;
+  generateTapeData();
+
+  // Animate weight falling
+  let frame = 0;
+  const maxFrames = 25; // ~0.5s at 50fps
+  const fallDist = 50; // SVG units
+
+  function animStep() {
+    frame++;
+    const frac = Math.min(1, frame / maxFrames);
+    const ease = 1 - Math.pow(1 - frac, 2); // ease-out
+    const dy = ease * fallDist;
+    weight.setAttribute('transform', `translate(0, ${dy})`);
+
+    if (frame < maxFrames) {
+      requestAnimationFrame(animStep);
+    } else {
+      // Show tape analysis
+      showExpandedTape();
+    }
+  }
+  requestAnimationFrame(animStep);
+
+  document.getElementById('statusBadge').textContent = '重物下落中...';
+  document.getElementById('statusBadge').className = 'status-badge progress';
+  document.getElementById('valTape').textContent = '打点中';
+  document.getElementById('valTape').style.color = '#B45309';
+}
+
+// ===== SHOW EXPANDED TAPE =====
+function showExpandedTape() {
+  // Show ruler and horizontal tape
+  document.getElementById('rulerGroup').setAttribute('opacity', '1');
+  document.getElementById('hTapeGroup').setAttribute('opacity', '1');
+
+  // Draw dots on horizontal tape
+  const hDots = document.getElementById('hDots');
+  hDots.innerHTML = '';
+  const tapeStartX = 325;
+  const scale = 330 / dotPositions[dotPositions.length - 1]; // fit in 330px
+
+  dotPositions.forEach((pos, i) => {
+    const cx = tapeStartX + pos * scale;
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', cx.toFixed(1));
+    dot.setAttribute('cy', '62');
+    dot.setAttribute('r', '2');
+    dot.setAttribute('fill', '#1F2937');
+    dot.setAttribute('class', 'tape-dot');
+    dot.setAttribute('data-idx', i);
+    dot.addEventListener('click', () => toggleDotSelection(i));
+    hDots.appendChild(dot);
+  });
+
+  // Draw vertical tape dots too
+  const vDots = document.getElementById('vertDots');
+  vDots.innerHTML = '';
+  const vScale = 170 / dotPositions[dotPositions.length - 1];
+  dotPositions.forEach((pos, i) => {
+    const cy = 73 + pos * vScale;
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', '204');
+    dot.setAttribute('cy', cy.toFixed(1));
+    dot.setAttribute('r', '1');
+    dot.setAttribute('fill', '#1F2937');
+    vDots.appendChild(dot);
+  });
+
+  document.getElementById('statusBadge').textContent = '点击纸带上的点选为计数点';
+  document.getElementById('statusBadge').className = 'status-badge success';
+  document.getElementById('valTape').textContent = '已打点';
+  document.getElementById('valTape').style.color = '#059669';
+  document.getElementById('analyzeHint').textContent = '点击纸带上的点选为计数点';
+}
+
+// ===== DOT SELECTION =====
+function toggleDotSelection(idx) {
+  const i = selectedDots.indexOf(idx);
+  if (i >= 0) {
+    selectedDots.splice(i, 1);
+  } else {
+    selectedDots.push(idx);
+  }
+  selectedDots.sort((a, b) => a - b);
+  updateSelectionVisuals();
+  updateCalculations();
+}
+
+function updateSelectionVisuals() {
+  const cpGroup = document.getElementById('countPoints');
+  const distGroup = document.getElementById('distAnnotations');
+  cpGroup.innerHTML = '';
+  distGroup.innerHTML = '';
+
+  const tapeStartX = 325;
+  const scale = 330 / dotPositions[dotPositions.length - 1];
+
+  // Draw selection rings + labels
+  selectedDots.forEach((dotIdx, i) => {
+    const cx = tapeStartX + dotPositions[dotIdx] * scale;
+    const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    ring.setAttribute('cx', cx.toFixed(1));
+    ring.setAttribute('cy', '62');
+    ring.setAttribute('r', '4');
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#059669');
+    ring.setAttribute('stroke-width', '1.5');
+    ring.setAttribute('class', 'count-ring');
+    cpGroup.appendChild(ring);
+
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', cx.toFixed(1));
+    label.setAttribute('y', '85');
+    label.setAttribute('font-size', '6');
+    label.setAttribute('fill', '#059669');
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('font-weight', '600');
+    label.textContent = String(i);
+    cpGroup.appendChild(label);
+  });
+
+  // Draw distance annotations between consecutive selected dots
+  for (let i = 0; i < selectedDots.length - 1; i++) {
+    const cx1 = tapeStartX + dotPositions[selectedDots[i]] * scale;
+    const cx2 = tapeStartX + dotPositions[selectedDots[i + 1]] * scale;
+    const dist = dotPositions[selectedDots[i + 1]] - dotPositions[selectedDots[i]];
+    const y = 92 + (i % 2) * 14; // stagger
+
+    // Bracket lines
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', cx1.toFixed(1)); line.setAttribute('y1', String(y));
+    line.setAttribute('x2', cx2.toFixed(1)); line.setAttribute('y2', String(y));
+    line.setAttribute('stroke', '#374151'); line.setAttribute('stroke-width', '0.5');
+    distGroup.appendChild(line);
+
+    [cx1, cx2].forEach(cx => {
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('x1', cx.toFixed(1)); tick.setAttribute('y1', String(y - 3));
+      tick.setAttribute('x2', cx.toFixed(1)); tick.setAttribute('y2', String(y + 3));
+      tick.setAttribute('stroke', '#374151'); tick.setAttribute('stroke-width', '0.5');
+      distGroup.appendChild(tick);
+    });
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', ((cx1 + cx2) / 2).toFixed(1));
+    text.setAttribute('y', String(y + 8));
+    text.setAttribute('font-size', '5');
+    text.setAttribute('fill', '#374151');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('font-style', 'italic');
+    text.textContent = `s${i + 1}=${dist.toFixed(2)}`;
+    distGroup.appendChild(text);
+  }
+
+  // Update count display
+  document.getElementById('valCount').textContent = selectedDots.length + ' 个';
+
+  // Warning
+  const warn = document.getElementById('warnTip');
+  if (selectedDots.length >= 3 && selectedDots.length < 6) {
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  // Highlight selected dots
+  document.querySelectorAll('.tape-dot').forEach(d => {
+    const idx = parseInt(d.getAttribute('data-idx'));
+    d.classList.toggle('selected', selectedDots.includes(idx));
+  });
+}
+
+// ===== CALCULATIONS =====
+function updateCalculations() {
+  if (selectedDots.length < 3) {
+    document.getElementById('resultBody').innerHTML = '<tr><td class="empty" colspan="5">选计数点后自动填充</td></tr>';
+    document.getElementById('valEp').innerHTML = '—<span class="unit"> J</span>';
+    document.getElementById('valEk').innerHTML = '—<span class="unit"> J</span>';
+    document.getElementById('chartPoints').innerHTML = '';
+    document.getElementById('fitLine').setAttribute('opacity', '0');
+    return;
+  }
+
+  // Calculate intervals between consecutive selected dots
+  const intervals = [];
+  for (let i = 0; i < selectedDots.length - 1; i++) {
+    intervals.push(dotPositions[selectedDots[i + 1]] - dotPositions[selectedDots[i]]);
+  }
+
+  // Calculate velocities using mid-point method
+  // v_i = (s_i + s_{i+1}) / (2T)  where T is the time between counting points
+  // Time between counting points = number of dot intervals × T_INTERVAL
+  const countingIntervals = [];
+  for (let i = 0; i < selectedDots.length - 1; i++) {
+    countingIntervals.push((selectedDots[i + 1] - selectedDots[i]) * T_INTERVAL);
+  }
+
+  const velocities = []; // velocity at each interior point
+  const heights = []; // cumulative height from first selected point
+  for (let i = 1; i < selectedDots.length - 1; i++) {
+    const s_prev = intervals[i - 1]; // cm
+    const s_next = intervals[i]; // cm
+    const T_prev = countingIntervals[i - 1];
+    const T_next = countingIntervals[i];
+    const v = (s_prev + s_next) / (T_prev + T_next) / 100; // m/s
+    velocities.push(v);
+    heights.push(dotPositions[selectedDots[i]] - dotPositions[selectedDots[0]]); // cm
+  }
+
+  // Fill result table
+  const tbody = document.getElementById('resultBody');
+  tbody.innerHTML = '';
+  let totalEp = 0, totalEk = 0;
+
+  velocities.forEach((v, i) => {
+    const h = heights[i] / 100; // m
+    const mgh = MASS * G * h;
+    const halfmv2 = 0.5 * MASS * v * v;
+    totalEp = mgh;
+    totalEk = halfmv2;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i + 1}</td><td>${heights[i].toFixed(2)}</td><td>${v.toFixed(3)}</td><td>${mgh.toFixed(4)}</td><td>${halfmv2.toFixed(4)}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Update energy cards
+  if (velocities.length > 0) {
+    document.getElementById('valEp').innerHTML = totalEp.toFixed(4) + '<span class="unit"> J</span>';
+    document.getElementById('valEk').innerHTML = totalEk.toFixed(4) + '<span class="unit"> J</span>';
+  }
+
+  // Update chart: v² vs h
+  const chartG = document.getElementById('chartPoints');
+  chartG.innerHTML = '';
+  // Scale: h 0-20cm → x 30-235, v² 0-4 → y 95-5
+  const chartData = [];
+  velocities.forEach((v, i) => {
+    const h = heights[i];
+    const v2 = v * v;
+    chartData.push({ h, v2 });
+    const x = 30 + (h / 20) * 205;
+    const y = 95 - (v2 / 4) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', Math.max(30, Math.min(235, x)).toFixed(1));
+    c.setAttribute('cy', Math.max(5, Math.min(95, y)).toFixed(1));
+    c.setAttribute('r', '3');
+    c.setAttribute('fill', '#059669');
+    chartG.appendChild(c);
+  });
+
+  // Fit line (≥3 points)
+  if (chartData.length >= 3) {
+    let sX = 0, sY = 0, sXY = 0, sXX = 0, n = chartData.length;
+    chartData.forEach(d => { sX += d.h; sY += d.v2; sXY += d.h * d.v2; sXX += d.h * d.h; });
+    const slope = (n * sXY - sX * sY) / (n * sXX - sX * sX);
+    const intercept = (sY - slope * sX) / n;
+    const y1 = 95 - (intercept / 4) * 90;
+    const y2 = 95 - ((slope * 20 + intercept) / 4) * 90;
+    const line = document.getElementById('fitLine');
+    line.setAttribute('x1', '30');
+    line.setAttribute('y1', Math.max(5, Math.min(95, y1)));
+    line.setAttribute('x2', '235');
+    line.setAttribute('y2', Math.max(5, Math.min(95, y2)));
+    line.setAttribute('opacity', '1');
+
+    // slope in (m/s²)/cm = slope * 100 in m/s²
+    // Expected: 2g/100 = 0.196 per cm, or slope≈0.196
+    const slopeMs2 = slope * 100; // convert cm to m
+    const expectedSlope = 2 * G;
+    document.getElementById('statusBadge').textContent = `斜率 = ${slopeMs2.toFixed(1)} m/s²（理论值 2g = ${expectedSlope.toFixed(1)}）`;
+  }
+}
+
+// ===== TOGGLES =====
+function toggleForce() {
+  showForce = !showForce;
+  document.getElementById('forceArrow').style.display = showForce ? '' : 'none';
+  const t = document.getElementById('forceToggle');
+  t.style.background = showForce ? '#059669' : '#D1D5DB';
+  t.firstElementChild.style.left = showForce ? '16px' : '2px';
+}
+
+function toggleHeight() {
+  showHeight = !showHeight;
+  document.getElementById('heightRef').style.display = showHeight ? '' : 'none';
+  const t = document.getElementById('heightToggle');
+  t.style.background = showHeight ? '#059669' : '#D1D5DB';
+  t.firstElementChild.style.left = showHeight ? '16px' : '2px';
+}
+
+// ===== RESET =====
+function resetAll() {
+  powerOn = false;
+  experimentDone = false;
+  dotPositions = [];
+  selectedDots = [];
+
+  // Reset power
+  document.getElementById('powerLed').setAttribute('fill', '#6B7280');
+  document.getElementById('pwrDot').setAttribute('fill', '#D1D5DB');
+  document.querySelector('#powerSwitch text:nth-child(3)').textContent = 'OFF';
+  document.getElementById('pwrLabel').textContent = '点击开启';
+
+  // Reset weight
+  document.getElementById('weightGroup').setAttribute('transform', '');
+  document.getElementById('guideLabel').style.opacity = '1';
+
+  // Clear tape
+  document.getElementById('hDots').innerHTML = '';
+  document.getElementById('vertDots').innerHTML = '';
+  document.getElementById('countPoints').innerHTML = '';
+  document.getElementById('distAnnotations').innerHTML = '';
+  document.getElementById('hTapeGroup').setAttribute('opacity', '0');
+  document.getElementById('rulerGroup').setAttribute('opacity', '0');
+
+  // Reset panel
+  document.getElementById('resultBody').innerHTML = '<tr><td class="empty" colspan="5">选计数点后自动填充</td></tr>';
+  document.getElementById('valEp').innerHTML = '—<span class="unit"> J</span>';
+  document.getElementById('valEk').innerHTML = '—<span class="unit"> J</span>';
+  document.getElementById('valCount').textContent = '0 个';
+  document.getElementById('valTape').textContent = '待打点';
+  document.getElementById('valTape').style.color = '#D1D5DB';
+  document.getElementById('warnTip').style.display = 'none';
+
+  // Reset chart
+  document.getElementById('chartPoints').innerHTML = '';
+  document.getElementById('fitLine').setAttribute('opacity', '0');
+
+  document.getElementById('statusBadge').textContent = '拖住重物松手释放 · 纸带打点后选计数点分析';
+  document.getElementById('statusBadge').className = 'status-badge idle';
+  document.getElementById('analyzeHint').textContent = '释放重物后，点击纸带上的点选为计数点';
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  const f1 = document.getElementById('formula1');
+  const f2 = document.getElementById('formula2');
+  if (f1) katex.render('mgh = \\frac{1}{2}mv^2', f1, { displayMode: true, throwOnError: false });
+  if (f2) katex.render('v_n = \\frac{s_n + s_{n+1}}{2T}', f2, { displayMode: true, throwOnError: false });
+}
+if (window.katex) renderFormulas();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
