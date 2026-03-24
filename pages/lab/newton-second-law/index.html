@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>验证牛顿第二定律 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="牛顿第二定律, F=ma, 验证实验, 打点计时器, 逐差法, 高中物理力学">
+<meta name="description" content="拖拽器材操作，验证加速度与力、质量的关系 F=ma，高考必考实验">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F}
+.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.topbar .back svg{width:14px;height:14px;color:#374151}
+.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:#059669;text-decoration:none;font-weight:500}
+.topbar h1{font-size:15px;font-weight:700}
+.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
+.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.purpose-tag svg{width:12px;height:12px}
+.purpose-tag.highlight{background:#FEF3C7;color:#B45309;border-color:#FDE68A}
+.lab-container{display:flex;height:calc(100vh - 80px)}
+.canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
+.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
+.canvas-wrapper svg{width:100%;height:100%}
+.status-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:100px;font-size:12px;font-weight:700;pointer-events:none;z-index:10;transition:all 0.3s}
+.status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
+.status-badge.progress{background:rgba(234,179,8,0.15);color:#B45309}
+.status-badge.success{background:rgba(5,150,105,0.15);color:#059669}
+.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0;overflow-y:auto}
+.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#6B7280}
+.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
+.data-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.data-table th{background:#F9FAFB;padding:4px 6px;text-align:center;font-weight:600;color:#6B7280;border:1px solid #E5E7EB;font-size:10px}
+.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:11px}
+.data-table td.empty{color:#D1D5DB;font-family:inherit;font-style:italic;font-size:10px}
+.chart-area{background:#F9FAFB;border-radius:8px;border:1px solid #F3F4F6;margin-top:8px;position:relative;height:120px;cursor:crosshair}
+.chart-area svg{width:100%;height:100%}
+.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto}
+.reset-btn svg{width:13px;height:13px}
+.reset-btn:hover{background:#E5E7EB}
+.knowledge-section{width:100%;padding:24px 16px 40px 16px}
+.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
+.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
+.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
+.knowledge-card .card-body{padding:16px 24px 20px}
+.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
+.knowledge-card .formula-lg{background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #A7F3D0}
+.knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
+.knowledge-card.example{background:linear-gradient(180deg,#FAFFFE,#F0FDF4)}
+.knowledge-card.example .card-header .accent{background:#2563EB}
+.knowledge-card.example .solve{background:#fff;border-radius:8px;padding:14px 16px;margin-top:10px;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#374151}
+/* Dark mode */
+html[data-theme="dark"] body{background:#0A0A0F;color:#E5E7EB}
+html[data-theme="dark"] .topbar{background:rgba(15,15,20,0.92);border-bottom-color:rgba(255,255,255,0.06)}
+html[data-theme="dark"] .topbar .back{background:rgba(255,255,255,0.06)}
+html[data-theme="dark"] .topbar .back svg{color:#9CA3AF}
+html[data-theme="dark"] .topbar h1{color:#E5E7EB}
+html[data-theme="dark"] .purpose-bar{background:rgba(15,15,20,0.6);border-bottom-color:rgba(255,255,255,0.04)}
+html[data-theme="dark"] .canvas-wrapper{background:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+html[data-theme="dark"] .panel{background:rgba(20,20,30,0.88);border-left-color:rgba(255,255,255,0.06)}
+html[data-theme="dark"] .panel-section{background:#1E1E2E;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
+html[data-theme="dark"] .panel-section h3{color:#6B7280}
+html[data-theme="dark"] .data-label{color:#9CA3AF}
+html[data-theme="dark"] .data-value{color:#E5E7EB}
+html[data-theme="dark"] .data-table th{background:#1A1A2E;color:#9CA3AF;border-color:#374151}
+html[data-theme="dark"] .data-table td{border-color:#374151;color:#E5E7EB}
+html[data-theme="dark"] .chart-area{background:#1A1A2E;border-color:#374151}
+html[data-theme="dark"] .reset-btn{background:#1E1E2E;color:#9CA3AF}
+html[data-theme="dark"] .reset-btn:hover{background:#2A2A3E}
+html[data-theme="dark"] .knowledge-card{background:#1E1E2E;border-color:rgba(255,255,255,0.06)}
+html[data-theme="dark"] .knowledge-card .card-header{border-bottom-color:rgba(255,255,255,0.04)}
+html[data-theme="dark"] .knowledge-card .card-header h2{color:#E5E7EB}
+html[data-theme="dark"] .knowledge-card p{color:#9CA3AF}
+html[data-theme="dark"] .knowledge-card ul{color:#9CA3AF}
+html[data-theme="dark"] .knowledge-card .formula-lg{background:linear-gradient(135deg,#0A1A0F,#0F1F14);border-color:#065F46}
+html[data-theme="dark"] .knowledge-card.example{background:linear-gradient(180deg,#0F0F1A,#0A1A0F)}
+html[data-theme="dark"] .knowledge-card.example .solve{background:#0A0A0F;border-color:#374151;color:#D1D5DB}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>验证牛顿第二定律</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>验证 F=ma · 打点计时器 · 逐差法 · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖动垫片调节倾角 · 拖动小车轻推释放</div>
+      <svg id="canvas" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="benchGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4C4A8"/><stop offset="100%" stop-color="#BFA880"/></linearGradient>
+          <linearGradient id="cartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA"/><stop offset="50%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#2563EB"/></linearGradient>
+          <linearGradient id="weightGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="40%" stop-color="#6B7280"/><stop offset="100%" stop-color="#4B5563"/></linearGradient>
+          <linearGradient id="hookMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <radialGradient id="pulleyMetal" cx="45%" cy="40%" r="55%"><stop offset="0%" stop-color="#E5E7EB"/><stop offset="30%" stop-color="#D1D5DB"/><stop offset="70%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></radialGradient>
+          <linearGradient id="timerGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E5E7EB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#DC2626"/></marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#059669"/></marker>
+        </defs>
+
+        <!-- Table legs -->
+        <rect x="60" y="280" width="10" height="90" rx="2" fill="#92400E"/>
+        <rect x="580" y="280" width="10" height="90" rx="2" fill="#92400E"/>
+        <rect x="40" y="365" width="50" height="8" rx="2" fill="#78350F"/>
+        <rect x="560" y="365" width="50" height="8" rx="2" fill="#78350F"/>
+
+        <!-- Bench / Rail -->
+        <g id="benchGroup">
+          <rect id="railBody" x="50" y="260" width="540" height="16" rx="3" fill="url(#benchGrad)" stroke="#C4A882" stroke-width="0.5"/>
+          <rect x="55" y="261" width="530" height="2" rx="1" fill="#C4A882" opacity="0.5"/>
+          <!-- Scale markings -->
+          <line x1="100" y1="274" x2="100" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <line x1="150" y1="274" x2="150" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <text x="150" y="279" font-size="4" fill="#8B6E42" text-anchor="middle">10</text>
+          <line x1="200" y1="274" x2="200" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <line x1="250" y1="274" x2="250" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <text x="250" y="279" font-size="4" fill="#8B6E42" text-anchor="middle">20</text>
+          <line x1="300" y1="274" x2="300" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <line x1="350" y1="274" x2="350" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <text x="350" y="279" font-size="4" fill="#8B6E42" text-anchor="middle">30</text>
+          <line x1="400" y1="274" x2="400" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <line x1="450" y1="274" x2="450" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <text x="450" y="279" font-size="4" fill="#8B6E42" text-anchor="middle">40</text>
+          <line x1="500" y1="274" x2="500" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <line x1="550" y1="274" x2="550" y2="276" stroke="#A0845C" stroke-width="0.5"/>
+          <text x="550" y="279" font-size="4" fill="#8B6E42" text-anchor="middle">50</text>
+        </g>
+
+        <!-- Wedge (draggable) -->
+        <g id="wedgeGroup" style="cursor:grab">
+          <polygon id="wedgePoly" points="50,276 100,276 50,260" fill="#F59E0B" stroke="#D97706" stroke-width="0.6"/>
+          <line x1="55" y1="273" x2="63" y2="268" stroke="#D97706" stroke-width="0.3" opacity="0.5"/>
+          <line x1="60" y1="274" x2="68" y2="269" stroke="#D97706" stroke-width="0.3" opacity="0.5"/>
+          <line x1="65" y1="275" x2="73" y2="270" stroke="#D97706" stroke-width="0.3" opacity="0.5"/>
+          <text id="wedgeLabel" x="65" y="290" font-size="7" fill="#059669" text-anchor="middle" font-weight="600">↕ 拖动调节</text>
+        </g>
+
+        <!-- Timer -->
+        <g id="timerGroup">
+          <rect x="70" y="210" width="48" height="48" rx="4" fill="url(#timerGrad)" stroke="#6B7280" stroke-width="1"/>
+          <rect x="74" y="214" width="40" height="40" rx="2" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <rect x="77" y="217" width="34" height="10" rx="1.5" fill="#1F2937"/>
+          <text x="94" y="225" font-size="5.5" fill="#4ADE80" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-weight="700">50.0Hz</text>
+          <circle cx="80" cy="233" r="1.8" fill="#EF4444"/><circle cx="80" cy="233" r="1" fill="#FCA5A5"/>
+          <text x="84" y="235" font-size="3.5" fill="#6B7280">电源</text>
+          <rect x="78" y="238" width="30" height="8" rx="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <path d="M82,242 Q85,240 88,242 Q91,244 94,242 Q97,240 100,242 Q103,244 105,242" fill="none" stroke="#6B7280" stroke-width="0.6"/>
+          <circle cx="81" cy="252" r="2.5" fill="#B45309" stroke="#92400E" stroke-width="0.5"/>
+          <circle cx="105" cy="252" r="2.5" fill="#B45309" stroke="#92400E" stroke-width="0.5"/>
+        </g>
+
+        <!-- Paper tape -->
+        <g id="tapeGroup">
+          <rect id="tapeRect" x="120" y="248" width="200" height="10" rx="1" fill="#FFFBEB" stroke="#E5E0D0" stroke-width="0.5"/>
+          <g id="tapeDots"></g>
+        </g>
+
+        <!-- Cart (draggable) -->
+        <g id="cartGroup" style="cursor:grab">
+          <rect id="cartBody" x="220" y="225" width="90" height="35" rx="4" fill="url(#cartGrad)" stroke="#1D4ED8" stroke-width="0.5"/>
+          <!-- Wheels -->
+          <circle cx="240" cy="262" r="5" fill="url(#pulleyMetal)" stroke="#4B5563" stroke-width="1"/>
+          <circle cx="240" cy="262" r="1.5" fill="#374151"/>
+          <circle cx="292" cy="262" r="5" fill="url(#pulleyMetal)" stroke="#4B5563" stroke-width="1"/>
+          <circle cx="292" cy="262" r="1.5" fill="#374151"/>
+          <!-- Mass label -->
+          <text x="265" y="248" font-size="12" fill="rgba(255,255,255,0.9)" text-anchor="middle" font-weight="800" font-family="Georgia,serif">M</text>
+          <!-- Mass tray (for adding砝码) -->
+          <rect x="235" y="221" width="62" height="4" rx="1" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
+          <!-- Hook at front -->
+          <circle cx="310" cy="242" r="3" fill="none" stroke="#1D4ED8" stroke-width="1.5"/>
+          <!-- Drag hint -->
+          <text id="cartHint" x="265" y="218" font-size="7" fill="#059669" text-anchor="middle" font-weight="600" opacity="0.8">← 拖住松手释放</text>
+        </g>
+
+        <!-- Stacked masses on cart -->
+        <g id="stackedMasses"></g>
+
+        <!-- Rope -->
+        <line id="ropeH" x1="313" y1="242" x2="580" y2="242" stroke="#92400E" stroke-width="2" stroke-linecap="round"/>
+        <line id="ropeV" x1="590" y1="252" x2="590" y2="330" stroke="#92400E" stroke-width="2" stroke-linecap="round"/>
+        <text id="ropeLabel" x="560" y="238" font-size="7" fill="#92400E" font-weight="600">绳 T</text>
+
+        <!-- Pulley -->
+        <circle cx="590" cy="242" r="12" fill="url(#pulleyMetal)" stroke="#6B7280" stroke-width="1.5"/>
+        <circle cx="590" cy="242" r="2.5" fill="#4B5563"/>
+        <!-- Pulley bracket (L-shape) -->
+        <rect x="585" y="225" width="10" height="12" rx="1" fill="#6B7280"/>
+        <rect x="580" y="222" width="20" height="5" rx="1" fill="#4B5563"/>
+
+        <!-- Hanging weights -->
+        <g id="hangingWeights">
+          <ellipse cx="590" cy="332" rx="4" ry="5" fill="none" stroke="url(#hookMetal)" stroke-width="1.5"/>
+        </g>
+
+        <!-- Force arrows -->
+        <g id="forceArrows">
+          <line id="arrowF" x1="310" y1="240" x2="360" y2="240" stroke="#DC2626" stroke-width="2.5" marker-end="url(#arrowRed)" opacity="0.8"/>
+          <text id="labelF" x="365" y="237" font-size="10" fill="#DC2626" font-weight="700">F</text>
+          <line id="arrowMg" x1="590" y1="365" x2="590" y2="375" stroke="#059669" stroke-width="2.5" marker-end="url(#arrowGreen)" opacity="0.8"/>
+          <text id="labelMg" x="600" y="375" font-size="9" fill="#059669" font-weight="700">mg</text>
+        </g>
+
+        <!-- Weight shelf (hooks - for rope end) -->
+        <g id="hookShelf">
+          <text x="50" y="38" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">备用钩码</text>
+          <rect x="15" y="42" width="70" height="3" rx="1.5" fill="#9CA3AF"/>
+          <g id="shelfH0" style="cursor:grab">
+            <path d="M28,45 Q28,49 25,49 L25,51 Q28,51 28,47" fill="none" stroke="#6B7280" stroke-width="1"/>
+            <rect x="21" y="51" width="14" height="16" rx="3" fill="url(#weightGrad)" stroke="#4B5563" stroke-width="0.5"/>
+            <text x="28" y="63" font-size="5" fill="#fff" text-anchor="middle" font-weight="600">50g</text>
+          </g>
+          <g id="shelfH1" style="cursor:grab">
+            <path d="M50,45 Q50,49 47,49 L47,51 Q50,51 50,47" fill="none" stroke="#6B7280" stroke-width="1"/>
+            <rect x="43" y="51" width="14" height="16" rx="3" fill="url(#weightGrad)" stroke="#4B5563" stroke-width="0.5"/>
+            <text x="50" y="63" font-size="5" fill="#fff" text-anchor="middle" font-weight="600">50g</text>
+          </g>
+          <g id="shelfH2" style="cursor:grab">
+            <path d="M72,45 Q72,49 69,49 L69,51 Q72,51 72,47" fill="none" stroke="#6B7280" stroke-width="1"/>
+            <rect x="65" y="51" width="14" height="16" rx="3" fill="url(#weightGrad)" stroke="#4B5563" stroke-width="0.5"/>
+            <text x="72" y="63" font-size="5" fill="#fff" text-anchor="middle" font-weight="600">50g</text>
+          </g>
+          <text x="50" y="80" font-size="6" fill="#059669" text-anchor="middle" font-weight="600">↓ 拖到绳末端</text>
+        </g>
+
+        <!-- Mass shelf (for cart) -->
+        <g id="massShelf">
+          <text x="145" y="38" font-size="9" fill="#6B7280" text-anchor="middle" font-weight="600">砝码</text>
+          <rect x="110" y="42" width="70" height="3" rx="1.5" fill="#9CA3AF"/>
+          <g id="shelfM0" style="cursor:grab">
+            <ellipse cx="125" cy="50" rx="8" ry="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.4"/>
+            <rect x="117" y="50" width="16" height="12" rx="2" fill="#B0B8C4" stroke="#9CA3AF" stroke-width="0.4"/>
+            <ellipse cx="125" cy="62" rx="8" ry="2" fill="#9CA3AF"/>
+            <text x="125" y="60" font-size="5" fill="#374151" text-anchor="middle" font-weight="700">50g</text>
+          </g>
+          <g id="shelfM1" style="cursor:grab">
+            <ellipse cx="148" cy="50" rx="8" ry="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.4"/>
+            <rect x="140" y="50" width="16" height="12" rx="2" fill="#B0B8C4" stroke="#9CA3AF" stroke-width="0.4"/>
+            <ellipse cx="148" cy="62" rx="8" ry="2" fill="#9CA3AF"/>
+            <text x="148" y="60" font-size="5" fill="#374151" text-anchor="middle" font-weight="700">50g</text>
+          </g>
+          <g id="shelfM2" style="cursor:grab">
+            <ellipse cx="171" cy="50" rx="8" ry="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.4"/>
+            <rect x="163" y="50" width="16" height="12" rx="2" fill="#B0B8C4" stroke="#9CA3AF" stroke-width="0.4"/>
+            <ellipse cx="171" cy="62" rx="8" ry="2" fill="#9CA3AF"/>
+            <text x="171" y="60" font-size="5" fill="#374151" text-anchor="middle" font-weight="700">50g</text>
+          </g>
+          <text x="145" y="80" font-size="6" fill="#059669" text-anchor="middle" font-weight="600">↓ 拖到小车上</text>
+        </g>
+
+        <!-- Guide labels -->
+        <g id="guideLabels" opacity="1">
+          <rect x="330" y="210" width="140" height="20" rx="4" fill="rgba(5,150,105,0.9)"/>
+          <text x="400" y="224" font-size="9" fill="#fff" text-anchor="middle" font-weight="600">拖住小车松手释放</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div style="font-size:11px;color:#4B5563;line-height:1.8">
+        <div style="display:flex;gap:6px;padding:3px 0"><span style="width:16px;height:16px;border-radius:50%;background:#ECFDF5;color:#059669;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">1</span><span><strong style="color:#059669">补偿摩擦力</strong>：拖动垫片调倾角，推小车看纸带是否等间距</span></div>
+        <div style="display:flex;gap:6px;padding:3px 0"><span style="width:16px;height:16px;border-radius:50%;background:#ECFDF5;color:#059669;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">2</span><span><strong style="color:#059669">探究 a 与 F</strong>：拖钩码挂上去，释放小车，记录数据</span></div>
+        <div style="display:flex;gap:6px;padding:3px 0"><span style="width:16px;height:16px;border-radius:50%;background:#ECFDF5;color:#059669;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">3</span><span><strong style="color:#059669">探究 a 与 M</strong>：改变小车质量，重复实验</span></div>
+        <div style="display:flex;gap:6px;padding:3px 0"><span style="width:16px;height:16px;border-radius:50%;background:#ECFDF5;color:#059669;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">4</span><span><strong style="color:#059669">分析数据</strong>：在图上描点拟合，验证 F=ma</span></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实时数据</h3>
+      <div class="data-row"><span class="data-label">小车+砝码 M</span><span class="data-value" id="valM">200.0 g</span></div>
+      <div class="data-row"><span class="data-label">钩码 m</span><span class="data-value" id="valm">0 g</span></div>
+      <div class="data-row"><span class="data-label">车上砝码</span><span class="data-value" id="valMassCount">0 片</span></div>
+      <div class="data-row"><span class="data-label" style="color:#059669">拉力 F</span><span class="data-value" id="valF" style="color:#059669">0.00 N</span></div>
+      <div class="data-row"><span class="data-label">木板倾角</span><span class="data-value" id="valAngle">0.0°</span></div>
+      <div class="data-row"><span class="data-label">纸带状态</span><span class="data-value" id="valTape" style="color:#B45309">未测试</span></div>
+      <div class="data-row"><span class="data-label" style="color:#DC2626">加速度 a</span><span class="data-value" id="valA" style="color:#DC2626">— m/s²</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 实验记录</h3>
+      <table class="data-table">
+        <thead><tr><th>次数</th><th>F (N)</th><th>a (m/s²)</th></tr></thead>
+        <tbody id="recordBody">
+          <tr><td class="empty" colspan="3">释放小车开始记录</td></tr>
+        </tbody>
+      </table>
+      <div class="chart-area" id="chartArea">
+        <svg id="chartSvg" viewBox="0 0 240 110">
+          <line x1="30" y1="5" x2="30" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <line x1="30" y1="95" x2="235" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="132" y="108" font-size="8" fill="#9CA3AF" text-anchor="middle">F / N</text>
+          <text x="10" y="50" font-size="8" fill="#9CA3AF" text-anchor="middle" transform="rotate(-90,10,50)">a / m·s⁻²</text>
+          <!-- Axis ticks -->
+          <text x="30" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0</text>
+          <text x="71" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.5</text>
+          <text x="112" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">1.0</text>
+          <text x="153" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">1.5</text>
+          <text x="194" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">2.0</text>
+          <text x="26" y="97" font-size="6" fill="#9CA3AF" text-anchor="end">0</text>
+          <text x="26" y="75" font-size="6" fill="#9CA3AF" text-anchor="end">2</text>
+          <text x="26" y="53" font-size="6" fill="#9CA3AF" text-anchor="end">4</text>
+          <text x="26" y="31" font-size="6" fill="#9CA3AF" text-anchor="end">6</text>
+          <text x="26" y="9" font-size="6" fill="#9CA3AF" text-anchor="end">8</text>
+          <g id="chartPoints"></g>
+          <line id="fitLine" x1="0" y1="0" x2="0" y2="0" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 显示选项</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:12px">
+        <span class="data-label">力的箭头</span>
+        <div id="forceToggle" class="toggle-switch on" onclick="toggleForces()" style="width:36px;height:20px;border-radius:10px;background:#059669;cursor:pointer;position:relative;transition:background 0.2s"><div style="position:absolute;top:2px;left:18px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.15)"></div></div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>牛顿第二定律</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>物体的加速度与所受合外力成正比，与质量成反比。方向与合外力方向相同。</p>
+      <ul>
+        <li><strong>F</strong> — 合外力（单位：N）</li>
+        <li><strong>m</strong> — 物体质量（单位：kg）</li>
+        <li><strong>a</strong> — 加速度（单位：m/s²）</li>
+      </ul>
+      <p style="margin-top:12px;color:#059669;font-size:12px;font-weight:600">实验中，补偿摩擦力后绳的拉力即为小车受到的合外力。当钩码质量 m ≪ 小车质量 M 时，绳的拉力近似等于钩码重力 mg。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>逐差法求加速度</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula2"></div>
+      <p>在纸带上取连续等时间间隔的计数点，每段位移依次为 s₁, s₂, s₃, s₄, s₅, s₆。</p>
+      <ul>
+        <li>将数据分前后两组：(s₁, s₂, s₃) 和 (s₄, s₅, s₆)</li>
+        <li>逐差：Δs₁ = s₄ - s₁, Δs₂ = s₅ - s₂, Δs₃ = s₆ - s₃</li>
+        <li>每个 Δs 对应 3T 的时间间隔</li>
+        <li>取平均得加速度</li>
+      </ul>
+      <p style="margin-top:8px;color:#059669;font-size:12px;font-weight:600">考点提醒：逐差法比逐项求差再取平均更精确，因为它充分利用了所有数据点，减小了偶然误差。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>a-F 图像不过原点？</strong></p>
+      <ul>
+        <li>摩擦力未完全补偿 → 图像在 F 轴上有截距</li>
+        <li>过度补偿 → 图像在 a 轴上有截距</li>
+      </ul>
+      <p style="margin-top:12px"><strong>a-F 图像弯曲？</strong></p>
+      <ul>
+        <li>钩码质量过大，不满足 m ≪ M 条件</li>
+        <li>此时绳的拉力 ≠ mg，需要用 T = mMg/(M+m) 修正</li>
+      </ul>
+      <p style="margin-top:8px;color:#059669;font-size:12px;font-weight:600">考点提醒：高考常考"图像异常的原因分析"，要能结合实验操作判断误差来源。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>用如图所示装置验证牛顿第二定律。小车质量 M=200g，砝码盘（含砝码）质量 m=20g。已补偿摩擦力。释放小车后打点计时器记录纸带，相邻计数点间距依次为 2.40cm, 3.20cm, 4.00cm, 4.80cm, 5.60cm, 6.40cm（每两个计数点间还有4个点）。求小车加速度。</p>
+      <div class="solve">
+T = 0.02 × 5 = 0.1s（每两个计数点间5个间隔）<br/>
+逐差法：<br/>
+Δs₁ = s₄ - s₁ = 4.80 - 2.40 = 2.40 cm<br/>
+Δs₂ = s₅ - s₂ = 5.60 - 3.20 = 2.40 cm<br/>
+Δs₃ = s₆ - s₃ = 6.40 - 4.00 = 2.40 cm<br/>
+a = (Δs₁ + Δs₂ + Δs₃) / (3 × (3T)²)<br/>
+a = (2.40 + 2.40 + 2.40) × 10⁻² / (3 × 0.09)<br/>
+a = <strong style="color:#059669">0.80 m/s²</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== PHYSICS CONSTANTS =====
+const G = 10; // m/s²
+const MU = 0.05; // friction coefficient of rail
+const T = 0.02; // timer interval (s)
+const CART_BASE_MASS = 200; // g
+const HOOK_MASS = 50; // g per hook weight
+
+// ===== STATE =====
+let angle = 0; // degrees
+let hookCount = 0; // hanging hooks (start with 0, user drags to add)
+let massCount = 0; // masses on cart
+let hookShelfAvail = [true, true, true];
+let massShelfAvail = [true, true, true];
+let isAnimating = false;
+let tapeData = []; // dot positions on tape
+let records = []; // {F, a}
+let chartPoints = []; // user-plotted points
+let showForces = true;
+
+// Derived
+function getCartMass() { return (CART_BASE_MASS + massCount * 50) / 1000; } // kg
+function getHookMass() { return (hookCount * HOOK_MASS) / 1000; } // kg
+function getPullForce() { return getHookMass() * G; } // N (approx, when m << M)
+function getAcceleration() {
+  const M = getCartMass();
+  const m = getHookMass();
+  const theta = angle * Math.PI / 180;
+  // a = (mg - μMg·cosθ + Mg·sinθ) / (M + m) — with friction compensation by tilt
+  const netF = m * G - MU * M * G * Math.cos(theta) + M * G * Math.sin(theta);
+  return Math.max(0, netF / (M + m));
+}
+function isFrictionCompensated() {
+  // When tanθ ≈ μ, friction is compensated
+  const theta = angle * Math.PI / 180;
+  return Math.abs(Math.tan(theta) - MU) < 0.008;
+}
+
+// ===== SVG HELPERS =====
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) {
+  const pt = svg.createSVGPoint();
+  const touch = e.touches ? e.touches[0] : e;
+  pt.x = touch.clientX; pt.y = touch.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+// ===== UPDATE UI =====
+function updatePanel() {
+  const M = CART_BASE_MASS + massCount * 50;
+  document.getElementById('valM').textContent = M + '.0 g';
+  document.getElementById('valm').textContent = (hookCount * HOOK_MASS) + ' g';
+  document.getElementById('valMassCount').textContent = massCount + ' 片';
+  document.getElementById('valF').textContent = getPullForce().toFixed(2) + ' N';
+  document.getElementById('valAngle').textContent = angle.toFixed(1) + '°';
+  
+  if (tapeData.length > 0) {
+    const a = getAcceleration();
+    document.getElementById('valA').textContent = a.toFixed(2) + ' m/s²';
+    if (isFrictionCompensated()) {
+      document.getElementById('valTape').textContent = '等间距 ✓';
+      document.getElementById('valTape').style.color = '#059669';
+    } else {
+      document.getElementById('valTape').textContent = '不均匀';
+      document.getElementById('valTape').style.color = '#B45309';
+    }
+  } else {
+    document.getElementById('valA').textContent = '— m/s²';
+    document.getElementById('valTape').textContent = '未测试';
+    document.getElementById('valTape').style.color = '#B45309';
+  }
+
+  // Update force arrow length
+  const F = getPullForce();
+  const fLen = F * 30;
+  document.getElementById('arrowF').setAttribute('x2', 310 + fLen);
+  document.getElementById('labelF').setAttribute('x', 315 + fLen);
+
+  // Hanging weight count visual
+  updateHangingWeights();
+
+  // Warning if hook mass > M/10
+  const hookMassG = hookCount * HOOK_MASS;
+  const cartMassG = CART_BASE_MASS + massCount * 50;
+  if (hookMassG > cartMassG / 10) {
+    document.getElementById('valm').style.color = '#DC2626';
+  } else {
+    document.getElementById('valm').style.color = '#1D1D1F';
+  }
+}
+
+function updateHangingWeights() {
+  const g = document.getElementById('hangingWeights');
+  // Clear existing
+  while (g.children.length > 1) g.removeChild(g.lastChild);
+  // Keep hook ellipse, add weight rects
+  for (let i = 0; i < hookCount; i++) {
+    const y = 338 + i * 24;
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', '578'); rect.setAttribute('y', String(y));
+    rect.setAttribute('width', '24'); rect.setAttribute('height', '22');
+    rect.setAttribute('rx', '3'); rect.setAttribute('fill', '#F59E0B');
+    rect.setAttribute('stroke', '#D97706'); rect.setAttribute('stroke-width', '0.5');
+    g.appendChild(rect);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.setAttribute('x', '590'); txt.setAttribute('y', String(y + 15));
+    txt.setAttribute('font-size', '7'); txt.setAttribute('fill', '#fff');
+    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '700');
+    txt.textContent = '50g';
+    g.appendChild(txt);
+  }
+  // Rope length
+  const ropeEnd = 338 + hookCount * 24;
+  document.getElementById('ropeV').setAttribute('y2', String(338));
+  // mg arrow
+  document.getElementById('arrowMg').setAttribute('y1', String(ropeEnd + 2));
+  document.getElementById('arrowMg').setAttribute('y2', String(ropeEnd + 18));
+  document.getElementById('labelMg').setAttribute('y', String(ropeEnd + 18));
+}
+
+function updateBenchAngle() {
+  const rad = -angle;
+  // Rotate bench around right-end pivot (x=590)
+  document.getElementById('benchGroup').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+  document.getElementById('timerGroup').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+  document.getElementById('tapeGroup').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+  document.getElementById('cartGroup').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+  document.getElementById('stackedMasses').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+}
+
+function drawStackedMasses() {
+  const g = document.getElementById('stackedMasses');
+  g.innerHTML = '';
+  for (let i = 0; i < massCount; i++) {
+    const y = 217 - (i + 1) * 8;
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    el.setAttribute('cx', '266'); el.setAttribute('cy', String(y));
+    el.setAttribute('rx', '25'); el.setAttribute('ry', '4');
+    el.setAttribute('fill', '#B0B8C4'); el.setAttribute('stroke', '#9CA3AF');
+    el.setAttribute('stroke-width', '0.4');
+    g.appendChild(el);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.setAttribute('x', '266'); txt.setAttribute('y', String(y + 3));
+    txt.setAttribute('font-size', '5'); txt.setAttribute('fill', '#374151');
+    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-weight', '600');
+    txt.textContent = '50g';
+    g.appendChild(txt);
+  }
+}
+
+// ===== TAPE ANIMATION =====
+function runExperiment() {
+  if (isAnimating || hookCount === 0) return;
+  isAnimating = true;
+  const a = getAcceleration();
+  const compensated = isFrictionCompensated();
+
+  // Generate tape dots
+  tapeData = [];
+  const numDots = 9;
+  let pos = 0;
+  let v = 0.5; // initial push velocity (cm)
+  for (let i = 0; i < numDots; i++) {
+    tapeData.push(pos);
+    if (compensated && hookCount === 0) {
+      // No acceleration, uniform
+      pos += v * T * 50;
+    } else {
+      v += a * T * 5;
+      pos += v * T * 50;
+    }
+  }
+
+  // Draw dots on tape
+  const dotsG = document.getElementById('tapeDots');
+  dotsG.innerHTML = '';
+  const tapeStart = 125;
+  const scale = 180 / (tapeData[tapeData.length - 1] || 1);
+  for (let i = 0; i < tapeData.length; i++) {
+    const cx = tapeStart + tapeData[i] * scale;
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', String(cx));
+    dot.setAttribute('cy', '253');
+    dot.setAttribute('r', '1.5');
+    dot.setAttribute('fill', '#1F2937');
+    dot.setAttribute('style', 'cursor:pointer');
+    dot.setAttribute('data-idx', String(i));
+    dotsG.appendChild(dot);
+  }
+
+  // Record data
+  const F = getPullForce();
+  records.push({ F: F, a: a });
+  updateRecordTable();
+
+  // Status
+  const badge = document.getElementById('statusBadge');
+  if (compensated) {
+    badge.textContent = '摩擦力已补偿 · a = ' + a.toFixed(2) + ' m/s²';
+    badge.className = 'status-badge success';
+  } else {
+    badge.textContent = '摩擦力未补偿 · a = ' + a.toFixed(2) + ' m/s²';
+    badge.className = 'status-badge progress';
+  }
+
+  updatePanel();
+  isAnimating = false;
+}
+
+function updateRecordTable() {
+  const tbody = document.getElementById('recordBody');
+  tbody.innerHTML = '';
+  if (records.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="3">释放小车开始记录</td></tr>';
+    return;
+  }
+  records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i + 1}</td><td>${r.F.toFixed(2)}</td><td>${r.a.toFixed(2)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== CHART (a-F plot) =====
+function addChartPoint(F, a) {
+  chartPoints.push({ F, a });
+  drawChart();
+}
+
+function drawChart() {
+  const g = document.getElementById('chartPoints');
+  g.innerHTML = '';
+  // Scale: F 0-2.5N → x 30-235, a 0-8 → y 95-5
+  chartPoints.forEach(p => {
+    const x = 30 + (p.F / 2.5) * 205;
+    const y = 95 - (p.a / 8) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', String(x)); c.setAttribute('cy', String(y));
+    c.setAttribute('r', '3'); c.setAttribute('fill', '#059669');
+    g.appendChild(c);
+  });
+  // Fit line if >= 2 points
+  if (chartPoints.length >= 2) {
+    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0, n = chartPoints.length;
+    chartPoints.forEach(p => { sumX += p.F; sumY += p.a; sumXY += p.F * p.a; sumXX += p.F * p.F; });
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+    const x1 = 30, x2 = 235;
+    const F1 = 0, F2 = 2.5;
+    const a1 = intercept, a2 = slope * F2 + intercept;
+    const y1 = 95 - (a1 / 8) * 90, y2 = 95 - (a2 / 8) * 90;
+    const line = document.getElementById('fitLine');
+    line.setAttribute('x1', String(x1)); line.setAttribute('y1', String(Math.max(5, Math.min(95, y1))));
+    line.setAttribute('x2', String(x2)); line.setAttribute('y2', String(Math.max(5, Math.min(95, y2))));
+    line.setAttribute('opacity', '1');
+  }
+}
+
+// Auto-add chart points from records
+function syncChart() {
+  chartPoints = records.map(r => ({ F: r.F, a: r.a }));
+  drawChart();
+}
+
+// ===== DRAG HANDLERS =====
+let dragType = null;
+let dragIdx = -1;
+let dragGhost = null;
+let dragStartY = 0;
+
+function createGhost(x, y, text, color) {
+  if (dragGhost) dragGhost.remove();
+  dragGhost = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  dragGhost.setAttribute('pointer-events', 'none');
+  dragGhost.setAttribute('opacity', '0.6');
+  const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  r.setAttribute('width', '20'); r.setAttribute('height', '18'); r.setAttribute('rx', '3');
+  r.setAttribute('fill', color || '#6B7280');
+  dragGhost.appendChild(r);
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', '10'); t.setAttribute('y', '13'); t.setAttribute('font-size', '5');
+  t.setAttribute('fill', '#fff'); t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '600');
+  t.textContent = text || '';
+  dragGhost.appendChild(t);
+  svg.appendChild(dragGhost);
+  dragGhost.setAttribute('transform', `translate(${x - 10},${y - 9})`);
+}
+
+function onDown(e) {
+  e.preventDefault();
+  const p = getSvgPoint(e);
+
+  // Wedge drag (adjust angle)
+  if (p.x >= 45 && p.x <= 105 && p.y >= 255 && p.y <= 295) {
+    dragType = 'wedge';
+    dragStartY = p.y;
+    return;
+  }
+
+  // Cart drag (push/release)
+  if (p.x >= 220 && p.x <= 315 && p.y >= 220 && p.y <= 270) {
+    dragType = 'cart';
+    document.getElementById('guideLabels').style.opacity = '0';
+    return;
+  }
+
+  // Hook shelf weights
+  for (let i = 0; i < 3; i++) {
+    if (!hookShelfAvail[i]) continue;
+    const bx = [21, 43, 65][i];
+    if (p.x >= bx && p.x <= bx + 14 && p.y >= 45 && p.y <= 70) {
+      dragType = 'hook';
+      dragIdx = i;
+      createGhost(p.x, p.y, '50g', '#6B7280');
+      return;
+    }
+  }
+
+  // Mass shelf weights
+  for (let i = 0; i < 3; i++) {
+    if (!massShelfAvail[i]) continue;
+    const bx = [117, 140, 163][i];
+    if (p.x >= bx && p.x <= bx + 16 && p.y >= 45 && p.y <= 68) {
+      dragType = 'mass';
+      dragIdx = i;
+      createGhost(p.x, p.y, '50g', '#B0B8C4');
+      return;
+    }
+  }
+}
+
+function onMove(e) {
+  if (!dragType) return;
+  e.preventDefault();
+  const p = getSvgPoint(e.touches ? e.touches[0] : e);
+
+  if (dragType === 'wedge') {
+    const dy = dragStartY - p.y;
+    angle = Math.max(0, Math.min(5, angle + dy * 0.05));
+    dragStartY = p.y;
+    updateBenchAngle();
+    updatePanel();
+  }
+  if (dragType === 'hook' || dragType === 'mass') {
+    if (dragGhost) dragGhost.setAttribute('transform', `translate(${p.x - 10},${p.y - 9})`);
+  }
+}
+
+function onUp(e) {
+  if (!dragType) return;
+  const p = getSvgPoint(e.changedTouches ? e.changedTouches[0] : e);
+
+  if (dragType === 'cart') {
+    // Release cart → animate slide then run experiment
+    const cart = document.getElementById('cartGroup');
+    const a = getAcceleration();
+    if (a > 0 || hookCount === 0) {
+      // Animate cart sliding right
+      let dx = 0;
+      const maxDx = 120;
+      const step = () => {
+        dx += 4;
+        if (dx > maxDx) { dx = maxDx; }
+        const rad = -angle;
+        cart.setAttribute('transform', `rotate(${rad}, 590, 268) translate(${dx}, 0)`);
+        document.getElementById('stackedMasses').setAttribute('transform', `rotate(${rad}, 590, 268) translate(${dx}, 0)`);
+        if (dx < maxDx) {
+          requestAnimationFrame(step);
+        } else {
+          // Reset cart position after animation
+          setTimeout(() => {
+            cart.setAttribute('transform', `rotate(${rad}, 590, 268)`);
+            document.getElementById('stackedMasses').setAttribute('transform', `rotate(${rad}, 590, 268)`);
+            runExperiment();
+            syncChart();
+          }, 200);
+        }
+      };
+      requestAnimationFrame(step);
+    } else {
+      runExperiment();
+      syncChart();
+    }
+  }
+
+  if (dragType === 'hook') {
+    // Drop near rope/hanging area (tightened snap zone)
+    if (p.x >= 570 && p.x <= 610 && p.y >= 300 && p.y <= 380) {
+      hookShelfAvail[dragIdx] = false;
+      hookCount++;
+      document.getElementById('shelfH' + dragIdx).style.opacity = '0.2';
+      document.getElementById('shelfH' + dragIdx).style.pointerEvents = 'none';
+      updatePanel();
+    }
+  }
+
+  if (dragType === 'mass') {
+    // Drop near cart tray (tightened snap zone)
+    if (p.x >= 230 && p.x <= 300 && p.y >= 210 && p.y <= 250) {
+      massShelfAvail[dragIdx] = false;
+      massCount++;
+      document.getElementById('shelfM' + dragIdx).style.opacity = '0.2';
+      document.getElementById('shelfM' + dragIdx).style.pointerEvents = 'none';
+      drawStackedMasses();
+      updatePanel();
+    }
+  }
+
+  if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+  dragType = null;
+}
+
+svg.addEventListener('mousedown', onDown);
+svg.addEventListener('mousemove', onMove);
+svg.addEventListener('mouseup', onUp);
+svg.addEventListener('mouseleave', onUp);
+svg.addEventListener('touchstart', onDown, { passive: false });
+svg.addEventListener('touchmove', onMove, { passive: false });
+svg.addEventListener('touchend', onUp);
+
+// ===== TOGGLES =====
+function toggleForces() {
+  showForces = !showForces;
+  document.getElementById('forceArrows').style.display = showForces ? '' : 'none';
+  const t = document.getElementById('forceToggle');
+  t.style.background = showForces ? '#059669' : '#D1D5DB';
+  t.firstElementChild.style.left = showForces ? '18px' : '2px';
+}
+
+// ===== RESET =====
+function resetAll() {
+  angle = 0; hookCount = 0; massCount = 0;
+  hookShelfAvail = [true, true, true];
+  massShelfAvail = [true, true, true];
+  tapeData = []; records = []; chartPoints = [];
+  isAnimating = false;
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('shelfH' + i).style.opacity = '1';
+    document.getElementById('shelfH' + i).style.pointerEvents = '';
+    document.getElementById('shelfM' + i).style.opacity = '1';
+    document.getElementById('shelfM' + i).style.pointerEvents = '';
+  }
+  document.getElementById('tapeDots').innerHTML = '';
+  document.getElementById('chartPoints').innerHTML = '';
+  document.getElementById('fitLine').setAttribute('opacity', '0');
+  updateBenchAngle();
+  drawStackedMasses();
+  updateHangingWeights();
+  updateRecordTable();
+  updatePanel();
+  document.getElementById('statusBadge').textContent = '拖动垫片调节倾角 · 拖动小车轻推释放';
+  document.getElementById('statusBadge').className = 'status-badge idle';
+  document.getElementById('guideLabels').style.opacity = '1';
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  const f1 = document.getElementById('formula1');
+  const f2 = document.getElementById('formula2');
+  if (f1 && window.katex) katex.render('F = ma', f1, { throwOnError: false, displayMode: true });
+  if (f2 && window.katex) katex.render('a = \\frac{\\Delta s_1 + \\Delta s_2 + \\Delta s_3}{3 \\times (3T)^2}', f2, { throwOnError: false, displayMode: true });
+}
+
+// ===== INIT =====
+updatePanel();
+updateHangingWeights();
+setTimeout(() => {
+  const g = document.getElementById('guideLabels');
+  if (g) { g.style.transition = 'opacity 1s'; g.style.opacity = '0'; }
+}, 4000);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
