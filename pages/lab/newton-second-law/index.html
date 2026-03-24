@@ -7,83 +7,10 @@
 <meta name="keywords" content="牛顿第二定律, F=ma, 验证实验, 打点计时器, 逐差法, 高中物理力学">
 <meta name="description" content="拖拽器材操作，验证加速度与力、质量的关系 F=ma，高考必考实验">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif;background:#F0F1F5;color:#1D1D1F}
-.topbar{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:0 24px;height:48px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
-.topbar .back{width:28px;height:28px;border-radius:6px;border:none;background:rgba(0,0,0,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.topbar .back svg{width:14px;height:14px;color:#374151}
-.breadcrumb{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:6px}
-.breadcrumb a{color:#059669;text-decoration:none;font-weight:500}
-.topbar h1{font-size:15px;font-weight:700}
-.purpose-bar{background:rgba(255,255,255,0.6);border-bottom:1px solid rgba(0,0,0,0.04);padding:6px 24px;display:flex;align-items:center;gap:10px}
-.purpose-tag{display:inline-flex;align-items:center;gap:5px;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600}
-.purpose-tag svg{width:12px;height:12px}
-.purpose-tag.highlight{background:#FEF3C7;color:#B45309;border-color:#FDE68A}
-.lab-container{display:flex;height:calc(100vh - 80px)}
-.canvas-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;min-width:0}
-.canvas-wrapper{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 20px rgba(0,0,0,0.04);overflow:hidden;width:100%;position:relative;user-select:none}
-.canvas-wrapper svg{width:100%;height:100%}
-.status-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);padding:6px 20px;border-radius:100px;font-size:12px;font-weight:700;pointer-events:none;z-index:10;transition:all 0.3s}
-.status-badge.idle{background:rgba(107,114,128,0.1);color:#6B7280}
-.status-badge.progress{background:rgba(234,179,8,0.15);color:#B45309}
-.status-badge.success{background:rgba(5,150,105,0.15);color:#059669}
-.panel{width:280px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-left:1px solid rgba(0,0,0,0.06);padding:14px;display:flex;flex-direction:column;gap:12px;flex-shrink:0;overflow-y:auto}
-.panel-section{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
-.panel-section h3{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.panel-section h3 svg{width:12px;height:12px;color:#8E8E93}
-.data-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:12px}
-.data-row:last-child{border-bottom:none}
-.data-label{color:#6B7280}
-.data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#1D1D1F;font-size:12px}
-.data-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
-.data-table th{background:#F9FAFB;padding:4px 6px;text-align:center;font-weight:600;color:#6B7280;border:1px solid #E5E7EB;font-size:10px}
-.data-table td{padding:4px 6px;text-align:center;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:11px}
-.data-table td.empty{color:#D1D5DB;font-family:inherit;font-style:italic;font-size:10px}
-.chart-area{background:#F9FAFB;border-radius:8px;border:1px solid #F3F4F6;margin-top:8px;position:relative;height:120px;cursor:crosshair}
-.chart-area svg{width:100%;height:100%}
-.reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto}
-.reset-btn svg{width:13px;height:13px}
-.reset-btn:hover{background:#E5E7EB}
-.knowledge-section{width:100%;padding:24px 16px 40px 16px}
-.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
-.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
-.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
-.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
-.knowledge-card .card-body{padding:16px 24px 20px}
-.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
-.knowledge-card .formula-lg{background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border-radius:10px;padding:20px;text-align:center;margin:16px 0;border:1px solid #A7F3D0}
-.knowledge-card ul{font-size:13px;line-height:2;color:#4B5563;padding-left:20px}
-.knowledge-card.example{background:linear-gradient(180deg,#FAFFFE,#F0FDF4)}
-.knowledge-card.example .card-header .accent{background:#2563EB}
-.knowledge-card.example .solve{background:#fff;border-radius:8px;padding:14px 16px;margin-top:10px;border:1px solid #E5E7EB;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;color:#374151}
-/* Dark mode */
-html[data-theme="dark"] body{background:#0A0A0F;color:#E5E7EB}
-html[data-theme="dark"] .topbar{background:rgba(15,15,20,0.92);border-bottom-color:rgba(255,255,255,0.06)}
-html[data-theme="dark"] .topbar .back{background:rgba(255,255,255,0.06)}
-html[data-theme="dark"] .topbar .back svg{color:#9CA3AF}
-html[data-theme="dark"] .topbar h1{color:#E5E7EB}
-html[data-theme="dark"] .purpose-bar{background:rgba(15,15,20,0.6);border-bottom-color:rgba(255,255,255,0.04)}
-html[data-theme="dark"] .canvas-wrapper{background:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
-html[data-theme="dark"] .panel{background:rgba(20,20,30,0.88);border-left-color:rgba(255,255,255,0.06)}
-html[data-theme="dark"] .panel-section{background:#1E1E2E;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
-html[data-theme="dark"] .panel-section h3{color:#6B7280}
-html[data-theme="dark"] .data-label{color:#9CA3AF}
-html[data-theme="dark"] .data-value{color:#E5E7EB}
-html[data-theme="dark"] .data-table th{background:#1A1A2E;color:#9CA3AF;border-color:#374151}
-html[data-theme="dark"] .data-table td{border-color:#374151;color:#E5E7EB}
-html[data-theme="dark"] .chart-area{background:#1A1A2E;border-color:#374151}
-html[data-theme="dark"] .reset-btn{background:#1E1E2E;color:#9CA3AF}
-html[data-theme="dark"] .reset-btn:hover{background:#2A2A3E}
-html[data-theme="dark"] .knowledge-card{background:#1E1E2E;border-color:rgba(255,255,255,0.06)}
-html[data-theme="dark"] .knowledge-card .card-header{border-bottom-color:rgba(255,255,255,0.04)}
-html[data-theme="dark"] .knowledge-card .card-header h2{color:#E5E7EB}
-html[data-theme="dark"] .knowledge-card p{color:#9CA3AF}
-html[data-theme="dark"] .knowledge-card ul{color:#9CA3AF}
-html[data-theme="dark"] .knowledge-card .formula-lg{background:linear-gradient(135deg,#0A1A0F,#0F1F14);border-color:#065F46}
-html[data-theme="dark"] .knowledge-card.example{background:linear-gradient(180deg,#0F0F1A,#0A1A0F)}
-html[data-theme="dark"] .knowledge-card.example .solve{background:#0A0A0F;border-color:#374151;color:#D1D5DB}
+/* Experiment-specific styles only */
 </style>
 </head>
 <body>
@@ -448,10 +375,12 @@ function isFrictionCompensated() {
 // ===== SVG HELPERS =====
 const svg = document.getElementById('canvas');
 function getSvgPoint(e) {
-  const pt = svg.createSVGPoint();
-  const touch = e.touches ? e.touches[0] : e;
-  pt.x = touch.clientX; pt.y = touch.clientY;
-  return pt.matrixTransform(svg.getScreenCTM().inverse());
+  return window.labUtils ? window.labUtils.getSvgPoint(svg, e) : (() => {
+    const pt = svg.createSVGPoint();
+    const touch = e.touches ? e.touches[0] : e;
+    pt.x = touch.clientX; pt.y = touch.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  })();
 }
 
 // ===== UPDATE UI =====
@@ -878,6 +807,7 @@ setTimeout(() => {
   if (g) { g.style.transition = 'opacity 1s'; g.style.opacity = '0'; }
 }, 4000);
 </script>
+<script src="/shared/lab-utils.js"></script>
 <script src="/shared/theme.js"></script>
 </body>
 </html>
