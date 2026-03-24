@@ -8,7 +8,7 @@
  * @param {MouseEvent|TouchEvent} e - The event
  * @returns {{x: number, y: number}} SVG coordinates
  */
-export function getSvgPoint(svgEl, e) {
+function getSvgPoint(svgEl, e) {
   const pt = svgEl.createSVGPoint();
   const src = e.touches ? e.touches[0] : (e.changedTouches ? e.changedTouches[0] : e);
   pt.x = src.clientX;
@@ -23,7 +23,7 @@ export function getSvgPoint(svgEl, e) {
  * @param {Object.<string, string>} formulas - Map of element id to LaTeX string
  * @param {Object} [options] - KaTeX render options
  */
-export function renderFormulas(formulas = {}, options = {}) {
+function renderFormulas(formulas = {}, options = {}) {
   const defaultOpts = { throwOnError: false, displayMode: true, ...options };
 
   // Render by id map
@@ -48,7 +48,7 @@ export function renderFormulas(formulas = {}, options = {}) {
  * Wait for KaTeX to load, then call renderFormulas.
  * @param {Object.<string, string>} formulas - Map of element id to LaTeX string
  */
-export function initFormulas(formulas = {}) {
+function initFormulas(formulas = {}) {
   if (window.katex) {
     renderFormulas(formulas);
   } else {
