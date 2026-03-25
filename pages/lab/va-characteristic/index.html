@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>描绘小灯泡伏安特性曲线 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="伏安特性曲线, 小灯泡, 非线性, 分压器, 外接法, 高中物理">
+<meta name="description" content="分压法调压，描绘小灯泡U-I特性曲线，观察非线性电阻随温度变化">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#4338CA;--lab-accent-bg:#EEF2FF;--lab-accent-border:#C7D2FE}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.record-btn{padding:4px 12px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.record-btn:hover{opacity:0.9}
+.record-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.chart-box{border:1px solid #E5E7EB;border-radius:8px;padding:6px;background:#FAFAFA;margin-top:6px}
+.bulb-glow{transition:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>描绘小灯泡伏安特性曲线</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>伏安特性 · U-I 曲线 · 非线性电阻 · 高中电学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">点击开关闭合电路 · 拖滑片调电压 · 记录数据描曲线</div>
+      <svg id="canvas" viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="battGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DC2626"/><stop offset="20%" stop-color="#EF4444"/><stop offset="80%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#1D4ED8"/></linearGradient>
+          <linearGradient id="meterFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FAFAFA"/><stop offset="100%" stop-color="#E5E7EB"/></linearGradient>
+          <linearGradient id="rheoBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDF2E9"/><stop offset="100%" stop-color="#E8D5C4"/></linearGradient>
+          <radialGradient id="bulbGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FEF3C7" stop-opacity="0.9"/><stop offset="60%" stop-color="#FBBF24" stop-opacity="0.3"/><stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/></radialGradient>
+          <filter id="glowFilter"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- Background -->
+        <rect width="720" height="290" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect width="720" height="290" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- ===== CIRCUIT LAYOUT ===== -->
+        <!-- Wires (pre-connected) -->
+        <g id="wires" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round" fill="none">
+          <!-- Battery+ to switch -->
+          <polyline points="145,100 180,100 180,50 220,50"/>
+          <!-- Switch to rheostat A -->
+          <polyline points="290,50 340,50 340,100"/>
+          <!-- Rheostat B to junction top -->
+          <polyline points="470,100 520,100"/>
+          <!-- Rheostat slider to junction top (分压output) -->
+          <polyline points="405,80 405,50 520,50"/>
+          <!-- Junction top to ammeter -->
+          <polyline points="520,50 520,100 560,100"/>
+          <!-- Ammeter to bulb -->
+          <polyline points="640,100 670,100 670,160"/>
+          <!-- Bulb to junction bottom -->
+          <polyline points="670,210 670,240 520,240"/>
+          <!-- Junction bottom to battery- -->
+          <polyline points="520,240 60,240 60,120"/>
+          <!-- Voltmeter parallel (purple dashed) -->
+          <polyline points="560,100 560,140" stroke="#7C3AED" stroke-dasharray="4,3" stroke-width="2"/>
+          <polyline points="560,200 560,240 520,240" stroke="#7C3AED" stroke-dasharray="4,3" stroke-width="2"/>
+          <!-- Rheostat full connection A-B -->
+        </g>
+
+        <!-- BATTERY 4.5V -->
+        <g id="battery">
+          <rect x="50" y="85" width="90" height="35" rx="4" fill="url(#battGrad)" stroke="#6B7280" stroke-width="0.8"/>
+          <text x="95" y="106" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">4.5V</text>
+          <text x="140" y="82" font-size="8" fill="#DC2626" font-weight="800">+</text>
+          <text x="55" y="82" font-size="8" fill="#374151" font-weight="800">-</text>
+        </g>
+
+        <!-- SWITCH -->
+        <g id="switchGroup" style="cursor:pointer">
+          <rect x="220" y="38" width="70" height="24" rx="3" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="0.8"/>
+          <circle cx="235" cy="50" r="3" fill="#D97706" stroke="#92400E" stroke-width="0.5"/>
+          <circle cx="275" cy="50" r="3" fill="#D97706" stroke="#92400E" stroke-width="0.5"/>
+          <line id="switchBlade" x1="235" y1="50" x2="273" y2="36" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="255" y="75" font-size="7" fill="#4338CA" text-anchor="middle" font-weight="600">S</text>
+        </g>
+
+        <!-- RHEOSTAT (分压器) -->
+        <g id="rheostat">
+          <rect x="340" y="90" width="130" height="24" rx="4" fill="url(#rheoBody)" stroke="#A16207" stroke-width="0.8"/>
+          <!-- Coil lines -->
+          <g stroke="#92400E" stroke-width="0.8" opacity="0.6">
+            <line x1="350" y1="94" x2="350" y2="110"/>
+            <line x1="360" y1="94" x2="360" y2="110"/>
+            <line x1="370" y1="94" x2="370" y2="110"/>
+            <line x1="380" y1="94" x2="380" y2="110"/>
+            <line x1="390" y1="94" x2="390" y2="110"/>
+            <line x1="400" y1="94" x2="400" y2="110"/>
+            <line x1="410" y1="94" x2="410" y2="110"/>
+            <line x1="420" y1="94" x2="420" y2="110"/>
+            <line x1="430" y1="94" x2="430" y2="110"/>
+            <line x1="440" y1="94" x2="440" y2="110"/>
+            <line x1="450" y1="94" x2="450" y2="110"/>
+            <line x1="460" y1="94" x2="460" y2="110"/>
+          </g>
+          <!-- Terminals A, B -->
+          <text x="340" y="125" font-size="7" fill="#92400E" text-anchor="middle">A</text>
+          <text x="470" y="125" font-size="7" fill="#92400E" text-anchor="middle">B</text>
+          <!-- Slider -->
+          <g id="slider" cursor="grab">
+            <line id="sliderArm" x1="405" y1="82" x2="405" y2="90" stroke="#4338CA" stroke-width="2"/>
+            <polygon id="sliderHead" points="398,78 412,78 405,85" fill="#4338CA"/>
+            <circle id="sliderKnob" cx="405" cy="75" r="5" fill="#6366F1" stroke="#4338CA" stroke-width="1"/>
+          </g>
+          <text x="405" y="130" font-size="6" fill="#6B7280" text-anchor="middle">分压器</text>
+        </g>
+
+        <!-- AMMETER -->
+        <g id="ammeter">
+          <circle cx="600" cy="100" r="28" fill="url(#meterFace)" stroke="#374151" stroke-width="1.5"/>
+          <text x="600" y="84" font-size="7" fill="#DC2626" text-anchor="middle" font-weight="700">A</text>
+          <text x="600" y="122" font-size="5" fill="#6B7280" text-anchor="middle">0~0.6A</text>
+          <!-- Scale -->
+          <g id="ammeterScale" stroke="#374151" stroke-width="0.4"></g>
+          <!-- Needle -->
+          <line id="aNeedle" x1="600" y1="112" x2="600" y2="88" stroke="#DC2626" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="600" cy="112" r="2" fill="#374151"/>
+        </g>
+
+        <!-- VOLTMETER -->
+        <g id="voltmeter">
+          <circle cx="560" cy="170" r="28" fill="url(#meterFace)" stroke="#374151" stroke-width="1.5"/>
+          <text x="560" y="154" font-size="7" fill="#2563EB" text-anchor="middle" font-weight="700">V</text>
+          <text x="560" y="192" font-size="5" fill="#6B7280" text-anchor="middle">0~5V</text>
+          <g id="voltmeterScale" stroke="#374151" stroke-width="0.4"></g>
+          <line id="vNeedle" x1="560" y1="182" x2="560" y2="158" stroke="#2563EB" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="560" cy="182" r="2" fill="#374151"/>
+        </g>
+
+        <!-- LIGHT BULB -->
+        <g id="bulb">
+          <!-- Base/socket -->
+          <rect x="660" y="195" width="20" height="15" rx="2" fill="#6B7280" stroke="#4B5563" stroke-width="0.5"/>
+          <line x1="663" y1="198" x2="677" y2="198" stroke="#9CA3AF" stroke-width="0.5"/>
+          <line x1="663" y1="201" x2="677" y2="201" stroke="#9CA3AF" stroke-width="0.5"/>
+          <line x1="663" y1="204" x2="677" y2="204" stroke="#9CA3AF" stroke-width="0.5"/>
+          <!-- Glass bulb -->
+          <ellipse cx="670" cy="182" r="14" ry="16" fill="#F0F9FF" stroke="#93C5FD" stroke-width="0.8" opacity="0.9"/>
+          <!-- Filament -->
+          <path id="filament" d="M666,190 Q668,180 670,185 Q672,180 674,190" fill="none" stroke="#9CA3AF" stroke-width="1" stroke-linecap="round"/>
+          <!-- Glow overlay -->
+          <ellipse id="bulbGlowEl" cx="670" cy="182" rx="18" ry="20" fill="url(#bulbGlow)" opacity="0" filter="url(#glowFilter)"/>
+          <!-- Label -->
+          <text x="670" y="224" font-size="6" fill="#6B7280" text-anchor="middle">3.8V 0.3A</text>
+        </g>
+
+        <!-- Labels -->
+        <text x="560" y="130" font-size="6" fill="#7C3AED" text-anchor="middle">外接法</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>点击<strong>开关 S</strong> 闭合电路</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>拖<strong>滑片</strong>从左到右逐步增大电压</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>读取 U、I 值，点击<strong>记录</strong></span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>多次调节，记录<strong>≥6 组</strong>数据</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>观察 U-I 图，<strong>曲线向 U 轴弯曲</strong></span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>分析 R 随温度升高<strong>非线性增大</strong></span></div>
+      </div>
+
+      <!-- Readings -->
+      <div class="panel-section">
+        <div class="section-title">实时读数</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">电压 U</div><div class="val" id="dispU" style="color:#2563EB">0.00</div><div class="unit">V</div></div>
+          <div class="reading-card"><div class="label">电流 I</div><div class="val" id="dispI" style="color:#DC2626">0.000</div><div class="unit">A</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">电阻 R</div><div class="val" id="dispR">—</div><div class="unit">Ω</div></div>
+          <div class="reading-card"><div class="label">灯泡</div><div class="val" id="dispBulbState" style="font-size:11px">未通电</div></div>
+        </div>
+      </div>
+
+      <!-- Record -->
+      <div class="panel-section">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="section-title" style="margin:0">数据记录</div>
+          <div style="display:flex;gap:4px">
+            <button class="record-btn" id="btnRecord" onclick="recordData()" disabled>记录</button>
+            <button class="record-btn" onclick="resetAll()" style="background:#6B7280">重置</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;margin-top:6px">
+          <table class="data-table" id="dataTable">
+            <thead><tr><th>#</th><th>U(V)</th><th>I(A)</th><th>R(Ω)</th></tr></thead>
+            <tbody id="dataBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- U-I Chart -->
+      <div class="panel-section">
+        <div class="section-title">U-I 特性曲线</div>
+        <div class="chart-box">
+          <svg id="uiChart" viewBox="0 0 240 160" width="100%">
+            <!-- Axes -->
+            <line x1="30" y1="140" x2="230" y2="140" stroke="#374151" stroke-width="1"/>
+            <line x1="30" y1="140" x2="30" y2="10" stroke="#374151" stroke-width="1"/>
+            <!-- Axis labels -->
+            <text x="130" y="158" font-size="8" fill="#374151" text-anchor="middle">U / V</text>
+            <text x="10" y="75" font-size="8" fill="#374151" text-anchor="middle" transform="rotate(-90,10,75)">I / A</text>
+            <!-- Grid lines -->
+            <g stroke="#E5E7EB" stroke-width="0.3" stroke-dasharray="2,2">
+              <line x1="30" y1="114" x2="230" y2="114"/>
+              <line x1="30" y1="88" x2="230" y2="88"/>
+              <line x1="30" y1="62" x2="230" y2="62"/>
+              <line x1="30" y1="36" x2="230" y2="36"/>
+              <line x1="74" y1="10" x2="74" y2="140"/>
+              <line x1="118" y1="10" x2="118" y2="140"/>
+              <line x1="162" y1="10" x2="162" y2="140"/>
+              <line x1="206" y1="10" x2="206" y2="140"/>
+            </g>
+            <!-- Scale labels -->
+            <text x="27" y="143" font-size="6" fill="#6B7280" text-anchor="end">0</text>
+            <text x="27" y="117" font-size="6" fill="#6B7280" text-anchor="end">0.1</text>
+            <text x="27" y="91" font-size="6" fill="#6B7280" text-anchor="end">0.2</text>
+            <text x="27" y="65" font-size="6" fill="#6B7280" text-anchor="end">0.3</text>
+            <text x="27" y="39" font-size="6" fill="#6B7280" text-anchor="end">0.4</text>
+            <text x="74" y="152" font-size="6" fill="#6B7280" text-anchor="middle">1</text>
+            <text x="118" y="152" font-size="6" fill="#6B7280" text-anchor="middle">2</text>
+            <text x="162" y="152" font-size="6" fill="#6B7280" text-anchor="middle">3</text>
+            <text x="206" y="152" font-size="6" fill="#6B7280" text-anchor="middle">4</text>
+            <!-- Data points -->
+            <g id="chartDots"></g>
+            <!-- Fit curve -->
+            <path id="fitCurve" d="" fill="none" stroke="#4338CA" stroke-width="1.5" stroke-dasharray="4,2" opacity="0"/>
+          </svg>
+          <div id="chartNote" style="font-size:9px;color:#6B7280;text-align:center;margin-top:2px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>小灯泡的灯丝是金属导体，电阻随温度升高而增大。通电后灯丝温度升高，电阻 R 不再是常数，U-I 关系不是直线（非线性）。</p>
+    <div class="formula-block" id="formula2"></div>
+    <p>通过分压法逐步增大灯泡两端电压，用电流表和电压表分别测量 I 和 U，描绘 U-I 特性曲线。曲线向 U 轴弯曲，说明 I 的增速越来越慢（R 越来越大）。</p>
+
+    <h3>分压法的优势</h3>
+    <p>分压法可以使灯泡两端电压从 0 连续变化到电源电压，测量范围更大。限流法无法使电压从 0 开始变化。</p>
+
+    <h3>外接法</h3>
+    <div class="formula-block" id="formula3"></div>
+    <p>电压表并联在灯泡两端（外接法），适合被测电阻较小的情况。灯泡电阻约 8~13Ω，远小于电压表内阻（约 3kΩ），系统误差小。</p>
+
+    <h3>误差来源</h3>
+    <ul>
+      <li>电流表、电压表精度限制</li>
+      <li>外接法：电流表测量值包含电压表分流（系统偏大）</li>
+      <li>灯丝温度未完全稳定时读数</li>
+      <li>接触电阻</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const EMF = 4.5; // V
+const R_INT = 0.5; // internal resistance
+const R0 = 8.0; // cold resistance Ω
+const K_COEFF = 1.05; // R(U) = R0 + K * U^1.2
+const RHEO_TOTAL = 20; // Ω total rheostat resistance
+const SLIDER_MIN_X = 340;
+const SLIDER_MAX_X = 470;
+
+const $ = id => document.getElementById(id);
+const canvas = $('canvas');
+
+// ===== STATE =====
+const state = {
+  switchClosed: false,
+  sliderX: 340, // leftmost = 0V output
+  sliderFrac: 0, // 0~1
+  U: 0, I: 0, R: 0,
+  records: [],
+  lastRecordU: -1 // duplicate prevention
+};
+
+// ===== METER SCALES =====
+function initMeterScales() {
+  // Ammeter 0~0.6A
+  const aScale = $('ammeterScale');
+  for (let i = 0; i <= 12; i++) {
+    const angle = -45 + i * (270/12);
+    const rad = angle * Math.PI / 180;
+    const r1 = i % 2 === 0 ? 22 : 24;
+    const r2 = 26;
+    const x1 = 600 + r1 * Math.sin(rad), y1 = 112 - r1 * Math.cos(rad);
+    const x2 = 600 + r2 * Math.sin(rad), y2 = 112 - r2 * Math.cos(rad);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+    line.setAttribute('stroke-width', i % 2 === 0 ? '0.6' : '0.3');
+    aScale.appendChild(line);
+    if (i % 2 === 0) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      const rt = 18;
+      t.setAttribute('x', 600 + rt * Math.sin(rad));
+      t.setAttribute('y', 112 - rt * Math.cos(rad) + 2);
+      t.setAttribute('font-size','5'); t.setAttribute('fill','#374151');
+      t.setAttribute('text-anchor','middle');
+      t.textContent = (i/12*0.6).toFixed(1);
+      aScale.appendChild(t);
+    }
+  }
+  // Voltmeter 0~5V
+  const vScale = $('voltmeterScale');
+  for (let i = 0; i <= 10; i++) {
+    const angle = -45 + i * (270/10);
+    const rad = angle * Math.PI / 180;
+    const r1 = i % 2 === 0 ? 22 : 24;
+    const r2 = 26;
+    const x1 = 560 + r1 * Math.sin(rad), y1 = 182 - r1 * Math.cos(rad);
+    const x2 = 560 + r2 * Math.sin(rad), y2 = 182 - r2 * Math.cos(rad);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+    line.setAttribute('stroke-width', i % 2 === 0 ? '0.6' : '0.3');
+    vScale.appendChild(line);
+    if (i % 2 === 0) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      const rt = 18;
+      t.setAttribute('x', 560 + rt * Math.sin(rad));
+      t.setAttribute('y', 182 - rt * Math.cos(rad) + 2);
+      t.setAttribute('font-size','5'); t.setAttribute('fill','#374151');
+      t.setAttribute('text-anchor','middle');
+      t.textContent = (i/10*5).toFixed(0);
+      vScale.appendChild(t);
+    }
+  }
+}
+
+// ===== NEEDLE UPDATE =====
+function setNeedle(needleId, cx, cy, value, maxVal) {
+  const frac = Math.min(Math.max(value / maxVal, 0), 1);
+  const angle = -45 + frac * 270;
+  const rad = angle * Math.PI / 180;
+  const len = 24;
+  const x2 = cx + len * Math.sin(rad);
+  const y2 = cy - len * Math.cos(rad);
+  const el = $(needleId);
+  el.setAttribute('x2', x2);
+  el.setAttribute('y2', y2);
+}
+
+// ===== PHYSICS MODEL =====
+function calcCircuit(sliderFrac) {
+  if (!state.switchClosed || sliderFrac <= 0) {
+    return { U: 0, I: 0, R: R0 };
+  }
+  // 分压器: output voltage = sliderFrac * EMF (approximately, ignoring load)
+  // More accurate: with load R_bulb in parallel with fraction of rheostat
+  // Simplified: U_bulb ≈ sliderFrac * EMF * R_bulb / (R_bulb + R_INT + R_rheo_series)
+  // For teaching clarity, use simplified model:
+  const U_open = sliderFrac * EMF;
+  // Bulb resistance depends on voltage (non-linear)
+  // Iterate to find equilibrium
+  let U = U_open;
+  for (let iter = 0; iter < 10; iter++) {
+    const R_bulb = R0 + K_COEFF * Math.pow(Math.max(U, 0.01), 1.2);
+    const R_series = R_INT + RHEO_TOTAL * (1 - sliderFrac) * 0.1; // small series portion
+    U = U_open * R_bulb / (R_bulb + R_series);
+  }
+  const R_bulb = R0 + K_COEFF * Math.pow(Math.max(U, 0.01), 1.2);
+  const I = U / R_bulb;
+  return { U: Math.max(U, 0), I: Math.max(I, 0), R: R_bulb };
+}
+
+// ===== SWITCH =====
+$('switchGroup').addEventListener('click', () => {
+  state.switchClosed = !state.switchClosed;
+  const blade = $('switchBlade');
+  if (state.switchClosed) {
+    blade.setAttribute('x2', '275');
+    blade.setAttribute('y2', '50');
+  } else {
+    blade.setAttribute('x2', '273');
+    blade.setAttribute('y2', '36');
+  }
+  updateCircuit();
+});
+
+// ===== SLIDER DRAG =====
+let dragging = false;
+canvas.addEventListener('pointerdown', e => {
+  const pt = svgPoint(e);
+  const knob = $('sliderKnob');
+  const kx = parseFloat(knob.getAttribute('cx'));
+  const ky = parseFloat(knob.getAttribute('cy'));
+  if (Math.abs(pt.x - kx) < 15 && Math.abs(pt.y - ky) < 15) {
+    dragging = true;
+    canvas.style.cursor = 'grabbing';
+    e.preventDefault();
+  }
+});
+
+canvas.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const pt = svgPoint(e);
+  let x = Math.max(SLIDER_MIN_X, Math.min(SLIDER_MAX_X, pt.x));
+  state.sliderX = x;
+  state.sliderFrac = (x - SLIDER_MIN_X) / (SLIDER_MAX_X - SLIDER_MIN_X);
+  updateSliderVisual();
+  updateCircuit();
+  e.preventDefault();
+});
+
+canvas.addEventListener('pointerup', e => {
+  if (dragging) {
+    dragging = false;
+    canvas.style.cursor = '';
+    // Enable record
+    if (state.switchClosed && state.U > 0) {
+      $('btnRecord').disabled = false;
+    }
+  }
+});
+
+function svgPoint(e) {
+  const rect = canvas.getBoundingClientRect();
+  const vb = canvas.viewBox.baseVal;
+  return {
+    x: (e.clientX - rect.left) / rect.width * vb.width,
+    y: (e.clientY - rect.top) / rect.height * vb.height
+  };
+}
+
+function updateSliderVisual() {
+  const x = state.sliderX;
+  $('sliderArm').setAttribute('x1', x);
+  $('sliderArm').setAttribute('x2', x);
+  $('sliderHead').setAttribute('points', `${x-7},78 ${x+7},78 ${x},85`);
+  $('sliderKnob').setAttribute('cx', x);
+  // Update slider output wire
+}
+
+// ===== CIRCUIT UPDATE =====
+function updateCircuit() {
+  const result = calcCircuit(state.sliderFrac);
+  state.U = result.U;
+  state.I = result.I;
+  state.R = result.R;
+
+  // Needles
+  setNeedle('aNeedle', 600, 112, state.I, 0.6);
+  setNeedle('vNeedle', 560, 182, state.U, 5);
+
+  // Panel
+  $('dispU').textContent = state.U.toFixed(2);
+  $('dispI').textContent = state.I.toFixed(3);
+  $('dispR').textContent = state.U > 0.01 ? state.R.toFixed(1) : '—';
+
+  // Bulb glow
+  updateBulb();
+
+  // Status
+  if (!state.switchClosed) {
+    $('dispBulbState').textContent = '未通电';
+    $('statusBadge').textContent = '点击开关闭合电路';
+    $('statusBadge').className = 'status-badge idle';
+    $('btnRecord').disabled = true;
+  } else if (state.U < 0.1) {
+    $('dispBulbState').textContent = '暗';
+    $('statusBadge').textContent = '拖滑片增大电压';
+    $('statusBadge').className = 'status-badge active';
+  } else if (state.I < 0.15) {
+    $('dispBulbState').textContent = '微亮';
+    $('statusBadge').textContent = '调节电压 · 记录数据';
+    $('statusBadge').className = 'status-badge active';
+  } else if (state.I < 0.25) {
+    $('dispBulbState').textContent = '亮';
+    $('statusBadge').className = 'status-badge active';
+  } else {
+    $('dispBulbState').textContent = '很亮';
+    $('statusBadge').className = 'status-badge done';
+  }
+}
+
+// ===== BULB RENDERING =====
+function updateBulb() {
+  const brightness = state.switchClosed ? Math.min(state.I / 0.35, 1) : 0;
+  const glow = $('bulbGlowEl');
+  const filament = $('filament');
+
+  glow.setAttribute('opacity', brightness * 0.8);
+
+  // Filament color: gray → orange → yellow-white
+  if (brightness < 0.01) {
+    filament.setAttribute('stroke', '#9CA3AF');
+    filament.setAttribute('stroke-width', '1');
+  } else if (brightness < 0.3) {
+    filament.setAttribute('stroke', '#F97316');
+    filament.setAttribute('stroke-width', '1.2');
+  } else if (brightness < 0.7) {
+    filament.setAttribute('stroke', '#FBBF24');
+    filament.setAttribute('stroke-width', '1.5');
+  } else {
+    filament.setAttribute('stroke', '#FEF3C7');
+    filament.setAttribute('stroke-width', '2');
+  }
+
+  // Update glow gradient color based on temperature
+  const stops = document.querySelectorAll('#bulbGlow stop');
+  if (brightness > 0.5) {
+    stops[0].setAttribute('stop-color', '#FFFBEB');
+    stops[1].setAttribute('stop-color', '#FDE68A');
+  } else {
+    stops[0].setAttribute('stop-color', '#FEF3C7');
+    stops[1].setAttribute('stop-color', '#FBBF24');
+  }
+}
+
+// ===== RECORD =====
+function recordData() {
+  if (!state.switchClosed || state.U < 0.01) return;
+
+  // ±1% error on I only, generated once here (pointerup → record click)
+  const errI = 1 + (Math.random() - 0.5) * 0.02;
+  const measI = state.I * errI;
+  const measU = state.U; // voltage as-is
+  const measR = measU / measI;
+
+  // Duplicate prevention: reject if U within 0.05V of last record
+  if (state.records.length > 0) {
+    const last = state.records[state.records.length - 1];
+    if (Math.abs(measU - last.U) < 0.05) return;
+  }
+
+  state.records.push({ U: measU, I: measI, R: measR });
+  renderTable();
+  renderChart();
+  $('btnRecord').disabled = true;
+}
+
+function renderTable() {
+  const tbody = $('dataBody');
+  tbody.innerHTML = '';
+  state.records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${r.U.toFixed(2)}</td><td>${r.I.toFixed(3)}</td><td>${r.R.toFixed(1)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== U-I CHART =====
+const CHART_X0 = 30, CHART_Y0 = 140;
+const CHART_W = 200, CHART_H = 130;
+const U_MAX = 4.5, I_MAX = 0.4;
+
+function chartXY(u, i) {
+  return {
+    x: CHART_X0 + (u / U_MAX) * CHART_W,
+    y: CHART_Y0 - (i / I_MAX) * CHART_H
+  };
+}
+
+function renderChart() {
+  const dots = $('chartDots');
+  dots.innerHTML = '';
+
+  state.records.forEach(r => {
+    const p = chartXY(r.U, r.I);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', p.x); c.setAttribute('cy', p.y);
+    c.setAttribute('r', '3'); c.setAttribute('fill','#4338CA');
+    dots.appendChild(c);
+  });
+
+  // Fit curve with ≥6 points
+  const fitPath = $('fitCurve');
+  const note = $('chartNote');
+
+  if (state.records.length >= 6) {
+    // Generate smooth curve using the physics model
+    const sorted = [...state.records].sort((a,b) => a.U - b.U);
+    let d = '';
+    for (let u = 0; u <= 4.5; u += 0.05) {
+      const R = R0 + K_COEFF * Math.pow(Math.max(u, 0.01), 1.2);
+      const I = u / R;
+      const p = chartXY(u, I);
+      d += (d ? ' L' : 'M') + `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    }
+    fitPath.setAttribute('d', d);
+    fitPath.setAttribute('opacity', '0.8');
+    note.textContent = '曲线向U轴弯曲 — R随温度增大，电流增速减缓';
+    note.style.color = '#4338CA';
+  } else {
+    fitPath.setAttribute('opacity', '0');
+    note.textContent = state.records.length > 0 ? `已记录 ${state.records.length} 组，≥6 组显示拟合曲线` : '';
+    note.style.color = '#6B7280';
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  state.switchClosed = false;
+  state.sliderX = SLIDER_MIN_X;
+  state.sliderFrac = 0;
+  state.records = [];
+  state.lastRecordU = -1;
+
+  $('switchBlade').setAttribute('x2', '273');
+  $('switchBlade').setAttribute('y2', '36');
+  updateSliderVisual();
+  updateCircuit();
+  renderTable();
+  renderChart();
+
+  $('statusBadge').textContent = '点击开关闭合电路 · 拖滑片调电压 · 记录数据描曲线';
+  $('statusBadge').className = 'status-badge idle';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: 'R = \\frac{U}{I}' },
+    { id: 'formula2', tex: 'R(T) = R_0(1 + \\alpha \\Delta T)' },
+    { id: 'formula3', tex: 'I_{\\text{测}} = I_{\\text{灯}} + I_{\\text{V}} \\approx I_{\\text{灯}} \\quad (R_{\\text{灯}} \\ll R_V)' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+initMeterScales();
+updateSliderVisual();
+updateCircuit();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
