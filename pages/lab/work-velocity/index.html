@@ -11,22 +11,9 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#059669;--lab-accent-bg:#ECFDF5;--lab-accent-border:#A7F3D0}
-.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
-.guide-step strong{color:var(--lab-accent)}
-.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
-.reading-card .label{font-size:9px;color:#6B7280}
-.reading-card .val{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
-.reading-card .unit{font-size:10px}
-.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
-.ctrl-btn:hover{opacity:0.9}
-.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
-.ctrl-btn.secondary{background:#6B7280}
 .band-btn{width:28px;height:28px;border-radius:6px;border:2px solid #D1D5DB;background:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
 .band-btn.active{border-color:var(--lab-accent);background:var(--lab-accent);color:#fff}
 .chart-box{background:#fff;border:1px solid #E5E7EB;border-radius:6px;padding:4px;margin-top:6px}
-.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
-.toggle-row input{accent-color:var(--lab-accent)}
 .result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
 .result-card .val{font-size:16px;font-weight:700;color:var(--lab-accent)}
 </style>
