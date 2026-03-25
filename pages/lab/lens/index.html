@@ -9,7 +9,6 @@
 <meta property="og:title" content="凸透镜成像模拟实验 - 在线物理实验室 \">
 <meta property="og:description" content="DevKit">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F8FAFC;color:#1C1C1E;overflow-x:hidden}
 .lab-header{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.06);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
 .lab-header a{color:#3B82F6;text-decoration:none;font-size:13px;font-weight:600}
@@ -49,6 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/lens/">
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/convex-lens.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -443,5 +443,6 @@ window.addEventListener('load', () => {
   if (window.katex && fd) katex.render('\dfrac{1}{f} = \dfrac{1}{u} + \dfrac{1}{v}', fd, {throwOnError:false});
 })(0);
 </script>
+<script src="/shared/lab-utils.js"></script>
 </body>
 </html>
