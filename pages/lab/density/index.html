@@ -11,6 +11,7 @@
 <meta property="og:image" content="https://l-s-c.github.io/devkit/images/lab/density.png">
 <link rel="canonical" href="https://l-s-c.github.io/devkit/pages/lab/density/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -44,7 +45,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
 .tab-btn.active .num{background:rgba(255,255,255,0.3)}
 .tab-btn.done{color:#059669}
 .tab-btn.done .num{background:#ECFDF5;color:#059669}
-.slider-container input[type=range]{width:100%;accent-color:#EA580C;height:6px}
+/* slider removed — SVG drag only */
 .reset-btn{width:100%;padding:9px;border-radius:8px;border:none;background:#F3F4F6;color:#374151;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto}
 .reset-btn:hover{background:#E5E7EB}
 .step-btn{width:100%;padding:10px;border-radius:8px;border:none;background:#EA580C;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s}
@@ -308,10 +309,7 @@ body{font-family:-apple-system,'SF Pro Display','Inter','PingFang SC',sans-serif
           拖砝码到右盘，拖游码调平衡。<br/>
           自己看砝码上的标注和游码刻度来读数。
         </p>
-        <div class="slider-container" style="margin-top:6px">
-          <div style="font-size:10px;color:#6B7280;margin-bottom:2px">游码 (0-5g，步长0.2g)</div>
-          <input type="range" min="0" max="50" value="0" step="2" id="riderSlider" oninput="updateRider()"/>
-        </div>
+        <div style="margin-top:6px;font-size:10px;color:#6B7280">游码：直接在天平上拖拽橙色游码（0~5g）</div>
         <div id="readingInput" style="display:none;margin-top:10px">
           <div style="font-size:12px;color:#059669;font-weight:600;margin-bottom:6px">✓ 天平已平衡，请读数</div>
           <div style="display:flex;gap:6px;align-items:center">
@@ -536,7 +534,7 @@ function updateBalance() {
 }
 
 function updateRider() {
-  riderValue = parseInt(document.getElementById('riderSlider').value) / 10;
+  // riderValue set by SVG drag
   
   // Move rider visual
   const riderEl = document.getElementById('rider');
@@ -688,7 +686,7 @@ function onBalMove(e) {
     document.getElementById('rider').setAttribute('x', newX);
     riderValue = (step * 0.2);
     riderValue = Math.round(riderValue * 10) / 10;
-    document.getElementById('riderSlider').value = Math.round(riderValue * 10);
+    // slider removed, SVG drag only
     
     updateBalance();
     return;
@@ -923,7 +921,6 @@ function resetAll() {
   volumeConfirmed = false;
   objectDropped = false;
   riderValue = 0;
-  document.getElementById('riderSlider').value = 0;
   
   document.getElementById('rider').setAttribute('x', 348);
   
@@ -967,11 +964,14 @@ function resetAll() {
 
 // ===== KATEX =====
 function renderFormulas() {
+  if (!window.katex) return;
   const el = document.getElementById('formula1');
-  if (el && window.katex) {
-    katex.render('\\rho = \\frac{m}{V}', el, { throwOnError:false, displayMode:true });
-  }
+  if (el) katex.render('\\rho = \\frac{m}{V}', el, { throwOnError:false, displayMode:true });
 }
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
 
 // ===== INIT =====
 initWeights();
