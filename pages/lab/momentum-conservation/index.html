@@ -200,13 +200,13 @@
           <div class="reading-card"><div class="label">Δt₁</div><div class="val" id="dispDt1">—</div><div class="unit">ms</div></div>
           <div class="reading-card"><div class="label">v₁ →</div><div class="val slider1-color" id="dispV1">—</div><div class="unit">m/s</div></div>
         </div>
-        <div style="font-size:10px;color:#6B7280;margin:4px 0">碰后</div>
+        <div style="font-size:10px;color:#6B7280;margin:4px 0" id="postLabel">碰后</div>
         <div style="display:flex;gap:6px">
-          <div class="reading-card"><div class="label">Δt₁'(门1)</div><div class="val" id="dispDt1p">—</div><div class="unit">ms</div></div>
+          <div class="reading-card"><div class="label" id="labelDt1p">Δt₁'(门1)</div><div class="val" id="dispDt1p">—</div><div class="unit">ms</div></div>
           <div class="reading-card"><div class="label" id="labelV1p">v₁' ←</div><div class="val slider1-color" id="dispV1p">—</div><div class="unit">m/s</div></div>
         </div>
         <div style="display:flex;gap:6px;margin-top:4px">
-          <div class="reading-card"><div class="label">Δt₂'(门2)</div><div class="val" id="dispDt2p">—</div><div class="unit">ms</div></div>
+          <div class="reading-card"><div class="label" id="labelDt2p">Δt₂'(门2)</div><div class="val" id="dispDt2p">—</div><div class="unit">ms</div></div>
           <div class="reading-card"><div class="label">v₂' →</div><div class="val slider2-color" id="dispV2p">—</div><div class="unit">m/s</div></div>
         </div>
       </div>
@@ -450,7 +450,7 @@ function renderWeightsOnSlider(gSel, count, color) {
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', 0); c.setAttribute('cy', cy); c.setAttribute('r', 8);
     c.setAttribute('fill','url(#weightMetal)'); c.setAttribute('stroke', color);
-    c.setAttribute('stroke-width','0.5');
+    c.setAttribute('stroke-width','0.5'); c.setAttribute('cursor','pointer');
     gSel.appendChild(c);
     const t = document.createElementNS('http://www.w3.org/2000/svg','text');
     t.setAttribute('x', 0); t.setAttribute('y', cy + 3);
@@ -502,17 +502,28 @@ function updatePanel() {
     if (m.v1p !== null && m.v1p !== 0) {
       $('dispDt1p').textContent = (m.dt1p * 1000).toFixed(1);
       $('dispV1p').textContent = Math.abs(m.v1p).toFixed(3);
-      $('labelV1p').textContent = m.v1p < 0 ? "v₁' ←" : "v₁' →";
+      if (m.v1p < 0) {
+        // Bounced back — measured by gate1 (return trip)
+        $('labelV1p').textContent = "v₁' ← (反弹)";
+        $('labelDt1p').textContent = "Δt₁'(门1·回程)";
+      } else {
+        // m1>m2: slider1 also goes right, measured by gate2 first
+        $('labelV1p').textContent = "v₁' → (滑块1)";
+        $('labelDt1p').textContent = "Δt₁'(门2·先过)";
+      }
     } else if (m.v1p === 0) {
       $('dispDt1p').textContent = '—';
       $('dispV1p').textContent = '0.000';
-      $('labelV1p').textContent = "v₁'";
+      $('labelV1p').textContent = "v₁' (静止)";
+      $('labelDt1p').textContent = "—";
     } else {
       $('dispDt1p').textContent = '—';
       $('dispV1p').textContent = '—';
     }
     $('dispDt2p').textContent = (m.dt2p * 1000).toFixed(1);
     $('dispV2p').textContent = m.v2p.toFixed(3);
+    // Label gate2 for slider2
+    $('labelDt2p').textContent = m.v1p > 0 ? "Δt₂'(门2·后过)" : "Δt₂'(门2)";
 
     // Momentum
     const m1kg = state.m1 / 1000;
@@ -627,8 +638,26 @@ canvas.addEventListener('pointerdown', e => {
   if (state.animating) return;
   const pt = svgPoint(e);
 
-  // Check weight box
+  // Check click on slider weights to remove
   const target = e.target;
+  if (state.phase === 'ready') {
+    const s1g = $('slider1').querySelector('.weights1');
+    const s2g = $('slider2').querySelector('.weights2');
+    if (s1g && s1g.contains(target) && state.weights1 > 0) {
+      state.weights1--;
+      state.boxWeightsUsed--;
+      state.m1 = BASE_MASS + state.weights1 * WEIGHT_MASS;
+      initWeightBox(); render(); return;
+    }
+    if (s2g && s2g.contains(target) && state.weights2 > 0) {
+      state.weights2--;
+      state.boxWeightsUsed--;
+      state.m2 = BASE_MASS + state.weights2 * WEIGHT_MASS;
+      initWeightBox(); render(); return;
+    }
+  }
+
+  // Check weight box
   if (target.hasAttribute('data-wi')) {
     const remaining = MAX_WEIGHTS_PER_SLIDER * 2 - state.boxWeightsUsed;
     if (remaining <= 0) return;
@@ -870,11 +899,14 @@ function startMotion() {
       state.collided = true;
 
       if (state.collisionType === 'inelastic') {
-        // Stick together
+        // Stick together — faces touch: s1 right edge (s1x+25) = s2 left edge (s2x-25)
         state.stuck = true;
         state.v1 = state.v2_after_px;
         state.v2 = state.v2_after_px;
-        state.s2x = state.s1x + 50; // align
+        // Align so they're flush at collision point
+        const contactX = (state.s1x + 25 + state.s2x - 25) / 2;
+        state.s1x = contactX - 25;
+        state.s2x = contactX + 25;
       } else {
         state.v1 = state.v1_after_px;
         state.v2 = state.v2_after_px;
