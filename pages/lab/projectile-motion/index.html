@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>探究平抛运动的规律 - 高中物理在线实验 | DevKit</title>
-<meta name="keywords" content="平抛运动, 抛物线, 频闪照片, 分运动, 高中物理">
-<meta name="description" content="探究平抛运动的规律，验证水平匀速、竖直自由落体的分运动特征">
+<meta name="keywords" content="平抛运动, 抛物线, 频闪, 分运动, 高中物理">
+<meta name="description" content="斜槽释放小球做平抛运动，频闪描点验证抛物线轨迹">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
@@ -22,8 +22,8 @@
 .ctrl-btn:hover{opacity:0.9}
 .ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
 .ctrl-btn.secondary{background:#6B7280}
-.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#4B5563;padding:2px 0}
-.toggle-row input[type=checkbox]{accent-color:var(--lab-accent)}
+.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
+.toggle-row input{accent-color:var(--lab-accent)}
 </style>
 </head>
 <body>
@@ -33,97 +33,90 @@
   <h1>探究平抛运动的规律</h1>
 </div>
 <div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>平抛运动 · 频闪照片 · 分运动分解 · 高中力学</div>
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>平抛运动 · 频闪描点 · 分运动分解 · 高中力学</div>
   <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
 </div>
 
 <div class="lab-container">
   <div class="canvas-area">
     <div class="canvas-wrapper">
-      <div id="statusBadge" class="status-badge idle">拖动小球调整释放高度 → 点击释放</div>
+      <div id="statusBadge" class="status-badge idle">拖动小球调整释放高度 · 点击释放</div>
       <svg id="canvas" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="rampGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
-          <radialGradient id="ballGrad" cx="35%" cy="35%" r="60%"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#059669"/></radialGradient>
-          <radialGradient id="ghostGrad" cx="35%" cy="35%" r="60%"><stop offset="0%" stop-color="#6EE7B7"/><stop offset="100%" stop-color="#059669"/></radialGradient>
+          <radialGradient id="ballGlow" cx="40%" cy="35%"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#059669"/></radialGradient>
+          <pattern id="gridSmall" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="#D1D5DB" stroke-width="0.3"/></pattern>
+          <pattern id="gridLarge" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="#9CA3AF" stroke-width="0.5"/></pattern>
         </defs>
 
         <!-- Background -->
         <rect width="720" height="340" fill="#F8FAFC"/>
 
-        <!-- Grid board -->
-        <g id="gridBoard">
-          <!-- Fine grid 1cm = 10px -->
-          <pattern id="fineGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#D1D5DB" stroke-width="0.3"/>
-          </pattern>
-          <!-- Coarse grid 5cm = 50px -->
-          <pattern id="coarseGrid" width="50" height="50" patternUnits="userSpaceOnUse">
-            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#9CA3AF" stroke-width="0.5"/>
-          </pattern>
-          <rect x="170" y="30" width="530" height="290" fill="url(#fineGrid)"/>
-          <rect x="170" y="30" width="530" height="290" fill="url(#coarseGrid)"/>
-          <rect x="170" y="30" width="530" height="290" fill="none" stroke="#6B7280" stroke-width="1"/>
+        <!-- ===== BOARD (background grid) ===== -->
+        <g id="boardArea" transform="translate(170,20)">
+          <!-- Board background -->
+          <rect x="0" y="0" width="530" height="300" fill="#FEFCE8" stroke="#D1D5DB" stroke-width="1" rx="2"/>
+          <rect x="0" y="0" width="530" height="300" fill="url(#gridSmall)"/>
+          <rect x="0" y="0" width="530" height="300" fill="url(#gridLarge)"/>
 
-          <!-- Axes: origin at launch point (170, 30) -->
-          <!-- X axis -->
-          <line x1="170" y1="30" x2="700" y2="30" stroke="#374151" stroke-width="1.5"/>
-          <text x="700" y="25" font-size="9" fill="#374151" font-weight="600">x / cm</text>
-          <!-- Y axis (downward) -->
-          <line x1="170" y1="30" x2="170" y2="320" stroke="#374151" stroke-width="1.5"/>
-          <text x="160" y="325" font-size="9" fill="#374151" font-weight="600" text-anchor="end">y / cm</text>
-          <!-- Origin -->
-          <text x="165" y="25" font-size="8" fill="#374151" font-weight="700">O</text>
+          <!-- Axes: origin at top-left (launch point) -->
+          <!-- x axis -->
+          <line x1="0" y1="0" x2="520" y2="0" stroke="#374151" stroke-width="1.2"/>
+          <polygon points="520,0 515,-3 515,3" fill="#374151"/>
+          <text x="525" y="4" font-size="9" fill="#374151" font-weight="600">x</text>
+          <!-- y axis (downward) -->
+          <line x1="0" y1="0" x2="0" y2="290" stroke="#374151" stroke-width="1.2"/>
+          <polygon points="0,290 -3,285 3,285" fill="#374151"/>
+          <text x="-8" y="298" font-size="9" fill="#374151" font-weight="600">y</text>
+          <!-- Origin label -->
+          <text x="-8" y="-4" font-size="8" fill="#374151" font-weight="600">O</text>
 
-          <!-- X axis labels (every 5cm = 50px) -->
-          <g id="xLabels"></g>
-          <!-- Y axis labels -->
-          <g id="yLabels"></g>
-        </g>
+          <!-- cm labels on axes -->
+          <g id="axisLabels"></g>
 
-        <!-- Ramp -->
-        <g id="ramp">
-          <!-- Inclined track -->
-          <path d="M30,10 L140,55 L170,55 L170,30" fill="url(#rampGrad)" stroke="#4B5563" stroke-width="1" stroke-linejoin="round"/>
-          <!-- Track surface -->
-          <line x1="35" y1="12" x2="168" y2="52" stroke="#E5E7EB" stroke-width="1"/>
-          <!-- Horizontal exit section -->
-          <rect x="140" y="25" width="32" height="6" rx="1" fill="#6B7280" stroke="#4B5563" stroke-width="0.5"/>
-          <!-- Height marker -->
-          <line id="hLine" x1="50" y1="55" x2="50" y2="55" stroke="#059669" stroke-width="1" stroke-dasharray="3,2"/>
-          <text id="hLabel" x="20" y="40" font-size="8" fill="#059669" font-weight="600"></text>
-          <!-- Support -->
-          <rect x="155" y="55" width="18" height="270" rx="2" fill="#9CA3AF" stroke="#6B7280" stroke-width="0.5"/>
-        </g>
-
-        <!-- Old trajectories (max 3) -->
-        <g id="oldTrajectories"></g>
-
-        <!-- Current trajectory -->
-        <g id="currentTrajectory">
-          <!-- Strobe dots -->
+          <!-- Old trajectories -->
+          <g id="oldTrajectories"></g>
+          <!-- Current trajectory dots -->
           <g id="strobeDots"></g>
-          <!-- Trajectory path -->
-          <path id="trajPath" d="" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="4,3" opacity="0"/>
+          <!-- Trajectory curve -->
+          <path id="trajCurve" d="" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="4,2" opacity="0"/>
+          <!-- Decomposition lines -->
+          <g id="horizLines" opacity="0"></g>
+          <g id="vertLines" opacity="0"></g>
         </g>
 
-        <!-- Decomposition lines -->
-        <g id="decompH" opacity="0"></g>
-        <g id="decompV" opacity="0"></g>
+        <!-- ===== RAMP ===== -->
+        <g id="rampGroup">
+          <!-- Ramp body -->
+          <path d="M30,20 L170,20 L170,30 L40,30 Z" fill="url(#rampGrad)" stroke="#4B5563" stroke-width="1"/>
+          <!-- Inclined section -->
+          <path d="M30,20 L30,0 Q30,0 35,0 L80,0 Q85,0 85,5 L85,20" fill="url(#rampGrad)" stroke="#4B5563" stroke-width="1"/>
+          <!-- Horizontal exit section -->
+          <rect x="85" y="14" width="85" height="8" rx="1" fill="#9CA3AF" stroke="#4B5563" stroke-width="0.5"/>
+          <!-- Ramp support -->
+          <rect x="165" y="20" width="8" height="30" rx="1" fill="#6B7280"/>
+          <!-- Height indicator -->
+          <line id="hLine" x1="25" y1="10" x2="25" y2="20" stroke="#059669" stroke-width="1" stroke-dasharray="2,2"/>
+          <text id="hLabel" x="12" y="16" font-size="7" fill="#059669" font-weight="600">h</text>
+        </g>
 
         <!-- Ball on ramp (draggable) -->
-        <circle id="ball" cx="100" cy="37" r="7" fill="url(#ballGrad)" stroke="#047857" stroke-width="0.8" cursor="grab"/>
+        <circle id="ball" cx="57" cy="5" r="6" fill="url(#ballGlow)" stroke="#047857" stroke-width="0.5" cursor="grab"/>
+        <!-- Ball height drag area -->
+        <circle id="ballHit" cx="57" cy="5" r="12" fill="transparent" cursor="grab"/>
 
         <!-- Flying ball (hidden initially) -->
-        <circle id="flyBall" cx="170" cy="30" r="7" fill="url(#ballGrad)" stroke="#047857" stroke-width="0.8" opacity="0"/>
+        <circle id="flyBall" cx="170" cy="20" r="6" fill="url(#ballGlow)" stroke="#047857" stroke-width="0.5" opacity="0"/>
 
         <!-- Legend -->
-        <g transform="translate(600,300)">
-          <rect x="0" y="0" width="100" height="35" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="0.5" opacity="0.9"/>
-          <line x1="8" y1="10" x2="24" y2="10" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="3,2"/>
-          <text x="28" y="13" font-size="7" fill="#3B82F6">水平等距 Δx</text>
-          <line x1="8" y1="24" x2="24" y2="24" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="3,2"/>
-          <text x="28" y="27" font-size="7" fill="#EF4444">竖直加速 Δy</text>
+        <g transform="translate(580,280)">
+          <rect x="0" y="0" width="120" height="50" rx="4" fill="#fff" stroke="#E5E7EB" opacity="0.9"/>
+          <circle cx="12" cy="12" r="4" fill="#059669" opacity="0.6"/>
+          <text x="22" y="15" font-size="7" fill="#374151">频闪标记点</text>
+          <line x1="8" y1="26" x2="20" y2="26" stroke="#3B82F6" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="22" y="29" font-size="7" fill="#3B82F6">水平等距 Δx</text>
+          <line x1="8" y1="40" x2="20" y2="40" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="22" y="43" font-size="7" fill="#EF4444">竖直加速 Δy</text>
         </g>
       </svg>
     </div>
@@ -134,12 +127,12 @@
       <!-- Guide -->
       <div class="panel-section">
         <div class="section-title">实验步骤</div>
-        <div class="guide-step"><span class="guide-num">1</span><span>拖动小球调整<strong>释放高度</strong> h</span></div>
-        <div class="guide-step"><span class="guide-num">2</span><span>点击<strong>释放</strong>，观察小球飞出</span></div>
-        <div class="guide-step"><span class="guide-num">3</span><span>观察<strong>频闪标记点</strong>的分布</span></div>
-        <div class="guide-step"><span class="guide-num">4</span><span>开启<strong>分运动显示</strong>，验证分解</span></div>
-        <div class="guide-step"><span class="guide-num">5</span><span>检查 x²/(2y) 是否为<strong>常数</strong></span></div>
-        <div class="guide-step"><span class="guide-num">6</span><span>改变 h 重复，<strong>对比轨迹</strong></span></div>
+        <div class="guide-step"><span class="guide-num">1</span><span>拖小球调整<strong>释放高度 h</strong></span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>点击 <strong>释放</strong> 按钮</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>观察<strong>频闪轨迹</strong>（等时间间隔标记点）</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>开启<strong>分运动</strong>观察水平等距/竖直加速</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>查看数据表验证 <strong>x²/(2y) 为常数</strong></span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>改变 h 对比<strong>不同 v₀</strong> 的轨迹</span></div>
       </div>
 
       <!-- Parameters -->
@@ -150,27 +143,26 @@
           <div class="reading-card"><div class="label">初速度 v₀</div><div class="val" id="dispV0">1.40</div><div class="unit">m/s</div></div>
         </div>
         <div style="display:flex;gap:6px;margin-top:4px">
-          <div class="reading-card"><div class="label">描点数</div><div class="val" id="dispDots">—</div></div>
-          <div class="reading-card"><div class="label">轨迹数</div><div class="val" id="dispTrails">0</div><div class="unit">/ 3</div></div>
+          <div class="reading-card"><div class="label">频闪间隔</div><div class="val" id="dispDt" style="font-size:14px">0.05</div><div class="unit">s</div></div>
+          <div class="reading-card"><div class="label">描点数</div><div class="val" id="dispN">0</div></div>
+          <div class="reading-card"><div class="label">轨迹数</div><div class="val" id="dispTrails">0</div></div>
         </div>
       </div>
 
       <!-- Controls -->
       <div class="panel-section">
         <div style="display:flex;gap:6px">
-          <button class="ctrl-btn" id="btnLaunch" onclick="launch()">释放</button>
+          <button class="ctrl-btn" id="btnLaunch" onclick="launchBall()">释放小球</button>
           <button class="ctrl-btn secondary" onclick="resetAll()">重置</button>
-          <button class="ctrl-btn secondary" onclick="clearTrails()">清除轨迹</button>
         </div>
       </div>
 
       <!-- Toggles -->
       <div class="panel-section">
         <div class="section-title">显示选项</div>
-        <div class="toggle-row"><input type="checkbox" id="chkH" onchange="toggleDecomp()"><label for="chkH" style="color:#3B82F6">水平分运动（Δx 等距）</label></div>
-        <div class="toggle-row"><input type="checkbox" id="chkV" onchange="toggleDecomp()"><label for="chkV" style="color:#EF4444">竖直分运动（Δy 加速）</label></div>
-        <div class="toggle-row"><input type="checkbox" id="chkTraj" checked onchange="toggleTraj()"><label for="chkTraj">轨迹连线</label></div>
-        <div class="toggle-row"><input type="checkbox" id="chkCoord" onchange="toggleCoord()"><label for="chkCoord">坐标读数标注</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkHoriz" onchange="toggleHoriz(this.checked)"><label for="chkHoriz" style="color:#3B82F6">水平分运动（Δx 等间距）</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkVert" onchange="toggleVert(this.checked)"><label for="chkVert" style="color:#EF4444">竖直分运动（Δy 加速）</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkCurve" checked onchange="toggleCurve(this.checked)"><label for="chkCurve" style="color:#059669">轨迹连线</label></div>
       </div>
 
       <!-- Data table -->
@@ -182,7 +174,7 @@
             <tbody id="dataBody"></tbody>
           </table>
         </div>
-        <div id="constCheck" style="font-size:10px;margin-top:4px;color:#059669"></div>
+        <div id="constNote" style="font-size:10px;color:#059669;margin-top:4px"></div>
       </div>
     </div>
   </div>
@@ -193,21 +185,21 @@
   <div class="knowledge-container">
     <h2>实验原理</h2>
     <div class="formula-block" id="formula1"></div>
-    <p>平抛运动可以分解为两个分运动：水平方向匀速直线运动，竖直方向自由落体运动。</p>
+    <p>平抛运动可以分解为水平方向的匀速直线运动和竖直方向的自由落体运动。</p>
 
-    <h3>分运动方程</h3>
+    <h3>运动方程</h3>
     <div class="formula-block" id="formula2"></div>
+    <p>水平方向：x = v₀t（匀速），竖直方向：y = ½gt²（自由落体）。消去 t 得到抛物线方程。</p>
+
+    <h3>验证方法</h3>
     <div class="formula-block" id="formula3"></div>
+    <p>如果 x²/(2y) 在各点近似相等，则验证了平抛运动的抛物线规律。该常数等于 v₀²/g。</p>
 
-    <h3>轨迹方程</h3>
-    <div class="formula-block" id="formula4"></div>
-    <p>消去时间 t 后得到抛物线方程。x²/(2y) = v₀²/g 为常数，可用于验证平抛运动规律。</p>
-
-    <h3>实验要点</h3>
+    <h3>分运动特征</h3>
     <ul>
-      <li><strong>水平方向</strong>：等时间间隔 Δx 相等，证明匀速运动</li>
-      <li><strong>竖直方向</strong>：Δy₁ < Δy₂ < Δy₃ ...，且 Δy 之差恒定（= gT²），证明匀加速运动</li>
-      <li><strong>轨迹验证</strong>：多点 x²/(2y) 近似相等 → 抛物线</li>
+      <li><strong>水平方向</strong>：相邻频闪点的水平间距 Δx 相等（匀速）</li>
+      <li><strong>竖直方向</strong>：相邻频闪点的竖直间距 Δy 逐渐增大（加速）</li>
+      <li>Δy₂ - Δy₁ = Δy₃ - Δy₂ = gΔt²（等差）</li>
     </ul>
   </div>
 </div>
@@ -217,93 +209,67 @@
 const $ = id => document.getElementById(id);
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-// ===== CONSTANTS =====
-const G = 9.8;        // m/s²
-const DT = 0.05;      // strobe interval (s)
-const PX_PER_CM = 10; // 1cm = 10px
-const ORIGIN_X = 170; // px (launch point)
-const ORIGIN_Y = 30;  // px
-const BOARD_W = 530;  // px
-const BOARD_H = 290;  // px
-const H_MIN = 5;      // cm
-const H_MAX = 20;     // cm
-const MAX_TRAILS = 3;
+// Physics constants
+const G = 9.8; // m/s²
+const DT = 0.05; // strobe interval (s)
+const PX_PER_CM = 10; // 1cm = 10px on board
+const BOARD_W = 530; // px
+const BOARD_H = 300; // px
+const BOARD_W_CM = BOARD_W / PX_PER_CM; // 53cm
+const BOARD_H_CM = BOARD_H / PX_PER_CM; // 30cm (was 40cm but fits 300px)
+const H_MIN = 5; // cm release height
+const H_MAX = 20;
+const MAX_OLD_TRAILS = 3;
 
-// Ramp geometry for ball drag
-const RAMP_TOP_X = 35, RAMP_TOP_Y = 12;
-const RAMP_BOT_X = 140, RAMP_BOT_Y = 52;
+// Ramp geometry
+const RAMP_BALL_MIN_Y = 0; // top of ramp SVG
+const RAMP_BALL_MAX_Y = 18; // bottom near exit
+const LAUNCH_X = 170; // board origin x in SVG
+const LAUNCH_Y = 20;  // board origin y in SVG
 
 const state = {
-  h: 10,           // release height cm
-  v0: 0,           // m/s
+  h: 10, // release height cm
+  v0: 0,
   launched: false,
   animating: false,
-  strobePoints: [], // [{x_cm, y_cm}]
-  measErrors: [],   // per-point ±1% error, generated once on launch
-  trails: [],       // saved old trajectories [{v0, points}]
-  coordLabels: false
+  strobePoints: [], // {x_cm, y_cm} with ±1% error
+  oldTrails: [], // [{points, v0, color}]
+  measError: 1
 };
 
 // ===== AXIS LABELS =====
-function initAxisLabels() {
-  const xg = $('xLabels');
-  const yg = $('yLabels');
-  xg.innerHTML = ''; yg.innerHTML = '';
-  for (let cm = 5; cm <= 50; cm += 5) {
-    const px = ORIGIN_X + cm * PX_PER_CM;
-    if (px > 700) break;
-    const t = document.createElementNS(SVG_NS, 'text');
-    t.setAttribute('x', px); t.setAttribute('y', 25);
-    t.setAttribute('font-size', '6'); t.setAttribute('fill', '#6B7280');
-    t.setAttribute('text-anchor', 'middle');
-    t.textContent = cm;
-    xg.appendChild(t);
-    // Tick
-    const tick = document.createElementNS(SVG_NS, 'line');
-    tick.setAttribute('x1', px); tick.setAttribute('y1', 28);
-    tick.setAttribute('x2', px); tick.setAttribute('y2', 32);
-    tick.setAttribute('stroke', '#374151'); tick.setAttribute('stroke-width', '0.8');
-    xg.appendChild(tick);
+function drawAxisLabels() {
+  const g = $('axisLabels');
+  g.innerHTML = '';
+  // x axis: every 5cm
+  for (let x = 5; x <= 50; x += 5) {
+    const px = x * PX_PER_CM;
+    const t = document.createElementNS(SVG_NS,'text');
+    t.setAttribute('x', px); t.setAttribute('y', -3);
+    t.setAttribute('font-size','6'); t.setAttribute('fill','#6B7280');
+    t.setAttribute('text-anchor','middle');
+    t.textContent = x;
+    g.appendChild(t);
   }
-  for (let cm = 5; cm <= 28; cm += 5) {
-    const py = ORIGIN_Y + cm * PX_PER_CM;
-    if (py > 320) break;
-    const t = document.createElementNS(SVG_NS, 'text');
-    t.setAttribute('x', 165); t.setAttribute('y', py + 3);
-    t.setAttribute('font-size', '6'); t.setAttribute('fill', '#6B7280');
-    t.setAttribute('text-anchor', 'end');
-    t.textContent = cm;
-    yg.appendChild(t);
-    const tick = document.createElementNS(SVG_NS, 'line');
-    tick.setAttribute('x1', 168); tick.setAttribute('y1', py);
-    tick.setAttribute('x2', 172); tick.setAttribute('y2', py);
-    tick.setAttribute('stroke', '#374151'); tick.setAttribute('stroke-width', '0.8');
-    yg.appendChild(tick);
+  // y axis: every 5cm (downward)
+  for (let y = 5; y <= 25; y += 5) {
+    const py = y * PX_PER_CM;
+    const t = document.createElementNS(SVG_NS,'text');
+    t.setAttribute('x', -5); t.setAttribute('y', py + 3);
+    t.setAttribute('font-size','6'); t.setAttribute('fill','#6B7280');
+    t.setAttribute('text-anchor','end');
+    t.textContent = y;
+    g.appendChild(t);
   }
 }
 
-// ===== BALL DRAG =====
+// ===== BALL DRAG (height adjust) =====
 let dragging = false;
-const ball = $('ball');
 
-function hFromBallPos(bx, by) {
-  // Map ball position along ramp to height h
-  const frac = 1 - (bx - RAMP_TOP_X) / (RAMP_BOT_X - RAMP_TOP_X);
-  return H_MIN + frac * (H_MAX - H_MIN);
-}
-
-function ballPosFromH(h) {
-  const frac = (h - H_MIN) / (H_MAX - H_MIN);
-  const t = 1 - frac;
-  const x = RAMP_TOP_X + t * (RAMP_BOT_X - RAMP_TOP_X);
-  const y = RAMP_TOP_Y + t * (RAMP_BOT_Y - RAMP_TOP_Y);
-  return { x, y };
-}
-
-ball.addEventListener('pointerdown', e => {
-  if (state.launched) return;
+$('ballHit').addEventListener('pointerdown', e => {
+  if (state.animating) return;
   dragging = true;
-  ball.style.cursor = 'grabbing';
+  $('ball').style.cursor = 'grabbing';
   e.preventDefault();
 });
 
@@ -312,364 +278,359 @@ document.addEventListener('pointermove', e => {
   const svg = $('canvas');
   const rect = svg.getBoundingClientRect();
   const vb = svg.viewBox.baseVal;
-  const mx = (e.clientX - rect.left) / rect.width * vb.width;
-  // Clamp along ramp
-  const clampX = Math.max(RAMP_TOP_X, Math.min(RAMP_BOT_X, mx));
-  const h = Math.max(H_MIN, Math.min(H_MAX, hFromBallPos(clampX, 0)));
-  state.h = Math.round(h * 10) / 10;
-  updateBallPos();
+  const svgY = (e.clientY - rect.top) / rect.height * vb.height;
+
+  // Map SVG Y to height: higher on ramp = more h
+  // Ball Y range: 0 (top, h=20cm) to 18 (bottom, h=5cm)
+  const ballY = Math.max(RAMP_BALL_MIN_Y, Math.min(RAMP_BALL_MAX_Y, svgY));
+  const frac = 1 - (ballY - RAMP_BALL_MIN_Y) / (RAMP_BALL_MAX_Y - RAMP_BALL_MIN_Y);
+  state.h = H_MIN + frac * (H_MAX - H_MIN);
+
+  updateBallPosition();
   updateParams();
   e.preventDefault();
 });
 
-document.addEventListener('pointerup', e => {
+document.addEventListener('pointerup', () => {
   if (dragging) {
     dragging = false;
-    ball.style.cursor = 'grab';
+    $('ball').style.cursor = 'grab';
   }
 });
 
-function updateBallPos() {
-  const pos = ballPosFromH(state.h);
-  ball.setAttribute('cx', pos.x);
-  ball.setAttribute('cy', pos.y);
+function updateBallPosition() {
+  const frac = (state.h - H_MIN) / (H_MAX - H_MIN);
+  const ballY = RAMP_BALL_MAX_Y - frac * (RAMP_BALL_MAX_Y - RAMP_BALL_MIN_Y);
+  // Ball x moves along ramp incline
+  const ballX = 30 + (1 - frac) * 27 + frac * 27;
+  $('ball').setAttribute('cy', ballY);
+  $('ballHit').setAttribute('cy', ballY);
 
-  // Height line
-  $('hLine').setAttribute('x1', pos.x);
-  $('hLine').setAttribute('y1', RAMP_BOT_Y + 3);
-  $('hLine').setAttribute('x2', pos.x);
-  $('hLine').setAttribute('y2', pos.y);
-
-  $('hLabel').setAttribute('x', pos.x - 12);
-  $('hLabel').setAttribute('y', (RAMP_BOT_Y + pos.y) / 2 + 3);
-  $('hLabel').textContent = `h=${state.h.toFixed(1)}cm`;
+  // Height indicator
+  $('hLine').setAttribute('y1', ballY);
+  $('hLabel').setAttribute('y', (ballY + 20) / 2 + 2);
 }
 
 function updateParams() {
   state.v0 = Math.sqrt(2 * G * state.h / 100); // h in cm → m
   $('dispH').textContent = state.h.toFixed(1);
   $('dispV0').textContent = state.v0.toFixed(2);
-  $('dispTrails').textContent = state.trails.length;
+  $('dispTrails').textContent = state.oldTrails.length;
 }
 
 // ===== LAUNCH =====
-function launch() {
+function launchBall() {
   if (state.animating) return;
-  state.launched = true;
-  state.animating = true;
-  $('btnLaunch').disabled = true;
-  ball.setAttribute('opacity', '0.3');
+
+  // Generate ±1% error once
+  state.measError = 1 + (Math.random() - 0.5) * 0.02;
 
   state.v0 = Math.sqrt(2 * G * state.h / 100);
+  state.launched = true;
+  state.animating = true;
+  state.strobePoints = [];
+  $('btnLaunch').disabled = true;
+  $('ball').setAttribute('opacity', '0');
+  $('flyBall').setAttribute('opacity', '1');
+  $('statusBadge').textContent = '小球飞行中...';
+  $('statusBadge').className = 'status-badge active';
 
   // Calculate strobe points
-  state.strobePoints = [];
-  state.measErrors = [];
+  const v0 = state.v0;
   let t = 0;
+  const points = [];
   while (true) {
-    t += DT;
-    const x_m = state.v0 * t;
+    const x_m = v0 * t;
     const y_m = 0.5 * G * t * t;
     const x_cm = x_m * 100;
     const y_cm = y_m * 100;
 
-    if (x_cm * PX_PER_CM > BOARD_W || y_cm * PX_PER_CM > BOARD_H) break;
+    if (x_cm > BOARD_W_CM || y_cm > BOARD_H_CM) break;
 
-    // ±1% error generated once per launch
-    const errX = 1 + (Math.random() - 0.5) * 0.02;
-    const errY = 1 + (Math.random() - 0.5) * 0.02;
-    state.strobePoints.push({ x_cm: x_cm * errX, y_cm: y_cm * errY });
-    state.measErrors.push({ errX, errY });
+    // Apply ±1% error to position
+    points.push({
+      x_cm: x_cm * state.measError,
+      y_cm: y_cm * (2 - state.measError), // slightly different error for y
+      t
+    });
+    t += DT;
   }
+  state.strobePoints = points;
 
   // Animate ball flight
-  animateFlight(0);
+  animateFlight(points, 0);
 }
 
-function animateFlight(step) {
-  if (step >= state.strobePoints.length) {
-    state.animating = false;
-    finishLaunch();
+function animateFlight(points, idx) {
+  if (idx >= points.length) {
+    finishFlight();
     return;
   }
 
-  const pt = state.strobePoints[step];
-  const px = ORIGIN_X + pt.x_cm * PX_PER_CM;
-  const py = ORIGIN_Y + pt.y_cm * PX_PER_CM;
+  const p = points[idx];
+  const px = LAUNCH_X + p.x_cm * PX_PER_CM;
+  const py = LAUNCH_Y + p.y_cm * PX_PER_CM;
 
-  // Move flying ball
-  const fb = $('flyBall');
-  fb.setAttribute('cx', px);
-  fb.setAttribute('cy', py);
-  fb.setAttribute('opacity', '1');
+  $('flyBall').setAttribute('cx', px);
+  $('flyBall').setAttribute('cy', py);
 
-  // Add strobe ghost
-  const ghost = document.createElementNS(SVG_NS, 'circle');
-  ghost.setAttribute('cx', px);
-  ghost.setAttribute('cy', py);
-  ghost.setAttribute('r', '6');
-  ghost.setAttribute('fill', 'url(#ghostGrad)');
-  ghost.setAttribute('opacity', 0.15 + step * 0.08);
-  $('strobeDots').appendChild(ghost);
+  // Add strobe dot
+  addStrobeDot(p, idx, points.length);
 
   requestAnimationFrame(() => {
-    setTimeout(() => animateFlight(step + 1), 60);
+    setTimeout(() => animateFlight(points, idx + 1), 40);
   });
 }
 
-function finishLaunch() {
-  $('flyBall').setAttribute('opacity', '0');
+function addStrobeDot(p, idx, total) {
+  const g = $('strobeDots');
+  const cx = p.x_cm * PX_PER_CM;
+  const cy = p.y_cm * PX_PER_CM;
+  const opacity = 0.3 + 0.5 * (idx / Math.max(total - 1, 1));
 
-  // Draw trajectory path
-  if ($('chkTraj').checked) drawTrajPath();
+  const c = document.createElementNS(SVG_NS, 'circle');
+  c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+  c.setAttribute('r', '5');
+  c.setAttribute('fill', '#059669');
+  c.setAttribute('opacity', opacity);
+  g.appendChild(c);
 
-  // Draw decomposition if toggled
-  toggleDecomp();
-
-  // Update data
-  renderTable();
-  updateParams();
-  $('dispDots').textContent = state.strobePoints.length;
-
-  $('statusBadge').textContent = '频闪完成 · 查看数据 · 改变高度重复实验';
-  $('statusBadge').className = 'status-badge done';
-}
-
-function drawTrajPath() {
-  if (state.strobePoints.length < 2) return;
-  let d = `M${ORIGIN_X},${ORIGIN_Y}`;
-  state.strobePoints.forEach(pt => {
-    d += ` L${(ORIGIN_X + pt.x_cm * PX_PER_CM).toFixed(1)},${(ORIGIN_Y + pt.y_cm * PX_PER_CM).toFixed(1)}`;
-  });
-  $('trajPath').setAttribute('d', d);
-  $('trajPath').setAttribute('opacity', '0.7');
-}
-
-// ===== DECOMPOSITION =====
-function toggleDecomp() {
-  const showH = $('chkH').checked;
-  const showV = $('chkV').checked;
-  const gH = $('decompH');
-  const gV = $('decompV');
-
-  gH.innerHTML = '';
-  gV.innerHTML = '';
-  gH.setAttribute('opacity', showH ? '1' : '0');
-  gV.setAttribute('opacity', showV ? '1' : '0');
-
-  if (!state.launched || state.strobePoints.length === 0) return;
-
-  if (showH) {
-    // Vertical blue dashed lines at each strobe x (equal spacing)
-    state.strobePoints.forEach((pt, i) => {
-      const px = ORIGIN_X + pt.x_cm * PX_PER_CM;
-      const py = ORIGIN_Y + pt.y_cm * PX_PER_CM;
-      const line = document.createElementNS(SVG_NS, 'line');
-      line.setAttribute('x1', px); line.setAttribute('y1', ORIGIN_Y);
-      line.setAttribute('x2', px); line.setAttribute('y2', py);
-      line.setAttribute('stroke', '#3B82F6');
-      line.setAttribute('stroke-width', '1');
-      line.setAttribute('stroke-dasharray', '3,2');
-      gH.appendChild(line);
-
-      // Δx label between consecutive points
-      if (i > 0) {
-        const prevPx = ORIGIN_X + state.strobePoints[i-1].x_cm * PX_PER_CM;
-        const midX = (prevPx + px) / 2;
-        const t = document.createElementNS(SVG_NS, 'text');
-        t.setAttribute('x', midX); t.setAttribute('y', ORIGIN_Y - 4);
-        t.setAttribute('font-size', '6'); t.setAttribute('fill', '#3B82F6');
-        t.setAttribute('text-anchor', 'middle');
-        t.textContent = `Δx${i}`;
-        gH.appendChild(t);
-      }
-    });
-  }
-
-  if (showV) {
-    // Horizontal red dashed lines at each strobe y
-    state.strobePoints.forEach((pt, i) => {
-      const px = ORIGIN_X + pt.x_cm * PX_PER_CM;
-      const py = ORIGIN_Y + pt.y_cm * PX_PER_CM;
-      const line = document.createElementNS(SVG_NS, 'line');
-      line.setAttribute('x1', ORIGIN_X); line.setAttribute('y1', py);
-      line.setAttribute('x2', px); line.setAttribute('y2', py);
-      line.setAttribute('stroke', '#EF4444');
-      line.setAttribute('stroke-width', '1');
-      line.setAttribute('stroke-dasharray', '3,2');
-      gV.appendChild(line);
-
-      // Δy label between consecutive points
-      if (i > 0) {
-        const prevPy = ORIGIN_Y + state.strobePoints[i-1].y_cm * PX_PER_CM;
-        const midY = (prevPy + py) / 2;
-        const t = document.createElementNS(SVG_NS, 'text');
-        t.setAttribute('x', ORIGIN_X - 8); t.setAttribute('y', midY + 3);
-        t.setAttribute('font-size', '6'); t.setAttribute('fill', '#EF4444');
-        t.setAttribute('text-anchor', 'end');
-        t.textContent = `Δy${i}`;
-        gV.appendChild(t);
-      }
-    });
-  }
-}
-
-function toggleTraj() {
-  $('trajPath').setAttribute('opacity', $('chkTraj').checked && state.launched ? '0.7' : '0');
-}
-
-function toggleCoord() {
-  state.coordLabels = $('chkCoord').checked;
-  renderStrobeLabels();
-}
-
-function renderStrobeLabels() {
-  // Remove old labels
-  document.querySelectorAll('.coord-label').forEach(el => el.remove());
-
-  if (!state.coordLabels || state.strobePoints.length === 0) return;
-
-  state.strobePoints.forEach((pt, i) => {
-    const px = ORIGIN_X + pt.x_cm * PX_PER_CM;
-    const py = ORIGIN_Y + pt.y_cm * PX_PER_CM;
+  // Small label
+  if (idx > 0) {
     const t = document.createElementNS(SVG_NS, 'text');
-    t.setAttribute('x', px + 8); t.setAttribute('y', py - 4);
-    t.setAttribute('font-size', '6'); t.setAttribute('fill', '#374151');
-    t.classList.add('coord-label');
-    t.textContent = `(${pt.x_cm.toFixed(1)}, ${pt.y_cm.toFixed(1)})`;
-    $('currentTrajectory').appendChild(t);
+    t.setAttribute('x', cx + 8); t.setAttribute('y', cy - 3);
+    t.setAttribute('font-size', '6'); t.setAttribute('fill', '#059669');
+    t.textContent = idx;
+    g.appendChild(t);
+  }
+}
+
+function finishFlight() {
+  state.animating = false;
+  $('flyBall').setAttribute('opacity', '0');
+  $('statusBadge').textContent = '观察轨迹 · 开启分运动 · 查看数据';
+  $('statusBadge').className = 'status-badge done';
+  $('btnLaunch').disabled = false;
+
+  drawTrajCurve();
+  drawDecomposition();
+  renderData();
+  $('dispN').textContent = state.strobePoints.length;
+}
+
+// ===== TRAJECTORY CURVE =====
+function drawTrajCurve() {
+  const points = state.strobePoints;
+  if (points.length < 2) return;
+  let d = '';
+  points.forEach((p, i) => {
+    const x = p.x_cm * PX_PER_CM;
+    const y = p.y_cm * PX_PER_CM;
+    d += (i === 0 ? 'M' : ' L') + `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  $('trajCurve').setAttribute('d', d);
+  $('trajCurve').setAttribute('opacity', $('chkCurve').checked ? '0.8' : '0');
+}
+
+// ===== DECOMPOSITION LINES =====
+function drawDecomposition() {
+  const points = state.strobePoints.filter(p => p.t > 0);
+  if (points.length < 2) return;
+
+  // Horizontal lines (blue vertical dashed lines at each x)
+  const hg = $('horizLines');
+  hg.innerHTML = '';
+  points.forEach((p, i) => {
+    const x = p.x_cm * PX_PER_CM;
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', x); line.setAttribute('y1', 0);
+    line.setAttribute('x2', x); line.setAttribute('y2', p.y_cm * PX_PER_CM);
+    line.setAttribute('stroke', '#3B82F6'); line.setAttribute('stroke-width', '0.8');
+    line.setAttribute('stroke-dasharray', '3,2');
+    hg.appendChild(line);
+
+    // Δx label between consecutive points
+    if (i > 0) {
+      const prevX = points[i-1].x_cm * PX_PER_CM;
+      const midX = (prevX + x) / 2;
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', midX); t.setAttribute('y', -6);
+      t.setAttribute('font-size', '6'); t.setAttribute('fill', '#3B82F6');
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = 'Δx';
+      hg.appendChild(t);
+    }
+  });
+
+  // Vertical lines (red horizontal dashed lines at each y)
+  const vg = $('vertLines');
+  vg.innerHTML = '';
+  points.forEach((p, i) => {
+    const y = p.y_cm * PX_PER_CM;
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', 0); line.setAttribute('y1', y);
+    line.setAttribute('x2', p.x_cm * PX_PER_CM); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#EF4444'); line.setAttribute('stroke-width', '0.8');
+    line.setAttribute('stroke-dasharray', '3,2');
+    vg.appendChild(line);
+
+    // Δy label
+    if (i > 0) {
+      const prevY = points[i-1].y_cm * PX_PER_CM;
+      const midY = (prevY + y) / 2;
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', -12); t.setAttribute('y', midY + 3);
+      t.setAttribute('font-size', '6'); t.setAttribute('fill', '#EF4444');
+      t.setAttribute('text-anchor', 'end');
+      t.textContent = `Δy${i}`;
+      vg.appendChild(t);
+    }
   });
 }
+
+// ===== TOGGLES =====
+function toggleHoriz(on) { $('horizLines').setAttribute('opacity', on ? '1' : '0'); }
+function toggleVert(on) { $('vertLines').setAttribute('opacity', on ? '1' : '0'); }
+function toggleCurve(on) { $('trajCurve').setAttribute('opacity', on ? '0.8' : '0'); }
 
 // ===== DATA TABLE =====
-function renderTable() {
+function renderData() {
   const tbody = $('dataBody');
   tbody.innerHTML = '';
+  const vals = [];
 
-  const ratios = [];
-  state.strobePoints.forEach((pt, i) => {
+  state.strobePoints.forEach((p, i) => {
+    if (i === 0) return; // skip origin point (0,0)
+    const x = p.x_cm;
+    const y = p.y_cm;
+    const ratio = y > 0.01 ? (x * x) / (2 * y) : 0;
+    vals.push(ratio);
+
     const tr = document.createElement('tr');
-    const ratio = pt.y_cm > 0.01 ? (pt.x_cm * pt.x_cm) / (2 * pt.y_cm) : 0;
-    ratios.push(ratio);
-    tr.innerHTML = `<td>${i+1}</td><td>${pt.x_cm.toFixed(2)}</td><td>${pt.y_cm.toFixed(2)}</td><td>${ratio.toFixed(2)}</td>`;
+    tr.innerHTML = `<td>${i}</td><td>${x.toFixed(2)}</td><td>${y.toFixed(2)}</td><td>${ratio.toFixed(2)}</td>`;
     tbody.appendChild(tr);
   });
 
   // Check if x²/(2y) is approximately constant
-  const check = $('constCheck');
-  if (ratios.length >= 3) {
-    const avg = ratios.reduce((a,b) => a+b, 0) / ratios.length;
-    const std = Math.sqrt(ratios.reduce((s,r) => s + (r-avg)*(r-avg), 0) / ratios.length);
-    const cv = std / avg * 100;
-    const v0_calc = Math.sqrt(avg * G / 100); // avg = v0²/g in cm
-    check.innerHTML = cv < 5
-      ? `x²/(2y) 平均值 = ${avg.toFixed(2)} cm，标准差 ${cv.toFixed(1)}% < 5% ✓<br>v₀(轨迹) = ${v0_calc.toFixed(2)} m/s，v₀(能量) = ${state.v0.toFixed(2)} m/s`
-      : `x²/(2y) 平均值 = ${avg.toFixed(2)} cm，标准差 ${cv.toFixed(1)}%`;
-    check.style.color = cv < 5 ? '#059669' : '#D97706';
+  const note = $('constNote');
+  if (vals.length >= 3) {
+    const mean = vals.reduce((a,b) => a+b, 0) / vals.length;
+    const std = Math.sqrt(vals.reduce((a,v) => a + (v-mean)**2, 0) / vals.length);
+    const cv = std / mean * 100;
+    const theoretical = (state.v0 * state.v0) / G * 10000; // cm
+    note.textContent = `x²/(2y) ≈ ${mean.toFixed(2)} cm（理论值 v₀²/g = ${theoretical.toFixed(2)} cm），变异系数 ${cv.toFixed(1)}%`;
+    note.style.color = cv < 5 ? '#059669' : '#D97706';
   } else {
-    check.textContent = '';
+    note.textContent = '';
   }
 }
 
-// ===== SAVE & CLEAR TRAILS =====
-function saveTrail() {
-  if (state.strobePoints.length === 0) return;
-  if (state.trails.length >= MAX_TRAILS) state.trails.shift();
-  state.trails.push({
-    v0: state.v0,
-    points: [...state.strobePoints]
-  });
-  renderOldTrails();
+// ===== SAVE OLD TRAIL & PREPARE NEW =====
+function saveTrailAndReset() {
+  if (state.strobePoints.length > 0) {
+    // Save current trail
+    const colors = ['#9CA3AF', '#D1D5DB', '#E5E7EB'];
+    if (state.oldTrails.length >= MAX_OLD_TRAILS) state.oldTrails.shift();
+    state.oldTrails.push({
+      points: [...state.strobePoints],
+      v0: state.v0,
+      color: colors[Math.min(state.oldTrails.length, 2)]
+    });
+    drawOldTrails();
+  }
+
+  // Clear current
+  $('strobeDots').innerHTML = '';
+  $('trajCurve').setAttribute('d', '');
+  $('horizLines').innerHTML = '';
+  $('vertLines').innerHTML = '';
+  state.strobePoints = [];
+  state.launched = false;
+  $('ball').setAttribute('opacity', '1');
+  $('dispN').textContent = '0';
+  $('dataBody').innerHTML = '';
+  $('constNote').textContent = '';
+
+  // Uncheck toggles
+  $('chkHoriz').checked = false;
+  $('chkVert').checked = false;
 }
 
-function renderOldTrails() {
+function drawOldTrails() {
   const g = $('oldTrajectories');
   g.innerHTML = '';
-  state.trails.forEach((trail, ti) => {
-    let d = `M${ORIGIN_X},${ORIGIN_Y}`;
-    trail.points.forEach(pt => {
-      d += ` L${(ORIGIN_X + pt.x_cm * PX_PER_CM).toFixed(1)},${(ORIGIN_Y + pt.y_cm * PX_PER_CM).toFixed(1)}`;
+  state.oldTrails.forEach(trail => {
+    // Dashed path
+    let d = '';
+    trail.points.forEach((p, i) => {
+      const x = p.x_cm * PX_PER_CM;
+      const y = p.y_cm * PX_PER_CM;
+      d += (i === 0 ? 'M' : ' L') + `${x.toFixed(1)},${y.toFixed(1)}`;
     });
     const path = document.createElementNS(SVG_NS, 'path');
     path.setAttribute('d', d);
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', '#9CA3AF');
+    path.setAttribute('stroke', trail.color);
     path.setAttribute('stroke-width', '1');
     path.setAttribute('stroke-dasharray', '4,3');
-    path.setAttribute('opacity', '0.5');
     g.appendChild(path);
 
     // v₀ label
-    const lastPt = trail.points[trail.points.length - 1];
-    const lx = ORIGIN_X + lastPt.x_cm * PX_PER_CM;
-    const ly = ORIGIN_Y + lastPt.y_cm * PX_PER_CM;
+    const last = trail.points[trail.points.length - 1];
     const t = document.createElementNS(SVG_NS, 'text');
-    t.setAttribute('x', lx + 5); t.setAttribute('y', ly + 3);
-    t.setAttribute('font-size', '7'); t.setAttribute('fill', '#9CA3AF');
+    t.setAttribute('x', last.x_cm * PX_PER_CM + 5);
+    t.setAttribute('y', last.y_cm * PX_PER_CM - 3);
+    t.setAttribute('font-size', '7');
+    t.setAttribute('fill', trail.color);
     t.textContent = `v₀=${trail.v0.toFixed(2)}`;
     g.appendChild(t);
-
-    // Ghost dots (faint)
-    trail.points.forEach(pt => {
-      const c = document.createElementNS(SVG_NS, 'circle');
-      c.setAttribute('cx', ORIGIN_X + pt.x_cm * PX_PER_CM);
-      c.setAttribute('cy', ORIGIN_Y + pt.y_cm * PX_PER_CM);
-      c.setAttribute('r', '3');
-      c.setAttribute('fill', '#9CA3AF');
-      c.setAttribute('opacity', '0.3');
-      g.appendChild(c);
-    });
   });
 }
 
-function clearTrails() {
-  state.trails = [];
-  renderOldTrails();
+// Override launch to save old trail first
+const _origLaunch = launchBall;
+window.launchBall = function() {
+  if (state.animating) return;
+  if (state.launched) saveTrailAndReset();
   updateParams();
-}
+  _origLaunch();
+};
 
 // ===== RESET =====
 function resetAll() {
-  // Save current trail if exists
-  if (state.launched && state.strobePoints.length > 0) {
-    saveTrail();
-  }
-
+  state.oldTrails = [];
+  state.strobePoints = [];
   state.launched = false;
   state.animating = false;
-  state.strobePoints = [];
-  state.measErrors = [];
+  state.h = 10;
 
-  // Clear current trajectory
   $('strobeDots').innerHTML = '';
-  $('trajPath').setAttribute('d', '');
-  $('trajPath').setAttribute('opacity', '0');
-  $('decompH').innerHTML = '';
-  $('decompV').innerHTML = '';
+  $('oldTrajectories').innerHTML = '';
+  $('trajCurve').setAttribute('d', '');
+  $('horizLines').innerHTML = '';
+  $('vertLines').innerHTML = '';
   $('flyBall').setAttribute('opacity', '0');
-  document.querySelectorAll('.coord-label').forEach(el => el.remove());
-
-  // Reset ball
-  ball.setAttribute('opacity', '1');
-  updateBallPos();
-  updateParams();
-
+  $('ball').setAttribute('opacity', '1');
   $('btnLaunch').disabled = false;
-  $('dispDots').textContent = '—';
+  $('chkHoriz').checked = false;
+  $('chkVert').checked = false;
+  $('chkCurve').checked = true;
   $('dataBody').innerHTML = '';
-  $('constCheck').textContent = '';
+  $('constNote').textContent = '';
 
-  $('statusBadge').textContent = '拖动小球调整释放高度 → 点击释放';
+  updateBallPosition();
+  updateParams();
+  $('dispN').textContent = '0';
+  $('statusBadge').textContent = '拖动小球调整释放高度 · 点击释放';
   $('statusBadge').className = 'status-badge idle';
 }
 
 // ===== FORMULAS =====
 function renderFormulas() {
   const formulas = [
-    { id: 'formula1', tex: '\\text{平抛运动 = 水平匀速 + 竖直自由落体}' },
-    { id: 'formula2', tex: 'x = v_0 t \\quad (\\text{水平方向：匀速})' },
-    { id: 'formula3', tex: 'y = \\frac{1}{2}gt^2 \\quad (\\text{竖直方向：自由落体})' },
-    { id: 'formula4', tex: 'y = \\frac{g}{2v_0^2}x^2 \\quad \\Rightarrow \\quad \\frac{x^2}{2y} = \\frac{v_0^2}{g} = \\text{常数}' }
+    { id: 'formula1', tex: 'y = \\frac{g}{2v_0^2} x^2' },
+    { id: 'formula2', tex: 'x = v_0 t, \\quad y = \\frac{1}{2}gt^2 \\quad \\Rightarrow \\quad y = \\frac{g}{2v_0^2}x^2' },
+    { id: 'formula3', tex: '\\frac{x^2}{2y} = \\frac{v_0^2}{g} = \\text{常数}' }
   ];
   formulas.forEach(f => {
     const el = $(f.id);
@@ -685,8 +646,8 @@ function renderFormulas() {
 })(0);
 
 // ===== INIT =====
-initAxisLabels();
-updateBallPos();
+drawAxisLabels();
+updateBallPosition();
 updateParams();
 </script>
 <script src="/shared/theme.js"></script>
