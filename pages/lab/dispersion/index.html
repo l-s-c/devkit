@@ -27,9 +27,9 @@
 .data-label{color:#9CA3AF}
 .data-value{font-family:'JetBrains Mono',monospace;font-weight:600;color:#F5F5F5;font-size:12px}
 .btn-row{display:flex;gap:6px}
-.ctrl-btn{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#E5E7EB;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
-.ctrl-btn:hover{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#F59E0B}
-.ctrl-btn.active{background:#F59E0B;color:#1A1A2E;border-color:#F59E0B}
+.exp-btn{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#E5E7EB;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:inherit}
+.exp-btn:hover{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#F59E0B}
+.exp-btn.active{background:#F59E0B;color:#1A1A2E;border-color:#F59E0B}
 .slider-control{margin:8px 0}
 .slider-control label{font-size:11px;color:#9CA3AF;font-weight:600;display:block;margin-bottom:4px}
 .slider-control input[type=range]{width:100%;accent-color:#F59E0B;height:6px}
@@ -185,8 +185,8 @@
     <div class="panel-section">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/></svg> 棱镜材质</h3>
       <div class="btn-row">
-        <button class="ctrl-btn active" id="btnGlass" onclick="setMaterial('glass')">玻璃</button>
-        <button class="ctrl-btn" id="btnCrystal" onclick="setMaterial('crystal')">水晶</button>
+        <button class="exp-btn active" id="btnGlass" onclick="setMaterial('glass')">玻璃</button>
+        <button class="exp-btn" id="btnCrystal" onclick="setMaterial('crystal')">水晶</button>
       </div>
     </div>
 
@@ -205,7 +205,7 @@
     <div class="panel-section">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> 光源控制</h3>
       <div class="btn-row">
-        <button class="ctrl-btn active" id="btnLight" onclick="toggleLight()">光源开启</button>
+        <button class="exp-btn active" id="btnLight" onclick="toggleLight()">光源开启</button>
       </div>
     </div>
 

@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="/shared/lab-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
-.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
 .highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
 .stopwatch{background:#1F2937;border-radius:10px;padding:10px;text-align:center;margin:6px 0}
 .sw-display{font-family:'JetBrains Mono',monospace;font-size:28px;color:#4ADE80;letter-spacing:2px;margin:4px 0}
@@ -521,14 +519,17 @@ function swStartStop() {
     document.getElementById('swCount').textContent = '全振动：0 次';
     document.getElementById('swPeriod').textContent = 'T = — s';
 
-    swTimerId = setInterval(() => {
+    function swTick() {
+      if (!swRunning) return;
       swElapsed = (performance.now() - swStartTime) / 1000;
       document.getElementById('swDisplay').textContent = formatTime(swElapsed);
-    }, 10);
+      swTimerId = requestAnimationFrame(swTick);
+    }
+    swTimerId = requestAnimationFrame(swTick);
   } else {
     // Stop — add one-time human error ±0.05s
     swRunning = false;
-    clearInterval(swTimerId);
+    cancelAnimationFrame(swTimerId);
     const humanError = (Math.random() - 0.5) * 0.1; // ±0.05s
     swElapsed += humanError;
     if (swElapsed < 0) swElapsed = 0;
@@ -545,7 +546,7 @@ function swStartStop() {
 
 function swReset() {
   swRunning = false;
-  clearInterval(swTimerId);
+  cancelAnimationFrame(swTimerId);
   swElapsed = 0;
   fullSwings = 0;
   crossCount = 0;
