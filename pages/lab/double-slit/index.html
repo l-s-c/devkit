@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用双缝干涉测量光的波长 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="双缝干涉, 光的波长, 干涉条纹, 杨氏双缝, 高中物理">
+<meta name="description" content="用双缝干涉测量单色光波长，观察干涉条纹，测量条纹间距">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#7C3AED;--lab-accent-bg:#F5F3FF;--lab-accent-border:#DDD6FE}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.ctrl-btn.secondary{background:#6B7280}
+.filter-btn{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s}
+.filter-btn.active{border-color:#fff;box-shadow:0 0 8px currentColor}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+.result-card .label{font-size:9px;color:#6B7280}
+.result-card .val{font-size:16px;font-weight:700;color:var(--lab-accent)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>用双缝干涉测量光的波长</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>双缝干涉 · 光的波长 · 条纹间距 · 高中光学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">选择滤光片 · 拖光屏调 L · 拖分划线对准明纹</div>
+      <svg id="canvas" viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="lampGlow" cx="50%" cy="50%"><stop offset="0%" stop-color="#FDE68A" stop-opacity="0.8"/><stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/></radialGradient>
+          <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6B7280"/><stop offset="100%" stop-color="#374151"/></linearGradient>
+        </defs>
+
+        <!-- Dark background (optical lab) -->
+        <rect width="720" height="310" fill="#0F172A"/>
+
+        <!-- ===== LIGHT SOURCE ===== -->
+        <g transform="translate(30,125)">
+          <!-- Housing -->
+          <rect x="0" y="0" width="50" height="60" rx="4" fill="url(#metalGrad)" stroke="#4B5563" stroke-width="0.5"/>
+          <!-- Lamp glow -->
+          <circle cx="25" cy="30" r="12" fill="url(#lampGlow)"/>
+          <circle cx="25" cy="30" r="5" fill="#FBBF24" opacity="0.9"/>
+          <!-- Label -->
+          <text x="25" y="72" font-size="7" fill="#9CA3AF" text-anchor="middle">光源</text>
+        </g>
+
+        <!-- ===== FILTER ===== -->
+        <g transform="translate(95,130)">
+          <rect x="0" y="0" width="12" height="50" rx="2" fill="#374151" stroke="#4B5563" stroke-width="0.5"/>
+          <rect id="filterRect" x="2" y="5" width="8" height="40" rx="1" fill="#EF4444" opacity="0.6"/>
+          <text x="6" y="62" font-size="6" fill="#9CA3AF" text-anchor="middle">滤光片</text>
+        </g>
+
+        <!-- ===== SINGLE SLIT ===== -->
+        <g transform="translate(135,120)">
+          <rect x="0" y="0" width="6" height="28" fill="#374151"/>
+          <rect x="0" y="32" width="6" height="28" fill="#374151"/>
+          <text x="3" y="72" font-size="6" fill="#9CA3AF" text-anchor="middle">单缝</text>
+        </g>
+
+        <!-- ===== DOUBLE SLIT ===== -->
+        <g transform="translate(175,110)">
+          <rect x="0" y="0" width="6" height="30" fill="#374151"/>
+          <rect x="0" y="34" width="6" height="22" fill="#374151"/>
+          <rect x="0" y="60" width="6" height="30" fill="#374151"/>
+          <!-- d label -->
+          <line x1="10" y1="30" x2="10" y2="34" stroke="#9CA3AF" stroke-width="0.5"/>
+          <line x1="10" y1="56" x2="10" y2="60" stroke="#9CA3AF" stroke-width="0.5"/>
+          <text id="dLabel" x="16" y="48" font-size="6" fill="#9CA3AF">d=0.2mm</text>
+          <text x="3" y="102" font-size="6" fill="#9CA3AF" text-anchor="middle">双缝</text>
+        </g>
+
+        <!-- ===== LIGHT RAYS (toggle) ===== -->
+        <g id="lightRays" opacity="0.3">
+          <line x1="181" y1="142" x2="520" y2="100" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+          <line x1="181" y1="142" x2="520" y2="155" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+          <line x1="181" y1="142" x2="520" y2="210" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+          <line x1="181" y1="168" x2="520" y2="100" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+          <line x1="181" y1="168" x2="520" y2="155" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+          <line x1="181" y1="168" x2="520" y2="210" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
+        </g>
+
+        <!-- ===== L DISTANCE ===== -->
+        <line x1="178" y1="280" x2="520" y2="280" stroke="#7C3AED" stroke-width="0.8" stroke-dasharray="4,2"/>
+        <text id="lLabel" x="349" y="295" font-size="8" fill="#7C3AED" text-anchor="middle" font-weight="600">L = 80.0 cm</text>
+
+        <!-- ===== SCREEN ===== -->
+        <g id="screenGroup">
+          <!-- Screen body -->
+          <rect id="screenRect" x="515" y="40" width="20" height="230" rx="3" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+          <!-- Fringe area -->
+          <g id="fringeArea" transform="translate(520,55)"></g>
+          <!-- Screen drag handle -->
+          <rect x="515" y="145" width="20" height="20" rx="2" fill="transparent" cursor="ew-resize" id="screenHandle"/>
+          <text x="525" y="285" font-size="6" fill="#9CA3AF" text-anchor="middle">光屏</text>
+        </g>
+
+        <!-- ===== CROSSHAIR (measurement line) ===== -->
+        <g id="crosshair" cursor="ns-resize">
+          <line id="crossH" x1="516" y1="155" x2="534" y2="155" stroke="#22C55E" stroke-width="1.5"/>
+          <line id="crossV" x1="525" y1="145" x2="525" y2="165" stroke="#22C55E" stroke-width="0.8"/>
+          <!-- Larger hit area -->
+          <rect x="514" y="140" width="22" height="30" fill="transparent"/>
+          <!-- Position readout -->
+          <text id="crossLabel" x="540" y="158" font-size="7" fill="#22C55E" font-weight="600">0.00 mm</text>
+        </g>
+
+        <!-- ===== MEASUREMENT HEAD ===== -->
+        <g transform="translate(545,100)">
+          <rect x="0" y="0" width="50" height="110" rx="4" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+          <!-- Eyepiece -->
+          <circle cx="25" cy="15" r="8" fill="#0F172A" stroke="#4B5563" stroke-width="1"/>
+          <circle cx="25" cy="15" r="4" fill="#1E293B"/>
+          <!-- Digital readout -->
+          <rect x="5" y="35" width="40" height="18" rx="2" fill="#0F172A" stroke="#334155" stroke-width="0.5"/>
+          <text id="digitalRead" x="25" y="48" font-size="9" fill="#22C55E" text-anchor="middle" font-family="'JetBrains Mono',monospace">0.00</text>
+          <text x="25" y="62" font-size="5" fill="#6B7280" text-anchor="middle">mm</text>
+          <!-- Label -->
+          <text x="25" y="80" font-size="6" fill="#9CA3AF" text-anchor="middle">测量头</text>
+        </g>
+
+        <!-- ===== ORDER LABELS ===== -->
+        <g id="orderLabels"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>选择<strong>滤光片</strong>（红/绿/蓝）</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>调节双缝间距 <strong>d</strong></span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>拖光屏调节 <strong>L</strong>（双缝到光屏距离）</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>拖<strong>分划线</strong>对准明纹中央，记录位置</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>记录多条明纹，算 <strong>Δx 平均值</strong></span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>由 <strong>λ = Δx·d/L</strong> 计算波长</span></div>
+      </div>
+
+      <!-- Filter selection -->
+      <div class="panel-section">
+        <div class="section-title">滤光片</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="filter-btn active" style="background:#EF4444" data-filter="red" onclick="setFilter('red')"></button>
+          <button class="filter-btn" style="background:#22C55E" data-filter="green" onclick="setFilter('green')"></button>
+          <button class="filter-btn" style="background:#3B82F6" data-filter="blue" onclick="setFilter('blue')"></button>
+          <span id="filterName" style="font-size:11px;color:#EF4444;font-weight:600">红光 632nm</span>
+        </div>
+      </div>
+
+      <!-- Parameters -->
+      <div class="panel-section">
+        <div class="section-title">实验参数</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">双缝间距 d</div><div class="val" id="dispD" style="font-size:14px">0.20</div><div class="unit">mm</div></div>
+          <div class="reading-card"><div class="label">缝屏距 L</div><div class="val" id="dispL" style="font-size:14px">80.0</div><div class="unit">cm</div></div>
+        </div>
+        <div style="margin-top:4px">
+          <label style="font-size:10px;color:#6B7280">双缝间距：</label>
+          <select id="selD" onchange="setSlitD(this.value)" style="font-size:10px;padding:2px 4px;border-radius:4px;border:1px solid #D1D5DB">
+            <option value="0.2" selected>d = 0.2 mm</option>
+            <option value="0.3">d = 0.3 mm</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Measurement -->
+      <div class="panel-section">
+        <div class="section-title">分划线位置</div>
+        <div class="reading-card" style="padding:10px">
+          <div class="val" id="dispPos" style="font-size:22px;color:#22C55E">0.00</div>
+          <div class="unit">mm</div>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:6px">
+          <button class="ctrl-btn" id="btnRecord" onclick="recordData()">记录位置</button>
+          <button class="ctrl-btn secondary" onclick="clearRecords()">清空记录</button>
+          <button class="ctrl-btn secondary" onclick="resetAll()">重置</button>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="panel-section">
+        <div class="section-title">明纹位置记录</div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="dataTable">
+            <thead><tr><th>#</th><th>级次</th><th>位置/mm</th></tr></thead>
+            <tbody id="dataBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">测量结果</div>
+        <div class="result-card">
+          <div style="display:flex;gap:6px">
+            <div style="flex:1"><div class="label">Δx 平均</div><div class="val" id="resAvgDx">—</div><div style="font-size:9px;color:#6B7280">mm</div></div>
+            <div style="flex:1"><div class="label">λ 测量值</div><div class="val" id="resLambda">—</div><div style="font-size:9px;color:#6B7280">nm</div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <div style="flex:1"><div class="label">λ 标准值</div><div class="val" id="resStd">—</div><div style="font-size:9px;color:#6B7280">nm</div></div>
+            <div style="flex:1"><div class="label">偏差</div><div class="val" id="resErr">—</div><div style="font-size:9px;color:#6B7280">%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>单色光通过双缝后产生干涉，在光屏上形成等间距的明暗相间条纹。相邻明纹（或暗纹）间距 Δx 与波长 λ、双缝间距 d、缝屏距 L 的关系为上式。</p>
+
+    <h3>测量方法</h3>
+    <div class="formula-block" id="formula2"></div>
+    <p>用测量头的分划线对准各级明纹中央，记录位置。测量多条明纹位置后，取平均间距 Δx，代入公式计算波长。</p>
+
+    <h3>影响条纹间距的因素</h3>
+    <ul>
+      <li><strong>波长 λ 越大</strong>（红光 > 绿光 > 蓝光），条纹间距越大</li>
+      <li><strong>双缝间距 d 越小</strong>，条纹间距越大</li>
+      <li><strong>缝屏距 L 越大</strong>，条纹间距越大</li>
+    </ul>
+
+    <h3>注意事项</h3>
+    <ul>
+      <li>双缝必须平行且等间距</li>
+      <li>分划线对准明纹中央，不是边缘</li>
+      <li>多测几条明纹取平均，减小误差</li>
+      <li>改变 d 或 L 后条纹间距会变化</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== CONSTANTS =====
+const FILTERS = {
+  red:   { color: '#EF4444', lambda: 632, name: '红光 632nm', rgb: [239,68,68] },
+  green: { color: '#22C55E', lambda: 532, name: '绿光 532nm', rgb: [34,197,94] },
+  blue:  { color: '#3B82F6', lambda: 470, name: '蓝光 470nm', rgb: [59,130,246] }
+};
+
+const SCREEN_Y_TOP = 55;   // fringe area top in SVG (within screenGroup)
+const SCREEN_H = 200;      // fringe area height px
+const SCREEN_MID = SCREEN_Y_TOP + SCREEN_H / 2; // midpoint in canvas coords (55+100=155)
+const SCREEN_X = 520;      // fringe x position
+const FRINGE_W = 10;       // width of each fringe rect
+const NUM_ORDERS = 5;      // ±5 orders = 11 fringes
+const SNAP_PX = 3;         // crosshair snap proximity
+
+// Physics
+const MM_PER_PX = 0.05;    // 1px = 0.05mm on screen for measurement
+
+const state = {
+  filter: 'red',
+  d: 0.2,    // mm
+  L: 80.0,   // cm
+  crossY: 155, // crosshair Y in SVG coords
+  records: [],  // {order, position_mm}
+  screenX: 520
+};
+
+// ===== FRINGE RENDERING =====
+function fringeSpacingPx() {
+  const f = FILTERS[state.filter];
+  // Δx = λL/d (all in mm): λ in nm=1e-6mm, L in cm=10mm, d in mm
+  const dx_mm = (f.lambda * 1e-6) * (state.L * 10) / state.d;
+  return dx_mm / MM_PER_PX; // convert to px
+}
+
+function renderFringes() {
+  const g = $('fringeArea');
+  g.innerHTML = '';
+  const f = FILTERS[state.filter];
+  const spacingPx = fringeSpacingPx();
+  const midY = SCREEN_H / 2; // center of fringe area (relative)
+
+  // Render 11 fringes (0, ±1..±5)
+  for (let n = -NUM_ORDERS; n <= NUM_ORDERS; n++) {
+    const y = midY + n * spacingPx;
+    if (y < -10 || y > SCREEN_H + 10) continue;
+
+    // Intensity: sinc² envelope (simplified)
+    const envelope = n === 0 ? 1 : Math.pow(Math.sin(Math.PI * 0.3 * n) / (Math.PI * 0.3 * n), 2);
+    const opacity = Math.max(0.1, 0.95 * envelope);
+
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('x', '0');
+    rect.setAttribute('y', (y - spacingPx * 0.35).toFixed(1));
+    rect.setAttribute('width', FRINGE_W);
+    rect.setAttribute('height', (spacingPx * 0.7).toFixed(1));
+    rect.setAttribute('rx', '1');
+    rect.setAttribute('fill', f.color);
+    rect.setAttribute('opacity', opacity.toFixed(2));
+    g.appendChild(rect);
+  }
+
+  // Order labels
+  const ol = $('orderLabels');
+  ol.innerHTML = '';
+  for (let n = -NUM_ORDERS; n <= NUM_ORDERS; n++) {
+    const y = SCREEN_MID + n * spacingPx;
+    if (y < 50 || y > 260) continue;
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', '508');
+    t.setAttribute('y', (y + 2).toFixed(1));
+    t.setAttribute('font-size', '5');
+    t.setAttribute('fill', '#6B7280');
+    t.setAttribute('text-anchor', 'end');
+    t.textContent = n === 0 ? '0' : (n > 0 ? `+${n}` : `${n}`);
+    ol.appendChild(t);
+  }
+
+  // Update filter visual
+  $('filterRect').setAttribute('fill', f.color);
+
+  // Update light rays color
+  $('lightRays').querySelectorAll('line').forEach(l => l.setAttribute('stroke', f.color));
+}
+
+// ===== FILTER =====
+function setFilter(name) {
+  state.filter = name;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === name);
+  });
+  const f = FILTERS[name];
+  $('filterName').textContent = f.name;
+  $('filterName').style.color = f.color;
+  renderFringes();
+  updateResult();
+}
+
+// ===== SLIT D =====
+function setSlitD(val) {
+  state.d = parseFloat(val);
+  $('dispD').textContent = state.d.toFixed(2);
+  $('dLabel').textContent = `d=${state.d}mm`;
+  renderFringes();
+  updateResult();
+}
+
+// ===== SCREEN DRAG (L adjust) =====
+let draggingScreen = false;
+
+$('screenHandle').addEventListener('pointerdown', e => {
+  draggingScreen = true;
+  e.preventDefault();
+});
+
+document.addEventListener('pointermove', e => {
+  if (draggingScreen) {
+    const svg = $('canvas');
+    const rect = svg.getBoundingClientRect();
+    const vb = svg.viewBox.baseVal;
+    const svgX = (e.clientX - rect.left) / rect.width * vb.width;
+
+    // L range: 60-100cm mapped to screen X 400-600
+    const newX = Math.max(400, Math.min(600, svgX));
+    const L = 60 + (newX - 400) / 200 * 40;
+    state.L = Math.round(L * 10) / 10;
+    state.screenX = newX;
+
+    // Move screen group
+    const dx = newX - 520;
+    $('screenGroup').setAttribute('transform', `translate(${dx},0)`);
+    // Move crosshair
+    $('crosshair').querySelectorAll('line')[0].setAttribute('x1', newX - 4);
+    $('crosshair').querySelectorAll('line')[0].setAttribute('x2', newX + 14);
+    $('crosshair').querySelectorAll('line')[1].setAttribute('x1', newX + 5);
+    $('crosshair').querySelectorAll('line')[1].setAttribute('x2', newX + 5);
+
+    $('dispL').textContent = state.L.toFixed(1);
+    $('lLabel').textContent = `L = ${state.L.toFixed(1)} cm`;
+
+    // Update L line endpoint
+    const lLine = $('canvas').querySelectorAll('line');
+
+    renderFringes();
+    updateResult();
+    e.preventDefault();
+  }
+
+  if (draggingCross) {
+    const svg = $('canvas');
+    const rect = svg.getBoundingClientRect();
+    const vb = svg.viewBox.baseVal;
+    const svgY = (e.clientY - rect.top) / rect.height * vb.height;
+
+    let newY = Math.max(55, Math.min(255, svgY));
+
+    // Snap to nearest fringe
+    const spacingPx = fringeSpacingPx();
+    for (let n = -NUM_ORDERS; n <= NUM_ORDERS; n++) {
+      const fringeY = SCREEN_MID + n * spacingPx;
+      if (Math.abs(newY - fringeY) < SNAP_PX) {
+        newY = fringeY;
+        break;
+      }
+    }
+
+    state.crossY = newY;
+    updateCrosshair();
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('pointerup', () => {
+  draggingScreen = false;
+  draggingCross = false;
+});
+
+// ===== CROSSHAIR DRAG =====
+let draggingCross = false;
+
+$('crosshair').addEventListener('pointerdown', e => {
+  draggingCross = true;
+  e.preventDefault();
+});
+
+function updateCrosshair() {
+  const y = state.crossY;
+  $('crossH').setAttribute('y1', y);
+  $('crossH').setAttribute('y2', y);
+  $('crossV').setAttribute('y1', y - 10);
+  $('crossV').setAttribute('y2', y + 10);
+  $('crosshair').querySelector('rect').setAttribute('y', y - 15);
+
+  // Position in mm (relative to center)
+  const posMm = (y - SCREEN_MID) * MM_PER_PX;
+  $('crossLabel').setAttribute('y', y + 3);
+  $('crossLabel').textContent = posMm.toFixed(2) + ' mm';
+  $('digitalRead').textContent = posMm.toFixed(2);
+  $('dispPos').textContent = posMm.toFixed(2);
+}
+
+// ===== RECORD =====
+function recordData() {
+  const spacingPx = fringeSpacingPx();
+  const posMm = (state.crossY - SCREEN_MID) * MM_PER_PX;
+
+  // Determine nearest order
+  let nearestOrder = 0;
+  let minDist = Infinity;
+  for (let n = -NUM_ORDERS; n <= NUM_ORDERS; n++) {
+    const fringeY = SCREEN_MID + n * spacingPx;
+    const dist = Math.abs(state.crossY - fringeY);
+    if (dist < minDist) {
+      minDist = dist;
+      nearestOrder = n;
+    }
+  }
+
+  // Check if not on a fringe (too far)
+  if (minDist > spacingPx * 0.4) return;
+
+  // Check duplicate order
+  if (state.records.some(r => r.order === nearestOrder)) return;
+
+  // ±0.5% error on position, generated once per record
+  const err = 1 + (Math.random() - 0.5) * 0.01;
+  const measPos = posMm * err;
+
+  state.records.push({ order: nearestOrder, position: measPos });
+  state.records.sort((a, b) => a.order - b.order);
+
+  renderTable();
+  updateResult();
+}
+
+function renderTable() {
+  const tbody = $('dataBody');
+  tbody.innerHTML = '';
+  state.records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i + 1}</td><td>${r.order >= 0 ? '+' : ''}${r.order}</td><td>${r.position.toFixed(2)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== RESULT CALCULATION =====
+function updateResult() {
+  if (state.records.length < 2) {
+    $('resultSection').style.display = 'none';
+    return;
+  }
+  $('resultSection').style.display = 'block';
+
+  // Δx = (x_n - x_1) / (n-1) average spacing
+  const sorted = [...state.records].sort((a, b) => a.order - b.order);
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  const orderSpan = last.order - first.order;
+  if (orderSpan === 0) return;
+
+  const avgDx = (last.position - first.position) / orderSpan;
+
+  // λ = Δx * d / L (Δx in mm, d in mm, L in cm → convert L to mm)
+  const lambda_mm = avgDx * state.d / (state.L * 10);
+  const lambda_nm = lambda_mm * 1e6;
+
+  const stdLambda = FILTERS[state.filter].lambda;
+  const errPct = Math.abs(lambda_nm - stdLambda) / stdLambda * 100;
+
+  $('resAvgDx').textContent = avgDx.toFixed(3);
+  $('resLambda').textContent = lambda_nm.toFixed(0);
+  $('resStd').textContent = stdLambda;
+  $('resErr').textContent = errPct.toFixed(1);
+  $('resErr').style.color = errPct < 5 ? '#059669' : '#D97706';
+}
+
+// ===== CLEAR / RESET =====
+function clearRecords() {
+  state.records = [];
+  renderTable();
+  $('resultSection').style.display = 'none';
+}
+
+function resetAll() {
+  state.filter = 'red';
+  state.d = 0.2;
+  state.L = 80.0;
+  state.crossY = SCREEN_MID;
+  state.records = [];
+  state.screenX = 520;
+
+  $('screenGroup').setAttribute('transform', '');
+  $('selD').value = '0.2';
+  setFilter('red');
+  setSlitD('0.2');
+  updateCrosshair();
+  renderTable();
+  $('resultSection').style.display = 'none';
+  $('dispL').textContent = '80.0';
+  $('lLabel').textContent = 'L = 80.0 cm';
+  $('statusBadge').textContent = '选择滤光片 · 拖光屏调 L · 拖分划线对准明纹';
+  $('statusBadge').className = 'status-badge idle';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: '\\Delta x = \\frac{\\lambda L}{d}' },
+    { id: 'formula2', tex: '\\lambda = \\frac{\\Delta x \\cdot d}{L}' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+renderFringes();
+updateCrosshair();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
