@@ -348,11 +348,12 @@ function onPointerMove(e) {
     const rawDefl = (state.currentVelocity / 300) * MAX_DEFLECTION;
     deflection = Math.max(-MAX_DEFLECTION, Math.min(MAX_DEFLECTION, rawDefl));
 
-    // Apply Lenz's law direction
-    // N right + moving right (inserting) → Φ increases → oppose → right deflection
-    // N right + moving left (extracting) → Φ decreases → same → left deflection
-    // Flip for S
-    if (!state.nRight) deflection = -deflection;
+    // Apply Lenz's law: determine facing pole + approach direction
+    const mc = state.magnetX + MAGNET_W / 2;
+    const fl = mc < COIL_CENTER;
+    const fp = fl ? (state.nRight ? 'N' : 'S') : (state.nRight ? 'S' : 'N');
+    if (fp === 'S') deflection = -deflection;
+    if (!fl) deflection = -deflection;
   }
 
   state.needleAngle = deflection;
@@ -369,19 +370,28 @@ function onPointerUp(e) {
   state.dragging = false;
   magnetGroup.style.cursor = 'grab';
 
-  // Record case
+  // Record case — determine by which pole faces coil + approach direction
   const inside = isMagnetInside();
   const pastCenter = isMagnetPastCenter();
+  const magnetCenter = state.magnetX + MAGNET_W / 2;
+  const fromLeft = magnetCenter < COIL_CENTER;
   const movingRight = state.currentVelocity > 20;
   const movingLeft = state.currentVelocity < -20;
 
-  if (state.nRight) {
-    if (pastCenter && movingRight) recordCase('nIn', 'N 极插入', '右偏', 'Φ↑ 增反');
-    if (!inside && movingLeft) recordCase('nOut', 'N 极抽出', '左偏', 'Φ↓ 减同');
+  // Which pole faces the coil opening?
+  let facingPole;
+  if (fromLeft) {
+    facingPole = state.nRight ? 'N' : 'S'; // right side of magnet → coil
   } else {
-    if (pastCenter && movingRight) recordCase('sIn', 'S 极插入', '左偏', 'Φ↑ 增反');
-    if (!inside && movingLeft) recordCase('sOut', 'S 极抽出', '右偏', 'Φ↓ 减同');
+    facingPole = state.nRight ? 'S' : 'N'; // left side of magnet → coil
   }
+  // Moving toward coil = inserting
+  const inserting = (fromLeft && movingRight) || (!fromLeft && movingLeft);
+
+  if (facingPole === 'N' && inserting && pastCenter) recordCase('nIn', 'N 极插入', '右偏', 'Φ↑ 增反');
+  if (facingPole === 'N' && !inserting && !inside) recordCase('nOut', 'N 极抽出', '左偏', 'Φ↓ 减同');
+  if (facingPole === 'S' && inserting && pastCenter) recordCase('sIn', 'S 极插入', '左偏', 'Φ↑ 增反');
+  if (facingPole === 'S' && !inserting && !inside) recordCase('sOut', 'S 极抽出', '右偏', 'Φ↓ 减同');
 
   // Damping oscillation back to zero
   startDamping(state.needleAngle);
@@ -441,14 +451,6 @@ function flipMagnet() {
 
   // Swap colors visually
   if (state.nRight) {
-    $('magnetN').setAttribute('x', '120'); $('magnetN').querySelector ? 0 : 0;
-    $('magnetS').setAttribute('x', '70');
-    $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
-    $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
-    // Re-render N/S text positions
-  } else {
-    $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
-    $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
   }
 
   // Simple approach: swap the text content of the two halves
