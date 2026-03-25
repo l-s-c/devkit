@@ -88,7 +88,7 @@
         </g>
 
         <!-- SWITCH -->
-        <g id="switchGroup" style="cursor:pointer">
+        <g id="switchGroup" class="switch-toggle" style="cursor:pointer">
           <rect x="220" y="38" width="70" height="24" rx="3" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="0.8"/>
           <circle cx="235" cy="50" r="3" fill="#D97706" stroke="#92400E" stroke-width="0.5"/>
           <circle cx="275" cy="50" r="3" fill="#D97706" stroke="#92400E" stroke-width="0.5"/>
@@ -193,6 +193,9 @@
         </div>
         <div style="display:flex;gap:6px;margin-top:4px">
           <div class="reading-card"><div class="label">电阻 R</div><div class="val" id="dispR">—</div><div class="unit">Ω</div></div>
+          <div class="reading-card"><div class="label">功率 P</div><div class="val" id="dispP">0.000</div><div class="unit">W</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
           <div class="reading-card"><div class="label">灯泡</div><div class="val" id="dispBulbState" style="font-size:11px">未通电</div></div>
         </div>
       </div>
@@ -211,6 +214,29 @@
             <thead><tr><th>#</th><th>U(V)</th><th>I(A)</th><th>R(Ω)</th></tr></thead>
             <tbody id="dataBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Chart toggle -->
+      <div class="panel-section">
+        <div class="section-title">图表</div>
+        <div style="display:flex;gap:6px;margin-bottom:4px">
+          <label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer">
+            <input type="checkbox" id="chkRU" onchange="toggleRU(this.checked)"> R-U 关系图
+          </label>
+        </div>
+        <div id="ruChartWrap" style="display:none">
+          <div class="chart-box">
+            <svg id="ruChart" viewBox="0 0 240 120" width="100%">
+              <line x1="30" y1="100" x2="230" y2="100" stroke="#374151" stroke-width="1"/>
+              <line x1="30" y1="100" x2="30" y2="10" stroke="#374151" stroke-width="1"/>
+              <text x="130" y="118" font-size="8" fill="#374151" text-anchor="middle">U / V</text>
+              <text x="10" y="55" font-size="8" fill="#374151" text-anchor="middle" transform="rotate(-90,10,55)">R / Ω</text>
+              <g id="ruDots"></g>
+              <path id="ruCurve" d="" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="4,2" opacity="0"/>
+            </svg>
+            <div style="font-size:9px;color:#059669;text-align:center">R 随电压(温度)升高而增大</div>
+          </div>
         </div>
       </div>
 
@@ -481,6 +507,7 @@ function updateCircuit() {
   $('dispU').textContent = state.U.toFixed(2);
   $('dispI').textContent = state.I.toFixed(3);
   $('dispR').textContent = state.U > 0.01 ? state.R.toFixed(1) : '—';
+  $('dispP').textContent = (state.U * state.I).toFixed(3);
 
   // Bulb glow
   updateBulb();
@@ -561,6 +588,7 @@ function recordData() {
   state.records.push({ U: measU, I: measI, R: measR });
   renderTable();
   renderChart();
+  renderRUChart();
   $('btnRecord').disabled = true;
 }
 
@@ -620,6 +648,41 @@ function renderChart() {
     fitPath.setAttribute('opacity', '0');
     note.textContent = state.records.length > 0 ? `已记录 ${state.records.length} 组，≥6 组显示拟合曲线` : '';
     note.style.color = '#6B7280';
+  }
+}
+
+// ===== R-U CHART =====
+function toggleRU(on) {
+  $('ruChartWrap').style.display = on ? 'block' : 'none';
+  if (on) renderRUChart();
+}
+
+function renderRUChart() {
+  const dots = $('ruDots');
+  dots.innerHTML = '';
+  const R_MAX = 16;
+  state.records.forEach(r => {
+    const x = 30 + (r.U / U_MAX) * 200;
+    const y = 100 - (r.R / R_MAX) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y);
+    c.setAttribute('r', '3'); c.setAttribute('fill','#059669');
+    dots.appendChild(c);
+  });
+
+  const curve = $('ruCurve');
+  if (state.records.length >= 6) {
+    let d = '';
+    for (let u = 0.1; u <= 4.5; u += 0.05) {
+      const R = R0 + K_COEFF * Math.pow(u, 1.2);
+      const x = 30 + (u / U_MAX) * 200;
+      const y = 100 - (R / R_MAX) * 90;
+      d += (d ? ' L' : 'M') + `${x.toFixed(1)},${y.toFixed(1)}`;
+    }
+    curve.setAttribute('d', d);
+    curve.setAttribute('opacity', '0.8');
+  } else {
+    curve.setAttribute('opacity', '0');
   }
 }
 
