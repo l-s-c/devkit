@@ -451,8 +451,8 @@ document.addEventListener('pointermove', e => {
   const svg = $('canvas');
   const rect = svg.getBoundingClientRect();
   const x = (e.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width;
-  // Drag left = increase measurement (thimble moves left, spindle extends)
-  const dx = dragStartX - x;
+  // Drag right = increase measurement (clockwise rotation = spindle extends)
+  const dx = x - dragStartX;
   const dmm = dx / PX_PER_MM;
 
   state.displayMM = Math.max(0, Math.min(MAX_MM, dragStartMM + dmm));
