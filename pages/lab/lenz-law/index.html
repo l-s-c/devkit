@@ -492,7 +492,9 @@ function updateStatus() {
   }
 
   const movingRight = v > 0;
-  const inserting = (state.nRight && movingRight) || (!state.nRight && movingRight);
+  const magnetCenter = state.magnetX + MAGNET_W / 2;
+  const fromLeft = magnetCenter < COIL_CENTER;
+  const inserting = (fromLeft && movingRight) || (!fromLeft && !movingRight);
   const phiChange = inserting ? '增大' : '减小';
   const phiArrow = inserting ? '↑' : '↓';
   const direction = movingRight ? '向右' : '向左';
