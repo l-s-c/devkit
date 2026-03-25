@@ -429,24 +429,30 @@ function setupGridInteraction() {
       rect.setAttribute('cursor', 'pointer');
       rect.setAttribute('data-key', `${r},${c}`);
 
-      // Single click = full, double click = half, click again = remove
+      // 300ms delay to distinguish single click vs double click
+      let clickTimer = null;
       rect.addEventListener('click', () => {
-        const key = `${r},${c}`;
-        const cur = state.gridCells[key];
-        if (!cur) {
-          state.gridCells[key] = 'full';
-          rect.setAttribute('fill', '#059669');
-          rect.setAttribute('fill-opacity', '0.3');
-        } else if (cur === 'full') {
-          delete state.gridCells[key];
-          rect.setAttribute('fill', 'transparent');
-          rect.setAttribute('fill-opacity', '1');
-        }
-        updateCountDisplay();
+        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; return; }
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          const key = `${r},${c}`;
+          const cur = state.gridCells[key];
+          if (!cur) {
+            state.gridCells[key] = 'full';
+            rect.setAttribute('fill', '#059669');
+            rect.setAttribute('fill-opacity', '0.3');
+          } else {
+            delete state.gridCells[key];
+            rect.setAttribute('fill', 'transparent');
+            rect.setAttribute('fill-opacity', '1');
+          }
+          updateCountDisplay();
+        }, 300);
       });
 
       rect.addEventListener('dblclick', e => {
         e.preventDefault();
+        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
         const key = `${r},${c}`;
         state.gridCells[key] = 'half';
         rect.setAttribute('fill', '#CA8A04');
