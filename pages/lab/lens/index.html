@@ -436,6 +436,12 @@ window.addEventListener('load', () => {
   </div>
 </div>
 </div>
-<script src="/shared/theme.js"></script>
+<script src="/shared/theme.js">
+(function tryKatex(n) {
+  if (!window.katex && n < 50) { setTimeout(() => tryKatex(n + 1), 100); return; }
+  var fd = document.getElementById('formula-display');
+  if (window.katex && fd) katex.render('\dfrac{1}{f} = \dfrac{1}{u} + \dfrac{1}{v}', fd, {throwOnError:false});
+})(0);
+</script>
 </body>
 </html>

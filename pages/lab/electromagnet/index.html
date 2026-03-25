@@ -295,6 +295,12 @@ function getMaxClips() {
   return 6;
 }
 
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
 // ===== INIT CLIPS =====
 function initClips() {
   clipStates = [];

@@ -850,7 +850,12 @@
     });
   });
 </script>
-<script src="/shared/theme.js"></script>
+<script src="/shared/theme.js">
+(function tryKatex(n) {
+  if (window.katex) { renderFormula(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
 
 <div class="knowledge-section">
 <div class="knowledge-card">

@@ -413,6 +413,11 @@ function renderFormulas(){
   if(el&&window.katex)katex.render('F = \\frac{G}{n}',el,{throwOnError:false,displayMode:true});
 }
 </script>
-<script src="/shared/theme.js"></script>
+<script src="/shared/theme.js">
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
 </body>
 </html>

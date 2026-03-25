@@ -415,6 +415,11 @@ function renderFormulas() {
 }
 
 render();
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
 </script>
 </body>
 </html>

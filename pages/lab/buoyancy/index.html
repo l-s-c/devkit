@@ -599,6 +599,11 @@ updateDisplay();
 renderFormulas();
 if (localStorage.getItem('buoy2-guide-seen')) { const g2 = document.getElementById('guideOverlay'); if(g2) g2.style.display='none'; } else { localStorage.setItem('buoy2-guide-seen','1'); }
 </script>
-<script src="/shared/theme.js"></script>
+<script src="/shared/theme.js">
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
 </body>
 </html>
