@@ -259,6 +259,7 @@ const ELEMENTS = [
   { id: 'r_100', label: '100Ω', value: 100, type: 'resistance', unit: 'Ω', colors: ['棕','黑','棕','金'] },
   { id: 'r_1k', label: '1kΩ', value: 1000, type: 'resistance', unit: 'Ω', colors: ['棕','黑','红','金'] },
   { id: 'r_10k', label: '10kΩ', value: 10000, type: 'resistance', unit: 'Ω', colors: ['棕','黑','橙','金'] },
+  { id: 'bulb_circuit', label: '灯泡电路 0.3A', value: 0.3, type: 'current', unit: 'A' },
 ];
 
 const COLOR_MAP = {'棕':'#92400E','黑':'#1F2937','红':'#DC2626','橙':'#EA580C','金':'#D97706'};
@@ -271,6 +272,7 @@ const state = {
   zeroed: false,
   zeroOffset: 0.15, // +15% unzeroed bias
   zeroKnobAngle: 0,
+  measError: 1, // ±2% random error, generated once on selectElement
   records: []
 };
 
@@ -295,7 +297,7 @@ function drawOhmScale() {
   g.innerHTML = '';
   // Ohm scale: right=0Ω (frac=1), left=∞ (frac=0)
   // Non-linear: frac = Rg/(Rg+R), where Rg = center resistance
-  const Rg = 25; // internal resistance for angle mapping
+  const Rg = 15; // base internal resistance for ×1 scale drawing
   const ohmMarks = [
     { R: 0, label: '0' }, { R: 0.5, label: '' }, { R: 1, label: '1' },
     { R: 2, label: '2' }, { R: 3, label: '' }, { R: 5, label: '5' },
@@ -508,6 +510,7 @@ function selectRange(idx) {
 function selectElement(idx) {
   state.elemIdx = idx;
   state.contacted = true;
+  state.measError = 1 + (Math.random() - 0.5) * 0.04; // ±2% once per contact
   updateDisplay();
   initElemBtns();
   drawElements();
@@ -580,8 +583,8 @@ function calcNeedleAngle() {
 
   if (range.type === 'ohm') {
     if (elem.type !== 'resistance') return NEEDLE_MIN_ANGLE;
-    const R = elem.value / range.multiplier; // scale to base range
-    const Rg = 25;
+    const Rg = 15 * range.multiplier; // center-scale R: ×1→15Ω, ×10→150Ω, ×100→1500Ω, ×1k→15kΩ
+    const R = elem.value; // actual resistance
     let frac = Rg / (Rg + R);
     // Apply zero offset if not zeroed
     if (!state.zeroed) frac = Math.max(0, frac - state.zeroOffset);
@@ -590,6 +593,12 @@ function calcNeedleAngle() {
 
   if (range.type === 'dcv') {
     if (elem.type !== 'voltage') return NEEDLE_MIN_ANGLE;
+    const frac = Math.min(elem.value / range.max, 1);
+    return angleForFrac(frac);
+  }
+
+  if (range.type === 'dca') {
+    if (elem.type !== 'current') return NEEDLE_MIN_ANGLE;
     const frac = Math.min(elem.value / range.max, 1);
     return angleForFrac(frac);
   }
@@ -604,13 +613,26 @@ function calcReading() {
   const elem = ELEMENTS[state.elemIdx];
 
   if (range.type === 'ohm' && elem.type === 'resistance') {
-    let reading = elem.value;
+    let reading = elem.value * state.measError;
     if (!state.zeroed) reading *= (1 + state.zeroOffset);
-    return { value: reading, unit: 'Ω', display: reading >= 1000 ? (reading/1000).toFixed(1)+'k' : reading.toFixed(0) };
+    const dialVal = reading / range.multiplier;
+    const displayDial = dialVal >= 100 ? dialVal.toFixed(0) : dialVal >= 10 ? dialVal.toFixed(1) : dialVal.toFixed(2);
+    const displayFull = reading >= 1000 ? (reading/1000).toFixed(1)+'kΩ' : reading.toFixed(0)+'Ω';
+    return { value: reading, unit: 'Ω', display: `${displayDial}×${range.multiplier} = ${displayFull}` };
   }
 
   if (range.type === 'dcv' && elem.type === 'voltage') {
-    return { value: elem.value, unit: 'V', display: elem.value.toFixed(2) };
+    const v = elem.value * state.measError;
+    return { value: v, unit: 'V', display: v.toFixed(2) };
+  }
+
+  if (range.type === 'dca' && elem.type === 'current') {
+    const a = elem.value * state.measError;
+    let display;
+    if (a < 0.001) display = (a * 1e6).toFixed(1) + 'μ';
+    else if (a < 1) display = (a * 1000).toFixed(2) + 'm';
+    else display = a.toFixed(3);
+    return { value: a, unit: 'A', display };
   }
 
   // Mismatch (measuring voltage with ohm etc)
@@ -622,7 +644,7 @@ function checkRange() {
   const reading = calcReading();
   if (!reading || reading.mismatch) return '';
 
-  if (range.type === 'dcv') {
+  if (range.type === 'dcv' || range.type === 'dca') {
     const frac = reading.value / range.max;
     if (frac < 1/3) return 'too-low';
     if (frac > 1) return 'over';
@@ -630,8 +652,8 @@ function checkRange() {
 
   if (range.type === 'ohm') {
     // For ohm, check needle deflection
-    const Rg = 25;
-    const R = reading.value / range.multiplier;
+    const Rg = 15 * range.multiplier;
+    const R = reading.value;
     const frac = Rg / (Rg + R);
     if (frac < 0.15) return 'too-low'; // near ∞
     if (frac > 0.85) return 'too-high'; // near 0
