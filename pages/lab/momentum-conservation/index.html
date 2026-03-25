@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>验证动量守恒定律 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="动量守恒定律, 气垫导轨, 光电门, 碰撞, 弹性碰撞, 完全非弹性碰撞, 高中物理">
+<meta name="description" content="气垫导轨上双滑块碰撞，光电门测速，验证碰撞前后动量守恒">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#059669;--lab-accent-bg:#ECFDF5;--lab-accent-border:#A7F3D0}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.record-btn{padding:4px 12px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.record-btn:hover{opacity:0.9}
+.record-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.toggle-row{display:flex;gap:6px;align-items:center;font-size:11px}
+.toggle-btn{padding:3px 10px;border-radius:4px;border:1px solid #D1D5DB;background:#fff;font-size:11px;cursor:pointer;transition:all .15s}
+.toggle-btn.active{background:var(--lab-accent);color:#fff;border-color:var(--lab-accent)}
+.momentum-card{border-radius:8px;padding:8px;background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border)}
+.momentum-card .mc-title{font-size:10px;font-weight:700;color:var(--lab-accent);margin-bottom:4px}
+.momentum-card .mc-row{display:flex;justify-content:space-between;font-size:12px;font-family:'JetBrains Mono',monospace}
+.momentum-card .mc-label{font-size:10px;color:#6B7280}
+.momentum-card .mc-err{font-size:11px;font-weight:700;text-align:center;margin-top:4px}
+.mc-err.good{color:#059669}
+.mc-err.warn{color:#D97706}
+.mc-err.bad{color:#DC2626}
+.slider1-color{color:#DC2626}
+.slider2-color{color:#2563EB}
+.gate-flash{animation:gflash .15s ease 3}
+@keyframes gflash{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>验证动量守恒定律</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>动量守恒 · 气垫导轨 · 光电门测速 · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖砝码片到滑块调质量 · 拖红色滑块压弹簧 · 松手释放</div>
+      <svg id="canvas" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="trackGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="40%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="slider1Grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F87171"/><stop offset="50%" stop-color="#DC2626"/><stop offset="100%" stop-color="#B91C1C"/></linearGradient>
+          <linearGradient id="slider2Grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA"/><stop offset="50%" stop-color="#2563EB"/><stop offset="100%" stop-color="#1D4ED8"/></linearGradient>
+          <linearGradient id="springYellow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F59E0B"/><stop offset="50%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient>
+          <linearGradient id="gateGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <radialGradient id="weightMetal" cx="50%" cy="30%" r="60%"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#6B7280"/></radialGradient>
+        </defs>
+
+        <!-- Background -->
+        <rect x="0" y="0" width="760" height="340" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect x="0" y="0" width="760" height="340" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- Air track -->
+        <g id="airTrack">
+          <!-- Track body -->
+          <rect x="40" y="200" width="680" height="20" rx="3" fill="url(#trackGrad)" stroke="#6B7280" stroke-width="0.5"/>
+          <!-- Air holes -->
+          <g id="airHoles" fill="#9CA3AF" opacity="0.5"></g>
+          <!-- Scale marks -->
+          <g id="scaleMarks" font-size="7" fill="#6B7280" text-anchor="middle"></g>
+          <!-- Left buffer -->
+          <rect x="40" y="195" width="8" height="30" rx="2" fill="#4B5563"/>
+          <!-- Right buffer -->
+          <rect x="712" y="195" width="8" height="30" rx="2" fill="#4B5563"/>
+          <!-- Legs -->
+          <rect x="100" y="220" width="10" height="40" rx="2" fill="#4B5563"/>
+          <rect x="650" y="220" width="10" height="40" rx="2" fill="#4B5563"/>
+          <rect x="85" y="255" width="40" height="6" rx="2" fill="#374151"/>
+          <rect x="635" y="255" width="40" height="6" rx="2" fill="#374151"/>
+          <!-- Level bubble -->
+          <rect x="360" y="222" width="40" height="10" rx="4" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <circle id="levelBubble" cx="380" cy="227" r="3" fill="#34D399"/>
+        </g>
+
+        <!-- Launch spring -->
+        <g id="launchSpring">
+          <path id="springPath" d="" fill="none" stroke="url(#springYellow)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- Collision zone marker -->
+        <rect id="collisionZone" x="370" y="170" width="4" height="30" rx="1" fill="#FBBF24" opacity="0.4"/>
+
+        <!-- Photogate 1 (left of collision) -->
+        <g id="gate1">
+          <rect x="0" y="155" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
+          <rect x="2" y="148" width="2" height="8" fill="#6B7280"/>
+          <circle cx="3" cy="146" r="3" fill="#4ADE80" id="gate1Light"/>
+          <line id="gate1Laser" x1="3" y1="168" x2="3" y2="210" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+          <text x="3" y="235" font-size="8" fill="#6B7280" text-anchor="middle">门1</text>
+        </g>
+
+        <!-- Photogate 2 (right of collision) -->
+        <g id="gate2">
+          <rect x="0" y="155" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
+          <rect x="2" y="148" width="2" height="8" fill="#6B7280"/>
+          <circle cx="3" cy="146" r="3" fill="#4ADE80" id="gate2Light"/>
+          <line id="gate2Laser" x1="3" y1="168" x2="3" y2="210" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+          <text x="3" y="235" font-size="8" fill="#6B7280" text-anchor="middle">门2</text>
+        </g>
+
+        <!-- Slider 1 (red) -->
+        <g id="slider1" cursor="grab">
+          <rect class="slider-body" x="-25" y="175" width="50" height="25" rx="3" fill="url(#slider1Grad)" stroke="#991B1B" stroke-width="0.5"/>
+          <!-- Flag/light blocker -->
+          <rect class="flag" x="-1" y="160" width="2" height="15" fill="#DC2626"/>
+          <rect class="flag-top" x="-4" y="157" width="8" height="5" rx="1" fill="#DC2626"/>
+          <!-- d label -->
+          <text x="0" y="155" font-size="6" fill="#DC2626" text-anchor="middle">d</text>
+          <!-- Mass label -->
+          <text class="mass-label" x="0" y="191" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
+          <!-- Weights stack -->
+          <g class="weights1"></g>
+          <!-- Collision face -->
+          <rect class="face" x="24" y="177" width="3" height="21" rx="1" fill="#F59E0B"/>
+        </g>
+
+        <!-- Slider 2 (blue) -->
+        <g id="slider2">
+          <rect class="slider-body" x="-25" y="175" width="50" height="25" rx="3" fill="url(#slider2Grad)" stroke="#1E40AF" stroke-width="0.5"/>
+          <rect class="flag" x="-1" y="160" width="2" height="15" fill="#2563EB"/>
+          <rect class="flag-top" x="-4" y="157" width="8" height="5" rx="1" fill="#2563EB"/>
+          <text x="0" y="155" font-size="6" fill="#2563EB" text-anchor="middle">d</text>
+          <text class="mass-label" x="0" y="191" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
+          <g class="weights2"></g>
+          <rect class="face" x="-27" y="177" width="3" height="21" rx="1" fill="#F59E0B"/>
+        </g>
+
+        <!-- Weight box -->
+        <g id="weightBox">
+          <rect x="580" y="10" width="160" height="50" rx="6" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="1"/>
+          <text x="660" y="22" font-size="8" fill="#6B7280" text-anchor="middle">砝码片 (50g/片)</text>
+          <g id="weightSlots"></g>
+        </g>
+
+        <!-- Velocity arrows (shown after collision) -->
+        <g id="velocityArrows" opacity="0"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>从砝码盒<strong>拖砝码片</strong>到滑块上调质量</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>选择<strong>碰撞类型</strong>（弹性/完全非弹性）</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span><strong>拖红色滑块</strong>向左压弹簧</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span><strong>松手释放</strong>，观察碰撞过程</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>读取光电门数据，<strong>记录</strong>实验数据</span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>改变质量组合，<strong>多次实验</strong>验证</span></div>
+      </div>
+
+      <!-- Collision type toggle -->
+      <div class="panel-section">
+        <div class="section-title">碰撞类型</div>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="btnElastic" onclick="setCollisionType('elastic')">弹性碰撞</button>
+          <button class="toggle-btn" id="btnInelastic" onclick="setCollisionType('inelastic')">完全非弹性</button>
+        </div>
+        <div style="font-size:10px;color:#6B7280;margin-top:4px" id="collisionDesc">弹簧片：碰后分离，动能守恒</div>
+      </div>
+
+      <!-- Parameters -->
+      <div class="panel-section">
+        <div class="section-title">实验参数</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">滑块1 <span class="slider1-color">m₁</span></div><div class="val slider1-color" id="dispM1">200</div><div class="unit">g</div></div>
+          <div class="reading-card"><div class="label">滑块2 <span class="slider2-color">m₂</span></div><div class="val slider2-color" id="dispM2">200</div><div class="unit">g</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">挡光片宽</div><div class="val" id="dispD">1.00</div><div class="unit">cm</div></div>
+          <div class="reading-card"><div class="label">状态</div><div class="val" id="dispState" style="font-size:12px;color:#059669">就绪</div></div>
+        </div>
+      </div>
+
+      <!-- Gate data -->
+      <div class="panel-section">
+        <div class="section-title">光电门数据</div>
+        <div style="font-size:10px;color:#6B7280;margin-bottom:4px">碰前（门1记录）</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">Δt₁</div><div class="val" id="dispDt1">—</div><div class="unit">ms</div></div>
+          <div class="reading-card"><div class="label">v₁ →</div><div class="val slider1-color" id="dispV1">—</div><div class="unit">m/s</div></div>
+        </div>
+        <div style="font-size:10px;color:#6B7280;margin:4px 0">碰后</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">Δt₁'(门1)</div><div class="val" id="dispDt1p">—</div><div class="unit">ms</div></div>
+          <div class="reading-card"><div class="label" id="labelV1p">v₁' ←</div><div class="val slider1-color" id="dispV1p">—</div><div class="unit">m/s</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">Δt₂'(门2)</div><div class="val" id="dispDt2p">—</div><div class="unit">ms</div></div>
+          <div class="reading-card"><div class="label">v₂' →</div><div class="val slider2-color" id="dispV2p">—</div><div class="unit">m/s</div></div>
+        </div>
+      </div>
+
+      <!-- Momentum verification -->
+      <div class="panel-section">
+        <div class="section-title">动量验证</div>
+        <div class="momentum-card">
+          <div class="mc-title">碰撞前后动量对比</div>
+          <div class="mc-row"><span class="mc-label">p前 = m₁v₁ + m₂v₂</span><span id="dispPBefore">—</span></div>
+          <div class="mc-row" style="margin-top:2px"><span class="mc-label">p后 = m₁v₁' + m₂v₂'</span><span id="dispPAfter">—</span></div>
+          <div class="mc-err" id="dispError">—</div>
+        </div>
+      </div>
+
+      <!-- Record -->
+      <div class="panel-section">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="section-title" style="margin:0">数据记录</div>
+          <div style="display:flex;gap:4px">
+            <button class="record-btn" id="btnRecord" onclick="recordData()" disabled>记录</button>
+            <button class="record-btn" onclick="resetExperiment()" style="background:#6B7280">重置</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;margin-top:6px">
+          <table class="data-table" id="dataTable">
+            <thead><tr>
+              <th>#</th><th>类型</th><th>m₁(g)</th><th>m₂(g)</th>
+              <th>v₁</th><th>v₁'</th><th>v₂'</th>
+              <th>p前</th><th>p后</th><th>Δ%</th>
+            </tr></thead>
+            <tbody id="dataBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge section -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>动量守恒定律：如果一个系统不受外力或所受外力之和为零，则系统的总动量保持不变。</p>
+    <div class="formula-block" id="formula2"></div>
+    <p>气垫导轨提供近似无摩擦环境，两滑块碰撞前后总动量应守恒。通过光电门测量滑块速度 v = d/Δt（d 为挡光片宽度，Δt 为挡光时间），比较碰前碰后总动量验证定律。</p>
+
+    <h3>弹性碰撞</h3>
+    <div class="formula-block" id="formula3"></div>
+    <p>动量和动能均守恒。碰后两物体分离，速度由质量比决定。当 m₁ = m₂ 时，滑块1 静止（动量完全转移）。</p>
+
+    <h3>完全非弹性碰撞</h3>
+    <div class="formula-block" id="formula4"></div>
+    <p>碰后两物体粘合一起运动，动能损失最大，但动量仍守恒。</p>
+
+    <h3>误差来源</h3>
+    <ul>
+      <li>气垫导轨未完全水平</li>
+      <li>光电门计时精度限制</li>
+      <li>滑块与导轨残余摩擦</li>
+      <li>挡光片宽度测量误差</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== STATE =====
+const D_CM = 1.00; // blocker width cm
+const D_M = D_CM / 100; // in meters
+const BASE_MASS = 200; // grams
+const WEIGHT_MASS = 50; // grams per weight
+const MAX_WEIGHTS_PER_SLIDER = 6;
+const SPRING_REST_X = 80; // track-relative x for spring rest
+const PX_PER_CM = 6.8; // scale: track 680px = 100cm
+const TRACK_LEFT = 40;
+const TRACK_RIGHT = 720;
+const TRACK_Y = 200;
+
+// Positions on track (px from left edge of SVG)
+const GATE1_X = 270; // left of collision
+const GATE2_X = 500; // right of collision
+const SLIDER2_INIT_X = 400; // slider2 resting position
+const SPRING_ANCHOR_X = 55; // spring fixed end
+
+const state = {
+  collisionType: 'elastic', // 'elastic' | 'inelastic'
+  weights1: 0,
+  weights2: 0,
+  m1: BASE_MASS,
+  m2: BASE_MASS,
+  // Slider positions (SVG x)
+  s1x: 200,
+  s2x: SLIDER2_INIT_X,
+  // Spring compression
+  springCompressed: false,
+  springDragStartX: 0,
+  draggingSlider1: false,
+  // Animation
+  animating: false,
+  phase: 'ready', // 'ready' | 'compressing' | 'launched' | 'done'
+  v1: 0, v2: 0, // current velocities (px/frame at 60fps)
+  // Measured values (set on collision)
+  meas: null, // { v1, v1p, v2p, dt1, dt1p, dt2p }
+  // Gate flash
+  gate1Flash: 0,
+  gate2Flash: 0,
+  // Velocity arrows
+  showArrows: false,
+  // Weight dragging
+  draggingWeight: null, // { fromBox: true, index: n } or null
+  dragWeightPos: null,
+  boxWeightsUsed: 0,
+  // Inelastic stuck
+  stuck: false,
+  records: []
+};
+
+const $ = id => document.getElementById(id);
+const canvas = $('canvas');
+
+// ===== WEIGHT BOX =====
+function initWeightBox() {
+  const g = $('weightSlots');
+  g.innerHTML = '';
+  const total = MAX_WEIGHTS_PER_SLIDER * 2;
+  for (let i = 0; i < total; i++) {
+    const cx = 596 + (i % 6) * 24;
+    const cy = 42;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', cx);
+    circle.setAttribute('cy', cy);
+    circle.setAttribute('r', 9);
+    circle.setAttribute('fill', i < total - state.boxWeightsUsed ? 'url(#weightMetal)' : '#E5E7EB');
+    circle.setAttribute('stroke', '#6B7280');
+    circle.setAttribute('stroke-width', '0.5');
+    circle.setAttribute('cursor', 'grab');
+    circle.setAttribute('data-wi', i);
+    circle.style.pointerEvents = i < total - state.boxWeightsUsed ? 'auto' : 'none';
+    g.appendChild(circle);
+    // Label
+    if (i < total - state.boxWeightsUsed) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', cx);
+      t.setAttribute('y', cy + 3);
+      t.setAttribute('font-size','7');
+      t.setAttribute('fill','#374151');
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('pointer-events','none');
+      t.textContent = '50';
+      g.appendChild(t);
+    }
+  }
+}
+
+// ===== AIR HOLES & SCALE =====
+function initTrack() {
+  const holes = $('airHoles');
+  holes.innerHTML = '';
+  for (let x = 60; x < 710; x += 10) {
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', 210); c.setAttribute('r', 1);
+    c.setAttribute('fill','#9CA3AF'); c.setAttribute('opacity','0.4');
+    holes.appendChild(c);
+  }
+  const marks = $('scaleMarks');
+  marks.innerHTML = '';
+  for (let cm = 0; cm <= 100; cm += 10) {
+    const x = TRACK_LEFT + cm * PX_PER_CM;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x); line.setAttribute('y1', 218);
+    line.setAttribute('x2', x); line.setAttribute('y2', 222);
+    line.setAttribute('stroke','#6B7280'); line.setAttribute('stroke-width','0.5');
+    marks.appendChild(line);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', x); t.setAttribute('y', 230);
+    t.setAttribute('font-size','6'); t.setAttribute('fill','#9CA3AF'); t.setAttribute('text-anchor','middle');
+    t.textContent = cm;
+    marks.appendChild(t);
+  }
+}
+
+// ===== SPRING DRAWING =====
+function drawSpring(x1, x2) {
+  const coils = 12;
+  const amp = 6;
+  let d = `M${x1},${TRACK_Y + 10}`;
+  const dx = (x2 - x1) / (coils * 2);
+  for (let i = 0; i < coils * 2; i++) {
+    const nx = x1 + dx * (i + 1);
+    const ny = TRACK_Y + 10 + (i % 2 === 0 ? -amp : amp);
+    d += ` L${nx},${ny}`;
+  }
+  d += ` L${x2},${TRACK_Y + 10}`;
+  $('springPath').setAttribute('d', d);
+}
+
+// ===== GATE POSITIONS =====
+function updateGates() {
+  const g1 = $('gate1');
+  const g2 = $('gate2');
+  g1.setAttribute('transform', `translate(${GATE1_X - 3},0)`);
+  g2.setAttribute('transform', `translate(${GATE2_X - 3},0)`);
+}
+
+// ===== SLIDER RENDERING =====
+function renderWeightsOnSlider(gSel, count, color) {
+  gSel.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const cy = 172 - i * 8;
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', 0); c.setAttribute('cy', cy); c.setAttribute('r', 8);
+    c.setAttribute('fill','url(#weightMetal)'); c.setAttribute('stroke', color);
+    c.setAttribute('stroke-width','0.5');
+    gSel.appendChild(c);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', 0); t.setAttribute('y', cy + 3);
+    t.setAttribute('font-size','6'); t.setAttribute('fill','#374151');
+    t.setAttribute('text-anchor','middle'); t.setAttribute('pointer-events','none');
+    t.textContent = '50g';
+    gSel.appendChild(t);
+  }
+}
+
+function renderSliders() {
+  const s1 = $('slider1');
+  const s2 = $('slider2');
+  s1.setAttribute('transform', `translate(${state.s1x},0)`);
+  s2.setAttribute('transform', `translate(${state.s2x},0)`);
+
+  // Update mass labels
+  s1.querySelector('.mass-label').textContent = state.m1 + 'g';
+  s2.querySelector('.mass-label').textContent = state.m2 + 'g';
+
+  // Weights on sliders
+  renderWeightsOnSlider(s1.querySelector('.weights1'), state.weights1, '#DC2626');
+  renderWeightsOnSlider(s2.querySelector('.weights2'), state.weights2, '#2563EB');
+
+  // Collision face appearance
+  const face1 = s1.querySelector('.face');
+  const face2 = s2.querySelector('.face');
+  if (state.collisionType === 'elastic') {
+    face1.setAttribute('fill', '#F59E0B'); // spring plate
+    face2.setAttribute('fill', '#F59E0B');
+  } else {
+    face1.setAttribute('fill', '#92400E'); // putty
+    face2.setAttribute('fill', '#92400E');
+  }
+}
+
+// ===== PANEL UPDATE =====
+function updatePanel() {
+  $('dispM1').textContent = state.m1;
+  $('dispM2').textContent = state.m2;
+  $('dispState').textContent = state.phase === 'ready' ? '就绪' : state.phase === 'compressing' ? '压缩弹簧' : state.phase === 'done' ? '碰撞完成' : '运动中';
+  $('dispState').style.color = state.phase === 'done' ? '#059669' : '#6B7280';
+
+  if (state.meas) {
+    const m = state.meas;
+    $('dispDt1').textContent = (m.dt1 * 1000).toFixed(1);
+    $('dispV1').textContent = m.v1.toFixed(3);
+
+    if (m.v1p !== null && m.v1p !== 0) {
+      $('dispDt1p').textContent = (m.dt1p * 1000).toFixed(1);
+      $('dispV1p').textContent = Math.abs(m.v1p).toFixed(3);
+      $('labelV1p').textContent = m.v1p < 0 ? "v₁' ←" : "v₁' →";
+    } else if (m.v1p === 0) {
+      $('dispDt1p').textContent = '—';
+      $('dispV1p').textContent = '0.000';
+      $('labelV1p').textContent = "v₁'";
+    } else {
+      $('dispDt1p').textContent = '—';
+      $('dispV1p').textContent = '—';
+    }
+    $('dispDt2p').textContent = (m.dt2p * 1000).toFixed(1);
+    $('dispV2p').textContent = m.v2p.toFixed(3);
+
+    // Momentum
+    const m1kg = state.m1 / 1000;
+    const m2kg = state.m2 / 1000;
+    const pBefore = m1kg * m.v1; // v2=0 before
+    const pAfter = m1kg * (m.v1p || 0) + m2kg * m.v2p;
+    $('dispPBefore').textContent = pBefore.toFixed(4) + ' kg·m/s';
+    $('dispPAfter').textContent = pAfter.toFixed(4) + ' kg·m/s';
+    const errPct = pBefore !== 0 ? Math.abs((pAfter - pBefore) / pBefore * 100) : 0;
+    const errEl = $('dispError');
+    errEl.textContent = '偏差: ' + errPct.toFixed(2) + '%';
+    errEl.className = 'mc-err ' + (errPct < 1 ? 'good' : errPct < 3 ? 'warn' : 'bad');
+
+    $('btnRecord').disabled = false;
+  } else {
+    $('dispDt1').textContent = '—';
+    $('dispV1').textContent = '—';
+    $('dispDt1p').textContent = '—';
+    $('dispV1p').textContent = '—';
+    $('dispDt2p').textContent = '—';
+    $('dispV2p').textContent = '—';
+    $('dispPBefore').textContent = '—';
+    $('dispPAfter').textContent = '—';
+    $('dispError').textContent = '—';
+    $('dispError').className = 'mc-err';
+    $('btnRecord').disabled = true;
+  }
+}
+
+// ===== VELOCITY ARROWS =====
+function renderArrows() {
+  const g = $('velocityArrows');
+  g.innerHTML = '';
+  if (!state.meas || state.phase !== 'done') { g.setAttribute('opacity','0'); return; }
+  g.setAttribute('opacity','1');
+  const m = state.meas;
+  const scale = 80; // px per m/s
+
+  // v1 before (at gate1)
+  drawArrow(g, GATE1_X, 145, m.v1 * scale, '#DC2626', `v₁=${m.v1.toFixed(2)}`);
+
+  // v1' after
+  if (m.v1p !== null && m.v1p !== 0) {
+    drawArrow(g, state.s1x, 145, m.v1p * scale, '#DC2626', `v₁'=${m.v1p.toFixed(2)}`);
+  }
+  // v2' after
+  drawArrow(g, state.s2x, 145, m.v2p * scale, '#2563EB', `v₂'=${m.v2p.toFixed(2)}`);
+}
+
+function drawArrow(parent, x, y, len, color, label) {
+  if (Math.abs(len) < 1) return;
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', x); line.setAttribute('y1', y);
+  line.setAttribute('x2', x + len); line.setAttribute('y2', y);
+  line.setAttribute('stroke', color); line.setAttribute('stroke-width','2');
+  line.setAttribute('marker-end','');
+  parent.appendChild(line);
+
+  // Arrowhead
+  const dir = len > 0 ? 1 : -1;
+  const ax = x + len;
+  const p = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  p.setAttribute('points', `${ax},${y-4} ${ax},${y+4} ${ax+dir*8},${y}`);
+  p.setAttribute('fill', color);
+  parent.appendChild(p);
+
+  // Label
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', x + len/2); t.setAttribute('y', y - 6);
+  t.setAttribute('font-size','8'); t.setAttribute('fill', color);
+  t.setAttribute('text-anchor','middle');
+  t.textContent = label;
+  parent.appendChild(t);
+}
+
+// ===== GATE FLASH =====
+function flashGate(gateId) {
+  const light = $(gateId + 'Light');
+  light.setAttribute('fill','#EF4444');
+  setTimeout(() => light.setAttribute('fill','#4ADE80'), 300);
+}
+
+// ===== COLLISION TYPE =====
+function setCollisionType(type) {
+  if (state.animating) return;
+  state.collisionType = type;
+  $('btnElastic').className = 'toggle-btn' + (type === 'elastic' ? ' active' : '');
+  $('btnInelastic').className = 'toggle-btn' + (type === 'inelastic' ? ' active' : '');
+  $('collisionDesc').textContent = type === 'elastic'
+    ? '弹簧片：碰后分离，动能守恒'
+    : '橡皮泥：碰后粘合，动能损失最大';
+  renderSliders();
+}
+
+// ===== PHYSICS =====
+function calcElasticCollision(m1, m2, v1) {
+  // v2 = 0 before collision
+  const v1p = (m1 - m2) / (m1 + m2) * v1;
+  const v2p = 2 * m1 / (m1 + m2) * v1;
+  return { v1p, v2p };
+}
+
+function calcInelasticCollision(m1, m2, v1) {
+  const vp = m1 / (m1 + m2) * v1;
+  return { v1p: vp, v2p: vp };
+}
+
+// ===== DRAG INTERACTIONS =====
+let dragInfo = null;
+
+canvas.addEventListener('pointerdown', e => {
+  if (state.animating) return;
+  const pt = svgPoint(e);
+
+  // Check weight box
+  const target = e.target;
+  if (target.hasAttribute('data-wi')) {
+    const remaining = MAX_WEIGHTS_PER_SLIDER * 2 - state.boxWeightsUsed;
+    if (remaining <= 0) return;
+    state.draggingWeight = { fromBox: true };
+    state.dragWeightPos = { x: pt.x, y: pt.y };
+    canvas.style.cursor = 'grabbing';
+    e.preventDefault();
+    return;
+  }
+
+  // Check slider1 drag (for spring compression) - only in ready state
+  if (state.phase === 'ready') {
+    const s1rect = { x: state.s1x - 25, y: 160, w: 50, h: 40 };
+    if (pt.x >= s1rect.x && pt.x <= s1rect.x + s1rect.w && pt.y >= s1rect.y && pt.y <= s1rect.y + s1rect.h) {
+      state.draggingSlider1 = true;
+      state.springDragStartX = pt.x;
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+      return;
+    }
+  }
+});
+
+canvas.addEventListener('pointermove', e => {
+  const pt = svgPoint(e);
+
+  if (state.draggingWeight) {
+    state.dragWeightPos = { x: pt.x, y: pt.y };
+    renderDragWeight();
+    e.preventDefault();
+    return;
+  }
+
+  if (state.draggingSlider1 && state.phase === 'ready') {
+    // Constrain slider1 movement: can only go left (toward spring)
+    let newX = Math.max(SPRING_ANCHOR_X + 30, Math.min(200, pt.x));
+    state.s1x = newX;
+    state.springCompressed = newX < 180;
+    state.phase = state.springCompressed ? 'compressing' : 'ready';
+    render();
+    e.preventDefault();
+  }
+});
+
+canvas.addEventListener('pointerup', e => {
+  const pt = svgPoint(e);
+
+  if (state.draggingWeight) {
+    // Check if dropped on slider1 or slider2
+    const s1rect = { x: state.s1x - 30, y: 130, w: 60, h: 70 };
+    const s2rect = { x: state.s2x - 30, y: 130, w: 60, h: 70 };
+
+    if (pt.x >= s1rect.x && pt.x <= s1rect.x + s1rect.w && pt.y >= s1rect.y && pt.y <= s1rect.y + s1rect.h) {
+      if (state.weights1 < MAX_WEIGHTS_PER_SLIDER) {
+        state.weights1++;
+        state.boxWeightsUsed++;
+        state.m1 = BASE_MASS + state.weights1 * WEIGHT_MASS;
+      }
+    } else if (pt.x >= s2rect.x && pt.x <= s2rect.x + s2rect.w && pt.y >= s2rect.y && pt.y <= s2rect.y + s2rect.h) {
+      if (state.weights2 < MAX_WEIGHTS_PER_SLIDER) {
+        state.weights2++;
+        state.boxWeightsUsed++;
+        state.m2 = BASE_MASS + state.weights2 * WEIGHT_MASS;
+      }
+    }
+
+    state.draggingWeight = null;
+    state.dragWeightPos = null;
+    removeDragWeight();
+    initWeightBox();
+    render();
+    e.preventDefault();
+    return;
+  }
+
+  if (state.draggingSlider1) {
+    state.draggingSlider1 = false;
+    canvas.style.cursor = '';
+
+    if (state.springCompressed) {
+      // Launch!
+      launchSlider();
+    } else {
+      state.s1x = 200;
+      state.phase = 'ready';
+      render();
+    }
+    e.preventDefault();
+  }
+});
+
+function svgPoint(e) {
+  const rect = canvas.getBoundingClientRect();
+  const vb = canvas.viewBox.baseVal;
+  return {
+    x: (e.clientX - rect.left) / rect.width * vb.width,
+    y: (e.clientY - rect.top) / rect.height * vb.height
+  };
+}
+
+// ===== DRAG WEIGHT VISUAL =====
+let dragWeightEl = null;
+function renderDragWeight() {
+  if (!dragWeightEl) {
+    dragWeightEl = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dragWeightEl.setAttribute('r','10');
+    dragWeightEl.setAttribute('fill','url(#weightMetal)');
+    dragWeightEl.setAttribute('stroke','#F59E0B');
+    dragWeightEl.setAttribute('stroke-width','2');
+    dragWeightEl.setAttribute('pointer-events','none');
+    dragWeightEl.setAttribute('opacity','0.8');
+    canvas.appendChild(dragWeightEl);
+  }
+  dragWeightEl.setAttribute('cx', state.dragWeightPos.x);
+  dragWeightEl.setAttribute('cy', state.dragWeightPos.y);
+}
+function removeDragWeight() {
+  if (dragWeightEl) { dragWeightEl.remove(); dragWeightEl = null; }
+}
+
+// ===== LAUNCH =====
+function launchSlider() {
+  state.animating = true;
+  state.phase = 'launched';
+
+  // Map compression to initial velocity (m/s)
+  const compressionPx = 200 - state.s1x; // how far left from rest
+  const maxCompressionPx = 200 - (SPRING_ANCHOR_X + 30); // ~115px
+  const v1_ms = 0.3 + (compressionPx / maxCompressionPx) * 1.2; // 0.3 ~ 1.5 m/s
+
+  // Convert to px/frame (60fps, track 680px = 100cm = 1m)
+  // 1 m/s = 680 px/s = ~11.3 px/frame
+  const pxPerMs = 680; // px per m/s per second
+  const v1_px_per_frame = v1_ms * pxPerMs / 60;
+
+  state.v1 = v1_px_per_frame;
+  state.v2 = 0;
+
+  // Precompute collision results with ±0.5% error (generated ONCE here)
+  const m1 = state.m1 / 1000; // kg
+  const m2 = state.m2 / 1000;
+  let result;
+  if (state.collisionType === 'elastic') {
+    result = calcElasticCollision(m1, m2, v1_ms);
+  } else {
+    result = calcInelasticCollision(m1, m2, v1_ms);
+  }
+
+  // Apply ±0.5% measurement error to Δt values
+  const err1 = 1 + (Math.random() - 0.5) * 0.01;
+  const err1p = 1 + (Math.random() - 0.5) * 0.01;
+  const err2p = 1 + (Math.random() - 0.5) * 0.01;
+
+  const dt1_ideal = D_M / v1_ms;
+  const dt1 = dt1_ideal * err1;
+  const meas_v1 = D_M / dt1;
+
+  let dt1p, meas_v1p;
+  if (Math.abs(result.v1p) < 0.001) {
+    dt1p = 0;
+    meas_v1p = 0;
+  } else {
+    const dt1p_ideal = D_M / Math.abs(result.v1p);
+    dt1p = dt1p_ideal * err1p;
+    meas_v1p = (result.v1p < 0 ? -1 : 1) * D_M / dt1p;
+  }
+
+  const dt2p_ideal = D_M / result.v2p;
+  const dt2p = dt2p_ideal * err2p;
+  const meas_v2p = D_M / dt2p;
+
+  // Store for display after collision completes
+  state.pendingMeas = {
+    v1: meas_v1,
+    v1p: meas_v1p,
+    v2p: meas_v2p,
+    dt1: dt1,
+    dt1p: dt1p,
+    dt2p: dt2p,
+    result: result, // theoretical for animation
+    v1_ms: v1_ms
+  };
+
+  // Collision results in px/frame for animation
+  state.v1_after_px = result.v1p * pxPerMs / 60;
+  state.v2_after_px = result.v2p * pxPerMs / 60;
+
+  // Flags
+  state.collided = false;
+  state.gate1Triggered = false;
+  state.gate2Triggered_s1 = false;
+  state.gate2Triggered_s2 = false;
+  state.s1PassedGate1 = false;
+
+  // Spring expansion animation
+  const springExpandDuration = 8; // frames
+  let springFrame = 0;
+  const restX = 200;
+
+  const springExpand = () => {
+    springFrame++;
+    const t = Math.min(springFrame / springExpandDuration, 1);
+    // Ease out
+    const eased = 1 - (1-t)*(1-t);
+    // Spring pushes slider to rest position then slider flies
+    if (t < 1) {
+      const sx = state.s1x + (restX - state.s1x) * 0.3;
+      state.s1x = sx;
+      drawSpring(SPRING_ANCHOR_X, state.s1x - 25);
+      renderSliders();
+      requestAnimationFrame(springExpand);
+    } else {
+      state.s1x = restX;
+      drawSpring(SPRING_ANCHOR_X, SPRING_ANCHOR_X + 20);
+      startMotion();
+    }
+  };
+
+  requestAnimationFrame(springExpand);
+  $('statusBadge').textContent = '滑块已释放…';
+  $('statusBadge').className = 'status-badge active';
+}
+
+function startMotion() {
+  const animate = () => {
+    if (!state.animating) return;
+
+    // Move slider1
+    state.s1x += state.v1;
+
+    // Check gate1 trigger (slider1 passes gate1 going right, before collision)
+    if (!state.gate1Triggered && state.s1x >= GATE1_X) {
+      state.gate1Triggered = true;
+      flashGate('gate1');
+    }
+
+    // Check collision
+    if (!state.collided && state.s1x + 25 >= state.s2x - 25) {
+      state.collided = true;
+
+      if (state.collisionType === 'inelastic') {
+        // Stick together
+        state.stuck = true;
+        state.v1 = state.v2_after_px;
+        state.v2 = state.v2_after_px;
+        state.s2x = state.s1x + 50; // align
+      } else {
+        state.v1 = state.v1_after_px;
+        state.v2 = state.v2_after_px;
+      }
+    }
+
+    // Move slider2
+    if (state.collided) {
+      if (state.stuck) {
+        // Move together
+        state.s2x = state.s1x + 50;
+      }
+      state.s2x += state.v2;
+      if (state.stuck) {
+        state.s1x = state.s2x - 50;
+      }
+    }
+
+    // Check gate1 return (slider1 bouncing back through gate1)
+    if (state.collided && state.v1 < 0 && !state.s1PassedGate1 && state.s1x <= GATE1_X) {
+      state.s1PassedGate1 = true;
+      flashGate('gate1');
+    }
+
+    // Check gate2 triggers
+    if (state.collided) {
+      // Slider1 going right through gate2 (m1 > m2 elastic)
+      if (state.v1 > 0.01 && !state.gate2Triggered_s1 && state.s1x >= GATE2_X) {
+        state.gate2Triggered_s1 = true;
+        flashGate('gate2');
+      }
+      // Slider2 through gate2
+      if (!state.gate2Triggered_s2 && state.s2x >= GATE2_X) {
+        state.gate2Triggered_s2 = true;
+        flashGate('gate2');
+      }
+    }
+
+    renderSliders();
+
+    // Check if done: sliders off-screen or past endpoints
+    const allDone = (
+      state.collided &&
+      (state.s1x < TRACK_LEFT || state.s1x > TRACK_RIGHT || Math.abs(state.v1) < 0.01) &&
+      (state.s2x > TRACK_RIGHT || state.s2x > GATE2_X + 80)
+    );
+
+    if (allDone || (state.collided && state.s2x > TRACK_RIGHT - 20)) {
+      finishExperiment();
+      return;
+    }
+
+    // Safety: if slider goes off screen
+    if (state.s1x > TRACK_RIGHT + 50 || state.s2x > TRACK_RIGHT + 50 || state.s1x < TRACK_LEFT - 50) {
+      finishExperiment();
+      return;
+    }
+
+    requestAnimationFrame(animate);
+  };
+
+  requestAnimationFrame(animate);
+}
+
+function finishExperiment() {
+  state.animating = false;
+  state.phase = 'done';
+  state.meas = state.pendingMeas;
+  state.pendingMeas = null;
+
+  // Show special message for m1=m2 elastic
+  if (state.collisionType === 'elastic' && state.m1 === state.m2) {
+    $('statusBadge').textContent = '碰撞完成 · 滑块1静止（动量完全转移）';
+  } else {
+    $('statusBadge').textContent = '碰撞完成 · 读取数据并记录';
+  }
+  $('statusBadge').className = 'status-badge done';
+
+  updatePanel();
+  renderArrows();
+}
+
+// ===== RECORD =====
+function recordData() {
+  if (!state.meas) return;
+  const m = state.meas;
+  const m1kg = state.m1 / 1000;
+  const m2kg = state.m2 / 1000;
+  const pBefore = m1kg * m.v1;
+  const pAfter = m1kg * (m.v1p || 0) + m2kg * m.v2p;
+  const errPct = pBefore !== 0 ? Math.abs((pAfter - pBefore) / pBefore * 100) : 0;
+
+  state.records.push({
+    type: state.collisionType === 'elastic' ? '弹性' : '非弹性',
+    m1: state.m1,
+    m2: state.m2,
+    v1: m.v1.toFixed(3),
+    v1p: m.v1p !== null ? m.v1p.toFixed(3) : '0.000',
+    v2p: m.v2p.toFixed(3),
+    pBefore: pBefore.toFixed(4),
+    pAfter: pAfter.toFixed(4),
+    err: errPct.toFixed(2)
+  });
+
+  renderTable();
+  $('btnRecord').disabled = true;
+}
+
+function renderTable() {
+  const tbody = $('dataBody');
+  tbody.innerHTML = '';
+  state.records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    const errClass = parseFloat(r.err) < 1 ? 'good' : parseFloat(r.err) < 3 ? 'warn' : 'bad';
+    tr.innerHTML = `<td>${i+1}</td><td>${r.type}</td><td>${r.m1}</td><td>${r.m2}</td>
+      <td>${r.v1}</td><td>${r.v1p}</td><td>${r.v2p}</td>
+      <td>${r.pBefore}</td><td>${r.pAfter}</td><td class="mc-err ${errClass}">${r.err}%</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== RESET =====
+function resetExperiment() {
+  if (state.animating) return;
+  state.phase = 'ready';
+  state.s1x = 200;
+  state.s2x = SLIDER2_INIT_X;
+  state.v1 = 0;
+  state.v2 = 0;
+  state.meas = null;
+  state.pendingMeas = null;
+  state.collided = false;
+  state.stuck = false;
+  state.springCompressed = false;
+
+  $('statusBadge').textContent = '拖砝码片到滑块调质量 · 拖红色滑块压弹簧 · 松手释放';
+  $('statusBadge').className = 'status-badge idle';
+
+  render();
+  updatePanel();
+  renderArrows();
+}
+
+// ===== RENDER =====
+function render() {
+  drawSpring(SPRING_ANCHOR_X, state.s1x - 25);
+  renderSliders();
+  updatePanel();
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: 'm_1 v_1 + m_2 v_2 = m_1 v_1\' + m_2 v_2\'' },
+    { id: 'formula2', tex: 'v = \\frac{d}{\\Delta t}' },
+    { id: 'formula3', tex: 'v_1\' = \\frac{m_1 - m_2}{m_1 + m_2} v_1, \\quad v_2\' = \\frac{2m_1}{m_1 + m_2} v_1' },
+    { id: 'formula4', tex: 'v\' = \\frac{m_1}{m_1 + m_2} v_1' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+initTrack();
+initWeightBox();
+updateGates();
+state.s1x = 200;
+state.s2x = SLIDER2_INIT_X;
+render();
+updatePanel();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
