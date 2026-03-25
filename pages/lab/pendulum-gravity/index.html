@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用单摆测重力加速度 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="单摆, 重力加速度, 周期, T²-L图, 高中物理力学">
+<meta name="description" content="调节摆长释放摆球，手动停表计时，T²-L图拟合求重力加速度g">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
+.stopwatch{background:#1F2937;border-radius:10px;padding:10px;text-align:center;margin:6px 0}
+.sw-display{font-family:'JetBrains Mono',monospace;font-size:28px;color:#4ADE80;letter-spacing:2px;margin:4px 0}
+.sw-count{font-size:11px;color:#9CA3AF;margin:2px 0}
+.sw-period{font-size:12px;color:#60A5FA;font-weight:600;margin:2px 0}
+.sw-btns{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.sw-btn{padding:4px 14px;border-radius:6px;border:none;font-size:11px;font-weight:600;cursor:pointer}
+.sw-btn.start{background:#059669;color:#fff}
+.sw-btn.stop{background:#EF4444;color:#fff}
+.sw-btn.reset{background:#6B7280;color:#fff}
+.sw-btn:disabled{opacity:0.4;cursor:not-allowed}
+.record-btn{padding:4px 12px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.record-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.warn-tip{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;margin-top:4px;text-align:center;display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>用单摆测重力加速度</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>单摆周期 · T²-L 图 · g = 4π²L/T² · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">调节摆长 · 拉开摆球松手释放 · 手动计时</div>
+      <svg id="canvas" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="standGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <radialGradient id="ballGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="40%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#4B5563"/></radialGradient>
+          <radialGradient id="clampMetal" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#6B7280"/></radialGradient>
+        </defs>
+
+        <rect x="0" y="0" width="700" height="340" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect x="0" y="0" width="700" height="340" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- Iron stand -->
+        <rect x="80" y="310" width="120" height="8" rx="2" fill="#4B5563"/>
+        <rect x="82" y="308" width="116" height="4" rx="1" fill="#6B7280"/>
+        <rect x="136" y="18" width="8" height="292" rx="2" fill="url(#standGrad)"/>
+        <line x1="139" y1="20" x2="139" y2="308" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <!-- Horizontal arm -->
+        <rect x="144" y="28" width="220" height="6" rx="1.5" fill="#6B7280"/>
+        <circle cx="144" cy="31" r="5" fill="url(#clampMetal)" stroke="#4B5563" stroke-width="0.8"/>
+        <circle cx="144" cy="31" r="1.5" fill="#374151"/>
+
+        <!-- Pivot point -->
+        <circle cx="350" cy="31" r="3" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+        <text x="350" y="22" font-size="7" fill="#6B7280" text-anchor="middle" font-weight="600">悬点</text>
+
+        <!-- Vertical reference line (equilibrium) -->
+        <line x1="350" y1="34" x2="350" y2="330" stroke="#059669" stroke-width="0.5" stroke-dasharray="4,3" opacity="0.4"/>
+
+        <!-- Pendulum string + ball (dynamic) -->
+        <line id="pendString" x1="350" y1="31" x2="350" y2="261" stroke="#374151" stroke-width="1.2"/>
+        <circle id="pendBall" cx="350" cy="271" r="10" fill="url(#ballGrad)" stroke="#4B5563" stroke-width="0.5" style="cursor:grab"/>
+        <!-- Ghost ball at equilibrium -->
+        <circle id="ghostBall" cx="350" cy="271" r="10" fill="none" stroke="#059669" stroke-width="0.5" stroke-dasharray="3,2" opacity="0"/>
+
+        <!-- Length annotation -->
+        <g id="lengthAnnot">
+          <line x1="380" y1="31" x2="380" y2="271" stroke="#059669" stroke-width="0.5" stroke-dasharray="3,2"/>
+          <line x1="376" y1="31" x2="384" y2="31" stroke="#059669" stroke-width="0.8"/>
+          <line x1="376" y1="271" x2="384" y2="271" stroke="#059669" stroke-width="0.8"/>
+          <text id="lengthLabel" x="390" y="155" font-size="9" fill="#059669" font-weight="700" font-style="italic">L = 80.0 cm</text>
+        </g>
+
+        <!-- Angle arc -->
+        <path id="angleArc" d="" fill="none" stroke="#F59E0B" stroke-width="0.8" opacity="0"/>
+        <text id="angleLabel" x="0" y="0" font-size="8" fill="#F59E0B" font-weight="600" opacity="0"></text>
+
+        <!-- Angle warning zones (visual) -->
+        <g id="angleZones" opacity="0.15">
+          <!-- 5° zone (yellow) -->
+          <path id="zone5" d="" fill="#FDE68A"/>
+          <!-- 10° zone (orange) -->
+          <path id="zone10" d="" fill="#FDBA74"/>
+        </g>
+
+        <!-- Force arrows -->
+        <g id="forceArrows">
+          <line id="mgArrow" x1="350" y1="281" x2="350" y2="315" stroke="#059669" stroke-width="2"/>
+          <polygon id="mgHead" points="350,317 347,311 353,311" fill="#059669"/>
+          <text id="mgLabel" x="340" y="305" font-size="7" fill="#059669" font-weight="700" font-style="italic">mg</text>
+        </g>
+
+        <!-- Drag guide -->
+        <g id="guideLabel" opacity="1">
+          <rect x="365" y="255" width="65" height="16" rx="4" fill="rgba(5,150,105,0.9)"/>
+          <text x="397" y="266" font-size="6" fill="#fff" text-anchor="middle" font-weight="600">拖拽摆球释放</text>
+        </g>
+
+        <!-- Length adjust hint -->
+        <g id="lengthHint">
+          <text x="350" y="300" font-size="7" fill="#6B7280" text-anchor="middle">↕ 拖拽摆球上下调摆长</text>
+        </g>
+
+        <!-- Info display on canvas -->
+        <g transform="translate(500, 40)">
+          <rect x="0" y="0" width="180" height="60" rx="6" fill="rgba(255,255,255,0.9)" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="10" y="16" font-size="7" fill="#6B7280" font-weight="600">实验参数</text>
+          <text x="10" y="30" font-size="8" fill="#374151">摆长 L = <tspan id="canvasL" font-weight="700" fill="#059669">80.0</tspan> cm</text>
+          <text x="10" y="44" font-size="8" fill="#374151">球径 d = <tspan font-weight="700">2.00</tspan> cm</text>
+          <text x="10" y="56" font-size="8" fill="#374151">质量 m = <tspan font-weight="700">50.0</tspan> g</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div class="guide-step"><span class="guide-num">1</span><span><strong>调摆长</strong>：上下拖拽摆球（50~120cm）</span></div>
+      <div class="guide-step"><span class="guide-num">2</span><span><strong>拉摆球</strong>：水平拖拽拉开角度（<5°）</span></div>
+      <div class="guide-step"><span class="guide-num">3</span><span><strong>释放</strong>：松手，摆球开始振动</span></div>
+      <div class="guide-step"><span class="guide-num">4</span><span><strong>计时</strong>：手动按停表，计 30~50 次全振动</span></div>
+      <div class="guide-step"><span class="guide-num">5</span><span><strong>记录</strong>：记录 L、n、t，计算 T</span></div>
+      <div class="guide-step"><span class="guide-num">6</span><span><strong>换摆长</strong>：改变摆长重复（≥3 组）</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实时参数</h3>
+      <div class="data-row"><span class="data-label">摆长 L</span><span class="data-value" id="valL" style="color:#059669">80.0 cm</span></div>
+      <div class="data-row"><span class="data-label">摆角 θ</span><span class="data-value" id="valTheta">0.0°</span></div>
+      <div class="data-row"><span class="data-label">运动状态</span><span class="data-value" id="valState" style="color:#D1D5DB">静止</span></div>
+      <div class="warn-tip" id="warnTip"></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 停表</h3>
+      <div class="stopwatch">
+        <div class="sw-display" id="swDisplay">00:00.00</div>
+        <div class="sw-count" id="swCount">全振动：0 次</div>
+        <div class="sw-period" id="swPeriod">T = — s</div>
+        <div class="sw-btns">
+          <button class="sw-btn start" id="swStart" onclick="swStartStop()">开始</button>
+          <button class="sw-btn reset" id="swReset" onclick="swReset()">复位</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 数据记录</h3>
+      <div style="margin-bottom:4px">
+        <button class="record-btn" id="recordBtn" onclick="recordData()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 5v14M5 12h14"/></svg>记录
+        </button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>L(cm)</th><th>n</th><th>t(s)</th><th>T(s)</th><th>T²(s²)</th></tr></thead>
+        <tbody id="recordBody"><tr><td class="empty" colspan="5">计时后记录</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="panel-section" style="flex:1;display:flex;flex-direction:column">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-8"/></svg> T²-L 图</h3>
+      <div class="chart-area" style="flex:1;min-height:80px">
+        <svg id="chartSvg" viewBox="0 0 240 110">
+          <line x1="30" y1="5" x2="30" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <line x1="30" y1="95" x2="235" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="132" y="108" font-size="8" fill="#9CA3AF" text-anchor="middle">L / m</text>
+          <text x="10" y="50" font-size="8" fill="#9CA3AF" text-anchor="middle" transform="rotate(-90,10,50)">T² / s²</text>
+          <text x="30" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0</text>
+          <text x="81" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.3</text>
+          <text x="132" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.6</text>
+          <text x="183" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.9</text>
+          <text x="234" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">1.2</text>
+          <text x="26" y="97" font-size="6" fill="#9CA3AF" text-anchor="end">0</text>
+          <text x="26" y="75" font-size="6" fill="#9CA3AF" text-anchor="end">1</text>
+          <text x="26" y="53" font-size="6" fill="#9CA3AF" text-anchor="end">2</text>
+          <text x="26" y="31" font-size="6" fill="#9CA3AF" text-anchor="end">3</text>
+          <text x="26" y="9" font-size="6" fill="#9CA3AF" text-anchor="end">4</text>
+          <g id="chartPoints"></g>
+          <line id="fitLine" x1="0" y1="0" x2="0" y2="0" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>
+          <text id="fitLabel" x="0" y="0" font-size="7" fill="#059669" font-weight="700" opacity="0"></text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> 计算结果</h3>
+      <div style="display:flex;gap:6px;margin-bottom:4px">
+        <div class="reading-card" style="background:#ECFDF5"><div class="label">实测 g</div><div class="val" id="valG" style="color:#059669">—<span class="unit"> m/s²</span></div></div>
+        <div class="reading-card" style="background:#F9FAFB"><div class="label">标准值</div><div class="val" style="color:#1D1D1F">9.80<span class="unit"> m/s²</span></div></div>
+      </div>
+      <div class="data-row"><span class="data-label">偏差</span><span class="data-value" id="valDiff" style="color:#D1D5DB">—</span></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>单摆周期公式</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>单摆做简谐运动时，周期只与摆长 L 和重力加速度 g 有关，与振幅和质量无关（等时性）。</p>
+      <ul>
+        <li><strong>L</strong> — 摆长（悬点到球心的距离），单位 m</li>
+        <li><strong>g</strong> — 重力加速度，单位 m/s²</li>
+        <li>由 T² = 4π²L/g 得 <strong>g = 4π²L/T²</strong></li>
+      </ul>
+      <p class="highlight-tip">注意：摆长 = 悬线长度 + 球的半径，不是仅悬线长度。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>T²-L 图求 g</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula2"></div>
+      <p>T² 与 L 成正比，T²-L 图是过原点的直线，斜率 k = 4π²/g。</p>
+      <p>从斜率求 g：<strong>g = 4π²/k</strong></p>
+      <p class="highlight-tip">考点：为什么用 T²-L 图而不是 T-L 图？因为 T² 与 L 是线性关系，便于拟合。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验注意事项</h2></div>
+    <div class="card-body">
+      <p><strong>小角度</strong>：摆角 θ < 5°，否则不满足简谐运动近似。</p>
+      <p><strong>测多次取平均</strong>：测 30~50 次全振动的总时间再除以次数，减小人工计时误差。</p>
+      <p><strong>摆长测量</strong>：L = 悬线长度 + 球半径 r。</p>
+      <p><strong>全振动</strong>：从最大偏移开始，回到同侧最大偏移为一次全振动。</p>
+      <p class="highlight-tip">高考考点：为什么要测多次全振动取平均？减小反应时间误差。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>g 偏大</strong>：L 测量偏小（忘加球半径）或 T 测量偏小（计数多算）。</p>
+      <p><strong>g 偏小</strong>：L 测量偏大或 T 测量偏大（计数少算）。</p>
+      <p><strong>摆角过大</strong>：周期偏大 → g 偏小。</p>
+      <p class="highlight-tip">考点提醒：摆线太短或用橡皮线会导致什么后果？</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>测得 L=80.0cm 时，30 次全振动 t=53.86s。球径 d=2.00cm。求 g。</p>
+      <div class="solve">
+摆长 L = 80.0cm（已含球半径）<br/>
+T = t/n = 53.86/30 = 1.795 s<br/>
+T² = 3.222 s²<br/>
+g = 4π²L/T² = 4×9.870×0.800/3.222<br/>
+g = <strong style="color:#2563EB">9.77 m/s²</strong><br/>
+偏差 = (9.80-9.77)/9.80 = 0.3%
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const G_TRUE = 9.80; // m/s²
+const PIVOT_X = 350, PIVOT_Y = 31;
+const BALL_R = 10; // px
+const D_BALL = 2.00; // cm
+const PX_PER_CM = 3.0; // scale: 1cm = 3px
+const L_MIN = 50, L_MAX = 120; // cm
+const THETA_MAX_RAD = 15 * Math.PI / 180;
+const DAMPING = 0.002; // very small damping
+
+// ===== STATE =====
+let pendLength = 80.0; // cm
+let theta0 = 0; // initial angle (rad)
+let swinging = false;
+let animStart = 0;
+let animId = null;
+
+// Stopwatch
+let swRunning = false;
+let swStartTime = 0;
+let swElapsed = 0;
+let swTimerId = null;
+let fullSwings = 0;
+let lastCrossDir = 0; // +1 or -1, direction of last equilibrium crossing
+let crossCount = 0; // number of same-direction crossings
+let prevTheta = 0;
+
+// Records
+let records = []; // [{L, n, t, T, T2}]
+
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
+
+// ===== PENDULUM RENDERING =====
+function updatePendulum(angleDeg) {
+  const angleRad = (angleDeg || 0) * Math.PI / 180;
+  const len = pendLength * PX_PER_CM;
+  const bx = PIVOT_X + len * Math.sin(angleRad);
+  const by = PIVOT_Y + len * Math.cos(angleRad);
+
+  document.getElementById('pendString').setAttribute('x2', bx);
+  document.getElementById('pendString').setAttribute('y2', by);
+  document.getElementById('pendBall').setAttribute('cx', bx);
+  document.getElementById('pendBall').setAttribute('cy', by + BALL_R);
+
+  // Ghost ball at equilibrium
+  const ghost = document.getElementById('ghostBall');
+  ghost.setAttribute('cx', PIVOT_X);
+  ghost.setAttribute('cy', PIVOT_Y + len + BALL_R);
+
+  // Length annotation
+  document.getElementById('lengthAnnot').querySelector('line:nth-child(1)').setAttribute('y2', PIVOT_Y + len);
+  document.getElementById('lengthAnnot').querySelectorAll('line')[2].setAttribute('y1', PIVOT_Y + len);
+  document.getElementById('lengthAnnot').querySelectorAll('line')[2].setAttribute('y2', PIVOT_Y + len);
+  document.getElementById('lengthLabel').setAttribute('y', PIVOT_Y + len / 2);
+  document.getElementById('lengthLabel').textContent = `L = ${pendLength.toFixed(1)} cm`;
+  document.getElementById('canvasL').textContent = pendLength.toFixed(1);
+
+  // mg arrow
+  document.getElementById('mgArrow').setAttribute('x1', bx);
+  document.getElementById('mgArrow').setAttribute('y1', by + BALL_R + 2);
+  document.getElementById('mgArrow').setAttribute('x2', bx);
+  document.getElementById('mgArrow').setAttribute('y2', by + BALL_R + 30);
+  document.getElementById('mgHead').setAttribute('points',
+    `${bx},${by + BALL_R + 34} ${bx - 3},${by + BALL_R + 28} ${bx + 3},${by + BALL_R + 28}`);
+  document.getElementById('mgLabel').setAttribute('x', bx - 12);
+  document.getElementById('mgLabel').setAttribute('y', by + BALL_R + 22);
+
+  // Angle arc
+  if (Math.abs(angleRad) > 0.01) {
+    const r = 30;
+    const sx = PIVOT_X, sy = PIVOT_Y + r;
+    const ex = PIVOT_X + r * Math.sin(angleRad);
+    const ey = PIVOT_Y + r * Math.cos(angleRad);
+    const sweep = angleRad > 0 ? 0 : 1;
+    document.getElementById('angleArc').setAttribute('d',
+      `M${sx},${sy} A${r},${r} 0 0,${sweep} ${ex},${ey}`);
+    document.getElementById('angleArc').setAttribute('opacity', '1');
+    const mid = angleRad / 2;
+    document.getElementById('angleLabel').setAttribute('x', PIVOT_X + (r + 10) * Math.sin(mid));
+    document.getElementById('angleLabel').setAttribute('y', PIVOT_Y + (r + 10) * Math.cos(mid));
+    document.getElementById('angleLabel').textContent = `θ=${Math.abs(angleDeg).toFixed(1)}°`;
+    document.getElementById('angleLabel').setAttribute('opacity', '1');
+  } else {
+    document.getElementById('angleArc').setAttribute('opacity', '0');
+    document.getElementById('angleLabel').setAttribute('opacity', '0');
+  }
+
+  // Panel
+  document.getElementById('valL').textContent = pendLength.toFixed(1) + ' cm';
+  document.getElementById('valTheta').textContent = Math.abs(angleDeg || 0).toFixed(1) + '°';
+
+  // Angle warnings
+  const absAngle = Math.abs(angleDeg || 0);
+  const warn = document.getElementById('warnTip');
+  if (absAngle > 10) {
+    warn.textContent = '角度过大，实验误差增大';
+    warn.style.display = 'block';
+    warn.style.background = '#FED7AA'; warn.style.color = '#C2410C'; warn.style.borderColor = '#FDBA74';
+  } else if (absAngle > 5) {
+    warn.textContent = '建议摆角小于 5°';
+    warn.style.display = 'block';
+    warn.style.background = '#FEF3C7'; warn.style.color = '#B45309'; warn.style.borderColor = '#FDE68A';
+  } else {
+    warn.style.display = 'none';
+  }
+}
+
+// ===== DRAG: ADJUST LENGTH (vertical) + PULL ANGLE (horizontal) =====
+let dragMode = null; // 'length' or 'angle'
+let dragStartPt = null;
+let dragStartL = 0;
+let dragStartAngle = 0;
+
+document.getElementById('pendBall').addEventListener('pointerdown', e => {
+  if (swinging) return;
+  e.preventDefault();
+  const pt = getSvgPoint(e);
+  dragStartPt = pt;
+  dragStartL = pendLength;
+  dragStartAngle = theta0;
+  // Determine mode: if ball is at equilibrium, vertical = length, horizontal = angle
+  dragMode = 'detect';
+  document.getElementById('pendBall').style.cursor = 'grabbing';
+  document.getElementById('guideLabel').style.opacity = '0';
+  document.getElementById('lengthHint').style.opacity = '0';
+});
+
+document.addEventListener('pointermove', e => {
+  if (!dragMode) return;
+  const pt = getSvgPoint(e);
+  const dx = pt.x - dragStartPt.x;
+  const dy = pt.y - dragStartPt.y;
+
+  if (dragMode === 'detect') {
+    if (Math.abs(dy) > 5) dragMode = 'length';
+    else if (Math.abs(dx) > 5) dragMode = 'angle';
+    else return;
+  }
+
+  if (dragMode === 'length') {
+    const newL = Math.max(L_MIN, Math.min(L_MAX, dragStartL + dy / PX_PER_CM));
+    pendLength = Math.round(newL * 10) / 10;
+    updatePendulum(0);
+  } else if (dragMode === 'angle') {
+    // Map horizontal drag to angle
+    const len = pendLength * PX_PER_CM;
+    const angleRad = Math.asin(Math.max(-1, Math.min(1, dx / len)));
+    const clamped = Math.max(-THETA_MAX_RAD, Math.min(THETA_MAX_RAD, angleRad));
+    theta0 = clamped;
+    const angleDeg = clamped * 180 / Math.PI;
+    updatePendulum(angleDeg);
+    document.getElementById('ghostBall').setAttribute('opacity', '0.4');
+  }
+});
+
+document.addEventListener('pointerup', () => {
+  if (!dragMode) return;
+  document.getElementById('pendBall').style.cursor = 'grab';
+
+  if (dragMode === 'angle' && Math.abs(theta0) > 0.01) {
+    // Release: start swinging
+    startSwinging();
+  }
+  dragMode = null;
+});
+
+// ===== PENDULUM ANIMATION =====
+function startSwinging() {
+  swinging = true;
+  animStart = performance.now();
+  prevTheta = theta0;
+  crossCount = 0;
+  lastCrossDir = 0;
+  document.getElementById('valState').textContent = '摆动中';
+  document.getElementById('valState').style.color = '#059669';
+  document.getElementById('ghostBall').setAttribute('opacity', '0.3');
+  document.getElementById('statusBadge').textContent = '摆球振动中 · 按停表计时';
+
+  function animate(now) {
+    const t = (now - animStart) / 1000; // seconds
+    const omega = Math.sqrt(G_TRUE / (pendLength / 100)); // rad/s
+    const currentTheta = theta0 * Math.exp(-DAMPING * omega * t) * Math.cos(omega * t);
+    const angleDeg = currentTheta * 180 / Math.PI;
+    updatePendulum(angleDeg);
+
+    // Detect equilibrium crossings for full swing counting
+    if (swRunning) {
+      // Crossing: sign change of theta
+      if (prevTheta * currentTheta < 0 && Math.abs(currentTheta) < Math.abs(theta0) * 0.9) {
+        const dir = currentTheta > 0 ? 1 : -1;
+        if (lastCrossDir === 0) {
+          lastCrossDir = dir;
+          crossCount = 1;
+        } else if (dir === lastCrossDir) {
+          crossCount++;
+          // Every 2 same-direction crossings = 1 full swing
+          // Actually: cross in same direction = 1 full swing (period)
+          fullSwings++;
+          document.getElementById('swCount').textContent = `全振动：${fullSwings} 次`;
+          if (fullSwings > 0) {
+            const T = swElapsed / fullSwings;
+            document.getElementById('swPeriod').textContent = `T = ${T.toFixed(3)} s`;
+          }
+        }
+        lastCrossDir = dir;
+      }
+    }
+    prevTheta = currentTheta;
+
+    // Stop if amplitude too small
+    if (Math.abs(theta0 * Math.exp(-DAMPING * omega * t)) < 0.001) {
+      swinging = false;
+      updatePendulum(0);
+      document.getElementById('valState').textContent = '已停止';
+      document.getElementById('valState').style.color = '#6B7280';
+      document.getElementById('ghostBall').setAttribute('opacity', '0');
+      return;
+    }
+    animId = requestAnimationFrame(animate);
+  }
+  animId = requestAnimationFrame(animate);
+}
+
+// ===== STOPWATCH =====
+function swStartStop() {
+  if (!swinging) {
+    document.getElementById('warnTip').textContent = '请先释放摆球';
+    document.getElementById('warnTip').style.display = 'block';
+    setTimeout(() => document.getElementById('warnTip').style.display = 'none', 2000);
+    return;
+  }
+
+  if (!swRunning) {
+    // Start
+    swRunning = true;
+    swStartTime = performance.now() - swElapsed * 1000;
+    fullSwings = 0;
+    crossCount = 0;
+    lastCrossDir = 0;
+    document.getElementById('swStart').textContent = '停止';
+    document.getElementById('swStart').className = 'sw-btn stop';
+    document.getElementById('swCount').textContent = '全振动：0 次';
+    document.getElementById('swPeriod').textContent = 'T = — s';
+
+    swTimerId = setInterval(() => {
+      swElapsed = (performance.now() - swStartTime) / 1000;
+      document.getElementById('swDisplay').textContent = formatTime(swElapsed);
+    }, 10);
+  } else {
+    // Stop — add one-time human error ±0.05s
+    swRunning = false;
+    clearInterval(swTimerId);
+    const humanError = (Math.random() - 0.5) * 0.1; // ±0.05s
+    swElapsed += humanError;
+    if (swElapsed < 0) swElapsed = 0;
+    document.getElementById('swDisplay').textContent = formatTime(swElapsed);
+    document.getElementById('swStart').textContent = '开始';
+    document.getElementById('swStart').className = 'sw-btn start';
+
+    if (fullSwings > 0) {
+      const T = swElapsed / fullSwings;
+      document.getElementById('swPeriod').textContent = `T = ${T.toFixed(3)} s`;
+    }
+  }
+}
+
+function swReset() {
+  swRunning = false;
+  clearInterval(swTimerId);
+  swElapsed = 0;
+  fullSwings = 0;
+  crossCount = 0;
+  lastCrossDir = 0;
+  document.getElementById('swDisplay').textContent = '00:00.00';
+  document.getElementById('swCount').textContent = '全振动：0 次';
+  document.getElementById('swPeriod').textContent = 'T = — s';
+  document.getElementById('swStart').textContent = '开始';
+  document.getElementById('swStart').className = 'sw-btn start';
+}
+
+function formatTime(s) {
+  const mins = Math.floor(s / 60);
+  const secs = s % 60;
+  return `${String(mins).padStart(2, '0')}:${secs.toFixed(2).padStart(5, '0')}`;
+}
+
+// ===== RECORD =====
+function recordData() {
+  if (fullSwings < 1 || swRunning) return;
+
+  const L = pendLength;
+  const n = fullSwings;
+  const t = swElapsed;
+  const T = t / n;
+  const T2 = T * T;
+
+  records.push({ L, n, t: parseFloat(t.toFixed(2)), T: parseFloat(T.toFixed(3)), T2: parseFloat(T2.toFixed(4)) });
+  updateRecordTable();
+  updateChart();
+}
+
+function updateRecordTable() {
+  const tbody = document.getElementById('recordBody');
+  tbody.innerHTML = '';
+  records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.L.toFixed(1)}</td><td>${r.n}</td><td>${r.t.toFixed(2)}</td><td>${r.T.toFixed(3)}</td><td>${r.T2.toFixed(4)}</td>`;
+    tr.style.cursor = 'pointer';
+    tr.title = '点击删除';
+    tr.addEventListener('mouseenter', () => { tr.style.background = '#FEF2F2'; });
+    tr.addEventListener('mouseleave', () => { tr.style.background = ''; });
+    tr.addEventListener('click', () => {
+      records.splice(i, 1);
+      updateRecordTable();
+      updateChart();
+    });
+    tbody.appendChild(tr);
+  });
+  if (records.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="5">计时后记录</td></tr>';
+  }
+}
+
+// ===== T²-L CHART =====
+function updateChart() {
+  const chartG = document.getElementById('chartPoints');
+  chartG.innerHTML = '';
+
+  // Get last record per L value for chart
+  const byL = {};
+  records.forEach(r => { byL[r.L] = r; });
+  const chartData = Object.values(byL);
+
+  // L axis: 0-1.2m → x 30-234, T² axis: 0-4 → y 95-5
+  chartData.forEach(r => {
+    const Lm = r.L / 100;
+    const cx = 30 + (Lm / 1.2) * 204;
+    const cy = 95 - (r.T2 / 4) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', Math.max(30, Math.min(234, cx)).toFixed(1));
+    c.setAttribute('cy', Math.max(5, Math.min(95, cy)).toFixed(1));
+    c.setAttribute('r', '3');
+    c.setAttribute('fill', '#059669');
+    chartG.appendChild(c);
+  });
+
+  const fitLine = document.getElementById('fitLine');
+  const fitLabel = document.getElementById('fitLabel');
+
+  if (chartData.length >= 3) {
+    // Least squares: T² = k * L(m) + b
+    let sX = 0, sY = 0, sXY = 0, sXX = 0, n = chartData.length;
+    chartData.forEach(r => {
+      const Lm = r.L / 100;
+      sX += Lm; sY += r.T2; sXY += Lm * r.T2; sXX += Lm * Lm;
+    });
+    const k = (n * sXY - sX * sY) / (n * sXX - sX * sX);
+    const b = (sY - k * sX) / n;
+
+    // g = 4π²/k
+    const gCalc = 4 * Math.PI * Math.PI / k;
+
+    const y1 = 95 - (b / 4) * 90;
+    const y2 = 95 - ((k * 1.2 + b) / 4) * 90;
+    fitLine.setAttribute('x1', '30');
+    fitLine.setAttribute('y1', Math.max(5, Math.min(95, y1)));
+    fitLine.setAttribute('x2', '234');
+    fitLine.setAttribute('y2', Math.max(5, Math.min(95, y2)));
+    fitLine.setAttribute('opacity', '1');
+
+    fitLabel.setAttribute('x', '170');
+    fitLabel.setAttribute('y', Math.max(15, Math.min(90, y2 + 12)));
+    fitLabel.textContent = `g = ${gCalc.toFixed(2)} m/s²`;
+    fitLabel.setAttribute('opacity', '1');
+
+    document.getElementById('valG').innerHTML = gCalc.toFixed(2) + '<span class="unit"> m/s²</span>';
+    const diff = Math.abs(gCalc - G_TRUE) / G_TRUE * 100;
+    document.getElementById('valDiff').textContent = diff.toFixed(1) + '%';
+    document.getElementById('valDiff').style.color = diff < 3 ? '#059669' : '#B45309';
+
+    document.getElementById('statusBadge').textContent =
+      `g = ${gCalc.toFixed(2)} m/s²（标准值 ${G_TRUE} m/s²，偏差 ${diff.toFixed(1)}%）`;
+  } else {
+    fitLine.setAttribute('opacity', '0');
+    fitLabel.setAttribute('opacity', '0');
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  // Stop animation
+  if (animId) cancelAnimationFrame(animId);
+  swinging = false;
+  animId = null;
+
+  // Reset stopwatch
+  swReset();
+
+  // Reset state
+  pendLength = 80.0;
+  theta0 = 0;
+  records = [];
+
+  // Reset UI
+  updatePendulum(0);
+  document.getElementById('ghostBall').setAttribute('opacity', '0');
+  document.getElementById('guideLabel').style.opacity = '1';
+  document.getElementById('lengthHint').style.opacity = '1';
+  document.getElementById('valState').textContent = '静止';
+  document.getElementById('valState').style.color = '#D1D5DB';
+  document.getElementById('warnTip').style.display = 'none';
+  document.getElementById('recordBody').innerHTML = '<tr><td class="empty" colspan="5">计时后记录</td></tr>';
+  document.getElementById('chartPoints').innerHTML = '';
+  document.getElementById('fitLine').setAttribute('opacity', '0');
+  document.getElementById('fitLabel').setAttribute('opacity', '0');
+  document.getElementById('valG').innerHTML = '—<span class="unit"> m/s²</span>';
+  document.getElementById('valDiff').textContent = '—';
+  document.getElementById('valDiff').style.color = '#D1D5DB';
+  document.getElementById('statusBadge').textContent = '调节摆长 · 拉开摆球松手释放 · 手动计时';
+  document.getElementById('statusBadge').className = 'status-badge idle';
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  const f1 = document.getElementById('formula1');
+  const f2 = document.getElementById('formula2');
+  if (f1) katex.render('T = 2\\pi\\sqrt{\\frac{L}{g}}', f1, { displayMode: true, throwOnError: false });
+  if (f2) katex.render('T^2 = \\frac{4\\pi^2}{g} \\cdot L', f2, { displayMode: true, throwOnError: false });
+}
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+updatePendulum(0);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
