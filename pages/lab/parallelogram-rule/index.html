@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>验证力的平行四边形定则 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="力的平行四边形定则, 合力, 分力, 矢量合成, 高中物理力学">
+<meta name="description" content="两弹簧测力计拉橡皮条到O点，平行四边形作图法验证合力">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
+.mode-btn{padding:5px 14px;border-radius:6px;border:1px solid var(--lab-accent-border);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.mode-btn.active{background:var(--lab-accent);color:#fff;border-color:var(--lab-accent)}
+.mode-btn:not(.active){background:#fff;color:#6B7280}
+.warn-tip{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;margin-top:4px;text-align:center;display:none}
+.compare-row{display:flex;gap:4px;align-items:center;padding:3px 0;font-size:11px}
+.compare-label{color:#6B7280;width:50px;flex-shrink:0}
+.compare-bar{flex:1;height:6px;border-radius:3px;background:#F3F4F6;overflow:hidden;position:relative}
+.compare-fill{height:100%;border-radius:3px;transition:width 0.3s}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>验证力的平行四边形定则</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>合力分力 · 平行四边形 · 矢量合成 · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖拽测力计手柄调节力的大小和方向</div>
+      <svg id="canvas" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="shellGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="30%" stop-color="#D1D5DB"/><stop offset="70%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#EF4444"/></marker>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#3B82F6"/></marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#059669"/></marker>
+          <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#F59E0B"/></marker>
+        </defs>
+
+        <!-- Grid paper background -->
+        <rect x="0" y="0" width="700" height="340" fill="#FAFAF9"/>
+        <pattern id="gridFine" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="#E7E5E4" stroke-width="0.2"/></pattern>
+        <pattern id="gridMajor" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="#D6D3D1" stroke-width="0.4"/></pattern>
+        <rect x="0" y="0" width="700" height="340" fill="url(#gridFine)"/>
+        <rect x="0" y="0" width="700" height="340" fill="url(#gridMajor)"/>
+
+        <!-- Fixed point O (nail) -->
+        <g id="pointO">
+          <circle cx="300" cy="170" r="12" fill="none" stroke="#059669" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <line x1="295" y1="170" x2="305" y2="170" stroke="#374151" stroke-width="1.5"/>
+          <line x1="300" y1="165" x2="300" y2="175" stroke="#374151" stroke-width="1.5"/>
+          <circle cx="300" cy="170" r="3" fill="#374151"/>
+          <text x="300" y="158" font-size="10" fill="#374151" text-anchor="middle" font-weight="700">O</text>
+        </g>
+
+        <!-- Rubber band (elastic line from O to junction) -->
+        <line id="rubberBand1" x1="300" y1="170" x2="300" y2="170" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+        <line id="rubberBand2" x1="300" y1="170" x2="300" y2="170" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- Junction point (where rubber bands meet the hooks) -->
+        <circle id="junction" cx="300" cy="170" r="4" fill="#B45309" stroke="#92400E" stroke-width="0.8"/>
+
+        <!-- Force arrows -->
+        <line id="arrowF1" x1="300" y1="170" x2="300" y2="170" stroke="#EF4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+        <line id="arrowF2" x1="300" y1="170" x2="300" y2="170" stroke="#3B82F6" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- Parallelogram (auto-drawn) -->
+        <polygon id="parallelogram" points="" fill="rgba(5,150,105,0.06)" stroke="#059669" stroke-width="1" stroke-dasharray="4,3" opacity="0"/>
+        <!-- Theoretical resultant F' (diagonal) -->
+        <line id="arrowFprime" x1="0" y1="0" x2="0" y2="0" stroke="#059669" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowGreen)" opacity="0"/>
+        <text id="labelFprime" x="0" y="0" font-size="9" fill="#059669" font-weight="700" font-style="italic" opacity="0">F'</text>
+
+        <!-- Actual resultant F (single force mode) -->
+        <line id="arrowF" x1="0" y1="0" x2="0" y2="0" stroke="#F59E0B" stroke-width="2.5" marker-end="url(#arrowOrange)" opacity="0"/>
+        <text id="labelF" x="0" y="0" font-size="9" fill="#F59E0B" font-weight="700" font-style="italic" opacity="0">F</text>
+
+        <!-- Angle arc θ -->
+        <path id="angleArc" d="" fill="none" stroke="#6B7280" stroke-width="0.8" opacity="0"/>
+        <text id="angleLabel" x="0" y="0" font-size="8" fill="#6B7280" font-style="italic" opacity="0">θ</text>
+
+        <!-- Force labels -->
+        <text id="labelF1" x="0" y="0" font-size="9" fill="#EF4444" font-weight="700" font-style="italic">F₁</text>
+        <text id="labelF2" x="0" y="0" font-size="9" fill="#3B82F6" font-weight="700" font-style="italic">F₂</text>
+
+        <!-- Spring dynamometer 1 (red) -->
+        <g id="dynamo1" style="cursor:grab">
+          <rect id="shell1" x="0" y="0" width="14" height="80" rx="3" fill="url(#shellGrad)" stroke="#9CA3AF" stroke-width="0.8" transform="rotate(0)"/>
+          <rect id="scale1" x="0" y="0" width="8" height="50" rx="1" fill="#fff" stroke="#E5E7EB" stroke-width="0.5"/>
+          <!-- Scale ticks drawn dynamically -->
+          <g id="ticks1"></g>
+          <line id="pointer1" x1="0" y1="0" x2="0" y2="0" stroke="#EF4444" stroke-width="1.5"/>
+          <circle id="ring1" cx="0" cy="0" r="5" fill="none" stroke="#EF4444" stroke-width="1.5"/>
+          <text id="readLabel1" x="0" y="0" font-size="7" fill="#EF4444" font-weight="700" text-anchor="middle"></text>
+        </g>
+
+        <!-- Spring dynamometer 2 (blue) -->
+        <g id="dynamo2" style="cursor:grab">
+          <rect id="shell2" x="0" y="0" width="14" height="80" rx="3" fill="url(#shellGrad)" stroke="#9CA3AF" stroke-width="0.8"/>
+          <rect id="scale2" x="0" y="0" width="8" height="50" rx="1" fill="#fff" stroke="#E5E7EB" stroke-width="0.5"/>
+          <g id="ticks2"></g>
+          <line id="pointer2" x1="0" y1="0" x2="0" y2="0" stroke="#3B82F6" stroke-width="1.5"/>
+          <circle id="ring2" cx="0" cy="0" r="5" fill="none" stroke="#3B82F6" stroke-width="1.5"/>
+          <text id="readLabel2" x="0" y="0" font-size="7" fill="#3B82F6" font-weight="700" text-anchor="middle"></text>
+        </g>
+
+        <!-- Single force dynamometer (orange, hidden by default) -->
+        <g id="dynamo3" style="cursor:grab;display:none">
+          <rect id="shell3" x="0" y="0" width="14" height="80" rx="3" fill="url(#shellGrad)" stroke="#9CA3AF" stroke-width="0.8"/>
+          <rect id="scale3" x="0" y="0" width="8" height="50" rx="1" fill="#fff" stroke="#E5E7EB" stroke-width="0.5"/>
+          <g id="ticks3"></g>
+          <line id="pointer3" x1="0" y1="0" x2="0" y2="0" stroke="#F59E0B" stroke-width="1.5"/>
+          <circle id="ring3" cx="0" cy="0" r="5" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+          <text id="readLabel3" x="0" y="0" font-size="7" fill="#F59E0B" font-weight="700" text-anchor="middle"></text>
+        </g>
+
+        <!-- Legend -->
+        <g transform="translate(580, 290)">
+          <rect x="0" y="0" width="110" height="45" rx="4" fill="rgba(255,255,255,0.9)" stroke="#E5E7EB" stroke-width="0.5"/>
+          <line x1="8" y1="10" x2="22" y2="10" stroke="#EF4444" stroke-width="2"/><text x="26" y="13" font-size="6" fill="#6B7280">F₁ 分力1</text>
+          <line x1="8" y1="22" x2="22" y2="22" stroke="#3B82F6" stroke-width="2"/><text x="26" y="25" font-size="6" fill="#6B7280">F₂ 分力2</text>
+          <line x1="8" y1="34" x2="22" y2="34" stroke="#059669" stroke-width="2" stroke-dasharray="3,2"/><text x="26" y="37" font-size="6" fill="#6B7280">F' 理论合力</text>
+          <line x1="60" y1="10" x2="74" y2="10" stroke="#F59E0B" stroke-width="2"/><text x="78" y="13" font-size="6" fill="#6B7280">F 实际合力</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div class="guide-step"><span class="guide-num">1</span><span><strong>双力拉伸</strong>：拖拽两个测力计手柄</span></div>
+      <div class="guide-step"><span class="guide-num">2</span><span><strong>记录双力</strong>：记录 F₁、F₂ 大小和方向</span></div>
+      <div class="guide-step"><span class="guide-num">3</span><span><strong>切换单力</strong>：用单力拉到同一 O 点</span></div>
+      <div class="guide-step"><span class="guide-num">4</span><span><strong>对比验证</strong>：比较 F' 和 F 是否一致</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 力的参数</h3>
+      <div style="display:flex;gap:4px;margin-bottom:6px">
+        <button class="mode-btn active" id="modeTwo" onclick="setMode('two')">双力模式</button>
+        <button class="mode-btn" id="modeOne" onclick="setMode('one')">单力验证</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <div class="reading-card" style="background:#FEF2F2"><div class="label">F₁</div><div class="val" id="valF1" style="color:#EF4444">0.00<span class="unit"> N</span></div></div>
+        <div class="reading-card" style="background:#EFF6FF"><div class="label">F₂</div><div class="val" id="valF2" style="color:#3B82F6">0.00<span class="unit"> N</span></div></div>
+      </div>
+      <div class="data-row"><span class="data-label">夹角 θ</span><span class="data-value" id="valTheta">0.0°</span></div>
+      <div class="data-row"><span class="data-label">理论合力 F'</span><span class="data-value" id="valFprime" style="color:#059669">—</span></div>
+      <div class="data-row"><span class="data-label">实际合力 F</span><span class="data-value" id="valFact" style="color:#F59E0B">—</span></div>
+      <div class="warn-tip" id="warnTip"></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> 验证结果</h3>
+      <div class="data-row"><span class="data-label">大小偏差</span><span class="data-value" id="valSizeDiff" style="color:#D1D5DB">待验证</span></div>
+      <div class="data-row"><span class="data-label">方向偏差</span><span class="data-value" id="valAngleDiff" style="color:#D1D5DB">待验证</span></div>
+      <div class="data-row"><span class="data-label">结论</span><span class="data-value" id="valConclusion" style="color:#D1D5DB">待验证</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 记录数据</h3>
+      <table class="data-table">
+        <thead><tr><th>次</th><th>F₁(N)</th><th>F₂(N)</th><th>θ(°)</th><th>F'(N)</th><th>F(N)</th></tr></thead>
+        <tbody id="recordBody"><tr><td class="empty" colspan="6">记录后填充</td></tr></tbody>
+      </table>
+      <div style="margin-top:4px">
+        <button class="mode-btn active" id="recordBtn" onclick="recordData()" style="background:var(--lab-accent);color:#fff;border-color:var(--lab-accent)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" style="vertical-align:-1px"><path d="M12 5v14M5 12h14"/></svg> 记录
+        </button>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>力的平行四边形定则</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>两个力的合力等于以这两个力为邻边构成的平行四边形的对角线。</p>
+      <ul>
+        <li><strong>F₁、F₂</strong> — 两个分力（由弹簧测力计测量）</li>
+        <li><strong>F'</strong> — 理论合力（平行四边形对角线）</li>
+        <li><strong>F</strong> — 实际合力（单力验证）</li>
+        <li>若 F' ≈ F（大小和方向），则验证了定则</li>
+      </ul>
+      <p class="highlight-tip">力是矢量，合成遵循平行四边形定则，不是简单的代数相加。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>合力计算公式</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula2"></div>
+      <p>合力的大小由余弦定理求得，方向由正弦定理或分量法求得。</p>
+      <ul>
+        <li>θ = 0°（同向）：F = F₁ + F₂</li>
+        <li>θ = 180°（反向）：F = |F₁ - F₂|</li>
+        <li>θ = 90°（垂直）：F = √(F₁² + F₂²)</li>
+      </ul>
+      <p class="highlight-tip">考点：合力范围 |F₁-F₂| ≤ F ≤ F₁+F₂。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>实验注意事项</h2></div>
+    <div class="card-body">
+      <p><strong>等效替代法</strong>：两次实验中橡皮条结点必须拉到同一位置 O 点。</p>
+      <p><strong>角度不宜太小或太大</strong>：θ 过小时 F' 接近 F₁+F₂，误差不明显；θ 过大时橡皮条可能滑脱。</p>
+      <p><strong>读数要准确</strong>：弹簧测力计要在拉力方向上读数，不能斜看。</p>
+      <p class="highlight-tip">高考常考：等效替代法的含义、实验误差来源分析。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>F' ≠ F 的原因：</strong></p>
+      <p>1. 两次拉伸时结点未完全到达同一位置</p>
+      <p>2. 力的方向记录不准确（角度读数误差）</p>
+      <p>3. 弹簧测力计未校零或有系统误差</p>
+      <p>4. 作图误差（线段长度和方向的绘制精度）</p>
+      <p class="highlight-tip">考点提醒：F' 和 F 方向基本一致但大小略有差异是正常的实验结果。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>F₁=3.0N，F₂=4.0N，夹角 θ=90°。求合力 F'。</p>
+      <div class="solve">
+F' = √(F₁² + F₂² + 2F₁F₂cosθ)<br/>
+F' = √(9 + 16 + 2×3×4×cos90°)<br/>
+F' = √(9 + 16 + 0) = √25<br/>
+F' = <strong style="color:#2563EB">5.0 N</strong><br/>
+方向：tanα = F₂sinθ/(F₁+F₂cosθ) = 4/3<br/>
+α = 53.1°（与 F₁ 的夹角）
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const OX = 300, OY = 170; // fixed point O
+const SCALE = 40; // px per Newton
+const MAX_FORCE = 5.0; // N
+const SNAP_R = 8; // snap to O radius
+
+// ===== STATE =====
+let mode = 'two'; // 'two' or 'one'
+// Dynamometer handle positions (what user drags)
+let handle1 = { x: 180, y: 100 }; // F1 handle (red)
+let handle2 = { x: 420, y: 100 }; // F2 handle (blue)
+let handle3 = { x: 300, y: 50 };  // F single (orange)
+
+// Saved F1/F2 state for comparison
+let savedF1 = null, savedF2 = null, savedTheta = null, savedFprime = null;
+let records = [];
+
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
+
+// ===== FORCE CALCULATIONS =====
+function getForceVec(handlePos) {
+  // Force direction: from handle toward O
+  const dx = OX - handlePos.x;
+  const dy = OY - handlePos.y;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 1) return { fx: 0, fy: 0, mag: 0, angle: 0 };
+  // Force magnitude proportional to distance from O
+  // but direction is from junction toward handle (outward), force pulls toward handle
+  // Actually: handle is pulled outward, force on junction is toward handle
+  // Force magnitude = distance / SCALE (capped at MAX_FORCE)
+  const mag = Math.min(MAX_FORCE, dist / SCALE);
+  // Unit vector from O toward handle
+  const ux = -dx / dist, uy = -dy / dist; // pointing away from O (toward handle)
+  // Force vector (pointing from O toward handle)
+  return {
+    fx: ux * mag,
+    fy: uy * mag,
+    mag: mag,
+    angle: Math.atan2(-uy, ux) * 180 / Math.PI // angle from +x axis, y-up
+  };
+}
+
+function getAngleDeg(ax, ay) {
+  return Math.atan2(-ay, ax) * 180 / Math.PI;
+}
+
+// ===== RENDERING =====
+function render() {
+  if (mode === 'two') renderTwoForces();
+  else renderSingleForce();
+  updatePanel();
+}
+
+function renderTwoForces() {
+  const f1 = getForceVec(handle1);
+  const f2 = getForceVec(handle2);
+
+  // Junction at O (always, since we're pulling to O)
+  const jx = OX, jy = OY;
+  document.getElementById('junction').setAttribute('cx', jx);
+  document.getElementById('junction').setAttribute('cy', jy);
+
+  // Rubber bands from O to near handles
+  const rb1End = getHookPos(handle1);
+  const rb2End = getHookPos(handle2);
+  setLine('rubberBand1', jx, jy, rb1End.x, rb1End.y);
+  setLine('rubberBand2', jx, jy, rb2End.x, rb2End.y);
+
+  // Force arrows from O outward
+  const a1End = { x: OX + f1.fx * SCALE, y: OY + f1.fy * SCALE };
+  const a2End = { x: OX + f2.fx * SCALE, y: OY + f2.fy * SCALE };
+  setLine('arrowF1', OX, OY, a1End.x, a1End.y);
+  setLine('arrowF2', OX, OY, a2End.x, a2End.y);
+
+  // Labels
+  posLabel('labelF1', a1End.x, a1End.y, f1.fx, f1.fy);
+  posLabel('labelF2', a2End.x, a2End.y, f2.fx, f2.fy);
+
+  // Dynamometers
+  renderDynamo(1, handle1, f1, '#EF4444');
+  renderDynamo(2, handle2, f2, '#3B82F6');
+
+  // Parallelogram + F'
+  if (f1.mag > 0.1 && f2.mag > 0.1) {
+    // Parallelogram vertices: O, O+F1, O+F1+F2, O+F2
+    const p1 = { x: OX + f1.fx * SCALE, y: OY + f1.fy * SCALE };
+    const p2 = { x: OX + f2.fx * SCALE, y: OY + f2.fy * SCALE };
+    const p3 = { x: OX + (f1.fx + f2.fx) * SCALE, y: OY + (f1.fy + f2.fy) * SCALE };
+    const pgon = document.getElementById('parallelogram');
+    pgon.setAttribute('points', `${OX},${OY} ${p1.x},${p1.y} ${p3.x},${p3.y} ${p2.x},${p2.y}`);
+    pgon.setAttribute('opacity', '1');
+
+    // F' diagonal
+    setLine('arrowFprime', OX, OY, p3.x, p3.y);
+    document.getElementById('arrowFprime').setAttribute('opacity', '1');
+    const lbl = document.getElementById('labelFprime');
+    posLabel('labelFprime', p3.x, p3.y, f1.fx + f2.fx, f1.fy + f2.fy);
+    lbl.setAttribute('opacity', '1');
+
+    // Angle arc
+    drawAngleArc(f1, f2);
+  } else {
+    document.getElementById('parallelogram').setAttribute('opacity', '0');
+    document.getElementById('arrowFprime').setAttribute('opacity', '0');
+    document.getElementById('labelFprime').setAttribute('opacity', '0');
+    document.getElementById('angleArc').setAttribute('opacity', '0');
+    document.getElementById('angleLabel').setAttribute('opacity', '0');
+  }
+
+  // Hide single force elements
+  document.getElementById('arrowF').setAttribute('opacity', '0');
+  document.getElementById('labelF').setAttribute('opacity', '0');
+  document.getElementById('dynamo3').style.display = 'none';
+}
+
+function renderSingleForce() {
+  const f3 = getForceVec(handle3);
+
+  document.getElementById('junction').setAttribute('cx', OX);
+  document.getElementById('junction').setAttribute('cy', OY);
+
+  // Single rubber band
+  const rb3End = getHookPos(handle3);
+  setLine('rubberBand1', OX, OY, rb3End.x, rb3End.y);
+  setLine('rubberBand2', OX, OY, OX, OY); // hide second
+
+  // Arrow F
+  const aEnd = { x: OX + f3.fx * SCALE, y: OY + f3.fy * SCALE };
+  setLine('arrowF', OX, OY, aEnd.x, aEnd.y);
+  document.getElementById('arrowF').setAttribute('opacity', '1');
+  posLabel('labelF', aEnd.x, aEnd.y, f3.fx, f3.fy);
+  document.getElementById('labelF').setAttribute('opacity', '1');
+
+  // Dynamometer 3
+  document.getElementById('dynamo3').style.display = '';
+  renderDynamo(3, handle3, f3, '#F59E0B');
+
+  // Keep parallelogram + F' visible from saved state
+  if (savedFprime !== null) {
+    // Show saved F' arrow
+    const f1s = getForceVec({ x: OX - savedF1.fx * SCALE, y: OY - savedF1.fy * SCALE });
+    // Already have savedFprime data, re-render from saved
+    const p3x = OX + savedFprime.fx * SCALE;
+    const p3y = OY + savedFprime.fy * SCALE;
+    setLine('arrowFprime', OX, OY, p3x, p3y);
+    document.getElementById('arrowFprime').setAttribute('opacity', '1');
+    posLabel('labelFprime', p3x, p3y, savedFprime.fx, savedFprime.fy);
+    document.getElementById('labelFprime').setAttribute('opacity', '1');
+  }
+
+  // Hide F1 F2 arrows but keep parallelogram
+  document.getElementById('arrowF1').setAttribute('opacity', '0.3');
+  document.getElementById('arrowF2').setAttribute('opacity', '0.3');
+  document.getElementById('dynamo1').style.display = 'none';
+  document.getElementById('dynamo2').style.display = 'none';
+}
+
+function getHookPos(handlePos) {
+  // Hook is partway from O toward handle
+  const dx = handlePos.x - OX;
+  const dy = handlePos.y - OY;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 1) return { x: OX, y: OY };
+  const hookDist = Math.min(dist * 0.3, 30);
+  return { x: OX + dx / dist * hookDist, y: OY + dy / dist * hookDist };
+}
+
+function setLine(id, x1, y1, x2, y2) {
+  const el = document.getElementById(id);
+  el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+  el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+}
+
+function posLabel(id, x, y, fx, fy) {
+  const el = document.getElementById(id);
+  const offset = 12;
+  const len = Math.hypot(fx, fy);
+  if (len < 0.01) return;
+  el.setAttribute('x', x + (fx / len) * offset);
+  el.setAttribute('y', y + (fy / len) * offset);
+}
+
+function renderDynamo(n, handlePos, force, color) {
+  const dx = handlePos.x - OX;
+  const dy = handlePos.y - OY;
+  const dist = Math.hypot(dx, dy);
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+  // Position shell along direction from O to handle
+  const shellLen = 80;
+  const shellW = 14;
+  const cx = (OX + handlePos.x) / 2;
+  const cy = (OY + handlePos.y) / 2;
+
+  const shell = document.getElementById('shell' + n);
+  const scaleRect = document.getElementById('scale' + n);
+  const ring = document.getElementById('ring' + n);
+  const readLabel = document.getElementById('readLabel' + n);
+
+  // Transform: rotate around center, position along line
+  const startX = OX + dx / dist * 25;
+  const startY = OY + dy / dist * 25;
+
+  const g = document.getElementById('dynamo' + n);
+  g.setAttribute('transform', `translate(${startX}, ${startY}) rotate(${angle}, 0, 0)`);
+
+  shell.setAttribute('x', 0);
+  shell.setAttribute('y', -shellW / 2);
+  shell.setAttribute('width', Math.max(40, dist - 30));
+  shell.setAttribute('height', shellW);
+
+  scaleRect.setAttribute('x', 10);
+  scaleRect.setAttribute('y', -4);
+  scaleRect.setAttribute('width', Math.max(20, dist - 60));
+  scaleRect.setAttribute('height', 8);
+
+  // Ring at handle end
+  ring.setAttribute('cx', Math.max(40, dist - 30));
+  ring.setAttribute('cy', 0);
+
+  // Reading label
+  readLabel.setAttribute('x', Math.max(40, dist - 30) / 2);
+  readLabel.setAttribute('y', -shellW / 2 - 4);
+  readLabel.textContent = force.mag.toFixed(2) + 'N';
+
+  // Draw scale ticks
+  const ticksG = document.getElementById('ticks' + n);
+  ticksG.innerHTML = '';
+  const scaleLen = Math.max(20, dist - 60);
+  for (let i = 0; i <= 5; i++) {
+    const tx = 10 + (i / 5) * scaleLen;
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', tx); tick.setAttribute('y1', -4);
+    tick.setAttribute('x2', tx); tick.setAttribute('y2', 4);
+    tick.setAttribute('stroke', '#9CA3AF'); tick.setAttribute('stroke-width', '0.3');
+    ticksG.appendChild(tick);
+  }
+  // Pointer at force magnitude position
+  const px = 10 + (force.mag / MAX_FORCE) * scaleLen;
+  const ptr = document.getElementById('pointer' + n);
+  ptr.setAttribute('x1', px); ptr.setAttribute('y1', -4);
+  ptr.setAttribute('x2', px); ptr.setAttribute('y2', 4);
+}
+
+function drawAngleArc(f1, f2) {
+  const r = 25;
+  const a1 = Math.atan2(f1.fy, f1.fx);
+  const a2 = Math.atan2(f2.fy, f2.fx);
+
+  // Always draw arc from f1 to f2 (shorter way)
+  const sx = OX + r * Math.cos(a1), sy = OY + r * Math.sin(a1);
+  const ex = OX + r * Math.cos(a2), ey = OY + r * Math.sin(a2);
+
+  let sweep = 0;
+  let dAngle = a2 - a1;
+  if (dAngle < -Math.PI) dAngle += 2 * Math.PI;
+  if (dAngle > Math.PI) dAngle -= 2 * Math.PI;
+  sweep = dAngle > 0 ? 1 : 0;
+  const large = Math.abs(dAngle) > Math.PI ? 1 : 0;
+
+  const arc = document.getElementById('angleArc');
+  arc.setAttribute('d', `M${sx},${sy} A${r},${r} 0 ${large},${sweep} ${ex},${ey}`);
+  arc.setAttribute('opacity', '1');
+
+  const midA = a1 + dAngle / 2;
+  const lbl = document.getElementById('angleLabel');
+  lbl.setAttribute('x', OX + (r + 10) * Math.cos(midA));
+  lbl.setAttribute('y', OY + (r + 10) * Math.sin(midA));
+  lbl.setAttribute('opacity', '1');
+
+  const theta = Math.abs(dAngle) * 180 / Math.PI;
+  lbl.textContent = `θ=${theta.toFixed(0)}°`;
+}
+
+// ===== PANEL =====
+function updatePanel() {
+  const f1 = getForceVec(handle1);
+  const f2 = getForceVec(handle2);
+  document.getElementById('valF1').innerHTML = f1.mag.toFixed(2) + '<span class="unit"> N</span>';
+  document.getElementById('valF2').innerHTML = f2.mag.toFixed(2) + '<span class="unit"> N</span>';
+
+  // Angle between F1 and F2
+  if (f1.mag > 0.1 && f2.mag > 0.1) {
+    const dot = f1.fx * f2.fx + f1.fy * f2.fy;
+    const cosTheta = dot / (f1.mag * f2.mag);
+    const theta = Math.acos(Math.max(-1, Math.min(1, cosTheta))) * 180 / Math.PI;
+    document.getElementById('valTheta').textContent = theta.toFixed(1) + '°';
+
+    // F' magnitude
+    const fPrimeMag = Math.hypot(f1.fx + f2.fx, f1.fy + f2.fy);
+    document.getElementById('valFprime').textContent = fPrimeMag.toFixed(2) + ' N';
+    document.getElementById('valFprime').style.color = '#059669';
+  }
+
+  // Warn if over range
+  const warn = document.getElementById('warnTip');
+  if (f1.mag >= MAX_FORCE || f2.mag >= MAX_FORCE) {
+    warn.textContent = '超出量程（5N）！';
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  if (mode === 'one') {
+    const f3 = getForceVec(handle3);
+    document.getElementById('valFact').textContent = f3.mag.toFixed(2) + ' N';
+    document.getElementById('valFact').style.color = '#F59E0B';
+
+    // Compare with saved F'
+    if (savedFprime) {
+      const fPrimeMag = savedFprime.mag;
+      const sizeDiff = Math.abs(f3.mag - fPrimeMag) / fPrimeMag * 100;
+      document.getElementById('valSizeDiff').textContent = sizeDiff.toFixed(1) + '%';
+      document.getElementById('valSizeDiff').style.color = sizeDiff < 5 ? '#059669' : '#B45309';
+
+      // Direction difference
+      const a3 = Math.atan2(f3.fy, f3.fx);
+      const aP = Math.atan2(savedFprime.fy, savedFprime.fx);
+      let angleDiff = Math.abs(a3 - aP) * 180 / Math.PI;
+      if (angleDiff > 180) angleDiff = 360 - angleDiff;
+      document.getElementById('valAngleDiff').textContent = angleDiff.toFixed(1) + '°';
+      document.getElementById('valAngleDiff').style.color = angleDiff < 5 ? '#059669' : '#B45309';
+
+      // Conclusion
+      if (sizeDiff < 5 && angleDiff < 5) {
+        document.getElementById('valConclusion').textContent = 'F\'≈F，定则成立';
+        document.getElementById('valConclusion').style.color = '#059669';
+        document.getElementById('statusBadge').textContent = '验证成功：F\' ≈ F，平行四边形定则成立';
+      } else {
+        document.getElementById('valConclusion').textContent = '偏差较大，检查操作';
+        document.getElementById('valConclusion').style.color = '#B45309';
+      }
+    }
+  }
+}
+
+// ===== MODE SWITCHING =====
+function setMode(m) {
+  if (m === 'one' && mode === 'two') {
+    // Save current F1 F2 state
+    const f1 = getForceVec(handle1);
+    const f2 = getForceVec(handle2);
+    if (f1.mag < 0.5 || f2.mag < 0.5) {
+      document.getElementById('warnTip').textContent = '请先拉两个测力计再切换';
+      document.getElementById('warnTip').style.display = 'block';
+      return;
+    }
+    savedF1 = f1;
+    savedF2 = f2;
+    savedFprime = { fx: f1.fx + f2.fx, fy: f1.fy + f2.fy, mag: Math.hypot(f1.fx + f2.fx, f1.fy + f2.fy) };
+
+    const dot = f1.fx * f2.fx + f1.fy * f2.fy;
+    savedTheta = Math.acos(Math.max(-1, Math.min(1, dot / (f1.mag * f2.mag)))) * 180 / Math.PI;
+
+    // Position handle3 near F' direction
+    handle3 = { x: OX + savedFprime.fx / savedFprime.mag * 120, y: OY + savedFprime.fy / savedFprime.mag * 120 };
+  }
+
+  mode = m;
+  document.getElementById('modeTwo').className = m === 'two' ? 'mode-btn active' : 'mode-btn';
+  document.getElementById('modeOne').className = m === 'one' ? 'mode-btn active' : 'mode-btn';
+
+  // Show/hide dynamometers
+  if (m === 'two') {
+    document.getElementById('dynamo1').style.display = '';
+    document.getElementById('dynamo2').style.display = '';
+    document.getElementById('dynamo3').style.display = 'none';
+    document.getElementById('arrowF1').setAttribute('opacity', '1');
+    document.getElementById('arrowF2').setAttribute('opacity', '1');
+    document.getElementById('statusBadge').textContent = '拖拽测力计手柄调节力的大小和方向';
+  } else {
+    document.getElementById('statusBadge').textContent = '拖拽单力测力计到 O 点，对比 F\' 和 F';
+  }
+  render();
+}
+
+// ===== DRAG HANDLING =====
+let activeDrag = null; // 1, 2, or 3
+
+['dynamo1', 'dynamo2', 'dynamo3'].forEach((id, i) => {
+  document.getElementById(id).addEventListener('pointerdown', e => {
+    e.preventDefault();
+    activeDrag = i + 1;
+    document.getElementById(id).style.cursor = 'grabbing';
+  });
+});
+
+// Also allow dragging ring handles directly
+['ring1', 'ring2', 'ring3'].forEach((id, i) => {
+  document.getElementById(id).addEventListener('pointerdown', e => {
+    e.preventDefault();
+    activeDrag = i + 1;
+  });
+});
+
+document.addEventListener('pointermove', e => {
+  if (!activeDrag) return;
+  const pt = getSvgPoint(e);
+  // Don't allow handle too close to O
+  const dist = Math.hypot(pt.x - OX, pt.y - OY);
+  if (dist < 20) return;
+  // Cap at MAX_FORCE distance
+  const maxDist = MAX_FORCE * SCALE;
+  let hx = pt.x, hy = pt.y;
+  if (dist > maxDist) {
+    hx = OX + (pt.x - OX) / dist * maxDist;
+    hy = OY + (pt.y - OY) / dist * maxDist;
+  }
+
+  if (activeDrag === 1 && mode === 'two') handle1 = { x: hx, y: hy };
+  else if (activeDrag === 2 && mode === 'two') handle2 = { x: hx, y: hy };
+  else if (activeDrag === 3 && mode === 'one') handle3 = { x: hx, y: hy };
+  render();
+});
+
+document.addEventListener('pointerup', () => {
+  if (activeDrag) {
+    const id = 'dynamo' + activeDrag;
+    document.getElementById(id).style.cursor = 'grab';
+    activeDrag = null;
+  }
+});
+
+// ===== RECORD =====
+function recordData() {
+  const f1 = getForceVec(handle1);
+  const f2 = getForceVec(handle2);
+  if (f1.mag < 0.5 || f2.mag < 0.5) return;
+
+  const dot = f1.fx * f2.fx + f1.fy * f2.fy;
+  const theta = Math.acos(Math.max(-1, Math.min(1, dot / (f1.mag * f2.mag)))) * 180 / Math.PI;
+  const fprime = Math.hypot(f1.fx + f2.fx, f1.fy + f2.fy);
+
+  const f3 = mode === 'one' ? getForceVec(handle3) : null;
+  const fActual = f3 ? f3.mag : null;
+
+  records.push({
+    n: records.length + 1,
+    F1: f1.mag, F2: f2.mag, theta: theta,
+    Fprime: fprime, F: fActual
+  });
+
+  updateRecordTable();
+}
+
+function updateRecordTable() {
+  const tbody = document.getElementById('recordBody');
+  tbody.innerHTML = '';
+  records.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.n}</td><td>${r.F1.toFixed(2)}</td><td>${r.F2.toFixed(2)}</td><td>${r.theta.toFixed(0)}</td><td>${r.Fprime.toFixed(2)}</td><td>${r.F !== null ? r.F.toFixed(2) : '—'}</td>`;
+    tr.style.cursor = 'pointer';
+    tr.title = '点击删除';
+    tr.addEventListener('mouseenter', () => { tr.style.background = '#FEF2F2'; });
+    tr.addEventListener('mouseleave', () => { tr.style.background = ''; });
+    tr.addEventListener('click', () => {
+      records = records.filter(d => d !== r);
+      records.forEach((d, i) => d.n = i + 1);
+      updateRecordTable();
+    });
+    tbody.appendChild(tr);
+  });
+  if (records.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="6">记录后填充</td></tr>';
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  mode = 'two';
+  handle1 = { x: 180, y: 100 };
+  handle2 = { x: 420, y: 100 };
+  handle3 = { x: 300, y: 50 };
+  savedF1 = null; savedF2 = null; savedTheta = null; savedFprime = null;
+  records = [];
+
+  document.getElementById('modeTwo').className = 'mode-btn active';
+  document.getElementById('modeOne').className = 'mode-btn';
+  document.getElementById('dynamo1').style.display = '';
+  document.getElementById('dynamo2').style.display = '';
+  document.getElementById('dynamo3').style.display = 'none';
+  document.getElementById('arrowF1').setAttribute('opacity', '1');
+  document.getElementById('arrowF2').setAttribute('opacity', '1');
+
+  document.getElementById('valFact').textContent = '—';
+  document.getElementById('valFact').style.color = '#F59E0B';
+  document.getElementById('valSizeDiff').textContent = '待验证';
+  document.getElementById('valSizeDiff').style.color = '#D1D5DB';
+  document.getElementById('valAngleDiff').textContent = '待验证';
+  document.getElementById('valAngleDiff').style.color = '#D1D5DB';
+  document.getElementById('valConclusion').textContent = '待验证';
+  document.getElementById('valConclusion').style.color = '#D1D5DB';
+  document.getElementById('warnTip').style.display = 'none';
+
+  document.getElementById('recordBody').innerHTML = '<tr><td class="empty" colspan="6">记录后填充</td></tr>';
+  document.getElementById('statusBadge').textContent = '拖拽测力计手柄调节力的大小和方向';
+  document.getElementById('statusBadge').className = 'status-badge idle';
+
+  render();
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  const f1 = document.getElementById('formula1');
+  const f2 = document.getElementById('formula2');
+  if (f1) katex.render('\\vec{F} = \\vec{F_1} + \\vec{F_2}', f1, { displayMode: true, throwOnError: false });
+  if (f2) katex.render('F = \\sqrt{F_1^2 + F_2^2 + 2F_1 F_2 \\cos\\theta}', f2, { displayMode: true, throwOnError: false });
+}
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+render();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
