@@ -176,21 +176,7 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
 .knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
 
 </style>
-<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}
-.knowledge-section{width:100%;padding:24px 16px 40px 16px}
-.knowledge-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.03);padding:0;margin-bottom:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
-.knowledge-card .card-header{padding:16px 24px 12px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:10px}
-.knowledge-card .card-header .accent{width:4px;height:24px;border-radius:2px;background:#059669;flex-shrink:0}
-.knowledge-card .card-header h2{font-size:16px;font-weight:700;color:#1D1D1F;margin:0}
-.knowledge-card .card-body{padding:16px 24px 20px}
-.knowledge-card p{font-size:13px;line-height:1.8;color:#4B5563;margin-bottom:8px}
-.knowledge-card ul{list-style:none;padding:0}
-.knowledge-card li{font-size:13px;line-height:1.8;color:#4B5563;padding:2px 0;padding-left:16px;position:relative}
-.knowledge-card li::before{content:'•';position:absolute;left:0;color:#059669}
-.knowledge-card .formula-lg{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
-.knowledge-card .solve{background:#F8FAFC;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;margin-top:8px}
-
-</style>
+<style>@media(min-width:1380px){.main{margin-left:calc((100vw - 328px)/2 - 480px)!important;margin-right:328px!important}}</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"单摆运动模拟","url":"https://l-s-c.github.io/devkit/pages/lab/pendulum/","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"在线单摆运动模拟实验，交互式物理动画，可调参数，能量守恒可视化","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
 </script>
@@ -831,6 +817,19 @@ input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: 
       el.innerHTML = '<span style="font-size:18px;font-weight:800;font-family:serif">' + f.fallback + '</span>';
     }
   });
+  // KaTeX polling fallback
+  if (typeof katex === 'undefined') {
+    (function tryKatex(n) {
+      if (typeof katex !== 'undefined') {
+        formulas.forEach(function(f) {
+          var el = document.getElementById(f.id);
+          if (el) try { katex.render(f.tex, el, { displayMode: f.display }); } catch(e) {}
+        });
+        return;
+      }
+      if (n < 50) setTimeout(function() { tryKatex(n + 1); }, 100);
+    })(0);
+  }
 
   // === 练习模式 ===
   var quizBank = [
