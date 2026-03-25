@@ -802,7 +802,11 @@ function renderFormulas() {
 // ===== INIT =====
 updatePanel();
 updateHangingWeights();
-if (window.katex) renderFormulas();
+// KaTeX rendering: try immediately, retry until loaded (defer script race condition)
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
 setTimeout(() => {
   const g = document.getElementById('guideLabels');
   if (g) { g.style.transition = 'opacity 1s'; g.style.opacity = '0'; }
