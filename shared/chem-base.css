@@ -1,0 +1,34 @@
+/* chem-base.css — Chemistry experiment shared styles */
+/* Extends lab-base.css with chemistry-specific components */
+
+/* Step progress bar */
+.step-bar{display:flex;gap:2px;margin-bottom:8px}
+.step-item{flex:1;text-align:center;padding:6px 4px;border-radius:6px;background:#F1F5F9;border:1px solid #E2E8F0;font-size:9px;color:#94A3B8;transition:all .2s}
+.step-item.active{background:#E0F2FE;border-color:#7DD3FC;color:#0284C7;font-weight:700}
+.step-item.done{background:#F0FDF4;border-color:#86EFAC;color:#16A34A}
+.step-item .step-num{display:block;font-size:11px;font-weight:800;margin-bottom:1px}
+
+/* Observation checklist */
+.obs-list{list-style:none;padding:0}
+.obs-item{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:11px;color:#64748B}
+.obs-item.checked{color:#0F172A}
+.obs-item .obs-check{width:14px;height:14px;border-radius:3px;border:1px solid #CBD5E1;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0}
+.obs-item.checked .obs-check{background:#0284C7;border-color:#0284C7;color:#FFF}
+
+/* Next step button */
+.step-btn{width:100%;padding:8px;border-radius:8px;border:none;background:#0284C7;color:#FFF;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.step-btn:hover{background:#0369A1}
+.step-btn:disabled{background:#CBD5E1;cursor:not-allowed}
+.step-desc{font-size:10px;color:#64748B;padding:4px 0}
+
+/* Chemistry info cards */
+.chem-equation{background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:8px;font-size:11px;text-align:center;margin:6px 0}
+
+/* Dark mode */
+html[data-theme="dark"] .step-item{background:#1E293B;border-color:#334155;color:#64748B}
+html[data-theme="dark"] .step-item.active{background:#0C4A6E;border-color:#0284C7;color:#7DD3FC}
+html[data-theme="dark"] .step-item.done{background:#052E16;border-color:#16A34A;color:#4ADE80}
+html[data-theme="dark"] .obs-item{color:#94A3B8}
+html[data-theme="dark"] .obs-item.checked{color:#E2E8F0}
+html[data-theme="dark"] .chem-equation{background:#0C4A6E;border-color:#075985;color:#BAE6FD}
+html[data-theme="dark"] .step-desc{color:#94A3B8}

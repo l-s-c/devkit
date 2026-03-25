@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测定空气中氧气含量 - 红磷燃烧法在线实验 | DevKit</title>
+<meta name="keywords" content="测定氧气含量, 红磷燃烧, 空气组成, 初中化学">
+<meta name="description" content="通过红磷燃烧法测定空气中氧气含量，观察水面上升约1/5，验证空气中氧气约占21%">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+.bar-chart{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0}
+.bar-seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#FFF}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
+  <h1>测定空气中氧气含量</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>氧气含量 · 红磷燃烧 · 空气组成 · 初中化学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
+      <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.25)"/><stop offset="100%" stop-color="rgba(255,255,255,0.05)"/></linearGradient>
+          <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#F97316"/><stop offset="40%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#FEF3C7" stop-opacity="0.5"/></linearGradient>
+        </defs>
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- ===== COLLECTING BOTTLE ===== -->
+        <g id="bottleGroup" transform="translate(200,40)">
+          <!-- Glass body -->
+          <rect id="bottleBody" x="0" y="20" width="100" height="160" rx="4" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="1.2"/>
+          <!-- Left highlight -->
+          <line x1="3" y1="25" x2="3" y2="175" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <!-- Neck -->
+          <rect x="38" y="5" width="24" height="18" rx="2" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
+          <!-- Scale marks -->
+          <line x1="0" y1="148" x2="10" y2="148" stroke="#94A3B8" stroke-width="0.5"/>
+          <text x="13" y="151" font-size="6" fill="#94A3B8">1/5</text>
+          <line x1="0" y1="116" x2="8" y2="116" stroke="#94A3B8" stroke-width="0.3"/>
+          <line x1="0" y1="84" x2="8" y2="84" stroke="#94A3B8" stroke-width="0.3"/>
+          <line x1="0" y1="52" x2="8" y2="52" stroke="#94A3B8" stroke-width="0.3"/>
+          <text x="50" y="205" font-size="7" fill="#64748B" text-anchor="middle">集气瓶 (500mL)</text>
+
+          <!-- Water inside bottle (initially hidden) -->
+          <rect id="bottleWater" x="2" y="180" width="96" height="0" fill="#7DD3FC" opacity="0.4" rx="2"/>
+          <!-- Water meniscus -->
+          <ellipse id="waterMeniscus" cx="50" cy="180" rx="48" ry="3" fill="#38BDF8" opacity="0"/>
+
+          <!-- Rubber stopper -->
+          <rect id="stopper" x="34" y="8" width="32" height="10" rx="3" fill="#92400E" stroke="#78350F" stroke-width="0.5"/>
+          <text x="50" y="0" font-size="5" fill="#64748B" text-anchor="middle">橡皮塞</text>
+        </g>
+
+        <!-- ===== COMBUSTION SPOON ===== -->
+        <g id="spoonGroup" transform="translate(250,48)">
+          <!-- Handle through stopper -->
+          <line id="spoonHandle" x1="0" y1="0" x2="0" y2="80" stroke="#78716C" stroke-width="2" stroke-linecap="round"/>
+          <!-- Spoon cup -->
+          <ellipse id="spoonCup" cx="0" cy="80" rx="8" ry="4" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
+          <!-- Red phosphorus -->
+          <circle id="redPhosphorus" cx="0" cy="78" r="5" fill="#DC2626" opacity="1"/>
+          <text x="15" y="82" font-size="5" fill="#DC2626">红磷</text>
+        </g>
+
+        <!-- ===== FLAME (hidden initially) ===== -->
+        <g id="flameGroup" opacity="0" transform="translate(250,108)">
+          <ellipse cx="0" cy="0" rx="10" ry="18" fill="url(#flameGrad)" opacity="0.8"/>
+          <ellipse cx="0" cy="4" rx="5" ry="10" fill="#FEF3C7" opacity="0.6"/>
+        </g>
+
+        <!-- ===== SMOKE CONTAINER ===== -->
+        <g id="smokeContainer"></g>
+
+        <!-- =====導管 + 止水夹 ===== -->
+        <g id="tubeGroup">
+          <!-- Rubber tube from bottle to trough -->
+          <path id="rubberTube" d="M200,190 Q180,190 170,220 Q160,260 180,280 L360,280" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+          <text x="165" y="245" font-size="5" fill="#64748B">导管</text>
+          <!-- Clamp -->
+          <rect id="clamp" x="172" y="230" width="16" height="10" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
+          <text id="clampLabel" x="180" y="254" font-size="5" fill="#64748B" text-anchor="middle">止水夹(关)</text>
+        </g>
+
+        <!-- ===== WATER TROUGH ===== -->
+        <g id="troughGroup" transform="translate(330,260)">
+          <rect x="0" y="0" width="120" height="60" rx="3" fill="rgba(219,234,254,0.15)" stroke="#93C5FD" stroke-width="1"/>
+          <!-- Trough water -->
+          <rect id="troughWater" x="2" y="15" width="116" height="43" rx="2" fill="#7DD3FC" opacity="0.35"/>
+          <!-- Tube end submerged -->
+          <line x1="30" y1="0" x2="30" y2="35" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+          <text x="60" y="72" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
+        </g>
+
+        <!-- ===== RIGHT SIDE INFO ===== -->
+        <!-- Chemical equation -->
+        <g transform="translate(480,50)">
+          <rect x="0" y="0" width="200" height="40" rx="6" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+          <text x="100" y="15" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">化学方程式</text>
+          <text id="equation" x="100" y="30" font-size="8" fill="#0F172A" text-anchor="middle">4P + 5O₂ → 2P₂O₅</text>
+        </g>
+
+        <!-- Air composition bar -->
+        <g transform="translate(480,110)">
+          <text x="0" y="0" font-size="7" fill="#64748B">空气组成（体积比）</text>
+          <rect x="0" y="8" width="200" height="16" rx="3" fill="#E2E8F0"/>
+          <rect x="0" y="8" width="42" height="16" rx="3" fill="#0284C7"/>
+          <text x="21" y="20" font-size="6" fill="#FFF" text-anchor="middle" font-weight="700">O₂ 21%</text>
+          <rect x="42" y="8" width="156" height="16" fill="#94A3B8"/>
+          <text x="120" y="20" font-size="6" fill="#FFF" text-anchor="middle">N₂ 78%</text>
+          <rect x="198" y="8" width="2" height="16" rx="1" fill="#64748B"/>
+        </g>
+
+        <!-- Measurement result -->
+        <g transform="translate(480,150)">
+          <rect x="0" y="0" width="200" height="60" rx="8" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="1"/>
+          <text x="100" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">测量结果</text>
+          <text id="resultDisplay" x="100" y="42" font-size="20" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">—</text>
+        </g>
+
+        <!-- Current state info -->
+        <g transform="translate(480,230)">
+          <rect x="0" y="0" width="200" height="80" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">实验状态</text>
+          <text id="stateGas" x="10" y="35" font-size="7" fill="#64748B">瓶内气体：空气（N₂+O₂）</text>
+          <text id="statePressure" x="10" y="50" font-size="7" fill="#64748B">瓶内气压：1 atm</text>
+          <text id="stateWater" x="10" y="65" font-size="7" fill="#64748B">水面位置：底部</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Step progress -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="step-bar" id="stepBar">
+          <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
+          <div class="step-item" data-step="1"><span class="step-num">2</span>燃烧</div>
+          <div class="step-item" data-step="2"><span class="step-num">3</span>冷却</div>
+          <div class="step-item" data-step="3"><span class="step-num">4</span>开夹</div>
+          <div class="step-item" data-step="4"><span class="step-num">5</span>完成</div>
+        </div>
+      </div>
+
+      <!-- Current step description + action -->
+      <div class="panel-section">
+        <div class="section-title" id="stepTitle">第 1 步：检查装置</div>
+        <div class="step-desc" id="stepDesc">检查装置气密性，确保集气瓶、导管、止水夹连接完好。</div>
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">检查气密性 → 点燃红磷</button>
+      </div>
+
+      <!-- Observation checklist -->
+      <div class="panel-section">
+        <div class="section-title">现象观察</div>
+        <ul class="obs-list" id="obsList">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>红磷剧烈燃烧</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>产生大量白烟</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>放出热量</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>冷却后打开止水夹</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>水沿导管进入集气瓶</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>水面上升约 1/5 体积</li>
+        </ul>
+      </div>
+
+      <!-- Data -->
+      <div class="panel-section">
+        <div class="section-title">实验数据</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">瓶容积</div><div class="val" style="font-size:14px;color:#0284C7">500</div><div class="unit">mL</div></div>
+          <div class="reading-card"><div class="label">水进入量</div><div class="val" id="dispWater" style="font-size:14px;color:#0284C7">—</div><div class="unit">mL</div></div>
+          <div class="reading-card"><div class="label">O₂ 占比</div><div class="val" id="dispRatio" style="font-size:14px;color:#0284C7">—</div><div class="unit">%</div></div>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="panel-section">
+        <button class="ctrl-btn secondary" id="btnReset" onclick="resetAll()">重做实验</button>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div class="result-card">
+          <div style="font-size:11px;color:#0F172A">
+            水面上升约 <strong style="color:#0284C7">1/5</strong> 体积，说明空气中氧气约占 <strong style="color:#0284C7">21%</strong>。
+          </div>
+        </div>
+      </div>
+
+      <!-- Error analysis -->
+      <div class="panel-section" id="errorSection" style="display:none">
+        <div class="section-title">误差分析</div>
+        <div style="font-size:10px;color:#64748B">
+          <div style="margin-bottom:4px"><strong style="color:#DC2626">偏小原因</strong>（水面不到 1/5）：</div>
+          <div>· 红磷量不足，O₂ 未完全消耗</div>
+          <div>· 装置漏气</div>
+          <div>· 未冷却至室温就打开止水夹</div>
+          <div style="margin:6px 0 4px"><strong style="color:#0284C7">偏大原因</strong>（水面超过 1/5）：</div>
+          <div>· 点燃后伸入过慢，部分气体逸出</div>
+          <div>· 止水夹未夹紧</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>红磷在集气瓶中燃烧消耗氧气，生成固体 P₂O₅。冷却后瓶内气压降低，打开止水夹，外部水在大气压作用下沿导管进入集气瓶。水面上升的体积即为消耗的氧气体积。</p>
+
+    <h3>为什么用红磷？</h3>
+    <ul>
+      <li>红磷燃点低（240°C），容易点燃</li>
+      <li>生成物 P₂O₅ 是<strong>固体</strong>，不影响气体体积</li>
+      <li>红磷只与 O₂ 反应，不与 N₂ 反应</li>
+      <li>不能用木炭/硫（生成 CO₂/SO₂ 气体，会占据体积）</li>
+    </ul>
+
+    <h3>误差分析（中考重点）</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin:12px 0">
+      <tr style="background:#FEE2E2"><th style="padding:6px;border:1px solid #FECACA" colspan="2">水面不到 1/5（偏小）</th></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">1</td><td style="padding:6px;border:1px solid #E5E7EB">红磷量不足，O₂ 未完全消耗</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">2</td><td style="padding:6px;border:1px solid #E5E7EB">装置漏气</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">3</td><td style="padding:6px;border:1px solid #E5E7EB">未冷却至室温就打开止水夹</td></tr>
+      <tr style="background:#DBEAFE"><th style="padding:6px;border:1px solid #BFDBFE" colspan="2">水面超过 1/5（偏大）</th></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">1</td><td style="padding:6px;border:1px solid #E5E7EB">点燃后伸入过慢，部分热气逸出</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">2</td><td style="padding:6px;border:1px solid #E5E7EB">止水夹未夹紧，实验前有气体逸出</td></tr>
+    </table>
+
+    <h3>中考答题模板</h3>
+    <p><strong>实验结论</strong>：空气中氧气的体积约占空气总体积的 1/5（约 21%）。</p>
+    <p><strong>现象描述</strong>：红磷剧烈燃烧，产生大量白烟，放出热量；冷却后打开止水夹，水沿导管进入集气瓶，水面上升约 1/5 体积。</p>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script src="/shared/chem-apparatus.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== STATE MACHINE =====
+const STEPS = ['ready', 'burning', 'cooling', 'water_rising', 'complete'];
+const STEP_INFO = [
+  { title: '第 1 步：检查装置', desc: '检查装置气密性，确保集气瓶、导管、止水夹连接完好。', btn: '检查气密性 → 点燃红磷' },
+  { title: '第 2 步：红磷燃烧', desc: '红磷剧烈燃烧，产生大量白烟，放出热量。等待红磷完全燃烧熄灭。', btn: '等待冷却…' },
+  { title: '第 3 步：冷却至室温', desc: '等待集气瓶冷却至室温。冷却后瓶内气压低于大气压。', btn: '打开止水夹' },
+  { title: '第 4 步：打开止水夹', desc: '水沿导管进入集气瓶，水面上升约占瓶容积的 1/5。', btn: '观察水面…' },
+  { title: '实验完成', desc: '记录水面上升的体积，计算氧气在空气中的体积分数。', btn: '实验完成' }
+];
+
+const state = {
+  step: 0,
+  animating: false,
+  measError: 0, // generated once at start
+  smokeSystem: null,
+  waterRiseAnim: null
+};
+
+// Generate measurement error once
+state.measError = (Math.random() - 0.5) * 0.05; // ±2.5% → result 19.5%~22.5%
+
+// ===== STEP CONTROL =====
+function nextStep() {
+  if (state.animating) return;
+  if (state.step >= STEPS.length - 1) return;
+
+  state.step++;
+  updateStepBar();
+
+  switch (STEPS[state.step]) {
+    case 'burning': startBurning(); break;
+    case 'cooling': startCooling(); break;
+    case 'water_rising': startWaterRising(); break;
+    case 'complete': showComplete(); break;
+  }
+}
+
+function updateStepBar() {
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < state.step) el.classList.add('done');
+    if (i === state.step) el.classList.add('active');
+  });
+
+  const info = STEP_INFO[state.step];
+  $('stepTitle').textContent = info.title;
+  $('stepDesc').textContent = info.desc;
+  $('stepBtn').textContent = info.btn;
+  $('stepBtn').disabled = state.animating;
+}
+
+// ===== STEP 1→2: BURNING =====
+function startBurning() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('statusBadge').textContent = '红磷剧烈燃烧，产生大量白烟…';
+  $('statusBadge').className = 'status-badge done';
+
+  // Show flame
+  $('flameGroup').setAttribute('opacity', '1');
+  checkObs('obs1');
+
+  // Start smoke
+  const smokeContainer = $('smokeContainer');
+  state.smokeSystem = ChemEffects.createSmokeSystem(null, smokeContainer, 20);
+  state.smokeSystem.start(80, (emit) => {
+    emit(250, 100, { spread: 15, color: '#D1D5DB', opacity: 0.35, speed: 0.4, maxR: 15, maxLife: 100 });
+  });
+  checkObs('obs2');
+  checkObs('obs3');
+
+  // Flame flicker animation
+  let flickerCount = 0;
+  function flicker() {
+    if (flickerCount > 120) { // ~2 seconds
+      endBurning();
+      return;
+    }
+    const scale = 0.8 + Math.random() * 0.4;
+    $('flameGroup').setAttribute('transform', `translate(250,108) scale(${scale})`);
+    flickerCount++;
+    requestAnimationFrame(flicker);
+  }
+  requestAnimationFrame(flicker);
+
+  // Update state info
+  $('stateGas').textContent = '瓶内气体：O₂ 正在消耗…';
+  $('statePressure').textContent = '瓶内气压：升高（燃烧放热）';
+}
+
+function endBurning() {
+  // Flame out
+  $('flameGroup').setAttribute('opacity', '0');
+  $('redPhosphorus').setAttribute('opacity', '0.3');
+  $('redPhosphorus').setAttribute('fill', '#E5E7EB'); // white P2O5 residue
+
+  // Stop smoke gradually
+  setTimeout(() => {
+    if (state.smokeSystem) state.smokeSystem.stop();
+  }, 1500);
+
+  state.animating = false;
+  $('stateGas').textContent = '瓶内气体：N₂ + P₂O₅(固)';
+  $('statePressure').textContent = '瓶内气压：升高（尚未冷却）';
+  $('statusBadge').textContent = '红磷燃烧完毕，等待冷却';
+
+  // Auto advance to cooling
+  state.step = 2;
+  updateStepBar();
+  $('stepBtn').disabled = false;
+}
+
+// ===== STEP 3: COOLING =====
+function startCooling() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('statusBadge').textContent = '冷却中…';
+  $('statePressure').textContent = '瓶内气压：逐渐降低…';
+
+  // Simulate cooling delay (1.5s then auto-ready)
+  setTimeout(() => {
+    state.animating = false;
+    $('statePressure').textContent = '瓶内气压：低于大气压（0.79 atm）';
+    $('statusBadge').textContent = '已冷却至室温，可打开止水夹';
+    checkObs('obs4');
+    $('stepBtn').disabled = false;
+  }, 1500);
+}
+
+// ===== STEP 4: WATER RISING =====
+function startWaterRising() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('clampLabel').textContent = '止水夹(开)';
+  $('statusBadge').textContent = '水沿导管进入集气瓶…';
+
+  checkObs('obs5');
+
+  // Water rises to ~1/5 of bottle height (160px total, 1/5 = 32px)
+  const bottleH = 160;
+  const bottleTop = 20;
+  const bottleBot = bottleTop + bottleH; // 180
+  const targetH = bottleH * (0.2 + state.measError); // ~1/5 ± error
+  const targetY = bottleBot - targetH;
+
+  const startTime = performance.now();
+  const duration = 2000;
+
+  function animate(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const h = targetH * eased;
+    const y = bottleBot - h;
+
+    $('bottleWater').setAttribute('y', y);
+    $('bottleWater').setAttribute('height', h);
+    $('waterMeniscus').setAttribute('cy', y);
+    $('waterMeniscus').setAttribute('opacity', eased > 0.1 ? '0.6' : '0');
+
+    if (t < 1) {
+      state.waterRiseAnim = requestAnimationFrame(animate);
+    } else {
+      state.animating = false;
+      checkObs('obs6');
+
+      // Calculate result
+      const waterVolume = Math.round(500 * (0.2 + state.measError));
+      const ratio = ((0.2 + state.measError) * 100).toFixed(1);
+
+      $('dispWater').textContent = waterVolume;
+      $('dispRatio').textContent = ratio;
+      $('resultDisplay').textContent = ratio + '%';
+      $('stateWater').textContent = `水面位置：上升至约 1/5`;
+      $('statusBadge').textContent = `水面上升 ${waterVolume}mL，氧气占比 ${ratio}%`;
+
+      // Auto advance to complete
+      state.step = 4;
+      updateStepBar();
+      showComplete();
+    }
+  }
+  state.waterRiseAnim = requestAnimationFrame(animate);
+}
+
+// ===== STEP 5: COMPLETE =====
+function showComplete() {
+  $('resultSection').style.display = 'block';
+  $('errorSection').style.display = 'block';
+  $('stepBtn').textContent = '实验完成';
+  $('stepBtn').disabled = true;
+  $('statusBadge').textContent = '实验完成！空气中氧气约占 21%';
+  $('statusBadge').className = 'status-badge done';
+}
+
+// ===== OBSERVATION CHECKLIST =====
+function checkObs(id) {
+  const el = $(id);
+  if (el && !el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  // Stop animations
+  if (state.smokeSystem) state.smokeSystem.stop();
+  if (state.waterRiseAnim) cancelAnimationFrame(state.waterRiseAnim);
+
+  state.step = 0;
+  state.animating = false;
+  state.measError = (Math.random() - 0.5) * 0.05;
+
+  // Reset visuals
+  $('flameGroup').setAttribute('opacity', '0');
+  $('flameGroup').setAttribute('transform', 'translate(250,108)');
+  $('redPhosphorus').setAttribute('opacity', '1');
+  $('redPhosphorus').setAttribute('fill', '#DC2626');
+  $('bottleWater').setAttribute('y', '180');
+  $('bottleWater').setAttribute('height', '0');
+  $('waterMeniscus').setAttribute('opacity', '0');
+  $('clampLabel').textContent = '止水夹(关)';
+  $('smokeContainer').innerHTML = '';
+
+  // Reset displays
+  $('dispWater').textContent = '—';
+  $('dispRatio').textContent = '—';
+  $('resultDisplay').textContent = '—';
+  $('stateGas').textContent = '瓶内气体：空气（N₂+O₂）';
+  $('statePressure').textContent = '瓶内气压：1 atm';
+  $('stateWater').textContent = '水面位置：底部';
+  $('statusBadge').textContent = '准备实验 → 按步骤操作';
+  $('statusBadge').className = 'status-badge idle';
+  $('resultSection').style.display = 'none';
+  $('errorSection').style.display = 'none';
+
+  // Reset observations
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+
+  updateStepBar();
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const el = $('formula1');
+  if (el && window.katex) {
+    try { katex.render('4P + 5O_2 \\xrightarrow{\\text{点燃}} 2P_2O_5', el, { throwOnError: false, displayMode: true }); } catch(e) {}
+  }
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
