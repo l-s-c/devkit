@@ -77,6 +77,9 @@
         <!-- Pins -->
         <g id="pinsGroup"></g>
 
+        <!-- Miss warning -->
+        <text id="missWarn" x="360" y="380" font-size="9" fill="#EF4444" text-anchor="middle" font-weight="600" opacity="0">未对准折射像，光路不连续</text>
+
         <!-- Click areas for inserting pins -->
         <rect id="upperArea" x="160" y="10" width="400" height="130" fill="transparent" cursor="crosshair"/>
         <rect id="lowerArea" x="160" y="260" width="400" height="130" fill="transparent" cursor="crosshair" opacity="0.01"/>
@@ -288,6 +291,20 @@ function insertPin(e) {
   }
 
   state.pins[pinName] = { x: finalX, y: finalY };
+
+  // Check if P3/P4 missed the exit ray
+  if ((pinName === 'P3' || pinName === 'P4') && state.pins.P1 && state.pins.P2) {
+    const exitRay = calcExitRay();
+    if (exitRay) {
+      const dist = distToLine(finalX, finalY, exitRay.x1, exitRay.y1, exitRay.x2, exitRay.y2);
+      if (dist > SNAP_PX) {
+        showMissWarning(finalX, finalY);
+      } else {
+        hideMissWarning();
+      }
+    }
+  }
+
   state.currentPin++;
 
   renderPins();
@@ -434,7 +451,7 @@ document.addEventListener('pointermove', e => {
   if ((name === 'P1' || name === 'P2') && (y >= GLASS_TOP - 5 || x < GLASS_LEFT || x > GLASS_RIGHT)) return;
   if ((name === 'P3' || name === 'P4') && (y <= GLASS_BOT + 5 || x < GLASS_LEFT || x > GLASS_RIGHT)) return;
 
-  state.pins[name] = { x, y: y + 15 }; // offset for pin head position
+  state.pins[name] = { x, y }; // actual pin tip position (light path calc point)
   renderPins();
   updateLightPath();
   updateDisplay();
@@ -603,6 +620,10 @@ function drawArc(g, cx, cy, r, startDeg, endDeg, color) {
   g.appendChild(path);
 }
 
+// ===== MISS WARNING =====
+function showMissWarning(x, y) { $('missWarn').setAttribute('opacity', '1'); }
+function hideMissWarning() { $('missWarn').setAttribute('opacity', '0'); }
+
 // ===== DISPLAY =====
 function updateDisplay() {
   const ref = calcRefraction();
@@ -758,6 +779,7 @@ function clearPins() {
   $('normalLine').innerHTML = '';
   $('protractor').innerHTML = '';
   $('angleArcs').innerHTML = '';
+  hideMissWarning();
   updateDisplay();
   updateStatus();
 }
