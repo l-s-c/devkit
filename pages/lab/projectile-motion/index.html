@@ -244,7 +244,8 @@ const state = {
   animating: false,
   strobePoints: [], // {x_cm, y_cm} with ±1% error
   oldTrails: [], // [{points, v0, color}]
-  measError: 1
+  measErrorX: 1,
+  measErrorY: 1
 };
 
 // ===== AXIS LABELS =====
@@ -332,8 +333,12 @@ function updateParams() {
 function launchBall() {
   if (state.animating) return;
 
-  // Generate ±1% error once
-  state.measError = 1 + (Math.random() - 0.5) * 0.02;
+  if (state.launched) saveTrailAndReset();
+  updateParams();
+
+  // Generate ±1% independent errors for x and y
+  state.measErrorX = 1 + (Math.random() - 0.5) * 0.02;
+  state.measErrorY = 1 + (Math.random() - 0.5) * 0.02;
 
   state.v0 = Math.sqrt(2 * G * state.h / 100);
   state.launched = true;
@@ -357,10 +362,10 @@ function launchBall() {
 
     if (x_cm > BOARD_W_CM || y_cm > BOARD_H_CM) break;
 
-    // Apply ±1% error to position
+    // Apply ±1% independent errors to x and y
     points.push({
-      x_cm: x_cm * state.measError,
-      y_cm: y_cm * (2 - state.measError), // slightly different error for y
+      x_cm: x_cm * state.measErrorX,
+      y_cm: y_cm * state.measErrorY,
       t
     });
     t += DT;
@@ -603,15 +608,6 @@ function drawOldTrails() {
     g.appendChild(t);
   });
 }
-
-// Override launch to save old trail first
-const _origLaunch = launchBall;
-window.launchBall = function() {
-  if (state.animating) return;
-  if (state.launched) saveTrailAndReset();
-  updateParams();
-  _origLaunch();
-};
 
 // ===== RESET =====
 function resetAll() {
