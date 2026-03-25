@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用油膜法估测分子大小 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="油膜法, 分子大小, 油酸, 单分子层, 高中物理">
+<meta name="description" content="用油膜法估测油酸分子的直径，理解分子大小的数量级">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#DC2626;--lab-accent-bg:#FEF2F2;--lab-accent-border:#FECACA}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.ctrl-btn.secondary{background:#6B7280}
+.conc-btn{padding:4px 10px;border-radius:5px;border:1px solid #D1D5DB;background:#fff;font-size:10px;cursor:pointer;transition:all .15s}
+.conc-btn.active{background:var(--lab-accent);color:#fff;border-color:var(--lab-accent)}
+.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
+.toggle-row input{accent-color:var(--lab-accent)}
+.count-bar{display:flex;gap:6px;font-size:11px}
+.count-bar .ct{flex:1;text-align:center;padding:4px;border-radius:4px}
+.count-bar .ct .num{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>用油膜法估测分子大小</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>油膜法 · 单分子层 · 分子大小 · 高中热学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">选择浓度 → 点击滴管滴液 → 数格子</div>
+      <svg id="canvas" viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="dishClip"><circle cx="320" cy="210" r="170"/></clipPath>
+          <radialGradient id="waterGrad" cx="40%" cy="40%"><stop offset="0%" stop-color="#BFDBFE"/><stop offset="100%" stop-color="#93C5FD"/></radialGradient>
+          <radialGradient id="filmGrad" cx="45%" cy="45%"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.7"/><stop offset="60%" stop-color="#F59E0B" stop-opacity="0.5"/><stop offset="100%" stop-color="#D97706" stop-opacity="0.3"/></radialGradient>
+          <filter id="filmTexture">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" result="noise"/>
+            <feColorMatrix type="hueRotate" values="60" in="noise" result="colored"/>
+            <feBlend in="SourceGraphic" in2="colored" mode="overlay"/>
+          </filter>
+        </defs>
+
+        <rect width="720" height="420" fill="#F8FAFC"/>
+
+        <!-- ===== DISH ===== -->
+        <!-- Dish rim -->
+        <circle cx="320" cy="210" r="180" fill="#9CA3AF" stroke="#6B7280" stroke-width="1"/>
+        <!-- Water surface -->
+        <circle id="waterSurface" cx="320" cy="210" r="170" fill="url(#waterGrad)"/>
+
+        <!-- ===== POWDER RING ===== -->
+        <circle id="powderRing" cx="320" cy="210" r="170" fill="none" stroke="#FFF" stroke-width="0" stroke-dasharray="4,3" opacity="0"/>
+
+        <!-- ===== OIL FILM ===== -->
+        <g clip-path="url(#dishClip)">
+          <path id="oilFilm" d="" fill="url(#filmGrad)" filter="url(#filmTexture)" opacity="0"/>
+        </g>
+
+        <!-- ===== GRID ===== -->
+        <g id="gridGroup" clip-path="url(#dishClip)" opacity="0">
+          <g id="gridLines"></g>
+          <g id="gridCells"></g>
+        </g>
+
+        <!-- ===== CONTOUR ===== -->
+        <path id="contourLine" d="" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,2" opacity="0"/>
+
+        <!-- ===== DROPPER ===== -->
+        <g id="dropper" cursor="pointer">
+          <rect x="590" y="30" width="12" height="50" rx="2" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <ellipse cx="596" cy="30" rx="8" ry="6" fill="#DC2626"/>
+          <circle id="droplet" cx="596" cy="85" r="3" fill="#F59E0B" opacity="0"/>
+          <text x="596" y="100" font-size="7" fill="#6B7280" text-anchor="middle">滴管</text>
+        </g>
+
+        <!-- ===== SOLUTION BOTTLE ===== -->
+        <rect x="630" y="50" width="30" height="40" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.5"/>
+        <text id="bottleLabel" x="645" y="74" font-size="5" fill="#92400E" text-anchor="middle">1:500</text>
+
+        <!-- Interaction hint -->
+        <text id="clickHint" x="320" y="395" font-size="9" fill="#6B7280" text-anchor="middle" opacity="0">单击格子 = 整格(绿) · 双击 = 半格(黄) · 再点取消</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>选择<strong>溶液浓度</strong></span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>点击滴管<strong>滴液</strong></span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>观察<strong>油膜扩散</strong></span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span><strong>数格子</strong>：单击=整格·双击=半格</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>计算<strong>分子直径 d</strong></span></div>
+      </div>
+
+      <!-- Concentration -->
+      <div class="panel-section">
+        <div class="section-title">溶液浓度</div>
+        <div style="display:flex;gap:4px">
+          <button class="conc-btn" data-c="200" onclick="setConc(200)">1:200</button>
+          <button class="conc-btn active" data-c="500" onclick="setConc(500)">1:500</button>
+          <button class="conc-btn" data-c="1000" onclick="setConc(1000)">1:1000</button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel-section">
+        <div style="display:flex;gap:4px">
+          <button class="ctrl-btn" id="btnDrop" onclick="dropLiquid()">滴液</button>
+          <button class="ctrl-btn secondary" id="btnAutoCount" onclick="autoCount()" disabled>自动计数</button>
+          <button class="ctrl-btn secondary" onclick="resetAll()">重置</button>
+        </div>
+      </div>
+
+      <!-- Toggles -->
+      <div class="panel-section">
+        <div class="section-title">显示选项</div>
+        <div class="toggle-row"><input type="checkbox" id="chkGrid" checked onchange="toggleGrid(this.checked)"><label for="chkGrid">方格纸</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkContour" onchange="toggleContour(this.checked)"><label for="chkContour">轮廓线</label></div>
+      </div>
+
+      <!-- Count stats -->
+      <div class="panel-section" id="countSection" style="display:none">
+        <div class="section-title">格子计数</div>
+        <div class="count-bar">
+          <div class="ct" style="background:#ECFDF5"><div style="font-size:8px;color:#059669">整格</div><div class="num" id="countFull" style="color:#059669">0</div></div>
+          <div class="ct" style="background:#FEFCE8"><div style="font-size:8px;color:#CA8A04">半格</div><div class="num" id="countHalf" style="color:#CA8A04">0</div></div>
+          <div class="ct" style="background:#F9FAFB"><div style="font-size:8px;color:#374151">总面积</div><div class="num" id="countArea" style="color:#374151;font-size:12px">0</div><div style="font-size:8px;color:#6B7280">cm²</div></div>
+        </div>
+      </div>
+
+      <!-- Calculation -->
+      <div class="panel-section" id="calcSection" style="display:none">
+        <div class="section-title">计算结果</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">V (纯油酸)</div><div class="val" id="dispV" style="font-size:12px">—</div><div class="unit">m³</div></div>
+          <div class="reading-card"><div class="label">S (油膜面积)</div><div class="val" id="dispS" style="font-size:12px">—</div><div class="unit">m²</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">d = V/S</div><div class="val" id="dispD" style="font-size:16px;color:#DC2626">—</div><div class="unit">m</div></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div class="result-card">
+          <div style="display:flex;gap:6px">
+            <div style="flex:1"><div style="font-size:9px;color:#6B7280">测量值</div><div class="val" id="resMeas" style="font-size:14px;color:#DC2626">—</div></div>
+            <div style="flex:1"><div style="font-size:9px;color:#6B7280">教科书值</div><div style="font-size:14px;font-weight:700;color:#059669">~10⁻¹⁰ m</div></div>
+          </div>
+          <div id="resNote" style="font-size:10px;color:#374151;margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>将一滴油酸酒精溶液滴在水面上，酒精挥发后，油酸在水面展开形成单分子油膜。通过测量油膜的面积 S 和纯油酸的体积 V，可以估算油酸分子的直径。</p>
+
+    <h3>实验方法</h3>
+    <ol>
+      <li>配制油酸酒精溶液（已知浓度 1:n）</li>
+      <li>用滴管取一滴溶液（体积 V₀ = 0.01mL），滴在撒有痱子粉的水面上</li>
+      <li>油膜扩散稳定后，覆盖方格纸，描出油膜轮廓</li>
+      <li>数格子：整格计入，超半格计入，不足半格舍去</li>
+      <li>计算面积 S、纯油酸体积 V = V₀/n、分子直径 d = V/S</li>
+    </ol>
+
+    <h3>关键假设</h3>
+    <ul>
+      <li>油酸在水面形成<strong>单分子层</strong></li>
+      <li>油酸分子视为球形，直径 d = 油膜厚度</li>
+      <li>这是<strong>数量级估测</strong>，结果在 10⁻¹⁰ m 量级即合理</li>
+    </ul>
+    <div class="formula-block" id="formula2"></div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== CONSTANTS =====
+const DISH_CX = 320, DISH_CY = 210, DISH_R = 170;
+const GRID_SIZE = 20; // px per cm
+const V0_ML = 0.01;   // drop volume in mL
+
+const state = {
+  concentration: 500,
+  dropped: false,
+  filmPath: '',        // SVG path data
+  filmPoints: [],      // boundary points [{x,y}]
+  filmAreaCm2: 0,      // theoretical area in cm²
+  gridCells: {},       // key "r,c" → 'full'|'half'|null
+  autoCountResult: null,
+  measError: 0
+};
+
+// ===== GRID =====
+function drawGrid() {
+  const g = $('gridLines');
+  g.innerHTML = '';
+  // Grid lines within dish
+  const left = DISH_CX - DISH_R, right = DISH_CX + DISH_R;
+  const top = DISH_CY - DISH_R, bot = DISH_CY + DISH_R;
+  const startCol = Math.ceil(left / GRID_SIZE);
+  const endCol = Math.floor(right / GRID_SIZE);
+  const startRow = Math.ceil(top / GRID_SIZE);
+  const endRow = Math.floor(bot / GRID_SIZE);
+
+  for (let c = startCol; c <= endCol; c++) {
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', c * GRID_SIZE); line.setAttribute('y1', top);
+    line.setAttribute('x2', c * GRID_SIZE); line.setAttribute('y2', bot);
+    line.setAttribute('stroke', '#94A3B8'); line.setAttribute('stroke-width', '0.3');
+    g.appendChild(line);
+  }
+  for (let r = startRow; r <= endRow; r++) {
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', left); line.setAttribute('y1', r * GRID_SIZE);
+    line.setAttribute('x2', right); line.setAttribute('y2', r * GRID_SIZE);
+    line.setAttribute('stroke', '#94A3B8'); line.setAttribute('stroke-width', '0.3');
+    g.appendChild(line);
+  }
+}
+
+// ===== GENERATE FILM SHAPE =====
+function generateFilm() {
+  // Area depends on concentration: higher concentration = smaller V = smaller area
+  // V = V0 / conc (in mL), d ≈ 10⁻¹⁰ m
+  // S = V/d. For d~10⁻¹⁰m, V in m³
+  // We want area ~ 50-150 cm² visually
+  const baseArea = { 200: 130, 500: 80, 1000: 50 };
+  const area = baseArea[state.concentration];
+  // ±10% random
+  state.measError = (Math.random() - 0.5) * 0.2;
+  state.filmAreaCm2 = area * (1 + state.measError);
+
+  // Convert to px radius (circular equiv)
+  const radiusPx = Math.sqrt(state.filmAreaCm2 / Math.PI) * GRID_SIZE;
+
+  // Generate irregular boundary using polar coordinates
+  const numPoints = 36;
+  state.filmPoints = [];
+  const rVariations = [];
+  for (let i = 0; i < numPoints; i++) {
+    rVariations.push(0.8 + Math.random() * 0.4); // 0.8-1.2 variation
+  }
+  // Smooth the variations
+  for (let pass = 0; pass < 3; pass++) {
+    for (let i = 0; i < numPoints; i++) {
+      const prev = rVariations[(i - 1 + numPoints) % numPoints];
+      const next = rVariations[(i + 1) % numPoints];
+      rVariations[i] = (prev + rVariations[i] * 2 + next) / 4;
+    }
+  }
+
+  for (let i = 0; i < numPoints; i++) {
+    const angle = (i / numPoints) * Math.PI * 2;
+    const r = radiusPx * rVariations[i];
+    state.filmPoints.push({
+      x: DISH_CX + Math.cos(angle) * r,
+      y: DISH_CY + Math.sin(angle) * r
+    });
+  }
+
+  // Build SVG path
+  let d = `M${state.filmPoints[0].x},${state.filmPoints[0].y}`;
+  for (let i = 1; i < state.filmPoints.length; i++) {
+    const p0 = state.filmPoints[(i - 1 + numPoints) % numPoints];
+    const p1 = state.filmPoints[i];
+    const p2 = state.filmPoints[(i + 1) % numPoints];
+    // Smooth curve
+    const cx = (p0.x + p1.x * 4 + p2.x) / 6;
+    const cy = (p0.y + p1.y * 4 + p2.y) / 6;
+    d += ` Q${p1.x},${p1.y} ${(p1.x + p2.x) / 2},${(p1.y + p2.y) / 2}`;
+  }
+  d += ' Z';
+  state.filmPath = d;
+}
+
+// ===== DROP ANIMATION =====
+function dropLiquid() {
+  if (state.dropped) return;
+  state.dropped = true;
+  $('btnDrop').disabled = true;
+
+  generateFilm();
+
+  // Droplet animation
+  const droplet = $('droplet');
+  droplet.setAttribute('opacity', '1');
+
+  let startTime = null;
+  function animDrop(now) {
+    if (!startTime) startTime = now;
+    const t = Math.min(1, (now - startTime) / 400);
+    const y = 85 + t * (DISH_CY - 85);
+    droplet.setAttribute('cy', y);
+    droplet.setAttribute('r', 3 - t * 2);
+    if (t < 1) {
+      requestAnimationFrame(animDrop);
+    } else {
+      droplet.setAttribute('opacity', '0');
+      animateFilmExpand();
+    }
+  }
+  requestAnimationFrame(animDrop);
+}
+
+function animateFilmExpand() {
+  const film = $('oilFilm');
+  const contour = $('contourLine');
+  const powder = $('powderRing');
+
+  let startTime = null;
+  const duration = 800;
+
+  function anim(now) {
+    if (!startTime) startTime = now;
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - (1 - t) * (1 - t);
+
+    // Scale film path from center
+    const scaled = scalePathFromCenter(state.filmPath, eased);
+    film.setAttribute('d', scaled);
+    film.setAttribute('opacity', 0.3 + eased * 0.5);
+    contour.setAttribute('d', scaled);
+
+    // Powder ring expands
+    const filmR = Math.sqrt(state.filmAreaCm2 / Math.PI) * GRID_SIZE * eased;
+    powder.setAttribute('r', Math.max(DISH_R - 20, filmR + 15));
+    powder.setAttribute('stroke-width', t > 0.2 ? '8' : '0');
+    powder.setAttribute('opacity', eased * 0.5);
+
+    if (t < 1) {
+      requestAnimationFrame(anim);
+    } else {
+      // Film stable
+      $('btnAutoCount').disabled = false;
+      $('gridGroup').setAttribute('opacity', $('chkGrid').checked ? '1' : '0');
+      $('contourLine').setAttribute('opacity', $('chkContour').checked ? '1' : '0');
+      $('clickHint').setAttribute('opacity', '1');
+      $('countSection').style.display = 'block';
+      $('calcSection').style.display = 'block';
+      setupGridInteraction();
+      updateCalc();
+      $('statusBadge').textContent = '单击格子标记整格(绿)，双击标记半格(黄)';
+      $('statusBadge').className = 'status-badge active';
+    }
+  }
+  requestAnimationFrame(anim);
+}
+
+function scalePathFromCenter(pathD, scale) {
+  // Simple scale: replace coordinates relative to center
+  return pathD.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (_, x, y) => {
+    const sx = DISH_CX + (parseFloat(x) - DISH_CX) * scale;
+    const sy = DISH_CY + (parseFloat(y) - DISH_CY) * scale;
+    return `${sx.toFixed(1)},${sy.toFixed(1)}`;
+  });
+}
+
+// ===== GRID INTERACTION =====
+function setupGridInteraction() {
+  const g = $('gridCells');
+  g.innerHTML = '';
+
+  const left = DISH_CX - DISH_R, right = DISH_CX + DISH_R;
+  const top = DISH_CY - DISH_R, bot = DISH_CY + DISH_R;
+  const startCol = Math.ceil(left / GRID_SIZE);
+  const endCol = Math.floor(right / GRID_SIZE);
+  const startRow = Math.ceil(top / GRID_SIZE);
+  const endRow = Math.floor(bot / GRID_SIZE);
+
+  for (let r = startRow; r < endRow; r++) {
+    for (let c = startCol; c < endCol; c++) {
+      const cx = c * GRID_SIZE + GRID_SIZE / 2;
+      const cy = r * GRID_SIZE + GRID_SIZE / 2;
+      // Only cells within dish
+      const dist = Math.sqrt((cx - DISH_CX) ** 2 + (cy - DISH_CY) ** 2);
+      if (dist > DISH_R - 5) continue;
+
+      const rect = document.createElementNS(SVG_NS, 'rect');
+      rect.setAttribute('x', c * GRID_SIZE);
+      rect.setAttribute('y', r * GRID_SIZE);
+      rect.setAttribute('width', GRID_SIZE);
+      rect.setAttribute('height', GRID_SIZE);
+      rect.setAttribute('fill', 'transparent');
+      rect.setAttribute('stroke', 'none');
+      rect.setAttribute('cursor', 'pointer');
+      rect.setAttribute('data-key', `${r},${c}`);
+
+      // Single click = full, double click = half, click again = remove
+      rect.addEventListener('click', () => {
+        const key = `${r},${c}`;
+        const cur = state.gridCells[key];
+        if (!cur) {
+          state.gridCells[key] = 'full';
+          rect.setAttribute('fill', '#059669');
+          rect.setAttribute('fill-opacity', '0.3');
+        } else if (cur === 'full') {
+          delete state.gridCells[key];
+          rect.setAttribute('fill', 'transparent');
+          rect.setAttribute('fill-opacity', '1');
+        }
+        updateCountDisplay();
+      });
+
+      rect.addEventListener('dblclick', e => {
+        e.preventDefault();
+        const key = `${r},${c}`;
+        state.gridCells[key] = 'half';
+        rect.setAttribute('fill', '#CA8A04');
+        rect.setAttribute('fill-opacity', '0.3');
+        updateCountDisplay();
+      });
+
+      g.appendChild(rect);
+    }
+  }
+}
+
+// ===== AUTO COUNT =====
+function autoCount() {
+  if (!state.dropped) return;
+
+  // Reset manual count
+  state.gridCells = {};
+  const cells = $('gridCells').querySelectorAll('rect');
+
+  cells.forEach(rect => {
+    const key = rect.getAttribute('data-key');
+    const [r, c] = key.split(',').map(Number);
+    const cx = c * GRID_SIZE + GRID_SIZE / 2;
+    const cy = r * GRID_SIZE + GRID_SIZE / 2;
+
+    // Check if cell center is inside film
+    const overlap = cellFilmOverlap(c * GRID_SIZE, r * GRID_SIZE);
+
+    if (overlap > 0.5) {
+      state.gridCells[key] = 'full';
+      rect.setAttribute('fill', '#059669');
+      rect.setAttribute('fill-opacity', '0.3');
+    } else if (overlap > 0.15) {
+      state.gridCells[key] = 'half';
+      rect.setAttribute('fill', '#CA8A04');
+      rect.setAttribute('fill-opacity', '0.3');
+    } else {
+      rect.setAttribute('fill', 'transparent');
+    }
+  });
+
+  updateCountDisplay();
+}
+
+function cellFilmOverlap(cellX, cellY) {
+  // Sample points in cell, check how many are inside film
+  const samples = 9; // 3x3 grid
+  let inside = 0;
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      const px = cellX + (i + 0.5) * GRID_SIZE / 3;
+      const py = cellY + (j + 0.5) * GRID_SIZE / 3;
+      if (isInsideFilm(px, py)) inside++;
+    }
+  }
+  return inside / samples;
+}
+
+function isInsideFilm(px, py) {
+  // Ray casting algorithm against film polygon
+  const pts = state.filmPoints;
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const xi = pts[i].x, yi = pts[i].y;
+    const xj = pts[j].x, yj = pts[j].y;
+    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+// ===== COUNT DISPLAY =====
+function updateCountDisplay() {
+  let full = 0, half = 0;
+  Object.values(state.gridCells).forEach(v => {
+    if (v === 'full') full++;
+    else if (v === 'half') half++;
+  });
+
+  $('countFull').textContent = full;
+  $('countHalf').textContent = half;
+  const areaCm2 = full + half * 0.5;
+  $('countArea').textContent = areaCm2.toFixed(1);
+
+  updateCalc();
+}
+
+// ===== CALCULATION =====
+function updateCalc() {
+  const conc = state.concentration;
+  const vPureML = V0_ML / conc; // mL of pure oleic acid
+  const vM3 = vPureML * 1e-6;  // convert mL to m³
+
+  $('dispV').textContent = vM3.toExponential(2);
+
+  let full = 0, half = 0;
+  Object.values(state.gridCells).forEach(v => {
+    if (v === 'full') full++;
+    else if (v === 'half') half++;
+  });
+  const areaCm2 = full + half * 0.5;
+
+  if (areaCm2 > 0) {
+    const areaM2 = areaCm2 * 1e-4; // cm² to m²
+    $('dispS').textContent = areaM2.toExponential(2);
+
+    const d = vM3 / areaM2;
+    $('dispD').textContent = d.toExponential(2);
+
+    // Result section
+    $('resultSection').style.display = 'block';
+    $('resMeas').textContent = d.toExponential(2) + ' m';
+
+    // Check order of magnitude
+    const order = Math.floor(Math.log10(d));
+    if (order === -10 || order === -9) {
+      $('resNote').innerHTML = `数量级 10<sup>${order}</sup> m — <strong style="color:#059669">合理</strong>，与教科书值一致`;
+    } else {
+      $('resNote').innerHTML = `数量级 10<sup>${order}</sup> m — 偏差较大，检查计数`;
+    }
+
+    $('statusBadge').textContent = `d = ${d.toExponential(2)} m`;
+    $('statusBadge').className = 'status-badge done';
+  } else {
+    $('dispS').textContent = '—';
+    $('dispD').textContent = '—';
+    $('resultSection').style.display = 'none';
+  }
+}
+
+// ===== TOGGLES =====
+function toggleGrid(on) { $('gridGroup').setAttribute('opacity', on && state.dropped ? '1' : '0'); }
+function toggleContour(on) { $('contourLine').setAttribute('opacity', on && state.dropped ? '1' : '0'); }
+
+// ===== CONCENTRATION =====
+function setConc(c) {
+  if (state.dropped) return; // Can't change after dropping
+  state.concentration = c;
+  document.querySelectorAll('.conc-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.c) === c);
+  });
+  $('bottleLabel').textContent = `1:${c}`;
+}
+
+// ===== RESET =====
+function resetAll() {
+  state.dropped = false;
+  state.filmPath = '';
+  state.filmPoints = [];
+  state.gridCells = {};
+  $('oilFilm').setAttribute('d', '');
+  $('oilFilm').setAttribute('opacity', '0');
+  $('contourLine').setAttribute('d', '');
+  $('contourLine').setAttribute('opacity', '0');
+  $('powderRing').setAttribute('stroke-width', '0');
+  $('powderRing').setAttribute('opacity', '0');
+  $('gridGroup').setAttribute('opacity', '0');
+  $('gridCells').innerHTML = '';
+  $('clickHint').setAttribute('opacity', '0');
+  $('btnDrop').disabled = false;
+  $('btnAutoCount').disabled = true;
+  $('countSection').style.display = 'none';
+  $('calcSection').style.display = 'none';
+  $('resultSection').style.display = 'none';
+  $('countFull').textContent = '0';
+  $('countHalf').textContent = '0';
+  $('countArea').textContent = '0';
+  $('dispV').textContent = '—';
+  $('dispS').textContent = '—';
+  $('dispD').textContent = '—';
+  $('statusBadge').textContent = '选择浓度 → 点击滴管滴液 → 数格子';
+  $('statusBadge').className = 'status-badge idle';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: 'd = \\frac{V}{S}' },
+    { id: 'formula2', tex: 'V = \\frac{V_0}{n}, \\quad S = (N_{\\text{整}} + \\frac{1}{2}N_{\\text{半}}) \\times 1\\text{cm}^2' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+drawGrid();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
