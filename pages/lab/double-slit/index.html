@@ -254,6 +254,10 @@
       <li><strong>缝屏距 L 越大</strong>，条纹间距越大</li>
     </ul>
 
+    <h3>条纹间距公式</h3>
+    <div class="formula-block" id="formula3"></div>
+    <p>改变光源颜色（波长 λ）、双缝间距 d 或缝屏距 L，条纹间距 Δx 都会相应变化。</p>
+
     <h3>注意事项</h3>
     <ul>
       <li>双缝必须平行且等间距</li>
@@ -402,19 +406,12 @@ document.addEventListener('pointermove', e => {
     // Move screen group
     const dx = newX - 520;
     $('screenGroup').setAttribute('transform', `translate(${dx},0)`);
-    // Move crosshair
-    $('crosshair').querySelectorAll('line')[0].setAttribute('x1', newX - 4);
-    $('crosshair').querySelectorAll('line')[0].setAttribute('x2', newX + 14);
-    $('crosshair').querySelectorAll('line')[1].setAttribute('x1', newX + 5);
-    $('crosshair').querySelectorAll('line')[1].setAttribute('x2', newX + 5);
 
     $('dispL').textContent = state.L.toFixed(1);
     $('lLabel').textContent = `L = ${state.L.toFixed(1)} cm`;
 
-    // Update L line endpoint
-    const lLine = $('canvas').querySelectorAll('line');
-
     renderFringes();
+    updateCrosshair();
     updateResult();
     e.preventDefault();
   }
@@ -458,10 +455,16 @@ $('crosshair').addEventListener('pointerdown', e => {
 
 function updateCrosshair() {
   const y = state.crossY;
+  const sx = state.screenX;
+  $('crossH').setAttribute('x1', sx - 4);
+  $('crossH').setAttribute('x2', sx + 14);
   $('crossH').setAttribute('y1', y);
   $('crossH').setAttribute('y2', y);
+  $('crossV').setAttribute('x1', sx + 5);
+  $('crossV').setAttribute('x2', sx + 5);
   $('crossV').setAttribute('y1', y - 10);
   $('crossV').setAttribute('y2', y + 10);
+  $('crosshair').querySelector('rect').setAttribute('x', sx - 6);
   $('crosshair').querySelector('rect').setAttribute('y', y - 15);
 
   // Position in mm (relative to center)
@@ -579,7 +582,8 @@ function resetAll() {
 function renderFormulas() {
   const formulas = [
     { id: 'formula1', tex: '\\Delta x = \\frac{\\lambda L}{d}' },
-    { id: 'formula2', tex: '\\lambda = \\frac{\\Delta x \\cdot d}{L}' }
+    { id: 'formula2', tex: '\\lambda = \\frac{\\Delta x \\cdot d}{L}' },
+    { id: 'formula3', tex: '\\Delta x \\propto \\frac{\\lambda L}{d}' }
   ];
   formulas.forEach(f => {
     const el = $(f.id);
