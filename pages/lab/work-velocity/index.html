@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探究做功与速度变化的关系 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="做功, 速度, 橡皮筋, 动能定理, 高中物理">
+<meta name="description" content="用橡皮筋倍增法探究做功与速度变化的关系，验证W∝v²">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#059669;--lab-accent-bg:#ECFDF5;--lab-accent-border:#A7F3D0}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.ctrl-btn.secondary{background:#6B7280}
+.band-btn{width:28px;height:28px;border-radius:6px;border:2px solid #D1D5DB;background:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.band-btn.active{border-color:var(--lab-accent);background:var(--lab-accent);color:#fff}
+.chart-box{background:#fff;border:1px solid #E5E7EB;border-radius:6px;padding:4px;margin-top:6px}
+.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
+.toggle-row input{accent-color:var(--lab-accent)}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+.result-card .val{font-size:16px;font-weight:700;color:var(--lab-accent)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>探究做功与速度变化的关系</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>做功 · 速度 · 橡皮筋倍增法 · 动能定理</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">选择橡皮筋条数 → 拖小车到起点 → 释放</div>
+      <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="railGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <linearGradient id="carGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+        </defs>
+
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- ===== RAIL ===== -->
+        <rect x="60" y="88" width="600" height="6" rx="2" fill="url(#railGrad)"/>
+        <!-- Rail markings -->
+        <line x1="60" y1="96" x2="60" y2="102" stroke="#6B7280" stroke-width="0.5"/>
+        <line x1="660" y1="96" x2="660" y2="102" stroke="#6B7280" stroke-width="0.5"/>
+
+        <!-- ===== FIXED HOOK ===== -->
+        <rect id="hookPost" x="56" y="60" width="8" height="40" rx="2" fill="#6B7280"/>
+        <circle cx="60" cy="60" r="4" fill="#4B5563"/>
+
+        <!-- ===== RUBBER BANDS ===== -->
+        <g id="bandsGroup"></g>
+
+        <!-- ===== CAR ===== -->
+        <g id="carGroup" cursor="grab">
+          <rect id="carBody" x="120" y="68" width="50" height="20" rx="3" fill="url(#carGrad)" stroke="#047857" stroke-width="0.5"/>
+          <circle cx="130" cy="92" r="4" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+          <circle cx="160" cy="92" r="4" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+          <text x="145" y="82" font-size="7" fill="#FFF" text-anchor="middle" font-weight="600" pointer-events="none">小车</text>
+        </g>
+
+        <!-- ===== TIMER ===== -->
+        <rect x="620" y="60" width="40" height="30" rx="3" fill="#374151" stroke="#1F2937" stroke-width="0.5"/>
+        <text x="640" y="78" font-size="5" fill="#9CA3AF" text-anchor="middle">打点计时器</text>
+        <circle cx="635" cy="68" r="2" fill="#059669"/>
+
+        <!-- ===== PAPER TAPE ===== -->
+        <g id="tapeGroup" transform="translate(60,130)">
+          <rect x="0" y="0" width="600" height="50" rx="4" fill="#FFFBEB" stroke="#FDE68A" stroke-width="0.8"/>
+          <text x="300" y="15" font-size="8" fill="#92400E" text-anchor="middle" font-weight="600">纸带</text>
+          <g id="tapeDots"></g>
+          <g id="tapeLabels"></g>
+        </g>
+
+        <!-- ===== TAPE THUMBNAILS ===== -->
+        <g id="thumbnails" transform="translate(60,210)"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>选择<strong>橡皮筋条数</strong>（1~6）</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span><strong>拖小车</strong>到起点（橡皮筋拉伸）</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>点击<strong>释放</strong>，观察纸带</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>从等距段读取<strong>最大速度 v</strong></span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>点击<strong>记录数据</strong></span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>改变条数，<strong>重复实验</strong></span></div>
+      </div>
+
+      <!-- Band selection -->
+      <div class="panel-section">
+        <div class="section-title">橡皮筋条数</div>
+        <div style="display:flex;gap:4px">
+          <button class="band-btn active" data-n="1" onclick="setBands(1)">1</button>
+          <button class="band-btn" data-n="2" onclick="setBands(2)">2</button>
+          <button class="band-btn" data-n="3" onclick="setBands(3)">3</button>
+          <button class="band-btn" data-n="4" onclick="setBands(4)">4</button>
+          <button class="band-btn" data-n="5" onclick="setBands(5)">5</button>
+          <button class="band-btn" data-n="6" onclick="setBands(6)">6</button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel-section">
+        <div style="display:flex;gap:4px">
+          <button class="ctrl-btn" id="btnRelease" onclick="releaseCar()" disabled>释放</button>
+          <button class="ctrl-btn" id="btnRecord" onclick="recordData()" disabled>记录数据</button>
+          <button class="ctrl-btn secondary" onclick="resetCurrent()">重置当前</button>
+        </div>
+      </div>
+
+      <!-- Current data -->
+      <div class="panel-section">
+        <div class="section-title">当前测量</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">W</div><div class="val" id="dispW" style="font-size:14px">—</div><div class="unit">W₀</div></div>
+          <div class="reading-card"><div class="label">v</div><div class="val" id="dispV" style="font-size:14px">—</div><div class="unit">m/s</div></div>
+          <div class="reading-card"><div class="label">v²</div><div class="val" id="dispV2" style="font-size:14px">—</div><div class="unit">m²/s²</div></div>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="panel-section">
+        <div class="section-title">测量记录</div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="dataTable">
+            <thead><tr><th>n</th><th>W/W₀</th><th>v/(m/s)</th><th>v²/(m²/s²)</th></tr></thead>
+            <tbody id="dataBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Chart toggle -->
+      <div class="panel-section" id="chartSection" style="display:none">
+        <div class="section-title">图表</div>
+        <div class="toggle-row">
+          <label><input type="radio" name="chartType" value="wv" checked onchange="updateChart()"> W-v 图</label>
+          <label><input type="radio" name="chartType" value="wv2" onchange="updateChart()"> W-v² 图</label>
+        </div>
+        <div class="chart-box">
+          <svg id="chart" viewBox="0 0 200 200" width="100%">
+            <line x1="30" y1="170" x2="190" y2="170" stroke="#374151" stroke-width="1"/>
+            <line x1="30" y1="170" x2="30" y2="10" stroke="#374151" stroke-width="1"/>
+            <text id="chartXLabel" x="110" y="195" font-size="8" fill="#374151" text-anchor="middle">v/(m/s)</text>
+            <text x="8" y="90" font-size="8" fill="#374151" text-anchor="middle" transform="rotate(-90,8,90)">W/W₀</text>
+            <g id="chartContent"></g>
+          </svg>
+          <div id="chartNote" style="font-size:9px;color:var(--lab-accent);text-align:center"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div class="result-card">
+          <div id="resultText" style="font-size:11px;color:#374151">
+            W-v 图为曲线，W-v² 图为过原点直线 → <strong style="color:#059669">W ∝ v²</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>用相同的橡皮筋，1 条做功 W₀，2 条做功 2W₀…通过倍增橡皮筋条数改变做功量，用打点计时器测量小车获得的最大速度。</p>
+
+    <h3>橡皮筋倍增法</h3>
+    <p>关键假设：每条橡皮筋完全相同，拉伸量相同时每条做功相等。n 条橡皮筋总做功 W = nW₀。</p>
+
+    <h3>速度测量</h3>
+    <div class="formula-block" id="formula2"></div>
+    <p>纸带上先密后疏：加速段（橡皮筋做功）→ 匀速段（橡皮筋恢复自然长度后）。从匀速段等间距部分读取最大速度。</p>
+
+    <h3>数据处理</h3>
+    <ul>
+      <li><strong>W-v 图</strong>：数据点落在曲线上（非线性）</li>
+      <li><strong>W-v² 图</strong>：数据点落在过原点直线上（线性） → W ∝ v²</li>
+      <li>这就是动能定理的实验验证：W = ½mv²</li>
+    </ul>
+
+    <h3>误差分析</h3>
+    <ul>
+      <li>橡皮筋不完全一致导致做功不是精确的整数倍</li>
+      <li>摩擦力补偿：实验前应补偿摩擦力（倾斜导轨）</li>
+      <li>纸带等距段判断不准导致速度读数偏差</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== CONSTANTS =====
+const CAR_START_X = 120;   // default car x
+const CAR_MIN_X = 68;      // pulled back position (rubber bands stretched)
+const CAR_WIDTH = 50;
+const HOOK_X = 60;
+const T = 0.02;             // timer interval in seconds
+const W0_BASE_V = 0.65;    // v for 1 rubber band: v = W0_BASE_V * sqrt(n)
+const TAPE_X0 = 20;
+const TAPE_WIDTH = 560;
+const NUM_DOTS = 12;
+
+const BAND_COLORS = ['#EF4444','#F97316','#3B82F6','#8B5CF6','#EC4899','#06B6D4'];
+
+const state = {
+  bands: 1,
+  carX: CAR_START_X,
+  pulled: false,   // car pulled to start
+  released: false,  // animation done
+  velocity: 0,      // measured v
+  measError: 0,     // ±2% error
+  records: [],      // {n, w, v, v2}
+  animFrame: null
+};
+
+// ===== RUBBER BANDS =====
+function drawBands() {
+  const g = $('bandsGroup');
+  g.innerHTML = '';
+  for (let i = 0; i < state.bands; i++) {
+    const path = document.createElementNS(SVG_NS, 'path');
+    const yOff = 70 + i * 3 - (state.bands - 1) * 1.5;
+    const carEdge = state.carX;
+    // Bezier curve for stretch
+    const stretch = state.pulled ? (CAR_START_X - state.carX) / 3 : 0;
+    const cy = yOff + (i % 2 === 0 ? -stretch * 0.1 : stretch * 0.1);
+    path.setAttribute('d', `M${HOOK_X},${yOff} Q${(HOOK_X + carEdge) / 2},${cy} ${carEdge},${yOff}`);
+    path.setAttribute('stroke', state.pulled ? BAND_COLORS[i % BAND_COLORS.length] : '#D1D5DB');
+    path.setAttribute('stroke-width', '2.5');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke-linecap', 'round');
+    g.appendChild(path);
+  }
+}
+
+// ===== CAR POSITION =====
+function updateCar() {
+  $('carBody').setAttribute('x', state.carX);
+  document.querySelector('#carGroup circle:first-of-type').setAttribute('cx', state.carX + 10);
+  document.querySelector('#carGroup circle:last-of-type').setAttribute('cx', state.carX + 40);
+  document.querySelector('#carGroup text').setAttribute('x', state.carX + 25);
+  drawBands();
+}
+
+// ===== CAR DRAG =====
+let dragging = false;
+let dragStartX = 0;
+let dragStartCarX = 0;
+
+$('carGroup').addEventListener('pointerdown', e => {
+  if (state.released) return;
+  dragging = true;
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  dragStartX = (e.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width;
+  dragStartCarX = state.carX;
+  e.preventDefault();
+});
+
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width;
+  const dx = x - dragStartX;
+  state.carX = Math.max(CAR_MIN_X, Math.min(CAR_START_X, dragStartCarX + dx));
+  state.pulled = state.carX < CAR_START_X - 5;
+  updateCar();
+  $('btnRelease').disabled = !state.pulled;
+  $('statusBadge').textContent = state.pulled ? '已拉伸，点击释放' : '拖小车向左拉伸橡皮筋';
+  $('statusBadge').className = state.pulled ? 'status-badge active' : 'status-badge idle';
+  e.preventDefault();
+});
+
+document.addEventListener('pointerup', () => { dragging = false; });
+
+// ===== RELEASE ANIMATION =====
+function releaseCar() {
+  if (!state.pulled || state.released) return;
+  state.released = true;
+  $('btnRelease').disabled = true;
+
+  // Generate measurement error once
+  state.measError = (Math.random() - 0.5) * 0.04; // ±2%
+
+  // Animate car moving right
+  const targetX = 400;
+  const startX = state.carX;
+  const startTime = performance.now();
+  const duration = 600;
+
+  function animate(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    // Ease out
+    const eased = 1 - (1 - t) * (1 - t);
+    state.carX = startX + (targetX - startX) * eased;
+    state.pulled = t < 0.15;
+    updateCar();
+    if (t < 1) {
+      state.animFrame = requestAnimationFrame(animate);
+    } else {
+      state.pulled = false;
+      drawBands();
+      generateTape();
+      $('btnRecord').disabled = false;
+      $('statusBadge').textContent = '观察纸带，记录数据';
+      $('statusBadge').className = 'status-badge done';
+    }
+  }
+  state.animFrame = requestAnimationFrame(animate);
+}
+
+// ===== PAPER TAPE =====
+function generateTape() {
+  const dots = $('tapeDots');
+  const labels = $('tapeLabels');
+  dots.innerHTML = '';
+  labels.innerHTML = '';
+
+  const n = state.bands;
+  // v = W0_BASE_V * sqrt(n) with error
+  const vTrue = W0_BASE_V * Math.sqrt(n);
+  state.velocity = vTrue * (1 + state.measError);
+
+  // Generate dot positions: acceleration phase then constant velocity
+  const positions = [];
+  const accelDots = 6;  // first 6 dots accelerating
+  const constDots = NUM_DOTS - accelDots; // last 6 dots constant velocity
+
+  // Constant velocity spacing
+  const constSpacing = state.velocity * T * 1000; // mm, scale to px
+  const pxPerMM = TAPE_WIDTH / 120; // ~120mm total tape
+  const constSpacingPx = constSpacing * pxPerMM;
+
+  // Acceleration phase: spacing increases from small to constSpacingPx
+  let x = TAPE_X0;
+  for (let i = 0; i < accelDots; i++) {
+    positions.push(x);
+    const frac = (i + 1) / accelDots;
+    const spacing = constSpacingPx * frac * frac; // quadratic increase
+    x += spacing;
+  }
+  // Constant velocity phase
+  for (let i = 0; i < constDots; i++) {
+    positions.push(x);
+    x += constSpacingPx;
+  }
+
+  // Draw dots
+  positions.forEach((px, i) => {
+    const isConst = i >= accelDots;
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('cx', px); c.setAttribute('cy', 35);
+    c.setAttribute('r', '2.5');
+    c.setAttribute('fill', isConst ? '#059669' : '#1F2937');
+    dots.appendChild(c);
+
+    // Label dot number
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', px); t.setAttribute('y', 48);
+    t.setAttribute('font-size', '5'); t.setAttribute('fill', '#6B7280');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = i + 1;
+    dots.appendChild(t);
+  });
+
+  // Mark equal spacing in constant section
+  for (let i = accelDots; i < positions.length - 1; i++) {
+    const x1 = positions[i], x2 = positions[i + 1];
+    const mid = (x1 + x2) / 2;
+    // Δx label
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', mid); t.setAttribute('y', 28);
+    t.setAttribute('font-size', '5'); t.setAttribute('fill', '#059669');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = 'Δx';
+    labels.appendChild(t);
+
+    // Bracket line
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', 30);
+    line.setAttribute('x2', x2); line.setAttribute('y2', 30);
+    line.setAttribute('stroke', '#059669'); line.setAttribute('stroke-width', '0.5');
+    labels.appendChild(line);
+  }
+
+  // Velocity readout on tape
+  const vLabel = document.createElementNS(SVG_NS, 'text');
+  vLabel.setAttribute('x', 540); vLabel.setAttribute('y', 15);
+  vLabel.setAttribute('font-size', '9'); vLabel.setAttribute('fill', '#059669');
+  vLabel.setAttribute('font-weight', '700');
+  vLabel.textContent = `v = ${state.velocity.toFixed(2)} m/s`;
+  labels.appendChild(vLabel);
+
+  // Update display
+  $('dispW').textContent = n;
+  $('dispV').textContent = state.velocity.toFixed(2);
+  $('dispV2').textContent = (state.velocity ** 2).toFixed(3);
+}
+
+// ===== RECORD =====
+function recordData() {
+  if (!state.released) return;
+
+  const n = state.bands;
+  // Check if already recorded this band count
+  if (state.records.find(r => r.n === n)) {
+    $('statusBadge').textContent = `${n} 条已记录过，请更换条数`;
+    return;
+  }
+
+  const v = state.velocity;
+  state.records.push({ n, w: n, v, v2: v * v });
+
+  renderTable();
+  renderThumbnails();
+  updateChart();
+  updateResult();
+
+  $('btnRecord').disabled = true;
+  $('statusBadge').textContent = `已记录 ${n}W₀，选择其他条数继续`;
+}
+
+function renderTable() {
+  const tbody = $('dataBody');
+  tbody.innerHTML = '';
+  state.records.sort((a, b) => a.n - b.n);
+  state.records.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.n}</td><td>${r.w}W₀</td><td>${r.v.toFixed(2)}</td><td>${r.v2.toFixed(3)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== THUMBNAILS =====
+function renderThumbnails() {
+  const g = $('thumbnails');
+  g.innerHTML = '';
+  state.records.forEach((r, i) => {
+    const x = i * 100;
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('x', x); rect.setAttribute('y', 0);
+    rect.setAttribute('width', '90'); rect.setAttribute('height', '25');
+    rect.setAttribute('rx', '4');
+    rect.setAttribute('fill', r.n === state.bands ? '#ECFDF5' : '#F9FAFB');
+    rect.setAttribute('stroke', r.n === state.bands ? '#059669' : '#E5E7EB');
+    rect.setAttribute('stroke-width', '0.8');
+    g.appendChild(rect);
+
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', x + 45); t.setAttribute('y', 16);
+    t.setAttribute('font-size', '7'); t.setAttribute('fill', '#374151');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = `${r.n}W₀ → v=${r.v.toFixed(2)}`;
+    g.appendChild(t);
+  });
+}
+
+// ===== CHART =====
+function updateChart() {
+  if (state.records.length < 2) {
+    $('chartSection').style.display = 'none';
+    return;
+  }
+  $('chartSection').style.display = 'block';
+
+  const isV2 = document.querySelector('input[name="chartType"]:checked').value === 'wv2';
+  const content = $('chartContent');
+  content.innerHTML = '';
+
+  $('chartXLabel').textContent = isV2 ? 'v²/(m²/s²)' : 'v/(m/s)';
+
+  const data = state.records.map(r => ({
+    x: isV2 ? r.v2 : r.v,
+    y: r.w
+  }));
+
+  const maxX = Math.max(...data.map(d => d.x)) * 1.2;
+  const maxY = Math.max(...data.map(d => d.y)) * 1.2;
+
+  // Plot points
+  data.forEach(d => {
+    const px = 30 + (d.x / maxX) * 160;
+    const py = 170 - (d.y / maxY) * 160;
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('cx', px); c.setAttribute('cy', py);
+    c.setAttribute('r', '3'); c.setAttribute('fill', '#059669');
+    content.appendChild(c);
+  });
+
+  // Fit line (for W-v² graph, through origin)
+  if (isV2 && state.records.length >= 3) {
+    let sumXY = 0, sumXX = 0;
+    data.forEach(d => { sumXY += d.x * d.y; sumXX += d.x * d.x; });
+    const slope = sumXY / sumXX;
+
+    const fitEndX = maxX;
+    const fitEndY = slope * fitEndX;
+    const px2 = 30 + (fitEndX / maxX) * 160;
+    const py2 = 170 - (fitEndY / maxY) * 160;
+
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', '30'); line.setAttribute('y1', '170');
+    line.setAttribute('x2', px2); line.setAttribute('y2', Math.max(10, py2));
+    line.setAttribute('stroke', '#059669'); line.setAttribute('stroke-width', '1.5');
+    line.setAttribute('stroke-dasharray', '4,2');
+    content.appendChild(line);
+
+    $('chartNote').textContent = `过原点拟合 · 斜率 = ${slope.toFixed(3)} · 线性 ✓`;
+  } else if (!isV2 && state.records.length >= 3) {
+    // W-v curve: draw smooth path
+    const sorted = [...data].sort((a, b) => a.x - b.x);
+    let pathD = '';
+    sorted.forEach((d, i) => {
+      const px = 30 + (d.x / maxX) * 160;
+      const py = 170 - (d.y / maxY) * 160;
+      pathD += i === 0 ? `M${px},${py}` : ` L${px},${py}`;
+    });
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', pathD);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#059669');
+    path.setAttribute('stroke-width', '1');
+    path.setAttribute('stroke-dasharray', '3,2');
+    content.appendChild(path);
+
+    $('chartNote').textContent = 'W-v 为曲线（非线性）';
+  } else {
+    $('chartNote').textContent = '';
+  }
+}
+
+// ===== RESULT =====
+function updateResult() {
+  $('resultSection').style.display = state.records.length >= 3 ? 'block' : 'none';
+}
+
+// ===== BAND SELECTION =====
+function setBands(n) {
+  state.bands = n;
+  document.querySelectorAll('.band-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.n) === n);
+  });
+  resetCurrent();
+}
+
+// ===== RESET =====
+function resetCurrent() {
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+  state.carX = CAR_START_X;
+  state.pulled = false;
+  state.released = false;
+  state.velocity = 0;
+  $('btnRelease').disabled = true;
+  $('btnRecord').disabled = true;
+  $('tapeDots').innerHTML = '';
+  $('tapeLabels').innerHTML = '';
+  $('dispW').textContent = '—';
+  $('dispV').textContent = '—';
+  $('dispV2').textContent = '—';
+  updateCar();
+  $('statusBadge').textContent = '拖小车向左拉伸橡皮筋';
+  $('statusBadge').className = 'status-badge idle';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: 'W = nW_0 \\quad (n = 1, 2, 3, \\ldots, 6)' },
+    { id: 'formula2', tex: 'v = \\frac{\\Delta x}{T} \\quad (T = 0.02\\text{s})' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+drawBands();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
