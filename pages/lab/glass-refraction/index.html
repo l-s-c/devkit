@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测量玻璃的折射率 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="折射率, 插针法, 斯涅尔定律, 玻璃砖, 高中物理">
+<meta name="description" content="用插针法测量玻璃的折射率，记录入射角和折射角，验证斯涅尔定律">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#7C3AED;--lab-accent-bg:#F5F3FF;--lab-accent-border:#DDD6FE}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.ctrl-btn.secondary{background:#6B7280}
+.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
+.toggle-row input{accent-color:var(--lab-accent)}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+.result-card .val{font-size:16px;font-weight:700;color:var(--lab-accent)}
+.chart-box{background:#fff;border:1px solid #E5E7EB;border-radius:6px;padding:4px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>测量玻璃的折射率</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>折射率 · 插针法 · 斯涅尔定律 · 高中光学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">在玻璃砖上方点击插入 P₁（入射光线起点）</div>
+      <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#BFDBFE" stop-opacity="0.4"/><stop offset="100%" stop-color="#93C5FD" stop-opacity="0.3"/></linearGradient>
+          <filter id="glassShadow"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.1"/></filter>
+        </defs>
+
+        <!-- White paper background -->
+        <rect width="720" height="400" fill="#FEFEFE"/>
+        <pattern id="dots" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="7.5" cy="7.5" r="0.4" fill="#D1D5DB"/></pattern>
+        <rect width="720" height="400" fill="url(#dots)"/>
+
+        <!-- Glass brick -->
+        <rect id="glassBrick" x="160" y="140" width="400" height="120" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5" filter="url(#glassShadow)"/>
+        <text x="360" y="205" font-size="10" fill="#3B82F6" text-anchor="middle" opacity="0.6" font-weight="600">n = 1.50</text>
+
+        <!-- Old pin holes -->
+        <g id="oldHoles"></g>
+
+        <!-- Light path -->
+        <g id="lightPath"></g>
+
+        <!-- Normal line -->
+        <g id="normalLine" opacity="0"></g>
+
+        <!-- Protractor -->
+        <g id="protractor" opacity="0"></g>
+
+        <!-- Angle arcs -->
+        <g id="angleArcs" opacity="0"></g>
+
+        <!-- Pins -->
+        <g id="pinsGroup"></g>
+
+        <!-- Click areas for inserting pins -->
+        <rect id="upperArea" x="160" y="10" width="400" height="130" fill="transparent" cursor="crosshair"/>
+        <rect id="lowerArea" x="160" y="260" width="400" height="130" fill="transparent" cursor="crosshair" opacity="0.01"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>在玻璃砖上方点击插 <strong>P₁</strong>（远离玻璃）</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>点击插 <strong>P₂</strong>（靠近玻璃上表面）</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>在下方<strong>对准折射像</strong>插 P₃</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>继续对准插 <strong>P₄</strong>，观察光路</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>读取 <strong>i 和 r</strong>，记录数据</span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>改变入射角，<strong>重复实验</strong></span></div>
+      </div>
+
+      <!-- Current measurement -->
+      <div class="panel-section">
+        <div class="section-title">当前测量</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">入射角 i</div><div class="val" id="dispI">—</div><div class="unit">°</div></div>
+          <div class="reading-card"><div class="label">折射角 r</div><div class="val" id="dispR">—</div><div class="unit">°</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">sin i</div><div class="val" id="dispSinI" style="font-size:14px">—</div></div>
+          <div class="reading-card"><div class="label">sin r</div><div class="val" id="dispSinR" style="font-size:14px">—</div></div>
+          <div class="reading-card"><div class="label">n</div><div class="val" id="dispN" style="font-size:14px">—</div></div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel-section">
+        <div style="display:flex;gap:4px">
+          <button class="ctrl-btn" id="btnRecord" onclick="recordData()" disabled>记录数据</button>
+          <button class="ctrl-btn secondary" onclick="clearPins()">清除当前</button>
+          <button class="ctrl-btn secondary" onclick="resetAll()">全部重置</button>
+        </div>
+      </div>
+
+      <!-- Toggles -->
+      <div class="panel-section">
+        <div class="section-title">显示选项</div>
+        <div class="toggle-row"><input type="checkbox" id="chkProtractor" checked onchange="toggleProtractor(this.checked)"><label for="chkProtractor">量角器</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkNormal" checked onchange="toggleNormal(this.checked)"><label for="chkNormal">法线</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkAngles" checked onchange="toggleAngles(this.checked)"><label for="chkAngles">角度标注</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkOldHoles" checked onchange="toggleOldHoles(this.checked)"><label for="chkOldHoles">旧针眼</label></div>
+      </div>
+
+      <!-- Data table -->
+      <div class="panel-section">
+        <div class="section-title">测量记录</div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="dataTable">
+            <thead><tr><th>#</th><th>i/°</th><th>r/°</th><th>sin i</th><th>sin r</th><th>n</th></tr></thead>
+            <tbody id="dataBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- sin i - sin r chart -->
+      <div class="panel-section" id="chartSection" style="display:none">
+        <div class="section-title">sin i — sin r 图</div>
+        <div class="chart-box">
+          <svg id="chart" viewBox="0 0 200 200" width="100%">
+            <line x1="30" y1="170" x2="190" y2="170" stroke="#374151" stroke-width="1"/>
+            <line x1="30" y1="170" x2="30" y2="10" stroke="#374151" stroke-width="1"/>
+            <text x="110" y="195" font-size="8" fill="#374151" text-anchor="middle">sin r</text>
+            <text x="8" y="90" font-size="8" fill="#374151" text-anchor="middle" transform="rotate(-90,8,90)">sin i</text>
+            <!-- Axis labels -->
+            <text x="30" y="182" font-size="6" fill="#6B7280" text-anchor="middle">0</text>
+            <text x="110" y="182" font-size="6" fill="#6B7280" text-anchor="middle">0.5</text>
+            <text x="190" y="182" font-size="6" fill="#6B7280" text-anchor="middle">1.0</text>
+            <text x="24" y="90" font-size="6" fill="#6B7280" text-anchor="end">0.5</text>
+            <text x="24" y="13" font-size="6" fill="#6B7280" text-anchor="end">1.0</text>
+            <g id="chartDots"></g>
+            <line id="fitLine" x1="30" y1="170" x2="30" y2="170" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4,2" opacity="0"/>
+          </svg>
+          <div id="chartNote" style="font-size:9px;color:#7C3AED;text-align:center"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">综合结果</div>
+        <div class="result-card">
+          <div style="display:flex;gap:6px">
+            <div style="flex:1"><div class="label" style="font-size:9px;color:#6B7280">n 平均值</div><div class="val" id="resAvgN">—</div></div>
+            <div style="flex:1"><div class="label" style="font-size:9px;color:#6B7280">n 标准值</div><div class="val" id="resStdN">1.50</div></div>
+            <div style="flex:1"><div class="label" style="font-size:9px;color:#6B7280">偏差</div><div class="val" id="resErr">—</div><div style="font-size:9px;color:#6B7280">%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>光从空气射入玻璃时发生折射，入射角 i 和折射角 r 满足斯涅尔定律（折射定律）。通过插针法确定入射光线和折射光线的方向，用量角器测量 i 和 r，即可计算折射率 n。</p>
+
+    <h3>插针法原理</h3>
+    <p>在玻璃砖上方插 P₁P₂ 确定入射光线方向。光线经玻璃砖两次折射后，从下表面射出。在下方透过玻璃砖观察 P₁P₂ 的像，插 P₃P₄ 使四针共线（与 P₁P₂ 的像重合），即确定了出射光线。</p>
+
+    <h3>数据处理</h3>
+    <div class="formula-block" id="formula2"></div>
+    <p>以 sin r 为横轴、sin i 为纵轴作图，数据点应近似落在过原点的直线上，直线斜率即为折射率 n。</p>
+
+    <h3>误差分析</h3>
+    <ul>
+      <li><strong>插针不准</strong>：P₃P₄ 没有准确对准 P₁P₂ 的像，导致折射角测量偏差</li>
+      <li><strong>量角器读数</strong>：角度读取存在 ±1° 的人为误差</li>
+      <li><strong>玻璃砖边缘</strong>：入射点和出射点标记不准</li>
+      <li><strong>减小误差</strong>：多次测量取平均；入射角选 30°~60° 范围（太小或太大误差大）</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== CONSTANTS =====
+const N_GLASS = 1.50;
+const GLASS_TOP = 140;
+const GLASS_BOT = 260;
+const GLASS_LEFT = 160;
+const GLASS_RIGHT = 560;
+const GLASS_MID_X = 360;
+const SNAP_PX = 5; // P3P4 snap threshold
+const DEG = Math.PI / 180;
+
+const PIN_COLORS = {
+  P1: '#EF4444', P2: '#EF4444', // incident side red
+  P3: '#3B82F6', P4: '#3B82F6'  // exit side blue
+};
+
+const state = {
+  pins: {}, // P1:{x,y}, P2:{x,y}, P3:{x,y}, P4:{x,y}
+  pinOrder: ['P1','P2','P3','P4'],
+  currentPin: 0, // index into pinOrder
+  incidentAngle: 0, // degrees
+  refractAngle: 0,
+  records: [],
+  oldHoles: [], // [{x,y}]
+  dragging: null // pin name being dragged
+};
+
+// ===== PIN INSERTION =====
+$('upperArea').addEventListener('click', e => {
+  if (state.currentPin > 1) return; // Only P1, P2 in upper area
+  insertPin(e);
+});
+
+$('lowerArea').addEventListener('click', e => {
+  if (state.currentPin < 2 || state.currentPin > 3) return; // Only P3, P4 in lower area
+  insertPin(e);
+});
+
+function insertPin(e) {
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  const x = (e.clientX - rect.left) / rect.width * vb.width;
+  const y = (e.clientY - rect.top) / rect.height * vb.height;
+
+  // Validate position
+  const pinName = state.pinOrder[state.currentPin];
+  if (pinName === 'P1' || pinName === 'P2') {
+    if (y >= GLASS_TOP - 5 || x < GLASS_LEFT || x > GLASS_RIGHT) return;
+  }
+  if (pinName === 'P3' || pinName === 'P4') {
+    if (y <= GLASS_BOT + 5 || x < GLASS_LEFT || x > GLASS_RIGHT) return;
+  }
+
+  // For P2: check incident angle 15°-75°
+  if (pinName === 'P2' && state.pins.P1) {
+    const dx = x - state.pins.P1.x;
+    const dy = y - state.pins.P1.y;
+    const angle = Math.abs(Math.atan2(Math.abs(dx), Math.abs(dy))) / DEG;
+    if (angle < 15 || angle > 75) {
+      $('statusBadge').textContent = '入射角需在 15°~75° 之间';
+      $('statusBadge').className = 'status-badge active';
+      return;
+    }
+  }
+
+  // For P3/P4: snap to theoretical exit ray
+  let finalX = x, finalY = y;
+  if ((pinName === 'P3' || pinName === 'P4') && state.pins.P1 && state.pins.P2) {
+    const exitRay = calcExitRay();
+    if (exitRay) {
+      // Distance from click to exit ray line
+      const dist = distToLine(x, y, exitRay.x1, exitRay.y1, exitRay.x2, exitRay.y2);
+      if (dist < SNAP_PX) {
+        // Snap: project onto exit ray
+        const proj = projectOnLine(x, y, exitRay.x1, exitRay.y1, exitRay.x2, exitRay.y2);
+        finalX = proj.x;
+        finalY = proj.y;
+      }
+    }
+  }
+
+  state.pins[pinName] = { x: finalX, y: finalY };
+  state.currentPin++;
+
+  renderPins();
+  updateLightPath();
+  updateDisplay();
+  updateStatus();
+}
+
+// ===== GEOMETRY =====
+function calcIncidentPoint() {
+  if (!state.pins.P1 || !state.pins.P2) return null;
+  const p1 = state.pins.P1, p2 = state.pins.P2;
+  // Extend P1→P2 line to glass top surface y=GLASS_TOP
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  if (dy === 0) return null;
+  const t = (GLASS_TOP - p1.y) / dy;
+  return { x: p1.x + t * dx, y: GLASS_TOP };
+}
+
+function calcRefraction() {
+  const ip = calcIncidentPoint();
+  if (!ip) return null;
+  const p1 = state.pins.P1, p2 = state.pins.P2;
+
+  // Incident angle (from normal = vertical)
+  const dx = ip.x - p1.x;
+  const dy = ip.y - p1.y;
+  const sinI = Math.abs(dx) / Math.sqrt(dx*dx + dy*dy);
+  const i = Math.asin(sinI) / DEG;
+
+  // Refraction: sin r = sin i / n
+  const sinR = sinI / N_GLASS;
+  if (sinR > 1) return null; // total internal reflection (shouldn't happen with i<75°)
+  const r = Math.asin(sinR) / DEG;
+
+  // Direction inside glass
+  const sign = dx > 0 ? 1 : -1;
+  const refractDx = sign * Math.sin(r * DEG);
+  const refractDy = Math.cos(r * DEG);
+
+  // Exit point on bottom surface
+  const glassH = GLASS_BOT - GLASS_TOP;
+  const tGlass = glassH / refractDy;
+  const exitX = ip.x + refractDx * tGlass;
+  const exitY = GLASS_BOT;
+
+  // Exit ray: same angle as incident (parallel faces → exit parallel to incident)
+  // Exit direction: sin(exitAngle) = n * sinR = sinI
+  const exitDx = sign * sinI;
+  const exitDy = Math.sqrt(1 - sinI*sinI);
+
+  return { ip, i, r, sinI, sinR: sinR, exitX, exitY, exitDx, exitDy, sign };
+}
+
+function calcExitRay() {
+  const ref = calcRefraction();
+  if (!ref) return null;
+  // Exit ray from (exitX, exitY) going downward
+  const len = 150;
+  return {
+    x1: ref.exitX,
+    y1: ref.exitY,
+    x2: ref.exitX + ref.exitDx * len,
+    y2: ref.exitY + ref.exitDy * len
+  };
+}
+
+function distToLine(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  if (len === 0) return Math.sqrt((px-x1)**2 + (py-y1)**2);
+  return Math.abs(dy*px - dx*py + x2*y1 - y2*x1) / len;
+}
+
+function projectOnLine(px, py, x1, y1, x2, y2) {
+  const dx = x2-x1, dy = y2-y1;
+  const t = ((px-x1)*dx + (py-y1)*dy) / (dx*dx + dy*dy);
+  return { x: x1 + t*dx, y: y1 + t*dy };
+}
+
+// ===== RENDER PINS =====
+function renderPins() {
+  const g = $('pinsGroup');
+  g.innerHTML = '';
+  state.pinOrder.forEach(name => {
+    const p = state.pins[name];
+    if (!p) return;
+    const color = PIN_COLORS[name];
+
+    // Pin shaft
+    const line = document.createElementNS(SVG_NS,'line');
+    line.setAttribute('x1', p.x); line.setAttribute('y1', p.y - 15);
+    line.setAttribute('x2', p.x); line.setAttribute('y2', p.y + 2);
+    line.setAttribute('stroke', '#9CA3AF'); line.setAttribute('stroke-width', '1.5');
+    g.appendChild(line);
+
+    // Pin head
+    const c = document.createElementNS(SVG_NS,'circle');
+    c.setAttribute('cx', p.x); c.setAttribute('cy', p.y - 15);
+    c.setAttribute('r', '4'); c.setAttribute('fill', color);
+    c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-width', '0.5');
+    c.setAttribute('cursor', 'grab');
+    c.setAttribute('data-pin', name);
+    g.appendChild(c);
+
+    // Label
+    const t = document.createElementNS(SVG_NS,'text');
+    t.setAttribute('x', p.x + 8); t.setAttribute('y', p.y - 18);
+    t.setAttribute('font-size', '8'); t.setAttribute('fill', color);
+    t.setAttribute('font-weight', '600');
+    t.textContent = name;
+    g.appendChild(t);
+
+    // Drag hit area
+    const hit = document.createElementNS(SVG_NS,'circle');
+    hit.setAttribute('cx', p.x); hit.setAttribute('cy', p.y - 15);
+    hit.setAttribute('r', '10'); hit.setAttribute('fill', 'transparent');
+    hit.setAttribute('cursor', 'grab');
+    hit.setAttribute('data-pin', name);
+    g.appendChild(hit);
+  });
+}
+
+// ===== PIN DRAGGING =====
+$('pinsGroup').addEventListener('pointerdown', e => {
+  const t = e.target;
+  if (t.hasAttribute('data-pin')) {
+    state.dragging = t.getAttribute('data-pin');
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('pointermove', e => {
+  if (!state.dragging) return;
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  const x = (e.clientX - rect.left) / rect.width * vb.width;
+  const y = (e.clientY - rect.top) / rect.height * vb.height;
+
+  const name = state.dragging;
+  // Validate bounds
+  if ((name === 'P1' || name === 'P2') && (y >= GLASS_TOP - 5 || x < GLASS_LEFT || x > GLASS_RIGHT)) return;
+  if ((name === 'P3' || name === 'P4') && (y <= GLASS_BOT + 5 || x < GLASS_LEFT || x > GLASS_RIGHT)) return;
+
+  state.pins[name] = { x, y: y + 15 }; // offset for pin head position
+  renderPins();
+  updateLightPath();
+  updateDisplay();
+  e.preventDefault();
+});
+
+document.addEventListener('pointerup', () => { state.dragging = null; });
+
+// ===== LIGHT PATH =====
+function updateLightPath() {
+  const g = $('lightPath');
+  g.innerHTML = '';
+
+  const ref = calcRefraction();
+  if (!ref) return;
+
+  const p1 = state.pins.P1, p2 = state.pins.P2;
+
+  // Incident ray: P1 → incident point
+  drawRay(g, p1.x, p1.y, ref.ip.x, ref.ip.y, '#EAB308');
+
+  // Refracted ray inside glass
+  drawRay(g, ref.ip.x, ref.ip.y, ref.exitX, ref.exitY, '#EAB308');
+
+  // Exit ray
+  if (state.pins.P3 || state.pins.P4) {
+    const exitEnd = { x: ref.exitX + ref.exitDx * 150, y: ref.exitY + ref.exitDy * 150 };
+    drawRay(g, ref.exitX, ref.exitY, exitEnd.x, exitEnd.y, '#EAB308');
+  }
+
+  // Normal line at incident point
+  drawNormal(ref.ip);
+
+  // Protractor at incident point
+  drawProtractor(ref.ip);
+
+  // Angle arcs
+  drawAngleArcs(ref);
+
+  // Update state
+  state.incidentAngle = ref.i;
+  state.refractAngle = ref.r;
+}
+
+function drawRay(g, x1, y1, x2, y2, color) {
+  const line = document.createElementNS(SVG_NS,'line');
+  line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+  line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+  line.setAttribute('stroke',color); line.setAttribute('stroke-width','2');
+  line.setAttribute('stroke-linecap','round');
+  g.appendChild(line);
+
+  // Arrow at midpoint
+  const mx = (x1+x2)/2, my = (y1+y2)/2;
+  const dx = x2-x1, dy = y2-y1;
+  const len = Math.sqrt(dx*dx+dy*dy);
+  if (len < 10) return;
+  const ux = dx/len, uy = dy/len;
+  const ax = mx + ux*5, ay = my + uy*5;
+  const p1x = ax - ux*8 - uy*4, p1y = ay - uy*8 + ux*4;
+  const p2x = ax - ux*8 + uy*4, p2y = ay - uy*8 - ux*4;
+  const arrow = document.createElementNS(SVG_NS,'polygon');
+  arrow.setAttribute('points', `${ax},${ay} ${p1x},${p1y} ${p2x},${p2y}`);
+  arrow.setAttribute('fill', color);
+  g.appendChild(arrow);
+}
+
+function drawNormal(ip) {
+  const g = $('normalLine');
+  g.innerHTML = '';
+  const line = document.createElementNS(SVG_NS,'line');
+  line.setAttribute('x1', ip.x); line.setAttribute('y1', ip.y - 60);
+  line.setAttribute('x2', ip.x); line.setAttribute('y2', ip.y + 60);
+  line.setAttribute('stroke', '#9CA3AF'); line.setAttribute('stroke-width', '0.8');
+  line.setAttribute('stroke-dasharray', '4,3');
+  g.appendChild(line);
+  const t = document.createElementNS(SVG_NS,'text');
+  t.setAttribute('x', ip.x + 5); t.setAttribute('y', ip.y - 52);
+  t.setAttribute('font-size', '7'); t.setAttribute('fill', '#9CA3AF');
+  t.textContent = '法线';
+  g.appendChild(t);
+  g.setAttribute('opacity', $('chkNormal').checked ? '1' : '0');
+}
+
+function drawProtractor(ip) {
+  const g = $('protractor');
+  g.innerHTML = '';
+  // Semi-circle protractor
+  for (let a = -90; a <= 90; a += 5) {
+    const isMajor = a % 10 === 0;
+    const r1 = isMajor ? 38 : 42;
+    const r2 = 45;
+    const rad = a * DEG;
+    const line = document.createElementNS(SVG_NS,'line');
+    line.setAttribute('x1', ip.x + Math.sin(rad)*r1);
+    line.setAttribute('y1', ip.y - Math.cos(rad)*r1);
+    line.setAttribute('x2', ip.x + Math.sin(rad)*r2);
+    line.setAttribute('y2', ip.y - Math.cos(rad)*r2);
+    line.setAttribute('stroke', '#7C3AED');
+    line.setAttribute('stroke-width', isMajor ? '0.5' : '0.3');
+    line.setAttribute('opacity', '0.5');
+    g.appendChild(line);
+
+    if (isMajor && a >= -80 && a <= 80) {
+      const tr = 50;
+      const t = document.createElementNS(SVG_NS,'text');
+      t.setAttribute('x', ip.x + Math.sin(rad)*tr);
+      t.setAttribute('y', ip.y - Math.cos(rad)*tr + 2);
+      t.setAttribute('font-size', '5'); t.setAttribute('fill', '#7C3AED');
+      t.setAttribute('text-anchor', 'middle'); t.setAttribute('opacity', '0.6');
+      t.textContent = Math.abs(a);
+      g.appendChild(t);
+    }
+  }
+  g.setAttribute('opacity', $('chkProtractor').checked ? '1' : '0');
+}
+
+function drawAngleArcs(ref) {
+  const g = $('angleArcs');
+  g.innerHTML = '';
+  const ip = ref.ip;
+
+  // Incident angle arc
+  const iStart = -90; // normal direction (up)
+  const iEnd = iStart + ref.sign * ref.i;
+  drawArc(g, ip.x, ip.y, 25, Math.min(iStart,iEnd), Math.max(iStart,iEnd), '#EF4444');
+  // Label
+  const iMid = (iStart + iEnd) / 2;
+  const ilx = ip.x + Math.sin(iMid*DEG) * 32;
+  const ily = ip.y - Math.cos(iMid*DEG) * 32;
+  const t1 = document.createElementNS(SVG_NS,'text');
+  t1.setAttribute('x', ilx); t1.setAttribute('y', ily);
+  t1.setAttribute('font-size', '8'); t1.setAttribute('fill', '#EF4444');
+  t1.setAttribute('text-anchor', 'middle'); t1.setAttribute('font-weight', '600');
+  t1.textContent = `i=${ref.i.toFixed(1)}°`;
+  g.appendChild(t1);
+
+  // Refraction angle arc (below normal, inside glass)
+  const rStart = 90; // normal direction (down into glass)
+  const rEnd = rStart + ref.sign * ref.r;
+  drawArc(g, ip.x, ip.y, 20, Math.min(rStart,rEnd), Math.max(rStart,rEnd), '#3B82F6');
+  const rMid = (rStart + rEnd) / 2;
+  const rlx = ip.x + Math.sin(rMid*DEG) * 28;
+  const rly = ip.y - Math.cos(rMid*DEG) * 28;
+  const t2 = document.createElementNS(SVG_NS,'text');
+  t2.setAttribute('x', rlx); t2.setAttribute('y', rly);
+  t2.setAttribute('font-size', '8'); t2.setAttribute('fill', '#3B82F6');
+  t2.setAttribute('text-anchor', 'middle'); t2.setAttribute('font-weight', '600');
+  t2.textContent = `r=${ref.r.toFixed(1)}°`;
+  g.appendChild(t2);
+
+  g.setAttribute('opacity', $('chkAngles').checked ? '1' : '0');
+}
+
+function drawArc(g, cx, cy, r, startDeg, endDeg, color) {
+  const path = document.createElementNS(SVG_NS,'path');
+  const s = startDeg * DEG;
+  const e = endDeg * DEG;
+  const x1 = cx + Math.sin(s) * r, y1 = cy - Math.cos(s) * r;
+  const x2 = cx + Math.sin(e) * r, y2 = cy - Math.cos(e) * r;
+  const large = (endDeg - startDeg) > 180 ? 1 : 0;
+  path.setAttribute('d', `M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2}`);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', color);
+  path.setAttribute('stroke-width', '1.5');
+  g.appendChild(path);
+}
+
+// ===== DISPLAY =====
+function updateDisplay() {
+  const ref = calcRefraction();
+  if (!ref) {
+    $('dispI').textContent = '—';
+    $('dispR').textContent = '—';
+    $('dispSinI').textContent = '—';
+    $('dispSinR').textContent = '—';
+    $('dispN').textContent = '—';
+    $('btnRecord').disabled = true;
+    return;
+  }
+
+  $('dispI').textContent = ref.i.toFixed(1);
+  $('dispR').textContent = ref.r.toFixed(1);
+  $('dispSinI').textContent = ref.sinI.toFixed(4);
+  $('dispSinR').textContent = ref.sinR.toFixed(4);
+  const n = ref.sinI / ref.sinR;
+  $('dispN').textContent = n.toFixed(3);
+
+  // Enable record if all 4 pins placed
+  $('btnRecord').disabled = state.currentPin < 4;
+}
+
+function updateStatus() {
+  const messages = [
+    '在玻璃砖上方点击插入 P₁（入射光线起点）',
+    '点击插入 P₂（靠近玻璃上表面）',
+    '在下方对准折射像插入 P₃',
+    '继续对准插入 P₄',
+    '光路完成！记录数据或调整针位'
+  ];
+  const idx = Math.min(state.currentPin, 4);
+  $('statusBadge').textContent = messages[idx];
+  $('statusBadge').className = idx === 4 ? 'status-badge done' : 'status-badge active';
+}
+
+// ===== TOGGLES =====
+function toggleProtractor(on) { $('protractor').setAttribute('opacity', on ? '1' : '0'); }
+function toggleNormal(on) { $('normalLine').setAttribute('opacity', on ? '1' : '0'); }
+function toggleAngles(on) { $('angleArcs').setAttribute('opacity', on ? '1' : '0'); }
+function toggleOldHoles(on) { $('oldHoles').setAttribute('opacity', on ? '1' : '0'); }
+
+// ===== RECORD =====
+function recordData() {
+  const ref = calcRefraction();
+  if (!ref || state.currentPin < 4) return;
+
+  // ±1° error on both i and r, independent
+  const errI = (Math.random() - 0.5) * 2; // ±1°
+  const errR = (Math.random() - 0.5) * 2;
+  const measI = ref.i + errI;
+  const measR = ref.r + errR;
+  const measSinI = Math.sin(measI * DEG);
+  const measSinR = Math.sin(measR * DEG);
+  const measN = measSinI / measSinR;
+
+  state.records.push({ i: measI, r: measR, sinI: measSinI, sinR: measSinR, n: measN });
+
+  // Save pin holes
+  Object.values(state.pins).forEach(p => state.oldHoles.push({x: p.x, y: p.y}));
+  renderOldHoles();
+
+  renderTable();
+  updateChart();
+  updateResult();
+
+  // Auto clear pins for next measurement
+  clearPins();
+}
+
+function renderTable() {
+  const tbody = $('dataBody');
+  tbody.innerHTML = '';
+  state.records.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${r.i.toFixed(1)}</td><td>${r.r.toFixed(1)}</td><td>${r.sinI.toFixed(4)}</td><td>${r.sinR.toFixed(4)}</td><td>${r.n.toFixed(3)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderOldHoles() {
+  const g = $('oldHoles');
+  g.innerHTML = '';
+  state.oldHoles.forEach(h => {
+    const c = document.createElementNS(SVG_NS,'circle');
+    c.setAttribute('cx', h.x); c.setAttribute('cy', h.y);
+    c.setAttribute('r', '1.5'); c.setAttribute('fill', '#9CA3AF');
+    g.appendChild(c);
+  });
+}
+
+// ===== CHART =====
+function updateChart() {
+  if (state.records.length < 2) {
+    $('chartSection').style.display = 'none';
+    return;
+  }
+  $('chartSection').style.display = 'block';
+
+  const dots = $('chartDots');
+  dots.innerHTML = '';
+
+  state.records.forEach(r => {
+    const x = 30 + r.sinR * 160;
+    const y = 170 - r.sinI * 160;
+    const c = document.createElementNS(SVG_NS,'circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y);
+    c.setAttribute('r', '3'); c.setAttribute('fill', '#7C3AED');
+    dots.appendChild(c);
+  });
+
+  // Fit line through origin: slope = Σ(sinI*sinR) / Σ(sinR²)
+  if (state.records.length >= 3) {
+    let sumIR = 0, sumRR = 0;
+    state.records.forEach(r => { sumIR += r.sinI * r.sinR; sumRR += r.sinR * r.sinR; });
+    const slope = sumIR / sumRR;
+
+    const maxSinR = Math.max(...state.records.map(r => r.sinR)) * 1.2;
+    const x2 = 30 + maxSinR * 160;
+    const y2 = 170 - slope * maxSinR * 160;
+
+    $('fitLine').setAttribute('x2', x2);
+    $('fitLine').setAttribute('y2', y2);
+    $('fitLine').setAttribute('opacity', '0.8');
+    $('chartNote').textContent = `斜率 n = ${slope.toFixed(3)}`;
+  }
+}
+
+// ===== RESULT =====
+function updateResult() {
+  if (state.records.length < 1) {
+    $('resultSection').style.display = 'none';
+    return;
+  }
+  $('resultSection').style.display = 'block';
+
+  const avgN = state.records.reduce((s,r) => s + r.n, 0) / state.records.length;
+  const err = Math.abs(avgN - N_GLASS) / N_GLASS * 100;
+
+  $('resAvgN').textContent = avgN.toFixed(3);
+  $('resErr').textContent = err.toFixed(1);
+  $('resErr').style.color = err < 3 ? '#059669' : '#D97706';
+}
+
+// ===== CLEAR / RESET =====
+function clearPins() {
+  state.pins = {};
+  state.currentPin = 0;
+  state.dragging = null;
+  $('pinsGroup').innerHTML = '';
+  $('lightPath').innerHTML = '';
+  $('normalLine').innerHTML = '';
+  $('protractor').innerHTML = '';
+  $('angleArcs').innerHTML = '';
+  updateDisplay();
+  updateStatus();
+}
+
+function resetAll() {
+  state.records = [];
+  state.oldHoles = [];
+  clearPins();
+  $('oldHoles').innerHTML = '';
+  $('dataBody').innerHTML = '';
+  $('chartSection').style.display = 'none';
+  $('resultSection').style.display = 'none';
+  $('fitLine').setAttribute('opacity', '0');
+  $('chartDots').innerHTML = '';
+  $('chartNote').textContent = '';
+  $('statusBadge').textContent = '在玻璃砖上方点击插入 P₁（入射光线起点）';
+  $('statusBadge').className = 'status-badge idle';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: 'n = \\frac{\\sin i}{\\sin r}' },
+    { id: 'formula2', tex: '\\sin i = n \\sin r \\quad \\Rightarrow \\quad \\text{斜率} = n' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+updateStatus();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
