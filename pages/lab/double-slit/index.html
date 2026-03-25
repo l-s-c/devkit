@@ -91,7 +91,7 @@
         </g>
 
         <!-- ===== LIGHT RAYS (toggle) ===== -->
-        <g id="lightRays" opacity="0.3">
+        <g id="lightRays" opacity="0">
           <line x1="181" y1="142" x2="520" y2="100" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
           <line x1="181" y1="142" x2="520" y2="155" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
           <line x1="181" y1="142" x2="520" y2="210" stroke="#EF4444" stroke-width="0.3" opacity="0.4"/>
@@ -162,10 +162,18 @@
       <div class="panel-section">
         <div class="section-title">滤光片</div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="filter-btn active" style="background:#EF4444" data-filter="red" onclick="setFilter('red')"></button>
-          <button class="filter-btn" style="background:#22C55E" data-filter="green" onclick="setFilter('green')"></button>
-          <button class="filter-btn" style="background:#3B82F6" data-filter="blue" onclick="setFilter('blue')"></button>
+          <button class="filter-btn active" id="filterRed" style="background:#EF4444" data-filter="red" onclick="setFilter('red')"></button>
+          <button class="filter-btn" id="filterGreen" style="background:#22C55E" data-filter="green" onclick="setFilter('green')"></button>
+          <button class="filter-btn" id="filterBlue" style="background:#3B82F6" data-filter="blue" onclick="setFilter('blue')"></button>
           <span id="filterName" style="font-size:11px;color:#EF4444;font-weight:600">红光 632nm</span>
+        </div>
+      </div>
+
+      <!-- Display toggles -->
+      <div class="panel-section">
+        <div class="section-title">显示选项</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <input type="checkbox" id="chkRays" onchange="toggleRays(this.checked)"><label for="chkRays">光路示意</label>
         </div>
       </div>
 
@@ -347,6 +355,8 @@ function renderFringes() {
 }
 
 // ===== FILTER =====
+function toggleRays(on) { $('lightRays').setAttribute('opacity', on ? '0.3' : '0'); }
+
 function setFilter(name) {
   state.filter = name;
   document.querySelectorAll('.filter-btn').forEach(b => {
