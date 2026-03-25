@@ -53,7 +53,7 @@
   <div class="canvas-area">
     <div class="canvas-wrapper">
       <div id="statusBadge" class="status-badge idle">拖砝码片到滑块调质量 · 拖红色滑块压弹簧 · 松手释放</div>
-      <svg id="canvas" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <svg id="canvas" viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="trackGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="40%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
           <linearGradient id="slider1Grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F87171"/><stop offset="50%" stop-color="#DC2626"/><stop offset="100%" stop-color="#B91C1C"/></linearGradient>
@@ -64,30 +64,30 @@
         </defs>
 
         <!-- Background -->
-        <rect x="0" y="0" width="760" height="340" fill="#F8FAFC"/>
+        <rect x="0" y="0" width="760" height="290" fill="#F8FAFC"/>
         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
-        <rect x="0" y="0" width="760" height="340" fill="url(#grid)" opacity="0.4"/>
+        <rect x="0" y="0" width="760" height="290" fill="url(#grid)" opacity="0.4"/>
 
         <!-- Air track -->
         <g id="airTrack">
           <!-- Track body -->
-          <rect x="40" y="200" width="680" height="20" rx="3" fill="url(#trackGrad)" stroke="#6B7280" stroke-width="0.5"/>
+          <rect x="40" y="165" width="680" height="20" rx="3" fill="url(#trackGrad)" stroke="#6B7280" stroke-width="0.5"/>
           <!-- Air holes -->
           <g id="airHoles" fill="#9CA3AF" opacity="0.5"></g>
           <!-- Scale marks -->
           <g id="scaleMarks" font-size="7" fill="#6B7280" text-anchor="middle"></g>
           <!-- Left buffer -->
-          <rect x="40" y="195" width="8" height="30" rx="2" fill="#4B5563"/>
+          <rect x="40" y="160" width="8" height="30" rx="2" fill="#4B5563"/>
           <!-- Right buffer -->
-          <rect x="712" y="195" width="8" height="30" rx="2" fill="#4B5563"/>
+          <rect x="712" y="160" width="8" height="30" rx="2" fill="#4B5563"/>
           <!-- Legs -->
-          <rect x="100" y="220" width="10" height="40" rx="2" fill="#4B5563"/>
-          <rect x="650" y="220" width="10" height="40" rx="2" fill="#4B5563"/>
-          <rect x="85" y="255" width="40" height="6" rx="2" fill="#374151"/>
-          <rect x="635" y="255" width="40" height="6" rx="2" fill="#374151"/>
+          <rect x="100" y="185" width="10" height="40" rx="2" fill="#4B5563"/>
+          <rect x="650" y="185" width="10" height="40" rx="2" fill="#4B5563"/>
+          <rect x="85" y="220" width="40" height="6" rx="2" fill="#374151"/>
+          <rect x="635" y="220" width="40" height="6" rx="2" fill="#374151"/>
           <!-- Level bubble -->
-          <rect x="360" y="222" width="40" height="10" rx="4" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
-          <circle id="levelBubble" cx="380" cy="227" r="3" fill="#34D399"/>
+          <rect x="360" y="187" width="40" height="10" rx="4" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <circle id="levelBubble" cx="380" cy="192" r="3" fill="#34D399"/>
         </g>
 
         <!-- Launch spring -->
@@ -96,51 +96,51 @@
         </g>
 
         <!-- Collision zone marker -->
-        <rect id="collisionZone" x="370" y="170" width="4" height="30" rx="1" fill="#FBBF24" opacity="0.4"/>
+        <rect id="collisionZone" x="370" y="135" width="4" height="30" rx="1" fill="#FBBF24" opacity="0.4"/>
 
         <!-- Photogate 1 (left of collision) -->
         <g id="gate1">
-          <rect x="0" y="155" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
-          <rect x="2" y="148" width="2" height="8" fill="#6B7280"/>
-          <circle cx="3" cy="146" r="3" fill="#4ADE80" id="gate1Light"/>
-          <line id="gate1Laser" x1="3" y1="168" x2="3" y2="210" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
-          <text x="3" y="235" font-size="8" fill="#6B7280" text-anchor="middle">门1</text>
+          <rect x="0" y="120" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
+          <rect x="2" y="113" width="2" height="8" fill="#6B7280"/>
+          <circle cx="3" cy="111" r="3" fill="#4ADE80" id="gate1Light"/>
+          <line id="gate1Laser" x1="3" y1="133" x2="3" y2="175" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+          <text x="3" y="200" font-size="8" fill="#6B7280" text-anchor="middle">门1</text>
         </g>
 
         <!-- Photogate 2 (right of collision) -->
         <g id="gate2">
-          <rect x="0" y="155" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
-          <rect x="2" y="148" width="2" height="8" fill="#6B7280"/>
-          <circle cx="3" cy="146" r="3" fill="#4ADE80" id="gate2Light"/>
-          <line id="gate2Laser" x1="3" y1="168" x2="3" y2="210" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
-          <text x="3" y="235" font-size="8" fill="#6B7280" text-anchor="middle">门2</text>
+          <rect x="0" y="120" width="6" height="65" rx="1.5" fill="url(#gateGrad)"/>
+          <rect x="2" y="113" width="2" height="8" fill="#6B7280"/>
+          <circle cx="3" cy="111" r="3" fill="#4ADE80" id="gate2Light"/>
+          <line id="gate2Laser" x1="3" y1="133" x2="3" y2="175" stroke="#EF4444" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+          <text x="3" y="200" font-size="8" fill="#6B7280" text-anchor="middle">门2</text>
         </g>
 
         <!-- Slider 1 (red) -->
         <g id="slider1" cursor="grab">
-          <rect class="slider-body" x="-25" y="175" width="50" height="25" rx="3" fill="url(#slider1Grad)" stroke="#991B1B" stroke-width="0.5"/>
+          <rect class="slider-body" x="-25" y="140" width="50" height="25" rx="3" fill="url(#slider1Grad)" stroke="#991B1B" stroke-width="0.5"/>
           <!-- Flag/light blocker -->
-          <rect class="flag" x="-1" y="160" width="2" height="15" fill="#DC2626"/>
-          <rect class="flag-top" x="-4" y="157" width="8" height="5" rx="1" fill="#DC2626"/>
+          <rect class="flag" x="-1" y="125" width="2" height="15" fill="#DC2626"/>
+          <rect class="flag-top" x="-4" y="122" width="8" height="5" rx="1" fill="#DC2626"/>
           <!-- d label -->
-          <text x="0" y="155" font-size="6" fill="#DC2626" text-anchor="middle">d</text>
+          <text x="0" y="120" font-size="6" fill="#DC2626" text-anchor="middle">d</text>
           <!-- Mass label -->
-          <text class="mass-label" x="0" y="191" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
+          <text class="mass-label" x="0" y="156" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
           <!-- Weights stack -->
           <g class="weights1"></g>
           <!-- Collision face -->
-          <rect class="face" x="24" y="177" width="3" height="21" rx="1" fill="#F59E0B"/>
+          <rect class="face" x="24" y="142" width="3" height="21" rx="1" fill="#F59E0B"/>
         </g>
 
         <!-- Slider 2 (blue) -->
         <g id="slider2">
-          <rect class="slider-body" x="-25" y="175" width="50" height="25" rx="3" fill="url(#slider2Grad)" stroke="#1E40AF" stroke-width="0.5"/>
-          <rect class="flag" x="-1" y="160" width="2" height="15" fill="#2563EB"/>
-          <rect class="flag-top" x="-4" y="157" width="8" height="5" rx="1" fill="#2563EB"/>
-          <text x="0" y="155" font-size="6" fill="#2563EB" text-anchor="middle">d</text>
-          <text class="mass-label" x="0" y="191" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
+          <rect class="slider-body" x="-25" y="140" width="50" height="25" rx="3" fill="url(#slider2Grad)" stroke="#1E40AF" stroke-width="0.5"/>
+          <rect class="flag" x="-1" y="125" width="2" height="15" fill="#2563EB"/>
+          <rect class="flag-top" x="-4" y="122" width="8" height="5" rx="1" fill="#2563EB"/>
+          <text x="0" y="120" font-size="6" fill="#2563EB" text-anchor="middle">d</text>
+          <text class="mass-label" x="0" y="156" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">200g</text>
           <g class="weights2"></g>
-          <rect class="face" x="-27" y="177" width="3" height="21" rx="1" fill="#F59E0B"/>
+          <rect class="face" x="-27" y="142" width="3" height="21" rx="1" fill="#F59E0B"/>
         </g>
 
         <!-- Weight box -->
@@ -222,6 +222,34 @@
         </div>
       </div>
 
+      <!-- Display toggles -->
+      <div class="panel-section">
+        <div class="section-title">显示选项</div>
+        <div class="toggle-row" style="margin-bottom:4px">
+          <label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer">
+            <input type="checkbox" id="chkArrows" onchange="toggleArrows(this.checked)"> 速度箭头
+          </label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer">
+            <input type="checkbox" id="chkBarChart" onchange="toggleBarChart(this.checked)"> 动量柱状图
+          </label>
+        </div>
+        <div id="barChartWrap" style="display:none">
+          <svg id="barChart" viewBox="0 0 220 80" width="100%" style="max-height:80px">
+            <text x="55" y="10" font-size="7" fill="#6B7280" text-anchor="middle">碰前</text>
+            <text x="165" y="10" font-size="7" fill="#6B7280" text-anchor="middle">碰后</text>
+            <rect id="bar1Pre" x="20" y="15" width="30" height="0" fill="#DC2626" rx="2"/>
+            <rect id="bar2Pre" x="55" y="15" width="30" height="0" fill="#2563EB" rx="2"/>
+            <rect id="bar1Post" x="130" y="15" width="30" height="0" fill="#DC2626" rx="2" opacity="0.6"/>
+            <rect id="bar2Post" x="165" y="15" width="30" height="0" fill="#2563EB" rx="2" opacity="0.6"/>
+            <line x1="15" y1="75" x2="205" y2="75" stroke="#D1D5DB" stroke-width="0.5"/>
+            <text id="barLabel1Pre" x="35" y="74" font-size="6" fill="#DC2626" text-anchor="middle"></text>
+            <text id="barLabel2Pre" x="70" y="74" font-size="6" fill="#2563EB" text-anchor="middle"></text>
+            <text id="barLabel1Post" x="145" y="74" font-size="6" fill="#DC2626" text-anchor="middle"></text>
+            <text id="barLabel2Post" x="180" y="74" font-size="6" fill="#2563EB" text-anchor="middle"></text>
+          </svg>
+        </div>
+      </div>
+
       <!-- Record -->
       <div class="panel-section">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -285,7 +313,7 @@ const SPRING_REST_X = 80; // track-relative x for spring rest
 const PX_PER_CM = 6.8; // scale: track 680px = 100cm
 const TRACK_LEFT = 40;
 const TRACK_RIGHT = 720;
-const TRACK_Y = 200;
+const TRACK_Y = 165;
 
 // Positions on track (px from left edge of SVG)
 const GATE1_X = 270; // left of collision
@@ -369,7 +397,7 @@ function initTrack() {
   holes.innerHTML = '';
   for (let x = 60; x < 710; x += 10) {
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', x); c.setAttribute('cy', 210); c.setAttribute('r', 1);
+    c.setAttribute('cx', x); c.setAttribute('cy', 175); c.setAttribute('r', 1);
     c.setAttribute('fill','#9CA3AF'); c.setAttribute('opacity','0.4');
     holes.appendChild(c);
   }
@@ -378,12 +406,12 @@ function initTrack() {
   for (let cm = 0; cm <= 100; cm += 10) {
     const x = TRACK_LEFT + cm * PX_PER_CM;
     const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1', x); line.setAttribute('y1', 218);
-    line.setAttribute('x2', x); line.setAttribute('y2', 222);
+    line.setAttribute('x1', x); line.setAttribute('y1', 183);
+    line.setAttribute('x2', x); line.setAttribute('y2', 187);
     line.setAttribute('stroke','#6B7280'); line.setAttribute('stroke-width','0.5');
     marks.appendChild(line);
     const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x', x); t.setAttribute('y', 230);
+    t.setAttribute('x', x); t.setAttribute('y', 195);
     t.setAttribute('font-size','6'); t.setAttribute('fill','#9CA3AF'); t.setAttribute('text-anchor','middle');
     t.textContent = cm;
     marks.appendChild(t);
@@ -394,14 +422,15 @@ function initTrack() {
 function drawSpring(x1, x2) {
   const coils = 12;
   const amp = 6;
-  let d = `M${x1},${TRACK_Y + 10}`;
+  const midY = TRACK_Y + 10;
+  let d = `M${x1},${midY}`;
   const dx = (x2 - x1) / (coils * 2);
   for (let i = 0; i < coils * 2; i++) {
     const nx = x1 + dx * (i + 1);
-    const ny = TRACK_Y + 10 + (i % 2 === 0 ? -amp : amp);
+    const ny = midY + (i % 2 === 0 ? -amp : amp);
     d += ` L${nx},${ny}`;
   }
-  d += ` L${x2},${TRACK_Y + 10}`;
+  d += ` L${x2},${midY}`;
   $('springPath').setAttribute('d', d);
 }
 
@@ -417,7 +446,7 @@ function updateGates() {
 function renderWeightsOnSlider(gSel, count, color) {
   gSel.innerHTML = '';
   for (let i = 0; i < count; i++) {
-    const cy = 172 - i * 8;
+    const cy = 137 - i * 8;
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', 0); c.setAttribute('cy', cy); c.setAttribute('r', 8);
     c.setAttribute('fill','url(#weightMetal)'); c.setAttribute('stroke', color);
@@ -517,20 +546,20 @@ function updatePanel() {
 function renderArrows() {
   const g = $('velocityArrows');
   g.innerHTML = '';
-  if (!state.meas || state.phase !== 'done') { g.setAttribute('opacity','0'); return; }
+  if (!state.meas || state.phase !== 'done' || !state.showArrows) { g.setAttribute('opacity','0'); return; }
   g.setAttribute('opacity','1');
   const m = state.meas;
   const scale = 80; // px per m/s
 
   // v1 before (at gate1)
-  drawArrow(g, GATE1_X, 145, m.v1 * scale, '#DC2626', `v₁=${m.v1.toFixed(2)}`);
+  drawArrow(g, GATE1_X, 108, m.v1 * scale, '#DC2626', `v₁=${m.v1.toFixed(2)}`);
 
   // v1' after
   if (m.v1p !== null && m.v1p !== 0) {
-    drawArrow(g, state.s1x, 145, m.v1p * scale, '#DC2626', `v₁'=${m.v1p.toFixed(2)}`);
+    drawArrow(g, state.s1x, 108, m.v1p * scale, '#DC2626', `v₁'=${m.v1p.toFixed(2)}`);
   }
   // v2' after
-  drawArrow(g, state.s2x, 145, m.v2p * scale, '#2563EB', `v₂'=${m.v2p.toFixed(2)}`);
+  drawArrow(g, state.s2x, 108, m.v2p * scale, '#2563EB', `v₂'=${m.v2p.toFixed(2)}`);
 }
 
 function drawArrow(parent, x, y, len, color, label) {
@@ -612,7 +641,7 @@ canvas.addEventListener('pointerdown', e => {
 
   // Check slider1 drag (for spring compression) - only in ready state
   if (state.phase === 'ready') {
-    const s1rect = { x: state.s1x - 25, y: 160, w: 50, h: 40 };
+    const s1rect = { x: state.s1x - 25, y: 115, w: 50, h: 55 };
     if (pt.x >= s1rect.x && pt.x <= s1rect.x + s1rect.w && pt.y >= s1rect.y && pt.y <= s1rect.y + s1rect.h) {
       state.draggingSlider1 = true;
       state.springDragStartX = pt.x;
@@ -649,8 +678,8 @@ canvas.addEventListener('pointerup', e => {
 
   if (state.draggingWeight) {
     // Check if dropped on slider1 or slider2
-    const s1rect = { x: state.s1x - 30, y: 130, w: 60, h: 70 };
-    const s2rect = { x: state.s2x - 30, y: 130, w: 60, h: 70 };
+    const s1rect = { x: state.s1x - 30, y: 95, w: 60, h: 75 };
+    const s2rect = { x: state.s2x - 30, y: 95, w: 60, h: 75 };
 
     if (pt.x >= s1rect.x && pt.x <= s1rect.x + s1rect.w && pt.y >= s1rect.y && pt.y <= s1rect.y + s1rect.h) {
       if (state.weights1 < MAX_WEIGHTS_PER_SLIDER) {
@@ -837,7 +866,7 @@ function startMotion() {
     }
 
     // Check collision
-    if (!state.collided && state.s1x + 25 >= state.s2x - 25) {
+    if (!state.collided && (state.s1x + 25) >= (state.s2x - 25)) {
       state.collided = true;
 
       if (state.collisionType === 'inelastic') {
@@ -926,6 +955,7 @@ function finishExperiment() {
 
   updatePanel();
   renderArrows();
+  renderBarChart();
 }
 
 // ===== RECORD =====
@@ -994,6 +1024,42 @@ function render() {
   drawSpring(SPRING_ANCHOR_X, state.s1x - 25);
   renderSliders();
   updatePanel();
+}
+
+// ===== TOGGLES =====
+function toggleArrows(on) {
+  state.showArrows = on;
+  renderArrows();
+}
+function toggleBarChart(on) {
+  $('barChartWrap').style.display = on ? 'block' : 'none';
+  if (on) renderBarChart();
+}
+function renderBarChart() {
+  if (!state.meas) {
+    ['bar1Pre','bar2Pre','bar1Post','bar2Post'].forEach(id => $(id).setAttribute('height','0'));
+    return;
+  }
+  const m1kg = state.m1 / 1000, m2kg = state.m2 / 1000;
+  const m = state.meas;
+  const p1pre = m1kg * m.v1;
+  const p2pre = 0;
+  const p1post = m1kg * (m.v1p || 0);
+  const p2post = m2kg * m.v2p;
+  const maxP = Math.max(Math.abs(p1pre), Math.abs(p1post), Math.abs(p2post), 0.001);
+  const scale = 55 / maxP;
+
+  function setBar(id, labelId, val) {
+    const h = Math.abs(val) * scale;
+    const el = $(id);
+    el.setAttribute('height', h);
+    el.setAttribute('y', 75 - h);
+    $(labelId).textContent = val.toFixed(3);
+  }
+  setBar('bar1Pre','barLabel1Pre', p1pre);
+  setBar('bar2Pre','barLabel2Pre', p2pre);
+  setBar('bar1Post','barLabel1Post', p1post);
+  setBar('bar2Post','barLabel2Post', p2post);
 }
 
 // ===== FORMULAS =====
