@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探究楞次定律 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="楞次定律, 电磁感应, 磁通量, 感应电流, 高中物理">
+<meta name="description" content="通过拖拽磁铁插入/抽出线圈，观察感应电流方向，验证楞次定律">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#7C3AED;--lab-accent-bg:#F5F3FF;--lab-accent-border:#DDD6FE}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:14px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn.secondary{background:#6B7280}
+.toggle-row{display:flex;align-items:center;gap:6px;font-size:11px;padding:2px 0}
+.toggle-row input{accent-color:var(--lab-accent)}
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.case-card{border-radius:6px;padding:8px;border:1px solid #E5E7EB;background:#F9FAFB;font-size:10px;text-align:center}
+.case-card.done{background:#F0FDF4;border-color:#86EFAC}
+.case-card .case-title{font-weight:700;margin-bottom:2px}
+.case-card .case-result{color:#6B7280;font-size:9px}
+.case-card.done .case-result{color:#16A34A}
+.result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>探究楞次定律</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>楞次定律 · 电磁感应 · 磁通量 · 感应电流 · 高中电磁学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖拽磁铁插入/抽出线圈 → 观察电流计偏转</div>
+      <svg id="canvas" viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="magnetNGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FCA5A5"/><stop offset="100%" stop-color="#DC2626"/></linearGradient>
+          <linearGradient id="magnetSGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#2563EB"/></linearGradient>
+          <linearGradient id="coilGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D97706"/><stop offset="100%" stop-color="#92400E"/></linearGradient>
+        </defs>
+        <rect width="720" height="380" fill="#F8FAFC"/>
+
+        <!-- ===== SOLENOID COIL ===== -->
+        <g id="coilGroup">
+          <!-- Coil body -->
+          <rect id="coilBody" class="coil" x="300" y="140" width="120" height="60" rx="4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+          <text x="360" y="218" font-size="7" fill="#92400E" text-anchor="middle">螺线管</text>
+          <!-- Windings -->
+          <g stroke="#B45309" stroke-width="1.2" opacity="0.7">
+            <line x1="310" y1="140" x2="310" y2="200"/>
+            <line x1="320" y1="140" x2="320" y2="200"/>
+            <line x1="330" y1="140" x2="330" y2="200"/>
+            <line x1="340" y1="140" x2="340" y2="200"/>
+            <line x1="350" y1="140" x2="350" y2="200"/>
+            <line x1="360" y1="140" x2="360" y2="200"/>
+            <line x1="370" y1="140" x2="370" y2="200"/>
+            <line x1="380" y1="140" x2="380" y2="200"/>
+            <line x1="390" y1="140" x2="390" y2="200"/>
+            <line x1="400" y1="140" x2="400" y2="200"/>
+            <line x1="410" y1="140" x2="410" y2="200"/>
+          </g>
+          <!-- End caps (ellipses for 3D) -->
+          <ellipse cx="300" cy="170" rx="6" ry="30" fill="none" stroke="#92400E" stroke-width="1"/>
+          <ellipse cx="420" cy="170" rx="6" ry="30" fill="none" stroke="#92400E" stroke-width="1"/>
+        </g>
+
+        <!-- ===== MAGNET (draggable) ===== -->
+        <g id="magnetGroup" cursor="grab" transform="translate(0,0)">
+          <!-- N pole (right side by default) -->
+          <rect id="magnetN" x="120" y="152" width="50" height="36" rx="3" fill="url(#magnetNGrad)" stroke="#B91C1C" stroke-width="0.5"/>
+          <text x="145" y="175" font-size="12" fill="#FFF" text-anchor="middle" font-weight="800" pointer-events="none">N</text>
+          <!-- S pole (left side) -->
+          <rect id="magnetS" x="70" y="152" width="50" height="36" rx="3" fill="url(#magnetSGrad)" stroke="#1D4ED8" stroke-width="0.5"/>
+          <text x="95" y="175" font-size="12" fill="#FFF" text-anchor="middle" font-weight="800" pointer-events="none">S</text>
+          <!-- Metallic stripe -->
+          <line x1="120" y1="156" x2="120" y2="184" stroke="#FFF" stroke-width="0.5" opacity="0.3"/>
+        </g>
+
+        <!-- ===== MAGNETIC FIELD LINES ===== -->
+        <g id="fieldLines" opacity="0">
+          <g id="fieldLinesGroup"></g>
+        </g>
+
+        <!-- ===== PHI STATUS ===== -->
+        <text id="phiStatus" x="360" y="50" font-size="16" fill="#7C3AED" text-anchor="middle" font-weight="700" opacity="0"></text>
+
+        <!-- ===== GALVANOMETER ===== -->
+        <g id="galvanometer" transform="translate(560,140)">
+          <!-- Body -->
+          <circle cx="0" cy="0" r="50" fill="#FAFAFA" stroke="#7C3AED" stroke-width="2"/>
+          <!-- Scale arc -->
+          <path d="M-35,-20 A40,40 0 0,1 35,-20" fill="none" stroke="#D1D5DB" stroke-width="1"/>
+          <!-- Scale marks -->
+          <g stroke="#6B7280" stroke-width="0.5">
+            <line x1="-35" y1="-20" x2="-30" y2="-18"/>
+            <line x1="-25" y1="-32" x2="-22" y2="-28"/>
+            <line x1="-12" y1="-38" x2="-10" y2="-34"/>
+            <line x1="0" y1="-40" x2="0" y2="-35"/>
+            <line x1="12" y1="-38" x2="10" y2="-34"/>
+            <line x1="25" y1="-32" x2="22" y2="-28"/>
+            <line x1="35" y1="-20" x2="30" y2="-18"/>
+          </g>
+          <!-- Zero mark -->
+          <text x="0" y="-42" font-size="6" fill="#374151" text-anchor="middle" font-weight="600">0</text>
+          <text x="-38" y="-14" font-size="5" fill="#6B7280" text-anchor="middle">-</text>
+          <text x="38" y="-14" font-size="5" fill="#6B7280" text-anchor="middle">+</text>
+          <!-- Needle -->
+          <line id="needle" x1="0" y1="10" x2="0" y2="-35" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Pivot -->
+          <circle cx="0" cy="0" r="3" fill="#7C3AED"/>
+          <text x="0" y="20" font-size="7" fill="#7C3AED" text-anchor="middle" font-weight="600">灵敏电流计</text>
+          <text x="0" y="30" font-size="6" fill="#6B7280" text-anchor="middle">G</text>
+        </g>
+
+        <!-- ===== WIRES ===== -->
+        <g stroke="#374151" stroke-width="1" fill="none">
+          <polyline points="420,155 480,155 510,140"/>
+          <polyline points="420,185 480,185 510,180"/>
+        </g>
+
+        <!-- ===== STATUS BOX ===== -->
+        <g id="infoBox" transform="translate(460,250)">
+          <rect x="0" y="0" width="200" height="70" rx="6" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+          <text id="infoMagnet" x="10" y="18" font-size="9" fill="#374151">磁极朝向：N 极向右</text>
+          <text id="infoMotion" x="10" y="33" font-size="9" fill="#374151">运动状态：静止</text>
+          <text id="infoPhi" x="10" y="48" font-size="9" fill="#374151">Φ 变化：—</text>
+          <text id="infoCurrent" x="10" y="63" font-size="9" fill="#374151">感应电流：—</text>
+        </g>
+
+        <!-- ===== DRAG HINT ===== -->
+        <g id="dragHint" opacity="0.5">
+          <text x="145" y="145" font-size="8" fill="#6B7280" text-anchor="middle">← 拖拽磁铁 →</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>向右拖拽磁铁<strong>插入</strong>线圈</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>观察电流计<strong>偏转方向</strong></span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>向左拖出磁铁，观察<strong>反向偏转</strong></span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span><strong>翻转磁铁</strong>，重复实验</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span>完成四种情况，验证<strong>增反减同</strong></span></div>
+      </div>
+
+      <!-- Magnet control -->
+      <div class="panel-section">
+        <div class="section-title">磁铁控制</div>
+        <div style="display:flex;gap:4px;align-items:center">
+          <span id="magnetDir" style="font-size:11px;color:#374151">N 极朝右</span>
+          <button class="ctrl-btn" onclick="flipMagnet()">翻转磁铁</button>
+          <button class="ctrl-btn secondary" id="btnReset" onclick="resetAll()">重置</button>
+        </div>
+      </div>
+
+      <!-- Toggles -->
+      <div class="panel-section">
+        <div class="toggle-row"><input type="checkbox" id="chkField" onchange="toggleField(this.checked)"><label for="chkField">磁力线</label></div>
+        <div class="toggle-row"><input type="checkbox" id="chkPhi" onchange="togglePhi(this.checked)" checked><label for="chkPhi">Φ 变化标注</label></div>
+      </div>
+
+      <!-- Live data -->
+      <div class="panel-section">
+        <div class="section-title">实时数据</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">Φ 变化</div><div class="val" id="dispPhi" style="color:#7C3AED">—</div></div>
+          <div class="reading-card"><div class="label">偏转角度</div><div class="val" id="dispAngle">0°</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">拖拽速度</div><div class="val" id="dispSpeed">0</div><div class="unit">px/s</div></div>
+          <div class="reading-card"><div class="label">电流方向</div><div class="val" id="dispCurrentDir" style="font-size:11px">—</div></div>
+        </div>
+      </div>
+
+      <!-- Four cases -->
+      <div class="panel-section">
+        <div class="section-title">四种情况</div>
+        <div class="case-grid">
+          <div class="case-card" id="caseNIn"><div class="case-title" style="color:#DC2626">N 极插入</div><div class="case-result">待操作</div></div>
+          <div class="case-card" id="caseNOut"><div class="case-title" style="color:#DC2626">N 极抽出</div><div class="case-result">待操作</div></div>
+          <div class="case-card" id="caseSIn"><div class="case-title" style="color:#2563EB">S 极插入</div><div class="case-result">待操作</div></div>
+          <div class="case-card" id="caseSOut"><div class="case-title" style="color:#2563EB">S 极抽出</div><div class="case-result">待操作</div></div>
+        </div>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div class="result-card">
+          <div style="font-size:11px;color:#374151">
+            感应电流的磁场总是<strong style="color:#7C3AED">阻碍</strong>引起感应电流的磁通量的变化：<br>
+            Φ 增大 → 电流反向（阻碍增大）<br>
+            Φ 减小 → 电流同向（阻碍减小）<br>
+            <strong style="color:#7C3AED">增反减同</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>楞次定律：感应电流的方向，总是使感应电流的磁场阻碍引起感应电流的磁通量的变化。</p>
+
+    <h3>四种情况对照表</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin:12px 0">
+      <tr style="background:#F5F3FF"><th style="padding:6px;border:1px solid #DDD6FE">操作</th><th style="padding:6px;border:1px solid #DDD6FE">Φ 变化</th><th style="padding:6px;border:1px solid #DDD6FE">感应电流</th><th style="padding:6px;border:1px solid #DDD6FE">偏转</th></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">N 极插入</td><td style="padding:6px;border:1px solid #E5E7EB">增大</td><td style="padding:6px;border:1px solid #E5E7EB">反向（排斥）</td><td style="padding:6px;border:1px solid #E5E7EB">右偏</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">N 极抽出</td><td style="padding:6px;border:1px solid #E5E7EB">减小</td><td style="padding:6px;border:1px solid #E5E7EB">同向（吸引）</td><td style="padding:6px;border:1px solid #E5E7EB">左偏</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">S 极插入</td><td style="padding:6px;border:1px solid #E5E7EB">增大</td><td style="padding:6px;border:1px solid #E5E7EB">反向（排斥）</td><td style="padding:6px;border:1px solid #E5E7EB">左偏</td></tr>
+      <tr><td style="padding:6px;border:1px solid #E5E7EB">S 极抽出</td><td style="padding:6px;border:1px solid #E5E7EB">减小</td><td style="padding:6px;border:1px solid #E5E7EB">同向（吸引）</td><td style="padding:6px;border:1px solid #E5E7EB">右偏</td></tr>
+    </table>
+
+    <h3>关键概念</h3>
+    <div class="formula-block" id="formula2"></div>
+    <ul>
+      <li><strong>磁通量</strong> Φ = B·S·cosθ，穿过线圈的磁感线总量</li>
+      <li><strong>感应电动力</strong>：ε = -dΦ/dt，负号体现楞次定律</li>
+      <li><strong>增反减同</strong>：Φ 增大时感应电流的磁场与原磁场方向相反；减小时相同</li>
+    </ul>
+
+    <h3>误差分析</h3>
+    <ul>
+      <li>拖拽速度过慢导致偏转不明显</li>
+      <li>磁铁磁性强弱影响感应电动力大小</li>
+      <li>线圈匝数越多，感应电流越大，偏转越明显</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== STATE =====
+const COIL_LEFT = 300, COIL_RIGHT = 420, COIL_CENTER = 360;
+const MAGNET_W = 100; // total magnet width (N+S)
+const MAX_DEFLECTION = 45; // degrees
+const DAMPING_BETA = 3;
+const DAMPING_OMEGA = 8;
+const DAMPING_DURATION = 1200; // ms
+
+const state = {
+  magnetX: 120, // left edge of magnet group (initial: x of S-pole rect)
+  nRight: true, // N pole facing right
+  dragging: false,
+  dragOffsetX: 0,
+  velocityHistory: [],
+  currentVelocity: 0,
+  needleAngle: 0,
+  dampingAnim: null,
+  cases: { nIn: false, nOut: false, sIn: false, sOut: false },
+  prevInside: false,
+  showPhi: true
+};
+
+const svg = $('canvas');
+const magnetGroup = $('magnetGroup');
+
+// ===== MAGNET POSITION =====
+function getMagnetTipX() {
+  // The tip that enters the coil
+  if (state.nRight) return state.magnetX + MAGNET_W; // right edge = N tip
+  return state.magnetX; // left edge = N tip (flipped: N is on left, S on right)
+}
+
+function isMagnetInside() {
+  const tip = getMagnetTipX();
+  return tip > COIL_LEFT && tip < COIL_RIGHT;
+}
+
+function isMagnetPastCenter() {
+  const tip = getMagnetTipX();
+  return tip > COIL_CENTER;
+}
+
+function updateMagnetPosition() {
+  // Magnet group initial position: S at x=70, N at x=120
+  // We translate relative to that
+  const dx = state.magnetX - 70;
+  magnetGroup.setAttribute('transform', `translate(${dx},0)`);
+}
+
+// ===== DRAG =====
+function onPointerDown(e) {
+  if (state.dampingAnim) { cancelAnimationFrame(state.dampingAnim); state.dampingAnim = null; }
+  const pt = svgPoint(e);
+  const tipX = state.nRight ? state.magnetX + MAGNET_W : state.magnetX;
+  // Check if click is on magnet area
+  if (pt.x >= state.magnetX && pt.x <= state.magnetX + MAGNET_W && pt.y >= 140 && pt.y <= 200) {
+    state.dragging = true;
+    state.dragOffsetX = pt.x - state.magnetX;
+    state.velocityHistory = [{ x: pt.x, t: performance.now() }];
+    state.prevInside = isMagnetInside();
+    magnetGroup.style.cursor = 'grabbing';
+    $('dragHint').setAttribute('opacity', '0');
+    e.preventDefault();
+  }
+}
+
+function onPointerMove(e) {
+  if (!state.dragging) return;
+  const pt = svgPoint(e);
+  const now = performance.now();
+
+  state.magnetX = Math.max(20, Math.min(450, pt.x - state.dragOffsetX));
+  updateMagnetPosition();
+
+  // Velocity history (5-frame smoothing)
+  state.velocityHistory.push({ x: pt.x, t: now });
+  if (state.velocityHistory.length > 5) state.velocityHistory.shift();
+
+  const first = state.velocityHistory[0];
+  const last = state.velocityHistory[state.velocityHistory.length - 1];
+  const dt = (last.t - first.t) / 1000;
+  state.currentVelocity = dt > 0 ? (last.x - first.x) / dt : 0;
+
+  // Calculate deflection based on velocity
+  const inside = isMagnetInside();
+  let deflection = 0;
+
+  if (inside || state.prevInside) {
+    // Deflection proportional to velocity, capped
+    const rawDefl = (state.currentVelocity / 300) * MAX_DEFLECTION;
+    deflection = Math.max(-MAX_DEFLECTION, Math.min(MAX_DEFLECTION, rawDefl));
+
+    // Apply Lenz's law direction
+    // N right + moving right (inserting) → Φ increases → oppose → right deflection
+    // N right + moving left (extracting) → Φ decreases → same → left deflection
+    // Flip for S
+    if (!state.nRight) deflection = -deflection;
+  }
+
+  state.needleAngle = deflection;
+  updateNeedle(deflection);
+  updateStatus();
+  updateFieldLines();
+
+  state.prevInside = inside;
+  e.preventDefault();
+}
+
+function onPointerUp(e) {
+  if (!state.dragging) return;
+  state.dragging = false;
+  magnetGroup.style.cursor = 'grab';
+
+  // Record case
+  const inside = isMagnetInside();
+  const pastCenter = isMagnetPastCenter();
+  const movingRight = state.currentVelocity > 20;
+  const movingLeft = state.currentVelocity < -20;
+
+  if (state.nRight) {
+    if (pastCenter && movingRight) recordCase('nIn', 'N 极插入', '右偏', 'Φ↑ 增反');
+    if (!inside && movingLeft) recordCase('nOut', 'N 极抽出', '左偏', 'Φ↓ 减同');
+  } else {
+    if (pastCenter && movingRight) recordCase('sIn', 'S 极插入', '左偏', 'Φ↑ 增反');
+    if (!inside && movingLeft) recordCase('sOut', 'S 极抽出', '右偏', 'Φ↓ 减同');
+  }
+
+  // Damping oscillation back to zero
+  startDamping(state.needleAngle);
+  state.currentVelocity = 0;
+  updateStatus();
+}
+
+function svgPoint(e) {
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  return {
+    x: (e.clientX - rect.left) / rect.width * vb.width,
+    y: (e.clientY - rect.top) / rect.height * vb.height
+  };
+}
+
+svg.addEventListener('pointerdown', onPointerDown);
+svg.addEventListener('pointermove', onPointerMove);
+svg.addEventListener('pointerup', onPointerUp);
+svg.addEventListener('pointerleave', onPointerUp);
+
+// ===== NEEDLE =====
+function updateNeedle(angleDeg) {
+  const needle = $('needle');
+  needle.setAttribute('transform', `rotate(${angleDeg},0,0)`);
+  $('dispAngle').textContent = Math.abs(angleDeg).toFixed(1) + '°';
+}
+
+// ===== DAMPING =====
+function startDamping(theta0) {
+  const startTime = performance.now();
+  if (Math.abs(theta0) < 0.5) { updateNeedle(0); return; }
+
+  function animate(now) {
+    const elapsed = (now - startTime) / 1000;
+    if (elapsed > DAMPING_DURATION / 1000) {
+      updateNeedle(0);
+      state.needleAngle = 0;
+      $('dispPhi').textContent = '—';
+      $('dispCurrentDir').textContent = '—';
+      $('phiStatus').setAttribute('opacity', '0');
+      state.dampingAnim = null;
+      return;
+    }
+    const theta = theta0 * Math.exp(-DAMPING_BETA * elapsed) * Math.cos(DAMPING_OMEGA * elapsed);
+    state.needleAngle = theta;
+    updateNeedle(theta);
+    state.dampingAnim = requestAnimationFrame(animate);
+  }
+  state.dampingAnim = requestAnimationFrame(animate);
+}
+
+// ===== FLIP MAGNET =====
+function flipMagnet() {
+  state.nRight = !state.nRight;
+  $('magnetDir').textContent = state.nRight ? 'N 极朝右' : 'S 极朝右';
+
+  // Swap colors visually
+  if (state.nRight) {
+    $('magnetN').setAttribute('x', '120'); $('magnetN').querySelector ? 0 : 0;
+    $('magnetS').setAttribute('x', '70');
+    $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
+    $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
+    // Re-render N/S text positions
+  } else {
+    $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
+    $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
+  }
+
+  // Simple approach: swap the text content of the two halves
+  const nText = magnetGroup.querySelectorAll('text');
+  if (state.nRight) {
+    nText[0].textContent = 'N'; nText[0].setAttribute('x', '145');
+    nText[1].textContent = 'S'; nText[1].setAttribute('x', '95');
+    $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
+    $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
+  } else {
+    nText[0].textContent = 'S'; nText[0].setAttribute('x', '145');
+    nText[1].textContent = 'N'; nText[1].setAttribute('x', '95');
+    $('magnetN').setAttribute('fill', 'url(#magnetSGrad)');
+    $('magnetS').setAttribute('fill', 'url(#magnetNGrad)');
+  }
+
+  updateFieldLines();
+  $('infoMagnet').textContent = state.nRight ? '磁极朝向：N 极向右' : '磁极朝向：S 极向右';
+}
+
+// ===== STATUS =====
+function updateStatus() {
+  const v = state.currentVelocity;
+  const inside = isMagnetInside();
+  const speed = Math.abs(v).toFixed(0);
+
+  $('dispSpeed').textContent = speed;
+
+  if (!state.dragging || Math.abs(v) < 5) {
+    $('infoMotion').textContent = '运动状态：静止';
+    $('infoPhi').textContent = 'Φ 变化：—';
+    $('infoCurrent').textContent = '感应电流：—';
+    $('dispPhi').textContent = '—';
+    $('dispCurrentDir').textContent = '—';
+    if (!state.dragging) $('phiStatus').setAttribute('opacity', '0');
+    $('statusBadge').textContent = '拖拽磁铁插入/抽出线圈 → 观察电流计偏转';
+    $('statusBadge').className = 'status-badge idle';
+    return;
+  }
+
+  const movingRight = v > 0;
+  const inserting = (state.nRight && movingRight) || (!state.nRight && movingRight);
+  const phiChange = inserting ? '增大' : '减小';
+  const phiArrow = inserting ? '↑' : '↓';
+  const direction = movingRight ? '向右' : '向左';
+
+  $('infoMotion').textContent = `运动状态：${direction}（${inserting ? '插入' : '抽出'}）`;
+  $('infoPhi').textContent = `Φ 变化：${phiChange}`;
+  $('dispPhi').textContent = `Φ ${phiArrow}`;
+
+  const deflRight = state.needleAngle > 0;
+  $('infoCurrent').textContent = `感应电流：${deflRight ? '正向（右偏）' : '反向（左偏）'}`;
+  $('dispCurrentDir').textContent = deflRight ? '正向' : '反向';
+
+  if (state.showPhi && inside) {
+    $('phiStatus').textContent = `Φ ${phiArrow} ${phiChange}中`;
+    $('phiStatus').setAttribute('opacity', '1');
+  } else {
+    $('phiStatus').setAttribute('opacity', '0');
+  }
+
+  $('statusBadge').textContent = `${state.nRight ? 'N' : 'S'}极${inserting ? '插入' : '抽出'} · Φ${phiChange} · ${deflRight ? '右偏' : '左偏'}`;
+  $('statusBadge').className = 'status-badge done';
+}
+
+// ===== FIELD LINES =====
+function toggleField(on) { $('fieldLines').setAttribute('opacity', on ? '1' : '0'); if (on) updateFieldLines(); }
+function togglePhi(on) { state.showPhi = on; if (!on) $('phiStatus').setAttribute('opacity', '0'); }
+
+function updateFieldLines() {
+  if ($('fieldLines').getAttribute('opacity') === '0') return;
+  const g = $('fieldLinesGroup');
+  g.innerHTML = '';
+
+  const tipX = getMagnetTipX();
+  const dist = Math.abs(tipX - COIL_CENTER);
+  const density = Math.max(2, Math.round(8 - dist / 40));
+
+  for (let i = 0; i < density; i++) {
+    const yOff = (i - density / 2) * 8;
+    const line = document.createElementNS(SVG_NS, 'line');
+    const startX = state.nRight ? state.magnetX + MAGNET_W : state.magnetX;
+    line.setAttribute('x1', startX);
+    line.setAttribute('y1', 170 + yOff);
+    line.setAttribute('x2', COIL_CENTER);
+    line.setAttribute('y2', 170 + yOff);
+    line.setAttribute('stroke', '#A78BFA');
+    line.setAttribute('stroke-width', '0.8');
+    line.setAttribute('stroke-dasharray', '3,3');
+    g.appendChild(line);
+
+    // Arrow
+    const arrow = document.createElementNS(SVG_NS, 'polygon');
+    const ax = (startX + COIL_CENTER) / 2;
+    const ay = 170 + yOff;
+    if (state.nRight) {
+      arrow.setAttribute('points', `${ax},${ay-2} ${ax+4},${ay} ${ax},${ay+2}`);
+    } else {
+      arrow.setAttribute('points', `${ax},${ay-2} ${ax-4},${ay} ${ax},${ay+2}`);
+    }
+    arrow.setAttribute('fill', '#A78BFA');
+    g.appendChild(arrow);
+  }
+}
+
+// ===== RECORD CASE =====
+function recordCase(key, label, deflection, rule) {
+  if (state.cases[key]) return;
+  state.cases[key] = true;
+
+  const cardMap = { nIn: 'caseNIn', nOut: 'caseNOut', sIn: 'caseSIn', sOut: 'caseSOut' };
+  const card = $(cardMap[key]);
+  card.classList.add('done');
+  card.querySelector('.case-result').textContent = `${deflection} · ${rule}`;
+
+  // Check if all done
+  if (state.cases.nIn && state.cases.nOut && state.cases.sIn && state.cases.sOut) {
+    $('resultSection').style.display = 'block';
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  if (state.dampingAnim) { cancelAnimationFrame(state.dampingAnim); state.dampingAnim = null; }
+  state.magnetX = 70;
+  state.nRight = true;
+  state.currentVelocity = 0;
+  state.needleAngle = 0;
+  state.cases = { nIn: false, nOut: false, sIn: false, sOut: false };
+  state.prevInside = false;
+
+  updateMagnetPosition();
+  updateNeedle(0);
+
+  // Reset magnet labels
+  const nText = magnetGroup.querySelectorAll('text');
+  nText[0].textContent = 'N'; nText[0].setAttribute('x', '145');
+  nText[1].textContent = 'S'; nText[1].setAttribute('x', '95');
+  $('magnetN').setAttribute('fill', 'url(#magnetNGrad)');
+  $('magnetS').setAttribute('fill', 'url(#magnetSGrad)');
+
+  $('magnetDir').textContent = 'N 极朝右';
+  $('infoMagnet').textContent = '磁极朝向：N 极向右';
+  $('infoMotion').textContent = '运动状态：静止';
+  $('infoPhi').textContent = 'Φ 变化：—';
+  $('infoCurrent').textContent = '感应电流：—';
+  $('dispPhi').textContent = '—';
+  $('dispAngle').textContent = '0°';
+  $('dispSpeed').textContent = '0';
+  $('dispCurrentDir').textContent = '—';
+  $('phiStatus').setAttribute('opacity', '0');
+  $('statusBadge').textContent = '拖拽磁铁插入/抽出线圈 → 观察电流计偏转';
+  $('statusBadge').className = 'status-badge idle';
+  $('dragHint').setAttribute('opacity', '0.5');
+
+  document.querySelectorAll('.case-card').forEach(c => {
+    c.classList.remove('done');
+    c.querySelector('.case-result').textContent = '待操作';
+  });
+  $('resultSection').style.display = 'none';
+  $('fieldLinesGroup').innerHTML = '';
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: '\\varepsilon = -\\frac{\\mathrm{d}\\Phi}{\\mathrm{d}t} \\quad (\\text{法拉第电磁感应定律})' },
+    { id: 'formula2', tex: '\\Phi = B \\cdot S \\cdot \\cos\\theta' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+updateMagnetPosition();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
