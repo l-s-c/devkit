@@ -802,6 +802,7 @@ function renderFormulas() {
 // ===== INIT =====
 updatePanel();
 updateHangingWeights();
+if (window.katex) renderFormulas();
 setTimeout(() => {
   const g = document.getElementById('guideLabels');
   if (g) { g.style.transition = 'opacity 1s'; g.style.opacity = '0'; }
