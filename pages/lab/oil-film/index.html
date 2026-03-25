@@ -62,8 +62,9 @@
         <rect width="720" height="420" fill="#F8FAFC"/>
 
         <!-- ===== DISH ===== -->
-        <!-- Dish rim -->
-        <circle cx="320" cy="210" r="180" fill="#9CA3AF" stroke="#6B7280" stroke-width="1"/>
+        <!-- Dish rim (浅盘) -->
+        <circle id="dish" class="tray" cx="320" cy="210" r="180" fill="#9CA3AF" stroke="#6B7280" stroke-width="1"/>
+        <text x="320" y="405" font-size="7" fill="#9CA3AF" text-anchor="middle">浅盘</text>
         <!-- Water surface -->
         <circle id="waterSurface" cx="320" cy="210" r="170" fill="url(#waterGrad)"/>
 
@@ -200,6 +201,15 @@
       <li>这是<strong>数量级估测</strong>，结果在 10⁻¹⁰ m 量级即合理</li>
     </ul>
     <div class="formula-block" id="formula2"></div>
+
+    <h3>误差分析</h3>
+    <ul>
+      <li><strong>油膜未充分展开</strong>：痱子粉撒得不均匀或水面不洁净，油膜扩散受阻，面积偏小 → d 偏大</li>
+      <li><strong>油酸不纯</strong>：溶液配制浓度不准确，影响 V 的计算</li>
+      <li><strong>数格子误差</strong>：边缘格子的整格/半格判断有主观性</li>
+      <li><strong>多滴或少滴</strong>：滴量不是标准的一滴（V₀ 不准）</li>
+      <li><strong>减小误差</strong>：多次实验取平均；细心描绘油膜轮廓；用细网格纸提高面积精度</li>
+    </ul>
   </div>
 </div>
 
