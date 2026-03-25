@@ -494,11 +494,12 @@ update();
   </div>
 </div>
 </div>
-<script src="/shared/theme.js">
+<script>
 (function tryKatex(n) {
   if (window.katex) { if(typeof update==='function') update(); return; }
   if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
 })(0);
 </script>
+<script src="/shared/theme.js"></script>
 </body>
 </html>
