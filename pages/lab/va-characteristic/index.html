@@ -631,16 +631,44 @@ function renderChart() {
   const note = $('chartNote');
 
   if (state.records.length >= 6) {
-    // Generate smooth curve using the physics model
+    // Cubic spline interpolation through actual data points
     const sorted = [...state.records].sort((a,b) => a.U - b.U);
-    let d = '';
-    for (let u = 0; u <= 4.5; u += 0.05) {
-      const R = R0 + K_COEFF * Math.pow(Math.max(u, 0.01), 1.2);
-      const I = u / R;
-      const p = chartXY(u, I);
-      d += (d ? ' L' : 'M') + `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    // Add origin point (0,0)
+    const pts = [{ U: 0, I: 0 }, ...sorted];
+    const n = pts.length;
+    const xs = pts.map(p => p.U);
+    const ys = pts.map(p => p.I);
+
+    // Natural cubic spline
+    const h = [], alpha = [], l = [1], mu = [0], z = [0];
+    for (let i = 0; i < n-1; i++) h[i] = xs[i+1] - xs[i];
+    for (let i = 1; i < n-1; i++) alpha[i] = 3/h[i]*(ys[i+1]-ys[i]) - 3/h[i-1]*(ys[i]-ys[i-1]);
+    for (let i = 1; i < n-1; i++) {
+      l[i] = 2*(xs[i+1]-xs[i-1]) - h[i-1]*mu[i-1];
+      mu[i] = h[i]/l[i];
+      z[i] = (alpha[i]-h[i-1]*z[i-1])/l[i];
     }
-    fitPath.setAttribute('d', d);
+    const c = new Array(n).fill(0), b = new Array(n-1), d2 = new Array(n-1);
+    for (let j = n-2; j >= 0; j--) {
+      if (j < n-1) c[j] = z[j] - mu[j]*(c[j+1]||0);
+      if (j < n-1) {
+        b[j] = (ys[j+1]-ys[j])/h[j] - h[j]*(c[j+1]+2*c[j])/3;
+        d2[j] = (c[j+1]-c[j])/(3*h[j]);
+      }
+    }
+
+    // Draw spline
+    let dPath = '';
+    for (let u = 0; u <= xs[n-1] + 0.1; u += 0.03) {
+      let seg = 0;
+      for (let i = n-2; i >= 0; i--) { if (u >= xs[i]) { seg = i; break; } }
+      if (seg >= n-1) seg = n-2;
+      const dx = u - xs[seg];
+      const ival = ys[seg] + b[seg]*dx + c[seg]*dx*dx + d2[seg]*dx*dx*dx;
+      const p = chartXY(u, Math.max(ival, 0));
+      dPath += (dPath ? ' L' : 'M') + `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    }
+    fitPath.setAttribute('d', dPath);
     fitPath.setAttribute('opacity', '0.8');
     note.textContent = '曲线向U轴弯曲 — R随温度增大，电流增速减缓';
     note.style.color = '#4338CA';
