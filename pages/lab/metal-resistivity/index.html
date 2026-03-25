@@ -425,6 +425,12 @@ let dRecords = []; // [{pos, d}]
 let measPosition = 1; // 1,2,3
 let dMeasDone = false;
 let dAvg = null;
+// Pre-generate true diameters for 3 positions (cached, not re-randomized)
+let trueDiameters = [
+  D_TRUE + (Math.random() - 0.5) * 0.006,
+  D_TRUE + (Math.random() - 0.5) * 0.006,
+  D_TRUE + (Math.random() - 0.5) * 0.006
+];
 
 // Phase 2
 let rheoResistance = 10;
@@ -434,6 +440,7 @@ let wireAvail = Array(8).fill(true);
 let uiRecords = [];
 let currentU = 0, currentI = 0;
 let measuredR = null;
+let readingNoise = { u: 0, i: 0 }; // fixed noise per slider stop
 
 const svg = document.getElementById('canvas');
 function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
@@ -738,8 +745,8 @@ function calibrateZero() {
 function recordDiameter() {
   if (dRecords.length >= 3) return;
   const d = getCorrectedReading();
-  // True diameter at current position (with random variation)
-  const trueD = D_TRUE + (Math.random() - 0.5) * 0.006; // ±0.003mm
+  // Use cached true diameter for current position
+  const trueD = trueDiameters[dRecords.length];
 
   // Only record if gap is close to wire diameter (contact made)
   if (Math.abs(d - trueD) > 0.05) {
@@ -764,10 +771,6 @@ function recordDiameter() {
     document.getElementById('calcD').style.color = '#4338CA';
     document.getElementById('statusBadge').textContent = '直径测量完成 · 切换到阶段二测电阻';
     document.getElementById('warnD').style.display = 'none';
-
-    // Open micrometer for next measurement
-    microPos = 2.0;
-    updateMicrometer();
   }
 }
 
@@ -980,6 +983,17 @@ function checkErrors() {
       return '接线错误：电流表不能与电压表直接连接';
     }
   }
+  // Internal ammeter method detection: voltmeter should be across Rx (rw+/rw-),
+  // not across ammeter+Rx. Check if vm connects to ammeter nodes instead of Rx nodes.
+  const vmConnections = wires.filter(w => vmPorts.includes(w.fromPort) || vmPorts.includes(w.toPort));
+  if (vmConnections.length >= 2) {
+    const vmTargets = vmConnections.map(w => vmPorts.includes(w.fromPort) ? w.toPort : w.fromPort);
+    // Internal method: vm connects to am+ side AND rw- side (measuring V across A+Rx)
+    const vmToAm = vmTargets.some(t => amPorts.includes(t));
+    if (vmToAm) {
+      return '接线提示：这是安培表内接法，本实验电阻丝阻值较小，应使用外接法（电压表直接并联在电阻丝两端）';
+    }
+  }
   return null;
 }
 
@@ -995,6 +1009,7 @@ document.getElementById('switch').addEventListener('click', () => {
   }
 
   switchClosed = !switchClosed;
+  readingNoise = { u: (Math.random() - 0.5) * 0.01, i: (Math.random() - 0.5) * 0.01 };
   const blade = document.getElementById('swBlade');
   if (switchClosed) {
     blade.setAttribute('x2', '260'); blade.setAttribute('y2', '55');
@@ -1026,7 +1041,15 @@ document.addEventListener('pointermove', e => {
   updatePhase2Panel();
 });
 
-document.addEventListener('pointerup', () => { sliderDrag = false; });
+document.addEventListener('pointerup', () => {
+  if (sliderDrag) {
+    sliderDrag = false;
+    // Regenerate noise once when slider stops
+    readingNoise = { u: (Math.random() - 0.5) * 0.01, i: (Math.random() - 0.5) * 0.01 };
+    updateReadings();
+    updatePhase2Panel();
+  }
+});
 
 // ===== READINGS =====
 function updateReadings() {
@@ -1036,11 +1059,11 @@ function updateReadings() {
     return;
   }
   const Rtotal = R_TRUE + R_INT + rheoResistance;
-  currentI = EMF / Rtotal;
-  currentU = currentI * R_TRUE;
-  // Add random error ±0.5%
-  currentI *= (1 + (Math.random() - 0.5) * 0.01);
-  currentU *= (1 + (Math.random() - 0.5) * 0.01);
+  const baseI = EMF / Rtotal;
+  const baseU = baseI * R_TRUE;
+  // Apply fixed noise (regenerated only on pointerup / switch toggle)
+  currentI = baseI * (1 + readingNoise.i);
+  currentU = baseU * (1 + readingNoise.u);
   updateNeedles();
 }
 
@@ -1175,6 +1198,11 @@ function resetAll() {
   dRecords = [];
   measPosition = 1;
   dAvg = null;
+  trueDiameters = [
+    D_TRUE + (Math.random() - 0.5) * 0.006,
+    D_TRUE + (Math.random() - 0.5) * 0.006,
+    D_TRUE + (Math.random() - 0.5) * 0.006
+  ];
   rheoResistance = 10;
   switchClosed = false;
   wires = [];
