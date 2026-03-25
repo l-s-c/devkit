@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测量金属电阻率 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="电阻率, 伏安法, 螺旋测微器, 胡克定律, 高中物理电学">
+<meta name="description" content="螺旋测微器测直径+伏安法测电阻，计算金属电阻率 ρ = Rπd²/(4l)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#4338CA;--lab-accent-bg:#EEF2FF;--lab-accent-border:#C7D2FE;--lab-accent-dark-bg:rgba(67,56,202,0.15);--lab-accent-dark-border:rgba(67,56,202,0.3)}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
+.phase-tabs{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:10}
+.phase-tab{padding:4px 12px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(0,0,0,0.08);transition:all 0.2s}
+.phase-tab.active{background:var(--lab-accent);color:#fff;border-color:var(--lab-accent)}
+.phase-tab:not(.active){background:rgba(255,255,255,0.9);color:#6B7280}
+.record-btn{padding:4px 12px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.record-btn:hover{opacity:0.9}
+.record-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.wire-temp{stroke-dasharray:6 4;opacity:0.6;fill:none;pointer-events:none}
+.wire-line{stroke-width:3;stroke-linecap:round;fill:none;cursor:pointer}
+.wire-line:hover{stroke-width:4;filter:drop-shadow(0 0 4px rgba(67,56,202,0.3))}
+.terminal-hint{cursor:crosshair;transition:r 0.15s}
+.terminal-hint:hover{r:6;filter:drop-shadow(0 0 3px rgba(67,56,202,0.4))}
+.warn-tip{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:600;margin-top:4px;text-align:center;display:none}
+.error-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(239,68,68,0.95);color:#fff;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;pointer-events:none;z-index:20;display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>测量金属电阻率</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>伏安法 · 螺旋测微器 · ρ=Rπd²/(4l) · 高中电学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div class="phase-tabs">
+        <div class="phase-tab active" id="tab1" onclick="switchPhase(1)">阶段一：测直径</div>
+        <div class="phase-tab" id="tab2" onclick="switchPhase(2)">阶段二：测电阻</div>
+      </div>
+      <div id="statusBadge" class="status-badge">拖拽旋钮测量电阻丝直径 · 测 3 次取平均</div>
+      <div id="errorOverlay" class="error-overlay"></div>
+
+      <svg id="canvas" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="metalFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="30%" stop-color="#6B7280"/><stop offset="70%" stop-color="#4B5563"/><stop offset="100%" stop-color="#374151"/></linearGradient>
+          <linearGradient id="thimbleGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7280"/><stop offset="20%" stop-color="#9CA3AF"/><stop offset="50%" stop-color="#D1D5DB"/><stop offset="80%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <linearGradient id="sleeveGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#E5E7EB"/><stop offset="50%" stop-color="#F9FAFB"/><stop offset="100%" stop-color="#E5E7EB"/></linearGradient>
+          <linearGradient id="anvilGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="50%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="terminalRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FCA5A5"/><stop offset="100%" stop-color="#EF4444"/></linearGradient>
+          <linearGradient id="terminalBlack" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6B7280"/><stop offset="100%" stop-color="#1F2937"/></linearGradient>
+          <linearGradient id="terminalGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient>
+          <clipPath id="magClip"><circle cx="570" cy="170" r="90"/></clipPath>
+        </defs>
+
+        <rect x="0" y="0" width="700" height="340" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect x="0" y="0" width="700" height="340" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- ====== PHASE 1: MICROMETER ====== -->
+        <g id="phase1Group">
+          <g id="micrometer" transform="translate(20, 30)">
+            <!-- U-Frame -->
+            <rect x="30" y="200" width="200" height="24" rx="4" fill="url(#metalFrame)"/>
+            <rect x="30" y="50" width="24" height="174" rx="4" fill="url(#metalFrame)"/>
+            <rect x="30" y="50" width="200" height="24" rx="4" fill="url(#metalFrame)"/>
+            <line x1="54" y1="74" x2="54" y2="200" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- Insulating plate -->
+            <rect x="210" y="56" width="20" height="12" rx="2" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
+            <!-- Fixed anvil top -->
+            <rect x="220" y="62" width="12" height="74" rx="1" fill="url(#anvilGrad)" stroke="#6B7280" stroke-width="0.5"/>
+            <!-- Fixed anvil face -->
+            <rect x="228" y="132" width="4" height="16" rx="0.5" fill="#E5E7EB"/>
+            <rect x="230" y="134" width="2" height="12" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="0.3"/>
+
+            <!-- Sleeve (fixed scale) -->
+            <rect x="232" y="110" width="180" height="56" rx="3" fill="url(#sleeveGrad)" stroke="#9CA3AF" stroke-width="0.8"/>
+            <!-- Main scale horizontal lines -->
+            <line x1="240" y1="138" x2="408" y2="138" stroke="#374151" stroke-width="0.8"/>
+            <line x1="240" y1="145" x2="408" y2="145" stroke="#374151" stroke-width="0.4"/>
+            <!-- Main scale mm ticks -->
+            <g id="mainScaleTicks"></g>
+
+            <!-- Thimble (movable, draggable) -->
+            <g id="thimbleGroup" style="cursor:ns-resize">
+              <rect id="thimbleBody" x="340" y="106" width="110" height="64" rx="4" fill="url(#thimbleGrad)" stroke="#6B7280" stroke-width="0.8"/>
+              <!-- Knurl texture -->
+              <g id="knurlLines"></g>
+              <!-- Thimble scale edge -->
+              <line id="thimbleEdge" x1="340" y1="106" x2="340" y2="170" stroke="#4B5563" stroke-width="0.8"/>
+              <!-- Thimble scale ticks (副尺) -->
+              <g id="thimbleScale"></g>
+            </g>
+
+            <!-- Ratchet -->
+            <g id="ratchet" style="cursor:ns-resize">
+              <rect x="450" y="118" width="28" height="40" rx="6" fill="#9CA3AF" stroke="#6B7280" stroke-width="0.5"/>
+              <line x1="452" y1="124" x2="476" y2="124" stroke="rgba(0,0,0,0.1)" stroke-width="0.3"/>
+              <line x1="452" y1="130" x2="476" y2="130" stroke="rgba(0,0,0,0.1)" stroke-width="0.3"/>
+              <line x1="452" y1="136" x2="476" y2="136" stroke="rgba(0,0,0,0.1)" stroke-width="0.3"/>
+              <line x1="452" y1="142" x2="476" y2="142" stroke="rgba(0,0,0,0.1)" stroke-width="0.3"/>
+              <line x1="452" y1="148" x2="476" y2="148" stroke="rgba(0,0,0,0.1)" stroke-width="0.3"/>
+            </g>
+
+            <!-- Spindle (moves with thimble) -->
+            <rect id="spindle" x="232" y="134" width="108" height="12" rx="1" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.4"/>
+            <rect id="spindleFace" x="232" y="136" width="2" height="8" fill="#F9FAFB" stroke="#D1D5DB" stroke-width="0.3"/>
+
+            <!-- Wire being measured -->
+            <circle id="wireCircle" cx="232" cy="140" r="2" fill="#D97706" stroke="#B45309" stroke-width="0.3"/>
+
+            <!-- Labels -->
+            <text x="130" y="44" font-size="9" fill="#374151" text-anchor="middle" font-weight="700">螺旋测微器</text>
+            <text x="232" y="170" font-size="5" fill="#B45309" text-anchor="middle">电阻丝</text>
+          </g>
+
+          <!-- Magnifier circle (right side) -->
+          <circle cx="570" cy="170" r="92" fill="none" stroke="#C7D2FE" stroke-width="2"/>
+          <circle cx="570" cy="170" r="90" fill="#fff" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="570" y="85" font-size="8" fill="#4338CA" text-anchor="middle" font-weight="700">放大镜</text>
+          <!-- Magnified view (rendered dynamically) -->
+          <g id="magView" clip-path="url(#magClip)"></g>
+          <!-- Magnifier border overlay -->
+          <circle cx="570" cy="170" r="90" fill="none" stroke="#C7D2FE" stroke-width="2.5"/>
+          <!-- Magnifier reading pointer -->
+          <line x1="570" y1="110" x2="570" y2="230" stroke="#EF4444" stroke-width="0.5" stroke-dasharray="3,2" opacity="0.6"/>
+
+          <!-- Measurement position indicator -->
+          <g transform="translate(20, 290)">
+            <text x="0" y="0" font-size="7" fill="#6B7280" font-weight="600">测量位置：</text>
+            <rect id="pos1" x="65" y="-10" width="30" height="14" rx="4" fill="#4338CA" stroke="none"/>
+            <text x="80" y="1" font-size="6" fill="#fff" text-anchor="middle" font-weight="600">1</text>
+            <rect id="pos2" x="100" y="-10" width="30" height="14" rx="4" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="0.5"/>
+            <text x="115" y="1" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">2</text>
+            <rect id="pos3" x="135" y="-10" width="30" height="14" rx="4" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="0.5"/>
+            <text x="150" y="1" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">3</text>
+          </g>
+        </g>
+
+        <!-- ====== PHASE 2: CIRCUIT ====== -->
+        <g id="phase2Group" style="display:none">
+          <!-- Battery -->
+          <g id="battery">
+            <rect x="30" y="100" width="130" height="50" rx="6" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="0.8"/>
+            <rect x="45" y="110" width="100" height="30" rx="4" fill="#E5E7EB"/>
+            <text x="95" y="128" font-size="7" fill="#6B7280" text-anchor="middle" font-weight="600">E=3.0V r=0.5Ω</text>
+            <circle data-port="bat+" cx="153" cy="125" r="4" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.8" class="terminal-hint"/>
+            <circle data-port="bat-" cx="37" cy="125" r="4" fill="url(#terminalBlack)" stroke="#111827" stroke-width="0.8" class="terminal-hint"/>
+            <text x="153" y="118" font-size="5" fill="#EF4444" text-anchor="middle">+</text>
+            <text x="37" y="118" font-size="5" fill="#374151" text-anchor="middle">-</text>
+          </g>
+
+          <!-- Switch -->
+          <g id="switch">
+            <rect x="200" y="40" width="80" height="30" rx="5" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="0.6"/>
+            <circle data-port="sw1" cx="220" cy="55" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <circle data-port="sw2" cx="260" cy="55" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <line id="swBlade" x1="220" y1="55" x2="255" y2="45" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+            <text x="240" y="38" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">开关</text>
+          </g>
+
+          <!-- Ammeter -->
+          <g id="ammeter">
+            <rect x="350" y="40" width="100" height="50" rx="6" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="0.8"/>
+            <circle cx="400" cy="60" r="18" fill="#fff" stroke="#9CA3AF" stroke-width="0.8"/>
+            <text x="400" y="56" font-size="5" fill="#6B7280" text-anchor="middle">mA</text>
+            <line id="amNeedle" x1="400" y1="60" x2="400" y2="46" stroke="#EF4444" stroke-width="1" stroke-linecap="round"/>
+            <circle data-port="am+" cx="370" cy="83" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <circle data-port="am-" cx="430" cy="83" r="3.5" fill="url(#terminalBlack)" stroke="#111827" stroke-width="0.6" class="terminal-hint"/>
+            <text x="370" y="79" font-size="4" fill="#EF4444" text-anchor="middle">+</text>
+            <text x="430" y="79" font-size="4" fill="#374151" text-anchor="middle">-</text>
+            <text x="400" y="37" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">电流表</text>
+          </g>
+
+          <!-- Voltmeter -->
+          <g id="voltmeter">
+            <rect x="200" y="240" width="100" height="50" rx="6" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="0.8"/>
+            <circle cx="250" cy="260" r="18" fill="#fff" stroke="#9CA3AF" stroke-width="0.8"/>
+            <text x="250" y="256" font-size="5" fill="#6B7280" text-anchor="middle">V</text>
+            <line id="vmNeedle" x1="250" y1="260" x2="250" y2="246" stroke="#4338CA" stroke-width="1" stroke-linecap="round"/>
+            <circle data-port="vm+" cx="220" cy="283" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <circle data-port="vm-" cx="280" cy="283" r="3.5" fill="url(#terminalBlack)" stroke="#111827" stroke-width="0.6" class="terminal-hint"/>
+            <text x="250" y="237" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">电压表</text>
+          </g>
+
+          <!-- Resistance wire -->
+          <g id="resWire">
+            <rect x="500" y="220" width="160" height="40" rx="5" fill="#FFF7ED" stroke="#FED7AA" stroke-width="0.8"/>
+            <line x1="530" y1="240" x2="630" y2="240" stroke="#B45309" stroke-width="2" stroke-linecap="round"/>
+            <circle data-port="rw+" cx="520" cy="240" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <circle data-port="rw-" cx="640" cy="240" r="3.5" fill="url(#terminalBlack)" stroke="#111827" stroke-width="0.6" class="terminal-hint"/>
+            <text x="580" y="232" font-size="6" fill="#B45309" text-anchor="middle" font-weight="600">电阻丝 l=60.0cm</text>
+            <text x="580" y="256" font-size="5" fill="#6B7280" text-anchor="middle">R = ?</text>
+          </g>
+
+          <!-- Rheostat -->
+          <g id="rheostat">
+            <rect x="500" y="100" width="170" height="60" rx="6" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="0.8"/>
+            <rect x="520" y="120" width="130" height="20" rx="3" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5"/>
+            <rect id="slider2" x="570" y="115" width="12" height="30" rx="2" fill="#4338CA" stroke="#3730A3" stroke-width="0.6" style="cursor:ew-resize"/>
+            <circle data-port="rh-a" cx="520" cy="153" r="3.5" fill="url(#terminalRed)" stroke="#991B1B" stroke-width="0.6" class="terminal-hint"/>
+            <circle data-port="rh-d" cx="585" cy="100" r="3.5" fill="url(#terminalGold)" stroke="#92400E" stroke-width="0.6" class="terminal-hint"/>
+            <text x="585" y="95" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">滑动变阻器</text>
+            <text x="520" y="167" font-size="4" fill="#6B7280" text-anchor="middle">A</text>
+            <text x="585" y="112" font-size="4" fill="#6B7280" text-anchor="middle">D</text>
+          </g>
+
+          <!-- Wire dock -->
+          <g id="wireDock">
+            <text x="90" y="200" font-size="6" fill="#6B7280" text-anchor="middle" font-weight="600">导线</text>
+            <g class="dock-wire" data-wire="0" style="cursor:grab"><line x1="30" y1="210" x2="60" y2="210" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="1" style="cursor:grab"><line x1="65" y1="210" x2="95" y2="210" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="2" style="cursor:grab"><line x1="100" y1="210" x2="130" y2="210" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="3" style="cursor:grab"><line x1="30" y1="225" x2="60" y2="225" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="4" style="cursor:grab"><line x1="65" y1="225" x2="95" y2="225" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="5" style="cursor:grab"><line x1="100" y1="225" x2="130" y2="225" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="6" style="cursor:grab"><line x1="135" y1="210" x2="165" y2="210" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/></g>
+            <g class="dock-wire" data-wire="7" style="cursor:grab"><line x1="135" y1="225" x2="165" y2="225" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/></g>
+          </g>
+
+          <!-- Wire layer -->
+          <g id="wireLayer"></g>
+          <!-- Temp layer -->
+          <g id="tempLayer"></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div class="guide-step"><span class="guide-num">1</span><span><strong>测直径</strong>：螺旋测微器量电阻丝（3次）</span></div>
+      <div class="guide-step"><span class="guide-num">2</span><span><strong>接电路</strong>：伏安法外接法测电阻</span></div>
+      <div class="guide-step"><span class="guide-num">3</span><span><strong>测 U-I</strong>：改变 R，记录多组 U、I</span></div>
+      <div class="guide-step"><span class="guide-num">4</span><span><strong>求 R</strong>：U-I 图拟合直线斜率</span></div>
+      <div class="guide-step"><span class="guide-num">5</span><span><strong>算 ρ</strong>：ρ = Rπd²/(4l)</span></div>
+    </div>
+
+    <!-- Phase 1 panel -->
+    <div id="panel1">
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 阶段一：测直径</h3>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <div class="reading-card" style="background:var(--lab-accent-bg)"><div class="label">当前读数</div><div class="val" id="valReading" style="color:var(--lab-accent)">0.000<span class="unit"> mm</span></div></div>
+          <div class="reading-card" style="background:#F9FAFB"><div class="label">平均值 d̄</div><div class="val" id="valDAvg" style="color:#1D1D1F">—<span class="unit"> mm</span></div></div>
+        </div>
+        <div class="data-row"><span class="data-label">零点读数</span><span class="data-value" id="valZero">0.000 mm</span></div>
+        <div class="data-row"><span class="data-label">已测次数</span><span class="data-value" id="valMeasCount" style="color:var(--lab-accent)">0 / 3</span></div>
+        <div style="margin-top:4px;display:flex;gap:4px">
+          <button class="record-btn" id="recordDBtn" onclick="recordDiameter()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 5v14M5 12h14"/></svg>记录
+          </button>
+          <button class="record-btn" id="zeroBtn" onclick="calibrateZero()" style="background:#6B7280">校零</button>
+        </div>
+        <div class="warn-tip" id="warnD">建议测量 3 次取平均</div>
+      </div>
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 直径记录</h3>
+        <table class="data-table">
+          <thead><tr><th>次数</th><th>位置</th><th>d(mm)</th></tr></thead>
+          <tbody id="dBody"><tr><td class="empty" colspan="3">旋转旋钮测量</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Phase 2 panel -->
+    <div id="panel2" style="display:none">
+      <div class="panel-section">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 阶段二：测电阻</h3>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <div class="reading-card" style="background:var(--lab-accent-bg)"><div class="label">电压 U</div><div class="val" id="valU" style="color:var(--lab-accent)">0.00<span class="unit"> V</span></div></div>
+          <div class="reading-card" style="background:#F9FAFB"><div class="label">电流 I</div><div class="val" id="valI" style="color:#1D1D1F">0.000<span class="unit"> A</span></div></div>
+        </div>
+        <div class="data-row"><span class="data-label">电阻丝长度 l</span><span class="data-value">60.0 cm</span></div>
+        <div class="data-row"><span class="data-label">平均直径 d̄</span><span class="data-value" id="valDPanel2">—</span></div>
+        <div class="data-row"><span class="data-label">电路状态</span><span class="data-value" id="valCircuit" style="color:#D1D5DB">未连接</span></div>
+        <div class="data-row"><span class="data-label">变阻器</span><span class="data-value" id="valRheo">10.0 Ω</span></div>
+        <div style="margin-top:4px">
+          <button class="record-btn" id="recordUIBtn" onclick="recordUI()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 5v14M5 12h14"/></svg>记录
+          </button>
+        </div>
+      </div>
+      <div class="panel-section" style="flex:1;display:flex;flex-direction:column">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> U-I 数据</h3>
+        <table class="data-table">
+          <thead><tr><th>次数</th><th>U(V)</th><th>I(A)</th></tr></thead>
+          <tbody id="uiBody"><tr><td class="empty" colspan="3">接电路后记录</td></tr></tbody>
+        </table>
+        <div id="chartArea" style="flex:1;min-height:80px">
+          <svg id="chartSvg" viewBox="0 0 240 110">
+            <line x1="30" y1="5" x2="30" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+            <line x1="30" y1="95" x2="235" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+            <text x="132" y="108" font-size="8" fill="#9CA3AF" text-anchor="middle">I / A</text>
+            <text x="10" y="50" font-size="8" fill="#9CA3AF" text-anchor="middle" transform="rotate(-90,10,50)">U / V</text>
+            <text x="30" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0</text>
+            <text x="81" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.3</text>
+            <text x="132" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.6</text>
+            <text x="183" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0.9</text>
+            <text x="234" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">1.2</text>
+            <text x="26" y="97" font-size="6" fill="#9CA3AF" text-anchor="end">0</text>
+            <text x="26" y="75" font-size="6" fill="#9CA3AF" text-anchor="end">1</text>
+            <text x="26" y="53" font-size="6" fill="#9CA3AF" text-anchor="end">2</text>
+            <text x="26" y="31" font-size="6" fill="#9CA3AF" text-anchor="end">3</text>
+            <g id="chartPoints"></g>
+            <line id="fitLine" x1="0" y1="0" x2="0" y2="0" stroke="#4338CA" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>
+            <text id="fitLabel" x="0" y="0" font-size="7" fill="#4338CA" font-weight="700" opacity="0"></text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final calculation (always visible) -->
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> 最终计算</h3>
+      <div class="data-row"><span class="data-label">平均直径 d̄</span><span class="data-value" id="calcD" style="color:#D1D5DB">待测</span></div>
+      <div class="data-row"><span class="data-label">电阻 R</span><span class="data-value" id="calcR" style="color:#D1D5DB">待测</span></div>
+      <div class="data-row"><span class="data-label">电阻率 ρ</span><span class="data-value" id="calcRho" style="color:#D1D5DB">待计算</span></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>电阻率公式</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>由电阻定律 R = ρl/S 和圆面积 S = πd²/4，可得电阻率计算公式。</p>
+      <ul>
+        <li><strong>R</strong> — 电阻丝电阻（Ω），由伏安法测量</li>
+        <li><strong>d</strong> — 电阻丝直径（m），由螺旋测微器测量</li>
+        <li><strong>l</strong> — 电阻丝长度（m），由刻度尺测量</li>
+      </ul>
+      <p class="highlight-tip">注意单位换算：d 从 mm 换算到 m，l 从 cm 换算到 m。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>螺旋测微器读数</h2></div>
+    <div class="card-body">
+      <p><strong>读数 = 固定刻度（主尺）+ 可动刻度（副尺）× 0.01mm</strong></p>
+      <p>主尺每格 0.5mm（上下交错），副尺 50 格转一圈 = 0.5mm，每格 0.01mm。</p>
+      <p><strong>零误差</strong>：使用前先合拢两测量面，读取零点读数，测量值 = 读数 - 零点。</p>
+      <p class="highlight-tip">高考常考：螺旋测微器读数 + 零误差修正。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>伏安法测电阻（外接法）</h2></div>
+    <div class="card-body">
+      <p>电阻丝阻值较小（几 Ω），适合<strong>安培表外接法</strong>（电压表并联在电阻丝两端）。</p>
+      <p>系统误差：电压表分流导致 R 测 &lt; R 真。</p>
+      <p class="highlight-tip">高考考点：何时用内接法、何时用外接法？判据：R 大用内接，R 小用外接。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>直径测量</strong>：不同位置直径可能不一致（电阻丝不完全均匀），需多次测量取平均。</p>
+      <p><strong>长度测量</strong>：接线柱之间的有效长度，不是电阻丝总长度。</p>
+      <p><strong>电路测量</strong>：外接法 R 偏小 → ρ 偏小；内接法 R 偏大 → ρ 偏大。</p>
+      <p class="highlight-tip">d 的测量误差对 ρ 影响最大（ρ ∝ d²），是主要误差来源。</p>
+      <p class="highlight-tip">考点提醒：为什么 d 要测 3 次取平均？因为 ρ ∝ d²，d 的误差被平方放大。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>测得 d̄=0.400mm，l=60.0cm，U-I 图斜率 R=2.39Ω。求电阻率 ρ。</p>
+      <div class="solve">
+d = 0.400mm = 4.00×10⁻⁴ m<br/>
+l = 60.0cm = 0.600 m<br/>
+S = πd²/4 = π×(4.00×10⁻⁴)²/4 = 1.257×10⁻⁷ m²<br/>
+ρ = RS/l = 2.39×1.257×10⁻⁷/0.600<br/>
+ρ = <strong style="color:#2563EB">5.01×10⁻⁷ Ω·m</strong><br/>
+（康铜标准值 5.0×10⁻⁷ Ω·m，吻合良好）
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const D_TRUE = 0.400; // mm true diameter
+const L_WIRE = 60.0;  // cm wire length
+const RHO_TRUE = 5.0e-7; // Ω·m
+const R_TRUE = RHO_TRUE * (L_WIRE / 100) / (Math.PI * Math.pow(D_TRUE / 1000, 2) / 4); // ≈2.39Ω
+const EMF = 3.0; // V
+const R_INT = 0.5; // Ω
+const RHEO_MAX = 20; // Ω
+const ZERO_ERR_RANGE = 0.005; // ±0.005mm
+
+// ===== STATE =====
+let currentPhase = 1;
+let microPos = 5.0; // mm, thimble position (distance from closed = current gap)
+let zeroError = (Math.random() - 0.5) * 2 * ZERO_ERR_RANGE; // random zero error
+let zeroCal = 0; // calibrated zero
+let dRecords = []; // [{pos, d}]
+let measPosition = 1; // 1,2,3
+let dMeasDone = false;
+let dAvg = null;
+
+// Phase 2
+let rheoResistance = 10;
+let switchClosed = false;
+let wires = [];
+let wireAvail = Array(8).fill(true);
+let uiRecords = [];
+let currentU = 0, currentI = 0;
+let measuredR = null;
+
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
+
+// ===== PHASE SWITCHING =====
+function switchPhase(p) {
+  currentPhase = p;
+  document.getElementById('tab1').className = p === 1 ? 'phase-tab active' : 'phase-tab';
+  document.getElementById('tab2').className = p === 2 ? 'phase-tab active' : 'phase-tab';
+  document.getElementById('phase1Group').style.display = p === 1 ? '' : 'none';
+  document.getElementById('phase2Group').style.display = p === 2 ? '' : 'none';
+  document.getElementById('panel1').style.display = p === 1 ? '' : 'none';
+  document.getElementById('panel2').style.display = p === 2 ? '' : 'none';
+
+  if (p === 1) {
+    document.getElementById('statusBadge').textContent = '拖拽旋钮测量电阻丝直径 · 测 3 次取平均';
+  } else {
+    // Show d warning if not enough measurements
+    if (dRecords.length < 3) {
+      document.getElementById('warnD').style.display = 'block';
+    }
+    document.getElementById('statusBadge').textContent = '用导线连接电路 · 伏安法测电阻';
+    updatePhase2Panel();
+  }
+}
+
+// ===== MICROMETER =====
+// Draw main scale ticks
+function drawMainScale() {
+  const g = document.getElementById('mainScaleTicks');
+  g.innerHTML = '';
+  for (let i = 0; i <= 10; i++) {
+    const x = 260 + i * 20; // 20px per mm
+    // Main mm tick (above line)
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', x); tick.setAttribute('y1', '130');
+    tick.setAttribute('x2', x); tick.setAttribute('y2', '138');
+    tick.setAttribute('stroke', '#374151'); tick.setAttribute('stroke-width', '0.5');
+    g.appendChild(tick);
+    if (i <= 5) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', x); t.setAttribute('y', '128');
+      t.setAttribute('font-size', '5'); t.setAttribute('fill', '#374151');
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = String(i);
+      g.appendChild(t);
+    }
+    // 0.5mm tick (below line)
+    if (i < 10) {
+      const half = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      half.setAttribute('x1', x + 10); half.setAttribute('y1', '140');
+      half.setAttribute('x2', x + 10); half.setAttribute('y2', '145');
+      half.setAttribute('stroke', '#374151'); half.setAttribute('stroke-width', '0.3');
+      g.appendChild(half);
+    }
+  }
+}
+
+// Draw thimble scale (副尺 50 格)
+function drawThimbleScale() {
+  const g = document.getElementById('thimbleScale');
+  g.innerHTML = '';
+  // 50 ticks around the circumference, mapped to Y positions
+  // Visible range: about 25 ticks (half the circumference)
+  // Each tick = 0.01mm, 50 ticks = 0.50mm = 1 revolution
+  const tickSpacing = 2.4; // px per 0.01mm tick
+  const frac = (microPos % 0.5) / 0.5; // fraction of current revolution
+  const centerTick = Math.round(frac * 50); // which tick is at center
+
+  for (let i = -12; i <= 12; i++) {
+    const tickNum = ((centerTick + i) % 50 + 50) % 50;
+    const y = 138 + i * tickSpacing; // center at y=138
+    if (y < 108 || y > 168) continue;
+
+    const isMajor = tickNum % 5 === 0;
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    const thimbleX = parseFloat(document.getElementById('thimbleBody').getAttribute('x'));
+    tick.setAttribute('x1', thimbleX - 4);
+    tick.setAttribute('y1', y);
+    tick.setAttribute('x2', thimbleX);
+    tick.setAttribute('y2', y);
+    tick.setAttribute('stroke', '#374151');
+    tick.setAttribute('stroke-width', isMajor ? '0.5' : '0.3');
+    g.appendChild(tick);
+
+    if (isMajor) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', thimbleX - 6);
+      t.setAttribute('y', String(y + 1.5));
+      t.setAttribute('font-size', '4');
+      t.setAttribute('fill', '#374151');
+      t.setAttribute('text-anchor', 'end');
+      t.textContent = String(tickNum);
+      g.appendChild(t);
+    }
+  }
+
+  // Knurl lines
+  const kg = document.getElementById('knurlLines');
+  kg.innerHTML = '';
+  const thimbleX = parseFloat(document.getElementById('thimbleBody').getAttribute('x'));
+  for (let x = thimbleX + 40; x < thimbleX + 108; x += 5) {
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', x); l.setAttribute('y1', '110');
+    l.setAttribute('x2', x); l.setAttribute('y2', '166');
+    l.setAttribute('stroke', 'rgba(0,0,0,0.08)');
+    l.setAttribute('stroke-width', '0.3');
+    kg.appendChild(l);
+  }
+}
+
+function updateMicrometer() {
+  // microPos is the gap in mm (0 = closed, max ~5mm)
+  // Thimble X position: moves left as microPos decreases
+  // 1mm = 20px (matching main scale)
+  const closedX = 260; // thimble edge at 0mm mark when closed
+  const thimbleEdgeX = closedX + microPos * 20;
+  const thimbleWidth = 110;
+  document.getElementById('thimbleBody').setAttribute('x', thimbleEdgeX);
+  document.getElementById('thimbleEdge').setAttribute('x1', thimbleEdgeX);
+  document.getElementById('thimbleEdge').setAttribute('x2', thimbleEdgeX);
+
+  // Spindle position
+  const spindleRight = thimbleEdgeX;
+  const spindleWidth = spindleRight - 232;
+  if (spindleWidth > 0) {
+    document.getElementById('spindle').setAttribute('width', spindleWidth);
+    document.getElementById('spindle').style.display = '';
+  } else {
+    document.getElementById('spindle').style.display = 'none';
+  }
+
+  // Ratchet position
+  document.getElementById('ratchet').querySelector('rect').setAttribute('x', thimbleEdgeX + thimbleWidth);
+
+  drawThimbleScale();
+  updateMagnifier();
+  updateReading();
+}
+
+function updateMagnifier() {
+  const mag = document.getElementById('magView');
+  mag.innerHTML = '';
+  // Draw magnified view of main+thimble scale intersection
+  // Center on the thimble edge where it meets the main scale
+  const thimbleEdgeX = 260 + microPos * 20 + 20; // +20 for micrometer transform offset
+  const srcCx = thimbleEdgeX;
+  const srcCy = 168; // main scale area (138 in micrometer + 30 transform)
+  const magCx = 570, magCy = 170;
+  const scale = 2.5;
+
+  // Main scale line
+  const mainLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const mainY = magCy + (168 - srcCy) * scale;
+  mainLine.setAttribute('x1', magCx - 80); mainLine.setAttribute('y1', mainY);
+  mainLine.setAttribute('x2', magCx + 80); mainLine.setAttribute('y2', mainY);
+  mainLine.setAttribute('stroke', '#374151'); mainLine.setAttribute('stroke-width', '1.5');
+  mag.appendChild(mainLine);
+
+  // 0.5mm line
+  const halfY = mainY + 7 * scale;
+  const halfLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  halfLine.setAttribute('x1', magCx - 80); halfLine.setAttribute('y1', halfY);
+  halfLine.setAttribute('x2', magCx + 80); halfLine.setAttribute('y2', halfY);
+  halfLine.setAttribute('stroke', '#374151'); halfLine.setAttribute('stroke-width', '0.8');
+  mag.appendChild(halfLine);
+
+  // Main scale ticks (magnified)
+  for (let i = 0; i <= 5; i++) {
+    const origX = 280 + i * 20; // original tick X in micrometer coords
+    const magX = magCx + (origX - srcCx) * scale;
+    if (magX < magCx - 85 || magX > magCx + 85) continue;
+
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', magX); tick.setAttribute('y1', mainY - 15);
+    tick.setAttribute('x2', magX); tick.setAttribute('y2', mainY);
+    tick.setAttribute('stroke', '#374151'); tick.setAttribute('stroke-width', '1');
+    mag.appendChild(tick);
+
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', magX); t.setAttribute('y', mainY - 18);
+    t.setAttribute('font-size', '10'); t.setAttribute('fill', '#374151');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = String(i);
+    mag.appendChild(t);
+
+    // 0.5mm tick
+    const halfTickX = magX + 10 * scale;
+    if (halfTickX >= magCx - 85 && halfTickX <= magCx + 85) {
+      const ht = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ht.setAttribute('x1', halfTickX); ht.setAttribute('y1', halfY);
+      ht.setAttribute('x2', halfTickX); ht.setAttribute('y2', halfY + 8);
+      ht.setAttribute('stroke', '#374151'); ht.setAttribute('stroke-width', '0.8');
+      mag.appendChild(ht);
+    }
+  }
+
+  // Thimble edge (magnified)
+  const edgeOrigX = 260 + microPos * 20;
+  const edgeMagX = magCx + (edgeOrigX - srcCx + 20) * scale;
+
+  // Thimble scale ticks (magnified)
+  const frac = (microPos % 0.5) / 0.5;
+  const centerTick = Math.round(frac * 50);
+  for (let i = -8; i <= 8; i++) {
+    const tickNum = ((centerTick + i) % 50 + 50) % 50;
+    const tickY = mainY + i * 2.4 * scale;
+    if (tickY < magCy - 85 || tickY > magCy + 85) continue;
+
+    const isMajor = tickNum % 5 === 0;
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', edgeMagX - (isMajor ? 12 : 6));
+    tick.setAttribute('y1', tickY);
+    tick.setAttribute('x2', edgeMagX);
+    tick.setAttribute('y2', tickY);
+    tick.setAttribute('stroke', '#374151');
+    tick.setAttribute('stroke-width', isMajor ? '1' : '0.5');
+    mag.appendChild(tick);
+
+    if (isMajor) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', edgeMagX - 15);
+      t.setAttribute('y', String(tickY + 3));
+      t.setAttribute('font-size', '8'); t.setAttribute('fill', '#374151');
+      t.setAttribute('text-anchor', 'end');
+      t.textContent = String(tickNum);
+      mag.appendChild(t);
+    }
+  }
+
+  // Thimble body background (right of edge)
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('x', edgeMagX); bg.setAttribute('y', magCy - 90);
+  bg.setAttribute('width', '200'); bg.setAttribute('height', '180');
+  bg.setAttribute('fill', '#E5E7EB'); bg.setAttribute('opacity', '0.3');
+  mag.insertBefore(bg, mag.firstChild);
+}
+
+function getReading() {
+  // Reading = microPos + zeroError (raw), actual = reading - zeroCal
+  return microPos + zeroError;
+}
+
+function getCorrectedReading() {
+  return getReading() - zeroCal;
+}
+
+function updateReading() {
+  const reading = getCorrectedReading();
+  document.getElementById('valReading').innerHTML = reading.toFixed(3) + '<span class="unit"> mm</span>';
+}
+
+// ===== MICROMETER DRAG =====
+let microDrag = false;
+let microDragStartY = 0;
+let microDragStartPos = 0;
+
+const thimbleEl = document.getElementById('thimbleGroup');
+const ratchetEl = document.getElementById('ratchet');
+
+[thimbleEl, ratchetEl].forEach(el => {
+  el.addEventListener('pointerdown', e => {
+    if (currentPhase !== 1) return;
+    e.preventDefault();
+    microDrag = true;
+    const pt = getSvgPoint(e);
+    microDragStartY = pt.y;
+    microDragStartPos = microPos;
+  });
+});
+
+document.addEventListener('pointermove', e => {
+  if (!microDrag) return;
+  const pt = getSvgPoint(e);
+  const dy = pt.y - microDragStartY;
+  // Up = close (decrease pos), down = open (increase pos)
+  // 1px = 0.01mm → need sensitivity adjustment
+  let sensitivity = 0.008; // mm per SVG px
+
+  // Wire contact: when gap <= D_TRUE + small margin, increase resistance
+  const gap = microDragStartPos - dy * sensitivity;
+  if (gap <= D_TRUE * 1.05 && gap > 0) {
+    sensitivity *= 0.3; // harder to turn near contact
+  }
+
+  microPos = Math.max(0, Math.min(5.0, microDragStartPos - dy * sensitivity));
+  updateMicrometer();
+});
+
+document.addEventListener('pointerup', () => {
+  microDrag = false;
+});
+
+// ===== DIAMETER RECORDING =====
+function calibrateZero() {
+  // Close micrometer fully first
+  zeroCal = getReading(); // current reading becomes zero reference
+  document.getElementById('valZero').textContent = (microPos + zeroError).toFixed(3) + ' mm';
+  document.getElementById('statusBadge').textContent = '已校零 · 现在拧开旋钮夹紧电阻丝';
+}
+
+function recordDiameter() {
+  if (dRecords.length >= 3) return;
+  const d = getCorrectedReading();
+  // True diameter at current position (with random variation)
+  const trueD = D_TRUE + (Math.random() - 0.5) * 0.006; // ±0.003mm
+
+  // Only record if gap is close to wire diameter (contact made)
+  if (Math.abs(d - trueD) > 0.05) {
+    document.getElementById('errorOverlay').textContent = '请先夹紧电阻丝再记录';
+    document.getElementById('errorOverlay').style.display = 'block';
+    setTimeout(() => document.getElementById('errorOverlay').style.display = 'none', 2000);
+    return;
+  }
+
+  dRecords.push({ pos: measPosition, d: d });
+  measPosition = Math.min(3, measPosition + 1);
+
+  // Update position indicators
+  updatePositionIndicators();
+  updateDTable();
+  updateDPanel();
+
+  if (dRecords.length >= 3) {
+    dAvg = dRecords.reduce((s, r) => s + r.d, 0) / dRecords.length;
+    document.getElementById('valDAvg').innerHTML = dAvg.toFixed(3) + '<span class="unit"> mm</span>';
+    document.getElementById('calcD').textContent = dAvg.toFixed(3) + ' mm';
+    document.getElementById('calcD').style.color = '#4338CA';
+    document.getElementById('statusBadge').textContent = '直径测量完成 · 切换到阶段二测电阻';
+    document.getElementById('warnD').style.display = 'none';
+
+    // Open micrometer for next measurement
+    microPos = 2.0;
+    updateMicrometer();
+  }
+}
+
+function updatePositionIndicators() {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('pos' + i);
+    if (i <= dRecords.length) {
+      el.setAttribute('fill', '#059669');
+    } else if (i === dRecords.length + 1) {
+      el.setAttribute('fill', '#4338CA');
+    } else {
+      el.setAttribute('fill', '#F3F4F6');
+    }
+  }
+}
+
+function updateDTable() {
+  const tbody = document.getElementById('dBody');
+  tbody.innerHTML = '';
+  dRecords.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i + 1}</td><td>位置${r.pos}</td><td>${r.d.toFixed(3)}</td>`;
+    tbody.appendChild(tr);
+  });
+  if (dRecords.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="3">旋转旋钮测量</td></tr>';
+  }
+}
+
+function updateDPanel() {
+  document.getElementById('valMeasCount').textContent = dRecords.length + ' / 3';
+  if (dRecords.length > 0 && dRecords.length < 3) {
+    document.getElementById('warnD').style.display = 'block';
+  }
+}
+
+// ===== PHASE 2: CIRCUIT =====
+const PORTS = {
+  'bat+': {x:153, y:125}, 'bat-': {x:37, y:125},
+  'sw1': {x:220, y:55}, 'sw2': {x:260, y:55},
+  'am+': {x:370, y:83}, 'am-': {x:430, y:83},
+  'vm+': {x:220, y:283}, 'vm-': {x:280, y:283},
+  'rw+': {x:520, y:240}, 'rw-': {x:640, y:240},
+  'rh-a': {x:520, y:153}, 'rh-d': {x:585, y:100},
+};
+
+// Correct circuit: external ammeter method
+// Main loop: bat+ → sw1, sw2 → am+, am- → rw+, rw- → rh-a, rh-d → bat-
+// (or equivalent orderings)
+// Voltmeter: vm+ → rw+, vm- → rw- (parallel to wire)
+const CORRECT_MAIN = [
+  ['bat+', 'sw1'], ['sw2', 'am+'], ['am-', 'rw+'], ['rw-', 'rh-a'], ['rh-d', 'bat-']
+];
+
+const SNAP_R = 20;
+let dragWire = null;
+
+function softPath(ax, ay, bx, by) {
+  const dx = Math.abs(bx - ax), sag = Math.max(15, Math.hypot(dx, Math.abs(by - ay)) * 0.12);
+  return `M${ax},${ay} C${ax + dx * 0.3},${ay + sag} ${bx - dx * 0.3},${by + sag} ${bx},${by}`;
+}
+
+function findNearestPort(px, py, exclude) {
+  let best = null, bestD = SNAP_R;
+  for (const [id, p] of Object.entries(PORTS)) {
+    if (id === exclude) continue;
+    if (wires.some(w => w.fromPort === id || w.toPort === id)) continue;
+    const d = Math.hypot(p.x - px, p.y - py);
+    if (d < bestD) { bestD = d; best = id; }
+  }
+  return best;
+}
+
+// Init wire dock listeners
+function initWireDock() {
+  document.querySelectorAll('.dock-wire').forEach(el => {
+    el.addEventListener('pointerdown', e => {
+      if (currentPhase !== 2) return;
+      const idx = parseInt(el.getAttribute('data-wire'));
+      startWireDrag(e, idx);
+    });
+  });
+}
+
+function startWireDrag(e, wireIdx) {
+  e.preventDefault();
+  if (!wireAvail[wireIdx]) return;
+  const p = getSvgPoint(e);
+  const color = [0,1,2,6].includes(wireIdx) ? '#EF4444' : '#3B82F6';
+
+  const startPort = findNearestPort(p.x, p.y, null);
+  if (!startPort) return;
+
+  const sp = PORTS[startPort];
+  const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  tempPath.setAttribute('class', 'wire-temp');
+  tempPath.setAttribute('stroke', color);
+  tempPath.setAttribute('stroke-width', '3');
+  tempPath.setAttribute('d', `M${sp.x},${sp.y} L${sp.x},${sp.y}`);
+  document.getElementById('tempLayer').appendChild(tempPath);
+
+  dragWire = { fromPort: startPort, color, tempPath, snapIndicator: null, wireIdx };
+
+  const onMove = ev => {
+    ev.preventDefault();
+    const pt = getSvgPoint(ev);
+    const target = findNearestPort(pt.x, pt.y, dragWire.fromPort);
+    if (target) {
+      const tp = PORTS[target];
+      tempPath.setAttribute('d', softPath(sp.x, sp.y, tp.x, tp.y));
+      if (!dragWire.snapIndicator) {
+        const si = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        si.setAttribute('r', '6'); si.setAttribute('fill', 'rgba(67,56,202,0.15)');
+        si.setAttribute('stroke', '#4338CA'); si.setAttribute('stroke-width', '1.5');
+        si.style.pointerEvents = 'none';
+        document.getElementById('tempLayer').appendChild(si);
+        dragWire.snapIndicator = si;
+      }
+      dragWire.snapIndicator.setAttribute('cx', tp.x);
+      dragWire.snapIndicator.setAttribute('cy', tp.y);
+    } else {
+      tempPath.setAttribute('d', softPath(sp.x, sp.y, pt.x, pt.y));
+      if (dragWire.snapIndicator) { dragWire.snapIndicator.remove(); dragWire.snapIndicator = null; }
+    }
+  };
+
+  const onUp = ev => {
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    tempPath.remove();
+    if (dragWire.snapIndicator) dragWire.snapIndicator.remove();
+
+    const pt = getSvgPoint(ev);
+    const target = findNearestPort(pt.x, pt.y, dragWire.fromPort);
+    if (target) addWire(dragWire.fromPort, target, dragWire.color, dragWire.wireIdx);
+    dragWire = null;
+  };
+
+  document.addEventListener('pointermove', onMove);
+  document.addEventListener('pointerup', onUp);
+}
+
+function addWire(fromPort, toPort, color, wireIdx) {
+  if (wires.some(w =>
+    (w.fromPort === fromPort && w.toPort === toPort) ||
+    (w.fromPort === toPort && w.toPort === fromPort)
+  )) return;
+
+  const fp = PORTS[fromPort], tp = PORTS[toPort];
+  const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  pathEl.setAttribute('class', 'wire-line');
+  pathEl.setAttribute('stroke', color);
+  pathEl.setAttribute('d', softPath(fp.x, fp.y, tp.x, tp.y));
+  document.getElementById('wireLayer').appendChild(pathEl);
+
+  wireAvail[wireIdx] = false;
+  document.querySelectorAll('.dock-wire')[wireIdx].style.opacity = '0.2';
+  document.querySelectorAll('.dock-wire')[wireIdx].style.pointerEvents = 'none';
+
+  wires.push({ fromPort, toPort, color, pathEl, wireIdx });
+  checkCircuit();
+  updatePhase2Panel();
+}
+
+function hasConnection(a, b) {
+  return wires.some(w =>
+    (w.fromPort === a && w.toPort === b) ||
+    (w.fromPort === b && w.toPort === a)
+  );
+}
+
+function checkCircuit() {
+  const errorMsg = checkErrors();
+  if (errorMsg) {
+    document.getElementById('errorOverlay').textContent = errorMsg;
+    document.getElementById('errorOverlay').style.display = 'block';
+    setTimeout(() => document.getElementById('errorOverlay').style.display = 'none', 3000);
+    return;
+  }
+
+  const mainComplete = CORRECT_MAIN.every(([a, b]) => hasConnection(a, b));
+  const vmConnected = wires.some(w => w.fromPort === 'vm+' || w.toPort === 'vm+') &&
+                      wires.some(w => w.fromPort === 'vm-' || w.toPort === 'vm-');
+
+  if (mainComplete) {
+    document.getElementById('valCircuit').textContent = vmConnected ? '已连接' : '主回路已连';
+    document.getElementById('valCircuit').style.color = '#059669';
+    document.getElementById('statusBadge').textContent = '点击开关闭合电路';
+  }
+}
+
+function checkErrors() {
+  // Check for common mistakes
+  const vmPorts = ['vm+', 'vm-'];
+  for (const w of wires) {
+    const hasVm = vmPorts.includes(w.fromPort) || vmPorts.includes(w.toPort);
+    if (!hasVm) continue;
+    const other = vmPorts.includes(w.fromPort) ? w.toPort : w.fromPort;
+    if (['am+', 'am-', 'sw1', 'sw2'].includes(other)) {
+      return '接线错误：电压表不能串联在主回路中';
+    }
+  }
+  // Ammeter parallel to something
+  const amPorts = ['am+', 'am-'];
+  for (const w of wires) {
+    const hasAm = amPorts.includes(w.fromPort) || amPorts.includes(w.toPort);
+    if (!hasAm) continue;
+    const other = amPorts.includes(w.fromPort) ? w.toPort : w.fromPort;
+    if (['vm+', 'vm-'].includes(other)) {
+      return '接线错误：电流表不能与电压表直接连接';
+    }
+  }
+  return null;
+}
+
+// ===== SWITCH =====
+document.getElementById('switch').addEventListener('click', () => {
+  if (currentPhase !== 2) return;
+  const mainComplete = CORRECT_MAIN.every(([a, b]) => hasConnection(a, b));
+  if (!mainComplete) {
+    document.getElementById('errorOverlay').textContent = '请先连接完整电路';
+    document.getElementById('errorOverlay').style.display = 'block';
+    setTimeout(() => document.getElementById('errorOverlay').style.display = 'none', 2000);
+    return;
+  }
+
+  switchClosed = !switchClosed;
+  const blade = document.getElementById('swBlade');
+  if (switchClosed) {
+    blade.setAttribute('x2', '260'); blade.setAttribute('y2', '55');
+  } else {
+    blade.setAttribute('x2', '255'); blade.setAttribute('y2', '45');
+  }
+  updateReadings();
+  updatePhase2Panel();
+});
+
+// ===== SLIDER (rheostat) =====
+let sliderDrag = false;
+const SLIDER_LEFT = 525;
+const SLIDER_RIGHT = 645;
+
+document.getElementById('slider2').addEventListener('pointerdown', e => {
+  if (currentPhase !== 2) return;
+  e.preventDefault();
+  sliderDrag = true;
+});
+
+document.addEventListener('pointermove', e => {
+  if (!sliderDrag) return;
+  const pt = getSvgPoint(e);
+  const x = Math.max(SLIDER_LEFT, Math.min(SLIDER_RIGHT - 12, pt.x - 6));
+  document.getElementById('slider2').setAttribute('x', x);
+  rheoResistance = ((x - SLIDER_LEFT) / (SLIDER_RIGHT - 12 - SLIDER_LEFT)) * RHEO_MAX;
+  updateReadings();
+  updatePhase2Panel();
+});
+
+document.addEventListener('pointerup', () => { sliderDrag = false; });
+
+// ===== READINGS =====
+function updateReadings() {
+  if (!switchClosed) {
+    currentU = 0; currentI = 0;
+    updateNeedles();
+    return;
+  }
+  const Rtotal = R_TRUE + R_INT + rheoResistance;
+  currentI = EMF / Rtotal;
+  currentU = currentI * R_TRUE;
+  // Add random error ±0.5%
+  currentI *= (1 + (Math.random() - 0.5) * 0.01);
+  currentU *= (1 + (Math.random() - 0.5) * 0.01);
+  updateNeedles();
+}
+
+function updateNeedles() {
+  // Ammeter needle: 0-1.2A → angle -45 to 45
+  const amAngle = -45 + (currentI / 1.2) * 90;
+  const amNeedle = document.getElementById('amNeedle');
+  amNeedle.setAttribute('x2', 400 + 14 * Math.sin(amAngle * Math.PI / 180));
+  amNeedle.setAttribute('y2', 60 - 14 * Math.cos(amAngle * Math.PI / 180));
+
+  // Voltmeter needle: 0-3V → angle -45 to 45
+  const vmAngle = -45 + (currentU / 3) * 90;
+  const vmNeedle = document.getElementById('vmNeedle');
+  vmNeedle.setAttribute('x2', 250 + 14 * Math.sin(vmAngle * Math.PI / 180));
+  vmNeedle.setAttribute('y2', 260 - 14 * Math.cos(vmAngle * Math.PI / 180));
+}
+
+function updatePhase2Panel() {
+  document.getElementById('valU').innerHTML = currentU.toFixed(2) + '<span class="unit"> V</span>';
+  document.getElementById('valI').innerHTML = currentI.toFixed(3) + '<span class="unit"> A</span>';
+  document.getElementById('valRheo').textContent = rheoResistance.toFixed(1) + ' Ω';
+  if (dAvg) {
+    document.getElementById('valDPanel2').textContent = dAvg.toFixed(3) + ' mm';
+    document.getElementById('valDPanel2').style.color = '#4338CA';
+  }
+}
+
+// ===== RECORD U-I =====
+function recordUI() {
+  if (!switchClosed || currentI < 0.001) return;
+  // Use displayed values
+  const U = parseFloat(document.getElementById('valU').textContent);
+  const I = parseFloat(document.getElementById('valI').textContent);
+
+  // Check duplicate (±0.01A)
+  if (uiRecords.some(r => Math.abs(r.I - I) < 0.01)) return;
+
+  uiRecords.push({ n: uiRecords.length + 1, U, I });
+  updateUITable();
+  updateUIChart();
+  updateFinalCalc();
+}
+
+function updateUITable() {
+  const tbody = document.getElementById('uiBody');
+  tbody.innerHTML = '';
+  uiRecords.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.n}</td><td>${r.U.toFixed(2)}</td><td>${r.I.toFixed(3)}</td>`;
+    tr.style.cursor = 'pointer';
+    tr.title = '点击删除';
+    tr.addEventListener('mouseenter', () => { tr.style.background = '#FEF2F2'; });
+    tr.addEventListener('mouseleave', () => { tr.style.background = ''; });
+    tr.addEventListener('click', () => {
+      uiRecords = uiRecords.filter(d => d !== r);
+      uiRecords.forEach((d, i) => d.n = i + 1);
+      updateUITable();
+      updateUIChart();
+      updateFinalCalc();
+    });
+    tbody.appendChild(tr);
+  });
+  if (uiRecords.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="3">接电路后记录</td></tr>';
+  }
+}
+
+function updateUIChart() {
+  const chartG = document.getElementById('chartPoints');
+  chartG.innerHTML = '';
+  // I axis: 0-1.2A → x 30-234, U axis: 0-3V → y 95-5
+  uiRecords.forEach(r => {
+    const cx = 30 + (r.I / 1.2) * 204;
+    const cy = 95 - (r.U / 3) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', Math.max(30, Math.min(234, cx)).toFixed(1));
+    c.setAttribute('cy', Math.max(5, Math.min(95, cy)).toFixed(1));
+    c.setAttribute('r', '3');
+    c.setAttribute('fill', '#4338CA');
+    chartG.appendChild(c);
+  });
+
+  // Fit line ≥3 points: U = R*I (slope = R)
+  const fitLine = document.getElementById('fitLine');
+  const fitLabel = document.getElementById('fitLabel');
+  if (uiRecords.length >= 3) {
+    let sX = 0, sY = 0, sXY = 0, sXX = 0, n = uiRecords.length;
+    uiRecords.forEach(r => { sX += r.I; sY += r.U; sXY += r.I * r.U; sXX += r.I * r.I; });
+    const slope = (n * sXY - sX * sY) / (n * sXX - sX * sX); // U/I = R
+    const intercept = (sY - slope * sX) / n;
+    measuredR = slope;
+
+    const y1 = 95 - (intercept / 3) * 90;
+    const y2 = 95 - ((slope * 1.2 + intercept) / 3) * 90;
+    fitLine.setAttribute('x1', '30');
+    fitLine.setAttribute('y1', Math.max(5, Math.min(95, y1)));
+    fitLine.setAttribute('x2', '234');
+    fitLine.setAttribute('y2', Math.max(5, Math.min(95, y2)));
+    fitLine.setAttribute('opacity', '1');
+
+    fitLabel.setAttribute('x', '180');
+    fitLabel.setAttribute('y', Math.max(15, Math.min(90, y2 + 12)));
+    fitLabel.textContent = `R = ${slope.toFixed(2)} Ω`;
+    fitLabel.setAttribute('opacity', '1');
+
+    document.getElementById('calcR').textContent = slope.toFixed(2) + ' Ω';
+    document.getElementById('calcR').style.color = '#4338CA';
+  } else {
+    fitLine.setAttribute('opacity', '0');
+    fitLabel.setAttribute('opacity', '0');
+  }
+}
+
+function updateFinalCalc() {
+  if (dAvg && measuredR) {
+    const d_m = dAvg / 1000; // mm to m
+    const l_m = L_WIRE / 100; // cm to m
+    const rho = measuredR * Math.PI * d_m * d_m / (4 * l_m);
+    document.getElementById('calcRho').textContent = rho.toExponential(2) + ' Ω·m';
+    document.getElementById('calcRho').style.color = '#4338CA';
+    document.getElementById('statusBadge').textContent =
+      `ρ = ${rho.toExponential(2)} Ω·m（理论值 5.0×10⁻⁷ Ω·m）`;
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  currentPhase = 1;
+  microPos = 2.0;
+  zeroError = (Math.random() - 0.5) * 2 * ZERO_ERR_RANGE;
+  zeroCal = 0;
+  dRecords = [];
+  measPosition = 1;
+  dAvg = null;
+  rheoResistance = 10;
+  switchClosed = false;
+  wires = [];
+  wireAvail = Array(8).fill(true);
+  uiRecords = [];
+  currentU = 0; currentI = 0;
+  measuredR = null;
+
+  // Reset UI
+  switchPhase(1);
+  document.getElementById('valZero').textContent = '0.000 mm';
+  document.getElementById('valDAvg').innerHTML = '—<span class="unit"> mm</span>';
+  document.getElementById('valMeasCount').textContent = '0 / 3';
+  document.getElementById('warnD').style.display = 'none';
+  document.getElementById('dBody').innerHTML = '<tr><td class="empty" colspan="3">旋转旋钮测量</td></tr>';
+  document.getElementById('uiBody').innerHTML = '<tr><td class="empty" colspan="3">接电路后记录</td></tr>';
+  document.getElementById('chartPoints').innerHTML = '';
+  document.getElementById('fitLine').setAttribute('opacity', '0');
+  document.getElementById('fitLabel').setAttribute('opacity', '0');
+  document.getElementById('calcD').textContent = '待测';
+  document.getElementById('calcD').style.color = '#D1D5DB';
+  document.getElementById('calcR').textContent = '待测';
+  document.getElementById('calcR').style.color = '#D1D5DB';
+  document.getElementById('calcRho').textContent = '待计算';
+  document.getElementById('calcRho').style.color = '#D1D5DB';
+  document.getElementById('valCircuit').textContent = '未连接';
+  document.getElementById('valCircuit').style.color = '#D1D5DB';
+
+  // Reset switch blade
+  document.getElementById('swBlade').setAttribute('x2', '255');
+  document.getElementById('swBlade').setAttribute('y2', '45');
+
+  // Reset slider
+  document.getElementById('slider2').setAttribute('x', '570');
+
+  // Reset wire dock
+  document.querySelectorAll('.dock-wire').forEach(el => {
+    el.style.opacity = '1';
+    el.style.pointerEvents = '';
+  });
+  document.getElementById('wireLayer').innerHTML = '';
+
+  // Reset position indicators
+  updatePositionIndicators();
+  drawMainScale();
+  updateMicrometer();
+  updateNeedles();
+
+  document.getElementById('statusBadge').textContent = '拖拽旋钮测量电阻丝直径 · 测 3 次取平均';
+  document.getElementById('statusBadge').className = 'status-badge';
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  const f1 = document.getElementById('formula1');
+  if (f1) katex.render('\\rho = \\frac{R \\pi d^2}{4l}', f1, { displayMode: true, throwOnError: false });
+}
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+drawMainScale();
+microPos = 2.0; // start with gap open
+updateMicrometer();
+initWireDock();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
