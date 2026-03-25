@@ -317,6 +317,7 @@ function calcPhotoR(lux) {
 }
 
 function formatR(ohms) {
+  if (ohms >= 1000000) return { val: (ohms / 1000000).toFixed(2), unit: 'MΩ' };
   if (ohms >= 1000) return { val: (ohms / 1000).toFixed(2), unit: 'kΩ' };
   return { val: ohms.toFixed(1), unit: 'Ω' };
 }
@@ -569,12 +570,11 @@ function renderChart() {
 
 // ===== CLEAR =====
 function clearData() {
-  if (state.tab === 'therm') state.thermRecords = [];
-  else state.photoRecords = [];
-  renderTable();
-  renderChart();
-  if (state.tab === 'therm') updateThermCurvePreview();
-  else updatePhotoCurvePreview();
+  state.thermRecords = [];
+  state.photoRecords = [];
+  $('tempSlider').value = 25; state.temp = 25;
+  $('luxSlider').value = 100; state.lux = 100;
+  switchTab('therm');
 }
 
 // ===== FORMULAS =====
