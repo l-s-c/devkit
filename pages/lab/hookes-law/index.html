@@ -444,23 +444,16 @@ function removeBottomWeight() {
 
 // ===== SPRING PHYSICS =====
 function getExtension() {
-  // In elastic range: x = F/k
+  // x = F/k in cm (k in N/m, convert to N/cm)
   const F = hungCount * F_PER;
+  const linearX = F / (K_TRUE / 100); // cm
   if (!overLimit) {
-    return F / (K_TRUE / 100); // cm
+    return linearX;
   } else {
-    // Beyond elastic limit: non-linear + permanent deform
-    const linearX = (MAX_WEIGHTS * F_PER) / (K_TRUE / 100);
-    const extraWeights = hungCount - MAX_WEIGHTS;
-    // Already at limit, show permanent deform
+    // After exceeding elastic limit: current force extension + permanent deformation
+    // Taking off weights reduces extension but permanentDeform remains
     return linearX + permanentDeform;
   }
-}
-
-function getCurrentL() {
-  const x = getExtension();
-  const error = (Math.random() - 0.5) * 2 * ERROR_RANGE;
-  return L0 + x + error;
 }
 
 function getSpringBottomY() {
@@ -688,6 +681,8 @@ function updateTable() {
     // Click to delete
     tr.style.cursor = 'pointer';
     tr.title = '点击删除此条记录';
+    tr.addEventListener('mouseenter', () => { tr.style.background = '#FEF2F2'; });
+    tr.addEventListener('mouseleave', () => { tr.style.background = ''; });
     tr.addEventListener('click', () => {
       records = records.filter(d => d !== r);
       records.forEach((d, i) => d.n = i + 1);
