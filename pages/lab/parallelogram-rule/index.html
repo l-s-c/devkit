@@ -273,8 +273,8 @@ const SNAP_R = 8; // snap to O radius
 // ===== STATE =====
 let mode = 'two'; // 'two' or 'one'
 // Dynamometer handle positions (what user drags)
-let handle1 = { x: 180, y: 100 }; // F1 handle (red)
-let handle2 = { x: 420, y: 100 }; // F2 handle (blue)
+let handle1 = { x: 170, y: 90 };  // F1 handle (red) - upper left
+let handle2 = { x: 170, y: 250 }; // F2 handle (blue) - lower left
 let handle3 = { x: 300, y: 50 };  // F single (orange)
 
 // Saved F1/F2 state for comparison
@@ -561,8 +561,12 @@ function updatePanel() {
 
   // Warn if over range
   const warn = document.getElementById('warnTip');
-  if (f1.mag >= MAX_FORCE || f2.mag >= MAX_FORCE) {
+  const f3Check = mode === 'one' ? getForceVec(handle3) : null;
+  if (f1.mag >= MAX_FORCE || f2.mag >= MAX_FORCE || (f3Check && f3Check.mag >= MAX_FORCE)) {
     warn.textContent = '超出量程（5N）！';
+    warn.style.display = 'block';
+  } else if (mode === 'one' && savedFprime && savedFprime.mag > MAX_FORCE) {
+    warn.textContent = '合力超出测力计量程，请调整 F₁ F₂ 的大小或角度';
     warn.style.display = 'block';
   } else {
     warn.style.display = 'none';
@@ -704,7 +708,8 @@ function recordData() {
   records.push({
     n: records.length + 1,
     F1: f1.mag, F2: f2.mag, theta: theta,
-    Fprime: fprime, F: fActual
+    Fprime: fprime, F: fActual,
+    verified: mode === 'one'
   });
 
   updateRecordTable();
@@ -715,7 +720,8 @@ function updateRecordTable() {
   tbody.innerHTML = '';
   records.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.n}</td><td>${r.F1.toFixed(2)}</td><td>${r.F2.toFixed(2)}</td><td>${r.theta.toFixed(0)}</td><td>${r.Fprime.toFixed(2)}</td><td>${r.F !== null ? r.F.toFixed(2) : '—'}</td>`;
+    const fCell = r.F !== null ? r.F.toFixed(2) : '<span style="color:#D1D5DB">待验证</span>';
+    tr.innerHTML = `<td>${r.n}</td><td>${r.F1.toFixed(2)}</td><td>${r.F2.toFixed(2)}</td><td>${r.theta.toFixed(0)}</td><td>${r.Fprime.toFixed(2)}</td><td>${fCell}</td>`;
     tr.style.cursor = 'pointer';
     tr.title = '点击删除';
     tr.addEventListener('mouseenter', () => { tr.style.background = '#FEF2F2'; });
