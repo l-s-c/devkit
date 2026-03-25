@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探究弹力与弹簧伸长关系 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="胡克定律, F=kx, 弹簧, 弹力, 伸长量, 劲度系数, 高中物理">
+<meta name="description" content="逐次挂钩码，测弹簧伸长量，作 F-x 图拟合直线求 k，验证胡克定律">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:6px;text-align:center}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.highlight-tip{margin-top:6px;color:var(--lab-accent);font-size:12px;font-weight:600}
+.record-btn{padding:4px 12px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.record-btn:hover{opacity:0.9}
+.record-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.warn-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(239,68,68,0.95);color:#fff;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;pointer-events:none;z-index:20;display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>探究弹力与弹簧伸长关系</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>胡克定律 · F = kx · 弹簧伸长量 · 高中力学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考必考</div>
+  <div class="purpose-tag" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>初高中衔接</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖钩码挂到弹簧下端 · 观察伸长量 · 记录数据</div>
+      <div id="warnOverlay" class="warn-overlay">已超过弹性限度！弹簧发生永久形变</div>
+      <svg id="canvas" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="standGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7280"/><stop offset="50%" stop-color="#9CA3AF"/><stop offset="100%" stop-color="#6B7280"/></linearGradient>
+          <linearGradient id="springMetal" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#9CA3AF"/><stop offset="30%" stop-color="#D1D5DB"/><stop offset="70%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="springRed" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#EF4444"/><stop offset="30%" stop-color="#F87171"/><stop offset="70%" stop-color="#F87171"/><stop offset="100%" stop-color="#EF4444"/></linearGradient>
+          <linearGradient id="hookGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FBBF24"/><stop offset="50%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#D97706"/></linearGradient>
+          <linearGradient id="rulerWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#FDE68A"/><stop offset="50%" stop-color="#FEF3C7"/><stop offset="100%" stop-color="#FDE68A"/></linearGradient>
+          <radialGradient id="clampMetal" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="100%" stop-color="#6B7280"/></radialGradient>
+        </defs>
+
+        <!-- Background -->
+        <rect x="0" y="0" width="700" height="340" fill="#F8FAFC"/>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="0.3"/></pattern>
+        <rect x="0" y="0" width="700" height="340" fill="url(#grid)" opacity="0.4"/>
+
+        <!-- Iron stand -->
+        <rect x="120" y="310" width="130" height="8" rx="2" fill="#4B5563"/>
+        <rect x="122" y="308" width="126" height="4" rx="1" fill="#6B7280"/>
+        <rect x="180" y="18" width="8" height="292" rx="2" fill="url(#standGrad)"/>
+        <line x1="183" y1="20" x2="183" y2="308" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <rect x="188" y="28" width="70" height="6" rx="1.5" fill="#6B7280"/>
+        <circle cx="188" cy="31" r="5" fill="url(#clampMetal)" stroke="#4B5563" stroke-width="0.8"/>
+        <circle cx="188" cy="31" r="1.5" fill="#374151"/>
+        <circle cx="194" cy="31" r="3" fill="#F59E0B" stroke="#D97706" stroke-width="0.5"/>
+
+        <!-- Spring top hook -->
+        <path d="M250,34 L250,38 Q250,42 246,42 Q242,42 242,38" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/>
+
+        <!-- Spring coils (dynamic) -->
+        <path id="springPath" d="" fill="none" stroke="url(#springMetal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="springHighlight" d="" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Spring bottom hook -->
+        <g id="springBottom">
+          <path d="M250,0 L250,5 Q250,9 254,9 Q258,9 258,5" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- Hung weights group -->
+        <g id="hungWeights"></g>
+
+        <!-- Force arrow -->
+        <g id="forceArrow" style="display:none">
+          <line id="fLine" x1="224" y1="0" x2="224" y2="0" stroke="#EF4444" stroke-width="2"/>
+          <polygon id="fHead" points="224,0 221,0 227,0" fill="#EF4444"/>
+          <text id="fLabel" x="210" y="0" font-size="7" fill="#EF4444" font-weight="700" font-style="italic">F</text>
+          <text id="fValue" x="210" y="0" font-size="5" fill="#EF4444">0.00N</text>
+        </g>
+
+        <!-- Ruler -->
+        <g id="ruler" transform="translate(275, 30)">
+          <rect x="0" y="0" width="22" height="290" rx="1" fill="url(#rulerWood)" stroke="#D97706" stroke-width="0.4"/>
+        </g>
+        <!-- Ruler ticks (dynamic, drawn once) -->
+        <g id="rulerTicks"></g>
+
+        <!-- Natural length marker -->
+        <g id="naturalMarker">
+          <line x1="302" y1="42" x2="320" y2="42" stroke="#059669" stroke-width="1" stroke-dasharray="2,1"/>
+          <text x="322" y="45" font-size="5" fill="#059669" font-weight="600">L₀ = 10.0 cm</text>
+        </g>
+
+        <!-- Current length marker (red triangle) -->
+        <g id="currentMarker">
+          <polygon id="redPointer" points="275,42 268,39 268,45" fill="#EF4444"/>
+          <line id="redLine" x1="275" y1="42" x2="302" y2="42" stroke="#EF4444" stroke-width="0.8" stroke-dasharray="2,1"/>
+          <text id="redLabel" x="322" y="45" font-size="5" fill="#EF4444" font-weight="600">L = 10.0 cm</text>
+        </g>
+
+        <!-- Extension annotation x -->
+        <g id="extensionAnnotation" style="display:none">
+          <line id="extLine" x1="314" y1="42" x2="314" y2="42" stroke="#059669" stroke-width="1"/>
+          <line id="extTop" x1="310" y1="42" x2="318" y2="42" stroke="#059669" stroke-width="0.8"/>
+          <line id="extBot" x1="310" y1="42" x2="318" y2="42" stroke="#059669" stroke-width="0.8"/>
+          <rect id="extBox" x="316" y="35" width="30" height="14" rx="3" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="0.5"/>
+          <text id="extText" x="331" y="45" font-size="6" fill="#059669" text-anchor="middle" font-weight="700">x = 0.0</text>
+        </g>
+
+        <!-- Spare weights rack -->
+        <text x="530" y="30" font-size="9" fill="#374151" text-anchor="middle" font-weight="700">钩码</text>
+        <text id="dragHint" x="530" y="42" font-size="6.5" fill="#059669" text-anchor="middle" font-weight="600">拖到弹簧下端挂上</text>
+        <rect x="430" y="55" width="200" height="4" rx="1" fill="#6B7280"/>
+        <rect x="440" y="55" width="4" height="20" rx="1" fill="#9CA3AF"/>
+        <rect x="616" y="55" width="4" height="20" rx="1" fill="#9CA3AF"/>
+
+        <!-- Spare weights (dynamic) -->
+        <g id="spareWeights"></g>
+
+        <!-- Drag guide arrow -->
+        <g id="guideArrow" opacity="0.6">
+          <path d="M470,82 C430,120 310,160 262,175" fill="none" stroke="#059669" stroke-width="1" stroke-dasharray="4,3"/>
+          <polygon points="260,177 266,171 256,171" fill="#059669"/>
+          <text x="390,105" font-size="6" fill="#059669" font-weight="600" transform="rotate(-25,390,105)">拖到这里挂上</text>
+        </g>
+
+        <!-- Dragging weight (hidden, follows pointer) -->
+        <g id="dragWeight" style="display:none">
+          <path d="M0,-5 Q2,-9 4,-5 Q2,-1 0,-5" fill="none" stroke="#D97706" stroke-width="0.8"/>
+          <rect x="-10" y="-5" width="20" height="16" rx="2.5" fill="url(#hookGold)" stroke="#B45309" stroke-width="0.5"/>
+          <text x="0" y="6" font-size="5" fill="#92400E" text-anchor="middle" font-weight="700">50g</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> 实验引导</h3>
+      <div class="guide-step"><span class="guide-num">1</span><span><strong>观察原长</strong>：记录弹簧自然长度 L₀</span></div>
+      <div class="guide-step"><span class="guide-num">2</span><span><strong>逐次加钩码</strong>：拖钩码挂到弹簧下端</span></div>
+      <div class="guide-step"><span class="guide-num">3</span><span><strong>读数记录</strong>：读刻度尺，点击记录按钮</span></div>
+      <div class="guide-step"><span class="guide-num">4</span><span><strong>多次测量</strong>：加 5~7 个钩码，逐次记录</span></div>
+      <div class="guide-step"><span class="guide-num">5</span><span><strong>描点拟合</strong>：F-x 图自动拟合求劲度系数 k</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20V4M18 20v-6"/></svg> 实时数据</h3>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <div class="reading-card" style="background:#ECFDF5"><div class="label">弹力 F</div><div class="val" id="valF" style="color:#059669">0.00<span class="unit"> N</span></div></div>
+        <div class="reading-card" style="background:#F9FAFB"><div class="label">伸长量 x</div><div class="val" id="valX" style="color:#1D1D1F">0.00<span class="unit"> cm</span></div></div>
+      </div>
+      <div class="data-row"><span class="data-label">原长 L₀</span><span class="data-value">10.00 cm</span></div>
+      <div class="data-row"><span class="data-label">当前长度 L</span><span class="data-value" id="valL">10.00 cm</span></div>
+      <div class="data-row"><span class="data-label">已挂钩码</span><span class="data-value" id="valN" style="color:#059669">0 个</span></div>
+      <div class="data-row"><span class="data-label">弹性状态</span><span class="data-value" id="valState" style="color:#059669">正常</span></div>
+    </div>
+
+    <div class="panel-section" style="flex:1;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <h3 style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg> 数据记录</h3>
+        <div style="display:flex;gap:4px">
+          <button class="record-btn" id="recordBtn" onclick="recordData()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 5v14M5 12h14"/></svg>记录
+          </button>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>次数</th><th>F(N)</th><th>L(cm)</th><th>x(cm)</th></tr></thead>
+        <tbody id="resultBody"><tr><td class="empty" colspan="4">挂钩码后点击记录</td></tr></tbody>
+      </table>
+      <div id="chartArea" style="flex:1;min-height:80px">
+        <svg id="chartSvg" viewBox="0 0 240 110">
+          <line x1="30" y1="5" x2="30" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <line x1="30" y1="95" x2="235" y2="95" stroke="#E5E7EB" stroke-width="0.5"/>
+          <text x="132" y="108" font-size="8" fill="#9CA3AF" text-anchor="middle">x / cm</text>
+          <text x="10" y="50" font-size="8" fill="#9CA3AF" text-anchor="middle" transform="rotate(-90,10,50)">F / N</text>
+          <!-- x axis: 0-20 cm -->
+          <text x="30" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">0</text>
+          <text x="81" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">5</text>
+          <text x="132" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">10</text>
+          <text x="183" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">15</text>
+          <text x="234" y="104" font-size="6" fill="#9CA3AF" text-anchor="middle">20</text>
+          <!-- F axis: 0-5 N -->
+          <text x="26" y="97" font-size="6" fill="#9CA3AF" text-anchor="end">0</text>
+          <text x="26" y="79" font-size="6" fill="#9CA3AF" text-anchor="end">1</text>
+          <text x="26" y="61" font-size="6" fill="#9CA3AF" text-anchor="end">2</text>
+          <text x="26" y="43" font-size="6" fill="#9CA3AF" text-anchor="end">3</text>
+          <text x="26" y="25" font-size="6" fill="#9CA3AF" text-anchor="end">4</text>
+          <text x="26" y="7" font-size="6" fill="#9CA3AF" text-anchor="end">5</text>
+          <g id="chartPoints"></g>
+          <line id="fitLine" x1="0" y1="0" x2="0" y2="0" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>
+          <text id="fitLabel" x="0" y="0" font-size="7" fill="#059669" font-weight="700" opacity="0"></text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 显示选项</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:12px">
+        <span class="data-label">弹力箭头</span>
+        <div id="forceToggle" class="toggle-switch on" onclick="toggleForce()" style="width:30px;height:16px;border-radius:8px;background:#059669;cursor:pointer;position:relative;transition:background 0.2s"><div class="toggle-dot" style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.15)"></div></div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      重置实验
+    </button>
+  </div>
+</div>
+
+<!-- Knowledge Section -->
+<div class="knowledge-section">
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>胡克定律</h2></div>
+    <div class="card-body">
+      <div class="formula-lg" id="formula1"></div>
+      <p>在弹性限度内，弹簧弹力 F 与弹簧的伸长量（或压缩量）x 成正比。</p>
+      <ul>
+        <li><strong>k</strong> — 弹簧的劲度系数（N/m），由弹簧本身性质决定</li>
+        <li><strong>x</strong> — 弹簧的形变量（伸长量或压缩量），x = L - L₀</li>
+        <li><strong>F</strong> — 弹力（N）</li>
+      </ul>
+      <p class="highlight-tip">注意：F = kx 中的 x 是形变量，不是弹簧长度！</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>弹性限度</h2></div>
+    <div class="card-body">
+      <p>弹簧受力超过<strong>弹性限度</strong>后，将发生永久形变，不能恢复原长。此时 F-x 关系不再是线性的。</p>
+      <p>实验中应避免超过弹性限度。当你挂了太多钩码时，弹簧变红表示已超限。</p>
+      <p class="highlight-tip">高考常考：F-x 图中超过弹性限度的部分曲线弯曲，斜率增大。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>初高中衔接：弹簧测力计</h2></div>
+    <div class="card-body">
+      <p>初中学过的<strong>弹簧测力计</strong>，其原理正是胡克定律：弹簧伸长量与弹力成正比，所以刻度均匀。</p>
+      <p>高中的探究实验就是验证这个"成正比"的关系，并定量求出劲度系数 k。</p>
+      <p class="highlight-tip">这就是为什么弹簧测力计的刻度是均匀的！</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card">
+    <div class="card-header"><div class="accent"></div><h2>误差分析</h2></div>
+    <div class="card-body">
+      <p><strong>系统误差</strong>：弹簧自重引起的初始形变、钩码标注质量与实际质量的偏差。</p>
+      <p><strong>偶然误差</strong>：刻度尺读数误差、弹簧未完全静止就读数。</p>
+      <p><strong>减小误差</strong>：等弹簧静止后再读数；多次测量取平均值；用 F-x 图拟合直线代替逐次计算。</p>
+      <p class="highlight-tip">高考常考：分析 k 偏大或偏小的原因。</p>
+    </div>
+  </div>
+
+  <div class="knowledge-card example">
+    <div class="card-header"><div class="accent"></div><h2>典型例题</h2></div>
+    <div class="card-body">
+      <p><strong>题目：</strong>逐次挂上 50g 钩码，弹簧长度依次为 12.0, 14.0, 16.0, 18.0, 20.0 cm，原长 10.0 cm。求 k。</p>
+      <div class="solve">
+伸长量: x₁=2.0, x₂=4.0, x₃=6.0, x₄=8.0, x₅=10.0 cm<br/>
+弹力: F₁=0.49, F₂=0.98, F₃=1.47, F₄=1.96, F₅=2.45 N<br/>
+F-x 图斜率 k = ΔF/Δx = (2.45-0.49)/(0.10-0.02)<br/>
+k = 1.96 / 0.08 = <strong style="color:#2563EB">24.5 N/m</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+// ===== CONSTANTS =====
+const L0 = 10.0;       // cm, natural length
+const K_TRUE = 25.0;   // N/m, true spring constant
+const MASS_PER = 0.050; // kg per hook weight
+const G = 9.80;         // m/s²
+const F_PER = MASS_PER * G; // 0.49 N
+const MAX_WEIGHTS = 8;  // elastic limit
+const ERROR_RANGE = 0.03; // ±0.3mm random error
+const RULER_ORIGIN_Y = 42; // SVG y for ruler 0 mark
+const CM_TO_PX = 10;   // 1 cm = 10 SVG px on ruler
+
+// ===== STATE =====
+let hungCount = 0;      // weights currently hung
+let spareCount = 5;     // weights on rack (total 8 = 5 spare + 0 hung initially... wait, PRD says 8 total)
+let totalWeights = 8;
+let overLimit = false;  // elastic limit exceeded
+let permanentDeform = 0; // cm of permanent deformation
+let records = [];       // {n, F, L, x}
+let showForceArrow = true;
+let lastRecordedF = -1; // to prevent duplicate
+let animFrame = null;
+let springTargetY = 0;  // target bottom Y for spring animation
+let springCurrentY = 0; // current animated Y
+let springVelocity = 0; // for spring physics
+
+const svg = document.getElementById('canvas');
+function getSvgPoint(e) { return labUtils.getSvgPoint(svg, e); }
+
+// ===== INIT =====
+function init() {
+  spareCount = totalWeights; // all 8 on rack initially
+  hungCount = 0;
+  drawRulerTicks();
+  drawSpareWeights();
+  updateSpring(false);
+  updatePanel();
+}
+
+// ===== RULER TICKS =====
+function drawRulerTicks() {
+  const g = document.getElementById('rulerTicks');
+  g.innerHTML = '';
+  for (let cm = 0; cm <= 26; cm++) {
+    const y = RULER_ORIGIN_Y + cm * CM_TO_PX;
+    const isMajor = cm % 2 === 0;
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', '275');
+    tick.setAttribute('y1', y);
+    tick.setAttribute('x2', isMajor ? '287' : '281');
+    tick.setAttribute('y2', y);
+    tick.setAttribute('stroke', '#92400E');
+    tick.setAttribute('stroke-width', isMajor ? '0.4' : '0.3');
+    g.appendChild(tick);
+    if (isMajor) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', '291');
+      t.setAttribute('y', String(y + 2));
+      t.setAttribute('font-size', '4');
+      t.setAttribute('fill', '#92400E');
+      t.textContent = String(cm);
+      g.appendChild(t);
+    }
+  }
+  // cm label
+  const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  lbl.setAttribute('x', '286');
+  lbl.setAttribute('y', String(RULER_ORIGIN_Y + 27 * CM_TO_PX));
+  lbl.setAttribute('font-size', '4');
+  lbl.setAttribute('fill', '#92400E');
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.textContent = 'cm';
+  g.appendChild(lbl);
+}
+
+// ===== SPARE WEIGHTS =====
+function drawSpareWeights() {
+  const g = document.getElementById('spareWeights');
+  g.innerHTML = '';
+  const startX = 450;
+  const spacing = 32;
+  for (let i = 0; i < spareCount; i++) {
+    const x = startX + i * spacing;
+    const wg = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    wg.setAttribute('style', 'cursor:grab');
+    wg.setAttribute('data-spare', i);
+    wg.innerHTML = `
+      <path d="M${x},59 Q${x},55 ${x},52 Q${x+2},48 ${x+4},52 Q${x+4},55 ${x+4},59" fill="none" stroke="#D97706" stroke-width="0.8"/>
+      <rect x="${x-8}" y="59" width="20" height="16" rx="2.5" fill="url(#hookGold)" stroke="#B45309" stroke-width="0.5"/>
+      <text x="${x+2}" y="70" font-size="5" fill="#92400E" text-anchor="middle" font-weight="700">50g</text>
+    `;
+    // Transparent hit area
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    hit.setAttribute('x', x - 12);
+    hit.setAttribute('y', '46');
+    hit.setAttribute('width', '28');
+    hit.setAttribute('height', '34');
+    hit.setAttribute('fill', 'transparent');
+    hit.setAttribute('style', 'cursor:grab');
+    hit.setAttribute('data-spare', i);
+    hit.addEventListener('pointerdown', startDrag);
+    wg.insertBefore(hit, wg.firstChild);
+    g.appendChild(wg);
+  }
+}
+
+// ===== DRAG WEIGHT FROM RACK =====
+let dragging = false;
+let dragEl = document.getElementById('dragWeight');
+
+function startDrag(e) {
+  if (overLimit) return;
+  e.preventDefault();
+  dragging = true;
+  dragEl.style.display = '';
+  const pt = getSvgPoint(e);
+  dragEl.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+  document.getElementById('guideArrow').style.display = 'none';
+}
+
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const pt = getSvgPoint(e);
+  dragEl.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+});
+
+document.addEventListener('pointerup', e => {
+  if (!dragging) return;
+  dragging = false;
+  dragEl.style.display = 'none';
+
+  const pt = getSvgPoint(e);
+  // Check if dropped near spring bottom (snap zone)
+  const bottomY = getSpringBottomY();
+  const snapX = 250;
+  const dist = Math.sqrt(Math.pow(pt.x - snapX, 2) + Math.pow(pt.y - bottomY, 2));
+
+  if (dist < 50 && spareCount > 0) {
+    // Snap: add weight
+    spareCount--;
+    hungCount++;
+    drawSpareWeights();
+    updateSpring(true);
+    updatePanel();
+    if (hungCount >= MAX_WEIGHTS) triggerOverLimit();
+  }
+  // If miss, weight goes back (spare count unchanged, just redraw)
+  drawSpareWeights();
+});
+
+// ===== CLICK TO REMOVE BOTTOM WEIGHT =====
+function removeBottomWeight() {
+  if (hungCount <= 0 || dragging) return;
+  hungCount--;
+  spareCount++;
+  drawSpareWeights();
+  updateSpring(true);
+  updatePanel();
+}
+
+// ===== SPRING PHYSICS =====
+function getExtension() {
+  // In elastic range: x = F/k
+  const F = hungCount * F_PER;
+  if (!overLimit) {
+    return F / (K_TRUE / 100); // cm
+  } else {
+    // Beyond elastic limit: non-linear + permanent deform
+    const linearX = (MAX_WEIGHTS * F_PER) / (K_TRUE / 100);
+    const extraWeights = hungCount - MAX_WEIGHTS;
+    // Already at limit, show permanent deform
+    return linearX + permanentDeform;
+  }
+}
+
+function getCurrentL() {
+  const x = getExtension();
+  const error = (Math.random() - 0.5) * 2 * ERROR_RANGE;
+  return L0 + x + error;
+}
+
+function getSpringBottomY() {
+  return RULER_ORIGIN_Y + (L0 + getExtension()) * CM_TO_PX;
+}
+
+function generateSpringPath(bottomY) {
+  const topY = 42;
+  const len = bottomY - topY;
+  const numCoils = 12;
+  const amplitude = 10;
+  let d = `M250,${topY}`;
+  for (let i = 0; i < numCoils; i++) {
+    const y1 = topY + (i + 0.5) * (len / numCoils);
+    const y2 = topY + (i + 1) * (len / numCoils);
+    const dir = i % 2 === 0 ? 1 : -1;
+    // Over limit: uneven amplitude
+    let amp = amplitude;
+    if (overLimit) {
+      amp = amplitude * (0.7 + Math.random() * 0.6); // uneven
+    }
+    d += ` L${250 + dir * amp},${y1}`;
+  }
+  d += ` L250,${bottomY}`;
+  return d;
+}
+
+function updateSpring(animate) {
+  const targetY = getSpringBottomY();
+
+  if (animate) {
+    springTargetY = targetY;
+    if (!animFrame) animateSpring();
+  } else {
+    springCurrentY = targetY;
+    renderSpring(targetY);
+  }
+}
+
+function animateSpring() {
+  // Spring physics: damped oscillation
+  const damping = 0.15;
+  const stiffness = 0.08;
+  const diff = springTargetY - springCurrentY;
+  springVelocity += diff * stiffness;
+  springVelocity *= (1 - damping);
+  springCurrentY += springVelocity;
+
+  renderSpring(springCurrentY);
+
+  if (Math.abs(diff) < 0.1 && Math.abs(springVelocity) < 0.1) {
+    springCurrentY = springTargetY;
+    renderSpring(springCurrentY);
+    animFrame = null;
+    return;
+  }
+  animFrame = requestAnimationFrame(animateSpring);
+}
+
+function renderSpring(bottomY) {
+  const path = generateSpringPath(bottomY);
+  const sp = document.getElementById('springPath');
+  const sh = document.getElementById('springHighlight');
+  sp.setAttribute('d', path);
+  sh.setAttribute('d', path);
+
+  if (overLimit) {
+    sp.setAttribute('stroke', 'url(#springRed)');
+  } else {
+    sp.setAttribute('stroke', 'url(#springMetal)');
+  }
+
+  // Bottom hook
+  const sb = document.getElementById('springBottom');
+  sb.setAttribute('transform', `translate(0, ${bottomY - 42})`);
+
+  // Hung weights
+  renderHungWeights(bottomY);
+
+  // Markers
+  const L = L0 + getExtension();
+  const markerY = RULER_ORIGIN_Y + L * CM_TO_PX;
+  document.getElementById('redPointer').setAttribute('points', `275,${markerY} 268,${markerY - 3} 268,${markerY + 3}`);
+  document.getElementById('redLine').setAttribute('y1', markerY);
+  document.getElementById('redLine').setAttribute('y2', markerY);
+  document.getElementById('redLabel').setAttribute('y', markerY + 3);
+  document.getElementById('redLabel').textContent = `L = ${L.toFixed(1)} cm`;
+
+  // Extension annotation
+  const ext = document.getElementById('extensionAnnotation');
+  const x = getExtension();
+  if (x > 0.1) {
+    ext.style.display = '';
+    document.getElementById('extLine').setAttribute('y1', RULER_ORIGIN_Y);
+    document.getElementById('extLine').setAttribute('y2', markerY);
+    document.getElementById('extTop').setAttribute('y1', RULER_ORIGIN_Y);
+    document.getElementById('extTop').setAttribute('y2', RULER_ORIGIN_Y);
+    document.getElementById('extBot').setAttribute('y1', markerY);
+    document.getElementById('extBot').setAttribute('y2', markerY);
+    const midY = (RULER_ORIGIN_Y + markerY) / 2;
+    document.getElementById('extBox').setAttribute('y', midY - 7);
+    document.getElementById('extText').setAttribute('y', midY + 3);
+    document.getElementById('extText').textContent = `x = ${x.toFixed(1)}`;
+  } else {
+    ext.style.display = 'none';
+  }
+
+  // Force arrow
+  if (showForceArrow && hungCount > 0) {
+    const fa = document.getElementById('forceArrow');
+    fa.style.display = '';
+    const F = hungCount * F_PER;
+    const arrowLen = Math.min(F * 20, 60); // scale
+    const weightBottom = bottomY + 9 + hungCount * 22;
+    document.getElementById('fLine').setAttribute('y1', weightBottom);
+    document.getElementById('fLine').setAttribute('y2', weightBottom + arrowLen);
+    const tipY = weightBottom + arrowLen + 3;
+    document.getElementById('fHead').setAttribute('points', `224,${tipY} 221,${tipY - 6} 227,${tipY - 6}`);
+    document.getElementById('fLabel').setAttribute('y', weightBottom + arrowLen / 2);
+    document.getElementById('fValue').setAttribute('y', weightBottom + arrowLen / 2 + 10);
+    document.getElementById('fValue').textContent = `${F.toFixed(2)}N`;
+  } else {
+    document.getElementById('forceArrow').style.display = 'none';
+  }
+}
+
+function renderHungWeights(springBottomY) {
+  const g = document.getElementById('hungWeights');
+  g.innerHTML = '';
+  const hookEndY = springBottomY + 9;
+  for (let i = 0; i < hungCount; i++) {
+    const y = hookEndY + i * 22;
+    const wg = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+    // Connection line
+    if (i > 0) {
+      wg.innerHTML += `<path d="M250,${y - 4} L250,${y}" fill="none" stroke="#D97706" stroke-width="1"/>`;
+    } else {
+      // Hook from spring bottom
+      wg.innerHTML += `<path d="M254,${springBottomY + 9} Q254,${springBottomY + 13} 250,${springBottomY + 13} L250,${y}" fill="none" stroke="#D97706" stroke-width="1"/>`;
+    }
+
+    wg.innerHTML += `
+      <rect x="238" y="${y}" width="24" height="18" rx="3" fill="url(#hookGold)" stroke="#B45309" stroke-width="0.6"/>
+      <text x="250" y="${y + 12}" font-size="6" fill="#92400E" text-anchor="middle" font-weight="700">50g</text>
+      <line x1="240" y1="${y + 6}" x2="260" y2="${y + 6}" stroke="rgba(255,255,255,0.15)" stroke-width="0.3"/>
+    `;
+
+    // Click to remove (only bottom weight)
+    if (i === hungCount - 1 && !overLimit) {
+      const hit = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      hit.setAttribute('x', '234');
+      hit.setAttribute('y', String(y - 4));
+      hit.setAttribute('width', '32');
+      hit.setAttribute('height', '26');
+      hit.setAttribute('fill', 'transparent');
+      hit.setAttribute('style', 'cursor:pointer');
+      hit.addEventListener('click', removeBottomWeight);
+      wg.appendChild(hit);
+    }
+    g.appendChild(wg);
+  }
+}
+
+// ===== ELASTIC LIMIT =====
+function triggerOverLimit() {
+  overLimit = true;
+  permanentDeform = 3.0; // 3cm permanent deformation
+  document.getElementById('warnOverlay').style.display = 'block';
+  setTimeout(() => { document.getElementById('warnOverlay').style.display = 'none'; }, 3000);
+  document.getElementById('valState').textContent = '已超限';
+  document.getElementById('valState').style.color = '#EF4444';
+  document.getElementById('statusBadge').textContent = '弹簧已超过弹性限度！重置实验可恢复';
+  document.getElementById('statusBadge').className = 'status-badge progress';
+}
+
+// ===== PANEL UPDATE =====
+function updatePanel() {
+  const F = hungCount * F_PER;
+  const x = getExtension();
+  const L = L0 + x;
+
+  document.getElementById('valF').innerHTML = F.toFixed(2) + '<span class="unit"> N</span>';
+  document.getElementById('valX').innerHTML = x.toFixed(2) + '<span class="unit"> cm</span>';
+  document.getElementById('valL').textContent = L.toFixed(2) + ' cm';
+  document.getElementById('valN').textContent = hungCount + ' 个';
+
+  // Record button state: disable if same F as last record (±0.01N)
+  const btn = document.getElementById('recordBtn');
+  const isDuplicate = records.some(r => Math.abs(r.F - F) < 0.01);
+  btn.disabled = isDuplicate && hungCount > 0;
+}
+
+// ===== RECORD DATA =====
+function recordData() {
+  const F = hungCount * F_PER;
+  const x = getExtension();
+  const L = L0 + x;
+  // Use currently displayed values (with error applied once)
+  const displayedL = parseFloat(document.getElementById('valL').textContent);
+  const displayedX = parseFloat(document.getElementById('valX').textContent.replace(' cm', ''));
+  const displayedF = parseFloat(document.getElementById('valF').textContent.replace(' N', ''));
+
+  // Check duplicate (±0.01N)
+  if (records.some(r => Math.abs(r.F - displayedF) < 0.01)) return;
+
+  records.push({
+    n: records.length + 1,
+    F: displayedF,
+    L: displayedL,
+    x: displayedX
+  });
+
+  updateTable();
+  updateChart();
+  updatePanel(); // refresh button state
+}
+
+function updateTable() {
+  const tbody = document.getElementById('resultBody');
+  tbody.innerHTML = '';
+  records.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.n}</td><td>${r.F.toFixed(2)}</td><td>${r.L.toFixed(2)}</td><td>${r.x.toFixed(2)}</td>`;
+    // Click to delete
+    tr.style.cursor = 'pointer';
+    tr.title = '点击删除此条记录';
+    tr.addEventListener('click', () => {
+      records = records.filter(d => d !== r);
+      records.forEach((d, i) => d.n = i + 1);
+      updateTable();
+      updateChart();
+      updatePanel();
+    });
+    tbody.appendChild(tr);
+  });
+  if (records.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty" colspan="4">挂钩码后点击记录</td></tr>';
+  }
+}
+
+function updateChart() {
+  const chartG = document.getElementById('chartPoints');
+  chartG.innerHTML = '';
+  // x axis: 0-20cm → 30-234, F axis: 0-5N → 95-5
+  records.forEach(r => {
+    const cx = 30 + (r.x / 20) * 204;
+    const cy = 95 - (r.F / 5) * 90;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', Math.max(30, Math.min(234, cx)).toFixed(1));
+    c.setAttribute('cy', Math.max(5, Math.min(95, cy)).toFixed(1));
+    c.setAttribute('r', '3');
+    c.setAttribute('fill', '#059669');
+    chartG.appendChild(c);
+  });
+
+  // Fit line (≥3 points)
+  const fitLine = document.getElementById('fitLine');
+  const fitLabel = document.getElementById('fitLabel');
+  if (records.length >= 3) {
+    let sX = 0, sY = 0, sXY = 0, sXX = 0, n = records.length;
+    records.forEach(r => { sX += r.x; sY += r.F; sXY += r.x * r.F; sXX += r.x * r.x; });
+    const slope = (n * sXY - sX * sY) / (n * sXX - sX * sX); // N/cm
+    const intercept = (sY - slope * sX) / n;
+    // slope in N/cm → k = slope * 100 N/m
+    const k = slope * 100;
+
+    const y1 = 95 - (intercept / 5) * 90;
+    const y2 = 95 - ((slope * 20 + intercept) / 5) * 90;
+    fitLine.setAttribute('x1', '30');
+    fitLine.setAttribute('y1', Math.max(5, Math.min(95, y1)));
+    fitLine.setAttribute('x2', '234');
+    fitLine.setAttribute('y2', Math.max(5, Math.min(95, y2)));
+    fitLine.setAttribute('opacity', '1');
+
+    fitLabel.setAttribute('x', '180');
+    fitLabel.setAttribute('y', Math.max(15, Math.min(90, y2 + 10)));
+    fitLabel.textContent = `k = ${k.toFixed(1)} N/m`;
+    fitLabel.setAttribute('opacity', '1');
+
+    document.getElementById('statusBadge').textContent = `拟合 k = ${k.toFixed(1)} N/m（理论值 ${K_TRUE.toFixed(1)} N/m）`;
+  } else {
+    fitLine.setAttribute('opacity', '0');
+    fitLabel.setAttribute('opacity', '0');
+  }
+}
+
+// ===== TOGGLES =====
+function toggleForce() {
+  showForceArrow = !showForceArrow;
+  const t = document.getElementById('forceToggle');
+  t.style.background = showForceArrow ? '#059669' : '#D1D5DB';
+  t.firstElementChild.style.left = showForceArrow ? '16px' : '2px';
+  renderSpring(springCurrentY);
+}
+
+// ===== RESET =====
+function resetAll() {
+  hungCount = 0;
+  spareCount = totalWeights;
+  overLimit = false;
+  permanentDeform = 0;
+  records = [];
+  lastRecordedF = -1;
+  springVelocity = 0;
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+
+  drawSpareWeights();
+  updateSpring(false);
+  updatePanel();
+  updateTable();
+  updateChart();
+
+  document.getElementById('valState').textContent = '正常';
+  document.getElementById('valState').style.color = '#059669';
+  document.getElementById('statusBadge').textContent = '拖钩码挂到弹簧下端 · 观察伸长量 · 记录数据';
+  document.getElementById('statusBadge').className = 'status-badge idle';
+  document.getElementById('guideArrow').style.display = '';
+  document.getElementById('warnOverlay').style.display = 'none';
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  const f1 = document.getElementById('formula1');
+  if (f1) katex.render('F = kx', f1, { displayMode: true, throwOnError: false });
+}
+// Retry until KaTeX loads (defer race condition fix)
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== START =====
+init();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
