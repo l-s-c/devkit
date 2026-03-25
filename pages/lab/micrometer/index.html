@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>螺旋测微器 - 长度测量 - 高中物理在线实验 | DevKit</title>
+<meta name="keywords" content="螺旋测微器, 千分尺, 0.01mm, 长度测量, 高中物理">
+<meta name="description" content="练习螺旋测微器的使用与读数，精度0.01mm，估读到0.001mm">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#EA580C;--lab-accent-bg:#FFF7ED;--lab-accent-border:#FED7AA}
+.guide-num{width:16px;height:16px;border-radius:50%;background:var(--lab-accent-bg);color:var(--lab-accent);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step{display:flex;gap:6px;padding:3px 0;font-size:11px;color:#4B5563}
+.guide-step strong{color:var(--lab-accent)}
+.reading-card{flex:1;border-radius:8px;padding:8px;text-align:center;background:#F9FAFB;border:1px solid #E5E7EB}
+.reading-card .label{font-size:9px;color:#6B7280}
+.reading-card .val{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.reading-card .unit{font-size:10px}
+.ctrl-btn{padding:5px 14px;border-radius:6px;border:none;background:var(--lab-accent);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.ctrl-btn:hover{opacity:0.9}
+.ctrl-btn:disabled{background:#D1D5DB;cursor:not-allowed}
+.ctrl-btn.secondary{background:#6B7280}
+.verify-input{width:80px;padding:4px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:14px;font-family:'JetBrains Mono',monospace;text-align:center}
+.verify-input:focus{outline:none;border-color:var(--lab-accent)}
+.feedback{padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;margin-top:4px;display:none}
+.feedback.correct{display:block;background:#ECFDF5;color:#059669}
+.feedback.wrong{display:block;background:#FEF2F2;color:#DC2626}
+.stats-bar{display:flex;gap:8px;font-size:11px;padding:4px 0}
+.stats-bar .stat{flex:1;text-align:center;padding:4px;border-radius:4px;background:#F9FAFB}
+.stats-bar .stat .num{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">高中物理</a><span>/</span></div>
+  <h1>螺旋测微器</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>螺旋测微器 · 千分尺 · 0.01mm精度 · 高中物理</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>高考高频</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">拖拽旋钮旋转 · 读数 · 输入验证</div>
+      <svg id="canvas" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="steelGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D1D5DB"/><stop offset="40%" stop-color="#E5E7EB"/><stop offset="100%" stop-color="#9CA3AF"/></linearGradient>
+          <linearGradient id="thimbleGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A3947E"/><stop offset="50%" stop-color="#C4B5A0"/><stop offset="100%" stop-color="#8B7D6B"/></linearGradient>
+          <linearGradient id="frameGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6B7280"/><stop offset="100%" stop-color="#4B5563"/></linearGradient>
+        </defs>
+
+        <rect width="720" height="340" fill="#F8FAFC"/>
+
+        <!-- ===== FRAME (C-shaped) ===== -->
+        <g id="frame">
+          <!-- Frame body -->
+          <path d="M80,170 L80,80 Q80,60 100,60 L200,60 Q220,60 220,80 L220,100" fill="url(#frameGrad)" stroke="#374151" stroke-width="1"/>
+          <path d="M80,170 L80,240 Q80,260 100,260 L200,260 Q220,260 220,240 L220,220" fill="url(#frameGrad)" stroke="#374151" stroke-width="1"/>
+          <!-- Handle -->
+          <rect x="50" y="140" width="40" height="60" rx="8" fill="#6B7280" stroke="#374151" stroke-width="0.5"/>
+          <!-- Fixed anvil -->
+          <rect id="fixedAnvil" x="210" y="100" width="12" height="120" rx="1" fill="url(#steelGrad)" stroke="#9CA3AF" stroke-width="0.5"/>
+          <text x="216" y="235" font-size="6" fill="#9CA3AF" text-anchor="middle">固定砧</text>
+        </g>
+
+        <!-- ===== SLEEVE (fixed scale) ===== -->
+        <rect id="sleeve" x="280" y="130" width="200" height="60" rx="2" fill="url(#steelGrad)" stroke="#9CA3AF" stroke-width="0.5"/>
+
+        <!-- Fixed scale ticks -->
+        <g id="fixedTicks"></g>
+
+        <!-- ===== SPINDLE ===== -->
+        <rect id="spindle" x="222" y="155" width="80" height="10" fill="#B0B8C4" stroke="#9CA3AF" stroke-width="0.3"/>
+        <text x="260" y="235" font-size="6" fill="#9CA3AF" text-anchor="middle">活动砧</text>
+
+        <!-- ===== THIMBLE (rotating scale) ===== -->
+        <g id="thimbleGroup">
+          <rect id="thimble" x="300" y="120" width="80" height="80" rx="4" fill="url(#thimbleGrad)" stroke="#8B7D6B" stroke-width="0.5"/>
+          <g id="thimbleTicks"></g>
+          <!-- Ratchet knob -->
+          <rect id="ratchet" x="380" y="135" width="40" height="50" rx="6" fill="#8B7D6B" stroke="#6B5B4F" stroke-width="0.5" cursor="ew-resize"/>
+          <text x="400" y="165" font-size="7" fill="#FFF" text-anchor="middle" pointer-events="none">旋钮</text>
+        </g>
+
+        <!-- ===== OBJECT between anvils ===== -->
+        <rect id="objectRect" x="222" y="155" width="0" height="10" fill="none" stroke="#EA580C" stroke-width="1.5" stroke-dasharray="4,2"/>
+
+        <!-- ===== MAGNIFIED VIEW ===== -->
+        <g transform="translate(60,200)">
+          <rect x="0" y="30" width="600" height="90" rx="6" fill="#FEFCE8" stroke="#FDE68A" stroke-width="1"/>
+          <text x="300" y="44" font-size="8" fill="#92400E" text-anchor="middle" font-weight="600">3× 放大</text>
+          <g id="magArea" transform="translate(0,50)"></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Guide -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="guide-step"><span class="guide-num">1</span><span>先<strong>校零</strong>：观察零误差</span></div>
+        <div class="guide-step"><span class="guide-num">2</span><span>拖拽旋钮<strong>旋转</strong>螺杆前进</span></div>
+        <div class="guide-step"><span class="guide-num">3</span><span>读<strong>固定刻度</strong>（整/半mm）</span></div>
+        <div class="guide-step"><span class="guide-num">4</span><span>读<strong>活动刻度</strong>（0.01mm）</span></div>
+        <div class="guide-step"><span class="guide-num">5</span><span><strong>估读</strong>到 0.001mm</span></div>
+        <div class="guide-step"><span class="guide-num">6</span><span>输入读数，点击<strong>验证</strong></span></div>
+      </div>
+
+      <!-- Zero error -->
+      <div class="panel-section">
+        <div class="section-title">零误差</div>
+        <div class="reading-card">
+          <div class="label">零点读数</div>
+          <div class="val" id="dispZeroErr" style="font-size:14px;color:#EA580C">0.000</div>
+          <div class="unit">mm</div>
+        </div>
+      </div>
+
+      <!-- Reading info -->
+      <div class="panel-section">
+        <div class="section-title">读数信息</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">固定刻度</div><div class="val" id="dispFixed" style="font-size:14px">0.0</div><div class="unit">mm</div></div>
+          <div class="reading-card"><div class="label">活动刻度</div><div class="val" id="dispThimble" style="font-size:14px">0.00</div><div class="unit">×0.01mm</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <div class="reading-card"><div class="label">实际尺寸</div><div class="val" id="dispActual" style="font-size:16px;color:#EA580C">待测量</div><div class="unit">mm</div></div>
+        </div>
+      </div>
+
+      <!-- Verify -->
+      <div class="panel-section">
+        <div class="section-title">输入读数（估读到0.001mm）</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="text" class="verify-input" id="inputReading" placeholder="mm" onkeydown="if(event.key==='Enter')verifyReading()">
+          <span style="font-size:11px;color:#6B7280">mm</span>
+          <button class="ctrl-btn" onclick="verifyReading()">验证</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel-section">
+        <div style="display:flex;gap:4px">
+          <button class="ctrl-btn" onclick="nextQuestion()">下一题</button>
+          <button class="ctrl-btn secondary" onclick="resetStats()">重置统计</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="panel-section">
+        <div class="section-title">练习统计</div>
+        <div class="stats-bar">
+          <div class="stat"><div class="num" id="statTotal">0</div><div style="font-size:8px;color:#6B7280">总题数</div></div>
+          <div class="stat"><div class="num" id="statCorrect" style="color:#059669">0</div><div style="font-size:8px;color:#6B7280">正确</div></div>
+          <div class="stat"><div class="num" id="statWrong" style="color:#DC2626">0</div><div style="font-size:8px;color:#6B7280">错误</div></div>
+          <div class="stat"><div class="num" id="statRate">—</div><div style="font-size:8px;color:#6B7280">正确率</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>螺旋测微器原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>螺旋测微器（千分尺）利用螺旋放大原理，将微小位移转化为可读的旋转角度。螺距 0.5mm，活动刻度均分 50 格，每格 0.01mm。</p>
+
+    <h3>读数方法</h3>
+    <div class="formula-block" id="formula2"></div>
+    <ol>
+      <li><strong>固定刻度</strong>：读整毫米数和半毫米数（看半毫米线是否露出）</li>
+      <li><strong>活动刻度</strong>：读与固定刻度横线对齐的格数（0.01mm）</li>
+      <li><strong>估读</strong>：在活动刻度最小格之间估读一位（0.001mm）</li>
+      <li><strong>最终读数</strong> = 固定读数 + 活动读数 − 零误差</li>
+    </ol>
+
+    <h3>零误差</h3>
+    <ul>
+      <li><strong>正零误差</strong>：合拢时活动刻度零线在横线上方，读出正值，需减去</li>
+      <li><strong>负零误差</strong>：合拢时活动刻度零线在横线下方（读大数 − 50 × 0.01），需加上</li>
+    </ul>
+
+    <h3>注意事项</h3>
+    <ul>
+      <li>测量时使用棘轮旋钮，听到"咔咔"声即停止</li>
+      <li>半毫米线是否露出必须判断清楚，这是最常见的错误来源</li>
+      <li>螺旋测微器<strong>必须估读</strong>，这是和游标卡尺的关键区别</li>
+    </ul>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== CONSTANTS =====
+const PITCH = 0.5;           // mm per revolution
+const THIMBLE_DIVS = 50;     // 50 divisions on thimble
+const PRECISION = 0.01;      // mm per division
+const MAX_MM = 25;            // 0-25mm range
+const SPINDLE_BASE_X = 300;  // thimble start x at 0mm
+const PX_PER_MM = 8;         // fixed scale pixels per mm
+const THIMBLE_HEIGHT = 80;   // thimble visual height
+
+const state = {
+  targetMM: 0,       // actual object size
+  zeroError: 0,      // zero error mm
+  displayMM: 0,      // current display = target + zeroError
+  stats: { total: 0, correct: 0, wrong: 0 },
+  answered: false
+};
+
+// ===== DRAW FIXED SCALE =====
+function drawFixedScale() {
+  const g = $('fixedTicks');
+  g.innerHTML = '';
+  const y0 = 160; // horizontal reference line
+
+  // Reference line
+  const refLine = document.createElementNS(SVG_NS, 'line');
+  refLine.setAttribute('x1', 280); refLine.setAttribute('y1', y0);
+  refLine.setAttribute('x2', 480); refLine.setAttribute('y2', y0);
+  refLine.setAttribute('stroke', '#374151'); refLine.setAttribute('stroke-width', '0.8');
+  g.appendChild(refLine);
+
+  for (let i = 0; i <= MAX_MM; i++) {
+    const x = 290 + i * PX_PER_MM;
+    // mm ticks (above line)
+    const mmLine = document.createElementNS(SVG_NS, 'line');
+    mmLine.setAttribute('x1', x); mmLine.setAttribute('y1', y0);
+    mmLine.setAttribute('x2', x); mmLine.setAttribute('y2', y0 - 12);
+    mmLine.setAttribute('stroke', '#1F2937'); mmLine.setAttribute('stroke-width', i % 5 === 0 ? '0.8' : '0.4');
+    g.appendChild(mmLine);
+
+    // Labels every 5mm
+    if (i % 5 === 0) {
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', x); t.setAttribute('y', y0 - 15);
+      t.setAttribute('font-size', '7'); t.setAttribute('fill', '#1F2937');
+      t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '600');
+      t.textContent = i;
+      g.appendChild(t);
+    }
+
+    // 0.5mm ticks (below line) — between integer mm marks
+    if (i < MAX_MM) {
+      const halfX = x + PX_PER_MM / 2;
+      const halfLine = document.createElementNS(SVG_NS, 'line');
+      halfLine.setAttribute('x1', halfX); halfLine.setAttribute('y1', y0);
+      halfLine.setAttribute('x2', halfX); halfLine.setAttribute('y2', y0 + 8);
+      halfLine.setAttribute('stroke', '#1F2937'); halfLine.setAttribute('stroke-width', '0.4');
+      g.appendChild(halfLine);
+    }
+  }
+
+  // "mm" label
+  const label = document.createElementNS(SVG_NS, 'text');
+  label.setAttribute('x', 290 + MAX_MM * PX_PER_MM + 8); label.setAttribute('y', y0 - 5);
+  label.setAttribute('font-size', '6'); label.setAttribute('fill', '#6B7280');
+  label.textContent = 'mm';
+  g.appendChild(label);
+}
+
+// ===== DRAW THIMBLE SCALE =====
+function drawThimbleScale() {
+  const tg = $('thimbleTicks');
+  tg.innerHTML = '';
+
+  // Thimble edge (left edge of thimble) shows which mm/half-mm is exposed
+  const thimbleX = getThimbleX();
+
+  // Update thimble position
+  $('thimble').setAttribute('x', thimbleX);
+  $('ratchet').setAttribute('x', thimbleX + 80);
+
+  // Thimble ticks on left edge
+  const rotation = (state.displayMM % PITCH) / PITCH; // 0-1 fractional revolution
+  const thimbleTop = 120;
+
+  for (let i = 0; i < THIMBLE_DIVS; i++) {
+    // Position on the thimble circumference mapped to vertical position
+    const frac = (i / THIMBLE_DIVS - rotation + 1) % 1;
+    // Only show ticks in visible range (front half: 0.25 to 0.75 mapped to top-bottom)
+    const yFrac = frac;
+    if (yFrac < 0.1 || yFrac > 0.9) continue;
+
+    const y = thimbleTop + (yFrac - 0.1) * THIMBLE_HEIGHT / 0.8;
+    const isMajor = i % 5 === 0;
+    const tickLen = isMajor ? 15 : 8;
+
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', thimbleX); line.setAttribute('y1', y);
+    line.setAttribute('x2', thimbleX - tickLen); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#1F2937'); line.setAttribute('stroke-width', isMajor ? '0.7' : '0.3');
+    tg.appendChild(line);
+
+    if (isMajor) {
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', thimbleX - tickLen - 4); t.setAttribute('y', y + 3);
+      t.setAttribute('font-size', '6'); t.setAttribute('fill', '#1F2937');
+      t.setAttribute('text-anchor', 'end');
+      t.textContent = i;
+      tg.appendChild(t);
+    }
+  }
+
+  // Spindle extends from fixed anvil to thimble
+  const spindleWidth = thimbleX - 222;
+  $('spindle').setAttribute('width', Math.max(0, spindleWidth));
+}
+
+function getThimbleX() {
+  // Thimble position: moves left as measurement increases
+  return SPINDLE_BASE_X - state.displayMM * PX_PER_MM;
+}
+
+// ===== MAGNIFIED VIEW =====
+function drawMagnified() {
+  const g = $('magArea');
+  g.innerHTML = '';
+
+  const thimbleX = getThimbleX();
+  const magScale = 3;
+  const centerX = 300;
+
+  // Fixed scale reference line
+  const refLine = document.createElementNS(SVG_NS, 'line');
+  refLine.setAttribute('x1', 20); refLine.setAttribute('y1', 25);
+  refLine.setAttribute('x2', 580); refLine.setAttribute('y2', 25);
+  refLine.setAttribute('stroke', '#374151'); refLine.setAttribute('stroke-width', '1');
+  g.appendChild(refLine);
+
+  // Fixed scale ticks (magnified, around thimble edge)
+  const thimbleMM = state.displayMM;
+  const baseMM = Math.floor(thimbleMM);
+  for (let mm = Math.max(0, baseMM - 3); mm <= Math.min(MAX_MM, baseMM + 3); mm++) {
+    const origX = 290 + mm * PX_PER_MM;
+    const magX = centerX + (origX - thimbleX) * magScale;
+    if (magX < 20 || magX > 580) continue;
+
+    // mm tick above line
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', magX); line.setAttribute('y1', 25);
+    line.setAttribute('x2', magX); line.setAttribute('y2', 25 - 20);
+    line.setAttribute('stroke', '#374151'); line.setAttribute('stroke-width', '1');
+    g.appendChild(line);
+
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', magX); t.setAttribute('y', 0);
+    t.setAttribute('font-size', '8'); t.setAttribute('fill', '#374151');
+    t.setAttribute('text-anchor', 'middle');
+    t.textContent = mm;
+    g.appendChild(t);
+
+    // Half mm tick below line
+    const halfOrigX = origX + PX_PER_MM / 2;
+    const halfMagX = centerX + (halfOrigX - thimbleX) * magScale;
+    if (halfMagX > 20 && halfMagX < 580) {
+      const halfLine = document.createElementNS(SVG_NS, 'line');
+      halfLine.setAttribute('x1', halfMagX); halfLine.setAttribute('y1', 25);
+      halfLine.setAttribute('x2', halfMagX); halfLine.setAttribute('y2', 35);
+      halfLine.setAttribute('stroke', '#374151'); halfLine.setAttribute('stroke-width', '0.8');
+      g.appendChild(halfLine);
+    }
+  }
+
+  // Thimble edge line (magnified)
+  const edgeMagX = centerX;
+  const edgeLine = document.createElementNS(SVG_NS, 'line');
+  edgeLine.setAttribute('x1', edgeMagX); edgeLine.setAttribute('y1', 15);
+  edgeLine.setAttribute('x2', edgeMagX); edgeLine.setAttribute('y2', 60);
+  edgeLine.setAttribute('stroke', '#EA580C'); edgeLine.setAttribute('stroke-width', '1.5');
+  edgeLine.setAttribute('stroke-dasharray', '3,2');
+  g.appendChild(edgeLine);
+
+  // Thimble ticks near reference line (magnified)
+  const rotation = (state.displayMM % PITCH) / PITCH;
+  for (let i = -5; i <= 5; i++) {
+    const tickNum = (Math.round(rotation * THIMBLE_DIVS) + i + THIMBLE_DIVS) % THIMBLE_DIVS;
+    const tickRotation = tickNum / THIMBLE_DIVS;
+    const diff = tickRotation - rotation;
+    const wrappedDiff = ((diff + 0.5 + 1) % 1) - 0.5;
+
+    const y = 25 + wrappedDiff * THIMBLE_HEIGHT * magScale;
+    if (y < -5 || y > 60) continue;
+
+    const isMajor = tickNum % 5 === 0;
+    const tickLen = isMajor ? 20 : 10;
+
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', edgeMagX); line.setAttribute('y1', y);
+    line.setAttribute('x2', edgeMagX + tickLen); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#EA580C'); line.setAttribute('stroke-width', isMajor ? '1' : '0.5');
+    g.appendChild(line);
+
+    if (isMajor) {
+      const t = document.createElementNS(SVG_NS, 'text');
+      t.setAttribute('x', edgeMagX + tickLen + 8); t.setAttribute('y', y + 3);
+      t.setAttribute('font-size', '8'); t.setAttribute('fill', '#EA580C');
+      t.setAttribute('font-weight', '600');
+      t.textContent = tickNum;
+      g.appendChild(t);
+    }
+
+    // Highlight tick closest to reference line
+    if (Math.abs(y - 25) < 3) {
+      const hl = document.createElementNS(SVG_NS, 'rect');
+      hl.setAttribute('x', edgeMagX - 2); hl.setAttribute('y', y - 4);
+      hl.setAttribute('width', tickLen + 4); hl.setAttribute('height', '8');
+      hl.setAttribute('fill', '#EA580C'); hl.setAttribute('opacity', '0.15');
+      hl.setAttribute('rx', '2');
+      g.appendChild(hl);
+
+      const arrow = document.createElementNS(SVG_NS, 'text');
+      arrow.setAttribute('x', edgeMagX + tickLen + 22); arrow.setAttribute('y', y + 3);
+      arrow.setAttribute('font-size', '7'); arrow.setAttribute('fill', '#EA580C');
+      arrow.setAttribute('font-weight', '600');
+      arrow.textContent = '← 对齐';
+      g.appendChild(arrow);
+    }
+  }
+}
+
+// ===== DRAG RATCHET =====
+let dragging = false;
+let dragStartX = 0;
+let dragStartMM = 0;
+
+$('thimbleGroup').addEventListener('pointerdown', e => {
+  dragging = true;
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  dragStartX = (e.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width;
+  dragStartMM = state.displayMM;
+  e.preventDefault();
+});
+
+document.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const svg = $('canvas');
+  const rect = svg.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width;
+  // Drag left = increase measurement (thimble moves left, spindle extends)
+  const dx = dragStartX - x;
+  const dmm = dx / PX_PER_MM;
+
+  state.displayMM = Math.max(0, Math.min(MAX_MM, dragStartMM + dmm));
+  render();
+  e.preventDefault();
+});
+
+document.addEventListener('pointerup', () => { dragging = false; });
+
+// ===== RENDER =====
+function render() {
+  drawThimbleScale();
+  drawMagnified();
+  updateReadingDisplay();
+
+  // Object rect
+  const objWidth = state.displayMM * PX_PER_MM;
+  $('objectRect').setAttribute('width', Math.max(0, objWidth));
+}
+
+function updateReadingDisplay() {
+  const mm = state.displayMM;
+  // Fixed scale: integer + half mm
+  const fixedMM = Math.floor(mm * 2) / 2;
+  // Thimble: remaining 0.01mm divisions
+  const thimbleReading = (mm - fixedMM) / PRECISION;
+
+  $('dispFixed').textContent = fixedMM.toFixed(1);
+  $('dispThimble').textContent = thimbleReading.toFixed(1);
+}
+
+// ===== QUESTION GENERATION =====
+function generateQuestion() {
+  // Random target: 0.5 to 24.5mm in 0.001mm steps
+  state.targetMM = 0.5 + Math.floor(Math.random() * 24000) * 0.001;
+  state.targetMM = Math.round(state.targetMM * 1000) / 1000;
+
+  // Random zero error: -3 to +3 thimble divisions (±0.03mm)
+  const zeroTicks = Math.floor(Math.random() * 7) - 3;
+  state.zeroError = zeroTicks * PRECISION;
+
+  // Set display position
+  state.displayMM = state.targetMM + state.zeroError;
+
+  // Display zero error
+  $('dispZeroErr').textContent = state.zeroError >= 0
+    ? '+' + state.zeroError.toFixed(3)
+    : state.zeroError.toFixed(3);
+  $('dispZeroErr').style.color = state.zeroError === 0 ? '#059669' : '#EA580C';
+
+  // Hide actual size
+  $('dispActual').textContent = '待测量';
+
+  state.answered = false;
+  $('inputReading').value = '';
+  $('feedback').className = 'feedback';
+  $('feedback').textContent = '';
+
+  render();
+}
+
+// ===== VERIFY =====
+function verifyReading() {
+  if (state.answered) return;
+  const input = parseFloat($('inputReading').value);
+  if (isNaN(input)) return;
+
+  const correct = state.targetMM;
+  // Tolerance: ±0.003mm for micrometer (estimation involved)
+  const tolerance = 0.003;
+  const isCorrect = Math.abs(input - correct) < tolerance;
+
+  state.answered = true;
+  state.stats.total++;
+
+  // Reveal answer
+  $('dispActual').textContent = correct.toFixed(3);
+
+  const fb = $('feedback');
+  if (isCorrect) {
+    state.stats.correct++;
+    fb.className = 'feedback correct';
+    fb.textContent = `✓ 正确！实际尺寸 = ${correct.toFixed(3)} mm`;
+  } else {
+    state.stats.wrong++;
+    fb.className = 'feedback wrong';
+    fb.textContent = `✗ 错误。你的答案 ${input.toFixed(3)} mm，正确答案 ${correct.toFixed(3)} mm`;
+  }
+
+  updateStats();
+}
+
+function updateStats() {
+  $('statTotal').textContent = state.stats.total;
+  $('statCorrect').textContent = state.stats.correct;
+  $('statWrong').textContent = state.stats.wrong;
+  $('statRate').textContent = state.stats.total > 0
+    ? Math.round(state.stats.correct / state.stats.total * 100) + '%'
+    : '—';
+}
+
+function nextQuestion() { generateQuestion(); }
+function resetStats() {
+  state.stats = { total: 0, correct: 0, wrong: 0 };
+  updateStats();
+  generateQuestion();
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  const formulas = [
+    { id: 'formula1', tex: '\\text{精度} = \\frac{\\text{螺距}}{\\text{分度数}} = \\frac{0.5\\text{mm}}{50} = 0.01\\text{mm}' },
+    { id: 'formula2', tex: 'L = \\text{固定刻度} + \\text{活动刻度} \\times 0.01\\text{mm} - \\text{零误差}' }
+  ];
+  formulas.forEach(f => {
+    const el = $(f.id);
+    if (el && window.katex) {
+      try { katex.render(f.tex, el, { throwOnError: false, displayMode: true }); } catch(e) {}
+    }
+  });
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+
+// ===== INIT =====
+drawFixedScale();
+generateQuestion();
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
