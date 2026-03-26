@@ -735,6 +735,21 @@ function tryKatex(n) {
   if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
 }
 tryKatex();
+
+// Initial candle flicker loop
+(function idleFlicker() {
+  let t = 0;
+  function tick() {
+    t++;
+    if (!state.doneA && state.tab === 'A') {
+      const fl = $('flameLow'), fh = $('flameHigh');
+      if (fl.getAttribute('opacity') !== '0') flickerEl('flameLow', t);
+      if (fh.getAttribute('opacity') !== '0') flickerEl('flameHigh', t);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
 </script>
 </body>
 </html>
