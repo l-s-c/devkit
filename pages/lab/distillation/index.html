@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>蒸馏操作 - 虚拟实验室</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+.warn-toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:8px 16px;font-size:10px;color:#991B1B;font-weight:700;pointer-events:none;z-index:10;display:none}
+</style>
+</head>
+<body>
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-header">
+      <h1 class="exp-title">蒸馏操作</h1>
+      <div class="exp-subtitle">硬水软化 — 水的净化终极手段</div>
+    </div>
+    <div class="canvas-wrapper" style="position:relative">
+      <div class="warn-toast" id="warnToast">必须先加碎瓷片防暴沸！</div>
+      <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
+        <defs>
+          <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
+          <filter id="steamBlur"><feGaussianBlur stdDeviation="2.5"/></filter>
+          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="coolGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#BAE6FD" stop-opacity="0.08"/>
+          </linearGradient>
+        </defs>
+
+        <!-- ===== IRON STAND ===== -->
+        <g transform="translate(60,50)">
+          <rect x="0" y="0" width="4" height="300" rx="2" fill="#78716C"/>
+          <rect x="-20" y="295" width="50" height="6" rx="2" fill="#78716C"/>
+          <rect x="4" y="80" width="55" height="3" rx="1" fill="#78716C"/>
+          <circle cx="56" cy="81" r="4" fill="none" stroke="#78716C" stroke-width="1.5"/>
+        </g>
+
+        <!-- ===== ROUND BOTTOM FLASK ===== -->
+        <g transform="translate(90,100)">
+          <!-- Flask body -->
+          <ellipse cx="50" cy="120" rx="50" ry="55" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.5"/>
+          <rect x="40" y="0" width="20" height="70" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+
+          <!-- Water -->
+          <ellipse id="flaskWater" cx="50" cy="130" rx="45" ry="42" fill="url(#waterGrad)"/>
+
+          <!-- Ceramic chips -->
+          <g id="ceramicChips" opacity="0">
+            <circle cx="40" cy="155" r="2" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
+            <circle cx="50" cy="158" r="1.5" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
+            <circle cx="58" cy="154" r="2" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
+            <text x="50" y="172" font-size="5" fill="#DC2626" text-anchor="middle" font-weight="600">碎瓷片(防暴沸)</text>
+          </g>
+          <!-- Ceramic click zone -->
+          <g id="ceramicClick" class="clickable" onclick="addCeramic()">
+            <rect x="25" y="140" width="50" height="30" fill="transparent"/>
+            <text id="ceramicHint" x="50" y="190" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击放入碎瓷片</text>
+          </g>
+
+          <!-- Thermometer -->
+          <g transform="translate(50,-10)">
+            <rect x="-2" y="0" width="4" height="80" rx="2" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="0.5"/>
+            <circle cx="0" cy="80" r="4" fill="#EF4444"/>
+            <rect id="thermFill" x="-1" y="50" width="2" height="30" fill="#EF4444"/>
+            <text id="tempText" x="10" y="50" font-size="7" fill="#0F172A" font-weight="700">25°C</text>
+          </g>
+          <!-- Thermometer position note -->
+          <g transform="translate(60,55)">
+            <line x1="0" y1="0" x2="20" y2="-10" stroke="#DC2626" stroke-width="0.8" stroke-dasharray="3,2"/>
+            <text x="22" y="-8" font-size="5" fill="#DC2626" font-weight="700">球部在支管口处！</text>
+          </g>
+
+          <!-- Support tube (to condenser) -->
+          <rect x="60" y="30" width="30" height="8" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+
+          <!-- Boiling bubbles (pre-drawn 12) -->
+          <g id="boilBubbles">
+            <circle class="boil-b" cx="0" cy="0" r="2" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="2.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.8" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="2" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="2.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.8" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="2" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="2.5" fill="#BAE6FD" opacity="0"/>
+            <circle class="boil-b" cx="0" cy="0" r="1.8" fill="#BAE6FD" opacity="0"/>
+          </g>
+
+          <text x="50" y="195" font-size="7" fill="#64748B" text-anchor="middle">圆底烧瓶</text>
+        </g>
+
+        <!-- ===== CONDUIT PATH (flask → condenser) ===== -->
+        <path id="steamPath" d="M180,134 Q220,134 260,150 Q300,166 340,190 Q360,200 380,220" fill="none" stroke="#93C5FD" stroke-width="6" stroke-linecap="round" opacity="0.3"/>
+        <path id="steamPathInner" d="M180,134 Q220,134 260,150 Q300,166 340,190 Q360,200 380,220" fill="none" stroke="none" stroke-width="1"/>
+
+        <!-- Steam particles along path (pre-drawn 8) -->
+        <g id="steamPool">
+          <circle class="steam-p" cx="0" cy="0" r="3" fill="#E2E8F0" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="3.5" fill="#F1F5F9" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="2.5" fill="#E2E8F0" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="3" fill="#F1F5F9" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="3.5" fill="#E2E8F0" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="2.5" fill="#F1F5F9" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="3" fill="#E2E8F0" opacity="0" filter="url(#steamBlur)"/>
+          <circle class="steam-p" cx="0" cy="0" r="3.5" fill="#F1F5F9" opacity="0" filter="url(#steamBlur)"/>
+        </g>
+
+        <!-- ===== CONDENSER (simplified) ===== -->
+        <g transform="translate(370,210)">
+          <rect x="0" y="0" width="80" height="20" rx="4" fill="url(#coolGrad)" stroke="#7DD3FC" stroke-width="1" transform="rotate(15)"/>
+          <text x="40" y="35" font-size="5" fill="#0284C7" text-anchor="middle">冷凝管</text>
+          <text x="85" y="-5" font-size="4" fill="#38BDF8">冷水进↑</text>
+          <text x="-5" y="15" font-size="4" fill="#F59E0B">热水出↑</text>
+        </g>
+
+        <!-- ===== COLLECTION TUBE ===== -->
+        <g transform="translate(460,220)">
+          <rect x="0" y="0" width="30" height="100" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+          <!-- Collected water -->
+          <rect id="collectedWater" x="2" y="98" width="26" height="0" rx="2" fill="#BAE6FD" opacity="0.6"/>
+          <!-- 10mL mark -->
+          <line x1="0" y1="40" x2="30" y2="40" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
+          <text x="33" y="43" font-size="4" fill="#DC2626">10mL</text>
+          <!-- Drip (pre-drawn 3) -->
+          <circle class="drip" cx="15" cy="-5" r="2" fill="#BAE6FD" opacity="0"/>
+          <circle class="drip" cx="15" cy="-5" r="2" fill="#BAE6FD" opacity="0"/>
+          <circle class="drip" cx="15" cy="-5" r="2" fill="#BAE6FD" opacity="0"/>
+          <text x="15" y="115" font-size="7" fill="#64748B" text-anchor="middle">收集瓶</text>
+          <text id="collectHint" x="15" y="128" font-size="5" fill="#059669" text-anchor="middle" font-weight="600" opacity="0"></text>
+        </g>
+
+        <!-- ===== ALCOHOL LAMP ===== -->
+        <g id="lampGroup" transform="translate(100,310)">
+          <g id="lampClick" class="clickable" onclick="toggleLamp()">
+            <rect x="0" y="0" width="50" height="28" rx="5" fill="#F59E0B" stroke="#D97706" stroke-width="0.8"/>
+            <line x1="25" y1="0" x2="25" y2="-8" stroke="#1E293B" stroke-width="1.5"/>
+            <g id="lampFlame" opacity="0">
+              <ellipse cx="25" cy="-16" rx="6" ry="12" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
+              <ellipse cx="25" cy="-13" rx="3" ry="7" fill="#FEF3C7" opacity="0.7"/>
+            </g>
+            <text x="25" y="42" font-size="7" fill="#64748B" text-anchor="middle">酒精灯</text>
+            <text id="lampHint" x="25" y="54" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
+          </g>
+        </g>
+
+        <!-- ===== STEP 4: AgNO₃ TEST (hidden) ===== -->
+        <g id="testArea" style="display:none">
+          <!-- Two test tubes -->
+          <g transform="translate(180,100)">
+            <rect x="0" y="0" width="24" height="80" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+            <rect id="tapWater" x="2" y="30" width="20" height="48" rx="2" fill="hsl(0,0%,95%)"/>
+            <text x="12" y="95" font-size="6" fill="#64748B" text-anchor="middle">自来水</text>
+          </g>
+          <g transform="translate(260,100)">
+            <rect x="0" y="0" width="24" height="80" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+            <rect id="distWater" x="2" y="30" width="20" height="48" rx="2" fill="hsl(200,60%,90%)"/>
+            <text x="12" y="95" font-size="6" fill="#64748B" text-anchor="middle">蒸馏水</text>
+          </g>
+          <!-- AgNO₃ dropper -->
+          <g id="agno3Click" class="clickable" onclick="addAgNO3()">
+            <rect x="210" y="60" width="40" height="25" rx="5" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+            <text x="230" y="75" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">AgNO₃</text>
+            <text x="230" y="88" font-size="5" fill="#0284C7" text-anchor="middle">点击滴入</text>
+          </g>
+          <!-- Result labels -->
+          <text id="tapResult" x="192" y="210" font-size="7" fill="#DC2626" text-anchor="middle" font-weight="700" opacity="0">白色沉淀 AgCl↓</text>
+          <text id="distResult" x="272" y="210" font-size="7" fill="#059669" text-anchor="middle" font-weight="700" opacity="0">无沉淀 ✓</text>
+        </g>
+
+        <!-- ===== INFO CARDS ===== -->
+        <g id="flowCard" transform="translate(500,50)">
+          <rect x="0" y="0" width="200" height="60" rx="8" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+          <text x="100" y="18" font-size="8" fill="#0369A1" text-anchor="middle" font-weight="700">蒸馏流程</text>
+          <text x="100" y="36" font-size="7" fill="#0F172A" text-anchor="middle">①加热沸腾 → ②蒸汽冷凝 → ③收集</text>
+          <text x="100" y="52" font-size="6" fill="#64748B" text-anchor="middle">从热到冷，分离可溶性杂质</text>
+        </g>
+
+        <g id="purityCard" transform="translate(500,125)" opacity="0">
+          <rect x="0" y="0" width="200" height="70" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
+          <text x="100" y="18" font-size="8" fill="#92400E" text-anchor="middle" font-weight="700">净化层级</text>
+          <text x="15" y="36" font-size="6" fill="#0F172A">沉淀 → 过滤 → 吸附 → 蒸馏</text>
+          <text x="15" y="50" font-size="6" fill="#0F172A">蒸馏 = 最高级净化（纯净物）</text>
+          <text x="15" y="64" font-size="6" fill="#DC2626" font-weight="600">蒸馏水 ≠ 矿泉水（无矿物质）</text>
+        </g>
+
+        <g id="testResultCard" transform="translate(500,210)" opacity="0">
+          <rect x="0" y="0" width="200" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+          <text x="100" y="18" font-size="8" fill="#065F46" text-anchor="middle" font-weight="700">AgNO₃ 检验</text>
+          <text x="15" y="36" font-size="6" fill="#065F46">自来水含 Cl⁻ → AgCl↓ 白色沉淀</text>
+          <text x="15" y="50" font-size="6" fill="#065F46">蒸馏水无 Cl⁻ → 无沉淀（纯净！）</text>
+        </g>
+
+        <text id="canvasHint" x="360" y="390" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击烧瓶底部放入碎瓷片</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="step-bar" id="stepBar">
+          <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
+          <div class="step-item" data-step="1"><span class="step-num">2</span>蒸馏</div>
+          <div class="step-item" data-step="2"><span class="step-num">3</span>收集</div>
+          <div class="step-item" data-step="3"><span class="step-num">4</span>检验</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title" id="stepTitle">第 1 步：放入碎瓷片</div>
+        <div class="step-desc" id="stepDesc">点击烧瓶底部放入碎瓷片，防止加热时暴沸。</div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title">观察记录</div>
+        <ul class="obs-list" id="obsList">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>放入碎瓷片（防暴沸）</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>加热至沸腾（100°C）</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>蒸汽沿导管流动</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>冷凝成液滴收集</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>收集足量蒸馏水</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>AgNO₃ 检验纯度</li>
+        </ul>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title">化学方程式</div>
+        <div class="chem-equation" id="formula1"></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title">知识拓展</div>
+        <div style="font-size:10px;color:#475569;line-height:1.6">
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">碎瓷片的作用</h3>
+          <p>防暴沸。碎瓷片提供<strong>气化核</strong>，使沸腾更均匀。忘加碎瓷片，液体可能突然剧烈沸腾飞溅（暴沸），非常危险。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">温度计位置</h3>
+          <p style="color:#DC2626"><strong>球部在支管口处！</strong>不是在液面下。因为测的是<strong>蒸汽温度</strong>，不是液体温度。这是中考 6 分考点。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">硬水与软水</h3>
+          <p>硬水含较多 Ca²⁺、Mg²⁺；软水含量少。蒸馏是将硬水转变为软水的方法之一。生活中烧开水也能降低硬度。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考易错</h3>
+          <p style="color:#DC2626"><strong>蒸馏水是纯净物，不是混合物。</strong><br>自来水经过沉淀→过滤→吸附→消毒，仍含可溶性杂质。<br>只有蒸馏才能得到纯净水。净化程度：蒸馏 > 吸附 > 过滤 > 沉淀。</p>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <button class="step-btn" onclick="resetExperiment()">重做实验</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/theme.js"></script>
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+const STEP_INFO = [
+  { title: '第 1 步：放入碎瓷片', desc: '点击烧瓶底部放入碎瓷片，防止加热时暴沸。' },
+  { title: '第 2 步：加热蒸馏', desc: '点击酒精灯加热，观察沸腾→蒸汽→冷凝全过程。' },
+  { title: '第 3 步：收集蒸馏水', desc: '收集到 10mL 后，点击酒精灯停止加热。' },
+  { title: '第 4 步：AgNO₃ 检验纯度', desc: '点击 AgNO₃ 分别滴入自来水和蒸馏水，对比结果。' }
+];
+
+const state = {
+  step: 0,
+  ceramicAdded: false,
+  heating: false,
+  temp: 25,
+  boiling: false,
+  collected: 0,
+  collectDone: false,
+  tested: false,
+  animFrame: null
+};
+
+// Pools
+const boilBubs = [];
+document.querySelectorAll('.boil-b').forEach(el => boilBubs.push({ el, active: false, x: 0, y: 0, vy: 0 }));
+const steamPs = [];
+document.querySelectorAll('.steam-p').forEach(el => steamPs.push({ el, active: false, progress: 0 }));
+const drips = [];
+document.querySelectorAll('.drip').forEach(el => drips.push({ el, active: false, y: 0 }));
+
+// Path
+let steamPathEl, pathLen;
+function initPath() {
+  steamPathEl = $('steamPathInner');
+  pathLen = steamPathEl.getTotalLength();
+}
+
+// ===== STEP 1: CERAMIC =====
+function addCeramic() {
+  if (state.ceramicAdded) return;
+  state.ceramicAdded = true;
+  $('ceramicChips').setAttribute('opacity', '1');
+  $('ceramicHint').textContent = '已放入 ✓';
+  $('ceramicHint').setAttribute('fill', '#059669');
+  checkObs('obs1');
+  state.step = 1;
+  updateStepUI();
+  $('canvasHint').textContent = '点击酒精灯加热';
+  $('lampHint').textContent = '点击加热';
+}
+
+// ===== STEP 2: HEATING =====
+function toggleLamp() {
+  if (!state.ceramicAdded) {
+    // Block — show warning
+    const toast = $('warnToast');
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 2000);
+    return;
+  }
+
+  if (state.step === 1 && !state.heating) {
+    // Start heating
+    state.heating = true;
+    $('lampFlame').setAttribute('opacity', '1');
+    $('lampHint').textContent = '';
+    $('canvasHint').textContent = '加热中...观察温度上升';
+    initPath();
+    startHeating();
+  } else if (state.step === 2 && state.collectDone) {
+    // Stop heating (Step 3)
+    stopHeating();
+  }
+}
+
+function startHeating() {
+  let timer = 0;
+
+  function tick() {
+    if (!state.heating) return;
+    timer++;
+
+    // Temperature rise: 25→100 over ~5s (300 frames)
+    if (state.temp < 100) {
+      state.temp += 0.25;
+      state.temp = Math.min(100, state.temp);
+      $('tempText').textContent = Math.round(state.temp) + '°C';
+      // Thermometer fill: height proportional
+      const fillH = 30 + (state.temp - 25) / 75 * 40;
+      const fillY = 80 - fillH;
+      $('thermFill').setAttribute('y', fillY);
+      $('thermFill').setAttribute('height', fillH);
+    }
+
+    // Boiling at 100°C
+    if (state.temp >= 100 && !state.boiling) {
+      state.boiling = true;
+      checkObs('obs2');
+      state.step = 2;
+      updateStepUI();
+      $('canvasHint').textContent = '沸腾！蒸汽沿导管流动...';
+    }
+
+    // Boiling bubbles
+    if (state.boiling && timer % 8 === 0) {
+      const b = boilBubs.find(b => !b.active);
+      if (b) {
+        b.active = true;
+        b.x = 130 + (Math.random() - 0.5) * 50;
+        b.y = 250;
+        b.vy = -1.2 - Math.random() * 0.5;
+        b.el.setAttribute('opacity', '0.5');
+      }
+    }
+    for (const b of boilBubs) {
+      if (!b.active) continue;
+      b.y += b.vy;
+      b.x += (Math.random() - 0.5) * 0.5;
+      b.el.setAttribute('cx', b.x);
+      b.el.setAttribute('cy', b.y);
+      if (b.y < 180) { b.active = false; b.el.setAttribute('opacity', '0'); }
+    }
+
+    // Steam along path
+    if (state.boiling && timer % 15 === 0) {
+      const sp = steamPs.find(s => !s.active);
+      if (sp) {
+        sp.active = true;
+        sp.progress = 0;
+        sp.el.setAttribute('opacity', '0.5');
+        if (!state.steamShown) { state.steamShown = true; checkObs('obs3'); }
+      }
+    }
+    for (const sp of steamPs) {
+      if (!sp.active) continue;
+      sp.progress += 0.008;
+      if (sp.progress >= 1) {
+        sp.active = false;
+        sp.el.setAttribute('opacity', '0');
+        // Trigger drip
+        if (state.boiling) spawnDrip();
+        continue;
+      }
+      const pt = steamPathEl.getPointAtLength(sp.progress * pathLen);
+      sp.el.setAttribute('cx', pt.x);
+      sp.el.setAttribute('cy', pt.y);
+      // Fade near end
+      sp.el.setAttribute('opacity', sp.progress > 0.8 ? String(0.5 * (1 - (sp.progress - 0.8) / 0.2)) : '0.5');
+    }
+
+    // Drips falling
+    for (const d of drips) {
+      if (!d.active) continue;
+      d.y += 1.5;
+      d.el.setAttribute('cy', d.y);
+      if (d.y > 315) {
+        d.active = false;
+        d.el.setAttribute('opacity', '0');
+        // Add to collection
+        if (!state.collectDone) {
+          state.collected += 0.3;
+          const h = Math.min(state.collected * 6, 60);
+          $('collectedWater').setAttribute('height', h);
+          $('collectedWater').setAttribute('y', 98 - h);
+          checkObs('obs4');
+          if (state.collected >= 10) {
+            state.collectDone = true;
+            checkObs('obs5');
+            $('collectHint').textContent = '已满！点击酒精灯停止';
+            $('collectHint').setAttribute('opacity', '1');
+            $('canvasHint').textContent = '收集够了！点击酒精灯停止加热';
+            $('lampHint').textContent = '点击停止';
+          }
+        }
+      }
+    }
+
+    // Flame flicker
+    const s = 0.85 + Math.sin(timer * 0.2) * 0.15;
+    $('lampFlame').setAttribute('transform', 'scale(' + s + ')');
+
+    state.animFrame = requestAnimationFrame(tick);
+  }
+  state.animFrame = requestAnimationFrame(tick);
+}
+
+function spawnDrip() {
+  const d = drips.find(d => !d.active);
+  if (d) {
+    d.active = true;
+    d.y = 215;
+    d.el.setAttribute('cy', d.y);
+    d.el.setAttribute('cx', 475);
+    d.el.setAttribute('opacity', '0.7');
+  }
+}
+
+function stopHeating() {
+  state.heating = false;
+  state.boiling = false;
+  $('lampFlame').setAttribute('opacity', '0');
+  $('lampHint').textContent = '';
+
+  // Clear animations
+  boilBubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  steamPs.forEach(s => { s.active = false; s.el.setAttribute('opacity', '0'); });
+  drips.forEach(d => { d.active = false; d.el.setAttribute('opacity', '0'); });
+
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+
+  // Move to Step 4
+  state.step = 3;
+  updateStepUI();
+  $('purityCard').setAttribute('opacity', '1');
+  $('canvasHint').textContent = '点击 AgNO₃ 检验蒸馏水纯度';
+
+  // Show test area, hide distillation apparatus
+  $('testArea').style.display = '';
+}
+
+// ===== STEP 4: AgNO₃ TEST =====
+function addAgNO3() {
+  if (state.tested) return;
+  state.tested = true;
+
+  // Tap water turns cloudy (AgCl precipitate)
+  let t = 0;
+  function anim() {
+    t++;
+    const progress = Math.min(t / 120, 1);
+    const s = progress * 40;
+    const l = 95 - progress * 15;
+    $('tapWater').setAttribute('fill', 'hsl(0,' + s + '%,' + l + '%)');
+    if (progress >= 1) {
+      $('tapResult').setAttribute('opacity', '1');
+      $('distResult').setAttribute('opacity', '1');
+      $('testResultCard').setAttribute('opacity', '1');
+      checkObs('obs6');
+      $('canvasHint').textContent = '实验完成！蒸馏水是纯净物，不含 Cl⁻';
+      $('stepTitle').textContent = '实验完成';
+      $('stepDesc').textContent = '蒸馏水无沉淀 = 纯净物。自来水有 AgCl 白色沉淀 = 含 Cl⁻ 杂质。';
+      return;
+    }
+    requestAnimationFrame(anim);
+  }
+  requestAnimationFrame(anim);
+}
+
+// ===== UI =====
+function updateStepUI() {
+  const info = STEP_INFO[Math.min(state.step, 3)];
+  $('stepTitle').textContent = info.title;
+  $('stepDesc').textContent = info.desc;
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < state.step) el.classList.add('done');
+    if (i === state.step) el.classList.add('active');
+  });
+}
+
+function checkObs(id) {
+  const el = $(id);
+  if (!el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+// ===== RESET =====
+function resetExperiment() {
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+  state.heating = false;
+  state.boiling = false;
+
+  Object.assign(state, {
+    step: 0, ceramicAdded: false, heating: false, temp: 25,
+    boiling: false, collected: 0, collectDone: false, tested: false, steamShown: false
+  });
+
+  // Flask
+  $('ceramicChips').setAttribute('opacity', '0');
+  $('ceramicHint').textContent = '点击放入碎瓷片';
+  $('ceramicHint').setAttribute('fill', '#0284C7');
+  $('tempText').textContent = '25°C';
+  $('thermFill').setAttribute('y', '50');
+  $('thermFill').setAttribute('height', '30');
+
+  // Lamp
+  $('lampFlame').setAttribute('opacity', '0');
+  $('lampHint').textContent = '点击加热';
+
+  // Pools
+  boilBubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  steamPs.forEach(s => { s.active = false; s.el.setAttribute('opacity', '0'); });
+  drips.forEach(d => { d.active = false; d.el.setAttribute('opacity', '0'); });
+
+  // Collection
+  $('collectedWater').setAttribute('height', '0');
+  $('collectedWater').setAttribute('y', '98');
+  $('collectHint').setAttribute('opacity', '0');
+
+  // Test
+  $('testArea').style.display = 'none';
+  $('tapWater').setAttribute('fill', 'hsl(0,0%,95%)');
+  $('tapResult').setAttribute('opacity', '0');
+  $('distResult').setAttribute('opacity', '0');
+
+  // Cards
+  $('purityCard').setAttribute('opacity', '0');
+  $('testResultCard').setAttribute('opacity', '0');
+
+  // Observations
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+
+  $('canvasHint').textContent = '点击烧瓶底部放入碎瓷片';
+  updateStepUI();
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  try {
+    katex.render('\\text{AgNO}_3 + \\text{NaCl} \\rightarrow \\text{AgCl}\\downarrow + \\text{NaNO}_3', $('formula1'), { throwOnError: false, displayMode: true });
+  } catch(e) {}
+}
+function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
+}
+tryKatex();
+</script>
+</body>
+</html>

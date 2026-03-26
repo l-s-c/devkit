@@ -198,6 +198,7 @@ export default defineConfig({
         'lab-co2-properties': resolve(__dirname, 'pages/lab/co2-properties/index.html'),
         'lab-iron-burning': resolve(__dirname, 'pages/lab/iron-burning/index.html'),
         'lab-molecular-motion': resolve(__dirname, 'pages/lab/molecular-motion/index.html'),
+        'lab-distillation': resolve(__dirname, 'pages/lab/distillation/index.html'),
         'lab-make-oxygen': resolve(__dirname, 'pages/lab/make-oxygen/index.html'),
         'lab-parallelogram-rule': resolve(__dirname, 'pages/lab/parallelogram-rule/index.html'),
         'lab-pendulum-gravity': resolve(__dirname, 'pages/lab/pendulum-gravity/index.html'),
