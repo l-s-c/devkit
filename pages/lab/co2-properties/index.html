@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CO₂ 性质实验 - 虚拟实验室</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+.tab-bar{display:flex;gap:4px;margin-bottom:8px}
+.tab-btn{flex:1;padding:6px;text-align:center;border-radius:6px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:9px;color:#64748B;cursor:pointer;font-weight:600;transition:all .15s}
+.tab-btn.active{background:var(--lab-accent-bg);border-color:var(--lab-accent);color:var(--lab-accent)}
+.tab-btn.done{background:#F0FDF4;border-color:#86EFAC;color:#16A34A}
+.scene{display:none}.scene.active{display:block}
+</style>
+</head>
+<body>
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-header">
+      <h1 class="exp-title">CO₂ 性质实验</h1>
+      <div class="exp-subtitle">三合一 — 灭火、变浑、变色</div>
+    </div>
+    <div class="canvas-wrapper">
+      <!-- ===== TAB A: CANDLE EXTINGUISH ===== -->
+      <svg id="sceneA" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect id="svgBgA" width="720" height="400" fill="#F8FAFC"/>
+        <defs>
+          <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
+          <linearGradient id="co2Grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#94A3B8" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#94A3B8" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Beaker -->
+        <g transform="translate(150,60)">
+          <rect x="0" y="0" width="200" height="280" rx="5" fill="rgba(219,234,254,0.05)" stroke="#93C5FD" stroke-width="1.5"/>
+          <text x="100" y="298" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
+
+          <!-- Steps/platforms -->
+          <rect x="20" y="220" width="70" height="60" rx="3" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.5"/>
+          <text x="55" y="290" font-size="5" fill="#94A3B8" text-anchor="middle">低台阶</text>
+          <rect x="110" y="170" width="70" height="110" rx="3" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.5"/>
+          <text x="145" y="290" font-size="5" fill="#94A3B8" text-anchor="middle">高台阶</text>
+
+          <!-- Lower candle -->
+          <g id="candleLow" transform="translate(55,190)">
+            <rect x="-4" y="0" width="8" height="30" rx="2" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="-5" stroke="#1E293B" stroke-width="1"/>
+            <g id="flameLow">
+              <ellipse cx="0" cy="-12" rx="5" ry="10" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
+              <ellipse cx="0" cy="-9" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.7"/>
+            </g>
+          </g>
+          <!-- Lower badge -->
+          <g id="lowBadge" opacity="0" transform="translate(20,175)">
+            <rect x="0" y="0" width="35" height="14" rx="3" fill="#DC2626"/>
+            <text x="17" y="10" font-size="6" fill="#FFF" text-anchor="middle" font-weight="700">先灭!</text>
+          </g>
+
+          <!-- Upper candle -->
+          <g id="candleHigh" transform="translate(145,140)">
+            <rect x="-4" y="0" width="8" height="30" rx="2" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="-5" stroke="#1E293B" stroke-width="1"/>
+            <g id="flameHigh">
+              <ellipse cx="0" cy="-12" rx="5" ry="10" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
+              <ellipse cx="0" cy="-9" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.7"/>
+            </g>
+          </g>
+          <!-- Upper badge -->
+          <g id="highBadge" opacity="0" transform="translate(155,125)">
+            <rect x="0" y="0" width="35" height="14" rx="3" fill="#F59E0B"/>
+            <text x="17" y="10" font-size="6" fill="#FFF" text-anchor="middle" font-weight="700">后灭</text>
+          </g>
+
+          <!-- CO₂ gas layer (rises from bottom) -->
+          <rect id="co2Layer" x="3" y="277" width="194" height="0" rx="2" fill="url(#co2Grad)"/>
+        </g>
+
+        <!-- Collecting bottle (tilted) -->
+        <g id="bottleA" class="clickable" transform="translate(380,80)" onclick="pourCO2()">
+          <rect x="0" y="0" width="60" height="100" rx="4" fill="rgba(148,163,184,0.08)" stroke="#93C5FD" stroke-width="1" transform="rotate(-30,30,50)"/>
+          <text x="30" y="120" font-size="7" fill="#64748B" text-anchor="middle">集气瓶(CO₂)</text>
+          <text id="pourHint" x="30" y="135" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击倾倒</text>
+        </g>
+
+        <!-- Info cards -->
+        <g transform="translate(460,60)">
+          <rect x="0" y="0" width="230" height="80" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="115" y="20" font-size="8" fill="#475569" text-anchor="middle" font-weight="700">CO₂ 性质验证</text>
+          <text id="propA1" x="15" y="40" font-size="7" fill="#059669" font-weight="600">✓ 密度比空气大</text>
+          <text id="propA2" x="15" y="56" font-size="7" fill="#059669" font-weight="600">✓ 不燃烧、不支持燃烧</text>
+          <text id="propA3" x="15" y="72" font-size="7" fill="#94A3B8">○ 与石灰水反应 → Tab B</text>
+        </g>
+
+        <!-- Timeline -->
+        <g id="timelineA" transform="translate(460,160)" opacity="0">
+          <rect x="0" y="0" width="230" height="50" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="115" y="15" font-size="7" fill="#0F172A" text-anchor="middle" font-weight="600">熄灭时间线</text>
+          <line x1="20" y1="35" x2="210" y2="35" stroke="#CBD5E1" stroke-width="1.5"/>
+          <circle cx="80" cy="35" r="4" fill="#DC2626"/>
+          <text x="80" y="28" font-size="5" fill="#DC2626" text-anchor="middle">~2s 下层灭</text>
+          <circle cx="160" cy="35" r="4" fill="#F59E0B"/>
+          <text x="160" y="28" font-size="5" fill="#F59E0B" text-anchor="middle">~4s 上层灭</text>
+        </g>
+
+        <text id="hintA" x="360" y="385" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击集气瓶倾倒 CO₂</text>
+      </svg>
+
+      <!-- ===== TAB B: LIMEWATER ===== -->
+      <svg id="sceneB" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect id="svgBgB" width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- Test tube with limewater -->
+        <g transform="translate(200,60)">
+          <rect id="tubeB" x="0" y="0" width="60" height="220" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.2"/>
+          <!-- Limewater -->
+          <rect id="limewater" x="3" y="80" width="54" height="137" rx="3" fill="hsl(0,0%,95%)" stroke="none"/>
+          <text x="30" y="250" font-size="7" fill="#64748B" text-anchor="middle">澄清石灰水</text>
+
+          <!-- Delivery tube -->
+          <path d="M30,-20 L30,90" fill="none" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+          <text x="55" y="-5" font-size="5" fill="#64748B">导管</text>
+        </g>
+
+        <!-- CO₂ source -->
+        <g id="co2SourceB" class="clickable" transform="translate(180,10)" onclick="startLimewater()">
+          <rect x="0" y="0" width="60" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="30" y="18" font-size="7" fill="#0F172A" text-anchor="middle" font-weight="600">CO₂</text>
+          <text x="30" y="30" font-size="5" fill="#0284C7" text-anchor="middle">点击通入</text>
+        </g>
+
+        <!-- Bubbles in tube (pre-drawn 15) -->
+        <g id="limeBubbles">
+          <circle class="lime-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lime-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+        </g>
+
+        <!-- Result card -->
+        <g transform="translate(400,80)">
+          <rect x="0" y="0" width="260" height="90" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
+          <text x="130" y="20" font-size="8" fill="#92400E" text-anchor="middle" font-weight="700">石灰水变浑浊</text>
+          <text id="limeFeedback" x="130" y="45" font-size="10" fill="#64748B" text-anchor="middle" font-weight="800">等待通入 CO₂...</text>
+          <text x="130" y="70" font-size="6" fill="#64748B" text-anchor="middle" id="limeEqLabel" opacity="0">Ca(OH)₂ + CO₂ = CaCO₃↓ + H₂O</text>
+        </g>
+
+        <!-- Detection note -->
+        <g transform="translate(400,190)">
+          <rect x="0" y="0" width="260" height="60" rx="6" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
+          <text x="10" y="18" font-size="7" fill="#991B1B" font-weight="700">CO₂ 检验 vs 验满</text>
+          <text x="10" y="35" font-size="6" fill="#991B1B">检验 → 通入澄清石灰水（变浑浊）</text>
+          <text x="10" y="50" font-size="6" fill="#991B1B">验满 → 燃着木条放瓶口（熄灭）</text>
+        </g>
+
+        <text id="hintB" x="360" y="385" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击 CO₂ 通入石灰水</text>
+      </svg>
+
+      <!-- ===== TAB C: LITMUS COLOR CHANGE ===== -->
+      <svg id="sceneC" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect id="svgBgC" width="720" height="400" fill="#F8FAFC"/>
+        <defs>
+          <filter id="flameBlurC"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+
+        <!-- Test tube with litmus solution -->
+        <g transform="translate(200,60)">
+          <rect id="tubeC" x="0" y="0" width="60" height="220" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.2"/>
+          <!-- Litmus solution -->
+          <rect id="litmusSolution" x="3" y="80" width="54" height="137" rx="3" fill="hsl(280,50%,60%)" stroke="none"/>
+          <text x="30" y="250" font-size="7" fill="#64748B" text-anchor="middle">紫色石蕊溶液</text>
+
+          <!-- Delivery tube -->
+          <path d="M30,-20 L30,90" fill="none" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- CO₂ source -->
+        <g id="co2SourceC" class="clickable" transform="translate(180,10)" onclick="startLitmus()">
+          <rect x="0" y="0" width="60" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="30" y="18" font-size="7" fill="#0F172A" text-anchor="middle" font-weight="600">CO₂</text>
+          <text id="co2LabelC" x="30" y="30" font-size="5" fill="#0284C7" text-anchor="middle">点击通入</text>
+        </g>
+
+        <!-- Alcohol lamp -->
+        <g id="lampC" class="clickable" transform="translate(200,300)" onclick="startHeatLitmus()" style="display:none">
+          <rect x="10" y="0" width="40" height="25" rx="4" fill="#F59E0B" stroke="#D97706" stroke-width="0.8"/>
+          <line x1="30" y1="0" x2="30" y2="-8" stroke="#1E293B" stroke-width="1.5"/>
+          <g id="lampFlameC" opacity="0">
+            <ellipse cx="30" cy="-15" rx="6" ry="10" fill="#F97316" opacity="0.7" filter="url(#flameBlurC)"/>
+            <ellipse cx="30" cy="-12" rx="3" ry="6" fill="#FEF3C7" opacity="0.6"/>
+          </g>
+          <text x="30" y="40" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
+        </g>
+
+        <!-- CO₂ escape bubbles (pre-drawn 10) -->
+        <g id="escapeBubbles">
+          <circle class="esc-bub" cx="0" cy="0" r="1.5" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="2" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.8" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.5" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="2" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.8" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.5" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="2" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.8" fill="#CBD5E1" opacity="0"/>
+          <circle class="esc-bub" cx="0" cy="0" r="1.5" fill="#CBD5E1" opacity="0"/>
+        </g>
+
+        <!-- Litmus bubbles (pre-drawn 15) -->
+        <g id="litmusBubbles">
+          <circle class="lit-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/>
+          <circle class="lit-bub" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/>
+        </g>
+
+        <!-- Result cards -->
+        <g transform="translate(400,60)">
+          <rect x="0" y="0" width="260" height="80" rx="8" fill="#FAF5FF" stroke="#D8B4FE" stroke-width="1"/>
+          <text x="130" y="20" font-size="8" fill="#6B21A8" text-anchor="middle" font-weight="700">石蕊变色（可逆）</text>
+          <text id="litmusFeedback" x="130" y="45" font-size="10" fill="#64748B" text-anchor="middle" font-weight="800">紫色 — 等待操作</text>
+          <text x="130" y="68" font-size="6" fill="#6B21A8" text-anchor="middle" id="litmusNote" opacity="0">CO₂ + H₂O = H₂CO₃（碳酸使石蕊变红）</text>
+        </g>
+
+        <g transform="translate(400,160)">
+          <rect x="0" y="0" width="260" height="60" rx="6" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
+          <text x="10" y="18" font-size="7" fill="#991B1B" font-weight="700">中考易错</text>
+          <text x="10" y="35" font-size="6" fill="#991B1B">使石蕊变红的是 H₂CO₃（碳酸）</text>
+          <text x="10" y="48" font-size="6" fill="#991B1B">不是 CO₂ 直接使石蕊变色！</text>
+        </g>
+
+        <g transform="translate(400,240)">
+          <rect x="0" y="0" width="260" height="50" rx="6" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+          <text x="10" y="18" font-size="7" fill="#065F46" font-weight="700">碳酸不稳定</text>
+          <text x="10" y="35" font-size="6" fill="#065F46">H₂CO₃ → H₂O + CO₂↑（加热分解）</text>
+          <text x="10" y="47" font-size="6" fill="#065F46">所以加热后红色褪回紫色</text>
+        </g>
+
+        <text id="hintC" x="360" y="385" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击通入 CO₂ → 石蕊变红</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Tab bar -->
+      <div class="panel-section">
+        <div class="section-title">实验选择</div>
+        <div class="tab-bar">
+          <div class="tab-btn active" id="tabA" onclick="switchTab('A')">A 灭火</div>
+          <div class="tab-btn" id="tabB" onclick="switchTab('B')">B 变浑</div>
+          <div class="tab-btn" id="tabC" onclick="switchTab('C')">C 变色</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title" id="stepTitle">实验 A：阶梯蜡烛灭火</div>
+        <div class="step-desc" id="stepDesc">点击画布上的集气瓶，向烧杯中倾倒 CO₂，观察蜡烛熄灭顺序。</div>
+      </div>
+
+      <!-- Observation checklist -->
+      <div class="panel-section">
+        <div class="section-title">观察记录</div>
+        <ul class="obs-list" id="obsList">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>CO₂ 密度大于空气（从底部堆积）</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>下层蜡烛先熄灭</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>上层蜡烛后熄灭</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>石灰水变浑浊</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>石蕊由紫变红</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>加热后红色褪回紫色</li>
+        </ul>
+      </div>
+
+      <!-- CO₂ properties summary -->
+      <div class="panel-section">
+        <div class="section-title">CO₂ 三大性质</div>
+        <div style="font-size:10px;line-height:1.8">
+          <div id="sumA" style="color:#94A3B8">1. 密度比空气大 + 不燃烧不支持燃烧</div>
+          <div id="sumB" style="color:#94A3B8">2. 与 Ca(OH)₂ 反应生成 CaCO₃ 沉淀</div>
+          <div id="sumC" style="color:#94A3B8">3. 与 H₂O 反应生成 H₂CO₃（可逆）</div>
+        </div>
+      </div>
+
+      <!-- Equations -->
+      <div class="panel-section">
+        <div class="section-title">化学方程式</div>
+        <div class="chem-equation" id="formula1"></div>
+        <div class="chem-equation" id="formula2"></div>
+        <div class="chem-equation" id="formula3"></div>
+      </div>
+
+      <!-- Knowledge -->
+      <div class="panel-section">
+        <div class="section-title">知识拓展</div>
+        <div style="font-size:10px;color:#475569;line-height:1.6">
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">灭火原理</h3>
+          <p>CO₂ 灭火器原理：CO₂ 密度大，覆盖在燃烧物表面<strong>隔绝氧气</strong>。适用于图书馆、精密仪器等（不留痕迹）。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">碳酸不稳定性</h3>
+          <p>H₂CO₃ 不稳定，加热即分解为 H₂O 和 CO₂。所以石蕊变红是<strong>可逆的</strong>。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考考点</h3>
+          <p style="color:#DC2626"><strong>"使石蕊变红的不是 CO₂，是 H₂CO₃！"</strong><br>干燥的 CO₂ 不能使石蕊变色，必须有水参与。</p>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="panel-section">
+        <button class="step-btn" onclick="resetExperiment()">重做实验</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/theme.js"></script>
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+const TAB_INFO = {
+  A: { title: '实验 A：阶梯蜡烛灭火', desc: '点击画布上的集气瓶，向烧杯中倾倒 CO₂，观察蜡烛熄灭顺序。' },
+  B: { title: '实验 B：石灰水变浑浊', desc: '点击画布上的 CO₂ 通入石灰水，观察变化。' },
+  C: { title: '实验 C：石蕊变色（可逆）', desc: '点击通入 CO₂ 使石蕊变红，再点击酒精灯加热褪色。可反复操作。' }
+};
+
+const state = {
+  tab: 'A',
+  doneA: false, doneB: false, doneC: false,
+  animating: false, animFrame: null,
+  // Tab C
+  litmusRed: false, litmusHeating: false
+};
+
+// ===== TAB SWITCHING =====
+function switchTab(t) {
+  state.tab = t;
+  ['A','B','C'].forEach(k => {
+    $('scene' + k).classList.toggle('active', k === t);
+    $('tab' + k).classList.toggle('active', k === t);
+  });
+  const info = TAB_INFO[t];
+  $('stepTitle').textContent = info.title;
+  $('stepDesc').textContent = info.desc;
+}
+
+// ===== TAB A: CANDLE EXTINGUISH =====
+function pourCO2() {
+  if (state.doneA || state.animating) return;
+  state.animating = true;
+  $('pourHint').textContent = '倾倒中...';
+
+  let co2Height = 0;
+  const LOW_CANDLE_Y = 220; // relative to beaker top: step at 220, candle at 190
+  const HIGH_CANDLE_Y = 170;
+  let lowOut = false, highOut = false;
+  let timer = 0;
+
+  function tick() {
+    timer++;
+    // CO₂ layer rises from bottom
+    if (co2Height < 200) {
+      co2Height += 0.8;
+      $('co2Layer').setAttribute('height', co2Height);
+      $('co2Layer').setAttribute('y', 277 - co2Height);
+    }
+
+    // Lower candle extinguishes when CO₂ reaches it (~2s)
+    if (co2Height > 60 && !lowOut) {
+      lowOut = true;
+      extinguishFlame('flameLow');
+      $('lowBadge').setAttribute('opacity', '1');
+      checkObs('obs1');
+      checkObs('obs2');
+    }
+
+    // Upper candle extinguishes when CO₂ reaches it (~4s)
+    if (co2Height > 110 && !highOut) {
+      highOut = true;
+      extinguishFlame('flameHigh');
+      $('highBadge').setAttribute('opacity', '1');
+      checkObs('obs3');
+      $('timelineA').setAttribute('opacity', '1');
+    }
+
+    if (highOut && timer > 300) {
+      state.doneA = true;
+      state.animating = false;
+      $('tabA').classList.add('done');
+      $('pourHint').textContent = '已完成';
+      $('hintA').textContent = '实验完成！CO₂ 密度大，从底部堆积';
+      $('propA1').setAttribute('fill', '#059669');
+      $('propA2').setAttribute('fill', '#059669');
+      $('sumA').style.color = '#059669';
+      $('sumA').style.fontWeight = '700';
+      checkAllDone();
+      return;
+    }
+
+    // Flame flicker
+    if (!lowOut) flickerEl('flameLow', timer);
+    if (!highOut) flickerEl('flameHigh', timer);
+
+    state.animFrame = requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function extinguishFlame(id) {
+  const el = $(id);
+  let op = 1;
+  function fade() {
+    op -= 0.03;
+    if (op <= 0) { el.setAttribute('opacity', '0'); return; }
+    el.setAttribute('opacity', String(op));
+    // Shrink
+    el.setAttribute('transform', 'scale(' + op + ')');
+    requestAnimationFrame(fade);
+  }
+  requestAnimationFrame(fade);
+}
+
+function flickerEl(id, t) {
+  const s = 0.9 + Math.sin(t * 0.3) * 0.1;
+  $(id).setAttribute('transform', 'scale(' + s + ')');
+}
+
+// ===== TAB B: LIMEWATER =====
+const limeBubPool = [];
+document.querySelectorAll('.lime-bub').forEach(el => {
+  limeBubPool.push({ el, active: false, x: 0, y: 0, vy: 0 });
+});
+
+function startLimewater() {
+  if (state.doneB || state.animating) return;
+  state.animating = true;
+
+  let t = 0;
+  const DURATION = 240; // ~4s
+
+  function tick() {
+    t++;
+
+    // Bubbles
+    if (t % 12 === 0) {
+      const b = limeBubPool.find(b => !b.active);
+      if (b) {
+        b.active = true;
+        b.x = 228 + (Math.random() - 0.5) * 30;
+        b.y = 260;
+        b.vy = -1 - Math.random() * 0.5;
+        b.el.setAttribute('opacity', '0.6');
+      }
+    }
+    for (const b of limeBubPool) {
+      if (!b.active) continue;
+      b.y += b.vy;
+      b.x += (Math.random() - 0.5) * 0.5;
+      b.el.setAttribute('cx', b.x);
+      b.el.setAttribute('cy', b.y);
+      if (b.y < 150) { b.active = false; b.el.setAttribute('opacity', '0'); }
+    }
+
+    // HSL interpolation: clear → milky white (s:0→30, l:95→75)
+    const progress = Math.min(t / DURATION, 1);
+    const s = progress * 30;
+    const l = 95 - progress * 20;
+    $('limewater').setAttribute('fill', 'hsl(0,' + s + '%,' + l + '%)');
+    $('limeFeedback').textContent = progress < 1 ? '石灰水逐渐变浑浊...' : '石灰水变浑浊！（白色沉淀）';
+
+    if (t >= DURATION) {
+      state.doneB = true;
+      state.animating = false;
+      $('tabB').classList.add('done');
+      $('limeEqLabel').setAttribute('opacity', '1');
+      $('hintB').textContent = '实验完成！CaCO₃ 白色沉淀';
+      checkObs('obs4');
+      $('sumB').style.color = '#059669';
+      $('sumB').style.fontWeight = '700';
+      checkAllDone();
+      return;
+    }
+
+    state.animFrame = requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ===== TAB C: LITMUS =====
+const litBubPool = [];
+document.querySelectorAll('.lit-bub').forEach(el => {
+  litBubPool.push({ el, active: false, x: 0, y: 0, vy: 0 });
+});
+const escBubPool = [];
+document.querySelectorAll('.esc-bub').forEach(el => {
+  escBubPool.push({ el, active: false, x: 0, y: 0, vy: 0 });
+});
+
+function startLitmus() {
+  if (state.animating) return;
+  if (state.litmusRed) return; // already red, need to heat first
+  state.animating = true;
+
+  let t = 0;
+  const DURATION = 180; // ~3s
+
+  function tick() {
+    t++;
+
+    // Bubbles
+    if (t % 10 === 0) {
+      const b = litBubPool.find(b => !b.active);
+      if (b) {
+        b.active = true;
+        b.x = 228 + (Math.random() - 0.5) * 30;
+        b.y = 260;
+        b.vy = -1 - Math.random() * 0.5;
+        b.el.setAttribute('opacity', '0.6');
+      }
+    }
+    for (const b of litBubPool) {
+      if (!b.active) continue;
+      b.y += b.vy;
+      b.x += (Math.random() - 0.5) * 0.5;
+      b.el.setAttribute('cx', b.x);
+      b.el.setAttribute('cy', b.y);
+      if (b.y < 150) { b.active = false; b.el.setAttribute('opacity', '0'); }
+    }
+
+    // HSL: purple→red (h:280→350, s:50→70, l:60→50)
+    const progress = Math.min(t / DURATION, 1);
+    const h = 280 + progress * 70;
+    const s = 50 + progress * 20;
+    const l = 60 - progress * 10;
+    $('litmusSolution').setAttribute('fill', 'hsl(' + h + ',' + s + '%,' + l + '%)');
+    $('litmusFeedback').textContent = progress < 1 ? '石蕊逐渐变红...' : '石蕊变红！（H₂CO₃）';
+
+    if (t >= DURATION) {
+      state.litmusRed = true;
+      state.animating = false;
+      if (!state.doneC) {
+        checkObs('obs5');
+        $('litmusNote').setAttribute('opacity', '1');
+        $('co2LabelC').textContent = '已通入';
+        $('hintC').textContent = '点击酒精灯加热 → 褪色';
+        // Show lamp
+        $('lampC').style.display = '';
+      }
+      return;
+    }
+
+    state.animFrame = requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function startHeatLitmus() {
+  if (state.animating || !state.litmusRed) return;
+  state.animating = true;
+  $('lampFlameC').setAttribute('opacity', '1');
+
+  let t = 0;
+  const DURATION = 180;
+
+  function tick() {
+    t++;
+
+    // Escape bubbles (CO₂ leaving)
+    if (t % 15 === 0) {
+      const b = escBubPool.find(b => !b.active);
+      if (b) {
+        b.active = true;
+        b.x = 228 + (Math.random() - 0.5) * 20;
+        b.y = 150;
+        b.vy = -0.8 - Math.random() * 0.4;
+        b.el.setAttribute('opacity', '0.4');
+      }
+    }
+    for (const b of escBubPool) {
+      if (!b.active) continue;
+      b.y += b.vy;
+      b.x += (Math.random() - 0.5) * 0.5;
+      b.el.setAttribute('cx', b.x);
+      b.el.setAttribute('cy', b.y);
+      if (b.y < 80) { b.active = false; b.el.setAttribute('opacity', '0'); }
+    }
+
+    // HSL: red→purple (h:350→280, s:70→50, l:50→60) — reverse
+    const progress = Math.min(t / DURATION, 1);
+    const h = 350 - progress * 70;
+    const s = 70 - progress * 20;
+    const l = 50 + progress * 10;
+    $('litmusSolution').setAttribute('fill', 'hsl(' + h + ',' + s + '%,' + l + '%)');
+    $('litmusFeedback').textContent = progress < 1 ? '加热中...红色褪去' : '褪回紫色！（H₂CO₃ 分解）';
+
+    // Flame flicker
+    const fs = 0.9 + Math.sin(t * 0.3) * 0.1;
+    $('lampFlameC').setAttribute('transform', 'scale(' + fs + ')');
+
+    if (t >= DURATION) {
+      state.litmusRed = false;
+      state.animating = false;
+      $('lampFlameC').setAttribute('opacity', '0');
+      checkObs('obs6');
+      $('co2LabelC').textContent = '点击通入';
+      $('hintC').textContent = '可再次通入 CO₂ → 再变红（可逆！）';
+      $('litmusFeedback').textContent = '紫色 — 可再次通入 CO₂';
+
+      if (!state.doneC) {
+        state.doneC = true;
+        $('tabC').classList.add('done');
+        $('sumC').style.color = '#059669';
+        $('sumC').style.fontWeight = '700';
+        checkAllDone();
+      }
+      return;
+    }
+
+    state.animFrame = requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function checkAllDone() {
+  if (state.doneA && state.doneB && state.doneC) {
+    $('stepTitle').textContent = '全部完成！';
+    $('stepDesc').textContent = 'CO₂ 三大性质全部验证：密度大+不支持燃烧、与石灰水反应、与水反应生成碳酸（可逆）。';
+  }
+}
+
+function checkObs(id) {
+  const el = $(id);
+  if (!el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+// ===== RESET =====
+function resetExperiment() {
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+
+  Object.assign(state, {
+    tab: 'A', doneA: false, doneB: false, doneC: false,
+    animating: false, litmusRed: false, litmusHeating: false
+  });
+
+  // Tab A
+  $('co2Layer').setAttribute('height', '0');
+  $('co2Layer').setAttribute('y', '277');
+  ['flameLow', 'flameHigh'].forEach(id => {
+    $(id).setAttribute('opacity', '1');
+    $(id).setAttribute('transform', '');
+  });
+  ['lowBadge', 'highBadge', 'timelineA'].forEach(id => $(id).setAttribute('opacity', '0'));
+  $('pourHint').textContent = '点击倾倒';
+  $('hintA').textContent = '点击集气瓶倾倒 CO₂';
+  $('propA1').setAttribute('fill', '#059669');
+  $('propA2').setAttribute('fill', '#059669');
+
+  // Tab B
+  $('limewater').setAttribute('fill', 'hsl(0,0%,95%)');
+  $('limeFeedback').textContent = '等待通入 CO₂...';
+  $('limeEqLabel').setAttribute('opacity', '0');
+  $('hintB').textContent = '点击 CO₂ 通入石灰水';
+  limeBubPool.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+
+  // Tab C
+  $('litmusSolution').setAttribute('fill', 'hsl(280,50%,60%)');
+  $('litmusFeedback').textContent = '紫色 — 等待操作';
+  $('litmusNote').setAttribute('opacity', '0');
+  $('lampC').style.display = 'none';
+  $('lampFlameC').setAttribute('opacity', '0');
+  $('co2LabelC').textContent = '点击通入';
+  $('hintC').textContent = '点击通入 CO₂ → 石蕊变红';
+  litBubPool.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  escBubPool.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+
+  // Summary
+  ['sumA', 'sumB', 'sumC'].forEach(id => {
+    $(id).style.color = '#94A3B8';
+    $(id).style.fontWeight = '';
+  });
+
+  // Tabs
+  ['tabA', 'tabB', 'tabC'].forEach(id => $(id).classList.remove('done'));
+
+  // Observations
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+
+  switchTab('A');
+}
+
+// ===== KATEX =====
+function renderFormulas() {
+  if (!window.katex) return;
+  try {
+    katex.render('\\text{Ca(OH)}_2 + \\text{CO}_2 \\rightarrow \\text{CaCO}_3\\downarrow + \\text{H}_2\\text{O}', $('formula1'), { throwOnError: false, displayMode: true });
+    katex.render('\\text{CO}_2 + \\text{H}_2\\text{O} \\rightarrow \\text{H}_2\\text{CO}_3', $('formula2'), { throwOnError: false, displayMode: true });
+    katex.render('\\text{H}_2\\text{CO}_3 \\xrightarrow{\\Delta} \\text{H}_2\\text{O} + \\text{CO}_2\\uparrow', $('formula3'), { throwOnError: false, displayMode: true });
+  } catch(e) {}
+}
+function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
+}
+tryKatex();
+</script>
+</body>
+</html>
