@@ -16,6 +16,10 @@
 .wire-endpoint{cursor:pointer;transition:fill .2s,r .2s}.wire-endpoint:hover{r:8;fill:#059669}
 .reading-option{cursor:pointer;transition:fill .15s,stroke .15s}
 .reading-option:hover{fill:#E0F2FE;stroke:#0284C7;stroke-width:1.5}
+html[data-theme="dark"] #svgBg{fill:#0F172A}
+html[data-theme="dark"] #canvasHint{fill:#7DD3FC}
+html[data-theme="dark"] .reading-option rect{fill:#1E293B;stroke:#475569}
+html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
 </style>
 </head>
 <body>
@@ -26,8 +30,8 @@
       <div class="exp-subtitle">探究水的组成 — 正氧负氢，氢二氧一</div>
     </div>
     <div class="canvas-main" id="canvasMain">
-      <svg id="mainSvg" viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="420" fill="#F8FAFC"/>
+      <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
         <defs>
           <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.5"/>
@@ -342,6 +346,7 @@
 </div>
 
 <script src="../../shared/lab-utils.js"></script>
+<script src="../../shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 
