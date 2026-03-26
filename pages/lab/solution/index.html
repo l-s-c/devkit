@@ -459,7 +459,7 @@ function checkCalc() {
     allCorrect = false;
   }
 
-  if (Math.abs(waterM - 47) < 0.05 && Math.abs(waterV - 47) < 0.5) {
+  if (Math.abs(waterM - 47) < 0.05 && Math.abs(waterV - 47) < 0.05) {
     $('inputWaterM').className = 'calc-input correct';
     $('inputWaterV').className = 'calc-input correct';
     $('hintWater').textContent = '';
@@ -470,7 +470,7 @@ function checkCalc() {
     } else {
       $('inputWaterM').className = 'calc-input correct';
     }
-    if (isNaN(waterV) || Math.abs(waterV - 47) >= 0.5) {
+    if (isNaN(waterV) || Math.abs(waterV - 47) >= 0.05) {
       $('inputWaterV').className = 'calc-input wrong';
       allCorrect = false;
     } else {
@@ -532,8 +532,15 @@ function addWater(amount) {
     $('cylHint').setAttribute('opacity', '1');
     checkObs('obs3');
     $('statusBadge').textContent = '量取 47.0 mL 完成！';
+  } else if (state.waterVol > 47.5) {
+    $('cylHint').textContent = '超量了！请重做实验';
+    $('cylHint').setAttribute('fill', '#DC2626');
+    $('cylHint').setAttribute('opacity', '1');
+    $('btnAdd5').disabled = true;
+    $('btnAdd1').disabled = true;
+    $('btnDrop').disabled = true;
   } else if (state.waterVol > 47) {
-    $('cylHint').textContent = '超量了！重新量取';
+    $('cylHint').textContent = '略微超量，请重做实验';
     $('cylHint').setAttribute('fill', '#DC2626');
     $('cylHint').setAttribute('opacity', '1');
   }
