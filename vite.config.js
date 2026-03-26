@@ -187,6 +187,7 @@ export default defineConfig({
         'lab-newton-second-law': resolve(__dirname, 'pages/lab/newton-second-law/index.html'),
         'lab-oil-film': resolve(__dirname, 'pages/lab/oil-film/index.html'),
         'lab-oxygen-content': resolve(__dirname, 'pages/lab/oxygen-content/index.html'),
+        'lab-make-oxygen': resolve(__dirname, 'pages/lab/make-oxygen/index.html'),
         'lab-parallelogram-rule': resolve(__dirname, 'pages/lab/parallelogram-rule/index.html'),
         'lab-pendulum-gravity': resolve(__dirname, 'pages/lab/pendulum-gravity/index.html'),
         'lab-projectile-motion': resolve(__dirname, 'pages/lab/projectile-motion/index.html'),
