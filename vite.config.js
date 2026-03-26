@@ -187,6 +187,7 @@ export default defineConfig({
         'lab-newton-second-law': resolve(__dirname, 'pages/lab/newton-second-law/index.html'),
         'lab-oil-film': resolve(__dirname, 'pages/lab/oil-film/index.html'),
         'lab-oxygen-content': resolve(__dirname, 'pages/lab/oxygen-content/index.html'),
+        'lab-salt-purify': resolve(__dirname, 'pages/lab/salt-purify/index.html'),
         'lab-solution': resolve(__dirname, 'pages/lab/solution/index.html'),
         'lab-make-co2': resolve(__dirname, 'pages/lab/make-co2/index.html'),
         'lab-make-oxygen': resolve(__dirname, 'pages/lab/make-oxygen/index.html'),
