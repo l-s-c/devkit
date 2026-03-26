@@ -360,6 +360,7 @@ function startReacting() {
 
   // After 2s, auto-advance to collecting
   setTimeout(() => {
+    $('statusBadge').textContent = '气泡稳定，自动开始收集…';
     state.animating = false;
     state.step = 2;
     updateStepBar();
