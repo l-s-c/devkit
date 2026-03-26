@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酸碱中和反应 - 酚酞变色 | DevKit</title>
+<meta name="keywords" content="酸碱中和, 酚酞, pH, NaOH, HCl, 初中化学">
+<meta name="description" content="酸碱中和反应：NaOH+酚酞变红，逐滴加HCl褪色，观察pH S形曲线变化">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
+.drop-btn{padding:8px 16px;border:1px solid var(--lab-accent);border-radius:6px;background:#FFF;color:var(--lab-accent);font-size:11px;cursor:pointer;font-weight:700;transition:background .15s}
+.drop-btn:hover{background:var(--lab-accent-bg)}
+.drop-btn:disabled{opacity:0.4;cursor:not-allowed}
+.color-swatch{display:inline-block;width:16px;height:16px;border-radius:50%;border:1px solid #CBD5E1;vertical-align:middle;margin-right:4px}
+.indicator-card{display:flex;gap:6px;margin:6px 0}
+.indicator-item{flex:1;text-align:center;padding:6px 4px;border-radius:6px;font-size:8px;border:1px solid #E2E8F0}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
+  <h1>酸碱中和反应</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>酚酞指示剂 · pH变化 · 中和反应 · 初中化学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">准备实验 → 滴入酚酞</div>
+
+      <svg id="labCanvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- Beaker (main element, large) -->
+        <g id="beakerGroup" transform="translate(180,80)">
+          <rect id="beakerBody" x="0" y="0" width="180" height="220" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
+          <line x1="3" y1="5" x2="3" y2="215" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+          <!-- Solution -->
+          <rect id="solution" x="2" y="60" width="176" height="158" rx="3" fill="hsl(0,0%,95%)" opacity="0.8"/>
+          <!-- Ripple (shown on drop) -->
+          <ellipse id="ripple" cx="90" cy="60" rx="0" ry="0" fill="none" stroke="#93C5FD" stroke-width="0.5" opacity="0"/>
+          <!-- Stir rod -->
+          <line id="stirRod" x1="90" y1="-25" x2="90" y2="200" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" opacity="0"/>
+          <text x="90" y="240" font-size="8" fill="#64748B" text-anchor="middle">烧杯（NaOH 溶液）</text>
+        </g>
+        <!-- Color label -->
+        <g transform="translate(370,160)">
+          <text id="colorLabel" x="0" y="0" font-size="10" fill="#64748B">无色</text>
+          <text id="phLabel" x="0" y="18" font-size="9" fill="#64748B">pH ≈ 13</text>
+        </g>
+
+        <!-- Dropper (phenolphthalein / HCl) -->
+        <g id="dropperGroup" transform="translate(245,10)">
+          <rect x="0" y="0" width="14" height="50" rx="3" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
+          <ellipse cx="7" cy="0" rx="10" ry="8" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
+          <ellipse id="dropperTip" cx="7" cy="53" rx="3" ry="2.5" fill="#7DD3FC" opacity="0.5"/>
+          <text id="dropperLabel" x="30" y="30" font-size="7" fill="#64748B">酚酞指示剂</text>
+          <!-- Drop animation -->
+          <circle id="droplet" cx="7" cy="55" r="2.5" fill="#E879A0" opacity="0"/>
+        </g>
+
+        <!-- pH Curve (right side) -->
+        <g id="phCurveGroup" transform="translate(440,60)">
+          <rect x="0" y="0" width="240" height="200" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="120" y="18" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">pH 变化曲线</text>
+          <!-- Axes -->
+          <line x1="35" y1="30" x2="35" y2="180" stroke="#94A3B8" stroke-width="1"/>
+          <line x1="35" y1="180" x2="225" y2="180" stroke="#94A3B8" stroke-width="1"/>
+          <text x="15" y="108" font-size="6" fill="#64748B" text-anchor="middle" transform="rotate(-90,15,108)">pH</text>
+          <text x="130" y="195" font-size="6" fill="#64748B" text-anchor="middle">滴数</text>
+          <!-- Y-axis labels -->
+          <text x="30" y="34" font-size="5" fill="#94A3B8" text-anchor="end">14</text>
+          <text x="30" y="108" font-size="5" fill="#94A3B8" text-anchor="end">7</text>
+          <text x="30" y="182" font-size="5" fill="#94A3B8" text-anchor="end">0</text>
+          <line x1="33" y1="105" x2="225" y2="105" stroke="#E2E8F0" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <!-- pH=7 line (shown at neutralization) -->
+          <line id="ph7Line" x1="35" y1="105" x2="35" y2="105" stroke="#059669" stroke-width="1" stroke-dasharray="3,2" opacity="0"/>
+          <text id="ph7Label" x="35" y="100" font-size="5" fill="#059669" text-anchor="middle" opacity="0">中和点 pH=7</text>
+          <!-- Curve -->
+          <polyline id="phCurve" points="" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Drop markers -->
+          <g id="phDots"></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Step bar -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="step-bar" id="stepBar">
+          <div class="step-item active" data-step="0"><span class="step-num">1</span>加酚酞</div>
+          <div class="step-item" data-step="1"><span class="step-num">2</span>滴加HCl</div>
+          <div class="step-item" data-step="2"><span class="step-num">3</span>完成</div>
+        </div>
+      </div>
+
+      <!-- Step info -->
+      <div class="panel-section">
+        <div class="section-title" id="stepTitle">第 1 步：滴入酚酞</div>
+        <div class="step-desc" id="stepDesc">向 NaOH 溶液中滴入几滴酚酞指示剂，观察颜色变化。</div>
+      </div>
+
+      <!-- Step 1: Add indicator -->
+      <div class="panel-section" id="indicatorPanel">
+        <button class="step-btn" id="addIndicatorBtn" onclick="addIndicator()">滴入酚酞</button>
+      </div>
+
+      <!-- Step 2: Add HCl -->
+      <div class="panel-section" id="acidPanel" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <button class="drop-btn" id="addAcidBtn" onclick="addAcidDrop()">滴入 1 滴 HCl</button>
+          <span style="font-size:10px;color:#64748B" id="dropCount">已滴 0 滴</span>
+        </div>
+        <div style="font-size:9px;color:#64748B" id="acidStatus">逐滴加入稀盐酸，观察颜色和 pH 变化</div>
+      </div>
+
+      <!-- Real-time data -->
+      <div class="panel-section">
+        <div class="section-title">实时数据</div>
+        <div style="display:flex;gap:6px">
+          <div class="reading-card"><div class="label">pH</div><div class="val" id="dispPH" style="font-size:16px;color:#0284C7">13.0</div></div>
+          <div class="reading-card"><div class="label">颜色</div><div class="val" id="dispColor" style="font-size:11px;color:#0284C7">无色</div></div>
+          <div class="reading-card"><div class="label">滴数</div><div class="val" id="dispDrops" style="font-size:16px;color:#0284C7">0</div></div>
+        </div>
+      </div>
+
+      <!-- Observations -->
+      <div class="panel-section">
+        <div class="section-title">现象观察</div>
+        <ul class="obs-list" id="obsList">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>NaOH 溶液加酚酞变红</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>逐滴加 HCl 红色逐渐褪去</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>恰好褪色（中和点 pH=7）</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>继续加酸溶液仍无色</li>
+        </ul>
+      </div>
+
+      <!-- Indicator comparison -->
+      <div class="panel-section">
+        <div class="section-title">指示剂对比</div>
+        <div class="indicator-card">
+          <div class="indicator-item">
+            <div style="font-weight:700;margin-bottom:2px">酚酞</div>
+            <div><span class="color-swatch" style="background:hsl(340,80%,50%)"></span>碱性 → 红</div>
+            <div><span class="color-swatch" style="background:hsl(0,0%,95%)"></span>酸/中性 → 无色</div>
+          </div>
+          <div class="indicator-item">
+            <div style="font-weight:700;margin-bottom:2px">石蕊</div>
+            <div><span class="color-swatch" style="background:#3B82F6"></span>碱性 → 蓝</div>
+            <div><span class="color-swatch" style="background:#DC2626"></span>酸性 → 红</div>
+            <div><span class="color-swatch" style="background:#7C3AED"></span>中性 → 紫</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="panel-section">
+        <button class="ctrl-btn secondary" onclick="resetAll()">重做实验</button>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
+          <strong style="color:#0284C7">NaOH + HCl → NaCl + H₂O</strong>
+          <div style="margin-top:4px;font-size:10px;color:#64748B">酸碱中和反应：酸与碱反应生成盐和水。酚酞褪色说明碱性消失。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>酸和碱反应生成盐和水，称为<strong>中和反应</strong>。本实验用酚酞指示剂的颜色变化来判断中和终点。</p>
+
+    <h3>酚酞指示剂</h3>
+    <ul>
+      <li>酚酞在<strong>碱性溶液</strong>中变<strong>红色</strong>（pH > 8.2）</li>
+      <li>酚酞在<strong>酸性和中性溶液</strong>中<strong>无色</strong></li>
+      <li>酚酞<strong>不能指示酸性</strong>（酸性时仍无色，这是中考陷阱！）</li>
+    </ul>
+
+    <h3>为什么逐滴加入</h3>
+    <ul>
+      <li>中和反应<strong>无明显现象</strong>（不像有气泡、沉淀），只能靠指示剂判断</li>
+      <li>逐滴加入是为了准确找到<strong>中和点</strong>（恰好完全反应）</li>
+      <li>一次加太多会过量，错过中和点</li>
+    </ul>
+
+    <h3>pH 曲线特点</h3>
+    <ul>
+      <li>曲线呈 <strong>S 形</strong>（sigmoid）</li>
+      <li>中和点附近 <strong>pH 骤降</strong>（从 ~10 降到 ~4 只需 1-2 滴）</li>
+      <li>远离中和点时 pH 变化缓慢</li>
+    </ul>
+
+    <h3>中和反应的应用</h3>
+    <ul>
+      <li><strong>胃药</strong>：氢氧化铝中和胃酸（HCl）</li>
+      <li><strong>改良土壤</strong>：石灰（碱性）中和酸性土壤</li>
+      <li><strong>工业废水</strong>：酸碱中和处理</li>
+    </ul>
+
+    <h3>石蕊 vs 酚酞</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
+      <div style="background:#FEF2F2;padding:10px;border-radius:8px">
+        <strong>石蕊</strong><br>
+        酸性：红色<br>
+        中性：紫色<br>
+        碱性：蓝色<br>
+        <em style="font-size:11px;color:#64748B">能指示酸碱和中性</em>
+      </div>
+      <div style="background:#DBEAFE;padding:10px;border-radius:8px">
+        <strong>酚酞</strong><br>
+        酸性：无色<br>
+        中性：无色<br>
+        碱性：红色<br>
+        <em style="font-size:11px;color:#64748B">只能指示碱性</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+// ===== STATE =====
+let totalDrops; // random 8-12
+let state;
+
+function initState() {
+  totalDrops = 8 + Math.floor(Math.random() * 5); // 8-12
+  state = {
+    phase: 'add_indicator', // add_indicator → add_acid → complete
+    drops: 0,
+    maxExtraDrops: 3, // allow 3 extra after neutralization
+    phHistory: [],
+    indicatorAdded: false
+  };
+}
+initState();
+
+// ===== pH CALCULATION =====
+// S-curve: pH = 7 - 6 * tanh(k * (drop - midpoint))
+// At drop=0: pH≈13, at midpoint: pH=7, beyond: pH≈1
+function calcPH(drop) {
+  const k = 1.2; // steepness
+  return 7 - 6 * Math.tanh(k * (drop - totalDrops));
+}
+
+// ===== COLOR =====
+// HSL: hsl(340, sat%, light%) where sat goes 80→0 and light goes 50→95
+function calcColor(drop) {
+  if (!state.indicatorAdded) return { h: 0, s: 0, l: 95 };
+  const progress = Math.min(1, drop / totalDrops);
+  const s = 80 * (1 - progress);
+  const l = 50 + 45 * progress;
+  return { h: 340, s, l };
+}
+
+function colorStr(c) {
+  return `hsl(${c.h},${c.s}%,${c.l}%)`;
+}
+
+function colorName(c) {
+  if (c.s < 5) return '无色';
+  if (c.s < 20) return '极淡粉';
+  if (c.s < 40) return '浅粉';
+  if (c.s < 60) return '粉红';
+  return '玫红';
+}
+
+// ===== STEP 1: ADD INDICATOR =====
+function addIndicator() {
+  state.indicatorAdded = true;
+  state.phase = 'add_acid';
+  $('addIndicatorBtn').disabled = true;
+
+  // Drop animation
+  animateDrop('#E879A0', () => {
+    // Solution turns red
+    const c = calcColor(0);
+    $('solution').setAttribute('fill', colorStr(c));
+    updateDisplays(0);
+    checkObs('obs1');
+
+    // Show stir rod briefly
+    $('stirRod').setAttribute('opacity', '1');
+    setTimeout(() => $('stirRod').setAttribute('opacity', '0'), 800);
+
+    // Update UI
+    $('indicatorPanel').style.display = 'none';
+    $('acidPanel').style.display = 'block';
+    $('stepTitle').textContent = '第 2 步：逐滴加 HCl';
+    $('stepDesc').textContent = '逐滴加入稀盐酸，观察溶液颜色从红色逐渐褪去。';
+    $('dropperLabel').textContent = '稀盐酸 (HCl)';
+    $('dropperTip').setAttribute('fill', '#FDE68A');
+    $('statusBadge').textContent = '溶液变红！逐滴加入 HCl';
+    $('statusBadge').className = 'status-badge done';
+
+    updateStepBar(1);
+
+    // Initial pH point on curve
+    addPHPoint(0, calcPH(0));
+  });
+}
+
+// ===== STEP 2: ADD ACID =====
+function addAcidDrop() {
+  if (state.phase === 'complete') return;
+  state.drops++;
+
+  const pH = calcPH(state.drops);
+  const c = calcColor(state.drops);
+
+  // Drop animation
+  animateDrop('#FDE68A', () => {
+    // Update solution color
+    $('solution').setAttribute('fill', colorStr(c));
+
+    // Stir rod briefly
+    $('stirRod').setAttribute('opacity', '1');
+    const rodStart = performance.now();
+    function stirTick(now) {
+      const t = (now - rodStart) / 600;
+      if (t > 1) { $('stirRod').setAttribute('opacity', '0'); return; }
+      const dx = Math.sin(t * Math.PI * 4) * 8;
+      $('stirRod').setAttribute('x1', 90 + dx);
+      $('stirRod').setAttribute('x2', 90 + dx);
+      requestAnimationFrame(stirTick);
+    }
+    requestAnimationFrame(stirTick);
+
+    // Ripple
+    animateRipple();
+
+    // Add pH point
+    addPHPoint(state.drops, pH);
+    updateDisplays(state.drops);
+
+    // Check milestones
+    if (state.drops < totalDrops) {
+      checkObs('obs2');
+      $('acidStatus').textContent = `颜色逐渐褪去…继续滴加`;
+    }
+
+    if (state.drops === totalDrops) {
+      // Neutralization point
+      checkObs('obs3');
+      $('acidStatus').textContent = '恰好褪色！中和点到达';
+      $('statusBadge').textContent = '中和点！pH=7，溶液恰好褪色';
+
+      // Show pH=7 marker on curve
+      showPH7Marker();
+
+      $('resultSection').style.display = 'block';
+      updateStepBar(2);
+    }
+
+    if (state.drops > totalDrops) {
+      checkObs('obs4');
+      $('acidStatus').textContent = '过量酸，溶液仍无色（酚酞不指示酸性）';
+      $('statusBadge').textContent = '酸过量，溶液仍无色';
+    }
+
+    // Disable after max extra drops
+    if (state.drops >= totalDrops + state.maxExtraDrops) {
+      $('addAcidBtn').disabled = true;
+      state.phase = 'complete';
+      $('acidStatus').textContent = '实验结束。酚酞在酸性溶液中也是无色。';
+    }
+
+    $('dropCount').textContent = `已滴 ${state.drops} 滴`;
+  });
+}
+
+// ===== DROP ANIMATION =====
+function animateDrop(color, callback) {
+  const droplet = $('droplet');
+  droplet.setAttribute('fill', color);
+  droplet.setAttribute('opacity', '1');
+  droplet.setAttribute('cy', '55');
+
+  const startTime = performance.now();
+  const duration = 400;
+
+  function tick(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const y = 55 + t * 20;
+    droplet.setAttribute('cy', y);
+    droplet.setAttribute('opacity', 1 - t * 0.5);
+
+    if (t < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      droplet.setAttribute('opacity', '0');
+      if (callback) callback();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+// ===== RIPPLE ANIMATION =====
+function animateRipple() {
+  const ripple = $('ripple');
+  const startTime = performance.now();
+  const duration = 500;
+
+  function tick(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    ripple.setAttribute('rx', 30 * t);
+    ripple.setAttribute('ry', 5 * t);
+    ripple.setAttribute('opacity', 0.5 * (1 - t));
+
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ===== pH CURVE =====
+function addPHPoint(drop, pH) {
+  state.phHistory.push({ drop, pH });
+
+  // Curve area: x 35-225, y 30-180
+  const xScale = 190 / (totalDrops + state.maxExtraDrops + 1);
+  const yScale = 150 / 14;
+
+  const x = 35 + (drop + 0.5) * xScale;
+  const y = 180 - pH * yScale;
+
+  // Update polyline
+  const points = state.phHistory.map(p => {
+    const px = 35 + (p.drop + 0.5) * xScale;
+    const py = 180 - p.pH * yScale;
+    return `${px},${py}`;
+  }).join(' ');
+  $('phCurve').setAttribute('points', points);
+
+  // Add dot
+  const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  dot.setAttribute('cx', x);
+  dot.setAttribute('cy', y);
+  dot.setAttribute('r', '3');
+  dot.setAttribute('fill', '#0284C7');
+  dot.classList.add('ph-dot');
+  $('phDots').appendChild(dot);
+}
+
+function showPH7Marker() {
+  const xScale = 190 / (totalDrops + state.maxExtraDrops + 1);
+  const x = 35 + (totalDrops + 0.5) * xScale;
+
+  $('ph7Line').setAttribute('x1', x);
+  $('ph7Line').setAttribute('x2', x);
+  $('ph7Line').setAttribute('y1', '30');
+  $('ph7Line').setAttribute('y2', '180');
+  $('ph7Line').setAttribute('opacity', '1');
+  $('ph7Label').setAttribute('x', x);
+  $('ph7Label').setAttribute('opacity', '1');
+}
+
+// ===== DISPLAY UPDATES =====
+function updateDisplays(drop) {
+  const pH = calcPH(drop);
+  const c = calcColor(drop);
+  $('dispPH').textContent = pH.toFixed(1);
+  $('dispColor').innerHTML = `<span class="color-swatch" style="background:${colorStr(c)}"></span>${colorName(c)}`;
+  $('dispDrops').textContent = state.drops;
+  $('colorLabel').textContent = colorName(c);
+  $('phLabel').textContent = `pH ≈ ${pH.toFixed(1)}`;
+}
+
+// ===== STEP BAR =====
+function updateStepBar(active) {
+  document.querySelectorAll('#stepBar .step-item').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < active) el.classList.add('done');
+    if (i === active) el.classList.add('active');
+  });
+}
+
+// ===== UTILITIES =====
+function checkObs(id) {
+  const el = $(id);
+  if (el && !el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+function resetAll() {
+  initState();
+
+  // Reset canvas
+  $('solution').setAttribute('fill', 'hsl(0,0%,95%)');
+  $('stirRod').setAttribute('opacity', '0');
+  $('stirRod').setAttribute('x1', '90');
+  $('stirRod').setAttribute('x2', '90');
+  $('droplet').setAttribute('opacity', '0');
+  $('ripple').setAttribute('opacity', '0');
+  $('ripple').setAttribute('rx', '0');
+  $('ripple').setAttribute('ry', '0');
+  $('dropperLabel').textContent = '酚酞指示剂';
+  $('dropperTip').setAttribute('fill', '#7DD3FC');
+  $('phCurve').setAttribute('points', '');
+  $('phDots').innerHTML = '';
+  $('ph7Line').setAttribute('opacity', '0');
+  $('ph7Label').setAttribute('opacity', '0');
+  $('colorLabel').textContent = '无色';
+  $('phLabel').textContent = 'pH ≈ 13';
+
+  // Reset panels
+  $('indicatorPanel').style.display = 'block';
+  $('addIndicatorBtn').disabled = false;
+  $('acidPanel').style.display = 'none';
+  $('addAcidBtn').disabled = false;
+  $('dropCount').textContent = '已滴 0 滴';
+  $('acidStatus').textContent = '逐滴加入稀盐酸，观察颜色和 pH 变化';
+  $('resultSection').style.display = 'none';
+
+  $('dispPH').textContent = '13.0';
+  $('dispColor').textContent = '无色';
+  $('dispDrops').textContent = '0';
+
+  $('stepTitle').textContent = '第 1 步：滴入酚酞';
+  $('stepDesc').textContent = '向 NaOH 溶液中滴入几滴酚酞指示剂，观察颜色变化。';
+  $('statusBadge').textContent = '准备实验 → 滴入酚酞';
+  $('statusBadge').className = 'status-badge idle';
+  updateStepBar(0);
+
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  if (!window.katex) return;
+  try {
+    katex.render('\\text{NaOH} + \\text{HCl} \\rightarrow \\text{NaCl} + \\text{H}_2\\text{O}', $('formula1'), { throwOnError: false, displayMode: true });
+  } catch(e) {}
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
