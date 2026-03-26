@@ -260,6 +260,13 @@
 
           <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考易错</h3>
           <p style="color:#DC2626"><strong>铁燃烧产生的是"火星"不是"火焰"！</strong><br>火焰 = 气态物质燃烧（如 H₂、CH₄）<br>火星 = 固态物质飞溅（如 Fe）<br>这个区分是中考必考知识点。</p>
+
+          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">实验失败分析</h3>
+          <div style="font-size:10px;line-height:1.7">
+            <p><strong>铁丝不燃烧：</strong>O₂ 不纯（收集时未排尽空气）或铁丝太粗（受热面积不够）</p>
+            <p><strong>只红热不产生火星：</strong>O₂ 浓度不足，燃烧不够剧烈</p>
+            <p><strong>瓶底炸裂：</strong>未放水或细沙，高温熔融物直接接触玻璃</p>
+          </div>
         </div>
       </div>
 
@@ -362,6 +369,7 @@ function igniteMatch() {
       $('canvasHint').textContent = '火柴灭了 — 点击重做';
       state.matchLit = false;
       $('bottleClick').setAttribute('opacity', '0');
+      setTimeout(resetExperiment, 2000);
       return;
     }
 
@@ -380,10 +388,11 @@ function insertWire() {
     // Too early
     $('timeHint').textContent = '太早了！火柴还没预热铁丝';
     $('timeHint').style.color = '#DC2626';
-    $('canvasHint').textContent = '太早了 — 点击重做重试';
+    $('canvasHint').textContent = '太早了 — 2s 后自动重置';
     state.matchLit = false;
     $('matchFlame').setAttribute('opacity', '0');
     $('bottleClick').setAttribute('opacity', '0');
+    setTimeout(resetExperiment, 2000);
     return;
   }
 
