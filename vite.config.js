@@ -194,6 +194,7 @@ export default defineConfig({
         'lab-solution': resolve(__dirname, 'pages/lab/solution/index.html'),
         'lab-make-co2': resolve(__dirname, 'pages/lab/make-co2/index.html'),
         'lab-electrolysis-water': resolve(__dirname, 'pages/lab/electrolysis-water/index.html'),
+        'lab-combustion-conditions': resolve(__dirname, 'pages/lab/combustion-conditions/index.html'),
         'lab-make-oxygen': resolve(__dirname, 'pages/lab/make-oxygen/index.html'),
         'lab-parallelogram-rule': resolve(__dirname, 'pages/lab/parallelogram-rule/index.html'),
         'lab-pendulum-gravity': resolve(__dirname, 'pages/lab/pendulum-gravity/index.html'),
