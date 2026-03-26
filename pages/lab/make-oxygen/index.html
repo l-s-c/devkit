@@ -414,6 +414,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 const stateA = { step: 0, animating: false, bubbleAnim: null, collectPct: 0, bubblesReady: false };
 const stateB = { step: 0, animating: false, bubbleAnim: null, collectPct: 0 };
 let currentTab = 'A';
+let waterDispA = null, waterDispB = null;
 
 // ===== TAB SWITCH =====
 function switchTab(tab) {
@@ -584,7 +585,7 @@ function startBubblesA(rate) {
   stateA.bubbleAnim = requestAnimationFrame(animate);
 }
 
-// Step 3: Collecting (排水集气)
+// Step 3: Collecting (排水集气) — uses shared createWaterDisplacement
 function startCollecting() {
   stateA.animating = true;
   $('stepBtnA').disabled = true;
@@ -596,32 +597,14 @@ function startCollecting() {
   if (stateA.bubbleAnim) cancelAnimationFrame(stateA.bubbleAnim);
   startBubblesA(4);
 
-  // Animate water displacement in bottle
-  const startTime = performance.now();
-  const duration = 3000;
-  const bottleH = 66; // total water height
-
-  function animateCollect(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-    // Gas space grows from top
-    const gasH = bottleH * eased;
-    $('gasSpaceA').setAttribute('height', gasH);
-
-    // Water shrinks from top
-    $('bottleWaterA').setAttribute('y', 2 + gasH);
-    $('bottleWaterA').setAttribute('height', bottleH - gasH);
-
-    stateA.collectPct = Math.round(eased * 100);
-    $('stateCollect').textContent = `收集：${stateA.collectPct}%`;
-
-    if (t < 1) {
-      requestAnimationFrame(animateCollect);
-    } else {
-      // Collection complete → verify
+  waterDispA = ChemEffects.createWaterDisplacement($('gasSpaceA'), $('bottleWaterA'), {
+    bottleH: 66, duration: 3000, offsetY: 2,
+    onProgress(pct) {
+      stateA.collectPct = pct;
+      $('stateCollect').textContent = `收集：${pct}%`;
+    },
+    onDone() {
       $('stateCollect').textContent = '收集：完成';
-      // Show wood stick verification
       $('woodStick').setAttribute('opacity', '1');
       setTimeout(() => {
         $('verifyResult').textContent = '复燃！→ O₂';
@@ -632,8 +615,8 @@ function startCollecting() {
         $('stepBtnA').textContent = '先撤导管 → 后熄酒精灯';
       }, 800);
     }
-  }
-  requestAnimationFrame(animateCollect);
+  });
+  waterDispA.start();
 }
 
 // Step 4: Shutdown (先离后熄)
@@ -761,25 +744,13 @@ function startReacting() {
   // Start bubbles
   startBubblesB(4);
 
-  // Water displacement animation
-  const startTime = performance.now();
-  const duration = 3000;
-  const bottleH = 66;
-
-  function animateCollect(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    const gasH = bottleH * eased;
-    $('gasSpaceB').setAttribute('height', gasH);
-    $('bottleWaterB').setAttribute('y', 2 + gasH);
-    $('bottleWaterB').setAttribute('height', bottleH - gasH);
-    $('stateCollectB').textContent = `收集：${Math.round(eased * 100)}%`;
-    checkObs('obsB3');
-
-    if (t < 1) {
-      requestAnimationFrame(animateCollect);
-    } else {
-      // Stop bubbles
+  checkObs('obsB3');
+  waterDispB = ChemEffects.createWaterDisplacement($('gasSpaceB'), $('bottleWaterB'), {
+    bottleH: 66, duration: 3000, offsetY: 2,
+    onProgress(pct) {
+      $('stateCollectB').textContent = `收集：${pct}%`;
+    },
+    onDone() {
       if (stateB.bubbleAnim) { cancelAnimationFrame(stateB.bubbleAnim); stateB.bubbleAnim = null; }
       bubblePoolB.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
       $('stateCollectB').textContent = '收集：完成';
@@ -788,8 +759,8 @@ function startReacting() {
       $('stepBtnB').disabled = false;
       $('stepBtnB').textContent = '验满 → 带火星木条';
     }
-  }
-  requestAnimationFrame(animateCollect);
+  });
+  waterDispB.start();
 }
 
 function startVerifyB() {
@@ -841,14 +812,13 @@ function resetAll() {
   if (stateB.bubbleAnim) { cancelAnimationFrame(stateB.bubbleAnim); stateB.bubbleAnim = null; }
 
   // Reset state A
+  if (waterDispA) waterDispA.reset();
+  if (waterDispB) waterDispB.reset();
   Object.assign(stateA, { step: 0, animating: false, collectPct: 0, bubblesReady: false });
   $('flameA').setAttribute('opacity', '0');
   $('rubberTubeA').setAttribute('opacity', '1');
   $('woodStick').setAttribute('opacity', '0');
   $('verifyResult').setAttribute('opacity', '0');
-  $('gasSpaceA').setAttribute('height', '0');
-  $('bottleWaterA').setAttribute('y', '2');
-  $('bottleWaterA').setAttribute('height', '66');
   $('stateTemp').textContent = '温度：室温';
   $('stateBubble').textContent = '气泡：无';
   $('stateCollect').textContent = '收集：未开始';
@@ -859,9 +829,6 @@ function resetAll() {
   $('h2o2Liquid').setAttribute('opacity', '0');
   $('woodStickB').setAttribute('opacity', '0');
   $('verifyResultB').setAttribute('opacity', '0');
-  $('gasSpaceB').setAttribute('height', '0');
-  $('bottleWaterB').setAttribute('y', '2');
-  $('bottleWaterB').setAttribute('height', '66');
   $('stateBubbleB').textContent = '气泡：无';
   $('stateCollectB').textContent = '收集：未开始';
   bubblePoolB.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });

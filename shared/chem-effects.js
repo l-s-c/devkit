@@ -195,13 +195,58 @@ const ChemEffects = (() => {
     requestAnimationFrame(tick);
   }
 
+  // ===== WATER DISPLACEMENT (排水集气) =====
+  // gasSpaceEl: SVG rect for gas space (grows from top)
+  // waterEl: SVG rect for water (shrinks from top)
+  // opts: { bottleH, duration, offsetY, onProgress, onDone }
+  function createWaterDisplacement(gasSpaceEl, waterEl, opts = {}) {
+    const bottleH = opts.bottleH || 66;
+    const duration = opts.duration || 3000;
+    const offsetY = opts.offsetY || 2;
+    let animId = null;
+
+    function start() {
+      const startTime = performance.now();
+      function tick(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const gasH = bottleH * eased;
+        gasSpaceEl.setAttribute('height', gasH);
+        waterEl.setAttribute('y', offsetY + gasH);
+        waterEl.setAttribute('height', bottleH - gasH);
+        if (opts.onProgress) opts.onProgress(Math.round(eased * 100), t);
+        if (t < 1) {
+          animId = requestAnimationFrame(tick);
+        } else {
+          animId = null;
+          if (opts.onDone) opts.onDone();
+        }
+      }
+      animId = requestAnimationFrame(tick);
+    }
+
+    function stop() {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+    }
+
+    function reset() {
+      stop();
+      gasSpaceEl.setAttribute('height', '0');
+      waterEl.setAttribute('y', offsetY);
+      waterEl.setAttribute('height', bottleH);
+    }
+
+    return { start, stop, reset };
+  }
+
   return {
     createBubblePool,
     createSmokeSystem,
     lerpHSL,
     hslToString,
     animateColor,
-    animateLiquidLevel
+    animateLiquidLevel,
+    createWaterDisplacement
   };
 })();
 
