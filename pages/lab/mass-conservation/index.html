@@ -22,6 +22,7 @@
 .mass-card .label{font-size:8px;color:#64748B;margin-bottom:2px}
 .mass-card .val{font-size:18px;font-weight:800;color:#0284C7;font-family:'JetBrains Mono',monospace}
 .mass-card .unit{font-size:8px;color:#94A3B8}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
 .mass-eq{display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#059669;margin:4px 0}
 .counterex-card{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:8px;font-size:9px;color:#991B1B;margin:6px 0}
 .counterex-card strong{color:#DC2626}
@@ -77,7 +78,7 @@
         </g>
 
         <!-- Conical flask on left pan -->
-        <g id="flaskGroup" transform="translate(225,150)">
+        <g id="flaskGroup" class="clickable" transform="translate(225,150)" onclick="startExperiment()">
           <!-- Flask body -->
           <polygon points="20,0 0,65 70,65 50,65 70,65" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
           <rect x="20" y="-15" width="30" height="18" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
@@ -104,6 +105,7 @@
           </g>
         </g>
         <text x="260" y="290" font-size="6" fill="#64748B" text-anchor="middle">锥形瓶（密闭）</text>
+        <text id="flaskHint" class="svg-hint" x="260" y="305" text-anchor="middle">点击锥形瓶 → 开始实验</text>
 
         <!-- Mass display on canvas -->
         <g transform="translate(480,100)">
@@ -142,7 +144,7 @@
         </g>
 
         <!-- Beaker on left pan -->
-        <g id="beakerB" transform="translate(215,130)">
+        <g id="beakerB" class="clickable" transform="translate(215,130)" onclick="startExperiment()">
           <rect x="0" y="0" width="90" height="100" rx="3" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
           <rect id="bSol2" x="2" y="30" width="86" height="68" rx="2" fill="hsl(210,70%,55%)" opacity="0.4"/>
           <!-- Iron nail -->
@@ -158,6 +160,7 @@
             <circle cx="48" cy="70" r="1.8" fill="#DC2626"/>
           </g>
           <text x="45" y="115" font-size="6" fill="#64748B" text-anchor="middle">烧杯（Fe + CuSO₄）</text>
+          <text class="svg-hint" x="45" y="128" text-anchor="middle">点击烧杯 → 开始实验</text>
         </g>
 
         <!-- Mass display -->
@@ -188,8 +191,7 @@
       <!-- Control -->
       <div class="panel-section">
         <div class="section-title" id="expTitle">实验 A：密闭容器中白磷燃烧</div>
-        <div class="step-desc" id="expDesc">在密闭锥形瓶中点燃白磷，观察反应前后天平是否平衡。</div>
-        <button class="step-btn" id="expBtn" onclick="startExperiment()">开始实验</button>
+        <div class="step-desc" id="expDesc">在密闭锥形瓶中点燃白磷，观察反应前后天平是否平衡。<strong>点击画布器材</strong>开始。</div>
       </div>
 
       <!-- Mass comparison -->
@@ -313,9 +315,7 @@ function switchTab(tab) {
     B: { title: '实验 B：铁钉浸入硫酸铜溶液', desc: '将铁钉浸入 CuSO₄ 溶液，观察反应前后天平是否平衡。' }
   };
   $('expTitle').textContent = info[tab].title;
-  $('expDesc').textContent = info[tab].desc;
-  $('expBtn').disabled = state['done' + tab];
-  $('expBtn').textContent = state['done' + tab] ? '已完成' : '开始实验';
+  $('expDesc').textContent = info[tab].desc + (state['done' + tab] ? '' : ' 点击画布器材开始。');
 
   // Sync panel mass display per tab
   if (state['done' + tab]) {
@@ -338,7 +338,7 @@ function startExperiment() {
 // ===== EXPERIMENT A: White Phosphorus =====
 function startA() {
   state.animating = true;
-  $('expBtn').disabled = true;
+  void 0 = true;
   $('statusBadge').textContent = '称量中…';
   $('statusBadge').className = 'status-badge done';
 
@@ -416,7 +416,9 @@ function finishA() {
   $('massResult').style.display = 'flex';
 
   $('tabA').classList.add('done');
-  $('expBtn').textContent = '已完成';
+  $('flaskGroup').classList.remove('svg-click');
+  $('flaskGroup').removeAttribute('onclick');
+  $('flaskHint').textContent = '';
   $('statusBadge').textContent = '白磷燃烧完成，m₁ = m₂ 质量守恒！';
   checkAllDone();
 }
@@ -424,7 +426,7 @@ function finishA() {
 // ===== EXPERIMENT B: Fe + CuSO4 =====
 function startB() {
   state.animating = true;
-  $('expBtn').disabled = true;
+  void 0 = true;
   $('statusBadge').textContent = '称量中…';
   $('statusBadge').className = 'status-badge done';
 
@@ -484,7 +486,8 @@ function finishB() {
   $('massResult').style.display = 'flex';
 
   $('tabB').classList.add('done');
-  $('expBtn').textContent = '已完成';
+  $('beakerB').classList.remove('svg-click');
+  $('beakerB').removeAttribute('onclick');
   $('statusBadge').textContent = '置换反应完成，m₁ = m₂ 质量守恒！';
   checkAllDone();
 }

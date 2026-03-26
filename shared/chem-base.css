@@ -24,6 +24,11 @@
 /* Chemistry info cards */
 .chem-equation{background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:8px;font-size:11px;text-align:center;margin:6px 0}
 
+/* Clickable SVG equipment — canvas interaction */
+.clickable{cursor:pointer;transition:stroke .15s,stroke-width .15s,filter .15s}
+.clickable:hover{stroke:var(--lab-accent,#0284C7);stroke-width:2;filter:brightness(1.08)}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
+
 /* Dark mode */
 html[data-theme="dark"] .step-item{background:#1E293B;border-color:#334155;color:#64748B}
 html[data-theme="dark"] .step-item.active{background:#0C4A6E;border-color:#0284C7;color:#7DD3FC}

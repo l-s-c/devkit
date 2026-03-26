@@ -58,11 +58,12 @@
         </g>
 
         <!-- Dropper (phenolphthalein / HCl) -->
-        <g id="dropperGroup" transform="translate(245,10)">
+        <g id="dropperGroup" class="clickable" transform="translate(245,10)" onclick="state.phase==='add_indicator'?addIndicator():addAcidDrop()">
           <rect x="0" y="0" width="14" height="50" rx="3" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
           <ellipse cx="7" cy="0" rx="10" ry="8" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
           <ellipse id="dropperTip" cx="7" cy="53" rx="3" ry="2.5" fill="#7DD3FC" opacity="0.5"/>
           <text id="dropperLabel" x="30" y="30" font-size="7" fill="#64748B">酚酞指示剂</text>
+          <text id="dropperHint" class="svg-hint" x="7" y="70" text-anchor="middle">点击滴管</text>
           <!-- Drop animation -->
           <circle id="droplet" cx="7" cy="55" r="2.5" fill="#E879A0" opacity="0"/>
         </g>
@@ -111,18 +112,11 @@
         <div class="step-desc" id="stepDesc">向 NaOH 溶液中滴入几滴酚酞指示剂，观察颜色变化。</div>
       </div>
 
-      <!-- Step 1: Add indicator -->
-      <div class="panel-section" id="indicatorPanel">
-        <button class="step-btn" id="addIndicatorBtn" onclick="addIndicator()">滴入酚酞</button>
-      </div>
-
-      <!-- Step 2: Add HCl -->
-      <div class="panel-section" id="acidPanel" style="display:none">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-          <button class="drop-btn" id="addAcidBtn" onclick="addAcidDrop()">滴入 1 滴 HCl</button>
-          <span style="font-size:10px;color:#64748B" id="dropCount">已滴 0 滴</span>
-        </div>
-        <div style="font-size:9px;color:#64748B" id="acidStatus">逐滴加入稀盐酸，观察颜色和 pH 变化</div>
+      <!-- Step 1/2: Canvas interaction -->
+      <div class="panel-section" id="interactionPanel">
+        <div class="step-desc"><strong>点击画布上的滴管</strong>进行操作。</div>
+        <div style="font-size:9px;color:#64748B" id="acidStatus">点击滴管 → 滴入酚酞</div>
+        <div style="font-size:10px;color:#64748B;margin-top:4px" id="dropCount"></div>
       </div>
 
       <!-- Real-time data -->
@@ -291,11 +285,16 @@ function colorName(c) {
   return '玫红';
 }
 
+// ===== CANVAS CLICK ROUTER =====
+function canvasClick() {
+  if (state.phase === 'add_indicator') addIndicator();
+  else if (state.phase === 'add_acid') addAcidDrop();
+}
+
 // ===== STEP 1: ADD INDICATOR =====
 function addIndicator() {
   state.indicatorAdded = true;
   state.phase = 'add_acid';
-  $('addIndicatorBtn').disabled = true;
 
   // Drop animation
   animateDrop('#E879A0', () => {
@@ -310,9 +309,8 @@ function addIndicator() {
     setTimeout(() => $('stirRod').setAttribute('opacity', '0'), 800);
 
     // Update UI
-    $('indicatorPanel').style.display = 'none';
-    $('acidPanel').style.display = 'block';
     $('stepTitle').textContent = '第 2 步：逐滴加 HCl';
+    $('acidStatus').textContent = '点击滴管 → 逐滴加入稀盐酸';
     $('stepDesc').textContent = '逐滴加入稀盐酸，观察溶液颜色从红色逐渐褪去。';
     $('dropperLabel').textContent = '稀盐酸 (HCl)';
     $('dropperTip').setAttribute('fill', '#FDE68A');
@@ -386,7 +384,8 @@ function addAcidDrop() {
 
     // Disable after max extra drops
     if (state.drops >= totalDrops + state.maxExtraDrops) {
-      $('addAcidBtn').disabled = true;
+      $('dropperGroup').classList.remove('clickable');
+      $('dropperGroup').removeAttribute('onclick');
       state.phase = 'complete';
       $('acidStatus').textContent = '实验结束。酚酞在酸性溶液中也是无色。';
     }
@@ -531,11 +530,9 @@ function resetAll() {
   $('phLabel').textContent = 'pH ≈ 13';
 
   // Reset panels
-  $('indicatorPanel').style.display = 'block';
-  $('addIndicatorBtn').disabled = false;
-  $('acidPanel').style.display = 'none';
-  $('addAcidBtn').disabled = false;
-  $('dropCount').textContent = '已滴 0 滴';
+  $('dropperGroup').classList.add('svg-click');
+  $('dropperGroup').setAttribute('onclick', 'canvasClick()');
+  $('dropCount').textContent = '';
   $('acidStatus').textContent = '逐滴加入稀盐酸，观察颜色和 pH 变化';
   $('resultSection').style.display = 'none';
 

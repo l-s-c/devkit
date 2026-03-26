@@ -12,6 +12,8 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
+.svg-click{cursor:pointer}.svg-click:hover{filter:brightness(1.08)}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
 </style>
 </head>
 <body>
@@ -55,7 +57,7 @@
         </g>
 
         <!-- ===== LONG-NECK FUNNEL ===== -->
-        <g id="longFunnel" transform="translate(120,40)">
+        <g id="longFunnel" class="clickable" transform="translate(120,40)" onclick="nextStep()">
           <!-- Funnel mouth -->
           <polygon points="0,0 30,0 22,8 8,8" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="0.8"/>
           <!-- Long neck -->
@@ -74,7 +76,7 @@
         <text x="280" y="105" font-size="5" fill="#64748B">导管</text>
 
         <!-- ===== COLLECTING BOTTLE (upright, 向上排空气法) ===== -->
-        <g id="collectGroup" transform="translate(380,80)">
+        <g id="collectGroup" class="clickable" transform="translate(380,80)" onclick="nextStep()">
           <rect id="bottleBody" x="0" y="0" width="70" height="100" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
           <line x1="2" y1="3" x2="2" y2="97" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
           <!-- CO2 gas accumulating (semi-transparent gray rising from bottom) -->
@@ -131,6 +133,9 @@
           <text id="stateReaction" x="10" y="32" font-size="7" fill="#64748B">反应：未开始</text>
           <text id="stateCollect" x="10" y="46" font-size="7" fill="#64748B">收集：未开始</text>
         </g>
+        <!-- Canvas click zone -->
+        <rect id="canvasClick" class="svg-click" x="10" y="10" width="460" height="360" fill="transparent" onclick="nextStep()"/>
+        <text class="svg-hint" x="240" y="390" text-anchor="middle">点击实验装置 → 下一步操作</text>
       </svg>
     </div>
   </div>
@@ -152,7 +157,7 @@
       <div class="panel-section">
         <div class="section-title" id="stepTitle">第 1 步：准备装置</div>
         <div class="step-desc" id="stepDesc">检查气密性，向锥形瓶中加入大理石（CaCO₃），从长颈漏斗加入稀盐酸。注意漏斗末端伸入液面以下。</div>
-        <button class="step-btn" id="stepBtn" onclick="nextStep()">加入稀盐酸 → 开始反应</button>
+        <div class="step-desc" id="stepBtn" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
       </div>
 
       <!-- Observations -->

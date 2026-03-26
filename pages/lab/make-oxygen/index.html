@@ -21,6 +21,8 @@
 .mnemonic-item.done{background:#BBF7D0;color:#166534}
 .mnemonic-item.active{background:var(--lab-accent);color:#FFF}
 .warn-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;font-size:9px;color:#991B1B;margin-top:6px}
+.svg-click{cursor:pointer}.svg-click:hover{filter:brightness(1.08)}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
 </style>
 </head>
 <body>
@@ -78,7 +80,7 @@
         </g>
 
         <!-- ===== ALCOHOL LAMP ===== -->
-        <g id="alcoholLamp" transform="translate(220,285)">
+        <g id="alcoholLamp" class="clickable" transform="translate(220,285)" onclick="nextStepA()">
           <!-- Lamp body -->
           <ellipse cx="0" cy="20" rx="18" ry="8" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8"/>
           <rect x="-15" y="0" width="30" height="22" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8"/>
@@ -107,7 +109,7 @@
           <text x="80" y="90" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
 
           <!-- ===== COLLECTING BOTTLE (inverted in water) ===== -->
-          <g id="collectBottle" transform="translate(60,5)">
+          <g id="collectBottle" class="clickable" transform="translate(60,5)" onclick="nextStepA()">
             <!-- Bottle body (inverted: mouth down) -->
             <rect id="bottleBodyA" x="0" y="0" width="60" height="70" rx="3" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
             <line x1="2" y1="3" x2="2" y2="67" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
@@ -157,6 +159,9 @@
           <text id="stateBubble" x="10" y="46" font-size="7" fill="#64748B">气泡：无</text>
           <text id="stateCollect" x="10" y="60" font-size="7" fill="#64748B">收集：未开始</text>
         </g>
+        <!-- Canvas click zone -->
+        <rect id="canvasClickA" class="svg-click" x="10" y="10" width="460" height="360" fill="transparent" onclick="nextStepA()"/>
+        <text class="svg-hint" x="240" y="390" text-anchor="middle">点击实验装置 → 下一步操作</text>
       </svg>
 
       <!-- ===== TAB B: 过氧化氢法 SVG ===== -->
@@ -181,7 +186,7 @@
         </g>
 
         <!-- ===== SEPARATING FUNNEL ===== -->
-        <g id="sepFunnel" transform="translate(195,30)">
+        <g id="sepFunnel" class="clickable" transform="translate(195,30)" onclick="nextStepB()">
           <!-- Funnel body -->
           <ellipse cx="25" cy="25" rx="15" ry="18" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="0.8"/>
           <!-- H2O2 liquid inside -->
@@ -205,7 +210,7 @@
           <text x="80" y="90" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
 
           <!-- Collecting bottle B (inverted) -->
-          <g id="collectBottleB" transform="translate(60,5)">
+          <g id="collectBottleB" class="clickable" transform="translate(60,5)" onclick="nextStepB()">
             <rect id="bottleBodyB" x="0" y="0" width="60" height="70" rx="3" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
             <rect id="bottleWaterB" x="2" y="2" width="56" height="66" rx="2" fill="#7DD3FC" opacity="0.35"/>
             <rect id="gasSpaceB" x="2" y="2" width="56" height="0" rx="2" fill="rgba(255,255,255,0.05)"/>
@@ -240,6 +245,9 @@
           <text id="stateBubbleB" x="10" y="32" font-size="7" fill="#64748B">气泡：无</text>
           <text id="stateCollectB" x="10" y="46" font-size="7" fill="#64748B">收集：未开始</text>
         </g>
+        <!-- Canvas click zone -->
+        <rect id="canvasClickB" class="svg-click" x="10" y="10" width="460" height="360" fill="transparent" onclick="nextStepB()"/>
+        <text class="svg-hint" x="240" y="390" text-anchor="middle">点击实验装置 → 下一步操作</text>
       </svg>
     </div>
   </div>
@@ -288,7 +296,7 @@
         <div class="panel-section">
           <div class="section-title" id="stepTitleA">第 1 步：准备装置</div>
           <div class="step-desc" id="stepDescA">检查气密性，装入高锰酸钾，固定试管（口略向下倾斜），管口塞棉花。</div>
-          <button class="step-btn" id="stepBtnA" onclick="nextStepA()">点燃酒精灯 → 开始加热</button>
+          <div class="step-desc" id="stepBtnA" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
         </div>
 
         <!-- Observations A -->
@@ -325,7 +333,7 @@
         <div class="panel-section">
           <div class="section-title" id="stepTitleB">第 1 步：准备装置</div>
           <div class="step-desc" id="stepDescB">在锥形瓶中放入少量 MnO₂，分液漏斗中装入 H₂O₂ 溶液，连接导管。</div>
-          <button class="step-btn" id="stepBtnB" onclick="nextStepB()">打开旋塞 → 开始反应</button>
+          <div class="step-desc" id="stepBtnB" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
         </div>
 
         <div class="panel-section">

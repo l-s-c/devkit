@@ -15,6 +15,8 @@
 .result-card{background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;margin-top:6px}
 .bar-chart{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0}
 .bar-seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#FFF}
+.svg-click{cursor:pointer}.svg-click:hover{filter:brightness(1.08)}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
 </style>
 </head>
 <body>
@@ -67,7 +69,7 @@
         </g>
 
         <!-- ===== COMBUSTION SPOON ===== -->
-        <g id="spoonGroup" transform="translate(250,48)">
+        <g id="spoonGroup" class="clickable" transform="translate(250,48)" onclick="nextStep()">
           <!-- Handle through stopper -->
           <line id="spoonHandle" x1="0" y1="0" x2="0" y2="80" stroke="#78716C" stroke-width="2" stroke-linecap="round"/>
           <!-- Spoon cup -->
@@ -92,7 +94,7 @@
           <path id="rubberTube" d="M200,190 Q180,190 170,220 Q160,260 180,280 L360,280" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
           <text x="165" y="245" font-size="5" fill="#64748B">导管</text>
           <!-- Clamp -->
-          <rect id="clamp" x="172" y="230" width="16" height="10" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
+          <rect id="clamp" class="clickable" x="172" y="230" width="16" height="10" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5" onclick="nextStep()"/>
           <text id="clampLabel" x="180" y="254" font-size="5" fill="#64748B" text-anchor="middle">止水夹(关)</text>
         </g>
 
@@ -105,6 +107,10 @@
           <line x1="30" y1="0" x2="30" y2="35" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
           <text x="60" y="72" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
         </g>
+
+        <!-- Canvas click zone -->
+        <rect id="canvasClick" class="svg-click" x="10" y="10" width="460" height="350" fill="transparent" onclick="nextStep()"/>
+        <text id="canvasHint" class="svg-hint" x="240" y="380" text-anchor="middle">点击实验装置 → 下一步操作</text>
 
         <!-- ===== RIGHT SIDE INFO ===== -->
         <!-- Chemical equation -->
@@ -162,7 +168,7 @@
       <div class="panel-section">
         <div class="section-title" id="stepTitle">第 1 步：检查装置</div>
         <div class="step-desc" id="stepDesc">检查装置气密性，确保集气瓶、导管、止水夹连接完好。</div>
-        <button class="step-btn" id="stepBtn" onclick="nextStep()">检查气密性 → 点燃红磷</button>
+        <div class="step-desc" id="stepBtn" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
       </div>
 
       <!-- Observation checklist -->

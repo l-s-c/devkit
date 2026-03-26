@@ -23,6 +23,7 @@
 .rod-item.active{background:#0284C7;color:#FFF}
 .flash-warn{animation:flashWarn 0.5s ease-in-out 3}
 @keyframes flashWarn{0%,100%{opacity:1}50%{opacity:0.3}}
+.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
 </style>
 </head>
 <body>
@@ -63,6 +64,8 @@
           <text x="70" y="180" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
           <text x="110" y="-10" font-size="6" fill="#64748B">玻璃棒（搅拌）</text>
           <text x="70" y="195" font-size="6" fill="#94A3B8" text-anchor="middle">粗盐 + 水</text>
+          <rect class="clickable" x="0" y="0" width="140" height="200" fill="transparent" onclick="nextStep()"><title>点击搅拌溶解</title></rect>
+          <text class="svg-hint" x="70" y="210" text-anchor="middle">点击烧杯 → 搅拌溶解</text>
         </g>
         <!-- Status -->
         <g transform="translate(450,120)">
@@ -109,7 +112,7 @@
           <text x="40" y="135" font-size="7" fill="#64748B" text-anchor="middle">漏斗</text>
         </g>
         <!-- Source beaker (left, turbid) -->
-        <g transform="translate(150,140)">
+        <g id="srcBeaker" class="clickable" transform="translate(150,140)" onclick="nextStep()">
           <rect x="0" y="0" width="60" height="70" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
           <rect id="srcLiquid" x="2" y="20" width="56" height="48" rx="1" fill="#D6D3D1" opacity="0.35"/>
           <!-- Glass rod for guiding -->
@@ -120,6 +123,7 @@
           <text x="95" y="-40" font-size="5" fill="#DC2626" font-weight="600">三靠②：玻璃棒靠三层滤纸</text>
           <text x="95" y="-30" font-size="5" fill="#DC2626" font-weight="600">三靠③：漏斗下端靠烧杯壁</text>
           <text x="30" y="82" font-size="5" fill="#64748B" text-anchor="middle">浑浊液</text>
+          <text class="svg-hint" x="30" y="95" text-anchor="middle">点击 → 开始过滤</text>
         </g>
         <!-- Receiving beaker (below funnel) -->
         <g transform="translate(260,250)">
@@ -171,7 +175,7 @@
           <text x="85" y="-20" font-size="6" fill="#64748B">玻璃棒（防飞溅）</text>
         </g>
         <!-- Alcohol lamp -->
-        <g id="evapLamp" transform="translate(260,260)">
+        <g id="evapLamp" class="clickable" transform="translate(260,260)" onclick="nextStep()">
           <ellipse cx="0" cy="20" rx="18" ry="8" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8"/>
           <rect x="-15" y="0" width="30" height="22" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8"/>
           <rect x="-2" y="-10" width="4" height="12" rx="1" fill="#78716C"/>
@@ -181,6 +185,7 @@
             <ellipse cx="0" cy="-16" rx="1.5" ry="5" fill="#FEF3C7" opacity="0.6"/>
           </g>
           <text x="0" y="38" font-size="6" fill="#64748B" text-anchor="middle">酒精灯</text>
+          <text id="lampHint" class="svg-hint" x="0" y="50" text-anchor="middle">点击 → 点燃</text>
         </g>
         <!-- Warning (hidden, shown during evaporation) -->
         <g id="evapWarning" opacity="0" transform="translate(420,120)">
@@ -214,8 +219,7 @@
       <!-- Step info -->
       <div class="panel-section">
         <div class="section-title" id="stepTitle">第 1 步：溶解</div>
-        <div class="step-desc" id="stepDesc">将粗盐加入水中，用玻璃棒搅拌加速溶解。</div>
-        <button class="step-btn" id="stepBtn" onclick="nextStep()">搅拌溶解 → 过滤</button>
+        <div class="step-desc" id="stepDesc">将粗盐加入水中。<strong>点击画布上的器材</strong>进行操作。</div>
       </div>
 
       <!-- Mnemonic (shown in filter step) -->
@@ -383,9 +387,7 @@ function updateScene() {
 
   const info = STEP_INFO[state.step];
   $('stepTitle').textContent = info.title;
-  $('stepDesc').textContent = info.desc;
-  $('stepBtn').textContent = info.btn;
-  $('stepBtn').disabled = state.animating;
+  $('stepDesc').textContent = info.desc + ' 点击画布器材操作。';
 
   $('mnemonicSection').style.display = state.step >= 1 ? 'block' : 'none';
   $('rodSection').style.display = state.step >= 0 ? 'block' : 'none';
@@ -407,7 +409,7 @@ function updateStepBar() {
 // ===== STEP 1: DISSOLVE =====
 function startDissolve() {
   state.animating = true;
-  $('stepBtn').disabled = true;
+  ($('stepBtn')||{}).disabled = true;
   $('statusBadge').textContent = '搅拌溶解中…';
   $('statusBadge').className = 'status-badge done';
   $('rod1').classList.add('active');
@@ -446,7 +448,7 @@ function startDissolve() {
 // ===== STEP 2: FILTER =====
 function startFilter() {
   state.animating = true;
-  $('stepBtn').disabled = true;
+  ($('stepBtn')||{}).disabled = true;
   $('statusBadge').textContent = '过滤中…沿玻璃棒引流';
   $('rod2').classList.add('active');
 
@@ -521,7 +523,7 @@ let autoStopTimer = null;
 function startEvaporate() {
   state.evapStarted = true;
   state.animating = true;
-  $('stepBtn').disabled = true;
+  ($('stepBtn')||{}).disabled = true;
   $('statusBadge').textContent = '加热蒸发中…';
   $('rod3').classList.add('active');
   $('evapFlame').setAttribute('opacity', '1');
@@ -559,9 +561,8 @@ function startEvaporate() {
       $('evapWarning').classList.add('flash-warn');
       checkObs('obs4');
       state.animating = false;
-      $('stepBtn').disabled = false;
-      $('stepBtn').textContent = '停止加热！';
-      $('statusBadge').textContent = '出现大量固体，请停止加热！';
+      $('lampHint').textContent = '点击 → 停止加热！';
+      $('statusBadge').textContent = '出现大量固体，点击酒精灯停止加热！';
 
       // Auto-stop after 3 seconds if user doesn't click
       autoStopTimer = setTimeout(() => {
@@ -599,8 +600,8 @@ function stopEvaporate() {
   $('dispPure').textContent = pureMass;
   $('dispYield').textContent = yieldStr;
 
-  $('stepBtn').textContent = '实验完成';
-  $('stepBtn').disabled = true;
+  $('evapLamp').classList.remove('svg-click');
+  $('evapLamp').removeAttribute('onclick');
   $('resultSection').style.display = 'block';
   $('statusBadge').textContent = `实验完成！产率 ${yieldStr}%`;
 }

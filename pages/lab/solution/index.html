@@ -62,7 +62,8 @@
       <!-- ===== SCENE 2: BALANCE ===== -->
       <svg id="scene2" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect width="720" height="400" fill="#F8FAFC"/>
-        <g id="balanceGroup" transform="translate(200,80)">
+        <g id="balanceGroup" class="clickable" transform="translate(200,80)" onclick="if(!state.animating)nextStep()">
+          <text id="balanceHint" class="svg-hint" x="160" y="300" text-anchor="middle">点击天平 → 下一步</text>
           <!-- Base -->
           <rect x="100" y="250" width="120" height="10" rx="3" fill="#78716C"/>
           <rect x="148" y="200" width="24" height="52" rx="2" fill="#8D8680"/>
@@ -132,7 +133,8 @@
         <rect width="720" height="400" fill="#F8FAFC"/>
         <!-- Cylinder body -->
         <g id="cylinderGroup" transform="translate(200,30)">
-          <rect id="cylBody" x="0" y="0" width="80" height="300" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
+          <rect id="cylBody" class="clickable" x="0" y="0" width="80" height="300" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1" onclick="addWater(state.waterVol>=43?1:5)"/>
+          <text class="svg-hint" x="40" y="-8" text-anchor="middle">点击量筒倒水</text>
           <line x1="2" y1="5" x2="2" y2="295" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
           <!-- Scale markings (50mL cylinder, 1mL divisions) -->
           <g id="cylScale">
@@ -173,13 +175,17 @@
             <text x="133" y="293" class="sight-label">← 俯视（偏小）</text>
           </g>
           <text x="40" y="320" font-size="7" fill="#64748B" text-anchor="middle">量筒（50mL）</text>
+          <!-- Click zones on cylinder -->
+          <rect id="cylClickPour" class="clickable" x="0" y="150" width="80" height="150" fill="transparent" onclick="addWater(5)"><title>点击倒入 +5mL</title></rect>
+          <rect id="cylClickAdd" class="clickable" x="0" y="0" width="80" height="150" fill="transparent" onclick="addWater(1)"><title>点击加入 +1mL</title></rect>
+          <text id="cylClickHint" class="svg-hint" x="40" y="340" text-anchor="middle">点击量筒加水 | 点击滴管精调</text>
         </g>
         <!-- Dropper -->
-        <g id="dropper" transform="translate(320,40)">
+        <g id="dropper" class="clickable" transform="translate(320,40)" onclick="addWater(0.1)">
           <rect x="0" y="0" width="10" height="40" rx="2" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
           <ellipse cx="5" cy="0" rx="8" ry="6" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
           <ellipse cx="5" cy="43" rx="2" ry="2" fill="#7DD3FC" opacity="0.5"/>
-          <text x="25" y="25" font-size="6" fill="#64748B">胶头滴管</text>
+          <text x="25" y="25" font-size="6" fill="#64748B">点击滴管 +0.1mL</text>
         </g>
         <!-- Reading display -->
         <g transform="translate(450,100)">
@@ -204,7 +210,7 @@
       <svg id="scene4" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect width="720" height="400" fill="#F8FAFC"/>
         <!-- Beaker -->
-        <g id="beakerGroup" transform="translate(150,80)">
+        <g id="beakerGroup" class="clickable" transform="translate(150,80)" onclick="startDissolve()">
           <rect x="0" y="0" width="120" height="140" rx="3" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
           <line x1="2" y1="5" x2="2" y2="135" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
           <!-- Water -->
@@ -222,6 +228,7 @@
           <line id="glassRod" x1="60" y1="-20" x2="60" y2="130" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"/>
           <text x="60" y="155" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
           <text x="100" y="-10" font-size="6" fill="#64748B">玻璃棒</text>
+          <text id="dissolveHint" class="svg-hint" x="60" y="170" text-anchor="middle">点击烧杯 → 搅拌溶解</text>
         </g>
         <!-- Arrow -->
         <g transform="translate(310,150)">
@@ -295,26 +302,18 @@
 
       <!-- ===== STEP 2: BALANCE PANEL ===== -->
       <div class="panel-section" id="balancePanel" style="display:none">
-        <div class="step-desc">天平自动演示称量 3.0g NaCl（游码 3.0g，无砝码）</div>
-        <button class="step-btn" id="balanceBtn" onclick="nextStep()">称量完成 → 量取水</button>
+        <div class="step-desc">天平自动演示称量 3.0g NaCl（游码 3.0g，无砝码）。<br><strong>称量完成后点击画布天平 → 下一步</strong></div>
       </div>
 
       <!-- ===== STEP 3: CYLINDER PANEL ===== -->
       <div class="panel-section" id="cylinderPanel" style="display:none">
-        <div class="step-desc">用量筒量取 47mL 水。先倾倒至接近刻度，再用胶头滴管逐滴加至刻度线。</div>
-        <div style="display:flex;gap:6px;margin:8px 0">
-          <button class="cylinder-btn" id="btnAdd5" onclick="addWater(5)">+5 mL</button>
-          <button class="cylinder-btn" id="btnAdd1" onclick="addWater(1)">+1 mL</button>
-          <button class="cylinder-btn" id="btnDrop" onclick="addWater(0.1)">滴管 +0.1</button>
-        </div>
+        <div class="step-desc">在画布上操作：<strong>点击量筒下半部</strong>倒入 +5mL，<strong>点击上半部</strong> +1mL，<strong>点击滴管</strong> +0.1mL。</div>
         <div style="font-size:9px;color:#64748B;margin-top:4px" id="cylStatus">当前：0.0 mL / 目标：47.0 mL</div>
-        <button class="step-btn" id="cylDoneBtn" onclick="nextStep()" disabled>量取完成 → 溶解</button>
       </div>
 
       <!-- ===== STEP 4: DISSOLVE PANEL ===== -->
       <div class="panel-section" id="dissolvePanel" style="display:none">
-        <div class="step-desc">将 NaCl 加入水中，用玻璃棒搅拌至完全溶解，转移至试剂瓶并贴标签。</div>
-        <button class="step-btn" id="dissolveBtn" onclick="startDissolve()">开始溶解</button>
+        <div class="step-desc">在画布上<strong>点击烧杯</strong>，用玻璃棒搅拌至完全溶解，转移至试剂瓶并贴标签。</div>
       </div>
 
       <!-- Observations -->
@@ -513,6 +512,10 @@ function animateBalance() {
     else {
       $('balanceStatus').textContent = '游码：3.0g';
       $('balanceTotal').textContent = '总质量：3.0g ✓';
+      // Enable canvas click to advance
+      $('balanceGroup').classList.add('clickable');
+      $('balanceGroup').setAttribute('onclick', 'nextStep()');
+      $('balanceHint').setAttribute('opacity', '1');
     }
   }
   requestAnimationFrame(tick);
@@ -527,8 +530,7 @@ function addWater(amount) {
   // Check if reached target
   if (Math.abs(state.waterVol - 47) < 0.05) {
     state.cylDone = true;
-    $('cylDoneBtn').disabled = false;
-    $('cylHint').textContent = '精确到位！';
+    $('cylHint').textContent = '精确到位！点击量筒继续';
     $('cylHint').setAttribute('opacity', '1');
     checkObs('obs3');
     $('statusBadge').textContent = '量取 47.0 mL 完成！';
@@ -536,18 +538,24 @@ function addWater(amount) {
     $('cylHint').textContent = '超量了！请重做实验';
     $('cylHint').setAttribute('fill', '#DC2626');
     $('cylHint').setAttribute('opacity', '1');
-    $('btnAdd5').disabled = true;
-    $('btnAdd1').disabled = true;
-    $('btnDrop').disabled = true;
+    $('cylClickPour').style.pointerEvents = 'none';
+    $('cylClickAdd').style.pointerEvents = 'none';
+    $('dropper').style.pointerEvents = 'none';
   } else if (state.waterVol > 47) {
     $('cylHint').textContent = '略微超量，请重做实验';
     $('cylHint').setAttribute('fill', '#DC2626');
     $('cylHint').setAttribute('opacity', '1');
   }
 
-  // Disable +5/+1 when close to target
-  $('btnAdd5').disabled = state.waterVol >= 43;
-  $('btnAdd1').disabled = state.waterVol >= 46.5;
+  // Disable pour zones when close to target
+  $('cylClickPour').style.pointerEvents = state.waterVol >= 43 ? 'none' : 'auto';
+  $('cylClickAdd').style.pointerEvents = state.waterVol >= 46.5 ? 'none' : 'auto';
+
+  // If cylinder done, clicking cylinder advances
+  if (state.cylDone) {
+    $('cylClickPour').setAttribute('onclick', 'nextStep()');
+    $('cylClickPour').style.pointerEvents = 'auto';
+  }
 }
 
 function updateCylinder() {
@@ -582,7 +590,9 @@ function updateCylinder() {
 
 // ===== STEP 4: DISSOLVE =====
 function startDissolve() {
-  $('dissolveBtn').disabled = true;
+  if (state.step !== 3) return;
+  $('beakerGroup').classList.remove('clickable');
+  $('beakerGroup').removeAttribute('onclick');
   $('statusBadge').textContent = '搅拌溶解中…';
   $('dissolveStatus').textContent = '搅拌中…颗粒逐渐溶解';
 
@@ -612,6 +622,7 @@ function startDissolve() {
 }
 
 function finishDissolve() {
+  $('dissolveHint').textContent = '';
   $('dissolveStatus').textContent = '溶解完成！装瓶贴标签';
 
   // Show solution in bottle
@@ -652,16 +663,23 @@ function resetAll() {
   $('balanceStatus').textContent = '游码：0.0g';
   $('balanceTotal').textContent = '总质量：0.0g';
 
+  // Reset balance click
+  $('balanceGroup').classList.remove('clickable');
+  $('balanceGroup').removeAttribute('onclick');
+  $('balanceHint').setAttribute('opacity', '0');
+
   // Reset cylinder
+  $('cylClickPour').style.pointerEvents = 'auto';
+  $('cylClickPour').setAttribute('onclick', "addWater(5)");
+  $('cylClickAdd').style.pointerEvents = 'auto';
+  $('dropper').style.pointerEvents = 'auto';
   $('cylWater').setAttribute('y', '300');
   $('cylWater').setAttribute('height', '0');
   $('meniscus').setAttribute('opacity', '0');
   $('sightLines').setAttribute('opacity', '0');
   $('cylReading').textContent = '0.0 mL';
   $('cylHint').setAttribute('opacity', '0');
-  $('cylDoneBtn').disabled = true;
-  $('btnAdd5').disabled = false;
-  $('btnAdd1').disabled = false;
+  
 
   // Reset dissolve
   document.querySelectorAll('.nacl-p').forEach(p => p.setAttribute('opacity', '1'));
