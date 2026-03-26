@@ -316,6 +316,17 @@ function switchTab(tab) {
   $('expDesc').textContent = info[tab].desc;
   $('expBtn').disabled = state['done' + tab];
   $('expBtn').textContent = state['done' + tab] ? '已完成' : '开始实验';
+
+  // Sync panel mass display per tab
+  if (state['done' + tab]) {
+    $('panelM1').textContent = massVal;
+    $('panelM2').textContent = massVal;
+    $('massResult').style.display = 'flex';
+  } else {
+    $('panelM1').textContent = '—';
+    $('panelM2').textContent = '—';
+    $('massResult').style.display = 'none';
+  }
 }
 
 function startExperiment() {
