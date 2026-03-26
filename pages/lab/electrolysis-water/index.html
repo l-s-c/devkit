@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="../../shared/lab-base.css">
 <link rel="stylesheet" href="../../shared/chem-base.css">
-<script src="../../shared/theme.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
@@ -145,9 +144,23 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
         <text id="wireNegLabel" x="280" y="378" font-size="6" fill="#3B82F6" font-weight="600">负极导线</text>
         <text id="wirePosLabel" x="380" y="378" font-size="6" fill="#EF4444" font-weight="600">正极导线</text>
 
-        <!-- ===== BUBBLE CONTAINERS ===== -->
-        <g id="leftBubbles" clip-path="url(#leftClip)"></g>
-        <g id="rightBubbles" clip-path="url(#rightClip)"></g>
+        <!-- ===== BUBBLE CONTAINERS (pre-allocated 30 each) ===== -->
+        <g id="leftBubbles" clip-path="url(#leftClip)">
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
+        </g>
+        <g id="rightBubbles" clip-path="url(#rightClip)">
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
+        </g>
         <defs>
           <clipPath id="leftClip"><rect x="223" y="30" width="44" height="250"/></clipPath>
           <clipPath id="rightClip"><rect x="413" y="30" width="44" height="250"/></clipPath>
@@ -345,6 +358,7 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
   </div>
 </div>
 
+<script src="../../shared/theme.js"></script>
 <script src="../../shared/lab-utils.js"></script>
 <script src="../../shared/chem-effects.js"></script>
 <script>
@@ -444,9 +458,9 @@ function startElectrolysis() {
   checkObs('obs2');
   setTimeout(() => checkObs('obs3'), 2000);
 
-  // Bubble pools
-  const leftPool = createBubblePool($('leftBubbles'), 225, 270, 42, -240, 30);
-  const rightPool = createBubblePool($('rightBubbles'), 415, 270, 42, -240, 30);
+  // Bubble pools (pre-drawn elements)
+  const leftPool = initBubblePool('bub-l', 225, 270, 42, -240);
+  const rightPool = initBubblePool('bub-r', 415, 270, 42, -240);
 
   let leftTimer = 0, rightTimer = 0;
   const SPEED_H2 = 0.03; // mL per frame at 60fps → ~1.8 mL/s
@@ -509,17 +523,13 @@ function startElectrolysis() {
   state.animFrame = requestAnimationFrame(animate);
 }
 
-// Bubble pool helpers
-function createBubblePool(container, baseX, baseY, width, travel, poolSize) {
-  const pool = { container, baseX, baseY, width, travel, bubbles: [] };
-  for (let i = 0; i < poolSize; i++) {
-    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    c.setAttribute('r', 1.5 + Math.random() * 1.5);
-    c.setAttribute('fill', '#BFDBFE');
-    c.setAttribute('opacity', '0');
-    container.appendChild(c);
-    pool.bubbles.push({ el: c, active: false, x: 0, y: 0, speed: 0 });
-  }
+// Bubble pool helpers (pre-drawn elements, no createElement)
+function initBubblePool(className, baseX, baseY, width, travel) {
+  const els = document.querySelectorAll('.' + className);
+  const pool = { baseX, baseY, width, travel, bubbles: [] };
+  els.forEach(el => {
+    pool.bubbles.push({ el, active: false, x: 0, y: 0, speed: 0 });
+  });
   return pool;
 }
 
@@ -772,9 +782,8 @@ function resetExperiment() {
   $('leftWater').setAttribute('height', '50');
   $('rightWater').setAttribute('height', '50');
 
-  // Reset bubbles
-  $('leftBubbles').innerHTML = '';
-  $('rightBubbles').innerHTML = '';
+  // Reset bubbles (reuse pre-drawn, just hide)
+  document.querySelectorAll('.bub-l,.bub-r').forEach(el => el.setAttribute('opacity', '0'));
 
   // Reset overlays
   $('readingOverlay').setAttribute('opacity', '0');
@@ -823,10 +832,9 @@ function renderFormulas() {
   } catch(e) {}
 }
 
-function tryKatex() {
+function tryKatex(n) {
   if (window.katex) { renderFormulas(); return; }
-  let tries = 0;
-  const poll = setInterval(() => { tries++; if (window.katex || tries > 20) { clearInterval(poll); if (window.katex) renderFormulas(); } }, 500);
+  if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
 }
 
 // Init
