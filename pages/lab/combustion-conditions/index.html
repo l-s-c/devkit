@@ -458,10 +458,12 @@ function startSmoke() {
         p.el.setAttribute('opacity', '0');
       }
     }
-    // Flame flicker
+    // Flame flicker + phosphorus shrink
     if (state.wpBurning) {
       const s = 0.9 + Math.sin(timer * 0.3) * 0.1;
       $('wpTopFlame').setAttribute('transform', 'scale(' + s + ')');
+      const r = parseFloat($('wpTop').getAttribute('r'));
+      if (r > 2) $('wpTop').setAttribute('r', (r - 0.02).toFixed(2));
     }
     if (state.wpWaterBurning) {
       const s = 0.85 + Math.sin(timer * 0.35) * 0.15;
@@ -608,6 +610,9 @@ function resetExperiment() {
     compare1Done: false, compare2Done: false,
     o2Started: false, o2Timer: 0, wpWaterBurning: false
   });
+
+  // White phosphorus radius
+  $('wpTop').setAttribute('r', '8');
 
   // Thermometer
   $('mercuryCol').setAttribute('y', '170');
