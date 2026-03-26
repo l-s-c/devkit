@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>质量守恒定律验证 - 白磷燃烧与置换反应 | DevKit</title>
+<meta name="keywords" content="质量守恒定律, 白磷燃烧, 密闭容器, 初中化学">
+<meta name="description" content="质量守恒定律验证：白磷燃烧密闭实验+Fe置换Cu，反应前后质量不变">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
+.scene{display:none}.scene.active{display:block}
+.tab-bar{display:flex;gap:4px;margin-bottom:8px}
+.tab-btn{flex:1;padding:6px 4px;border:1px solid #E2E8F0;border-radius:6px;background:#FFF;font-size:9px;cursor:pointer;text-align:center;font-weight:600;color:#64748B}
+.tab-btn.active{background:var(--lab-accent);color:#FFF;border-color:var(--lab-accent)}
+.tab-btn.done{background:#BBF7D0;color:#166534;border-color:#86EFAC}
+.mass-display{display:flex;gap:8px;margin:8px 0}
+.mass-card{flex:1;text-align:center;padding:8px;border-radius:8px;background:#F0F9FF;border:1px solid #BAE6FD}
+.mass-card .label{font-size:8px;color:#64748B;margin-bottom:2px}
+.mass-card .val{font-size:18px;font-weight:800;color:#0284C7;font-family:'JetBrains Mono',monospace}
+.mass-card .unit{font-size:8px;color:#94A3B8}
+.mass-eq{display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#059669;margin:4px 0}
+.counterex-card{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:8px;font-size:9px;color:#991B1B;margin:6px 0}
+.counterex-card strong{color:#DC2626}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
+  <h1>质量守恒定律验证</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>质量守恒 · 密闭容器 · 原子守恒 · 初中化学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">选择实验 → 开始验证</div>
+
+      <!-- ===== TAB A: White Phosphorus Combustion ===== -->
+      <svg id="sceneA" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="smokeBlur"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- Balance (simplified) -->
+        <g id="balanceA" transform="translate(160,220)">
+          <rect x="140" y="80" width="120" height="8" rx="2" fill="#78716C"/>
+          <rect x="190" y="40" width="20" height="42" rx="2" fill="#8D8680"/>
+          <!-- Beam -->
+          <line id="beamA" x1="60" y1="35" x2="340" y2="35" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+          <!-- Pointer -->
+          <line id="pointerA" x1="200" y1="15" x2="200" y2="50" stroke="#DC2626" stroke-width="1.5"/>
+          <!-- Scale -->
+          <line x1="195" y1="45" x2="205" y2="45" stroke="#78716C" stroke-width="0.5"/>
+          <!-- Left pan -->
+          <g id="leftPanA">
+            <line x1="60" y1="35" x2="60" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <line x1="140" y1="35" x2="140" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <rect x="50" y="55" width="100" height="4" rx="1" fill="#D6D3D1"/>
+          </g>
+          <!-- Right pan -->
+          <g id="rightPanA">
+            <line x1="260" y1="35" x2="260" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <line x1="340" y1="35" x2="340" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <rect x="250" y="55" width="100" height="4" rx="1" fill="#D6D3D1"/>
+            <!-- Weights -->
+            <rect x="280" y="45" width="20" height="10" rx="1" fill="#78716C" stroke="#57534E" stroke-width="0.3"/>
+          </g>
+        </g>
+
+        <!-- Conical flask on left pan -->
+        <g id="flaskGroup" transform="translate(225,150)">
+          <!-- Flask body -->
+          <polygon points="20,0 0,65 70,65 50,65 70,65" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="20" y="-15" width="30" height="18" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
+          <!-- Rubber stopper -->
+          <rect id="stopper" x="18" y="-20" width="34" height="8" rx="2" fill="#D97706" stroke="#B45309" stroke-width="0.5"/>
+          <text x="35" y="-23" font-size="5" fill="#DC2626" font-weight="700">密闭！</text>
+          <!-- Balloon -->
+          <ellipse id="balloon" cx="35" cy="-35" rx="12" ry="10" fill="#FCA5A5" stroke="#F87171" stroke-width="0.5" opacity="0.7"/>
+          <!-- White phosphorus -->
+          <circle id="phosphorus" cx="35" cy="55" r="6" fill="#FEFCE8" stroke="#FDE68A" stroke-width="0.5"/>
+          <text x="35" y="50" font-size="4" fill="#854D0E" text-anchor="middle">P</text>
+          <!-- White smoke -->
+          <g id="smokeGroup" opacity="0" filter="url(#smokeBlur)">
+            <circle cx="25" cy="30" r="8" fill="#FFF" opacity="0.3"/>
+            <circle cx="40" cy="20" r="10" fill="#FFF" opacity="0.25"/>
+            <circle cx="30" cy="10" r="7" fill="#FFF" opacity="0.2"/>
+            <circle cx="45" cy="35" r="6" fill="#FFF" opacity="0.3"/>
+            <circle cx="20" cy="15" r="5" fill="#FFF" opacity="0.2"/>
+          </g>
+          <!-- Flame -->
+          <g id="flameA" opacity="0">
+            <ellipse cx="35" cy="45" rx="5" ry="10" fill="#F97316" opacity="0.7"/>
+            <ellipse cx="35" cy="48" rx="3" ry="6" fill="#FBBF24" opacity="0.8"/>
+          </g>
+        </g>
+        <text x="260" y="290" font-size="6" fill="#64748B" text-anchor="middle">锥形瓶（密闭）</text>
+
+        <!-- Mass display on canvas -->
+        <g transform="translate(480,100)">
+          <rect x="0" y="0" width="200" height="80" rx="8" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+          <text x="100" y="20" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">天平读数</text>
+          <text x="50" y="42" font-size="7" fill="#64748B" text-anchor="middle">反应前</text>
+          <text id="massA1" x="50" y="60" font-size="14" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">—</text>
+          <text x="150" y="42" font-size="7" fill="#64748B" text-anchor="middle">反应后</text>
+          <text id="massA2" x="150" y="60" font-size="14" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">—</text>
+          <text id="massAeq" x="100" y="75" font-size="8" fill="#059669" text-anchor="middle" font-weight="700" opacity="0">m₁ = m₂ ✓</text>
+        </g>
+      </svg>
+
+      <!-- ===== TAB B: Fe + CuSO4 ===== -->
+      <svg id="sceneB" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- Balance (simplified) -->
+        <g id="balanceB" transform="translate(160,220)">
+          <rect x="140" y="80" width="120" height="8" rx="2" fill="#78716C"/>
+          <rect x="190" y="40" width="20" height="42" rx="2" fill="#8D8680"/>
+          <line id="beamB" x1="60" y1="35" x2="340" y2="35" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
+          <line id="pointerB" x1="200" y1="15" x2="200" y2="50" stroke="#DC2626" stroke-width="1.5"/>
+          <line x1="195" y1="45" x2="205" y2="45" stroke="#78716C" stroke-width="0.5"/>
+          <g>
+            <line x1="60" y1="35" x2="60" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <line x1="140" y1="35" x2="140" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <rect x="50" y="55" width="100" height="4" rx="1" fill="#D6D3D1"/>
+          </g>
+          <g>
+            <line x1="260" y1="35" x2="260" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <line x1="340" y1="35" x2="340" y2="55" stroke="#A8A29E" stroke-width="1"/>
+            <rect x="250" y="55" width="100" height="4" rx="1" fill="#D6D3D1"/>
+            <rect x="280" y="45" width="20" height="10" rx="1" fill="#78716C" stroke="#57534E" stroke-width="0.3"/>
+          </g>
+        </g>
+
+        <!-- Beaker on left pan -->
+        <g id="beakerB" transform="translate(215,130)">
+          <rect x="0" y="0" width="90" height="100" rx="3" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
+          <rect id="bSol2" x="2" y="30" width="86" height="68" rx="2" fill="hsl(210,70%,55%)" opacity="0.4"/>
+          <!-- Iron nail -->
+          <rect id="bNail" x="38" y="5" width="6" height="90" rx="1" fill="#57534E" stroke="#44403C" stroke-width="0.5"/>
+          <rect x="33" y="5" width="16" height="4" rx="1" fill="#57534E"/>
+          <!-- Cu deposits -->
+          <g id="bDep2" opacity="0">
+            <circle cx="35" cy="50" r="1.5" fill="#DC2626"/>
+            <circle cx="50" cy="60" r="2" fill="#B91C1C"/>
+            <circle cx="36" cy="75" r="2" fill="#DC2626"/>
+            <circle cx="49" cy="80" r="1.5" fill="#B91C1C"/>
+            <circle cx="37" cy="65" r="1" fill="#DC2626"/>
+            <circle cx="48" cy="70" r="1.8" fill="#DC2626"/>
+          </g>
+          <text x="45" y="115" font-size="6" fill="#64748B" text-anchor="middle">烧杯（Fe + CuSO₄）</text>
+        </g>
+
+        <!-- Mass display -->
+        <g transform="translate(480,100)">
+          <rect x="0" y="0" width="200" height="80" rx="8" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+          <text x="100" y="20" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">天平读数</text>
+          <text x="50" y="42" font-size="7" fill="#64748B" text-anchor="middle">反应前</text>
+          <text id="massB1" x="50" y="60" font-size="14" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">—</text>
+          <text x="150" y="42" font-size="7" fill="#64748B" text-anchor="middle">反应后</text>
+          <text id="massB2" x="150" y="60" font-size="14" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">—</text>
+          <text id="massBeq" x="100" y="75" font-size="8" fill="#059669" text-anchor="middle" font-weight="700" opacity="0">m₁ = m₂ ✓</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Tab selector -->
+      <div class="panel-section">
+        <div class="section-title">实验组</div>
+        <div class="tab-bar" id="tabBar">
+          <div class="tab-btn active" id="tabA" onclick="switchTab('A')">A 白磷燃烧</div>
+          <div class="tab-btn" id="tabB" onclick="switchTab('B')">B Fe+CuSO₄</div>
+        </div>
+      </div>
+
+      <!-- Control -->
+      <div class="panel-section">
+        <div class="section-title" id="expTitle">实验 A：密闭容器中白磷燃烧</div>
+        <div class="step-desc" id="expDesc">在密闭锥形瓶中点燃白磷，观察反应前后天平是否平衡。</div>
+        <button class="step-btn" id="expBtn" onclick="startExperiment()">开始实验</button>
+      </div>
+
+      <!-- Mass comparison -->
+      <div class="panel-section">
+        <div class="section-title">质量对比</div>
+        <div class="mass-display">
+          <div class="mass-card"><div class="label">反应前 m₁</div><div class="val" id="panelM1">—</div><div class="unit">g</div></div>
+          <div class="mass-card"><div class="label">反应后 m₂</div><div class="val" id="panelM2">—</div><div class="unit">g</div></div>
+        </div>
+        <div class="mass-eq" id="massResult" style="display:none">m₁ = m₂ → 质量守恒！</div>
+      </div>
+
+      <!-- Observations -->
+      <div class="panel-section">
+        <div class="section-title">现象观察</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>白磷燃烧产生大量白烟</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>气球先鼓后瘪</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>天平仍然平衡（m₁=m₂）</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>Fe 表面析出红色 Cu</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>溶液蓝色→绿色</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>天平仍然平衡（m₁=m₂）</li>
+        </ul>
+      </div>
+
+      <!-- Counterexample -->
+      <div class="panel-section">
+        <div class="section-title">反例思考（中考考点）</div>
+        <div class="counterex-card">
+          <strong>为什么必须密闭容器？</strong><br>
+          镁条在敞口容器中燃烧 → 天平不平衡（质量增加，因为与空气中 O₂ 结合）<br>
+          碳酸钠 + HCl 在敞口容器中 → 天平不平衡（CO₂ 逸出）<br>
+          <strong>≠ 质量不守恒！</strong>是因为有气体进出，未密闭。
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="panel-section">
+        <button class="ctrl-btn secondary" onclick="resetAll()">重做实验</button>
+      </div>
+
+      <!-- Final conclusion -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
+          <strong style="color:#0284C7">质量守恒定律：化学反应前后，各物质的质量总和不变。</strong>
+          <div style="margin-top:4px;font-size:10px;color:#64748B">微观解释：化学反应前后，原子的种类、数目、质量都不变。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <p><strong>质量守恒定律</strong>：参加化学反应的各物质的质量总和，等于反应后生成的各物质的质量总和。</p>
+    <div class="formula-block" id="formula1"></div>
+
+    <h3>微观解释（中考重点）</h3>
+    <p>化学反应的实质是<strong>原子的重新组合</strong>。反应前后：</p>
+    <ul>
+      <li>原子的<strong>种类</strong>不变</li>
+      <li>原子的<strong>数目</strong>不变</li>
+      <li>原子的<strong>质量</strong>不变</li>
+    </ul>
+    <p>所以反应前后总质量一定相等。</p>
+
+    <h3>化学方程式</h3>
+    <div class="formula-block" id="formula2"></div>
+    <div class="formula-block" id="formula3"></div>
+
+    <h3>密闭容器的重要性</h3>
+    <ul>
+      <li>有<strong>气体参加或生成</strong>的反应，必须在密闭容器中验证</li>
+      <li>敞口实验"质量变化"是因为气体逸出或吸入，<strong>不是质量不守恒</strong></li>
+    </ul>
+
+    <h3>常见反例分析</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
+      <div style="background:#FEF2F2;padding:10px;border-radius:8px">
+        <strong style="color:#DC2626">看似"质量增加"</strong><br>
+        镁条燃烧（敞口）<br>
+        铁生锈<br>
+        原因：与 O₂ 结合
+      </div>
+      <div style="background:#FEF2F2;padding:10px;border-radius:8px">
+        <strong style="color:#DC2626">看似"质量减少"</strong><br>
+        碳酸钠 + HCl（敞口）<br>
+        蜡烛燃烧<br>
+        原因：CO₂/H₂O 逸出
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+// ===== STATE =====
+let massVal; // random 150-160g
+const state = { tab: 'A', doneA: false, doneB: false, animating: false };
+
+function initMass() { massVal = +(150 + Math.random() * 10).toFixed(1); }
+initMass();
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  if (state.animating) return;
+  state.tab = tab;
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  $('scene' + tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  $('tab' + tab).classList.add('active');
+
+  const info = {
+    A: { title: '实验 A：密闭容器中白磷燃烧', desc: '在密闭锥形瓶中点燃白磷，观察反应前后天平是否平衡。' },
+    B: { title: '实验 B：铁钉浸入硫酸铜溶液', desc: '将铁钉浸入 CuSO₄ 溶液，观察反应前后天平是否平衡。' }
+  };
+  $('expTitle').textContent = info[tab].title;
+  $('expDesc').textContent = info[tab].desc;
+  $('expBtn').disabled = state['done' + tab];
+  $('expBtn').textContent = state['done' + tab] ? '已完成' : '开始实验';
+}
+
+function startExperiment() {
+  if (state.animating) return;
+  if (state.tab === 'A') startA();
+  else startB();
+}
+
+// ===== EXPERIMENT A: White Phosphorus =====
+function startA() {
+  state.animating = true;
+  $('expBtn').disabled = true;
+  $('statusBadge').textContent = '称量中…';
+  $('statusBadge').className = 'status-badge done';
+
+  // Show mass before
+  $('massA1').textContent = massVal;
+  $('panelM1').textContent = massVal;
+
+  setTimeout(() => {
+    $('statusBadge').textContent = '点燃白磷…观察现象';
+    // Ignite
+    $('flameA').setAttribute('opacity', '1');
+
+    const startTime = performance.now();
+    const duration = 4000;
+
+    function tick(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+
+      // Flame flicker
+      if (t < 0.6) {
+        const s = 0.8 + Math.random() * 0.4;
+        $('flameA').setAttribute('transform', `scale(${s})`);
+      } else {
+        $('flameA').setAttribute('opacity', Math.max(0, 1 - (t - 0.6) * 2.5));
+      }
+
+      // White smoke appears
+      $('smokeGroup').setAttribute('opacity', Math.min(0.8, t * 1.2));
+
+      // Balloon: flat → inflate → deflate
+      let bx, by;
+      if (t < 0.3) { bx = 12 + t * 30; by = 10 + t * 25; } // inflate
+      else if (t < 0.7) { bx = 21; by = 17.5; } // hold
+      else { bx = 21 - (t - 0.7) * 30; by = 17.5 - (t - 0.7) * 25; } // deflate
+      $('balloon').setAttribute('rx', Math.max(8, bx));
+      $('balloon').setAttribute('ry', Math.max(6, by));
+
+      // Phosphorus shrinks
+      const pr = 6 * (1 - t * 0.8);
+      $('phosphorus').setAttribute('r', pr);
+
+      // Balance pointer slight wobble during reaction, then stable
+      if (t > 0.2 && t < 0.8) {
+        const wobble = Math.sin(t * Math.PI * 20) * 3 * (1 - t);
+        $('pointerA').setAttribute('x1', 200 + wobble);
+        $('pointerA').setAttribute('x2', 200 + wobble);
+      } else {
+        $('pointerA').setAttribute('x1', '200');
+        $('pointerA').setAttribute('x2', '200');
+      }
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        finishA();
+      }
+    }
+    requestAnimationFrame(tick);
+  }, 800);
+}
+
+function finishA() {
+  state.doneA = true;
+  state.animating = false;
+  $('flameA').setAttribute('opacity', '0');
+  $('pointerA').setAttribute('x1', '200');
+  $('pointerA').setAttribute('x2', '200');
+
+  checkObs('obs1'); checkObs('obs2'); checkObs('obs3');
+
+  // Show mass after (same!)
+  $('massA2').textContent = massVal;
+  $('massAeq').setAttribute('opacity', '1');
+  $('panelM2').textContent = massVal;
+  $('massResult').style.display = 'flex';
+
+  $('tabA').classList.add('done');
+  $('expBtn').textContent = '已完成';
+  $('statusBadge').textContent = '白磷燃烧完成，m₁ = m₂ 质量守恒！';
+  checkAllDone();
+}
+
+// ===== EXPERIMENT B: Fe + CuSO4 =====
+function startB() {
+  state.animating = true;
+  $('expBtn').disabled = true;
+  $('statusBadge').textContent = '称量中…';
+  $('statusBadge').className = 'status-badge done';
+
+  $('massB1').textContent = massVal;
+  $('panelM1').textContent = massVal;
+
+  setTimeout(() => {
+    $('statusBadge').textContent = '置换反应中…观察颜色变化';
+
+    const startTime = performance.now();
+    const duration = 3000;
+
+    function tick(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+      // Solution blue → green
+      const h = 210 - 70 * eased;
+      const s = 70 - 30 * eased;
+      const l = 55 - 5 * eased;
+      $('bSol2').setAttribute('fill', `hsl(${h},${s}%,${l}%)`);
+
+      // Cu deposits
+      $('bDep2').setAttribute('opacity', eased);
+
+      // Balance wobble
+      if (t > 0.1 && t < 0.7) {
+        const wobble = Math.sin(t * Math.PI * 16) * 2 * (1 - t);
+        $('pointerB').setAttribute('x1', 200 + wobble);
+        $('pointerB').setAttribute('x2', 200 + wobble);
+      } else {
+        $('pointerB').setAttribute('x1', '200');
+        $('pointerB').setAttribute('x2', '200');
+      }
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        finishB();
+      }
+    }
+    requestAnimationFrame(tick);
+  }, 800);
+}
+
+function finishB() {
+  state.doneB = true;
+  state.animating = false;
+  $('pointerB').setAttribute('x1', '200');
+  $('pointerB').setAttribute('x2', '200');
+
+  checkObs('obs4'); checkObs('obs5'); checkObs('obs6');
+
+  $('massB2').textContent = massVal;
+  $('massBeq').setAttribute('opacity', '1');
+  $('panelM2').textContent = massVal;
+  $('massResult').style.display = 'flex';
+
+  $('tabB').classList.add('done');
+  $('expBtn').textContent = '已完成';
+  $('statusBadge').textContent = '置换反应完成，m₁ = m₂ 质量守恒！';
+  checkAllDone();
+}
+
+// ===== HELPERS =====
+function checkAllDone() {
+  if (state.doneA && state.doneB) {
+    $('resultSection').style.display = 'block';
+    $('statusBadge').textContent = '两组实验验证：质量守恒定律成立！';
+  }
+}
+
+function checkObs(id) {
+  const el = $(id);
+  if (el && !el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+function resetAll() {
+  Object.assign(state, { tab: 'A', doneA: false, doneB: false, animating: false });
+  initMass();
+
+  // Reset A
+  $('flameA').setAttribute('opacity', '0');
+  $('smokeGroup').setAttribute('opacity', '0');
+  $('balloon').setAttribute('rx', '12'); $('balloon').setAttribute('ry', '10');
+  $('phosphorus').setAttribute('r', '6');
+  $('pointerA').setAttribute('x1', '200'); $('pointerA').setAttribute('x2', '200');
+  $('massA1').textContent = '—'; $('massA2').textContent = '—';
+  $('massAeq').setAttribute('opacity', '0');
+
+  // Reset B
+  $('bSol2').setAttribute('fill', 'hsl(210,70%,55%)');
+  $('bDep2').setAttribute('opacity', '0');
+  $('pointerB').setAttribute('x1', '200'); $('pointerB').setAttribute('x2', '200');
+  $('massB1').textContent = '—'; $('massB2').textContent = '—';
+  $('massBeq').setAttribute('opacity', '0');
+
+  // Reset UI
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('done'));
+  $('panelM1').textContent = '—'; $('panelM2').textContent = '—';
+  $('massResult').style.display = 'none';
+  $('resultSection').style.display = 'none';
+  $('statusBadge').textContent = '选择实验 → 开始验证';
+  $('statusBadge').className = 'status-badge idle';
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+  switchTab('A');
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  if (!window.katex) return;
+  try {
+    katex.render('m_{\\text{反应前}} = m_{\\text{反应后}}', $('formula1'), { throwOnError: false, displayMode: true });
+    katex.render('4\\text{P} + 5\\text{O}_2 \\xrightarrow{\\text{点燃}} 2\\text{P}_2\\text{O}_5', $('formula2'), { throwOnError: false, displayMode: true });
+    katex.render('\\text{Fe} + \\text{CuSO}_4 \\rightarrow \\text{FeSO}_4 + \\text{Cu}', $('formula3'), { throwOnError: false, displayMode: true });
+  } catch(e) {}
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
