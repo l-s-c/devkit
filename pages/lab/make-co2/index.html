@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验室制取二氧化碳 - 大理石与稀盐酸反应 | DevKit</title>
+<meta name="keywords" content="制取二氧化碳, 大理石, 稀盐酸, 向上排空气法, 初中化学">
+<meta name="description" content="大理石与稀盐酸反应制取二氧化碳，向上排空气法收集，石灰水检验">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="/shared/lab-base.css">
+<link rel="stylesheet" href="/shared/chem-base.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
+<style>
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
+  <h1>实验室制取二氧化碳</h1>
+</div>
+<div class="purpose-bar">
+  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>制取CO₂ · 向上排空气法 · 石灰水检验 · 初中化学</div>
+  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
+</div>
+
+<div class="lab-container">
+  <div class="canvas-area">
+    <div class="canvas-wrapper">
+      <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
+      <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
+          <linearGradient id="limewaterTurbid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+            <stop offset="100%" stop-color="rgba(200,200,200,0.8)"/>
+          </linearGradient>
+        </defs>
+        <rect width="720" height="400" fill="#F8FAFC"/>
+
+        <!-- ===== CONICAL FLASK ===== -->
+        <g id="conicalFlask" transform="translate(100,100)">
+          <polygon id="flaskBody" points="50,0 0,140 100,140" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="40" y="-20" width="20" height="22" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
+          <!-- Dilute HCl liquid -->
+          <polygon id="hclLiquid" points="35,60 15,140 85,140 65,60" fill="#BFDBFE" opacity="0.35"/>
+          <text x="50" y="85" font-size="5" fill="#0284C7" text-anchor="middle">稀盐酸</text>
+          <!-- Marble pieces -->
+          <rect id="marble1" x="30" y="115" width="18" height="14" rx="3" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5" transform="rotate(-10,39,122)"/>
+          <rect id="marble2" x="48" y="118" width="15" height="12" rx="3" fill="#E7E5E4" stroke="#A8A29E" stroke-width="0.5" transform="rotate(15,55,124)"/>
+          <rect id="marble3" x="38" y="125" width="12" height="10" rx="3" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
+          <text x="50" y="113" font-size="5" fill="#78716C" text-anchor="middle">大理石</text>
+          <text x="50" y="160" font-size="7" fill="#64748B" text-anchor="middle">锥形瓶</text>
+        </g>
+
+        <!-- ===== LONG-NECK FUNNEL ===== -->
+        <g id="longFunnel" transform="translate(120,40)">
+          <!-- Funnel mouth -->
+          <polygon points="0,0 30,0 22,8 8,8" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="0.8"/>
+          <!-- Long neck -->
+          <rect x="12" y="8" width="6" height="120" rx="1" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.5"/>
+          <!-- End submerged in liquid (below liquid line) -->
+          <circle id="funnelEnd" cx="15" cy="128" r="3" fill="#93C5FD" opacity="0.5"/>
+          <text x="35" y="70" font-size="5" fill="#64748B">长颈漏斗</text>
+          <text x="35" y="80" font-size="4" fill="#DC2626">（末端伸入液面下）</text>
+        </g>
+
+        <!-- ===== BUBBLES IN FLASK ===== -->
+        <g id="flaskBubbleContainer"></g>
+
+        <!-- ===== RUBBER TUBE ===== -->
+        <path id="rubberTube" d="M200,100 Q220,95 240,100 Q280,110 320,130 L380,130" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+        <text x="280" y="105" font-size="5" fill="#64748B">导管</text>
+
+        <!-- ===== COLLECTING BOTTLE (upright, 向上排空气法) ===== -->
+        <g id="collectGroup" transform="translate(380,80)">
+          <rect id="bottleBody" x="0" y="0" width="70" height="100" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
+          <line x1="2" y1="3" x2="2" y2="97" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- CO2 gas accumulating (semi-transparent gray rising from bottom) -->
+          <rect id="co2Gas" x="2" y="98" width="66" height="0" rx="2" fill="rgba(148,163,184,0.15)"/>
+          <!-- Neck -->
+          <rect x="25" y="-10" width="20" height="12" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.5"/>
+          <!-- Glass plate (to cover after collection) -->
+          <rect id="glassPlate" x="-2" y="-12" width="74" height="4" rx="1" fill="rgba(219,234,254,0.3)" stroke="#93C5FD" stroke-width="0.5" opacity="0"/>
+          <!-- Tube entering bottle from bottom side -->
+          <line x1="-10" y1="50" x2="35" y2="85" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="35" y="115" font-size="7" fill="#64748B" text-anchor="middle">集气瓶（正放）</text>
+          <text x="35" y="125" font-size="5" fill="#64748B" text-anchor="middle">向上排空气法</text>
+        </g>
+
+        <!-- ===== BUBBLES IN BOTTLE ===== -->
+        <g id="bottleBubbleContainer"></g>
+
+        <!-- ===== VERIFICATION — BURNING WOOD STICK ===== -->
+        <g id="woodStick" opacity="0" transform="translate(480,80)">
+          <line x1="0" y1="0" x2="0" y2="45" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+          <!-- Flame on stick -->
+          <g id="stickFlame">
+            <ellipse cx="0" cy="-5" rx="4" ry="8" fill="#F97316" opacity="0.7"/>
+            <ellipse cx="0" cy="-3" rx="2" ry="5" fill="#FBBF24" opacity="0.6"/>
+          </g>
+          <text x="15" y="5" font-size="6" fill="#EA580C">燃着的木条</text>
+          <text id="verifyFullResult" x="15" y="18" font-size="7" fill="#DC2626" font-weight="700" opacity="0"></text>
+        </g>
+
+        <!-- ===== LIMEWATER TEST TUBE ===== -->
+        <g id="limewaterGroup" transform="translate(560,100)">
+          <rect id="limeTube" x="0" y="0" width="24" height="80" rx="10" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
+          <line x1="2" y1="5" x2="2" y2="75" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Limewater (initially clear) -->
+          <rect id="limewater" x="2" y="25" width="20" height="53" rx="8" fill="rgba(219,234,254,0.15)"/>
+          <!-- Tube from collecting bottle to limewater -->
+          <path id="limeTubing" d="M450,110 Q480,105 520,110 Q545,115 555,120 L562,130" fill="none" stroke="#92400E" stroke-width="2" stroke-linecap="round"/>
+          <!-- Bubbles in limewater -->
+          <g id="limeBubbleContainer"></g>
+          <text x="12" y="92" font-size="6" fill="#64748B" text-anchor="middle">澄清石灰水</text>
+          <text id="limeResult" x="12" y="-8" font-size="7" fill="#0284C7" font-weight="700" text-anchor="middle" opacity="0"></text>
+        </g>
+
+        <!-- ===== RIGHT SIDE INFO ===== -->
+        <g transform="translate(480,230)">
+          <rect x="0" y="0" width="210" height="36" rx="6" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+          <text x="105" y="14" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">化学方程式</text>
+          <text id="equation" x="105" y="28" font-size="7" fill="#0F172A" text-anchor="middle">CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑</text>
+        </g>
+
+        <g transform="translate(480,280)">
+          <rect x="0" y="0" width="210" height="55" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="10" y="16" font-size="8" fill="#0F172A" font-weight="600">实验状态</text>
+          <text id="stateReaction" x="10" y="32" font-size="7" fill="#64748B">反应：未开始</text>
+          <text id="stateCollect" x="10" y="46" font-size="7" fill="#64748B">收集：未开始</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="panel-area">
+    <div class="panel-scroll">
+      <!-- Step bar -->
+      <div class="panel-section">
+        <div class="section-title">实验步骤</div>
+        <div class="step-bar" id="stepBar">
+          <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
+          <div class="step-item" data-step="1"><span class="step-num">2</span>反应</div>
+          <div class="step-item" data-step="2"><span class="step-num">3</span>收集</div>
+          <div class="step-item" data-step="3"><span class="step-num">4</span>验证</div>
+        </div>
+      </div>
+
+      <!-- Current step -->
+      <div class="panel-section">
+        <div class="section-title" id="stepTitle">第 1 步：准备装置</div>
+        <div class="step-desc" id="stepDesc">检查气密性，向锥形瓶中加入大理石（CaCO₃），从长颈漏斗加入稀盐酸。注意漏斗末端伸入液面以下。</div>
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">加入稀盐酸 → 开始反应</button>
+      </div>
+
+      <!-- Observations -->
+      <div class="panel-section">
+        <div class="section-title">现象观察</div>
+        <ul class="obs-list" id="obsList">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>大理石表面产生大量气泡</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>导管口有气泡冒出</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>CO₂ 向上排出空气</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>燃着的木条熄灭（验满）</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>石灰水变浑浊（检验）</li>
+        </ul>
+      </div>
+
+      <!-- Reset -->
+      <div class="panel-section">
+        <button class="ctrl-btn secondary" id="btnReset" onclick="resetAll()">重做实验</button>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="panel-section" id="resultSection" style="display:none">
+        <div class="section-title">实验结论</div>
+        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
+          <div>1. 燃着的木条<strong style="color:#DC2626">熄灭</strong> → 证明气体是 CO₂（不支持燃烧）</div>
+          <div>2. 澄清石灰水<strong style="color:#0284C7">变浑浊</strong> → 进一步确认是 CO₂</div>
+          <div style="margin-top:4px;font-size:10px;color:#64748B">Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledge -->
+<div class="knowledge-section">
+  <div class="knowledge-container">
+    <h2>实验原理</h2>
+    <div class="formula-block" id="formula1"></div>
+    <p>大理石（主要成分 CaCO₃）与稀盐酸反应，生成 CaCl₂、H₂O 和 CO₂ 气体。</p>
+
+    <h3>为什么用大理石 + 稀盐酸？</h3>
+    <ul>
+      <li>反应速度适中，便于收集</li>
+      <li>不能用浓盐酸（挥发 HCl 气体，CO₂ 不纯）</li>
+      <li>不能用稀硫酸（生成 CaSO₄ 微溶物覆盖大理石表面，阻止反应）</li>
+      <li>不能用 Na₂CO₃（粉末反应太快，来不及收集）</li>
+    </ul>
+
+    <h3>为什么用向上排空气法？</h3>
+    <ul>
+      <li>CO₂ <strong>能溶于水</strong>，不能用排水法</li>
+      <li>CO₂ <strong>密度比空气大</strong>（相对分子质量 44 &gt; 29），从瓶底积聚，将空气向上排出</li>
+    </ul>
+
+    <h3>长颈漏斗为什么要伸入液面以下？</h3>
+    <p>防止生成的 CO₂ 从漏斗口逸出，保证气密性。</p>
+
+    <h3>验满 vs 检验</h3>
+    <ul>
+      <li><strong>验满</strong>：将<strong>燃着的木条</strong>放在集气瓶口（不是伸入瓶内），木条<strong>熄灭</strong>说明已满</li>
+      <li><strong>检验</strong>：将气体通入<strong>澄清石灰水</strong>，石灰水<strong>变浑浊</strong>证明是 CO₂</li>
+    </ul>
+    <div class="formula-block" id="formula2"></div>
+
+    <h3>O₂ vs CO₂ 制取对比（中考常考）</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
+      <div style="background:#F0F9FF;padding:10px;border-radius:8px">
+        <strong style="color:#0284C7">制取 O₂</strong><br>
+        药品：KMnO₄ 或 H₂O₂+MnO₂<br>
+        收集：排水法 / 向上排空气法<br>
+        验满：带火星木条 → <strong>复燃</strong><br>
+        性质：支持燃烧，不溶于水
+      </div>
+      <div style="background:#F0F9FF;padding:10px;border-radius:8px">
+        <strong style="color:#0284C7">制取 CO₂</strong><br>
+        药品：CaCO₃ + 稀 HCl<br>
+        收集：向上排空气法<br>
+        验满：燃着木条 → <strong>熄灭</strong><br>
+        检验：石灰水 → <strong>变浑浊</strong><br>
+        性质：不支持燃烧，能溶于水
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/shared/lab-utils.js"></script>
+<script src="/shared/chem-effects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ===== STATE =====
+const STEPS = ['ready', 'reacting', 'collecting', 'verify'];
+const STEP_INFO = [
+  { title: '第 1 步：准备装置', desc: '检查气密性，向锥形瓶中加入大理石（CaCO₃），从长颈漏斗加入稀盐酸。注意漏斗末端伸入液面以下。', btn: '加入稀盐酸 → 开始反应' },
+  { title: '第 2 步：反应产气', desc: '大理石与稀盐酸反应，表面产生大量气泡。CO₂ 气体沿导管进入集气瓶。', btn: '等待产气…' },
+  { title: '第 3 步：收集 CO₂', desc: 'CO₂ 密度比空气大，从瓶底向上积聚，将空气排出。', btn: '等待收满…' },
+  { title: '第 4 步：验证', desc: '验满：燃着木条放在瓶口 → 熄灭。检验：通入石灰水 → 变浑浊。', btn: '验满（燃着木条）' }
+];
+
+const state = { step: 0, animating: false, verified: false, tested: false };
+let flaskBubblePool = [], bottleBubblePool = [], limeBubblePool = [];
+let flaskBubbleAnim = null, bottleBubbleAnim = null, limeBubbleAnim = null;
+
+// ===== STEP CONTROL =====
+function nextStep() {
+  if (state.animating) return;
+  if (state.step >= STEPS.length - 1) {
+    // In verify step, handle sub-operations
+    if (!state.verified) { doVerifyFull(); return; }
+    if (!state.tested) { doVerifyGas(); return; }
+    return;
+  }
+  state.step++;
+  updateStepBar();
+
+  switch (STEPS[state.step]) {
+    case 'reacting': startReacting(); break;
+    case 'collecting': startCollecting(); break;
+    case 'verify': /* button handles sub-ops */ break;
+  }
+}
+
+function updateStepBar() {
+  document.querySelectorAll('#stepBar .step-item').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < state.step) el.classList.add('done');
+    if (i === state.step) el.classList.add('active');
+  });
+  const info = STEP_INFO[state.step];
+  $('stepTitle').textContent = info.title;
+  $('stepDesc').textContent = info.desc;
+  $('stepBtn').textContent = info.btn;
+  $('stepBtn').disabled = state.animating;
+}
+
+// ===== BUBBLE HELPERS =====
+function createBubblePoolLocal(container, count) {
+  const pool = [];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('r', '0');
+    c.setAttribute('fill', '#BAE6FD');
+    c.setAttribute('opacity', '0');
+    container.appendChild(c);
+    pool.push({ el: c, active: false, x: 0, y: 0, r: 0, vy: 0, life: 0 });
+  }
+  return pool;
+}
+
+function animateBubbles(pool, emitX, emitY, ceilY, rate, onFrame) {
+  let lastEmit = 0;
+  const interval = 1000 / rate;
+  function loop(now) {
+    if (now - lastEmit > interval) {
+      lastEmit = now;
+      const b = pool.find(b => !b.active);
+      if (b) {
+        b.active = true;
+        b.x = emitX + (Math.random() - 0.5) * 10;
+        b.y = emitY;
+        b.r = 1.5 + Math.random() * 2;
+        b.vy = 0.4 + Math.random() * 0.3;
+        b.life = 0;
+      }
+    }
+    pool.forEach(b => {
+      if (!b.active) return;
+      b.y -= b.vy;
+      b.x += (Math.random() - 0.5) * 0.3;
+      b.life++;
+      if (b.y < ceilY || b.life > 200) {
+        b.active = false;
+        b.el.setAttribute('opacity', '0');
+        return;
+      }
+      b.el.setAttribute('cx', b.x);
+      b.el.setAttribute('cy', b.y);
+      b.el.setAttribute('r', b.r);
+      b.el.setAttribute('opacity', '0.45');
+    });
+    if (onFrame) onFrame();
+    return requestAnimationFrame(loop);
+  }
+  return requestAnimationFrame(loop);
+}
+
+function stopBubbles(pool, animRef) {
+  if (animRef) cancelAnimationFrame(animRef);
+  pool.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+}
+
+// ===== STEP 2: REACTING =====
+function startReacting() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('statusBadge').textContent = '大理石与稀盐酸反应，产生 CO₂…';
+  $('statusBadge').className = 'status-badge done';
+  $('stateReaction').textContent = '反应：进行中';
+
+  // Bubbles from marble surface (in flask)
+  if (flaskBubblePool.length === 0) flaskBubblePool = createBubblePoolLocal($('flaskBubbleContainer'), 30);
+  flaskBubbleAnim = animateBubbles(flaskBubblePool, 150, 230, 160, 3);
+  checkObs('obs1');
+  checkObs('obs2');
+
+  // After 2s, auto-advance to collecting
+  setTimeout(() => {
+    state.animating = false;
+    state.step = 2;
+    updateStepBar();
+    startCollecting();
+  }, 2000);
+}
+
+// ===== STEP 3: COLLECTING (向上排空气法) =====
+function startCollecting() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('stateCollect').textContent = '收集：进行中…';
+  checkObs('obs3');
+
+  // Bubbles entering bottle
+  if (bottleBubblePool.length === 0) bottleBubblePool = createBubblePoolLocal($('bottleBubbleContainer'), 20);
+  bottleBubbleAnim = animateBubbles(bottleBubblePool, 415, 165, 85, 2);
+
+  // CO2 gas fill animation (gray rect rising from bottom)
+  const bottleH = 96; // inner height
+  const startTime = performance.now();
+  const duration = 3500;
+
+  function animateGas(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const gasH = bottleH * eased;
+    $('co2Gas').setAttribute('y', 98 - gasH);
+    $('co2Gas').setAttribute('height', gasH);
+    $('stateCollect').textContent = `收集：${Math.round(eased * 100)}%`;
+
+    if (t < 1) {
+      requestAnimationFrame(animateGas);
+    } else {
+      // Stop bottle bubbles
+      stopBubbles(bottleBubblePool, bottleBubbleAnim);
+      bottleBubbleAnim = null;
+      $('stateCollect').textContent = '收集：完成';
+
+      // Cover with glass plate
+      $('glassPlate').setAttribute('opacity', '1');
+
+      // Advance to verify
+      state.animating = false;
+      state.step = 3;
+      updateStepBar();
+      $('stepBtn').disabled = false;
+    }
+  }
+  requestAnimationFrame(animateGas);
+}
+
+// ===== STEP 4a: VERIFY FULL (验满) =====
+function doVerifyFull() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+
+  // Show burning wood stick
+  $('woodStick').setAttribute('opacity', '1');
+  $('statusBadge').textContent = '验满：将燃着的木条放在瓶口…';
+
+  setTimeout(() => {
+    // Flame extinguishes
+    $('stickFlame').setAttribute('opacity', '0');
+    $('verifyFullResult').textContent = '熄灭！→ CO₂ 已满';
+    $('verifyFullResult').setAttribute('opacity', '1');
+    checkObs('obs4');
+
+    state.verified = true;
+    state.animating = false;
+    $('stepBtn').disabled = false;
+    $('stepBtn').textContent = '检验（石灰水）';
+    $('statusBadge').textContent = '木条熄灭，CO₂ 已满。接下来检验气体';
+  }, 1000);
+}
+
+// ===== STEP 4b: VERIFY GAS (石灰水检验) =====
+function doVerifyGas() {
+  state.animating = true;
+  $('stepBtn').disabled = true;
+  $('statusBadge').textContent = '将 CO₂ 通入澄清石灰水…';
+
+  // Show tubing to limewater
+  $('limeTubing').setAttribute('opacity', '1');
+
+  // Bubbles in limewater
+  if (limeBubblePool.length === 0) limeBubblePool = createBubblePoolLocal($('limeBubbleContainer'), 10);
+  limeBubbleAnim = animateBubbles(limeBubblePool, 572, 170, 130, 2);
+
+  // Limewater turns turbid (HSL interpolation: clear → milky white)
+  const startTime = performance.now();
+  const duration = 2500;
+
+  function animateTurbid(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    // Clear (HSL 210,80%,95%) → Milky (HSL 40,10%,85%)
+    const hsl = ChemEffects.lerpHSL([210, 80, 95], [40, 10, 85], eased);
+    $('limewater').setAttribute('fill', ChemEffects.hslToString(hsl));
+    $('limewater').setAttribute('opacity', 0.3 + eased * 0.5);
+
+    if (t < 1) {
+      requestAnimationFrame(animateTurbid);
+    } else {
+      stopBubbles(limeBubblePool, limeBubbleAnim);
+      limeBubbleAnim = null;
+
+      $('limeResult').textContent = '变浑浊！';
+      $('limeResult').setAttribute('opacity', '1');
+      checkObs('obs5');
+
+      state.tested = true;
+      state.animating = false;
+      $('stepBtn').textContent = '实验完成';
+      $('stepBtn').disabled = true;
+      $('resultSection').style.display = 'block';
+      $('statusBadge').textContent = '实验完成！CO₂ 验证成功';
+
+      // Stop flask bubbles too
+      stopBubbles(flaskBubblePool, flaskBubbleAnim);
+      flaskBubbleAnim = null;
+      $('stateReaction').textContent = '反应：已完成';
+    }
+  }
+  requestAnimationFrame(animateTurbid);
+}
+
+// ===== UTILITIES =====
+function checkObs(id) {
+  const el = $(id);
+  if (el && !el.classList.contains('checked')) {
+    el.classList.add('checked');
+    el.querySelector('.obs-check').textContent = '✓';
+  }
+}
+
+// ===== RESET =====
+function resetAll() {
+  stopBubbles(flaskBubblePool, flaskBubbleAnim); flaskBubbleAnim = null;
+  stopBubbles(bottleBubblePool, bottleBubbleAnim); bottleBubbleAnim = null;
+  stopBubbles(limeBubblePool, limeBubbleAnim); limeBubbleAnim = null;
+
+  Object.assign(state, { step: 0, animating: false, verified: false, tested: false });
+
+  $('co2Gas').setAttribute('y', '98');
+  $('co2Gas').setAttribute('height', '0');
+  $('glassPlate').setAttribute('opacity', '0');
+  $('woodStick').setAttribute('opacity', '0');
+  $('stickFlame').setAttribute('opacity', '1');
+  $('verifyFullResult').setAttribute('opacity', '0');
+  $('limewater').setAttribute('fill', 'rgba(219,234,254,0.15)');
+  $('limewater').setAttribute('opacity', '1');
+  $('limeResult').setAttribute('opacity', '0');
+  $('limeTubing').setAttribute('opacity', '1');
+  $('stateReaction').textContent = '反应：未开始';
+  $('stateCollect').textContent = '收集：未开始';
+  $('resultSection').style.display = 'none';
+  $('statusBadge').textContent = '准备实验 → 按步骤操作';
+  $('statusBadge').className = 'status-badge idle';
+
+  document.querySelectorAll('.obs-item').forEach(el => {
+    el.classList.remove('checked');
+    el.querySelector('.obs-check').textContent = '';
+  });
+  updateStepBar();
+}
+
+// ===== FORMULAS =====
+function renderFormulas() {
+  if (!window.katex) return;
+  try {
+    katex.render('CaCO_3 + 2HCl \\rightarrow CaCl_2 + H_2O + CO_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true });
+    katex.render('Ca(OH)_2 + CO_2 \\rightarrow CaCO_3\\downarrow + H_2O', $('formula2'), { throwOnError: false, displayMode: true });
+  } catch(e) {}
+}
+
+(function tryKatex(n) {
+  if (window.katex) { renderFormulas(); return; }
+  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
+})(0);
+</script>
+<script src="/shared/theme.js"></script>
+</body>
+</html>
