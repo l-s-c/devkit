@@ -43,44 +43,45 @@
         <rect width="720" height="400" fill="#F8FAFC"/>
 
         <!-- ===== COLLECTING BOTTLE ===== -->
-        <g id="bottleGroup" transform="translate(200,40)">
+        <g id="bottleGroup" transform="translate(160,20)">
           <!-- Glass body -->
-          <rect id="bottleBody" x="0" y="20" width="100" height="160" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
+          <rect id="bottleBody" x="0" y="20" width="140" height="220" rx="8" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="2.5"/>
+          <rect x="0" y="20" width="140" height="220" rx="8" fill="url(#glassGrad)" pointer-events="none"/>
           <!-- Left highlight -->
-          <line x1="3" y1="25" x2="3" y2="175" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="5" y1="30" x2="5" y2="230" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
           <!-- Neck -->
-          <rect x="38" y="5" width="24" height="18" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="50" y="3" width="40" height="22" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
           <!-- Scale marks -->
-          <line x1="0" y1="148" x2="10" y2="148" stroke="#94A3B8" stroke-width="0.5"/>
-          <text x="13" y="151" font-size="6" fill="#94A3B8">1/5</text>
-          <line x1="0" y1="116" x2="8" y2="116" stroke="#94A3B8" stroke-width="0.3"/>
-          <line x1="0" y1="84" x2="8" y2="84" stroke="#94A3B8" stroke-width="0.3"/>
-          <line x1="0" y1="52" x2="8" y2="52" stroke="#94A3B8" stroke-width="0.3"/>
-          <text x="50" y="205" font-size="7" fill="#64748B" text-anchor="middle">集气瓶 (500mL)</text>
+          <line x1="0" y1="200" x2="14" y2="200" stroke="#94A3B8" stroke-width="0.8"/>
+          <text x="18" y="204" font-size="7" fill="#94A3B8" font-weight="600">1/5</text>
+          <line x1="0" y1="156" x2="10" y2="156" stroke="#94A3B8" stroke-width="0.4"/>
+          <line x1="0" y1="112" x2="10" y2="112" stroke="#94A3B8" stroke-width="0.4"/>
+          <line x1="0" y1="68" x2="10" y2="68" stroke="#94A3B8" stroke-width="0.4"/>
+          <text x="70" y="265" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">集气瓶 (500mL)</text>
 
           <!-- Water inside bottle (initially hidden) -->
-          <rect id="bottleWater" x="2" y="180" width="96" height="0" fill="#7DD3FC" opacity="0.4" rx="2"/>
+          <rect id="bottleWater" x="4" y="240" width="132" height="0" fill="#7DD3FC" opacity="0.4" rx="4"/>
           <!-- Water meniscus -->
-          <ellipse id="waterMeniscus" cx="50" cy="180" rx="48" ry="3" fill="#38BDF8" opacity="0"/>
+          <ellipse id="waterMeniscus" cx="70" cy="240" rx="66" ry="4" fill="#38BDF8" opacity="0"/>
 
           <!-- Rubber stopper -->
-          <rect id="stopper" x="34" y="8" width="32" height="10" rx="3" fill="#92400E" stroke="#78350F" stroke-width="0.5"/>
-          <text x="50" y="0" font-size="5" fill="#64748B" text-anchor="middle">橡皮塞</text>
+          <rect id="stopper" x="44" y="6" width="52" height="14" rx="4" fill="#92400E" stroke="#78350F" stroke-width="0.8"/>
+          <text x="70" y="-3" font-size="7" fill="#64748B" text-anchor="middle">橡皮塞</text>
         </g>
 
         <!-- ===== COMBUSTION SPOON ===== -->
-        <g id="spoonGroup" class="clickable" transform="translate(250,48)" onclick="nextStep()">
+        <g id="spoonGroup" class="clickable" transform="translate(230,30)" onclick="nextStep()">
           <!-- Handle through stopper -->
-          <line id="spoonHandle" x1="0" y1="0" x2="0" y2="80" stroke="#78716C" stroke-width="2" stroke-linecap="round"/>
+          <line id="spoonHandle" x1="0" y1="0" x2="0" y2="110" stroke="#78716C" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Spoon cup -->
-          <ellipse id="spoonCup" cx="0" cy="80" rx="8" ry="4" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
+          <ellipse id="spoonCup" cx="0" cy="110" rx="10" ry="5" fill="#78716C" stroke="#57534E" stroke-width="0.8"/>
           <!-- Red phosphorus -->
-          <circle id="redPhosphorus" cx="0" cy="78" r="5" fill="#DC2626" opacity="1"/>
-          <text x="15" y="82" font-size="5" fill="#DC2626">红磷</text>
+          <circle id="redPhosphorus" cx="0" cy="108" r="7" fill="#DC2626" opacity="1"/>
+          <text x="18" y="112" font-size="7" fill="#DC2626" font-weight="600">红磷</text>
         </g>
 
         <!-- ===== FLAME (hidden initially) ===== -->
-        <g id="flameGroup" opacity="0" transform="translate(250,108)">
+        <g id="flameGroup" opacity="0" transform="translate(230,120)">
           <ellipse cx="0" cy="0" rx="10" ry="18" fill="url(#flameGrad)" opacity="0.8"/>
           <ellipse cx="0" cy="4" rx="5" ry="10" fill="#FEF3C7" opacity="0.6"/>
         </g>
@@ -91,21 +92,22 @@
         <!-- =====導管 + 止水夹 ===== -->
         <g id="tubeGroup">
           <!-- Rubber tube from bottle to trough -->
-          <path id="rubberTube" d="M200,190 Q180,190 170,220 Q160,260 180,280 L360,280" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-          <text x="165" y="245" font-size="5" fill="#64748B">导管</text>
+          <path id="rubberTube" d="M160,250 Q140,250 130,280 Q120,320 150,340 L360,340" fill="none" stroke="#92400E" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="125" y="305" font-size="7" fill="#64748B">导管</text>
           <!-- Clamp -->
-          <rect id="clamp" class="clickable" x="172" y="230" width="16" height="10" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5" onclick="nextStep()"/>
-          <text id="clampLabel" x="180" y="254" font-size="5" fill="#64748B" text-anchor="middle">止水夹(关)</text>
+          <rect id="clamp" class="clickable" x="132" y="290" width="20" height="12" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.8" onclick="nextStep()"/>
+          <text id="clampLabel" x="142" y="316" font-size="6" fill="#64748B" text-anchor="middle">止水夹(关)</text>
         </g>
 
         <!-- ===== WATER TROUGH ===== -->
-        <g id="troughGroup" transform="translate(330,260)">
-          <rect x="0" y="0" width="120" height="60" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
+        <g id="troughGroup" transform="translate(330,310)">
+          <rect x="0" y="0" width="150" height="70" rx="6" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="2"/>
+          <rect x="0" y="0" width="150" height="70" rx="6" fill="url(#glassGrad)" pointer-events="none"/>
           <!-- Trough water -->
-          <rect id="troughWater" x="2" y="15" width="116" height="43" rx="2" fill="#7DD3FC" opacity="0.35"/>
+          <rect id="troughWater" x="4" y="18" width="142" height="48" rx="4" fill="#7DD3FC" opacity="0.35"/>
           <!-- Tube end submerged -->
-          <line x1="30" y1="0" x2="30" y2="35" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-          <text x="60" y="72" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
+          <line x1="30" y1="0" x2="30" y2="40" stroke="#92400E" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="75" y="85" font-size="8" fill="#64748B" text-anchor="middle" font-weight="600">水槽</text>
         </g>
 
         <!-- Canvas click zone -->
