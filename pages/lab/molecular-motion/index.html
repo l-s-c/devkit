@@ -37,25 +37,29 @@
         <!-- ===== LARGE BEAKER (sealed container) ===== -->
         <g transform="translate(60,20)">
           <!-- Large beaker with glass effect -->
-          <rect id="bigBeaker" x="0" y="0" width="360" height="340" rx="10" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="2"/>
+          <rect id="bigBeaker" x="0" y="0" width="360" height="340" rx="10" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="2.5"/>
+          <!-- Glass gradient overlay -->
+          <rect x="0" y="0" width="360" height="340" rx="10" fill="url(#glassGrad)" pointer-events="none"/>
           <!-- Left highlight -->
-          <line x1="4" y1="15" x2="4" y2="325" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="5" y1="15" x2="5" y2="325" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round"/>
           <!-- Glass cover -->
           <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.2)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
           <text id="sealLabel" x="180" y="-18" font-size="8" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
 
           <!-- Small beaker A (ammonia) — with glass quality -->
           <g transform="translate(25,165)">
-            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.5"/>
-            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="#F0FDFA" stroke="#67E8F9" stroke-width="2"/>
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" pointer-events="none"/>
+            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
             <rect id="ammoniaLiquid" x="4" y="70" width="92" height="76" rx="5" fill="hsl(185,70%,65%)" opacity="0"/>
             <text x="50" y="168" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 A 浓氨水</text>
           </g>
 
           <!-- Small beaker B (phenolphthalein) — with glass quality -->
           <g transform="translate(235,165)">
-            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" stroke="#FDA4AF" stroke-width="1.5"/>
-            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="2"/>
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" pointer-events="none"/>
+            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
             <rect id="phenolLiquid" x="4" y="70" width="92" height="76" rx="5" fill="hsl(0,0%,95%)" opacity="0"/>
             <text x="50" y="168" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 B 酚酞溶液</text>
           </g>
