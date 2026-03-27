@@ -199,15 +199,18 @@
           <text id="co2LabelC" x="30" y="30" font-size="5" fill="#0284C7" text-anchor="middle">点击通入</text>
         </g>
 
-        <!-- Alcohol lamp -->
-        <g id="lampC" class="clickable" transform="translate(200,300)" onclick="startHeatLitmus()" style="display:none">
-          <rect x="10" y="0" width="40" height="25" rx="4" fill="#F59E0B" stroke="#D97706" stroke-width="0.8"/>
-          <line x1="30" y1="0" x2="30" y2="-8" stroke="#1E293B" stroke-width="1.5"/>
+        <!-- Alcohol lamp (5-element standard) -->
+        <g id="lampC" class="clickable" transform="translate(190,290)" onclick="startHeatLitmus()" style="display:none">
+          <rect x="0" y="15" width="60" height="32" rx="7" fill="#FEF3C7" stroke="#D97706" stroke-width="1.2"/>
+          <rect x="4" y="30" width="52" height="14" rx="4" fill="#FDE68A" opacity="0.6"/>
+          <rect x="23" y="5" width="14" height="14" rx="3" fill="#78716C" stroke="#6B7280" stroke-width="0.6"/>
+          <line x1="30" y1="5" x2="30" y2="-4" stroke="#1E293B" stroke-width="1.5"/>
           <g id="lampFlameC" opacity="0">
-            <ellipse cx="30" cy="-15" rx="6" ry="10" fill="#F97316" opacity="0.7" filter="url(#flameBlurC)"/>
-            <ellipse cx="30" cy="-12" rx="3" ry="6" fill="#FEF3C7" opacity="0.6"/>
+            <ellipse cx="30" cy="-14" rx="8" ry="14" fill="#F97316" opacity="0.6" filter="url(#flameBlurC)"/>
+            <ellipse cx="30" cy="-12" rx="5" ry="10" fill="#FBBF24" opacity="0.7"/>
+            <ellipse cx="30" cy="-10" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.8"/>
           </g>
-          <text x="30" y="40" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
+          <text x="30" y="60" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
         </g>
 
         <!-- CO₂ escape bubbles (pre-drawn 10) -->
