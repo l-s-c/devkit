@@ -26,19 +26,26 @@
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <filter id="molGlow"><feGaussianBlur stdDeviation="1.5"/></filter>
           <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
-          <filter id="glowHL"><feGaussianBlur stdDeviation="4"/></filter>
-          <!-- Designer v2 shared gradients -->
-          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="rgba(147,197,253,0.55)"/>
-            <stop offset="15%" stop-color="rgba(186,230,253,0.18)"/>
-            <stop offset="85%" stop-color="rgba(186,230,253,0.18)"/>
-            <stop offset="100%" stop-color="rgba(147,197,253,0.55)"/>
+          <!-- Glass body gradient (vertical, subtle depth) -->
+          <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+            <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+            <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+            <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
           </linearGradient>
+          <!-- Glass edge stroke gradient -->
           <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#0EA5E9"/>
-            <stop offset="50%" stop-color="#38BDF8"/>
-            <stop offset="100%" stop-color="#0EA5E9"/>
+            <stop offset="0%" stop-color="#0284C7"/>
+            <stop offset="50%" stop-color="#0EA5E9"/>
+            <stop offset="100%" stop-color="#0284C7"/>
           </linearGradient>
+          <!-- Highlight gradient (white softglow band) -->
+          <linearGradient id="highlightGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+          <!-- Water fill -->
           <linearGradient id="waterFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(56,189,248,0.15)"/>
             <stop offset="100%" stop-color="rgba(14,165,233,0.3)"/>
@@ -47,53 +54,65 @@
 
         <!-- ===== LARGE BEAKER (sealed container) — Designer v2 ===== -->
         <g transform="translate(60,15)">
-          <!-- 大烧杯实底色 -->
-          <rect x="2" y="2" width="356" height="341" rx="15" fill="#A8C8E0" stroke="none"/>
-          <!-- 大烧杯体 -->
-          <path d="M0,10 L0,325 Q0,345 15,345 L345,345 Q360,345 360,325 L360,10 Q360,5 355,3 L350,0 L10,0 L5,3 Q0,5 0,10 Z"
-                fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="3"/>
+          <!-- 大烧杯底色 -->
+          <path d="M8,0 L2,8 L2,325 Q2,345 17,345 L343,345 Q358,345 358,325 L358,8 L352,0 Z"
+                fill="#B8D4EA" stroke="none"/>
+          <!-- 大烧杯玻璃渐变 -->
+          <path d="M8,0 L2,8 L2,325 Q2,345 17,345 L343,345 Q358,345 358,325 L358,8 L352,0 Z"
+                fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2.5"/>
           <!-- 倒嘴 -->
-          <path d="M0,10 Q-20,0 -8,-8" fill="none" stroke="url(#glassEdge)" stroke-width="3" stroke-linecap="round"/>
-          <!-- 左高光（宽！） -->
-          <line x1="18" y1="30" x2="18" y2="320" stroke="white" stroke-width="12" opacity="0.95" filter="url(#glowHL)" stroke-linecap="round"/>
+          <path d="M8,0 Q-5,-3 -4,-12" fill="none" stroke="url(#glassEdge)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 左高光带（渐变矩形！） -->
+          <rect x="10" y="15" width="16" height="310" rx="8" fill="url(#highlightGrad)" opacity="0.9"/>
           <!-- 右微光 -->
-          <line x1="342" y1="30" x2="342" y2="320" stroke="rgba(255,255,255,0.25)" stroke-width="3" stroke-linecap="round"/>
+          <rect x="338" y="15" width="8" height="310" rx="4" fill="rgba(255,255,255,0.2)"/>
+          <!-- 底部阴影 -->
+          <ellipse cx="180" cy="348" rx="160" ry="3" fill="rgba(0,0,0,0.06)"/>
+          <!-- 底部弧形反光 -->
+          <ellipse cx="180" cy="340" rx="140" ry="4" fill="rgba(255,255,255,0.15)"/>
+          <!-- 右壁厚度线 -->
+          <line x1="354" y1="12" x2="354" y2="325" stroke="rgba(100,150,190,0.3)" stroke-width="2"/>
+
           <!-- 玻璃片 -->
           <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
           <text id="sealLabel" x="180" y="-18" font-size="9" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
 
           <!-- 小烧杯 A -->
           <g transform="translate(30,160)">
-            <rect x="2" y="2" width="96" height="136" rx="8" fill="#A8C8E0" stroke="none"/>
-            <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
-            <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="5" y1="8" x2="5" y2="125" stroke="white" stroke-width="5" opacity="0.95" filter="url(#glowHL)"/>
-            <line x1="85" y1="25" x2="96" y2="25" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <line x1="85" y1="55" x2="96" y2="55" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <line x1="85" y1="85" x2="96" y2="85" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <text x="82" y="28" font-size="6" fill="#64748B" text-anchor="end">50</text>
-            <text x="82" y="88" font-size="6" fill="#64748B" text-anchor="end">100</text>
+            <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
+                  fill="#B8D4EA" stroke="none"/>
+            <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
+                  fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.8"/>
+            <path d="M3,0 Q-3,-2 -2,-8" fill="none" stroke="url(#glassEdge)" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="4" y="6" width="6" height="120" rx="3" fill="url(#highlightGrad)" opacity="0.85"/>
+            <line x1="84" y1="35" x2="96" y2="35" stroke="#0284C7" stroke-width="1.2" opacity="0.7"/>
+            <text x="81" y="38" font-size="7" fill="#64748B" text-anchor="end">50</text>
+            <line x1="87" y1="55" x2="96" y2="55" stroke="#0284C7" stroke-width="0.8" opacity="0.5"/>
+            <line x1="84" y1="75" x2="96" y2="75" stroke="#0284C7" stroke-width="1.2" opacity="0.7"/>
+            <text x="81" y="78" font-size="7" fill="#64748B" text-anchor="end">100</text>
+            <line x1="87" y1="95" x2="96" y2="95" stroke="#0284C7" stroke-width="0.8" opacity="0.5"/>
             <rect id="ammoniaLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(185,70%,65%)" opacity="0"/>
-            <path id="ammoniaMenuscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.6" opacity="0"/>
-            <text x="50" y="158" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 A 浓氨水</text>
+            <path id="ammoniaMenuscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.8" opacity="0"/>
+            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 A 浓氨水</text>
           </g>
 
           <!-- 小烧杯 B -->
           <g transform="translate(230,160)">
-            <rect x="2" y="2" width="96" height="136" rx="8" fill="#A8C8E0" stroke="none"/>
-            <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
-            <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="5" y1="8" x2="5" y2="125" stroke="white" stroke-width="5" opacity="0.95" filter="url(#glowHL)"/>
-            <line x1="85" y1="25" x2="96" y2="25" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <line x1="85" y1="55" x2="96" y2="55" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <line x1="85" y1="85" x2="96" y2="85" stroke="#0EA5E9" stroke-width="1.5" opacity="0.9"/>
-            <text x="82" y="28" font-size="6" fill="#64748B" text-anchor="end">50</text>
-            <text x="82" y="88" font-size="6" fill="#64748B" text-anchor="end">100</text>
+            <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
+                  fill="#B8D4EA" stroke="none"/>
+            <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
+                  fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.8"/>
+            <path d="M3,0 Q-3,-2 -2,-8" fill="none" stroke="url(#glassEdge)" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="4" y="6" width="6" height="120" rx="3" fill="url(#highlightGrad)" opacity="0.85"/>
+            <line x1="84" y1="35" x2="96" y2="35" stroke="#0284C7" stroke-width="1.2" opacity="0.7"/>
+            <text x="81" y="38" font-size="7" fill="#64748B" text-anchor="end">50</text>
+            <line x1="87" y1="55" x2="96" y2="55" stroke="#0284C7" stroke-width="0.8" opacity="0.5"/>
+            <line x1="84" y1="75" x2="96" y2="75" stroke="#0284C7" stroke-width="1.2" opacity="0.7"/>
+            <text x="81" y="78" font-size="7" fill="#64748B" text-anchor="end">100</text>
+            <line x1="87" y1="95" x2="96" y2="95" stroke="#0284C7" stroke-width="0.8" opacity="0.5"/>
             <rect id="phenolLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(0,0%,95%)" opacity="0"/>
-            <path id="phenolMeniscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.6" opacity="0"/>
-            <text x="50" y="158" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 B 酚酞溶液</text>
+            <path id="phenolMeniscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.8" opacity="0"/>
+            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 B 酚酞溶液</text>
           </g>
 
           <!-- 扩散箭头 -->
