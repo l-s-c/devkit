@@ -40,25 +40,36 @@
         <rect width="720" height="400" fill="#F8FAFC"/>
 
         <!-- Beaker (main element, large) -->
-        <g id="beakerGroup" transform="translate(180,80)">
-          <rect id="beakerBody" x="0" y="0" width="180" height="220" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
-          <line x1="3" y1="5" x2="3" y2="215" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
-          <!-- Solution -->
-          <rect id="solution" x="2" y="60" width="176" height="158" rx="3" fill="hsl(0,0%,95%)" opacity="0.8"/>
+        <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/>
+            <stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/>
+            <stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/>
+            <stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/>
+          </linearGradient>
+        </defs>
+        <g id="beakerGroup" transform="translate(130,50)">
+          <rect id="beakerBody" x="0" y="0" width="230" height="280" rx="10" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.8"/>
+          <line x1="4" y1="10" x2="4" y2="270" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Solution with curved liquid surface -->
+          <rect id="solution" x="4" y="80" width="222" height="196" rx="6" fill="hsl(0,0%,95%)" opacity="0.8"/>
+          <!-- Liquid surface line -->
+          <path d="M4,80 Q60,76 115,80 Q170,84 226,80" fill="none" stroke="rgba(147,197,253,0.5)" stroke-width="1"/>
           <!-- Ripple (shown on drop) -->
-          <ellipse id="ripple" cx="90" cy="60" rx="0" ry="0" fill="none" stroke="#93C5FD" stroke-width="0.5" opacity="0"/>
+          <ellipse id="ripple" cx="115" cy="80" rx="0" ry="0" fill="none" stroke="#93C5FD" stroke-width="0.5" opacity="0"/>
           <!-- Stir rod -->
-          <line id="stirRod" x1="90" y1="-25" x2="90" y2="200" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" opacity="0"/>
-          <text x="90" y="240" font-size="8" fill="#64748B" text-anchor="middle">烧杯（NaOH 溶液）</text>
+          <line id="stirRod" x1="115" y1="-25" x2="115" y2="260" stroke="#93C5FD" stroke-width="3.5" stroke-linecap="round" opacity="0"/>
+          <text x="115" y="300" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">烧杯（NaOH 溶液）</text>
         </g>
         <!-- Color label -->
-        <g transform="translate(370,160)">
-          <text id="colorLabel" x="0" y="0" font-size="10" fill="#64748B">无色</text>
-          <text id="phLabel" x="0" y="18" font-size="9" fill="#64748B">pH ≈ 13</text>
+        <g transform="translate(375,140)">
+          <text id="colorLabel" x="0" y="0" font-size="12" fill="#64748B" font-weight="600">无色</text>
+          <text id="phLabel" x="0" y="22" font-size="10" fill="#64748B">pH ≈ 13</text>
         </g>
 
         <!-- Dropper (phenolphthalein / HCl) -->
-        <g id="dropperGroup" class="clickable" transform="translate(245,10)" onclick="state.phase==='add_indicator'?addIndicator():addAcidDrop()">
+        <g id="dropperGroup" class="clickable" transform="translate(222,5)" onclick="state.phase==='add_indicator'?addIndicator():addAcidDrop()">
           <rect x="0" y="0" width="14" height="50" rx="3" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
           <ellipse cx="7" cy="0" rx="10" ry="8" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
           <ellipse id="dropperTip" cx="7" cy="53" rx="3" ry="2.5" fill="#7DD3FC" opacity="0.5"/>
