@@ -306,12 +306,12 @@ const state = {
 // Pre-conditions: what must be true before each action
 const PRE = {
   seal:  () => state.ammoniaAdded && state.phenolAdded,
-  light: () => state.sealed && state.diffDone
+  light: () => state.sealed
 };
 
 const HINTS = {
   seal:  '先倒入浓氨水和酚酞，再盖玻璃片密封',
-  light: '等扩散完成（进度条走满）再加热对比'
+  light: '先盖玻璃片密封再加热'
 };
 
 // Beaker regions (relative to big beaker at 30,10)
@@ -427,6 +427,14 @@ function lightLamp() {
   state.speedMult = 2;
   $('toolMatch').classList.add('used');
   $('lampFlame').setAttribute('opacity', '1');
+
+  // Record normal time (even if not finished)
+  if (!state.normalTime) {
+    state.normalTime = state.diffDone ? (state.diffTime / 60).toFixed(1) : (state.diffTime / 60).toFixed(1) + '+';
+    $('tempNormal').textContent = '常温 ' + state.normalTime + 's';
+  }
+  // Stop current diffusion
+  state.diffusing = false;
 
   // Reset phenol to colorless for comparison
   $('phenolLiquid').setAttribute('fill', 'hsl(0,0%,95%)');
