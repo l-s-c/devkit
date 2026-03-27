@@ -10,6 +10,11 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+.tool-item{cursor:grab;transition:opacity 0.3s}
+.tool-item:hover{filter:brightness(1.1)}
+.tool-item.used{opacity:0.25;pointer-events:none}
+.drop-highlight{filter:brightness(1.15) drop-shadow(0 0 6px rgba(2,132,199,0.5))}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
 </style>
 </head>
 <body>
@@ -17,7 +22,7 @@
   <div class="canvas-area">
     <div class="canvas-header">
       <h1 class="exp-title">分子运动实验</h1>
-      <div class="exp-subtitle">浓氨水 + 酚酞 — 微观可视化</div>
+      <div class="exp-subtitle">浓氨水 + 酚酞 — 自由探索</div>
     </div>
     <div class="canvas-wrapper">
       <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -26,58 +31,48 @@
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <filter id="molGlow"><feGaussianBlur stdDeviation="1.5"/></filter>
           <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
-          <!-- Glass body gradient (vertical, subtle depth) -->
           <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
             <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
             <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
             <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
           </linearGradient>
-          <!-- Glass edge stroke gradient -->
           <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="#0284C7"/>
             <stop offset="50%" stop-color="#0EA5E9"/>
             <stop offset="100%" stop-color="#0284C7"/>
           </linearGradient>
-          <!-- Highlight gradient (white softglow band) -->
           <linearGradient id="highlightGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
             <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
             <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
           </linearGradient>
-          <!-- Water fill -->
           <linearGradient id="waterFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(56,189,248,0.15)"/>
             <stop offset="100%" stop-color="rgba(14,165,233,0.3)"/>
           </linearGradient>
         </defs>
 
-        <!-- ===== LARGE BEAKER (sealed container) — Designer v2 ===== -->
-        <g transform="translate(60,15)">
-          <!-- 大烧杯底色 -->
+        <!-- ===== LARGE BEAKER (sealed container) ===== -->
+        <g transform="translate(30,10)">
           <path d="M8,0 L2,8 L2,325 Q2,345 17,345 L343,345 Q358,345 358,325 L358,8 L352,0 Z"
                 fill="#B8D4EA" stroke="none"/>
-          <!-- 大烧杯玻璃渐变 -->
           <path d="M8,0 L2,8 L2,325 Q2,345 17,345 L343,345 Q358,345 358,325 L358,8 L352,0 Z"
                 fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="3.5"/>
-          <!-- 倒嘴 -->
           <path d="M8,0 Q-5,-3 -4,-12" fill="none" stroke="url(#glassEdge)" stroke-width="3.5" stroke-linecap="round"/>
-          <!-- 左高光带（渐变矩形！） -->
           <rect x="10" y="15" width="24" height="310" rx="12" fill="url(#highlightGrad)" opacity="0.9"/>
-          <!-- 右微光 -->
           <rect x="338" y="15" width="8" height="310" rx="4" fill="rgba(255,255,255,0.2)"/>
-          <!-- 底部阴影 -->
           <ellipse cx="180" cy="348" rx="160" ry="3" fill="rgba(0,0,0,0.06)"/>
-          <!-- 底部弧形反光 -->
-          <ellipse cx="180" cy="340" rx="140" ry="4" fill="rgba(255,255,255,0.15)"/>
-          <!-- 右壁厚度线 -->
           <line x1="354" y1="12" x2="354" y2="325" stroke="rgba(100,150,190,0.3)" stroke-width="2"/>
 
-          <!-- 玻璃片 -->
+          <!-- Glass cover (hidden until sealed) -->
           <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
           <text id="sealLabel" x="180" y="-18" font-size="9" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
 
-          <!-- 小烧杯 A -->
+          <!-- Drop zone: glass cover target -->
+          <rect id="dropCover" class="drop-zone" x="-5" y="-14" width="370" height="22" rx="4"/>
+
+          <!-- Small beaker A -->
           <g transform="translate(30,160)">
             <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
                   fill="#B8D4EA" stroke="none"/>
@@ -87,16 +82,16 @@
             <rect x="4" y="6" width="10" height="120" rx="5" fill="url(#highlightGrad)" opacity="0.85"/>
             <line x1="84" y1="35" x2="96" y2="35" stroke="#0284C7" stroke-width="2" opacity="0.7"/>
             <text x="81" y="38" font-size="9" fill="#64748B" text-anchor="end">50</text>
-            <line x1="87" y1="55" x2="96" y2="55" stroke="#0284C7" stroke-width="1.2" opacity="0.5"/>
             <line x1="84" y1="75" x2="96" y2="75" stroke="#0284C7" stroke-width="2" opacity="0.7"/>
             <text x="81" y="78" font-size="9" fill="#64748B" text-anchor="end">100</text>
-            <line x1="87" y1="95" x2="96" y2="95" stroke="#0284C7" stroke-width="1.2" opacity="0.5"/>
+            <!-- Drop zone: ammonia target -->
+            <rect id="dropA" class="drop-zone" x="-5" y="-10" width="110" height="155" rx="6"/>
             <rect id="ammoniaLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(185,70%,65%)" opacity="0"/>
             <path id="ammoniaMenuscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.8" opacity="0"/>
-            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 A 浓氨水</text>
+            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 A</text>
           </g>
 
-          <!-- 小烧杯 B -->
+          <!-- Small beaker B -->
           <g transform="translate(230,160)">
             <path d="M3,0 L0,4 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,4 L97,0 Z"
                   fill="#B8D4EA" stroke="none"/>
@@ -106,21 +101,40 @@
             <rect x="4" y="6" width="10" height="120" rx="5" fill="url(#highlightGrad)" opacity="0.85"/>
             <line x1="84" y1="35" x2="96" y2="35" stroke="#0284C7" stroke-width="2" opacity="0.7"/>
             <text x="81" y="38" font-size="9" fill="#64748B" text-anchor="end">50</text>
-            <line x1="87" y1="55" x2="96" y2="55" stroke="#0284C7" stroke-width="1.2" opacity="0.5"/>
             <line x1="84" y1="75" x2="96" y2="75" stroke="#0284C7" stroke-width="2" opacity="0.7"/>
             <text x="81" y="78" font-size="9" fill="#64748B" text-anchor="end">100</text>
-            <line x1="87" y1="95" x2="96" y2="95" stroke="#0284C7" stroke-width="1.2" opacity="0.5"/>
+            <!-- Drop zone: phenol target -->
+            <rect id="dropB" class="drop-zone" x="-5" y="-10" width="110" height="155" rx="6"/>
             <rect id="phenolLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(0,0%,95%)" opacity="0"/>
             <path id="phenolMeniscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.8" opacity="0"/>
-            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 B 酚酞溶液</text>
+            <text x="50" y="158" font-size="9" fill="#475569" text-anchor="middle" font-weight="600">小烧杯 B</text>
           </g>
 
-          <!-- 扩散箭头 -->
+          <!-- Diffusion arrow -->
           <g id="diffArrow" opacity="0">
             <line x1="140" y1="230" x2="220" y2="230" stroke="#06B6D4" stroke-width="1.5" stroke-dasharray="5,3"/>
             <polygon points="220,225 235,230 220,235" fill="#06B6D4"/>
             <text x="180" y="220" font-size="7" fill="#06B6D4" text-anchor="middle" font-weight="600">NH₃ 扩散</text>
           </g>
+        </g>
+
+        <!-- ===== ALCOHOL LAMP (always visible) ===== -->
+        <g id="lampGroup" transform="translate(45,330)">
+          <path d="M8,40 Q5,40 5,43 L5,72 Q5,78 11,78 L39,78 Q45,78 45,72 L45,43 Q45,40 42,40 Z"
+                fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+          <path d="M10,42 L10,70" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+          <rect x="8" y="55" width="34" height="20" rx="2" fill="#FEF3C7" opacity="0.5"/>
+          <rect x="18" y="34" width="14" height="8" rx="3" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
+          <rect x="22" y="28" width="6" height="10" rx="2" fill="#B0B0B0"/>
+          <line x1="25" y1="28" x2="25" y2="18" stroke="#4B5563" stroke-width="1.2" stroke-linecap="round"/>
+          <!-- Drop zone: match target (wick area) -->
+          <rect id="dropWick" class="drop-zone" x="15" y="10" width="20" height="25" rx="4"/>
+          <g id="lampFlame" opacity="0" filter="url(#flameGlow)">
+            <ellipse cx="25" cy="10" rx="8" ry="16" fill="#F97316" opacity="0.45"/>
+            <ellipse cx="25" cy="8" rx="5.5" ry="11" fill="#FBBF24" opacity="0.6"/>
+            <ellipse cx="25" cy="6" rx="3" ry="6" fill="#FEF9C3" opacity="0.75"/>
+          </g>
+          <text x="25" y="92" font-size="7" fill="#64748B" text-anchor="middle">酒精灯</text>
         </g>
 
         <!-- NH₃ molecule particles (pre-drawn 25) -->
@@ -152,79 +166,72 @@
           <circle class="mol" cx="0" cy="0" r="2.5" fill="#22D3EE" opacity="0" filter="url(#molGlow)"/>
         </g>
 
-        <!-- ===== REAGENT BOTTLES (Step 1) ===== -->
-        <g id="reagentArea" class="clickable" transform="translate(60,370)" onclick="prepareReagents()">
-          <rect x="0" y="0" width="140" height="28" rx="6" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1"/>
-          <text x="70" y="12" font-size="8" fill="#0D9488" text-anchor="middle" font-weight="700">准备实验</text>
-          <text x="70" y="24" font-size="6" fill="#0D9488" text-anchor="middle">点击倒入氨水 + 滴入酚酞</text>
-        </g>
+        <!-- ===== DRAGGABLE TOOL BAR (right side) ===== -->
+        <g transform="translate(430,20)">
+          <rect x="0" y="0" width="280" height="370" rx="12" fill="rgba(248,250,252,0.8)" stroke="#CBD5E1" stroke-width="1"/>
+          <text x="140" y="22" font-size="10" fill="#475569" text-anchor="middle" font-weight="700">器材栏 · 拖拽到实验区</text>
 
-        <!-- ===== GLASS COVER CLICK (Step 2) ===== -->
-        <g id="coverClick" class="clickable" opacity="0" transform="translate(220,370)" onclick="sealAndObserve()">
-          <rect x="0" y="0" width="120" height="28" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
-          <text x="60" y="12" font-size="8" fill="#2563EB" text-anchor="middle" font-weight="700">盖玻璃片</text>
-          <text x="60" y="24" font-size="6" fill="#2563EB" text-anchor="middle">密封并观察</text>
-        </g>
+          <!-- Tool 1: Ammonia bottle -->
+          <g id="toolAmmonia" class="tool-item" transform="translate(20,40)">
+            <rect x="5" y="0" width="30" height="50" rx="4" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="1.5"/>
+            <rect x="12" y="-6" width="16" height="8" rx="2" fill="#94A3B8"/>
+            <rect x="8" y="30" width="24" height="18" rx="2" fill="hsl(185,70%,65%)" opacity="0.6"/>
+            <text x="20" y="68" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">浓氨水</text>
+            <text x="20" y="80" font-size="6" fill="#94A3B8" text-anchor="middle">→ 拖到 A 杯</text>
+          </g>
 
-        <!-- ===== ALCOHOL LAMP (Step 3, Designer v2) ===== -->
-        <g id="lampGroup" transform="translate(75,330)" style="display:none">
-          <g id="lampClick" class="clickable" onclick="startHeating()">
-            <!-- Lamp body (curved, not rect) -->
-            <path d="M8,40 Q5,40 5,43 L5,72 Q5,78 11,78 L39,78 Q45,78 45,72 L45,43 Q45,40 42,40 Z"
-                  fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
-            <!-- Lamp body highlight -->
-            <path d="M10,42 L10,70" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
-            <!-- Alcohol liquid -->
-            <rect x="8" y="55" width="34" height="20" rx="2" fill="#FEF3C7" opacity="0.5"/>
-            <path d="M8,55 Q18,53 25,55 Q32,57 42,55" fill="none" stroke="#FDE68A" stroke-width="0.5" opacity="0.6"/>
-            <!-- Lamp cap seat -->
-            <rect x="18" y="34" width="14" height="8" rx="3" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
-            <!-- Wick tube -->
-            <rect x="22" y="28" width="6" height="10" rx="2" fill="#B0B0B0"/>
-            <!-- Wick -->
-            <line x1="25" y1="28" x2="25" y2="18" stroke="#4B5563" stroke-width="1.2" stroke-linecap="round"/>
-            <!-- Three-layer flame -->
-            <g id="lampFlame" opacity="0" filter="url(#flameGlow)">
-              <ellipse cx="25" cy="10" rx="8" ry="16" fill="#F97316" opacity="0.45"/>
-              <ellipse cx="25" cy="8" rx="5.5" ry="11" fill="#FBBF24" opacity="0.6"/>
-              <ellipse cx="25" cy="6" rx="3" ry="6" fill="#FEF9C3" opacity="0.75"/>
-            </g>
-            <text x="25" y="92" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
+          <!-- Tool 2: Phenolphthalein dropper -->
+          <g id="toolPhenol" class="tool-item" transform="translate(100,40)">
+            <rect x="12" y="0" width="10" height="40" rx="3" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="1"/>
+            <ellipse cx="17" cy="-4" rx="8" ry="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="0.8"/>
+            <circle cx="17" cy="42" r="2" fill="#0EA5E9"/>
+            <text x="17" y="60" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">酚酞</text>
+            <text x="17" y="72" font-size="6" fill="#94A3B8" text-anchor="middle">→ 拖到 B 杯</text>
+          </g>
+
+          <!-- Tool 3: Glass cover plate -->
+          <g id="toolCover" class="tool-item" transform="translate(170,40)">
+            <rect x="0" y="20" width="50" height="8" rx="3" fill="rgba(148,163,184,0.4)" stroke="#94A3B8" stroke-width="1"/>
+            <text x="25" y="48" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">玻璃片</text>
+            <text x="25" y="60" font-size="6" fill="#94A3B8" text-anchor="middle">→ 拖到杯口</text>
+          </g>
+
+          <!-- Tool 4: Match -->
+          <g id="toolMatch" class="tool-item" transform="translate(20,130)">
+            <line x1="15" y1="10" x2="15" y2="45" stroke="#D2B48C" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="15" cy="8" r="4" fill="#EF4444"/>
+            <text x="15" y="62" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">火柴</text>
+            <text x="15" y="74" font-size="6" fill="#94A3B8" text-anchor="middle">→ 拖到灯芯</text>
+          </g>
+
+          <!-- Info: micro→macro -->
+          <g transform="translate(10,210)">
+            <rect x="0" y="0" width="260" height="60" rx="8" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1"/>
+            <text x="130" y="18" font-size="9" fill="#0D9488" text-anchor="middle" font-weight="800">微观 → 宏观</text>
+            <text x="10" y="36" font-size="7" fill="#0F172A">NH₃ 分子扩散（看不见）→ 酚酞变红（看得见）</text>
+            <text id="microNote" x="130" y="52" font-size="7" fill="#64748B" text-anchor="middle">分子在不断运动</text>
+          </g>
+
+          <!-- Diffusion progress -->
+          <g id="progressCard" transform="translate(10,280)" opacity="0">
+            <rect x="0" y="0" width="260" height="40" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+            <text x="130" y="14" font-size="7" fill="#0F172A" text-anchor="middle" font-weight="700">扩散进度</text>
+            <rect x="10" y="22" width="240" height="8" rx="4" fill="#E2E8F0"/>
+            <rect id="diffProgress" x="10" y="22" width="0" height="8" rx="4" fill="#06B6D4"/>
+            <text id="diffTime" x="130" y="38" font-size="6" fill="#64748B" text-anchor="middle">0.0s</text>
+          </g>
+
+          <!-- Temperature comparison -->
+          <g id="tempCard" transform="translate(10,330)" opacity="0">
+            <rect x="0" y="0" width="260" height="30" rx="6" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+            <text id="tempNormal" x="60" y="18" font-size="8" fill="#64748B" text-anchor="middle">常温 ~8s</text>
+            <text x="130" y="20" font-size="10" fill="#DC2626" text-anchor="middle" font-weight="900">×2</text>
+            <text id="tempHeat" x="200" y="18" font-size="8" fill="#64748B" text-anchor="middle">加热 ~4s</text>
           </g>
         </g>
 
-        <!-- ===== INFO CARDS ===== -->
-        <!-- Micro→Macro card -->
-        <g id="microMacroCard" transform="translate(450,30)">
-          <rect x="0" y="0" width="250" height="80" rx="10" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1.2"/>
-          <text x="125" y="22" font-size="10" fill="#0D9488" text-anchor="middle" font-weight="800">微观 → 宏观</text>
-          <text x="15" y="44" font-size="8" fill="#0F172A">NH₃ 分子扩散（看不见）</text>
-          <text x="125" y="44" font-size="8" fill="#0284C7" font-weight="700">→</text>
-          <text x="140" y="44" font-size="8" fill="#0F172A">酚酞变红（看得见）</text>
-          <text id="microNote" x="125" y="66" font-size="7" fill="#64748B" text-anchor="middle">分子在不断运动</text>
-        </g>
-
-        <!-- Diffusion progress -->
-        <g id="progressCard" transform="translate(450,125)" opacity="0">
-          <rect x="0" y="0" width="250" height="60" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="125" y="20" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">扩散进度</text>
-          <rect x="15" y="32" width="220" height="10" rx="5" fill="#E2E8F0"/>
-          <rect id="diffProgress" x="15" y="32" width="0" height="10" rx="5" fill="#06B6D4"/>
-          <text id="diffTime" x="125" y="55" font-size="7" fill="#64748B" text-anchor="middle">0.0s / 8.0s</text>
-        </g>
-
-        <!-- Temperature comparison card -->
-        <g id="tempCard" transform="translate(450,200)" opacity="0">
-          <rect x="0" y="0" width="250" height="70" rx="10" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/>
-          <text x="125" y="22" font-size="10" fill="#9A3412" text-anchor="middle" font-weight="800">温度对比</text>
-          <text id="tempNormal" x="60" y="45" font-size="9" fill="#64748B" text-anchor="middle">常温 ~8s</text>
-          <text x="125" y="47" font-size="12" fill="#DC2626" text-anchor="middle" font-weight="900">×2</text>
-          <text id="tempHeat" x="190" y="45" font-size="9" fill="#64748B" text-anchor="middle">加热 ~4s</text>
-          <text id="tempResult" x="125" y="63" font-size="7" fill="#059669" text-anchor="middle" opacity="0">温度越高，分子运动越快！</text>
-        </g>
-
         <!-- Canvas hint -->
-        <text id="canvasHint" x="360" y="395" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">点击"准备实验"倒入试剂</text>
+        <text id="canvasHint" x="210" y="395" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">拖拽右侧器材到实验区 · 自由探索</text>
       </svg>
     </div>
   </div>
@@ -232,53 +239,33 @@
   <div class="panel-area">
     <div class="panel-scroll">
       <div class="panel-section">
-        <div class="section-title">实验步骤</div>
-        <div class="step-bar" id="stepBar">
-          <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
-          <div class="step-item" data-step="1"><span class="step-num">2</span>观察</div>
-          <div class="step-item" data-step="2"><span class="step-num">3</span>对比</div>
-        </div>
-      </div>
-
-      <div class="panel-section">
-        <div class="section-title" id="stepTitle">第 1 步：准备试剂</div>
-        <div class="step-desc" id="stepDesc">点击画布上的"准备实验"按钮，倒入浓氨水和滴入酚酞溶液。</div>
-      </div>
-
-      <!-- Observations -->
-      <div class="panel-section">
-        <div class="section-title">观察记录</div>
+        <div class="section-title">操作清单</div>
         <ul class="obs-list" id="obsList">
           <li class="obs-item" id="obs1"><span class="obs-check"></span>浓氨水倒入 A 杯</li>
           <li class="obs-item" id="obs2"><span class="obs-check"></span>酚酞滴入 B 杯（无色）</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>密封后 NH₃ 分子扩散</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>酚酞逐渐变红</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>加热后变红速度加倍</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>玻璃片密封烧杯</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>NH₃ 扩散 → 酚酞变红</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>加热 → 变红速度加倍</li>
         </ul>
       </div>
 
-      <!-- Equation -->
       <div class="panel-section">
         <div class="section-title">原理</div>
         <div class="chem-equation" id="formula1"></div>
         <div style="font-size:9px;color:#64748B;margin-top:4px">氨水呈碱性，使酚酞变红</div>
       </div>
 
-      <!-- Knowledge -->
       <div class="panel-section">
         <div class="section-title">知识拓展</div>
         <div style="font-size:10px;color:#475569;line-height:1.6">
           <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">分子的三大性质</h3>
           <p>1. 分子在<strong>不停地做无规则运动</strong>（本实验验证）<br>2. 分子间有<strong>间隔</strong>（气体间隔大，液体小，固体最小）<br>3. 分子的<strong>体积和质量都很小</strong></p>
-
           <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">温度与分子运动</h3>
           <p>温度越高，分子运动越剧烈。本实验中加热后酚酞变红加速就是证据。</p>
-
           <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">为什么用浓氨水？</h3>
           <p>浓氨水易挥发，NH₃ 分子从液面逸出后在空气中扩散。稀氨水挥发太慢，实验现象不明显。</p>
-
           <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考易错</h3>
-          <p style="color:#DC2626"><strong>酚酞变红 ≠ 分子在运动的"唯一"证据。</strong><br>闻到花香、墨水扩散也是分子运动的证据。<br>本实验的价值：<strong>看不见的 NH₃ 通过酚酞变色变得"可见"</strong>。</p>
+          <p style="color:#DC2626"><strong>酚酞变红 ≠ 分子在运动的"唯一"证据。</strong><br>闻到花香、墨水扩散也是分子运动的证据。</p>
         </div>
       </div>
 
@@ -294,223 +281,238 @@
 <script src="/shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const svg = $('mainSvg');
 
-const STEP_INFO = [
-  { title: '第 1 步：准备试剂', desc: '点击画布上的"准备实验"按钮，倒入浓氨水和滴入酚酞溶液。' },
-  { title: '第 2 步：密封观察', desc: '点击"盖玻璃片"密封烧杯，观察 NH₃ 分子扩散使酚酞变红。' },
-  { title: '第 3 步：温度对比', desc: '点击酒精灯加热，观察分子运动加速、变红更快。' }
-];
-
+// ===== CONDITION FLAGS (not steps!) =====
 const state = {
-  step: 0,
-  prepared: false,
+  ammoniaAdded: false,
+  phenolAdded: false,
+  sealed: false,
+  lampLit: false,
   diffusing: false,
+  diffDone: false,
   heating: false,
   speedMult: 1,
   diffTime: 0,
-  diffDone: false,
   normalTime: null,
   heatTime: null,
   animFrame: null
 };
 
-// Beaker A region (ammonia source): big beaker at (60,20), A at +25,+165, liquid at +4,+70 w92 h76
-const SRC = { x: 135, y: 270 };
-// Beaker B region (phenolphthalein): big beaker at (60,20), B at +235,+165, liquid at +4,+70 w92 h76
-const DST = { xMin: 295, xMax: 395, yMin: 255, yMax: 335 };
-// Big beaker bounds: (60,20) w360 h340
-const BOUNDS = { xMin: 68, xMax: 412, yMin: 28, yMax: 352 };
+// Pre-conditions: what must be true before each action
+const PRE = {
+  seal:  () => state.ammoniaAdded && state.phenolAdded,
+  light: () => state.sealed && state.diffDone
+};
+
+const HINTS = {
+  seal:  '先倒入浓氨水和酚酞，再盖玻璃片密封',
+  light: '先密封观察扩散完成，再加热对比'
+};
+
+// Beaker regions (relative to big beaker at 30,10)
+const SRC = { x: 105, y: 265 };
+const DST = { xMin: 265, xMax: 365, yMin: 250, yMax: 330 };
+const BOUNDS = { xMin: 38, xMax: 382, yMin: 18, yMax: 348 };
 
 // Molecule pool
 const mols = [];
 document.querySelectorAll('.mol').forEach(el => {
-  mols.push({
-    el,
-    active: false,
-    x: 0, y: 0,
-    baseR: parseFloat(el.getAttribute('r')),
-    r: parseFloat(el.getAttribute('r')),
-    opacity: 0
-  });
+  mols.push({el, active:false, x:0, y:0, baseR:parseFloat(el.getAttribute('r')), r:0, opacity:0});
 });
 
-// ===== STEP 1: PREPARE =====
-function prepareReagents() {
-  if (state.prepared) return;
-  state.prepared = true;
+// ===== DRAG SETUP =====
+function initDrag() {
+  // Ammonia bottle → beaker A
+  ChemDrag.makeDraggable($('toolAmmonia'), {
+    snapTargets: [{id:'dropA', action:'ammonia'}],
+    onDrop: (action) => doAction(action),
+    resetOnFail: true
+  });
 
-  $('ammoniaLiquid').setAttribute('opacity', '1');
-  $('phenolLiquid').setAttribute('opacity', '1');
-  checkObs('obs1');
-  checkObs('obs2');
+  // Phenol dropper → beaker B
+  ChemDrag.makeDraggable($('toolPhenol'), {
+    snapTargets: [{id:'dropB', action:'phenol'}],
+    onDrop: (action) => doAction(action),
+    resetOnFail: true
+  });
 
-  $('reagentArea').style.display = 'none';
-  $('coverClick').setAttribute('opacity', '1');
-  state.step = 1;
-  updateStepUI();
-  $('canvasHint').textContent = '点击"盖玻璃片"密封烧杯';
+  // Glass cover → beaker top
+  ChemDrag.makeDraggable($('toolCover'), {
+    snapTargets: [{id:'dropCover', action:'seal'}],
+    onDrop: (action) => doAction(action),
+    resetOnFail: true
+  });
+
+  // Match → wick
+  ChemDrag.makeDraggable($('toolMatch'), {
+    snapTargets: [{id:'dropWick', action:'light'}],
+    onDrop: (action) => doAction(action),
+    resetOnFail: true
+  });
 }
 
-// ===== STEP 2: SEAL & OBSERVE =====
-function sealAndObserve() {
-  if (state.step !== 1) return;
+// ===== ACTION DISPATCH =====
+function doAction(action) {
+  switch(action) {
+    case 'ammonia': addAmmonia(); break;
+    case 'phenol':  addPhenol(); break;
+    case 'seal':
+      if (!PRE.seal()) { ChemDrag.showToast(svg, HINTS.seal); return; }
+      sealBeaker();
+      break;
+    case 'light':
+      if (!PRE.light()) { ChemDrag.showToast(svg, HINTS.light); return; }
+      lightLamp();
+      break;
+  }
+}
+
+// ===== ACTIONS =====
+function addAmmonia() {
+  if (state.ammoniaAdded) return;
+  state.ammoniaAdded = true;
+  $('toolAmmonia').classList.add('used');
+  $('ammoniaLiquid').setAttribute('opacity', '1');
+  $('ammoniaMenuscus').setAttribute('opacity', '1');
+  checkObs('obs1');
+  updateHint();
+}
+
+function addPhenol() {
+  if (state.phenolAdded) return;
+  state.phenolAdded = true;
+  $('toolPhenol').classList.add('used');
+  $('phenolLiquid').setAttribute('opacity', '1');
+  $('phenolMeniscus').setAttribute('opacity', '1');
+  checkObs('obs2');
+  updateHint();
+}
+
+function sealBeaker() {
+  if (state.sealed) return;
+  state.sealed = true;
+  $('toolCover').classList.add('used');
   $('glassCover').setAttribute('opacity', '1');
   $('sealLabel').setAttribute('opacity', '1');
   $('diffArrow').setAttribute('opacity', '1');
-  $('coverClick').setAttribute('opacity', '0');
   $('progressCard').setAttribute('opacity', '1');
   checkObs('obs3');
 
-  state.step = 2;
-  updateStepUI();
-  $('canvasHint').textContent = '观察 NH₃ 分子扩散...';
-
-  // Init particles at source
-  mols.forEach((m, i) => {
+  // Start diffusion
+  mols.forEach(m => {
     m.active = true;
     m.x = SRC.x + (Math.random() - 0.5) * 60;
     m.y = SRC.y + (Math.random() - 0.5) * 40;
     m.r = m.baseR;
     m.opacity = 0.7 + Math.random() * 0.2;
-    m.el.setAttribute('cx', m.x);
-    m.el.setAttribute('cy', m.y);
-    m.el.setAttribute('r', m.r);
-    m.el.setAttribute('opacity', m.opacity);
+    m.el.setAttribute('cx', m.x); m.el.setAttribute('cy', m.y);
+    m.el.setAttribute('r', m.r); m.el.setAttribute('opacity', m.opacity);
   });
-
   state.diffusing = true;
   state.diffTime = 0;
   state.diffDone = false;
   startDiffusion();
+  updateHint();
 }
 
-function startDiffusion() {
-  const TARGET_TIME = state.speedMult > 1 ? 240 : 480; // 4s or 8s at 60fps
+function lightLamp() {
+  if (state.lampLit || state.speedMult > 1) return;
+  state.lampLit = true;
+  state.heating = true;
+  state.speedMult = 2;
+  $('toolMatch').classList.add('used');
+  $('lampFlame').setAttribute('opacity', '1');
 
+  // Reset phenol to colorless for comparison
+  $('phenolLiquid').setAttribute('fill', 'hsl(0,0%,95%)');
+  mols.forEach(m => {
+    m.x = SRC.x + (Math.random() - 0.5) * 60;
+    m.y = SRC.y + (Math.random() - 0.5) * 40;
+    m.r = m.baseR; m.opacity = 0.7 + Math.random() * 0.2; m.active = true;
+  });
+  state.diffTime = 0; state.diffDone = false; state.diffusing = true;
+  $('diffProgress').setAttribute('width', '0');
+  $('tempCard').setAttribute('opacity', '1');
+
+  // Flame flicker
+  (function flick() {
+    if (!state.heating) return;
+    const s = 0.85 + Math.sin(Date.now() * 0.008) * 0.15;
+    $('lampFlame').setAttribute('transform', 'scale(' + s + ')');
+    requestAnimationFrame(flick);
+  })();
+
+  startDiffusion();
+  updateHint();
+}
+
+// ===== DIFFUSION ANIMATION =====
+function startDiffusion() {
+  const TARGET = state.speedMult > 1 ? 240 : 480;
   function tick() {
     if (!state.diffusing) return;
     state.diffTime++;
-
-    const progress = Math.min(state.diffTime / TARGET_TIME, 1);
+    const progress = Math.min(state.diffTime / TARGET, 1);
     const elapsed = (state.diffTime / 60).toFixed(1);
-    const total = (TARGET_TIME / 60).toFixed(1);
-    $('diffProgress').setAttribute('width', String(progress * 220));
-    $('diffTime').textContent = elapsed + 's / ' + total + 's';
+    $('diffProgress').setAttribute('width', String(progress * 240));
+    $('diffTime').textContent = elapsed + 's';
 
-    // Move particles — Brownian motion with rightward bias
     const speed = 1.5 * state.speedMult;
     for (const m of mols) {
       if (!m.active) continue;
       m.x += (Math.random() - 0.4) * speed;
       m.y += (Math.random() - 0.5) * speed;
-
-      // Clamp to beaker bounds
       m.x = Math.max(BOUNDS.xMin, Math.min(BOUNDS.xMax, m.x));
       m.y = Math.max(BOUNDS.yMin, Math.min(BOUNDS.yMax, m.y));
-
-      // Dissolve effect in B region
       const inB = m.x >= DST.xMin && m.x <= DST.xMax && m.y >= DST.yMin && m.y <= DST.yMax;
       if (inB) {
         m.r = Math.max(0.6, m.r - 0.005 * state.speedMult);
         m.opacity = Math.max(0.1, m.opacity - 0.002 * state.speedMult);
       }
-
-      m.el.setAttribute('cx', m.x);
-      m.el.setAttribute('cy', m.y);
-      m.el.setAttribute('r', m.r);
-      m.el.setAttribute('opacity', m.opacity);
+      m.el.setAttribute('cx', m.x); m.el.setAttribute('cy', m.y);
+      m.el.setAttribute('r', m.r); m.el.setAttribute('opacity', m.opacity);
     }
 
-    // Phenolphthalein color: transparent → red
-    // hsl(340, s:0→70, l:95→60)
-    const s = progress * 70;
-    const l = 95 - progress * 35;
+    const s = progress * 70, l = 95 - progress * 35;
     $('phenolLiquid').setAttribute('fill', 'hsl(340,' + s + '%,' + l + '%)');
 
     if (progress >= 1 && !state.diffDone) {
       state.diffDone = true;
       checkObs('obs4');
-
+      state.diffusing = false;
       if (state.speedMult === 1) {
-        // Normal speed done
         state.normalTime = elapsed;
         $('tempNormal').textContent = '常温 ' + elapsed + 's';
-        $('canvasHint').textContent = '酚酞变红！点击酒精灯加热对比';
-        $('lampGroup').style.display = '';
-        $('tempCard').setAttribute('opacity', '1');
-        state.diffusing = false;
-        state.step = 2; // ready for step 3
-        updateStepUI();
-        $('stepTitle').textContent = '第 3 步：温度对比';
-        $('stepDesc').textContent = '点击酒精灯加热，观察分子运动加速、变红更快。';
+        updateHint();
       } else {
-        // Heated done
         state.heatTime = elapsed;
         $('tempHeat').textContent = '加热 ' + elapsed + 's';
-        $('tempResult').setAttribute('opacity', '1');
-        $('canvasHint').textContent = '实验完成！温度越高分子运动越快';
         checkObs('obs5');
-        state.diffusing = false;
-        $('stepTitle').textContent = '实验完成';
-        $('stepDesc').textContent = '常温 ' + state.normalTime + 's vs 加热 ' + elapsed + 's — 温度越高分子运动越快！';
         $('microNote').textContent = '温度越高，分子运动越快！';
+        $('canvasHint').textContent = '实验完成！常温 ' + state.normalTime + 's vs 加热 ' + elapsed + 's';
       }
       return;
     }
-
     state.animFrame = requestAnimationFrame(tick);
   }
   state.animFrame = requestAnimationFrame(tick);
 }
 
-// ===== STEP 3: HEATING =====
-function startHeating() {
-  if (state.heating || !state.diffDone || state.speedMult > 1) return;
-  state.heating = true;
-  state.speedMult = 2;
-  $('lampFlame').setAttribute('opacity', '1');
-
-  // Reset phenolphthalein to colorless
-  $('phenolLiquid').setAttribute('fill', 'hsl(0,0%,95%)');
-
-  // Reset particles to source
-  mols.forEach(m => {
-    m.x = SRC.x + (Math.random() - 0.5) * 60;
-    m.y = SRC.y + (Math.random() - 0.5) * 40;
-    m.r = m.baseR;
-    m.opacity = 0.7 + Math.random() * 0.2;
-    m.active = true;
-  });
-
-  state.diffTime = 0;
-  state.diffDone = false;
-  state.diffusing = true;
-  $('diffProgress').setAttribute('width', '0');
-  $('canvasHint').textContent = '加热中...分子运动加速 ×2！';
-
-  // Lamp flicker loop
-  (function flickLamp() {
-    if (!state.heating) return;
-    const s = 0.85 + Math.sin(Date.now() * 0.008) * 0.15;
-    $('lampFlame').setAttribute('transform', 'scale(' + s + ')');
-    requestAnimationFrame(flickLamp);
-  })();
-
-  startDiffusion();
+// ===== HINT UPDATE =====
+function updateHint() {
+  if (!state.ammoniaAdded || !state.phenolAdded) {
+    $('canvasHint').textContent = '拖拽浓氨水和酚酞到烧杯中';
+  } else if (!state.sealed) {
+    $('canvasHint').textContent = '拖拽玻璃片到杯口密封';
+  } else if (state.diffusing) {
+    $('canvasHint').textContent = '观察 NH₃ 分子扩散...';
+  } else if (state.diffDone && !state.lampLit) {
+    $('canvasHint').textContent = '酚酞变红！拖火柴到灯芯加热对比';
+  }
 }
 
 // ===== UTILS =====
-function updateStepUI() {
-  const info = STEP_INFO[Math.min(state.step, 2)];
-  $('stepTitle').textContent = info.title;
-  $('stepDesc').textContent = info.desc;
-  document.querySelectorAll('.step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < state.step) el.classList.add('done');
-    if (i === state.step) el.classList.add('active');
-  });
-}
-
 function checkObs(id) {
   const el = $(id);
   if (!el.classList.contains('checked')) {
@@ -521,55 +523,43 @@ function checkObs(id) {
 
 function resetExperiment() {
   if (state.animFrame) cancelAnimationFrame(state.animFrame);
-  state.diffusing = false;
-  state.heating = false;
-
+  state.diffusing = false; state.heating = false;
   Object.assign(state, {
-    step: 0, prepared: false, diffusing: false, heating: false,
-    speedMult: 1, diffTime: 0, diffDone: false,
-    normalTime: null, heatTime: null
+    ammoniaAdded:false, phenolAdded:false, sealed:false, lampLit:false,
+    diffusing:false, heating:false, speedMult:1, diffTime:0,
+    diffDone:false, normalTime:null, heatTime:null
   });
 
-  // Liquids
-  $('ammoniaLiquid').setAttribute('opacity', '0');
-  $('phenolLiquid').setAttribute('opacity', '0');
-  $('phenolLiquid').setAttribute('fill', 'hsl(0,0%,95%)');
-
-  // Cover
-  $('glassCover').setAttribute('opacity', '0');
-  $('sealLabel').setAttribute('opacity', '0');
-  $('diffArrow').setAttribute('opacity', '0');
-
-  // Particles
-  mols.forEach(m => {
-    m.active = false;
-    m.el.setAttribute('opacity', '0');
-  });
-
-  // Buttons
-  $('reagentArea').style.display = '';
-  $('coverClick').setAttribute('opacity', '0');
-  $('lampGroup').style.display = 'none';
-  $('lampFlame').setAttribute('opacity', '0');
-
-  // Cards
-  $('progressCard').setAttribute('opacity', '0');
-  $('diffProgress').setAttribute('width', '0');
-  $('tempCard').setAttribute('opacity', '0');
-  $('tempResult').setAttribute('opacity', '0');
-  $('tempNormal').textContent = '常温 ~8s';
-  $('tempHeat').textContent = '加热 ~4s';
+  $('ammoniaLiquid').setAttribute('opacity','0');
+  $('ammoniaMenuscus').setAttribute('opacity','0');
+  $('phenolLiquid').setAttribute('opacity','0');
+  $('phenolLiquid').setAttribute('fill','hsl(0,0%,95%)');
+  $('phenolMeniscus').setAttribute('opacity','0');
+  $('glassCover').setAttribute('opacity','0');
+  $('sealLabel').setAttribute('opacity','0');
+  $('diffArrow').setAttribute('opacity','0');
+  $('lampFlame').setAttribute('opacity','0');
+  $('progressCard').setAttribute('opacity','0');
+  $('diffProgress').setAttribute('width','0');
+  $('tempCard').setAttribute('opacity','0');
   $('microNote').textContent = '分子在不断运动';
+  mols.forEach(m => { m.active = false; m.el.setAttribute('opacity','0'); });
 
-  // Observations
+  // Reset tools
+  ['toolAmmonia','toolPhenol','toolCover','toolMatch'].forEach(id => {
+    $(id).classList.remove('used');
+  });
+
   document.querySelectorAll('.obs-item').forEach(el => {
     el.classList.remove('checked');
     el.querySelector('.obs-check').textContent = '';
   });
 
-  $('canvasHint').textContent = '点击"准备实验"倒入试剂';
-  updateStepUI();
+  $('canvasHint').textContent = '拖拽右侧器材到实验区 · 自由探索';
 }
+
+// ===== INIT =====
+initDrag();
 
 // ===== KATEX =====
 function renderFormulas() {
