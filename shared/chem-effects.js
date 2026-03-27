@@ -297,3 +297,92 @@ const ChemEffects = (() => {
 })();
 
 if (typeof module !== 'undefined') module.exports = ChemEffects;
+
+// ===== Drag & Drop for Chemistry Free Exploration =====
+const ChemDrag = (() => {
+  let active = null;
+
+  function makeDraggable(el, opts = {}) {
+    el.style.cursor = 'grab';
+    el.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      el.setPointerCapture(e.pointerId);
+      const svg = el.closest('svg');
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX; pt.y = e.clientY;
+      const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+      active = { el, startX: svgP.x, startY: svgP.y, origTransform: el.getAttribute('transform') || '', opts };
+      el.style.cursor = 'grabbing';
+      el.style.opacity = '0.7';
+      if (opts.onStart) opts.onStart(el);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!active || active.el !== el) return;
+      const svg = el.closest('svg');
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX; pt.y = e.clientY;
+      const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+      const dx = svgP.x - active.startX;
+      const dy = svgP.y - active.startY;
+      el.setAttribute('transform', `${active.origTransform} translate(${dx},${dy})`);
+      if (opts.snapTargets) {
+        opts.snapTargets.forEach(t => {
+          const tEl = typeof t.id === 'string' ? document.getElementById(t.id) : t.el;
+          if (tEl) tEl.classList.toggle('drop-highlight', isOver(el, tEl));
+        });
+      }
+      if (opts.onDrag) opts.onDrag(el, dx, dy);
+    });
+    el.addEventListener('pointerup', e => {
+      if (!active || active.el !== el) return;
+      el.style.cursor = 'grab';
+      el.style.opacity = '1';
+      let dropped = false;
+      if (opts.snapTargets) {
+        for (const t of opts.snapTargets) {
+          const tEl = typeof t.id === 'string' ? document.getElementById(t.id) : t.el;
+          if (tEl && isOver(el, tEl)) {
+            tEl.classList.remove('drop-highlight');
+            if (opts.onDrop) opts.onDrop(t.action || t.id, el, tEl);
+            dropped = true;
+            break;
+          }
+          if (tEl) tEl.classList.remove('drop-highlight');
+        }
+      }
+      if (!dropped && opts.resetOnFail !== false) {
+        el.setAttribute('transform', active.origTransform);
+      }
+      if (opts.onEnd) opts.onEnd(el, dropped);
+      active = null;
+    });
+  }
+
+  function isOver(a, b) {
+    const ab = a.getBBox(); const bb = b.getBBox();
+    const cx = ab.x + ab.width / 2, cy = ab.y + ab.height / 2;
+    return cx > bb.x && cx < bb.x + bb.width && cy > bb.y && cy < bb.y + bb.height;
+  }
+
+  function showToast(svg, msg, duration) {
+    duration = duration || 2000;
+    const ns = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(ns, 'g');
+    const vb = svg.viewBox.baseVal;
+    const cx = vb.width / 2, cy = vb.height / 2;
+    const r = document.createElementNS(ns, 'rect');
+    r.setAttribute('x', cx - 160); r.setAttribute('y', cy - 18);
+    r.setAttribute('width', 320); r.setAttribute('height', 36);
+    r.setAttribute('rx', 8); r.setAttribute('fill', 'rgba(0,0,0,0.75)');
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', cx); t.setAttribute('y', cy + 5);
+    t.setAttribute('font-size', '12'); t.setAttribute('fill', 'white');
+    t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-weight', '600');
+    t.textContent = msg;
+    g.appendChild(r); g.appendChild(t); svg.appendChild(g);
+    setTimeout(() => g.remove(), duration);
+  }
+
+  return { makeDraggable, showToast };
+})();
