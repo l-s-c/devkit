@@ -50,8 +50,9 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
 
         <!-- ===== HOFFMANN APPARATUS ===== -->
         <!-- Left tube (cathode, H₂) -->
-        <g id="leftTubeGroup" transform="translate(220,30)">
-          <rect id="leftTube" x="0" y="0" width="50" height="280" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
+        <g id="leftTubeGroup" transform="translate(200,20)">
+          <rect id="leftTube" x="0" y="0" width="65" height="290" rx="6" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
+          <line x1="3" y1="10" x2="3" y2="280" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
           <!-- Scale markings 0-20mL -->
           <g id="leftScale" font-size="5" fill="#94A3B8" text-anchor="end">
             <line x1="5" y1="20" x2="15" y2="20" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="22">20</text>
@@ -65,23 +66,24 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
             <line x1="5" y1="228" x2="15" y2="228" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="230">0</text>
           </g>
           <!-- Gas column (H₂) -->
-          <rect id="h2Gas" x="3" y="228" width="44" height="0" rx="2" fill="url(#h2Grad)"/>
+          <rect id="h2Gas" x="4" y="238" width="57" height="0" rx="3" fill="url(#h2Grad)"/>
           <!-- Water surface in left tube -->
-          <rect id="leftWater" x="3" y="228" width="44" height="50" rx="2" fill="url(#waterGrad)"/>
+          <rect id="leftWater" x="4" y="238" width="57" height="50" rx="3" fill="url(#waterGrad)"/>
           <!-- Electrode (cathode) -->
-          <rect id="cathode" x="15" y="265" width="20" height="8" rx="1" fill="#4B5563" stroke="#374151" stroke-width="0.5"/>
+          <rect id="cathode" x="18" y="275" width="30" height="10" rx="2" fill="#4B5563" stroke="#374151" stroke-width="0.8"/>
           <!-- Valve at top -->
-          <g id="leftValve" class="clickable" transform="translate(15,-8)" onclick="testGas('H2')">
-            <rect x="0" y="0" width="20" height="8" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-            <text class="svg-hint" x="10" y="-5" text-anchor="middle" opacity="0" id="leftValveHint">点击验气</text>
+          <g id="leftValve" class="clickable" transform="translate(18,-10)" onclick="testGas('H2')">
+            <rect x="0" y="0" width="30" height="10" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.8"/>
+            <text class="svg-hint" x="15" y="-6" text-anchor="middle" opacity="0" id="leftValveHint">点击验气</text>
           </g>
-          <text x="25" y="295" font-size="7" fill="#3B82F6" text-anchor="middle" font-weight="700">负极 (−)</text>
-          <text x="25" y="307" font-size="8" fill="#3B82F6" text-anchor="middle" font-weight="800" id="h2Label">H₂</text>
+          <text x="33" y="302" font-size="9" fill="#3B82F6" text-anchor="middle" font-weight="700">负极 (−)</text>
+          <text x="33" y="316" font-size="10" fill="#3B82F6" text-anchor="middle" font-weight="800" id="h2Label">H₂</text>
         </g>
 
         <!-- Right tube (anode, O₂) -->
-        <g id="rightTubeGroup" transform="translate(410,30)">
-          <rect id="rightTube" x="0" y="0" width="50" height="280" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
+        <g id="rightTubeGroup" transform="translate(420,20)">
+          <rect id="rightTube" x="0" y="0" width="65" height="290" rx="6" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
+          <line x1="3" y1="10" x2="3" y2="280" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
           <!-- Scale markings 0-20mL -->
           <g id="rightScale" font-size="5" fill="#94A3B8">
             <line x1="35" y1="20" x2="45" y2="20" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="22">20</text>
@@ -95,54 +97,54 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
             <line x1="35" y1="228" x2="45" y2="228" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="230">0</text>
           </g>
           <!-- Gas column (O₂) -->
-          <rect id="o2Gas" x="3" y="228" width="44" height="0" rx="2" fill="url(#o2Grad)"/>
+          <rect id="o2Gas" x="4" y="238" width="57" height="0" rx="3" fill="url(#o2Grad)"/>
           <!-- Water surface in right tube -->
-          <rect id="rightWater" x="3" y="228" width="44" height="50" rx="2" fill="url(#waterGrad)"/>
+          <rect id="rightWater" x="4" y="238" width="57" height="50" rx="3" fill="url(#waterGrad)"/>
           <!-- Electrode (anode) -->
-          <rect id="anode" x="15" y="265" width="20" height="8" rx="1" fill="#4B5563" stroke="#374151" stroke-width="0.5"/>
+          <rect id="anode" x="18" y="275" width="30" height="10" rx="2" fill="#4B5563" stroke="#374151" stroke-width="0.8"/>
           <!-- Valve at top -->
-          <g id="rightValve" class="clickable" transform="translate(15,-8)" onclick="testGas('O2')">
-            <rect x="0" y="0" width="20" height="8" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-            <text class="svg-hint" x="10" y="-5" text-anchor="middle" opacity="0" id="rightValveHint">点击验气</text>
+          <g id="rightValve" class="clickable" transform="translate(18,-10)" onclick="testGas('O2')">
+            <rect x="0" y="0" width="30" height="10" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.8"/>
+            <text class="svg-hint" x="15" y="-6" text-anchor="middle" opacity="0" id="rightValveHint">点击验气</text>
           </g>
-          <text x="25" y="295" font-size="7" fill="#EF4444" text-anchor="middle" font-weight="700">正极 (+)</text>
-          <text x="25" y="307" font-size="8" fill="#EF4444" text-anchor="middle" font-weight="800" id="o2Label">O₂</text>
+          <text x="33" y="302" font-size="9" fill="#EF4444" text-anchor="middle" font-weight="700">正极 (+)</text>
+          <text x="33" y="316" font-size="10" fill="#EF4444" text-anchor="middle" font-weight="800" id="o2Label">O₂</text>
         </g>
 
         <!-- Bottom connecting tube -->
-        <path id="connectTube" d="M245,308 L245,340 Q245,360 265,360 L395,360 Q415,360 415,340 L415,308" fill="none" stroke="#93C5FD" stroke-width="1.2"/>
+        <path id="connectTube" d="M232,308 L232,345 Q232,365 255,365 L425,365 Q448,365 448,345 L448,308" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
         <!-- Water in connecting tube -->
-        <path id="connectWater" d="M247,310 L247,338 Q247,358 265,358 L395,358 Q413,358 413,338 L413,310" fill="url(#waterGrad)" stroke="none"/>
+        <path id="connectWater" d="M234,310 L234,343 Q234,363 255,363 L425,363 Q446,363 446,343 L446,310" fill="url(#waterGrad)" stroke="none"/>
 
         <!-- ===== DC POWER SUPPLY ===== -->
-        <g id="powerGroup" transform="translate(295,370)">
-          <rect x="0" y="0" width="90" height="40" rx="6" fill="#1E293B" stroke="#475569" stroke-width="1"/>
-          <text x="45" y="15" font-size="7" fill="#E2E8F0" text-anchor="middle" font-weight="600">直流电源</text>
+        <g id="powerGroup" transform="translate(290,372)">
+          <rect x="0" y="0" width="110" height="45" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1.2"/>
+          <text x="55" y="16" font-size="9" fill="#E2E8F0" text-anchor="middle" font-weight="700">直流电源</text>
           <!-- Power switch -->
-          <g id="powerSwitch" class="clickable" transform="translate(30,20)" onclick="togglePower()">
-            <rect x="0" y="0" width="30" height="14" rx="7" fill="#334155" stroke="#475569" stroke-width="0.5"/>
-            <circle id="switchKnob" cx="7" cy="7" r="5" fill="#94A3B8" transition="cx .2s"/>
-            <text id="switchLabel" x="45" y="11" font-size="6" fill="#94A3B8">OFF</text>
+          <g id="powerSwitch" class="clickable" transform="translate(35,22)" onclick="togglePower()">
+            <rect x="0" y="0" width="36" height="16" rx="8" fill="#334155" stroke="#475569" stroke-width="0.8"/>
+            <circle id="switchKnob" cx="8" cy="8" r="6" fill="#94A3B8"/>
+            <text id="switchLabel" x="50" y="13" font-size="7" fill="#94A3B8">OFF</text>
           </g>
           <!-- Terminals -->
-          <circle id="posTerminal" cx="80" cy="10" r="5" fill="#EF4444" stroke="#DC2626" stroke-width="0.8"/>
-          <text x="80" y="3" font-size="5" fill="#EF4444" text-anchor="middle" font-weight="700">+</text>
-          <circle id="negTerminal" cx="10" cy="10" r="5" fill="#3B82F6" stroke="#2563EB" stroke-width="0.8"/>
-          <text x="10" y="3" font-size="5" fill="#3B82F6" text-anchor="middle" font-weight="700">−</text>
+          <circle id="posTerminal" cx="98" cy="12" r="7" fill="#EF4444" stroke="#DC2626" stroke-width="1"/>
+          <text x="98" y="4" font-size="7" fill="#EF4444" text-anchor="middle" font-weight="800">+</text>
+          <circle id="negTerminal" cx="12" cy="12" r="7" fill="#3B82F6" stroke="#2563EB" stroke-width="1"/>
+          <text x="12" y="4" font-size="7" fill="#3B82F6" text-anchor="middle" font-weight="800">−</text>
         </g>
 
         <!-- ===== WIRES (initially disconnected) ===== -->
         <!-- Negative wire (black): power neg → left tube cathode -->
-        <line id="wireNeg" x1="305" y1="380" x2="305" y2="380" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,0"/>
-        <circle id="wireNegEnd" class="wire-endpoint" cx="305" cy="380" r="6" fill="#3B82F6" stroke="#1E293B" stroke-width="1" onclick="connectWire('neg')"/>
+        <line id="wireNeg" x1="302" y1="384" x2="302" y2="384" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
+        <circle id="wireNegEnd" class="wire-endpoint" cx="302" cy="384" r="9" fill="#3B82F6" stroke="#1E293B" stroke-width="1.5" onclick="connectWire('neg')"/>
 
         <!-- Positive wire (red): power pos → right tube anode -->
-        <line id="wirePos" x1="375" y1="380" x2="375" y2="380" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,0"/>
-        <circle id="wirePosEnd" class="wire-endpoint" cx="375" cy="380" r="6" fill="#EF4444" stroke="#DC2626" stroke-width="1" onclick="connectWire('pos')"/>
+        <line id="wirePos" x1="388" y1="384" x2="388" y2="384" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
+        <circle id="wirePosEnd" class="wire-endpoint" cx="388" cy="384" r="9" fill="#EF4444" stroke="#DC2626" stroke-width="1.5" onclick="connectWire('pos')"/>
 
         <!-- Connection labels -->
-        <text id="wireNegLabel" x="280" y="378" font-size="6" fill="#3B82F6" font-weight="600">负极导线</text>
-        <text id="wirePosLabel" x="380" y="378" font-size="6" fill="#EF4444" font-weight="600">正极导线</text>
+        <text id="wireNegLabel" x="270" y="383" font-size="8" fill="#3B82F6" font-weight="700">负极导线</text>
+        <text id="wirePosLabel" x="395" y="383" font-size="8" fill="#EF4444" font-weight="700">正极导线</text>
 
         <!-- ===== BUBBLE CONTAINERS (pre-allocated 30 each) ===== -->
         <g id="leftBubbles" clip-path="url(#leftClip)">
@@ -162,8 +164,8 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
           <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
         </g>
         <defs>
-          <clipPath id="leftClip"><rect x="223" y="30" width="44" height="250"/></clipPath>
-          <clipPath id="rightClip"><rect x="413" y="30" width="44" height="250"/></clipPath>
+          <clipPath id="leftClip"><rect x="204" y="20" width="57" height="270"/></clipPath>
+          <clipPath id="rightClip"><rect x="424" y="20" width="57" height="270"/></clipPath>
         </defs>
 
         <!-- ===== VOLUME RATIO CARD (shown after read) ===== -->
@@ -233,7 +235,7 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
         </g>
 
         <!-- ===== GAS TEST FLAME (H₂) ===== -->
-        <g id="h2Flame" opacity="0" transform="translate(245,15)">
+        <g id="h2Flame" opacity="0" transform="translate(233,8)">
           <ellipse cx="0" cy="0" rx="6" ry="14" fill="#60A5FA" opacity="0.7" filter="url(#flameBlur)"/>
           <ellipse cx="0" cy="2" rx="3" ry="8" fill="#BFDBFE" opacity="0.8"/>
           <text x="15" y="5" font-size="6" fill="#2563EB" font-weight="700">H₂ 燃烧！</text>
@@ -241,7 +243,7 @@ html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
         </g>
 
         <!-- ===== GAS TEST SPLINT (O₂) ===== -->
-        <g id="o2Splint" opacity="0" transform="translate(435,15)">
+        <g id="o2Splint" opacity="0" transform="translate(453,8)">
           <rect x="-2" y="-5" width="4" height="25" rx="1" fill="#92400E"/>
           <ellipse cx="0" cy="-5" rx="5" ry="8" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
           <ellipse cx="0" cy="-3" rx="3" ry="5" fill="#FEF3C7" opacity="0.7"/>
@@ -397,13 +399,13 @@ function connectWire(which) {
   if (state.step !== 0) return;
   if (which === 'neg' && !state.negConnected) {
     state.negConnected = true;
-    animateWire('wireNeg', 'wireNegEnd', 305, 380, 245, 340);
+    animateWire("wireNeg", "wireNegEnd", 302, 384, 233, 340);
     $('wireNegLabel').textContent = '负极 ✓';
     $('wireNegLabel').setAttribute('fill', '#059669');
   }
   if (which === 'pos' && !state.posConnected) {
     state.posConnected = true;
-    animateWire('wirePos', 'wirePosEnd', 375, 380, 435, 340);
+    animateWire("wirePos", "wirePosEnd", 388, 384, 453, 340);
     $('wirePosLabel').textContent = '正极 ✓';
     $('wirePosLabel').setAttribute('fill', '#059669');
   }
@@ -459,8 +461,8 @@ function startElectrolysis() {
   setTimeout(() => checkObs('obs3'), 2000);
 
   // Bubble pools (pre-drawn elements)
-  const leftPool = initBubblePool('bub-l', 225, 270, 42, -240);
-  const rightPool = initBubblePool('bub-r', 415, 270, 42, -240);
+  const leftPool = initBubblePool('bub-l', 207, 280, 55, -250);
+  const rightPool = initBubblePool('bub-r', 427, 280, 55, -250);
 
   let leftTimer = 0, rightTimer = 0;
   const SPEED_H2 = 0.03; // mL per frame at 60fps → ~1.8 mL/s
@@ -477,19 +479,19 @@ function startElectrolysis() {
       state.o2Current = Math.min(state.o2Current + SPEED_O2, state.o2Target);
     }
 
-    // Update gas columns (228 is 0mL line, each mL = ~10.4px)
+    // Update gas columns (238 is 0mL line, each mL = ~10.4px)
     const PX_PER_ML = 208 / 20; // 208px for 20mL
     const h2Height = state.h2Current * PX_PER_ML;
     const o2Height = state.o2Current * PX_PER_ML;
 
-    $('h2Gas').setAttribute('y', 228 - h2Height);
+    $('h2Gas').setAttribute('y', 238 - h2Height);
     $('h2Gas').setAttribute('height', h2Height);
-    $('leftWater').setAttribute('y', 228);
+    $('leftWater').setAttribute('y', 238);
     $('leftWater').setAttribute('height', Math.max(0, 50 - h2Height * 0.2));
 
-    $('o2Gas').setAttribute('y', 228 - o2Height);
+    $('o2Gas').setAttribute('y', 238 - o2Height);
     $('o2Gas').setAttribute('height', o2Height);
-    $('rightWater').setAttribute('y', 228);
+    $('rightWater').setAttribute('y', 238);
     $('rightWater').setAttribute('height', Math.max(0, 50 - o2Height * 0.2));
 
     // Panel data
@@ -757,11 +759,11 @@ function resetExperiment() {
     l.setAttribute('y2', y1);
     l.setAttribute('stroke-dasharray', '4,0');
   });
-  $('wireNegEnd').setAttribute('cx', '305');
-  $('wireNegEnd').setAttribute('cy', '380');
+  $('wireNegEnd').setAttribute('cx', '302');
+  $('wireNegEnd').setAttribute('cy', '384');
   $('wireNegEnd').style.display = '';
-  $('wirePosEnd').setAttribute('cx', '375');
-  $('wirePosEnd').setAttribute('cy', '380');
+  $('wirePosEnd').setAttribute('cx', '388');
+  $('wirePosEnd').setAttribute('cy', '384');
   $('wirePosEnd').style.display = '';
   $('wireNegLabel').textContent = '负极导线';
   $('wireNegLabel').setAttribute('fill', '#3B82F6');
@@ -776,7 +778,7 @@ function resetExperiment() {
 
   // Reset gas columns
   ['h2Gas', 'o2Gas'].forEach(id => {
-    $(id).setAttribute('y', '228');
+    $(id).setAttribute('y', '238');
     $(id).setAttribute('height', '0');
   });
   $('leftWater').setAttribute('height', '50');
