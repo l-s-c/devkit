@@ -28,31 +28,36 @@
         </defs>
 
         <!-- ===== LARGE BEAKER (sealed container) ===== -->
-        <g transform="translate(100,50)">
-          <rect id="bigBeaker" x="0" y="0" width="300" height="280" rx="6" fill="rgba(219,234,254,0.05)" stroke="#93C5FD" stroke-width="1.5"/>
+        <g transform="translate(60,20)">
+          <!-- Large beaker with glass effect -->
+          <rect id="bigBeaker" x="0" y="0" width="360" height="340" rx="10" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="2"/>
+          <!-- Left highlight -->
+          <line x1="4" y1="15" x2="4" y2="325" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
           <!-- Glass cover -->
-          <rect id="glassCover" x="-5" y="-8" width="310" height="12" rx="3" fill="rgba(148,163,184,0.15)" stroke="#94A3B8" stroke-width="1" opacity="0"/>
-          <text id="sealLabel" x="150" y="-15" font-size="6" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
+          <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.2)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
+          <text id="sealLabel" x="180" y="-18" font-size="8" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
 
-          <!-- Small beaker A (ammonia) -->
-          <g transform="translate(30,160)">
-            <rect x="0" y="0" width="80" height="120" rx="4" fill="rgba(219,234,254,0.04)" stroke="#67E8F9" stroke-width="1"/>
-            <rect id="ammoniaLiquid" x="3" y="60" width="74" height="57" rx="3" fill="hsl(185,70%,65%)" opacity="0"/>
-            <text x="40" y="135" font-size="7" fill="#64748B" text-anchor="middle">小烧杯 A 浓氨水</text>
+          <!-- Small beaker A (ammonia) — with glass quality -->
+          <g transform="translate(25,165)">
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.5"/>
+            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <rect id="ammoniaLiquid" x="4" y="70" width="92" height="76" rx="5" fill="hsl(185,70%,65%)" opacity="0"/>
+            <text x="50" y="168" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 A 浓氨水</text>
           </g>
 
-          <!-- Small beaker B (phenolphthalein) -->
-          <g transform="translate(190,160)">
-            <rect x="0" y="0" width="80" height="120" rx="4" fill="rgba(219,234,254,0.04)" stroke="#FDA4AF" stroke-width="1"/>
-            <rect id="phenolLiquid" x="3" y="60" width="74" height="57" rx="3" fill="hsl(0,0%,95%)" opacity="0"/>
-            <text x="40" y="135" font-size="7" fill="#64748B" text-anchor="middle">小烧杯 B 酚酞溶液</text>
+          <!-- Small beaker B (phenolphthalein) — with glass quality -->
+          <g transform="translate(235,165)">
+            <rect x="0" y="0" width="100" height="150" rx="8" fill="url(#glassGrad)" stroke="#FDA4AF" stroke-width="1.5"/>
+            <line x1="3" y1="10" x2="3" y2="140" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <rect id="phenolLiquid" x="4" y="70" width="92" height="76" rx="5" fill="hsl(0,0%,95%)" opacity="0"/>
+            <text x="50" y="168" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">小烧杯 B 酚酞溶液</text>
           </g>
 
           <!-- Diffusion arrow (hidden until Step 2) -->
           <g id="diffArrow" opacity="0">
-            <line x1="120" y1="200" x2="180" y2="200" stroke="#06B6D4" stroke-width="1" stroke-dasharray="4,2"/>
-            <polygon points="180,196 190,200 180,204" fill="#06B6D4"/>
-            <text x="155" y="193" font-size="5" fill="#06B6D4" text-anchor="middle">NH₃ 扩散</text>
+            <line x1="140" y1="240" x2="220" y2="240" stroke="#06B6D4" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <polygon points="220,235 235,240 220,245" fill="#06B6D4"/>
+            <text x="180" y="230" font-size="7" fill="#06B6D4" text-anchor="middle" font-weight="600">NH₃ 扩散</text>
           </g>
         </g>
 
@@ -86,64 +91,71 @@
         </g>
 
         <!-- ===== REAGENT BOTTLES (Step 1) ===== -->
-        <g id="reagentArea" class="clickable" transform="translate(80,355)" onclick="prepareReagents()">
-          <rect x="0" y="0" width="120" height="30" rx="6" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1"/>
-          <text x="60" y="13" font-size="7" fill="#0D9488" text-anchor="middle" font-weight="700">准备实验</text>
-          <text x="60" y="25" font-size="5" fill="#0D9488" text-anchor="middle">点击倒入氨水 + 滴入酚酞</text>
+        <g id="reagentArea" class="clickable" transform="translate(60,370)" onclick="prepareReagents()">
+          <rect x="0" y="0" width="140" height="28" rx="6" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1"/>
+          <text x="70" y="12" font-size="8" fill="#0D9488" text-anchor="middle" font-weight="700">准备实验</text>
+          <text x="70" y="24" font-size="6" fill="#0D9488" text-anchor="middle">点击倒入氨水 + 滴入酚酞</text>
         </g>
 
         <!-- ===== GLASS COVER CLICK (Step 2) ===== -->
-        <g id="coverClick" class="clickable" opacity="0" transform="translate(220,355)" onclick="sealAndObserve()">
-          <rect x="0" y="0" width="100" height="30" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
-          <text x="50" y="13" font-size="7" fill="#2563EB" text-anchor="middle" font-weight="700">盖玻璃片</text>
-          <text x="50" y="25" font-size="5" fill="#2563EB" text-anchor="middle">密封并观察</text>
+        <g id="coverClick" class="clickable" opacity="0" transform="translate(220,370)" onclick="sealAndObserve()">
+          <rect x="0" y="0" width="120" height="28" rx="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+          <text x="60" y="12" font-size="8" fill="#2563EB" text-anchor="middle" font-weight="700">盖玻璃片</text>
+          <text x="60" y="24" font-size="6" fill="#2563EB" text-anchor="middle">密封并观察</text>
         </g>
 
-        <!-- ===== ALCOHOL LAMP (Step 3) ===== -->
-        <g id="lampGroup" transform="translate(100,340)" style="display:none">
+        <!-- ===== ALCOHOL LAMP (Step 3, with quality) ===== -->
+        <g id="lampGroup" transform="translate(80,360)" style="display:none">
           <g id="lampClick" class="clickable" onclick="startHeating()">
-            <rect x="0" y="0" width="50" height="25" rx="4" fill="#F59E0B" stroke="#D97706" stroke-width="0.8"/>
-            <line x1="25" y1="0" x2="25" y2="-8" stroke="#1E293B" stroke-width="1.5"/>
+            <!-- Lamp body -->
+            <rect x="0" y="10" width="60" height="28" rx="6" fill="#FEF3C7" stroke="#D97706" stroke-width="1.2"/>
+            <!-- Alcohol inside -->
+            <rect x="4" y="22" width="52" height="13" rx="4" fill="#FDE68A" opacity="0.6"/>
+            <!-- Wick tube + wick -->
+            <rect x="25" y="2" width="10" height="12" rx="2" fill="#78716C" stroke="#6B7280" stroke-width="0.5"/>
+            <line x1="30" y1="2" x2="30" y2="-5" stroke="#1E293B" stroke-width="1.5"/>
+            <!-- Three-layer flame -->
             <g id="lampFlame" opacity="0">
-              <ellipse cx="25" cy="-15" rx="5" ry="10" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
-              <ellipse cx="25" cy="-12" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.7"/>
+              <ellipse cx="30" cy="-14" rx="8" ry="14" fill="#F97316" opacity="0.6" filter="url(#flameBlur)"/>
+              <ellipse cx="30" cy="-12" rx="5" ry="10" fill="#FBBF24" opacity="0.7"/>
+              <ellipse cx="30" cy="-10" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.8"/>
             </g>
-            <text x="25" y="35" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
+            <text x="30" y="48" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">点击加热</text>
           </g>
         </g>
 
         <!-- ===== INFO CARDS ===== -->
         <!-- Micro→Macro card -->
-        <g id="microMacroCard" transform="translate(430,60)">
-          <rect x="0" y="0" width="250" height="70" rx="8" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1"/>
-          <text x="125" y="18" font-size="8" fill="#0D9488" text-anchor="middle" font-weight="700">微观 → 宏观</text>
-          <text x="15" y="38" font-size="7" fill="#0F172A">NH₃ 分子扩散（看不见）</text>
-          <text x="125" y="38" font-size="7" fill="#0284C7" font-weight="700">→</text>
-          <text x="140" y="38" font-size="7" fill="#0F172A">酚酞变红（看得见）</text>
-          <text id="microNote" x="125" y="58" font-size="6" fill="#64748B" text-anchor="middle">分子在不断运动</text>
+        <g id="microMacroCard" transform="translate(450,30)">
+          <rect x="0" y="0" width="250" height="80" rx="10" fill="#F0FDFA" stroke="#5EEAD4" stroke-width="1.2"/>
+          <text x="125" y="22" font-size="10" fill="#0D9488" text-anchor="middle" font-weight="800">微观 → 宏观</text>
+          <text x="15" y="44" font-size="8" fill="#0F172A">NH₃ 分子扩散（看不见）</text>
+          <text x="125" y="44" font-size="8" fill="#0284C7" font-weight="700">→</text>
+          <text x="140" y="44" font-size="8" fill="#0F172A">酚酞变红（看得见）</text>
+          <text id="microNote" x="125" y="66" font-size="7" fill="#64748B" text-anchor="middle">分子在不断运动</text>
         </g>
 
         <!-- Diffusion progress -->
-        <g id="progressCard" transform="translate(430,145)" opacity="0">
-          <rect x="0" y="0" width="250" height="55" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="125" y="18" font-size="7" fill="#0F172A" text-anchor="middle" font-weight="600">扩散进度</text>
-          <rect x="15" y="28" width="220" height="8" rx="4" fill="#E2E8F0"/>
-          <rect id="diffProgress" x="15" y="28" width="0" height="8" rx="4" fill="#06B6D4"/>
-          <text id="diffTime" x="125" y="50" font-size="6" fill="#64748B" text-anchor="middle">0.0s / 8.0s</text>
+        <g id="progressCard" transform="translate(450,125)" opacity="0">
+          <rect x="0" y="0" width="250" height="60" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+          <text x="125" y="20" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">扩散进度</text>
+          <rect x="15" y="32" width="220" height="10" rx="5" fill="#E2E8F0"/>
+          <rect id="diffProgress" x="15" y="32" width="0" height="10" rx="5" fill="#06B6D4"/>
+          <text id="diffTime" x="125" y="55" font-size="7" fill="#64748B" text-anchor="middle">0.0s / 8.0s</text>
         </g>
 
         <!-- Temperature comparison card -->
-        <g id="tempCard" transform="translate(430,215)" opacity="0">
-          <rect x="0" y="0" width="250" height="60" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
-          <text x="125" y="18" font-size="8" fill="#9A3412" text-anchor="middle" font-weight="700">温度对比</text>
-          <text id="tempNormal" x="60" y="38" font-size="7" fill="#64748B" text-anchor="middle">常温 ~8s</text>
-          <text x="125" y="40" font-size="9" fill="#DC2626" text-anchor="middle" font-weight="800">×2</text>
-          <text id="tempHeat" x="190" y="38" font-size="7" fill="#64748B" text-anchor="middle">加热 ~4s</text>
-          <text id="tempResult" x="125" y="55" font-size="6" fill="#059669" text-anchor="middle" opacity="0">温度越高，分子运动越快！</text>
+        <g id="tempCard" transform="translate(450,200)" opacity="0">
+          <rect x="0" y="0" width="250" height="70" rx="10" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/>
+          <text x="125" y="22" font-size="10" fill="#9A3412" text-anchor="middle" font-weight="800">温度对比</text>
+          <text id="tempNormal" x="60" y="45" font-size="9" fill="#64748B" text-anchor="middle">常温 ~8s</text>
+          <text x="125" y="47" font-size="12" fill="#DC2626" text-anchor="middle" font-weight="900">×2</text>
+          <text id="tempHeat" x="190" y="45" font-size="9" fill="#64748B" text-anchor="middle">加热 ~4s</text>
+          <text id="tempResult" x="125" y="63" font-size="7" fill="#059669" text-anchor="middle" opacity="0">温度越高，分子运动越快！</text>
         </g>
 
         <!-- Canvas hint -->
-        <text id="canvasHint" x="360" y="390" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击"准备实验"倒入试剂</text>
+        <text id="canvasHint" x="360" y="395" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">点击"准备实验"倒入试剂</text>
       </svg>
     </div>
   </div>
@@ -233,12 +245,12 @@ const state = {
   animFrame: null
 };
 
-// Beaker A region (ammonia source, relative to SVG): x:130-210, y:210-270
-const SRC = { x: 170, y: 230 };
-// Beaker B region (phenolphthalein): x:290-370, y:210-270
-const DST = { xMin: 290, xMax: 370, yMin: 210, yMax: 270 };
-// Big beaker bounds: x:100-400, y:50-330
-const BOUNDS = { xMin: 108, xMax: 392, yMin: 58, yMax: 322 };
+// Beaker A region (ammonia source): big beaker at (60,20), A at +25,+165, liquid at +4,+70 w92 h76
+const SRC = { x: 135, y: 270 };
+// Beaker B region (phenolphthalein): big beaker at (60,20), B at +235,+165, liquid at +4,+70 w92 h76
+const DST = { xMin: 295, xMax: 395, yMin: 255, yMax: 335 };
+// Big beaker bounds: (60,20) w360 h340
+const BOUNDS = { xMin: 68, xMax: 412, yMin: 28, yMax: 352 };
 
 // Molecule pool
 const mols = [];
