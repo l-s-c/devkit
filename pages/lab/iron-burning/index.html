@@ -26,7 +26,7 @@
       <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
         <defs>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#BFDBFE" stop-opacity="0.6"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#EFF6FF" stop-opacity="0.15"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#BFDBFE" stop-opacity="0.5"/></linearGradient>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#B8D4F0" stop-opacity="0.85"/><stop offset="12%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="50%" stop-color="#EDF4FC" stop-opacity="0.3"/><stop offset="88%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="100%" stop-color="#C8DCF0" stop-opacity="0.7"/></linearGradient>
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <filter id="glowBlur"><feGaussianBlur stdDeviation="4"/></filter>
           <filter id="steamBlur"><feGaussianBlur stdDeviation="3"/></filter>
@@ -39,7 +39,8 @@
         <!-- ===== COLLECTING BOTTLE (O₂) ===== -->
         <g id="bottleGroup" transform="translate(180,40)">
           <!-- Bottle body -->
-          <rect id="bottleBody" x="0" y="0" width="140" height="300" rx="8" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
+          <rect id="bottleBody" x="0" y="0" width="140" height="300" rx="8" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="2.5"/>
+          <rect x="0" y="0" width="140" height="300" rx="8" fill="url(#glassGrad)" pointer-events="none"/>
           <line x1="3" y1="5" x2="3" y2="295" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
           <!-- Neck -->
           <rect x="50" y="-15" width="40" height="18" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
