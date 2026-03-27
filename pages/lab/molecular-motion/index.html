@@ -88,6 +88,8 @@
                     fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
               <rect x="3" y="5" width="8" height="100" rx="4" fill="url(#highlightGrad)" opacity="0.8"/>
               <rect id="phenolL" x="2" y="58" width="76" height="57" rx="3" fill="hsl(0,0%,95%)" opacity="0"/>
+              <!-- Drop zone: phenol -->
+              <rect id="dropBL" class="drop-zone" x="-4" y="-8" width="88" height="130" rx="5"/>
               <text x="40" y="133" font-size="8" fill="#475569" text-anchor="middle" font-weight="600">B 酚酞</text>
             </g>
 
@@ -370,7 +372,7 @@ function initDrag() {
   });
   // Phenol → both groups (drop on left B... actually any beaker)
   ChemDrag.makeDraggable($('toolPhenol'), {
-    snapTargets: [{id:'dropAL', action:'phenol'}],
+    snapTargets: [{id:'dropBL', action:'phenol'}],
     onDrop: (action) => doAction(action), resetOnFail: true
   });
   // Glass cover → seal both
