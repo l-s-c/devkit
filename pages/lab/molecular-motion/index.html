@@ -46,9 +46,11 @@
 
         <!-- ===== LARGE BEAKER (sealed container) — Designer v2 ===== -->
         <g transform="translate(60,15)">
-          <!-- Large beaker body (scaled beaker template) -->
+          <!-- Large beaker body — solid base + glass overlay -->
           <path d="M0,10 L0,325 Q0,345 15,345 L345,345 Q360,345 360,325 L360,10 Q360,5 355,3 L350,0 L10,0 L5,3 Q0,5 0,10 Z"
-                fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2.5"/>
+                fill="#EDF5FF" stroke="url(#glassEdge)" stroke-width="2.5"/>
+          <path d="M0,10 L0,325 Q0,345 15,345 L345,345 Q360,345 360,325 L360,10 Q360,5 355,3 L350,0 L10,0 L5,3 Q0,5 0,10 Z"
+                fill="url(#glass)" pointer-events="none"/>
           <!-- Pour spout (left, exaggerated for 360px scale) -->
           <path d="M0,10 Q-20,0 -8,-8" fill="none" stroke="url(#glassEdge)" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Left highlight -->
@@ -62,7 +64,8 @@
           <!-- Small beaker A (ammonia) — Designer v2 beaker -->
           <g transform="translate(30,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
+                  fill="#EDF5FF" stroke="url(#glassEdge)" stroke-width="2"/>
+            <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z" fill="url(#glass)" pointer-events="none"/>
             <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
             <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
             <!-- 3 scale lines -->
@@ -78,7 +81,8 @@
           <!-- Small beaker B (phenolphthalein) — Designer v2 beaker -->
           <g transform="translate(230,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
+                  fill="#EDF5FF" stroke="url(#glassEdge)" stroke-width="2"/>
+            <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z" fill="url(#glass)" pointer-events="none"/>
             <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
             <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
             <line x1="85" y1="25" x2="95" y2="25" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
