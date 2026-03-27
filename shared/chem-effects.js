@@ -360,9 +360,12 @@ const ChemDrag = (() => {
   }
 
   function isOver(a, b) {
-    const ab = a.getBBox(); const bb = b.getBBox();
-    const cx = ab.x + ab.width / 2, cy = ab.y + ab.height / 2;
-    return cx > bb.x && cx < bb.x + bb.width && cy > bb.y && cy < bb.y + bb.height;
+    // Use getBoundingClientRect (includes transforms) instead of getBBox (local only)
+    const ar = a.getBoundingClientRect();
+    const br = b.getBoundingClientRect();
+    const cx = ar.left + ar.width / 2;
+    const cy = ar.top + ar.height / 2;
+    return cx > br.left && cx < br.right && cy > br.top && cy < br.bottom;
   }
 
   function showToast(svg, msg, duration) {
