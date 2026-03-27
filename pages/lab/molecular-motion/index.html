@@ -28,15 +28,15 @@
           <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
           <!-- Designer v2 shared gradients -->
           <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="rgba(186,230,253,0.25)"/>
-            <stop offset="12%" stop-color="rgba(186,230,253,0.05)"/>
-            <stop offset="88%" stop-color="rgba(186,230,253,0.05)"/>
-            <stop offset="100%" stop-color="rgba(186,230,253,0.25)"/>
+            <stop offset="0%" stop-color="rgba(186,230,253,0.45)"/>
+            <stop offset="12%" stop-color="rgba(186,230,253,0.12)"/>
+            <stop offset="88%" stop-color="rgba(186,230,253,0.12)"/>
+            <stop offset="100%" stop-color="rgba(186,230,253,0.45)"/>
           </linearGradient>
           <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#7DD3FC"/>
-            <stop offset="50%" stop-color="#BAE6FD"/>
-            <stop offset="100%" stop-color="#7DD3FC"/>
+            <stop offset="0%" stop-color="#38BDF8"/>
+            <stop offset="50%" stop-color="#7DD3FC"/>
+            <stop offset="100%" stop-color="#38BDF8"/>
           </linearGradient>
           <linearGradient id="waterFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(56,189,248,0.15)"/>
@@ -48,13 +48,13 @@
         <g transform="translate(60,15)">
           <!-- Large beaker body (scaled beaker template) -->
           <path d="M0,10 L0,325 Q0,345 15,345 L345,345 Q360,345 360,325 L360,10 Q360,5 355,3 L350,0 L10,0 L5,3 Q0,5 0,10 Z"
-                fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
+                fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2.5"/>
           <!-- Pour spout (left) -->
-          <path d="M0,10 Q-8,5 -4,0" fill="none" stroke="url(#glassEdge)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M0,10 Q-8,5 -4,0" fill="none" stroke="url(#glassEdge)" stroke-width="2" stroke-linecap="round"/>
           <!-- Left highlight -->
-          <line x1="5" y1="15" x2="5" y2="330" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="5" y1="15" x2="5" y2="330" stroke="rgba(255,255,255,0.75)" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Right highlight -->
-          <line x1="355" y1="15" x2="355" y2="330" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="355" y1="15" x2="355" y2="330" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
           <!-- Glass cover -->
           <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
           <text id="sealLabel" x="180" y="-18" font-size="9" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
@@ -62,9 +62,9 @@
           <!-- Small beaker A (ammonia) — Designer v2 beaker -->
           <g transform="translate(30,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
             <path d="M0,5 Q-5,2 -2,0" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
-            <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+            <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
             <!-- 3 scale lines -->
             <line x1="0" y1="46" x2="8" y2="46" stroke="#94A3B8" stroke-width="0.5"/>
             <line x1="0" y1="93" x2="8" y2="93" stroke="#94A3B8" stroke-width="0.5"/>
@@ -78,9 +78,9 @@
           <!-- Small beaker B (phenolphthalein) — Designer v2 beaker -->
           <g transform="translate(230,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
-                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+                  fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
             <path d="M0,5 Q-5,2 -2,0" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
-            <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+            <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
             <line x1="0" y1="46" x2="8" y2="46" stroke="#94A3B8" stroke-width="0.5"/>
             <line x1="0" y1="93" x2="8" y2="93" stroke="#94A3B8" stroke-width="0.5"/>
             <line x1="0" y1="116" x2="6" y2="116" stroke="#94A3B8" stroke-width="0.3"/>
