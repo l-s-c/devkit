@@ -36,25 +36,32 @@
           <filter id="smokeBlur"><feGaussianBlur stdDeviation="3"/></filter>
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <filter id="glowOrange"><feGaussianBlur stdDeviation="4"/><feComposite in="SourceGraphic"/></filter>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/>
+            <stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/>
+            <stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/>
+            <stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/>
+          </linearGradient>
         </defs>
 
         <!-- ===== BEAKER ===== -->
-        <g id="beakerGroup" transform="translate(120,60)">
-          <rect x="0" y="0" width="260" height="280" rx="6" fill="rgba(219,234,254,0.05)" stroke="#93C5FD" stroke-width="1.5"/>
-          <line x1="3" y1="5" x2="3" y2="275" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <g id="beakerGroup" transform="translate(80,30)">
+          <rect x="0" y="0" width="320" height="320" rx="10" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.8"/>
+          <line x1="4" y1="10" x2="4" y2="310" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
           <!-- Water (upper half visible) -->
-          <rect id="beakerWater" x="3" y="140" width="254" height="137" rx="4" fill="url(#waterGrad)"/>
-          <text x="130" y="295" font-size="7" fill="#64748B" text-anchor="middle">烧杯（热水）</text>
+          <rect id="beakerWater" x="4" y="165" width="312" height="151" rx="6" fill="url(#waterGrad)"/>
+          <text x="160" y="335" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">烧杯（热水）</text>
 
           <!-- Copper plate across water surface -->
-          <rect id="copperPlate" x="20" y="132" width="220" height="8" rx="2" fill="url(#copperGrad)" stroke="#B45309" stroke-width="0.5"/>
-          <text x="245" y="128" font-size="5" fill="#B45309">铜片</text>
+          <rect id="copperPlate" x="15" y="157" width="290" height="10" rx="3" fill="url(#copperGrad)" stroke="#B45309" stroke-width="0.8"/>
+          <text x="310" y="153" font-size="7" fill="#B45309" font-weight="600">铜片</text>
 
           <!-- ===== WHITE PHOSPHORUS on copper (left) ===== -->
-          <g id="whiteP_top" transform="translate(60,110)">
-            <circle id="wpTop" cx="0" cy="0" r="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
-            <text x="0" y="30" font-size="6" fill="#0F172A" text-anchor="middle" font-weight="600">白磷</text>
-            <text x="0" y="39" font-size="5" fill="#64748B" text-anchor="middle">着火点 40°C</text>
+          <g id="whiteP_top" transform="translate(70,130)">
+            <circle id="wpTop" cx="0" cy="0" r="11" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
+            <text x="0" y="34" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">白磷</text>
+            <text x="0" y="45" font-size="7" fill="#64748B" text-anchor="middle">着火点 40°C</text>
             <!-- Condition badges -->
             <g id="wpTopBadges" transform="translate(-30,-30)">
               <text class="condition-badge" x="0" y="0" fill="#059669">✓ 可燃物</text>
@@ -76,8 +83,8 @@
           </g>
 
           <!-- ===== RED PHOSPHORUS on copper (right) ===== -->
-          <g id="redP_top" transform="translate(180,110)">
-            <circle id="rpTop" cx="0" cy="0" r="8" fill="#DC2626" stroke="#991B1B" stroke-width="0.8"/>
+          <g id="redP_top" transform="translate(230,130)">
+            <circle id="rpTop" cx="0" cy="0" r="11" fill="#DC2626" stroke="#991B1B" stroke-width="1"/>
             <text x="0" y="30" font-size="6" fill="#0F172A" text-anchor="middle" font-weight="600">红磷</text>
             <text x="0" y="39" font-size="5" fill="#64748B" text-anchor="middle">着火点 240°C</text>
             <g id="rpTopBadges" transform="translate(-30,-30)">
@@ -93,7 +100,7 @@
           </g>
 
           <!-- ===== WHITE PHOSPHORUS underwater ===== -->
-          <g id="whiteP_water" transform="translate(120,210)">
+          <g id="whiteP_water" transform="translate(140,240)">
             <circle id="wpWater" cx="0" cy="0" r="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
             <text x="0" y="20" font-size="6" fill="#0F172A" text-anchor="middle" font-weight="600">白磷</text>
             <text x="0" y="29" font-size="5" fill="#64748B" text-anchor="middle">（水中）</text>
@@ -160,7 +167,7 @@
         </g>
 
         <!-- ===== COMBUSTION TRIANGLE (shown after analysis) ===== -->
-        <g id="triangleCard" transform="translate(430,60)" opacity="0">
+        <g id="triangleCard" transform="translate(430,30)" opacity="0">
           <rect x="0" y="0" width="250" height="100" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
           <text x="125" y="20" font-size="9" fill="#92400E" text-anchor="middle" font-weight="800">燃烧三条件</text>
           <text x="20" y="42" font-size="8" fill="#059669" font-weight="700">✓ 可燃物</text>
@@ -170,7 +177,7 @@
         </g>
 
         <!-- ===== IGNITION POINT COMPARISON ===== -->
-        <g id="ignitionCard" transform="translate(430,175)" opacity="0">
+        <g id="ignitionCard" transform="translate(430,150)" opacity="0">
           <rect x="0" y="0" width="250" height="55" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
           <text x="125" y="18" font-size="8" fill="#9A3412" text-anchor="middle" font-weight="700">着火点对比</text>
           <text x="30" y="38" font-size="9" fill="#F59E0B" font-weight="800">白磷 40°C</text>
@@ -180,7 +187,7 @@
         </g>
 
         <!-- ===== CONTRAST TABLE ===== -->
-        <g id="contrastTable" transform="translate(430,245)" opacity="0">
+        <g id="contrastTable" transform="translate(430,230)" opacity="0">
           <rect x="0" y="0" width="250" height="110" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
           <text x="125" y="18" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">对照记录</text>
           <!-- Header -->
