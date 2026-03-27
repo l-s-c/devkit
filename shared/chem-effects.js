@@ -239,6 +239,50 @@ const ChemEffects = (() => {
     return { start, stop, reset };
   }
 
+  // ===== GLASS DEFS INJECTION =====
+  // Injects shared SVG <defs> for glass/liquid rendering into all SVGs on the page.
+  // Call once on page load — all experiments get consistent glass gradients.
+  function injectGlassDefs() {
+    const defs = `
+      <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="15%" stop-color="rgba(255,255,255,0.02)"/>
+        <stop offset="85%" stop-color="rgba(255,255,255,0.02)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.06)"/>
+      </linearGradient>
+      <linearGradient id="liquidGradBlue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.6"/>
+      </linearGradient>
+      <linearGradient id="liquidGradClear" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E2E8F0" stop-opacity="0.2"/>
+        <stop offset="100%" stop-color="#CBD5E1" stop-opacity="0.3"/>
+      </linearGradient>
+      <filter id="glassHighlight"><feGaussianBlur stdDeviation="0.5"/></filter>
+      <filter id="smokeBlur"><feGaussianBlur stdDeviation="3"/></filter>
+    `;
+    document.querySelectorAll('svg').forEach(svg => {
+      let defsEl = svg.querySelector('defs');
+      if (!defsEl) {
+        defsEl = document.createElementNS(SVG_NS, 'defs');
+        svg.prepend(defsEl);
+      }
+      // Only inject if not already present
+      if (!defsEl.querySelector('#glassGrad')) {
+        defsEl.insertAdjacentHTML('beforeend', defs);
+      }
+    });
+  }
+
+  // Auto-inject on load
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectGlassDefs);
+    } else {
+      injectGlassDefs();
+    }
+  }
+
   return {
     createBubblePool,
     createSmokeSystem,
@@ -246,7 +290,8 @@ const ChemEffects = (() => {
     hslToString,
     animateColor,
     animateLiquidLevel,
-    createWaterDisplacement
+    createWaterDisplacement,
+    injectGlassDefs
   };
 })();
 
