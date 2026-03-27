@@ -37,7 +37,7 @@
       <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.25)"/><stop offset="100%" stop-color="rgba(255,255,255,0.05)"/></linearGradient>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
           <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#F97316"/><stop offset="40%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#FEF3C7" stop-opacity="0.5"/></linearGradient>
         </defs>
         <rect width="720" height="400" fill="#F8FAFC"/>
@@ -45,11 +45,11 @@
         <!-- ===== COLLECTING BOTTLE ===== -->
         <g id="bottleGroup" transform="translate(200,40)">
           <!-- Glass body -->
-          <rect id="bottleBody" x="0" y="20" width="100" height="160" rx="4" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="1.2"/>
+          <rect id="bottleBody" x="0" y="20" width="100" height="160" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
           <!-- Left highlight -->
           <line x1="3" y1="25" x2="3" y2="175" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
           <!-- Neck -->
-          <rect x="38" y="5" width="24" height="18" rx="2" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="38" y="5" width="24" height="18" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
           <!-- Scale marks -->
           <line x1="0" y1="148" x2="10" y2="148" stroke="#94A3B8" stroke-width="0.5"/>
           <text x="13" y="151" font-size="6" fill="#94A3B8">1/5</text>
@@ -100,7 +100,7 @@
 
         <!-- ===== WATER TROUGH ===== -->
         <g id="troughGroup" transform="translate(330,260)">
-          <rect x="0" y="0" width="120" height="60" rx="3" fill="rgba(219,234,254,0.15)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="0" y="0" width="120" height="60" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
           <!-- Trough water -->
           <rect id="troughWater" x="2" y="15" width="116" height="43" rx="2" fill="#7DD3FC" opacity="0.35"/>
           <!-- Tube end submerged -->

@@ -25,6 +25,7 @@
       <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
         <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <filter id="steamBlur"><feGaussianBlur stdDeviation="2.5"/></filter>
           <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
@@ -48,8 +49,8 @@
         <!-- ===== ROUND BOTTOM FLASK ===== -->
         <g transform="translate(90,100)">
           <!-- Flask body -->
-          <ellipse cx="50" cy="120" rx="50" ry="55" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.5"/>
-          <rect x="40" y="0" width="20" height="70" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+          <ellipse cx="50" cy="120" rx="50" ry="55" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
+          <rect x="40" y="0" width="20" height="70" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
 
           <!-- Water -->
           <ellipse id="flaskWater" cx="50" cy="130" rx="45" ry="42" fill="url(#waterGrad)"/>
@@ -81,7 +82,7 @@
           </g>
 
           <!-- Support tube (to condenser) -->
-          <rect x="60" y="30" width="30" height="8" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="60" y="30" width="30" height="8" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
 
           <!-- Boiling bubbles (pre-drawn 12) -->
           <g id="boilBubbles">
@@ -128,7 +129,7 @@
 
         <!-- ===== COLLECTION TUBE ===== -->
         <g transform="translate(460,220)">
-          <rect x="0" y="0" width="30" height="100" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="0" y="0" width="30" height="100" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
           <!-- Collected water -->
           <rect id="collectedWater" x="2" y="98" width="26" height="0" rx="2" fill="#BAE6FD" opacity="0.6"/>
           <!-- 10mL mark -->
@@ -160,12 +161,12 @@
         <g id="testArea" style="display:none">
           <!-- Two test tubes -->
           <g transform="translate(180,100)">
-            <rect x="0" y="0" width="24" height="80" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+            <rect x="0" y="0" width="24" height="80" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
             <rect id="tapWater" x="2" y="30" width="20" height="48" rx="2" fill="hsl(0,0%,95%)"/>
             <text x="12" y="95" font-size="6" fill="#64748B" text-anchor="middle">自来水</text>
           </g>
           <g transform="translate(260,100)">
-            <rect x="0" y="0" width="24" height="80" rx="3" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1"/>
+            <rect x="0" y="0" width="24" height="80" rx="3" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
             <rect id="distWater" x="2" y="30" width="20" height="48" rx="2" fill="hsl(200,60%,90%)"/>
             <text x="12" y="95" font-size="6" fill="#64748B" text-anchor="middle">蒸馏水</text>
           </g>

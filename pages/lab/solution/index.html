@@ -133,7 +133,7 @@
         <rect width="720" height="400" fill="#F8FAFC"/>
         <!-- Cylinder body -->
         <g id="cylinderGroup" transform="translate(200,30)">
-          <rect id="cylBody" class="clickable" x="0" y="0" width="80" height="300" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1" onclick="addWater(state.waterVol>=43?1:5)"/>
+          <rect id="cylBody" class="clickable" x="0" y="0" width="80" height="300" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1" onclick="addWater(state.waterVol>=43?1:5)"/>
           <text class="svg-hint" x="40" y="-8" text-anchor="middle">点击量筒倒水</text>
           <line x1="2" y1="5" x2="2" y2="295" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
           <!-- Scale markings (50mL cylinder, 1mL divisions) -->
@@ -237,8 +237,8 @@
         </g>
         <!-- Reagent bottle -->
         <g id="bottleGroup" transform="translate(400,80)">
-          <rect x="0" y="30" width="80" height="110" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
-          <rect x="30" y="15" width="20" height="18" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
+          <rect x="0" y="30" width="80" height="110" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="30" y="15" width="20" height="18" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.8"/>
           <!-- Cap -->
           <rect x="28" y="10" width="24" height="8" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
           <!-- Solution inside -->
@@ -258,6 +258,7 @@
           <text id="dissolveStatus" x="10" y="36" font-size="7" fill="#64748B">等待操作…</text>
         </g>
         <defs><marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0, 6 2, 0 4" fill="#64748B"/></marker></defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
       </svg>
     </div>
   </div>

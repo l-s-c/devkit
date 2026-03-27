@@ -33,6 +33,7 @@
       <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
       <svg id="canvas" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
           <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
           <linearGradient id="limewaterTurbid" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
@@ -44,7 +45,7 @@
         <!-- ===== CONICAL FLASK ===== -->
         <g id="conicalFlask" transform="translate(100,100)">
           <polygon id="flaskBody" points="50,0 0,140 100,140" fill="rgba(219,234,254,0.1)" stroke="#93C5FD" stroke-width="1"/>
-          <rect x="40" y="-20" width="20" height="22" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.8"/>
+          <rect x="40" y="-20" width="20" height="22" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.8"/>
           <!-- Dilute HCl liquid -->
           <polygon id="hclLiquid" points="35,60 15,140 85,140 65,60" fill="#BFDBFE" opacity="0.35"/>
           <text x="50" y="85" font-size="5" fill="#0284C7" text-anchor="middle">稀盐酸</text>
@@ -61,7 +62,7 @@
           <!-- Funnel mouth -->
           <polygon points="0,0 30,0 22,8 8,8" fill="rgba(219,234,254,0.12)" stroke="#93C5FD" stroke-width="0.8"/>
           <!-- Long neck -->
-          <rect x="12" y="8" width="6" height="120" rx="1" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.5"/>
+          <rect x="12" y="8" width="6" height="120" rx="1" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.5"/>
           <!-- End submerged in liquid (below liquid line) -->
           <circle id="funnelEnd" cx="15" cy="128" r="3" fill="#93C5FD" opacity="0.5"/>
           <text x="35" y="70" font-size="5" fill="#64748B">长颈漏斗</text>
@@ -77,12 +78,12 @@
 
         <!-- ===== COLLECTING BOTTLE (upright, 向上排空气法) ===== -->
         <g id="collectGroup" class="clickable" transform="translate(380,80)" onclick="nextStep()">
-          <rect id="bottleBody" x="0" y="0" width="70" height="100" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1"/>
+          <rect id="bottleBody" x="0" y="0" width="70" height="100" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
           <line x1="2" y1="3" x2="2" y2="97" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
           <!-- CO2 gas accumulating (semi-transparent gray rising from bottom) -->
           <rect id="co2Gas" x="2" y="98" width="66" height="0" rx="2" fill="rgba(148,163,184,0.15)"/>
           <!-- Neck -->
-          <rect x="25" y="-10" width="20" height="12" rx="2" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="0.5"/>
+          <rect x="25" y="-10" width="20" height="12" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.5"/>
           <!-- Glass plate (to cover after collection) -->
           <rect id="glassPlate" x="-2" y="-12" width="74" height="4" rx="1" fill="rgba(219,234,254,0.3)" stroke="#93C5FD" stroke-width="0.5" opacity="0"/>
           <!-- Tube entering bottle from bottom side -->

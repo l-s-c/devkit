@@ -29,6 +29,7 @@
       <svg id="sceneA" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect id="svgBgA" width="720" height="400" fill="#F8FAFC"/>
         <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
           <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
           <linearGradient id="co2Grad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#94A3B8" stop-opacity="0"/>
@@ -38,7 +39,7 @@
 
         <!-- Beaker -->
         <g transform="translate(150,60)">
-          <rect x="0" y="0" width="200" height="280" rx="5" fill="rgba(219,234,254,0.05)" stroke="#93C5FD" stroke-width="1.5"/>
+          <rect x="0" y="0" width="200" height="280" rx="5" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
           <text x="100" y="298" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
 
           <!-- Steps/platforms -->
@@ -117,7 +118,7 @@
 
         <!-- Test tube with limewater -->
         <g transform="translate(200,60)">
-          <rect id="tubeB" x="0" y="0" width="60" height="220" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.2"/>
+          <rect id="tubeB" x="0" y="0" width="60" height="220" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
           <!-- Limewater -->
           <rect id="limewater" x="3" y="80" width="54" height="137" rx="3" fill="hsl(0,0%,95%)" stroke="none"/>
           <text x="30" y="250" font-size="7" fill="#64748B" text-anchor="middle">澄清石灰水</text>
@@ -176,12 +177,13 @@
       <svg id="sceneC" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <rect id="svgBgC" width="720" height="400" fill="#F8FAFC"/>
         <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#DBEAFE" stop-opacity="0.5"/><stop offset="12%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="50%" stop-color="#F0F9FF" stop-opacity="0.1"/><stop offset="88%" stop-color="#EFF6FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.4"/></linearGradient>
           <filter id="flameBlurC"><feGaussianBlur stdDeviation="2"/></filter>
         </defs>
 
         <!-- Test tube with litmus solution -->
         <g transform="translate(200,60)">
-          <rect id="tubeC" x="0" y="0" width="60" height="220" rx="4" fill="rgba(219,234,254,0.06)" stroke="#93C5FD" stroke-width="1.2"/>
+          <rect id="tubeC" x="0" y="0" width="60" height="220" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
           <!-- Litmus solution -->
           <rect id="litmusSolution" x="3" y="80" width="54" height="137" rx="3" fill="hsl(280,50%,60%)" stroke="none"/>
           <text x="30" y="250" font-size="7" fill="#64748B" text-anchor="middle">紫色石蕊溶液</text>
