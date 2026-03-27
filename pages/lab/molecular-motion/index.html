@@ -49,12 +49,12 @@
           <!-- Large beaker body (scaled beaker template) -->
           <path d="M0,10 L0,325 Q0,345 15,345 L345,345 Q360,345 360,325 L360,10 Q360,5 355,3 L350,0 L10,0 L5,3 Q0,5 0,10 Z"
                 fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2.5"/>
-          <!-- Pour spout (left) -->
-          <path d="M0,10 Q-8,5 -4,0" fill="none" stroke="url(#glassEdge)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Pour spout (left, exaggerated for 360px scale) -->
+          <path d="M0,10 Q-20,0 -8,-8" fill="none" stroke="url(#glassEdge)" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Left highlight -->
-          <line x1="5" y1="15" x2="5" y2="330" stroke="rgba(255,255,255,0.75)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="18" y1="30" x2="18" y2="320" stroke="rgba(255,255,255,0.75)" stroke-width="5" stroke-linecap="round"/>
           <!-- Right highlight -->
-          <line x1="355" y1="15" x2="355" y2="330" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="342" y1="30" x2="342" y2="320" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Glass cover -->
           <rect id="glassCover" x="-5" y="-10" width="370" height="14" rx="4" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1.2" opacity="0"/>
           <text id="sealLabel" x="180" y="-18" font-size="9" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
@@ -63,12 +63,12 @@
           <g transform="translate(30,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
                   fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
-            <path d="M0,5 Q-5,2 -2,0" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
+            <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
             <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
             <!-- 3 scale lines -->
-            <line x1="0" y1="46" x2="8" y2="46" stroke="#94A3B8" stroke-width="0.5"/>
-            <line x1="0" y1="93" x2="8" y2="93" stroke="#94A3B8" stroke-width="0.5"/>
-            <line x1="0" y1="116" x2="6" y2="116" stroke="#94A3B8" stroke-width="0.3"/>
+            <line x1="85" y1="25" x2="95" y2="25" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
+            <line x1="85" y1="55" x2="95" y2="55" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
+            <line x1="85" y1="85" x2="95" y2="85" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
             <!-- Ammonia liquid (hidden until Step 1) -->
             <rect id="ammoniaLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(185,70%,65%)" opacity="0"/>
             <path id="ammoniaMenuscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.6" opacity="0"/>
@@ -79,11 +79,11 @@
           <g transform="translate(230,160)">
             <path d="M0,5 L0,130 Q0,140 8,140 L92,140 Q100,140 100,130 L100,5 Q100,2 97,1 L95,0 L5,0 L3,1 Q0,2 0,5 Z"
                   fill="url(#glass)" stroke="url(#glassEdge)" stroke-width="2"/>
-            <path d="M0,5 Q-5,2 -2,0" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
+            <path d="M0,5 Q-12,0 -5,-5" fill="none" stroke="url(#glassEdge)" stroke-width="1" stroke-linecap="round"/>
             <line x1="3" y1="8" x2="3" y2="128" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/>
-            <line x1="0" y1="46" x2="8" y2="46" stroke="#94A3B8" stroke-width="0.5"/>
-            <line x1="0" y1="93" x2="8" y2="93" stroke="#94A3B8" stroke-width="0.5"/>
-            <line x1="0" y1="116" x2="6" y2="116" stroke="#94A3B8" stroke-width="0.3"/>
+            <line x1="85" y1="25" x2="95" y2="25" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
+            <line x1="85" y1="55" x2="95" y2="55" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
+            <line x1="85" y1="85" x2="95" y2="85" stroke="#BAE6FD" stroke-width="1" opacity="0.6"/>
             <!-- Phenolphthalein liquid (hidden until Step 1) -->
             <rect id="phenolLiquid" x="3" y="70" width="94" height="67" rx="4" fill="hsl(0,0%,95%)" opacity="0"/>
             <path id="phenolMeniscus" d="M3,70 Q25,67 50,70 Q75,73 97,70" fill="none" stroke="rgba(14,165,233,0.3)" stroke-width="0.6" opacity="0"/>
