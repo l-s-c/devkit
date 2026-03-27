@@ -368,7 +368,9 @@ const ChemDrag = (() => {
     const br = b.getBoundingClientRect();
     const cx = ar.left + ar.width / 2;
     const cy = ar.top + ar.height / 2;
-    return cx > br.left && cx < br.right && cy > br.top && cy < br.bottom;
+    // Add 20px padding for easier drop targeting
+    const pad = 20;
+    return cx > br.left - pad && cx < br.right + pad && cy > br.top - pad && cy < br.bottom + pad;
   }
 
   function showToast(svg, msg, duration) {
