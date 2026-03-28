@@ -2,420 +2,295 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>配制一定溶质质量分数的溶液 - 6% NaCl 溶液 | DevKit</title>
-<meta name="keywords" content="配制溶液, 溶质质量分数, 天平, 量筒, 初中化学">
-<meta name="description" content="配制50g 6%的NaCl溶液：计算→称量→量取→溶解装瓶，掌握天平和量筒使用">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>配制 50g 6% NaCl 溶液 - 虚拟实验室</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <link rel="stylesheet" href="/shared/chem-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
-.calc-input{width:50px;padding:3px 6px;border:1px solid #CBD5E1;border-radius:4px;font-size:12px;text-align:center;font-family:'JetBrains Mono',monospace}
-.calc-input.correct{border-color:#059669;background:#ECFDF5}
-.calc-input.wrong{border-color:#DC2626;background:#FEF2F2}
-.calc-row{display:flex;align-items:center;gap:6px;margin:4px 0;font-size:11px}
-.calc-hint{font-size:9px;color:#DC2626;margin-top:2px;min-height:12px}
-.scene{display:none}.scene.active{display:block}
-.cylinder-btn{padding:4px 10px;border:1px solid var(--lab-accent);border-radius:4px;background:#FFF;color:var(--lab-accent);font-size:10px;cursor:pointer;font-weight:600}
-.cylinder-btn:hover{background:var(--lab-accent-bg)}
-.cylinder-btn:disabled{opacity:0.4;cursor:not-allowed}
-.sight-label{font-size:5px;fill:#DC2626}
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;font-size:10px;color:#0D9488}
+.data-row{display:flex;gap:4px;margin:8px 0}
+.data-card{flex:1;border-radius:8px;padding:6px;text-align:center;background:#F0F9FF;border:1px solid #BAE6FD}
+.data-val{font-size:16px;font-weight:900;color:#0284C7}
+.data-label{font-size:7px;color:#64748B;margin-top:2px}
+.step-card{border:2px solid #E2E8F0;border-radius:10px;padding:12px;text-align:center;background:#fff}
+.step-card.active{border-color:#0284C7;box-shadow:0 0 10px rgba(2,132,199,0.15)}
+.step-card.done{border-color:#6EE7B7;background:#F0FDF4}
+.step-num{font-size:8px;color:#0284C7;font-weight:700;margin-bottom:4px}
+.step-title{font-size:10px;color:#0F172A;font-weight:800}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
-  <h1>配制一定溶质质量分数的溶液</h1>
-</div>
-<div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>溶质质量分数 · 天平称量 · 量筒量取 · 初中化学</div>
-  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
-</div>
-
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-wrapper">
-      <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
-
-      <!-- ===== SCENE 1: CALCULATION ===== -->
-      <svg id="scene1" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <g transform="translate(80,60)">
-          <rect x="0" y="0" width="560" height="280" rx="12" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
-          <text x="280" y="35" font-size="14" fill="#0284C7" text-anchor="middle" font-weight="700">计算溶质和溶剂用量</text>
-          <text x="280" y="65" font-size="10" fill="#64748B" text-anchor="middle">目标：配制 50g 溶质质量分数为 6% 的 NaCl 溶液</text>
-
-          <text x="40" y="110" font-size="11" fill="#0F172A">已知：溶液质量 = 50g，溶质质量分数 = 6%</text>
-
-          <text x="40" y="150" font-size="11" fill="#0F172A" font-weight="600">第一步：求 NaCl 质量</text>
-          <text x="40" y="175" font-size="10" fill="#64748B">m(NaCl) = 溶液质量 × 溶质质量分数 = 50g × 6% = ?</text>
-
-          <text x="40" y="210" font-size="11" fill="#0F172A" font-weight="600">第二步：求水的体积</text>
-          <text x="40" y="235" font-size="10" fill="#64748B">m(H₂O) = 50g - m(NaCl) = ?g → V(H₂O) = m/ρ = ?mL</text>
-          <text x="40" y="255" font-size="9" fill="#94A3B8">（水的密度 ρ = 1g/mL，所以质量数值 = 体积数值）</text>
-
-          <!-- Equipment preview icons -->
-          <g transform="translate(360,100)">
-            <text x="80" y="-10" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">所需器材</text>
-            <!-- Mini balance -->
-            <g transform="translate(0,10)">
-              <rect x="20" y="55" width="40" height="5" rx="2" fill="#78716C"/>
-              <rect x="35" y="35" width="10" height="22" rx="1" fill="#8D8680"/>
-              <line x1="10" y1="33" x2="70" y2="33" stroke="#78716C" stroke-width="2"/>
-              <rect x="5" y="38" width="25" height="3" rx="1" fill="#D6D3D1"/>
-              <rect x="50" y="38" width="25" height="3" rx="1" fill="#D6D3D1"/>
-              <text x="40" y="78" font-size="7" fill="#64748B" text-anchor="middle">托盘天平</text>
-            </g>
-            <!-- Mini cylinder -->
-            <g transform="translate(100,10)">
-              <rect x="10" y="5" width="25" height="55" rx="3" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="1.5"/>
-              <rect x="12" y="30" width="21" height="28" rx="2" fill="#BAE6FD" opacity="0.4"/>
-              <text x="22" y="78" font-size="7" fill="#64748B" text-anchor="middle">量筒</text>
-            </g>
-            <!-- Mini beaker -->
-            <g transform="translate(155,10)">
-              <rect x="0" y="15" width="40" height="45" rx="5" fill="#F0F7FF" stroke="#7DD3FC" stroke-width="1.5"/>
-              <text x="20" y="78" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
-            </g>
-          </g>
-        </g>
-      </svg>
-
-      <!-- ===== SCENE 2: BALANCE ===== -->
-      <svg id="scene2" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <g id="balanceGroup" class="clickable" transform="translate(200,80)" onclick="if(!state.animating)nextStep()">
-          <text id="balanceHint" class="svg-hint" x="160" y="300" text-anchor="middle">点击天平 → 下一步</text>
-          <!-- Base -->
-          <rect x="100" y="250" width="120" height="10" rx="3" fill="#78716C"/>
-          <rect x="148" y="200" width="24" height="52" rx="2" fill="#8D8680"/>
-          <!-- Beam -->
-          <line id="beam" x1="40" y1="195" x2="280" y2="195" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
-          <!-- Pointer -->
-          <line id="balPointer" x1="160" y1="180" x2="160" y2="210" stroke="#DC2626" stroke-width="1.5"/>
-          <!-- Scale marks -->
-          <line x1="155" y1="205" x2="165" y2="205" stroke="#78716C" stroke-width="0.5"/>
-          <!-- Left pan (物) -->
-          <g id="leftPan" transform="translate(40,195)">
-            <line x1="0" y1="0" x2="0" y2="30" stroke="#A8A29E" stroke-width="1"/>
-            <line x1="60" y1="0" x2="60" y2="30" stroke="#A8A29E" stroke-width="1"/>
-            <rect x="-5" y="30" width="70" height="5" rx="2" fill="#D6D3D1"/>
-            <!-- Paper -->
-            <rect x="5" y="25" width="50" height="4" rx="1" fill="#FAFAF9" stroke="#E7E5E4" stroke-width="0.3"/>
-            <text x="30" y="22" font-size="6" fill="#64748B" text-anchor="middle">称量纸</text>
-            <!-- NaCl (shown after weighing) -->
-            <g id="naclOnPan" opacity="0">
-              <ellipse cx="30" cy="22" rx="15" ry="5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-              <text x="30" y="14" font-size="5" fill="#0284C7" text-anchor="middle">NaCl</text>
-            </g>
-          </g>
-          <text x="70" y="260" font-size="7" fill="#64748B" text-anchor="middle">左盘（物品）</text>
-          <!-- Right pan (码) -->
-          <g id="rightPan" transform="translate(220,195)">
-            <line x1="0" y1="0" x2="0" y2="30" stroke="#A8A29E" stroke-width="1"/>
-            <line x1="60" y1="0" x2="60" y2="30" stroke="#A8A29E" stroke-width="1"/>
-            <rect x="-5" y="30" width="70" height="5" rx="2" fill="#D6D3D1"/>
-            <!-- Paper -->
-            <rect x="5" y="25" width="50" height="4" rx="1" fill="#FAFAF9" stroke="#E7E5E4" stroke-width="0.3"/>
-          </g>
-          <text x="250" y="260" font-size="7" fill="#64748B" text-anchor="middle">右盘（砝码）</text>
-          <!-- Rider (游码) -->
-          <g id="riderGroup" transform="translate(110,185)">
-            <rect x="0" y="0" width="100" height="6" rx="1" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.5"/>
-            <!-- Scale ticks -->
-            <line x1="0" y1="0" x2="0" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="0" y="-6" font-size="4" fill="#64748B" text-anchor="middle">0</text>
-            <line x1="20" y1="0" x2="20" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="20" y="-6" font-size="4" fill="#64748B" text-anchor="middle">1</text>
-            <line x1="40" y1="0" x2="40" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="40" y="-6" font-size="4" fill="#64748B" text-anchor="middle">2</text>
-            <line x1="60" y1="0" x2="60" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="60" y="-6" font-size="4" fill="#64748B" text-anchor="middle">3</text>
-            <line x1="80" y1="0" x2="80" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="80" y="-6" font-size="4" fill="#64748B" text-anchor="middle">4</text>
-            <line x1="100" y1="0" x2="100" y2="-4" stroke="#64748B" stroke-width="0.5"/>
-            <text x="100" y="-6" font-size="4" fill="#64748B" text-anchor="middle">5</text>
-            <!-- Rider marker -->
-            <polygon id="riderMarker" points="0,-1 4,6 -4,6" fill="#DC2626" transform="translate(0,0)"/>
-          </g>
-          <text x="160" y="172" font-size="6" fill="#64748B" text-anchor="middle">游码</text>
-          <text x="160" y="280" font-size="8" fill="#64748B" text-anchor="middle">托盘天平（左物右码）</text>
-        </g>
-        <!-- Status -->
-        <g transform="translate(500,100)">
-          <rect x="0" y="0" width="180" height="60" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">称量状态</text>
-          <text id="balanceStatus" x="10" y="38" font-size="7" fill="#64748B">游码：0.0g</text>
-          <text id="balanceTotal" x="10" y="52" font-size="7" fill="#64748B">总质量：0.0g</text>
-        </g>
-      </svg>
-
-      <!-- ===== SCENE 3: MEASURING CYLINDER ===== -->
-      <svg id="scene3" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <!-- Cylinder body -->
-        <g id="cylinderGroup" transform="translate(200,30)">
-          <rect id="cylBody" class="clickable" x="0" y="0" width="80" height="300" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1" onclick="addWater(state.waterVol>=43?1:5)"/>
-          <text class="svg-hint" x="40" y="-8" text-anchor="middle">点击量筒倒水</text>
-          <line x1="2" y1="5" x2="2" y2="295" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-          <!-- Scale markings (50mL cylinder, 1mL divisions) -->
-          <g id="cylScale">
-            <!-- Major marks every 10mL -->
-            <line x1="0" y1="300" x2="15" y2="300" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="303" font-size="6" fill="#64748B" text-anchor="end">0</text>
-            <line x1="0" y1="240" x2="15" y2="240" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="243" font-size="6" fill="#64748B" text-anchor="end">10</text>
-            <line x1="0" y1="180" x2="15" y2="180" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="183" font-size="6" fill="#64748B" text-anchor="end">20</text>
-            <line x1="0" y1="120" x2="15" y2="120" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="123" font-size="6" fill="#64748B" text-anchor="end">30</text>
-            <line x1="0" y1="60" x2="15" y2="60" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="63" font-size="6" fill="#64748B" text-anchor="end">40</text>
-            <line x1="0" y1="0" x2="15" y2="0" stroke="#94A3B8" stroke-width="0.5"/>
-            <text x="-5" y="3" font-size="6" fill="#64748B" text-anchor="end">50</text>
-            <!-- Minor marks every 5mL -->
-            <line x1="0" y1="270" x2="10" y2="270" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="0" y1="210" x2="10" y2="210" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="0" y1="150" x2="10" y2="150" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="0" y1="90" x2="10" y2="90" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="0" y1="30" x2="10" y2="30" stroke="#CBD5E1" stroke-width="0.3"/>
-          </g>
-          <!-- Water level -->
-          <rect id="cylWater" x="2" y="300" width="76" height="0" rx="2" fill="#7DD3FC" opacity="0.35"/>
-          <!-- Meniscus -->
-          <ellipse id="meniscus" cx="40" cy="300" rx="38" ry="3" fill="#38BDF8" opacity="0"/>
-          <!-- Sight lines (always shown for teaching) -->
-          <g id="sightLines" opacity="0.6">
-            <!-- Correct: eye level = meniscus bottom -->
-            <line x1="82" y1="300" x2="130" y2="300" stroke="#059669" stroke-width="0.8" stroke-dasharray="3,2"/>
-            <text x="133" y="303" class="sight-label" fill="#059669">← 平视（正确）</text>
-            <!-- Looking up -->
-            <line x1="82" y1="300" x2="130" y2="310" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-            <text x="133" y="313" class="sight-label">← 仰视（偏大）</text>
-            <!-- Looking down -->
-            <line x1="82" y1="300" x2="130" y2="290" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-            <text x="133" y="293" class="sight-label">← 俯视（偏小）</text>
-          </g>
-          <text x="40" y="320" font-size="7" fill="#64748B" text-anchor="middle">量筒（50mL）</text>
-          <!-- Click zones on cylinder -->
-          <rect id="cylClickPour" class="clickable" x="0" y="150" width="80" height="150" fill="transparent" onclick="addWater(5)"><title>点击倒入 +5mL</title></rect>
-          <rect id="cylClickAdd" class="clickable" x="0" y="0" width="80" height="150" fill="transparent" onclick="addWater(1)"><title>点击加入 +1mL</title></rect>
-          <text id="cylClickHint" class="svg-hint" x="40" y="340" text-anchor="middle">点击量筒加水 | 点击滴管精调</text>
-        </g>
-        <!-- Dropper -->
-        <g id="dropper" class="clickable" transform="translate(320,40)" onclick="addWater(0.1)">
-          <rect x="0" y="0" width="10" height="40" rx="2" fill="#93C5FD" stroke="#60A5FA" stroke-width="0.5"/>
-          <ellipse cx="5" cy="0" rx="8" ry="6" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.5"/>
-          <ellipse cx="5" cy="43" rx="2" ry="2" fill="#7DD3FC" opacity="0.5"/>
-          <text x="25" y="25" font-size="6" fill="#64748B">点击滴管 +0.1mL</text>
-        </g>
-        <!-- Reading display -->
-        <g transform="translate(450,100)">
-          <rect x="0" y="0" width="200" height="100" rx="8" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="1"/>
-          <text x="100" y="22" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">量筒读数</text>
-          <text id="cylReading" x="100" y="55" font-size="24" fill="#0284C7" text-anchor="middle" font-weight="800" font-family="'JetBrains Mono',monospace">0.0 mL</text>
-          <text id="cylTarget" x="100" y="78" font-size="9" fill="#64748B" text-anchor="middle">目标：47.0 mL</text>
-          <text id="cylHint" x="100" y="92" font-size="8" fill="#059669" text-anchor="middle" opacity="0"></text>
-        </g>
-        <!-- Error analysis -->
-        <g transform="translate(450,220)">
-          <rect x="0" y="0" width="200" height="90" rx="6" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
-          <text x="10" y="18" font-size="7" fill="#991B1B" font-weight="700">量筒读数误差（中考考点）</text>
-          <text x="10" y="35" font-size="6" fill="#991B1B">仰视 → 读数偏大 → 实际偏少</text>
-          <text x="10" y="50" font-size="6" fill="#991B1B">俯视 → 读数偏小 → 实际偏多</text>
-          <text x="10" y="70" font-size="6" fill="#059669">平视 → 视线与凹液面最低处相平</text>
-          <text x="10" y="82" font-size="6" fill="#059669">        → 读数准确</text>
-        </g>
-      </svg>
-
-      <!-- ===== SCENE 4: DISSOLVE & BOTTLE ===== -->
-      <svg id="scene4" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <!-- Beaker -->
-        <g id="beakerGroup" class="clickable" transform="translate(150,80)" onclick="startDissolve()">
-          <rect x="0" y="0" width="120" height="140" rx="3" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-          <line x1="2" y1="5" x2="2" y2="135" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-          <!-- Water -->
-          <rect id="beakerWater" x="2" y="50" width="116" height="88" rx="2" fill="#7DD3FC" opacity="0.3"/>
-          <!-- NaCl particles (dissolving) -->
-          <g id="naclParticles">
-            <circle class="nacl-p" cx="30" cy="120" r="3" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="nacl-p" cx="50" cy="125" r="2.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="nacl-p" cx="70" cy="118" r="3.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="nacl-p" cx="90" cy="122" r="2" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="nacl-p" cx="45" cy="115" r="2" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="nacl-p" cx="80" cy="128" r="2.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.3"/>
-          </g>
-          <!-- Glass rod (stirring) -->
-          <line id="glassRod" x1="60" y1="-20" x2="60" y2="130" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"/>
-          <text x="60" y="155" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
-          <text x="100" y="-10" font-size="6" fill="#64748B">玻璃棒</text>
-          <text id="dissolveHint" class="svg-hint" x="60" y="170" text-anchor="middle">点击烧杯 → 搅拌溶解</text>
-        </g>
-        <!-- Arrow -->
-        <g transform="translate(310,150)">
-          <line x1="0" y1="0" x2="50" y2="0" stroke="#64748B" stroke-width="2" marker-end="url(#arrowhead)"/>
-          <text x="25" y="-8" font-size="7" fill="#64748B" text-anchor="middle">溶解后</text>
-        </g>
-        <!-- Reagent bottle -->
-        <g id="bottleGroup" transform="translate(400,80)">
-          <rect x="0" y="30" width="80" height="110" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
-          <rect x="30" y="15" width="20" height="18" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.8"/>
-          <!-- Cap -->
-          <rect x="28" y="10" width="24" height="8" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-          <!-- Solution inside -->
-          <rect id="bottleSolution" x="2" y="60" width="76" height="78" rx="3" fill="#7DD3FC" opacity="0" />
-          <!-- Label -->
-          <g id="bottleLabel" opacity="0">
-            <rect x="15" y="75" width="50" height="30" rx="3" fill="#FFF" stroke="#0284C7" stroke-width="1"/>
-            <text x="40" y="90" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="700">6% NaCl</text>
-            <text x="40" y="100" font-size="5" fill="#64748B" text-anchor="middle">50g</text>
-          </g>
-          <text x="40" y="158" font-size="7" fill="#64748B" text-anchor="middle">试剂瓶</text>
-        </g>
-        <!-- Dissolve status -->
-        <g transform="translate(500,250)">
-          <rect x="0" y="0" width="180" height="50" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">溶解状态</text>
-          <text id="dissolveStatus" x="10" y="36" font-size="7" fill="#64748B">等待操作…</text>
-        </g>
-        <defs><marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0 0, 6 2, 0 4" fill="#64748B"/></marker></defs>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#B8D4F0" stop-opacity="0.85"/><stop offset="12%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="50%" stop-color="#EDF4FC" stop-opacity="0.3"/><stop offset="88%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="100%" stop-color="#C8DCF0" stop-opacity="0.7"/></linearGradient>
-      </svg>
-    </div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">配制 50g 6% NaCl 溶液</strong>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Step bar -->
-      <div class="panel-section">
-        <div class="section-title">实验步骤</div>
-        <div class="step-bar" id="stepBar">
-          <div class="step-item active" data-step="0"><span class="step-num">1</span>计算</div>
-          <div class="step-item" data-step="1"><span class="step-num">2</span>称量</div>
-          <div class="step-item" data-step="2"><span class="step-num">3</span>量取</div>
-          <div class="step-item" data-step="3"><span class="step-num">4</span>溶解</div>
-        </div>
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ===== 5 STEP FLOW ===== -->
+          <!-- Step 1: 称量 -->
+          <g id="step1g" transform="translate(20,30)">
+            <rect x="0" y="0" width="120" height="180" rx="10" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="step1box"/>
+            <text x="60" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="700">① 称量</text>
+            <!-- Balance -->
+            <rect x="20" y="120" width="80" height="6" rx="2" fill="#94A3B8"/>
+            <rect x="56" y="90" width="8" height="36" rx="2" fill="#78716C"/>
+            <!-- Left pan -->
+            <path d="M15,118 Q15,110 25,110 L45,110 Q55,110 55,118" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+            <!-- Right pan -->
+            <path d="M65,118 Q65,110 75,110 L95,110 Q105,110 105,118" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+            <!-- NaCl on left pan -->
+            <g id="naclOnPan" opacity="0">
+              <rect x="25" y="95" width="20" height="14" rx="3" fill="#E5E7EB" stroke="#94A3B8" stroke-width="0.8"/>
+              <text x="35" y="105" font-size="5" fill="#475569" text-anchor="middle" font-weight="700">NaCl</text>
+            </g>
+            <text x="60" y="155" font-size="9" fill="#64748B" text-anchor="middle">NaCl 3g</text>
+            <!-- Drop zone -->
+            <rect id="dropNaCl" class="drop-zone" x="0" y="60" width="120" height="120" rx="10"/>
+          </g>
+          <!-- Arrow -->
+          <text x="152" y="130" font-size="16" fill="#CBD5E1">→</text>
+
+          <!-- Step 2: 量取 -->
+          <g id="step2g" transform="translate(170,30)">
+            <rect x="0" y="0" width="120" height="180" rx="10" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="step2box"/>
+            <text x="60" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="700">② 量取</text>
+            <!-- Measuring cylinder -->
+            <rect x="35" y="35" width="50" height="120" rx="4" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="38" y="40" width="6" height="100" rx="3" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- Water level (hidden) -->
+            <rect id="cylWater" x="37" y="80" width="46" height="70" rx="3" fill="url(#waterGrad)" opacity="0"/>
+            <text id="cylLabel" x="60" y="120" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600" opacity="0">47mL</text>
+            <!-- Scale -->
+            <line x1="75" y1="55" x2="82" y2="55" stroke="#94A3B8" stroke-width="0.5"/>
+            <line x1="75" y1="100" x2="82" y2="100" stroke="#94A3B8" stroke-width="0.5"/>
+            <text x="60" y="168" font-size="9" fill="#64748B" text-anchor="middle">水 47mL</text>
+            <rect id="dropCyl" class="drop-zone" x="0" y="30" width="120" height="140" rx="10" opacity="0"/>
+          </g>
+          <text x="302" y="130" font-size="16" fill="#CBD5E1">→</text>
+
+          <!-- Step 3: 溶解 -->
+          <g id="step3g" transform="translate(320,30)">
+            <rect x="0" y="0" width="120" height="180" rx="10" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="step3box"/>
+            <text x="60" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="700">③ 溶解</text>
+            <!-- Beaker -->
+            <path d="M25,40 L20,45 L20,140 Q20,150 30,150 L90,150 Q100,150 100,140 L100,45 L95,40 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="23" y="48" width="6" height="85" rx="3" fill="url(#hlGrad)" opacity="0.6"/>
+            <!-- Solution (hidden) -->
+            <path id="beakerSolution" d="M22,80 L22,140 Q22,148 30,148 L90,148 Q98,148 98,140 L98,80 Z" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Glass rod (hidden) -->
+            <g id="stirRod" opacity="0">
+              <line x1="60" y1="25" x2="60" y2="130" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="60" cy="130" r="3" fill="#94A3B8"/>
+            </g>
+            <text x="60" y="168" font-size="9" fill="#64748B" text-anchor="middle">搅拌溶解</text>
+            <rect id="dropStir" class="drop-zone" x="0" y="30" width="120" height="130" rx="10" opacity="0"/>
+          </g>
+          <text x="452" y="130" font-size="16" fill="#CBD5E1">→</text>
+
+          <!-- Step 4: 转移 -->
+          <g id="step4g" transform="translate(470,30)">
+            <rect x="0" y="0" width="120" height="180" rx="10" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="step4box"/>
+            <text x="60" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="700">④ 转移</text>
+            <!-- Reagent bottle -->
+            <rect x="30" y="50" width="60" height="90" rx="6" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="33" y="55" width="6" height="70" rx="3" fill="url(#hlGrad)" opacity="0.7"/>
+            <rect x="40" y="42" width="40" height="12" rx="4" fill="#D1D5DB" stroke="#94A3B8" stroke-width="0.5"/>
+            <rect id="bottleSolution" x="32" y="75" width="56" height="60" rx="4" fill="url(#waterGrad)" opacity="0"/>
+            <text x="60" y="168" font-size="9" fill="#64748B" text-anchor="middle">装入试剂瓶</text>
+            <rect id="dropBottle" class="drop-zone" x="0" y="30" width="120" height="130" rx="10" opacity="0"/>
+          </g>
+          <text x="602" y="130" font-size="16" fill="#CBD5E1">→</text>
+
+          <!-- Step 5: 贴标签 -->
+          <g id="step5g" transform="translate(610,30)">
+            <rect x="0" y="0" width="80" height="180" rx="10" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="step5box"/>
+            <text x="40" y="18" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="700">⑤ 贴标签</text>
+            <!-- Bottle with label -->
+            <rect x="10" y="50" width="60" height="90" rx="6" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect id="bottleLabel" x="18" y="70" width="44" height="30" rx="4" fill="#fff" stroke="#0284C7" stroke-width="1" opacity="0"/>
+            <text id="labelText1" x="40" y="82" font-size="6" fill="#0284C7" text-anchor="middle" font-weight="700" opacity="0">NaCl 溶液</text>
+            <text id="labelText2" x="40" y="92" font-size="5" fill="#64748B" text-anchor="middle" opacity="0">6% · 50g</text>
+            <rect id="bottleSol5" x="12" y="80" width="56" height="55" rx="4" fill="url(#waterGrad)" opacity="0"/>
+            <text x="40" y="168" font-size="9" fill="#64748B" text-anchor="middle">完成</text>
+          </g>
+
+          <!-- ===== CALCULATION CARD ===== -->
+          <g transform="translate(30,240)">
+            <rect x="0" y="0" width="260" height="90" rx="8" fill="#fff" stroke="#E2E8F0" stroke-width="1.5"/>
+            <text x="130" y="18" font-size="10" fill="#0F172A" text-anchor="middle" font-weight="800">计算过程</text>
+            <text x="15" y="38" font-size="8" fill="#475569">目标: 50g · 6% NaCl 溶液</text>
+            <text x="15" y="55" font-size="8" fill="#0284C7" font-weight="700">NaCl = 50 × 6% = 3g</text>
+            <text x="15" y="72" font-size="8" fill="#0284C7" font-weight="700">水 = 50 - 3 = 47g = 47mL</text>
+          </g>
+
+          <!-- ===== ERROR ANALYSIS CARD ===== -->
+          <g transform="translate(320,240)">
+            <rect x="0" y="0" width="260" height="90" rx="8" fill="#FEF2F2" stroke="#FECACA" stroke-width="1.5"/>
+            <text x="130" y="18" font-size="10" fill="#DC2626" text-anchor="middle" font-weight="800">常见误差</text>
+            <text x="15" y="38" font-size="7" fill="#9A3412">量水仰视读数 → 水多 → 浓度偏低</text>
+            <text x="15" y="55" font-size="7" fill="#9A3412">量水俯视读数 → 水少 → 浓度偏高</text>
+            <text x="15" y="72" font-size="7" fill="#9A3412">称量砝码与物品放反 → 质量偏差</text>
+          </g>
+
+          <!-- Flow bar -->
+          <g transform="translate(50,370)">
+            <rect x="0" y="0" width="600" height="28" rx="6" fill="#0284C7"/>
+            <text x="300" y="18" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">计算 → 称量 NaCl → 量取水 → 溶解搅拌 → 装瓶贴标签</text>
+          </g>
+
+          <!-- Canvas hint -->
+          <text id="canvasHint" x="350" y="430" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">拖 NaCl 到天平 → 称量 3g</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
+
+      <div class="tool-card" id="toolNaCl" data-action="nacl">
+        <svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="28" rx="4" fill="#E5E7EB" stroke="#94A3B8" stroke-width="1"/><text x="24" y="28" font-size="6" fill="#475569" text-anchor="middle" font-weight="700">NaCl</text><text x="24" y="42" font-size="5" fill="#94A3B8" text-anchor="middle">3g</text></svg>
+        <div class="tool-name">NaCl</div>
       </div>
 
-      <!-- Step content -->
-      <div class="panel-section">
-        <div class="section-title" id="stepTitle">第 1 步：计算用量</div>
-        <div class="step-desc" id="stepDesc">配制 50g 溶质质量分数为 6% 的 NaCl 溶液，计算所需 NaCl 和水的用量。</div>
+      <div class="tool-card" id="toolCyl" data-action="cyl">
+        <svg viewBox="0 0 48 48"><rect x="14" y="6" width="20" height="36" rx="3" fill="rgba(14,165,233,0.15)" stroke="#0EA5E9" stroke-width="1"/><rect x="16" y="25" width="16" height="14" rx="2" fill="#7DD3FC" opacity="0.4"/><text x="24" y="46" font-size="5" fill="#0284C7" text-anchor="middle">量筒</text></svg>
+        <div class="tool-name">量筒</div>
       </div>
 
-      <!-- ===== STEP 1: CALC PANEL ===== -->
-      <div class="panel-section" id="calcPanel">
-        <div class="calc-row">
-          <span>m(NaCl) = 50g × 6% =</span>
-          <input type="text" class="calc-input" id="inputMass" placeholder="?" maxlength="5">
-          <span>g</span>
-        </div>
-        <div class="calc-hint" id="hintMass"></div>
-        <div class="calc-row">
-          <span>m(H₂O) = 50g - m(NaCl) =</span>
-          <input type="text" class="calc-input" id="inputWaterM" placeholder="?" maxlength="5">
-          <span>g =</span>
-          <input type="text" class="calc-input" id="inputWaterV" placeholder="?" maxlength="5">
-          <span>mL</span>
-        </div>
-        <div class="calc-hint" id="hintWater"></div>
-        <button class="step-btn" id="calcBtn" onclick="checkCalc()">验证计算结果</button>
+      <div class="tool-card" id="toolRod" data-action="rod">
+        <svg viewBox="0 0 48 48"><line x1="24" y1="6" x2="24" y2="40" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="40" r="3" fill="#94A3B8"/></svg>
+        <div class="tool-name">玻璃棒</div>
       </div>
 
-      <!-- ===== STEP 2: BALANCE PANEL ===== -->
-      <div class="panel-section" id="balancePanel" style="display:none">
-        <div class="step-desc">天平自动演示称量 3.0g NaCl（游码 3.0g，无砝码）。<br><strong>称量完成后点击画布天平 → 下一步</strong></div>
+      <div class="tool-card" id="toolBottle" data-action="bottle">
+        <svg viewBox="0 0 48 48"><rect x="14" y="14" width="20" height="28" rx="4" fill="rgba(14,165,233,0.12)" stroke="#94A3B8" stroke-width="1"/><rect x="18" y="8" width="12" height="8" rx="3" fill="#D1D5DB"/></svg>
+        <div class="tool-name">试剂瓶</div>
       </div>
+    </div>
 
-      <!-- ===== STEP 3: CYLINDER PANEL ===== -->
-      <div class="panel-section" id="cylinderPanel" style="display:none">
-        <div class="step-desc">在画布上操作：<strong>点击量筒下半部</strong>倒入 +5mL，<strong>点击上半部</strong> +1mL，<strong>点击滴管</strong> +0.1mL。</div>
-        <div style="font-size:9px;color:#64748B;margin-top:4px" id="cylStatus">当前：0.0 mL / 目标：47.0 mL</div>
-      </div>
-
-      <!-- ===== STEP 4: DISSOLVE PANEL ===== -->
-      <div class="panel-section" id="dissolvePanel" style="display:none">
-        <div class="step-desc">在画布上<strong>点击烧杯</strong>，用玻璃棒搅拌至完全溶解，转移至试剂瓶并贴标签。</div>
-      </div>
-
-      <!-- Observations -->
-      <div class="panel-section">
-        <div class="section-title">操作要点</div>
-        <ul class="obs-list" id="obsList">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>正确计算溶质和溶剂用量</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>天平称量（左物右码）</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>量筒量取（平视弯月面最低处）</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>溶解并装瓶贴标签</li>
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:10px">
+        <div class="section-title">操作清单（计称量溶装贴）</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>计算: NaCl 3g + 水 47mL</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>称量 NaCl（天平）</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>量取水（量筒·平视）</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>倒入烧杯搅拌溶解</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>转移到试剂瓶</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>贴标签</li>
         </ul>
       </div>
 
-      <!-- Reset -->
-      <div class="panel-section">
-        <button class="ctrl-btn secondary" onclick="resetAll()">重做实验</button>
-      </div>
-
-      <!-- Conclusion -->
-      <div class="panel-section" id="resultSection" style="display:none">
-        <div class="section-title">实验结论</div>
-        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
-          成功配制 <strong style="color:#0284C7">50g 溶质质量分数为 6% 的 NaCl 溶液</strong>。
-          <div style="margin-top:4px;font-size:10px;color:#64748B">配制步骤口诀：<strong>计、称、量、溶、装、贴</strong></div>
+      <div>
+        <div class="section-title">配制数据</div>
+        <div class="data-row">
+          <div class="data-card"><div class="data-val">3g</div><div class="data-label">NaCl</div></div>
+          <div class="data-card"><div class="data-val">47mL</div><div class="data-label">水</div></div>
+          <div class="data-card"><div class="data-val">6%</div><div class="data-label">浓度</div></div>
         </div>
       </div>
+
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px;text-align:center">微观 → 宏观</div>
+        <div id="microNote" style="text-align:center;line-height:1.6">NaCl 晶体溶解 → Na⁺Cl⁻ 均匀分散<br>溶质质量分数 = 溶质/溶液 × 100%<br>玻璃棒搅拌加速溶解（不改变溶解度）</div>
+      </div>
+
+      <button onclick="resetExperiment()" style="width:100%;margin-top:10px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
     </div>
   </div>
-</div>
 
-<!-- Knowledge -->
-<div class="knowledge-section">
-  <div class="knowledge-container">
-    <h2>实验原理</h2>
-    <div class="formula-block" id="formula1"></div>
-    <p>溶质质量分数 = 溶质质量 / 溶液质量 × 100%</p>
-
-    <h3>配制步骤口诀</h3>
-    <ul>
-      <li><strong>计</strong>：计算溶质和溶剂的质量/体积</li>
-      <li><strong>称</strong>：用天平称量固体溶质</li>
-      <li><strong>量</strong>：用量筒量取液体溶剂</li>
-      <li><strong>溶</strong>：在烧杯中溶解，玻璃棒搅拌</li>
-      <li><strong>装</strong>：转移至试剂瓶</li>
-      <li><strong>贴</strong>：贴标签（名称、浓度、日期）</li>
-    </ul>
-
-    <h3>天平使用要点</h3>
-    <ul>
-      <li><strong>左物右码</strong>：左盘放物品，右盘放砝码</li>
-      <li>先放大砝码，后放小砝码，最后拨游码</li>
-      <li>药品不能直接放盘上（垫称量纸）</li>
-      <li>m(物) = m(砝码) + m(游码)</li>
-    </ul>
-
-    <h3>量筒读数（中考重点）</h3>
-    <ul>
-      <li><strong>平视</strong>：视线与凹液面最低处相平 → <strong>读数准确</strong></li>
-      <li><strong>仰视</strong>：视线从下往上看 → 读数偏大 → <strong>实际液体偏少</strong></li>
-      <li><strong>俯视</strong>：视线从上往下看 → 读数偏小 → <strong>实际液体偏多</strong></li>
-    </ul>
-
-    <h3>误差分析（中考高频）</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
-      <div style="background:#FEF2F2;padding:10px;border-radius:8px">
-        <strong style="color:#DC2626">溶质质量分数偏小</strong><br>
-        · NaCl 称量不足<br>
-        · 量筒仰视（水多了）<br>
-        · NaCl 不纯含杂质<br>
-        · 转移时 NaCl 洒落
+  <!-- Knowledge -->
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>溶质质量分数</h4>
+        <div id="formula1" style="text-align:center;margin:6px 0"></div>
+        <p>溶质质量分数 = 溶质质量 / 溶液质量 × 100%</p>
       </div>
-      <div style="background:#DBEAFE;padding:10px;border-radius:8px">
-        <strong style="color:#0284C7">溶质质量分数偏大</strong><br>
-        · 量筒俯视（水少了）<br>
-        · 天平"左码右物"（NaCl 偏多）<br>
-        · NaCl 已受潮
+      <div class="knowledge-card">
+        <h4>配制步骤口诀</h4>
+        <p><strong>计称量溶装贴</strong><br>计算→称量→量取→溶解→装瓶→贴标签</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>天平使用</h4>
+        <p>左物右码，先大后小，砝码用镊子取。称量 NaCl 需垫称量纸。游码读左边。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>量筒使用</h4>
+        <p>平视凹液面最低处读数。仰视偏大（多量），俯视偏小（少量）。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>玻璃棒的作用</h4>
+        <p>搅拌加速溶解（增大接触面积），但不改变溶解度。引流（过滤/转移时用）。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>误差分析</h4>
+        <p>仰视量水→水多→浓度偏低<br>俯视量水→水少→浓度偏高<br>NaCl 不纯→溶质少→浓度偏低</p>
       </div>
     </div>
   </div>
@@ -427,319 +302,175 @@
 const $ = id => document.getElementById(id);
 
 // ===== STATE =====
-const state = { step: 0, waterVol: 0, calcDone: false, cylDone: false };
+let step = 0; // 0=ready, 1=weighed, 2=measured, 3=dissolved, 4=transferred, 5=labeled
+const flags = {};
 
-// ===== STEP CONTROL =====
-function nextStep() {
-  state.step++;
-  updateScene();
-  updateStepBar();
+const DROP_TARGETS = {
+  nacl: ['dropNaCl'],
+  cyl: ['dropCyl'],
+  rod: ['dropStir'],
+  bottle: ['dropBottle']
+};
+const ACTION_MAP = { dropNaCl: 'weigh', dropCyl: 'measure', dropStir: 'dissolve', dropBottle: 'transfer' };
+
+// ===== DRAG =====
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
+  });
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
+  });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) doAction(ACTION_MAP[hit]);
+    dragState = null;
+  });
+});
+
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
 }
 
-function updateScene() {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  $('scene' + (state.step + 1)).classList.add('active');
+function doAction(action) {
+  switch(action) {
+    case 'weigh':
+      if (step >= 1) { toast('已称量'); return; }
+      step = 1;
+      $('toolNaCl').classList.add('used');
+      $('naclOnPan').setAttribute('opacity', '1');
+      markStep(1);
+      checkObs('obs1'); checkObs('obs2');
+      $('dropCyl').setAttribute('opacity', '0.4');
+      updateHint();
+      break;
+    case 'measure':
+      if (step < 1) { toast('先称量 NaCl'); return; }
+      if (step >= 2) { toast('已量取'); return; }
+      step = 2;
+      $('toolCyl').classList.add('used');
+      $('cylWater').setAttribute('opacity', '1');
+      $('cylLabel').setAttribute('opacity', '1');
+      markStep(2);
+      checkObs('obs3');
+      $('dropStir').setAttribute('opacity', '0.4');
+      updateHint();
+      break;
+    case 'dissolve':
+      if (step < 2) { toast('先量取水'); return; }
+      if (step >= 3) { toast('已溶解'); return; }
+      step = 3;
+      $('toolRod').classList.add('used');
+      $('beakerSolution').setAttribute('opacity', '1');
+      $('stirRod').setAttribute('opacity', '1');
+      markStep(3);
+      checkObs('obs4');
+      // Stir animation
+      let angle = 0;
+      (function stir() {
+        if (step > 3) return;
+        angle += 3;
+        const dx = Math.sin(angle * Math.PI / 180) * 8;
+        $('stirRod').querySelector('line').setAttribute('x1', String(60 + dx));
+        $('stirRod').querySelector('line').setAttribute('x2', String(60 + dx));
+        $('stirRod').querySelector('circle').setAttribute('cx', String(60 + dx));
+        requestAnimationFrame(stir);
+      })();
+      setTimeout(() => {
+        $('dropBottle').setAttribute('opacity', '0.4');
+        updateHint();
+      }, 1500);
+      break;
+    case 'transfer':
+      if (step < 3) { toast('先溶解搅拌'); return; }
+      if (step >= 4) { toast('已转移'); return; }
+      step = 4;
+      $('toolBottle').classList.add('used');
+      $('bottleSolution').setAttribute('opacity', '1');
+      markStep(4);
+      checkObs('obs5');
+      // Auto label after 500ms
+      setTimeout(() => {
+        step = 5;
+        markStep(5);
+        $('bottleLabel').setAttribute('opacity', '1');
+        $('labelText1').setAttribute('opacity', '1');
+        $('labelText2').setAttribute('opacity', '1');
+        $('bottleSol5').setAttribute('opacity', '1');
+        checkObs('obs6');
+        $('canvasHint').textContent = '实验完成！50g 6% NaCl 溶液配制成功';
+      }, 500);
+      updateHint();
+      break;
+  }
+}
 
-  // Hide/show panels
-  $('calcPanel').style.display = state.step === 0 ? 'block' : 'none';
-  $('balancePanel').style.display = state.step === 1 ? 'block' : 'none';
-  $('cylinderPanel').style.display = state.step === 2 ? 'block' : 'none';
-  $('dissolvePanel').style.display = state.step === 3 ? 'block' : 'none';
+function markStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    const box = $('step' + i + 'box');
+    if (!box) continue;
+    if (i < n) { box.setAttribute('stroke', '#6EE7B7'); box.setAttribute('fill', '#F0FDF4'); }
+    else if (i === n) { box.setAttribute('stroke', '#0284C7'); }
+    else { box.setAttribute('stroke', '#E2E8F0'); box.setAttribute('fill', '#fff'); }
+  }
+}
 
-  const titles = ['第 1 步：计算用量', '第 2 步：天平称量', '第 3 步：量筒量取', '第 4 步：溶解装瓶'];
-  const descs = [
-    '配制 50g 溶质质量分数为 6% 的 NaCl 溶液，计算所需 NaCl 和水的用量。',
-    '用托盘天平称量 3.0g NaCl。左盘放称量纸和 NaCl，游码拨至 3.0g。',
-    '用量筒量取 47mL 水。先倾倒至接近刻度，再用胶头滴管逐滴加至刻度线。',
-    '将 NaCl 加入水中，用玻璃棒搅拌至完全溶解，转移至试剂瓶并贴标签。'
+function updateHint() {
+  const hints = [
+    '拖 NaCl 到天平 → 称量 3g',
+    '拖量筒 → 量取 47mL 水',
+    '拖玻璃棒到烧杯 → 搅拌溶解',
+    '拖试剂瓶 → 转移溶液',
+    '实验完成！'
   ];
-  $('stepTitle').textContent = titles[state.step] || '';
-  $('stepDesc').textContent = descs[state.step] || '';
-
-  if (state.step === 1) animateBalance();
-  if (state.step === 2) updateCylinder();
+  $('canvasHint').textContent = hints[step] || hints[0];
 }
 
-function updateStepBar() {
-  document.querySelectorAll('#stepBar .step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < state.step) el.classList.add('done');
-    if (i === state.step) el.classList.add('active');
-  });
-}
+function toast(msg) { $('canvasHint').textContent = msg; setTimeout(updateHint, 2000); }
+function checkObs(id) { const el = $(id); if (el && !el.classList.contains('checked')) { el.classList.add('checked'); el.querySelector('.obs-check').textContent = '\u2713'; } }
 
-// ===== STEP 1: CALCULATION =====
-function checkCalc() {
-  let allCorrect = true;
-  const mass = parseFloat($('inputMass').value);
-  const waterM = parseFloat($('inputWaterM').value);
-  const waterV = parseFloat($('inputWaterV').value);
-
-  if (Math.abs(mass - 3) < 0.05) {
-    $('inputMass').className = 'calc-input correct';
-    $('hintMass').textContent = '';
-  } else {
-    $('inputMass').className = 'calc-input wrong';
-    $('hintMass').textContent = isNaN(mass) ? '请输入数字' : '提示：50 × 0.06 = ?';
-    allCorrect = false;
-  }
-
-  if (Math.abs(waterM - 47) < 0.05 && Math.abs(waterV - 47) < 0.05) {
-    $('inputWaterM').className = 'calc-input correct';
-    $('inputWaterV').className = 'calc-input correct';
-    $('hintWater').textContent = '';
-  } else {
-    if (isNaN(waterM) || Math.abs(waterM - 47) >= 0.05) {
-      $('inputWaterM').className = 'calc-input wrong';
-      allCorrect = false;
-    } else {
-      $('inputWaterM').className = 'calc-input correct';
-    }
-    if (isNaN(waterV) || Math.abs(waterV - 47) >= 0.05) {
-      $('inputWaterV').className = 'calc-input wrong';
-      allCorrect = false;
-    } else {
-      $('inputWaterV').className = 'calc-input correct';
-    }
-    if (!allCorrect) $('hintWater').textContent = '提示：m(H₂O) = 50 - 3 = ?g，水密度 1g/mL';
-  }
-
-  if (allCorrect) {
-    state.calcDone = true;
-    checkObs('obs1');
-    $('statusBadge').textContent = '计算正确！NaCl = 3g, H₂O = 47mL';
-    $('statusBadge').className = 'status-badge done';
-    $('calcBtn').textContent = '正确！→ 称量';
-    $('calcBtn').onclick = nextStep;
-  }
-}
-
-// ===== STEP 2: BALANCE ANIMATION =====
-function animateBalance() {
-  checkObs('obs2');
-  $('statusBadge').textContent = '天平称量 3.0g NaCl（游码 3.0g）';
-
-  // Animate rider sliding to 3.0g position (60px = 3.0g on the scale)
-  const startTime = performance.now();
-  const duration = 1500;
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    const riderX = 60 * eased; // 3.0g position
-    $('riderMarker').setAttribute('transform', `translate(${riderX},0)`);
-    $('balanceStatus').textContent = `游码：${(3 * eased).toFixed(1)}g`;
-    $('balanceTotal').textContent = `总质量：${(3 * eased).toFixed(1)}g`;
-
-    // Show NaCl on pan
-    $('naclOnPan').setAttribute('opacity', eased > 0.3 ? '1' : '0');
-
-    if (t < 1) requestAnimationFrame(tick);
-    else {
-      $('balanceStatus').textContent = '游码：3.0g';
-      $('balanceTotal').textContent = '总质量：3.0g ✓';
-      // Enable canvas click to advance
-      $('balanceGroup').classList.add('clickable');
-      $('balanceGroup').setAttribute('onclick', 'nextStep()');
-      $('balanceHint').setAttribute('opacity', '1');
-    }
-  }
-  requestAnimationFrame(tick);
-}
-
-// ===== STEP 3: MEASURING CYLINDER =====
-function addWater(amount) {
-  if (state.waterVol >= 47) return;
-  state.waterVol = Math.min(50, +(state.waterVol + amount).toFixed(1));
-  updateCylinder();
-
-  // Check if reached target
-  if (Math.abs(state.waterVol - 47) < 0.05) {
-    state.cylDone = true;
-    $('cylHint').textContent = '精确到位！点击量筒继续';
-    $('cylHint').setAttribute('opacity', '1');
-    checkObs('obs3');
-    $('statusBadge').textContent = '量取 47.0 mL 完成！';
-  } else if (state.waterVol > 47.5) {
-    $('cylHint').textContent = '超量了！请重做实验';
-    $('cylHint').setAttribute('fill', '#DC2626');
-    $('cylHint').setAttribute('opacity', '1');
-    $('cylClickPour').style.pointerEvents = 'none';
-    $('cylClickAdd').style.pointerEvents = 'none';
-    $('dropper').style.pointerEvents = 'none';
-  } else if (state.waterVol > 47) {
-    $('cylHint').textContent = '略微超量，请重做实验';
-    $('cylHint').setAttribute('fill', '#DC2626');
-    $('cylHint').setAttribute('opacity', '1');
-  }
-
-  // Disable pour zones when close to target
-  $('cylClickPour').style.pointerEvents = state.waterVol >= 43 ? 'none' : 'auto';
-  $('cylClickAdd').style.pointerEvents = state.waterVol >= 46.5 ? 'none' : 'auto';
-
-  // If cylinder done, clicking cylinder advances
-  if (state.cylDone) {
-    $('cylClickPour').setAttribute('onclick', 'nextStep()');
-    $('cylClickPour').style.pointerEvents = 'auto';
-  }
-}
-
-function updateCylinder() {
-  const maxH = 300; // cylinder height = 50mL
-  const h = (state.waterVol / 50) * maxH;
-  const y = 300 - h;
-  $('cylWater').setAttribute('y', y);
-  $('cylWater').setAttribute('height', h);
-  $('meniscus').setAttribute('cy', y);
-  $('meniscus').setAttribute('opacity', h > 0 ? '0.6' : '0');
-
-  // Update sight lines position
-  const sightY = y;
-  $('sightLines').querySelectorAll('line').forEach((line, i) => {
-    const baseY = sightY;
-    line.setAttribute('y1', baseY);
-    if (i === 0) line.setAttribute('y2', baseY);
-    if (i === 1) line.setAttribute('y2', baseY + 10);
-    if (i === 2) line.setAttribute('y2', baseY - 10);
-  });
-  $('sightLines').querySelectorAll('text').forEach((t, i) => {
-    const baseY = sightY;
-    if (i === 0) t.setAttribute('y', baseY + 3);
-    if (i === 1) t.setAttribute('y', baseY + 13);
-    if (i === 2) t.setAttribute('y', baseY - 7);
-  });
-  $('sightLines').setAttribute('opacity', h > 0 ? '0.6' : '0');
-
-  $('cylReading').textContent = state.waterVol.toFixed(1) + ' mL';
-  $('cylStatus').textContent = `当前：${state.waterVol.toFixed(1)} mL / 目标：47.0 mL`;
-}
-
-// ===== STEP 4: DISSOLVE =====
-function startDissolve() {
-  if (state.step !== 3) return;
-  $('beakerGroup').classList.remove('clickable');
-  $('beakerGroup').removeAttribute('onclick');
-  $('statusBadge').textContent = '搅拌溶解中…';
-  $('dissolveStatus').textContent = '搅拌中…颗粒逐渐溶解';
-
-  // Stir animation (glass rod oscillates)
-  const startTime = performance.now();
-  const stirDuration = 2500;
-
-  function stir(now) {
-    const t = (now - startTime) / stirDuration;
-    if (t > 1) {
-      finishDissolve();
-      return;
-    }
-    // Rod oscillates
-    const dx = Math.sin(t * Math.PI * 8) * 10;
-    $('glassRod').setAttribute('x1', 60 + dx);
-    $('glassRod').setAttribute('x2', 60 + dx);
-
-    // Particles fade out
-    document.querySelectorAll('.nacl-p').forEach(p => {
-      p.setAttribute('opacity', Math.max(0, 1 - t * 1.5));
-    });
-
-    requestAnimationFrame(stir);
-  }
-  requestAnimationFrame(stir);
-}
-
-function finishDissolve() {
-  $('dissolveHint').textContent = '';
-  $('dissolveStatus').textContent = '溶解完成！装瓶贴标签';
-
-  // Show solution in bottle
-  $('bottleSolution').setAttribute('opacity', '0.3');
-  $('bottleLabel').setAttribute('opacity', '1');
-  checkObs('obs4');
-
-  $('resultSection').style.display = 'block';
-  $('statusBadge').textContent = '实验完成！成功配制 6% NaCl 溶液';
-  $('statusBadge').className = 'status-badge done';
-}
-
-// ===== UTILITIES =====
-function checkObs(id) {
-  const el = $(id);
-  if (el && !el.classList.contains('checked')) {
-    el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
-  }
-}
-
-function resetAll() {
-  Object.assign(state, { step: 0, waterVol: 0, calcDone: false, cylDone: false });
-
-  // Reset inputs
-  ['inputMass', 'inputWaterM', 'inputWaterV'].forEach(id => {
-    $(id).value = '';
-    $(id).className = 'calc-input';
-  });
-  $('hintMass').textContent = '';
-  $('hintWater').textContent = '';
-  $('calcBtn').textContent = '验证计算结果';
-  $('calcBtn').onclick = checkCalc;
-
-  // Reset balance
-  $('riderMarker').setAttribute('transform', 'translate(0,0)');
+function resetExperiment() {
+  step = 0;
   $('naclOnPan').setAttribute('opacity', '0');
-  $('balanceStatus').textContent = '游码：0.0g';
-  $('balanceTotal').textContent = '总质量：0.0g';
-
-  // Reset balance click
-  $('balanceGroup').classList.remove('clickable');
-  $('balanceGroup').removeAttribute('onclick');
-  $('balanceHint').setAttribute('opacity', '0');
-
-  // Reset cylinder
-  $('cylClickPour').style.pointerEvents = 'auto';
-  $('cylClickPour').setAttribute('onclick', "addWater(5)");
-  $('cylClickAdd').style.pointerEvents = 'auto';
-  $('dropper').style.pointerEvents = 'auto';
-  $('cylWater').setAttribute('y', '300');
-  $('cylWater').setAttribute('height', '0');
-  $('meniscus').setAttribute('opacity', '0');
-  $('sightLines').setAttribute('opacity', '0');
-  $('cylReading').textContent = '0.0 mL';
-  $('cylHint').setAttribute('opacity', '0');
-  
-
-  // Reset dissolve
-  document.querySelectorAll('.nacl-p').forEach(p => p.setAttribute('opacity', '1'));
-  $('glassRod').setAttribute('x1', '60');
-  $('glassRod').setAttribute('x2', '60');
+  $('cylWater').setAttribute('opacity', '0'); $('cylLabel').setAttribute('opacity', '0');
+  $('beakerSolution').setAttribute('opacity', '0'); $('stirRod').setAttribute('opacity', '0');
   $('bottleSolution').setAttribute('opacity', '0');
   $('bottleLabel').setAttribute('opacity', '0');
-  $('dissolveStatus').textContent = '等待操作…';
-
-  // Reset UI
-  $('resultSection').style.display = 'none';
-  $('statusBadge').textContent = '准备实验 → 按步骤操作';
-  $('statusBadge').className = 'status-badge idle';
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-
-  updateScene();
-  updateStepBar();
+  $('labelText1').setAttribute('opacity', '0'); $('labelText2').setAttribute('opacity', '0');
+  $('bottleSol5').setAttribute('opacity', '0');
+  $('dropCyl').setAttribute('opacity', '0'); $('dropStir').setAttribute('opacity', '0'); $('dropBottle').setAttribute('opacity', '0');
+  for (let i = 1; i <= 5; i++) { const b = $('step'+i+'box'); if (b) { b.setAttribute('stroke','#E2E8F0'); b.setAttribute('fill','#fff'); } }
+  $('canvasHint').textContent = '拖 NaCl 到天平 → 称量 3g';
+  ['toolNaCl','toolCyl','toolRod','toolBottle'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
 
-// ===== FORMULAS =====
+// KaTeX
 function renderFormulas() {
   if (!window.katex) return;
-  try {
-    katex.render('\\text{溶质质量分数} = \\frac{m_{\\text{溶质}}}{m_{\\text{溶液}}} \\times 100\\%', $('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {}
+  try { katex.render('\\omega = \\frac{m_{\\text{溶质}}}{m_{\\text{溶液}}} \\times 100\\%', $('formula1'), { throwOnError: false, displayMode: true }); } catch(e) {}
 }
-
-(function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
-})(0);
+function tryKatex(n) { if (window.katex) { renderFormulas(); return; } if ((n||0) < 20) setTimeout(() => tryKatex((n||0)+1), 500); }
+tryKatex();
 </script>
 <script src="/shared/theme.js"></script>
 </body>
