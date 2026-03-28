@@ -2,349 +2,277 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>粗盐提纯 - 溶解过滤蒸发结晶 | DevKit</title>
-<meta name="keywords" content="粗盐提纯, 过滤, 蒸发结晶, 一贴二低三靠, 初中化学">
-<meta name="description" content="粗盐提纯实验：溶解→过滤→蒸发结晶，掌握过滤操作和一贴二低三靠口诀">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>粗盐提纯 - 虚拟实验室</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <link rel="stylesheet" href="/shared/chem-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
-.scene{display:none}.scene.active{display:block}
-.mnemonic-card{display:flex;gap:3px;margin:6px 0}
-.mnemonic-item{flex:1;text-align:center;padding:4px 2px;border-radius:4px;font-size:8px;font-weight:700;background:#E2E8F0;color:#64748B}
-.mnemonic-item.active{background:var(--lab-accent);color:#FFF}
-.mnemonic-item.done{background:#BBF7D0;color:#166534}
-.warn-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;font-size:9px;color:#991B1B;margin-top:6px}
-.rod-card{display:flex;gap:4px;margin:6px 0}
-.rod-item{flex:1;text-align:center;padding:4px;border-radius:4px;font-size:8px;background:#F0F9FF;border:1px solid #BAE6FD;color:#0284C7}
-.rod-item.active{background:#0284C7;color:#FFF}
-.flash-warn{animation:flashWarn 0.5s ease-in-out 3}
-@keyframes flashWarn{0%,100%{opacity:1}50%{opacity:0.3}}
-.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;font-size:10px;color:#0D9488}
+.data-row{display:flex;gap:4px;margin:8px 0}
+.data-card{flex:1;border-radius:8px;padding:6px;text-align:center;background:#F0F9FF;border:1px solid #BAE6FD}
+.data-val{font-size:16px;font-weight:900;color:#0284C7}
+.data-label{font-size:7px;color:#64748B;margin-top:2px}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
-  <h1>粗盐提纯</h1>
-</div>
-<div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>溶解 · 过滤 · 蒸发结晶 · 一贴二低三靠</div>
-  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
-</div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">粗盐提纯</strong>
+  </div>
 
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-wrapper">
-      <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5"/>
+            </linearGradient>
+            <filter id="flameGlow"><feGaussianBlur stdDeviation="2"/></filter>
+          </defs>
 
-      <!-- ===== SCENE 1: DISSOLVE ===== -->
-      <svg id="scene1" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <!-- Beaker -->
-        <g transform="translate(220,80)">
-          <rect id="dissolveBeaker" x="0" y="0" width="180" height="200" rx="8" fill="#E8F4FD" stroke="#7DD3FC" stroke-width="2"/>
-          <line x1="2" y1="5" x2="2" y2="155" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-          <!-- Turbid liquid -->
-          <rect id="turbidLiquid" x="2" y="50" width="136" height="108" rx="2" fill="#D6D3D1" opacity="0.4"/>
-          <!-- Salt particles -->
-          <g id="saltParticles">
-            <circle class="salt-p" cx="40" cy="140" r="3" fill="#E7E5E4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="salt-p" cx="65" cy="135" r="4" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.3"/>
-            <circle class="salt-p" cx="90" cy="142" r="3.5" fill="#E7E5E4" stroke="#D6D3D1" stroke-width="0.3"/>
-            <circle class="salt-p" cx="110" cy="138" r="2.5" fill="#D6D3D1" stroke="#A8A29E" stroke-width="0.3"/>
-            <circle class="salt-p" cx="55" cy="145" r="2" fill="#E7E5E4" stroke="#D6D3D1" stroke-width="0.3"/>
+          <!-- ===== STEP 1: 溶解 ===== -->
+          <g transform="translate(10,20)">
+            <rect x="0" y="0" width="210" height="310" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="box1"/>
+            <text x="105" y="22" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="800">① 溶解</text>
+            <!-- Beaker -->
+            <path d="M35,40 L28,48 L28,250 Q28,265 42,265 L168,265 Q182,265 182,250 L182,48 L175,40 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="32" y="50" width="10" height="190" rx="5" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- Water (hidden) -->
+            <path id="dissolveLiquid" d="M30,120 L30,250 Q30,262 42,262 L168,262 Q180,262 180,250 L180,120 Z" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Salt grains (hidden) -->
+            <g id="saltGrains" opacity="0">
+              <rect x="60" y="230" width="6" height="6" rx="1" fill="#D1D5DB" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="80" y="225" width="5" height="5" rx="1" fill="#E5E7EB" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="100" y="235" width="6" height="5" rx="1" fill="#D1D5DB" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="120" y="228" width="5" height="6" rx="1" fill="#E5E7EB" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="140" y="233" width="6" height="5" rx="1" fill="#D1D5DB" stroke="#94A3B8" stroke-width="0.5"/>
+            </g>
+            <!-- Glass rod (hidden) -->
+            <g id="rod1" opacity="0">
+              <line x1="105" y1="30" x2="105" y2="240" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="105" cy="240" r="3.5" fill="#94A3B8"/>
+            </g>
+            <text x="105" y="290" font-size="8" fill="#64748B" text-anchor="middle">搅拌加速溶解</text>
+            <rect id="dropSalt" class="drop-zone" x="20" y="30" width="170" height="240" rx="8"/>
+            <rect id="dropWater" class="drop-zone" x="20" y="30" width="170" height="240" rx="8" opacity="0"/>
+            <rect id="dropRod1" class="drop-zone" x="20" y="30" width="170" height="240" rx="8" opacity="0"/>
           </g>
-          <!-- Glass rod -->
-          <line id="dissolveRod" x1="70" y1="-20" x2="70" y2="150" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"/>
-          <text x="70" y="180" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
-          <text x="110" y="-10" font-size="6" fill="#64748B">玻璃棒（搅拌）</text>
-          <text x="70" y="195" font-size="6" fill="#94A3B8" text-anchor="middle">粗盐 + 水</text>
-          <rect class="clickable" x="0" y="0" width="140" height="200" fill="transparent" onclick="nextStep()"><title>点击搅拌溶解</title></rect>
-          <text class="svg-hint" x="70" y="210" text-anchor="middle">点击烧杯 → 搅拌溶解</text>
-        </g>
-        <!-- Status -->
-        <g transform="translate(450,120)">
-          <rect x="0" y="0" width="200" height="60" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">溶解状态</text>
-          <text id="dissolveState" x="10" y="38" font-size="7" fill="#64748B">浑浊：粗盐未完全溶解</text>
-          <text id="dissolveState2" x="10" y="52" font-size="7" fill="#64748B">搅拌加速溶解</text>
-        </g>
-      </svg>
 
-      <!-- ===== SCENE 2: FILTER ===== -->
-      <svg id="scene2" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <!-- Iron stand -->
-        <g transform="translate(200,30)">
-          <rect x="0" y="320" width="80" height="8" rx="2" fill="#78716C"/>
-          <rect x="35" y="0" width="6" height="325" rx="2" fill="#8D8680"/>
-          <line x1="37" y1="0" x2="37" y2="325" stroke="#A8A29E" stroke-width="0.8" opacity="0.3"/>
-          <!-- Iron ring -->
-          <ellipse id="ironRing" cx="80" cy="140" rx="40" ry="8" fill="none" stroke="#78716C" stroke-width="2"/>
-          <line x1="41" y1="140" x2="50" y2="140" stroke="#78716C" stroke-width="2"/>
-          <text x="20" y="-5" font-size="6" fill="#64748B" text-anchor="middle">铁架台</text>
-        </g>
-        <!-- Funnel -->
-        <g id="funnelGroup" transform="translate(240,100)">
-          <!-- Funnel cone -->
-          <polygon points="0,0 80,0 55,80 25,80" fill="#E8F4FD" stroke="#7DD3FC" stroke-width="2"/>
-          <!-- Filter paper (folded) -->
-          <polygon id="filterPaper" points="5,5 75,5 52,70 28,70" fill="#FEFCE8" stroke="#FDE68A" stroke-width="0.5" opacity="0.6"/>
-          <!-- "一贴" label -->
-          <line x1="5" y1="20" x2="-20" y2="20" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-          <text x="-60" y="23" font-size="5" fill="#DC2626" font-weight="600">一贴：滤纸紧贴漏斗壁</text>
-          <!-- Funnel stem -->
-          <rect x="35" y="80" width="10" height="40" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.5"/>
-          <!-- "二低" labels -->
-          <line x1="75" y1="5" x2="110" y2="5" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-          <text x="113" y="3" font-size="5" fill="#DC2626" font-weight="600">二低①：滤纸低于漏斗边缘</text>
-          <line x1="75" y1="15" x2="110" y2="25" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-          <text x="113" y="28" font-size="5" fill="#DC2626" font-weight="600">二低②：液面低于滤纸边缘</text>
-          <!-- Turbid liquid pouring (animated) -->
-          <line id="pourStream" x1="-20" y1="-15" x2="30" y2="15" stroke="#D6D3D1" stroke-width="2" opacity="0" stroke-linecap="round"/>
-          <!-- Filtrate dripping -->
-          <circle id="filtrateDrop" cx="40" cy="125" r="2" fill="#7DD3FC" opacity="0"/>
-          <text x="40" y="135" font-size="7" fill="#64748B" text-anchor="middle">漏斗</text>
-        </g>
-        <!-- Source beaker (left, turbid) -->
-        <g id="srcBeaker" class="clickable" transform="translate(150,140)" onclick="nextStep()">
-          <rect x="0" y="0" width="60" height="70" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.8"/>
-          <rect id="srcLiquid" x="2" y="20" width="56" height="48" rx="1" fill="#D6D3D1" opacity="0.35"/>
-          <!-- Glass rod for guiding -->
-          <line id="guideRod" x1="30" y1="-10" x2="80" y2="-50" stroke="#93C5FD" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- "三靠" labels -->
-          <line x1="60" y1="10" x2="95" y2="-10" stroke="#DC2626" stroke-width="0.5" stroke-dasharray="2,2"/>
-          <text x="95" y="-50" font-size="5" fill="#DC2626" font-weight="600">三靠①：烧杯口靠玻璃棒</text>
-          <text x="95" y="-40" font-size="5" fill="#DC2626" font-weight="600">三靠②：玻璃棒靠三层滤纸</text>
-          <text x="95" y="-30" font-size="5" fill="#DC2626" font-weight="600">三靠③：漏斗下端靠烧杯壁</text>
-          <text x="30" y="82" font-size="5" fill="#64748B" text-anchor="middle">浑浊液</text>
-          <text class="svg-hint" x="30" y="95" text-anchor="middle">点击 → 开始过滤</text>
-        </g>
-        <!-- Receiving beaker (below funnel) -->
-        <g transform="translate(260,250)">
-          <rect id="recvBeaker" x="0" y="0" width="60" height="70" rx="2" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="0.8"/>
-          <rect id="filtrate" x="2" y="30" width="56" height="0" rx="1" fill="#7DD3FC" opacity="0.25"/>
-          <!-- Funnel stem touches beaker wall -->
-          <line x1="20" y1="-2" x2="20" y2="8" stroke="#93C5FD" stroke-width="1" opacity="0.5"/>
-          <text x="30" y="82" font-size="5" fill="#64748B" text-anchor="middle">滤液（澄清）</text>
-        </g>
-        <!-- Status -->
-        <g transform="translate(480,160)">
-          <rect x="0" y="0" width="200" height="50" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">过滤状态</text>
-          <text id="filterState" x="10" y="36" font-size="7" fill="#64748B">等待开始过滤</text>
-        </g>
-      </svg>
+          <!-- ===== STEP 2: 过滤 ===== -->
+          <g transform="translate(240,20)">
+            <rect x="0" y="0" width="210" height="310" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="box2"/>
+            <text x="105" y="22" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="800">② 过滤</text>
+            <!-- Iron stand -->
+            <rect x="95" y="40" width="6" height="220" rx="2" fill="#78716C"/>
+            <rect x="70" y="260" width="56" height="6" rx="2" fill="#78716C"/>
+            <!-- Iron ring -->
+            <ellipse cx="98" cy="100" rx="40" ry="10" fill="none" stroke="#78716C" stroke-width="2"/>
+            <!-- Funnel -->
+            <path d="M58,90 L80,160 Q85,170 98,170 Q111,170 116,160 L138,90" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <!-- Filter paper (V shape) -->
+            <path d="M65,95 L98,155 L131,95" fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="98" y="125" font-size="6" fill="#94A3B8" text-anchor="middle">滤纸</text>
+            <!-- Beaker below -->
+            <path d="M55,190 L50,198 L50,270 Q50,280 60,280 L136,280 Q146,280 146,270 L146,198 L141,190 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <!-- Filtrate (hidden) -->
+            <rect id="filtrate" x="52" y="220" width="92" height="55" rx="4" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Glass rod for guiding (hidden) -->
+            <g id="guideRod" opacity="0">
+              <line x1="50" y1="70" x2="85" y2="100" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+              <text x="45" y="65" font-size="6" fill="#64748B">引流</text>
+            </g>
+            <!-- Residue on filter (hidden) -->
+            <g id="residue" opacity="0">
+              <rect x="82" y="130" width="32" height="8" rx="3" fill="#D4B896"/>
+              <text x="98" y="150" font-size="5" fill="#92400E" text-anchor="middle">不溶杂质</text>
+            </g>
+            <text x="105" y="290" font-size="8" fill="#64748B" text-anchor="middle">一贴二低三靠</text>
+            <rect id="dropFilter" class="drop-zone" x="20" y="30" width="170" height="180" rx="8" opacity="0"/>
+          </g>
 
-      <!-- ===== SCENE 3: EVAPORATE ===== -->
-      <svg id="scene3" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#B8D4F0" stop-opacity="0.85"/><stop offset="12%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="50%" stop-color="#EDF4FC" stop-opacity="0.3"/><stop offset="88%" stop-color="#E8F1FA" stop-opacity="0.4"/><stop offset="100%" stop-color="#C8DCF0" stop-opacity="0.7"/></linearGradient>
-          <filter id="flameGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <!-- Iron stand + ring -->
-        <g transform="translate(200,50)">
-          <rect x="0" y="270" width="80" height="8" rx="2" fill="#78716C"/>
-          <rect x="35" y="20" width="6" height="255" rx="2" fill="#8D8680"/>
-          <ellipse cx="80" cy="160" rx="45" ry="6" fill="none" stroke="#78716C" stroke-width="2"/>
-          <line x1="41" y1="160" x2="45" y2="160" stroke="#78716C" stroke-width="2"/>
-        </g>
-        <!-- Evaporating dish -->
-        <g id="evapDish" transform="translate(230,180)">
-          <ellipse cx="50" cy="15" rx="50" ry="15" fill="#E8F4FD" stroke="#7DD3FC" stroke-width="2"/>
-          <ellipse cx="50" cy="15" rx="48" ry="13" fill="#7DD3FC" opacity="0.25" id="evapLiquid"/>
-          <!-- Salt crystals (appear during evaporation) -->
-          <g id="evapSaltGroup" opacity="0">
-            <rect x="15" y="10" width="4" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="30" y="12" width="3" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="45" y="8" width="5" height="4" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="60" y="11" width="3" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="75" y="13" width="4" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="38" y="15" width="4" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="55" y="16" width="3" height="2" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
-            <rect x="22" y="16" width="3" height="3" rx="0.5" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.2"/>
+          <!-- ===== STEP 3: 蒸发 ===== -->
+          <g transform="translate(470,20)">
+            <rect x="0" y="0" width="210" height="310" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="box3"/>
+            <text x="105" y="22" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="800">③ 蒸发</text>
+            <!-- Iron stand -->
+            <rect x="95" y="40" width="6" height="200" rx="2" fill="#78716C"/>
+            <rect x="70" y="240" width="56" height="6" rx="2" fill="#78716C"/>
+            <!-- Iron ring -->
+            <ellipse cx="98" cy="120" rx="45" ry="8" fill="none" stroke="#78716C" stroke-width="2"/>
+            <!-- Evaporating dish -->
+            <path d="M50,115 Q50,145 98,145 Q146,145 146,115" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <!-- Liquid in dish (hidden) -->
+            <path id="evapLiquid" d="M55,118 Q55,138 98,138 Q141,138 141,118" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Crystals (hidden) -->
+            <g id="crystals" opacity="0">
+              <rect x="70" y="125" width="5" height="4" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="85" y="122" width="4" height="5" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="98" y="126" width="5" height="4" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="112" y="123" width="4" height="5" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
+              <rect x="125" y="127" width="5" height="4" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
+            </g>
+            <!-- Alcohol lamp -->
+            <g transform="translate(68,160)">
+              <path d="M8,10 Q5,10 5,13 L5,45 Q5,52 13,52 L47,52 Q55,52 55,45 L55,13 Q55,10 52,10 Z" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+              <rect x="20" y="3" width="20" height="10" rx="3" fill="#D1D5DB"/>
+              <line x1="30" y1="-4" x2="30" y2="3" stroke="#4B5563" stroke-width="1.2" stroke-linecap="round"/>
+              <g id="evapFlame" opacity="0" filter="url(#flameGlow)">
+                <ellipse cx="30" cy="-10" rx="8" ry="12" fill="#F97316" opacity="0.45"/>
+                <ellipse cx="30" cy="-12" rx="5" ry="8" fill="#FBBF24" opacity="0.6"/>
+                <ellipse cx="30" cy="-14" rx="3" ry="4" fill="#FEF3C3" opacity="0.75"/>
+              </g>
+            </g>
+            <text x="105" y="290" font-size="8" fill="#64748B" text-anchor="middle">大量晶体析出时停止加热</text>
+            <rect id="dropMatch" class="drop-zone" x="50" y="155" width="80" height="70" rx="8" opacity="0"/>
           </g>
-          <!-- Glass rod -->
-          <line id="evapRod" x1="50" y1="-30" x2="50" y2="15" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"/>
-          <text x="50" y="40" font-size="7" fill="#64748B" text-anchor="middle">蒸发皿</text>
-          <text x="85" y="-20" font-size="6" fill="#64748B">玻璃棒（防飞溅）</text>
-        </g>
-        <!-- Alcohol lamp -->
-        <g id="evapLamp" class="clickable" transform="translate(260,250)" onclick="nextStep()">
-          <!-- 1. Lamp body -->
-          <rect x="-30" y="15" width="60" height="32" rx="7" fill="#FEF3C7" stroke="#D97706" stroke-width="1.2"/>
-          <!-- 2. Alcohol liquid -->
-          <rect x="-26" y="30" width="52" height="14" rx="4" fill="#FDE68A" opacity="0.6"/>
-          <!-- 3. Wick tube -->
-          <rect x="-7" y="4" width="14" height="14" rx="3" fill="#78716C" stroke="#6B7280" stroke-width="0.6"/>
-          <!-- 4. Wick -->
-          <line x1="0" y1="4" x2="0" y2="-6" stroke="#1E293B" stroke-width="1.5"/>
-          <!-- 5. Three-layer flame -->
-          <g id="evapFlame" opacity="0" filter="url(#flameGlow)">
-            <ellipse cx="0" cy="-16" rx="8" ry="14" fill="#F97316" opacity="0.6"/>
-            <ellipse cx="0" cy="-14" rx="5" ry="10" fill="#FBBF24" opacity="0.7"/>
-            <ellipse cx="0" cy="-12" rx="2.5" ry="6" fill="#FEF3C7" opacity="0.8"/>
+
+          <!-- Flow bar -->
+          <g transform="translate(50,370)">
+            <rect x="0" y="0" width="600" height="28" rx="6" fill="#0284C7"/>
+            <text x="300" y="18" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">溶解 → 过滤（一贴二低三靠）→ 蒸发结晶</text>
           </g>
-          <text x="0" y="62" font-size="7" fill="#64748B" text-anchor="middle" font-weight="600">酒精灯</text>
-          <text id="lampHint" class="svg-hint" x="0" y="74" text-anchor="middle">点击 → 点燃</text>
-        </g>
-        <!-- Warning (hidden, shown during evaporation) -->
-        <g id="evapWarning" opacity="0" transform="translate(420,120)">
-          <rect x="0" y="0" width="240" height="40" rx="6" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
-          <text x="120" y="16" font-size="9" fill="#DC2626" text-anchor="middle" font-weight="700">出现大量固体，停止加热！</text>
-          <text x="120" y="30" font-size="7" fill="#991B1B" text-anchor="middle">用余热蒸干剩余水分</text>
-        </g>
-        <!-- Status -->
-        <g transform="translate(420,180)">
-          <rect x="0" y="0" width="240" height="70" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="18" font-size="8" fill="#0F172A" font-weight="600">蒸发状态</text>
-          <text id="evapState" x="10" y="36" font-size="7" fill="#64748B">等待点燃酒精灯</text>
-          <text id="evapYield" x="10" y="52" font-size="7" fill="#64748B">产率：—</text>
-        </g>
-      </svg>
+
+          <text id="canvasHint" x="350" y="430" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">拖粗盐到烧杯 → 开始溶解</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
+      <div class="tool-card" id="toolSalt" data-action="salt">
+        <svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="24" rx="4" fill="#E5E7EB" stroke="#94A3B8" stroke-width="1"/><rect x="18" y="18" width="4" height="4" rx="1" fill="#D1D5DB"/><rect x="24" y="16" width="4" height="3" rx="1" fill="#CBD5E1"/><rect x="20" y="24" width="5" height="3" rx="1" fill="#D1D5DB"/></svg>
+        <div class="tool-name">粗盐</div>
+      </div>
+      <div class="tool-card" id="toolWater" data-action="water">
+        <svg viewBox="0 0 48 48"><path d="M24,10 Q16,24 16,30 Q16,38 24,38 Q32,38 32,30 Q32,24 24,10 Z" fill="#7DD3FC" opacity="0.5" stroke="#0EA5E9" stroke-width="1"/></svg>
+        <div class="tool-name">水</div>
+      </div>
+      <div class="tool-card" id="toolRod" data-action="rod">
+        <svg viewBox="0 0 48 48"><line x1="24" y1="6" x2="24" y2="40" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="40" r="3" fill="#94A3B8"/></svg>
+        <div class="tool-name">玻璃棒</div>
+      </div>
+      <div class="tool-card" id="toolMatch" data-action="match">
+        <svg viewBox="0 0 48 48"><line x1="14" y1="38" x2="34" y2="12" stroke="#A16207" stroke-width="2.5" stroke-linecap="round"/><circle cx="34" cy="12" r="4" fill="#DC2626"/><circle cx="34" cy="12" r="2.5" fill="#F97316"/></svg>
+        <div class="tool-name">火柴</div>
+      </div>
+    </div>
+
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:10px">
+        <div class="section-title">操作清单</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>称取粗盐放入烧杯</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>加水搅拌溶解</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>组装过滤装置</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>玻璃棒引流过滤</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>点燃酒精灯蒸发</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>大量晶体析出时停止</li>
+          <li class="obs-item" id="obs7"><span class="obs-check"></span>余热蒸干，称量纯盐</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-title">产率数据</div>
+        <div class="data-row">
+          <div class="data-card"><div class="data-val" id="rawVal">5g</div><div class="data-label">粗盐</div></div>
+          <div class="data-card"><div class="data-val" id="pureVal">—g</div><div class="data-label">纯盐</div></div>
+          <div class="data-card" style="background:#FEF2F2;border-color:#FCA5A5"><div class="data-val" id="yieldVal" style="color:#EF4444">—%</div><div class="data-label">产率</div></div>
+        </div>
+      </div>
+
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px;text-align:center">微观 → 宏观</div>
+        <div id="microNote" style="text-align:center;line-height:1.6">溶解: NaCl 离子扩散到水中<br>过滤: 固体 O 拦截到水中<br>蒸发: 水分子蒸发, NaCl 重新结晶</div>
+      </div>
+
+      <button onclick="resetExperiment()" style="width:100%;margin-top:10px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
     </div>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Step bar -->
-      <div class="panel-section">
-        <div class="section-title">实验步骤</div>
-        <div class="step-bar" id="stepBar">
-          <div class="step-item active" data-step="0"><span class="step-num">1</span>溶解</div>
-          <div class="step-item" data-step="1"><span class="step-num">2</span>过滤</div>
-          <div class="step-item" data-step="2"><span class="step-num">3</span>蒸发</div>
-        </div>
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>粗盐提纯三步</h4>
+        <p><strong>溶解→过滤→蒸发</strong><br>利用 NaCl 可溶而杂质不溶的性质分离</p>
       </div>
-
-      <!-- Step info -->
-      <div class="panel-section">
-        <div class="section-title" id="stepTitle">第 1 步：溶解</div>
-        <div class="step-desc" id="stepDesc">将粗盐加入水中。<strong>点击画布上的器材</strong>进行操作。</div>
+      <div class="knowledge-card">
+        <h4>一贴二低三靠</h4>
+        <p>一贴: 滤纸紧贴漏斗壁<br>二低: 滤纸低于漏斗边缘, 液面低于滤纸<br>三靠: 烧杯靠玻璃棒, 玻璃棒靠三层滤纸, 漏斗下端靠烧杯壁</p>
       </div>
-
-      <!-- Mnemonic (shown in filter step) -->
-      <div class="panel-section" id="mnemonicSection" style="display:none">
-        <div class="section-title">口诀：一贴二低三靠</div>
-        <div class="mnemonic-card" id="mnemonicCard">
-          <div class="mnemonic-item" id="mn0">一贴</div>
-          <div class="mnemonic-item" id="mn1">二低①</div>
-          <div class="mnemonic-item" id="mn2">二低②</div>
-          <div class="mnemonic-item" id="mn3">三靠①</div>
-          <div class="mnemonic-item" id="mn4">三靠②</div>
-          <div class="mnemonic-item" id="mn5">三靠③</div>
-        </div>
-        <div class="step-desc" id="mnemonicDesc" style="font-size:9px;color:#64748B;margin-top:4px">
-          一贴：滤纸紧贴漏斗内壁（无气泡）
-        </div>
+      <div class="knowledge-card">
+        <h4>玻璃棒的三次使用</h4>
+        <p>① 溶解时搅拌<br>② 过滤时引流<br>③ 蒸发时搅拌（防止液滴飞溅）</p>
       </div>
-
-      <!-- Glass rod card -->
-      <div class="panel-section" id="rodSection" style="display:none">
-        <div class="section-title">玻璃棒的三次使用</div>
-        <div class="rod-card">
-          <div class="rod-item" id="rod1">① 搅拌<br><span style="font-size:7px">加速溶解</span></div>
-          <div class="rod-item" id="rod2">② 引流<br><span style="font-size:7px">过滤引导</span></div>
-          <div class="rod-item" id="rod3">③ 搅拌<br><span style="font-size:7px">防止飞溅</span></div>
-        </div>
+      <div class="knowledge-card">
+        <h4>蒸发注意事项</h4>
+        <p style="color:#DC2626"><strong>大量晶体析出时停止加热！</strong>用余热蒸干。否则晶体飞溅。</p>
       </div>
-
-      <!-- Observations -->
-      <div class="panel-section">
-        <div class="section-title">现象观察</div>
-        <ul class="obs-list" id="obsList">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>粗盐溶解，液体仍浑浊</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>过滤后滤液澄清</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>蒸发出现白色固体</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>大量固体时停止加热</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>余热蒸干，得到精盐</li>
-        </ul>
+      <div class="knowledge-card">
+        <h4>产率偏低原因</h4>
+        <p>溶解不充分（NaCl 残留）<br>过滤时损失（滤纸吸附）<br>蒸发时飞溅<br>转移时损失</p>
       </div>
-
-      <!-- Data -->
-      <div class="panel-section" id="dataSection" style="display:none">
-        <div class="section-title">实验数据</div>
-        <div style="display:flex;gap:6px">
-          <div class="reading-card"><div class="label">粗盐</div><div class="val" style="font-size:14px;color:#0284C7">5.0</div><div class="unit">g</div></div>
-          <div class="reading-card"><div class="label">精盐</div><div class="val" id="dispPure" style="font-size:14px;color:#0284C7">—</div><div class="unit">g</div></div>
-          <div class="reading-card"><div class="label">产率</div><div class="val" id="dispYield" style="font-size:14px;color:#0284C7">—</div><div class="unit">%</div></div>
-        </div>
-      </div>
-
-      <!-- Reset -->
-      <div class="panel-section">
-        <button class="ctrl-btn secondary" onclick="resetAll()">重做实验</button>
-      </div>
-
-      <!-- Conclusion -->
-      <div class="panel-section" id="resultSection" style="display:none">
-        <div class="section-title">实验结论</div>
-        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
-          通过溶解→过滤→蒸发结晶，除去粗盐中的不溶性杂质，获得较纯净的 NaCl。
-          <div style="margin-top:4px;font-size:10px;color:#64748B">注意：此方法只能除去<strong>不溶性杂质</strong>，可溶性杂质需化学方法除去。</div>
-        </div>
+      <div class="knowledge-card">
+        <h4>混合物分离方法</h4>
+        <p>过滤: 不溶固体+液体<br>蒸发: 可溶固体+液体<br>蒸馏: 沸点不同液体<br>结晶: 溶解度差异大的固体</p>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Knowledge -->
-<div class="knowledge-section">
-  <div class="knowledge-container">
-    <h2>实验原理</h2>
-    <p>粗盐中含有泥沙等<strong>不溶性杂质</strong>。利用 NaCl 能溶于水而泥沙不能溶于水的性质，通过<strong>溶解→过滤→蒸发</strong>三步操作，将不溶性杂质与 NaCl 分离。</p>
-
-    <h3>一贴二低三靠（过滤口诀）</h3>
-    <ul>
-      <li><strong>一贴</strong>：滤纸紧贴漏斗内壁（中间不能有气泡）</li>
-      <li><strong>二低①</strong>：滤纸边缘低于漏斗边缘</li>
-      <li><strong>二低②</strong>：液面低于滤纸边缘</li>
-      <li><strong>三靠①</strong>：倾倒时烧杯口靠玻璃棒</li>
-      <li><strong>三靠②</strong>：玻璃棒下端靠在三层滤纸一侧</li>
-      <li><strong>三靠③</strong>：漏斗下端管口靠烧杯内壁</li>
-    </ul>
-
-    <h3>玻璃棒的三次使用</h3>
-    <ul>
-      <li><strong>溶解时</strong>：搅拌，加速溶解</li>
-      <li><strong>过滤时</strong>：引流，引导液体沿玻璃棒流入漏斗</li>
-      <li><strong>蒸发时</strong>：搅拌，防止因局部过热而液体飞溅</li>
-    </ul>
-
-    <h3>蒸发注意事项</h3>
-    <ul>
-      <li>蒸发皿中出现<strong>大量固体</strong>时即停止加热</li>
-      <li>利用<strong>余热</strong>蒸干剩余水分</li>
-      <li>不能蒸至完全干燥再停火（NaCl 会飞溅）</li>
-      <li>全程用玻璃棒搅拌，防止液体飞溅</li>
-    </ul>
-
-    <h3>误差分析</h3>
-    <ul>
-      <li><strong>产率偏低</strong>的原因：
-        <ul>
-          <li>溶解不充分，NaCl 未完全溶解就过滤（损失溶质）</li>
-          <li>过滤时液体洒出（损失溶质）</li>
-          <li>蒸发时液体飞溅（损失固体）</li>
-          <li>转移过程中有损失</li>
-        </ul>
-      </li>
-      <li><strong>产率偏高</strong>的原因：
-        <ul>
-          <li>蒸发不充分，精盐中仍含水分</li>
-          <li>滤纸破损，泥沙混入滤液</li>
-        </ul>
-      </li>
-    </ul>
-
-    <h3>产率计算</h3>
-    <div class="formula-block" id="formula1"></div>
   </div>
 </div>
 
@@ -352,339 +280,182 @@
 <script src="/shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+let step = 0;
 
-// ===== STATE =====
-const STEPS = ['dissolve', 'filter', 'evaporate'];
-const STEP_INFO = [
-  { title: '第 1 步：溶解', desc: '将粗盐加入水中，用玻璃棒搅拌加速溶解。', btn: '搅拌溶解 → 过滤' },
-  { title: '第 2 步：过滤', desc: '将浑浊液沿玻璃棒引流入漏斗过滤，收集澄清滤液。', btn: '开始过滤' },
-  { title: '第 3 步：蒸发结晶', desc: '将滤液倒入蒸发皿，加热蒸发，出现大量固体时停止加热。', btn: '点燃酒精灯' }
-];
+const DROP_TARGETS = {
+  salt: ['dropSalt'],
+  water: ['dropWater'],
+  rod: ['dropRod1','dropFilter'],
+  match: ['dropMatch']
+};
 
-const state = { step: 0, animating: false, evapStarted: false, evapStopped: false, yieldPct: 0 };
-// Generate yield once: 75%-85%
-state.yieldPct = 75 + Math.random() * 10;
-
-// ===== STEP CONTROL =====
-function nextStep() {
-  if (state.animating) return;
-
-  if (state.step === 0) {
-    startDissolve();
-  } else if (state.step === 1) {
-    startFilter();
-  } else if (state.step === 2) {
-    if (!state.evapStarted) {
-      startEvaporate();
-    } else if (!state.evapStopped) {
-      stopEvaporate();
-    }
-  }
-}
-
-function advanceStep() {
-  state.step++;
-  updateScene();
-  updateStepBar();
-}
-
-function updateScene() {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  $('scene' + (state.step + 1)).classList.add('active');
-
-  const info = STEP_INFO[state.step];
-  $('stepTitle').textContent = info.title;
-  $('stepDesc').textContent = info.desc + ' 点击画布器材操作。';
-
-  $('mnemonicSection').style.display = state.step >= 1 ? 'block' : 'none';
-  $('rodSection').style.display = state.step >= 0 ? 'block' : 'none';
-
-  // Highlight current rod usage
-  ['rod1', 'rod2', 'rod3'].forEach((id, i) => {
-    $(id).classList.toggle('active', i === state.step);
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
   });
-}
-
-function updateStepBar() {
-  document.querySelectorAll('#stepBar .step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < state.step) el.classList.add('done');
-    if (i === state.step) el.classList.add('active');
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
   });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    const act = dragState.action;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) doAction(act, hit);
+    dragState = null;
+  });
+});
+
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
 }
 
-// ===== STEP 1: DISSOLVE =====
-function startDissolve() {
-  state.animating = true;
-  ($('stepBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '搅拌溶解中…';
-  $('statusBadge').className = 'status-badge done';
-  $('rod1').classList.add('active');
-
-  const startTime = performance.now();
-  const duration = 2000;
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    // Rod oscillates
-    const dx = Math.sin(t * Math.PI * 8) * 12;
-    $('dissolveRod').setAttribute('x1', 70 + dx);
-    $('dissolveRod').setAttribute('x2', 70 + dx);
-
-    // Particles fade (dissolving)
-    document.querySelectorAll('.salt-p').forEach(p => {
-      p.setAttribute('opacity', Math.max(0, 1 - t * 1.5));
-    });
-
-    // Liquid clears slightly but stays turbid (still has insoluble impurities)
-    $('turbidLiquid').setAttribute('opacity', 0.4 - t * 0.1);
-
-    if (t < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      checkObs('obs1');
-      $('dissolveState').textContent = 'NaCl 已溶解，液体仍浑浊';
-      $('dissolveState2').textContent = '含有不溶性杂质（泥沙）';
-      state.animating = false;
-      advanceStep();
-    }
-  }
-  requestAnimationFrame(tick);
-}
-
-// ===== STEP 2: FILTER =====
-function startFilter() {
-  state.animating = true;
-  ($('stepBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '过滤中…沿玻璃棒引流';
-  $('rod2').classList.add('active');
-
-  // Highlight mnemonic items one by one
-  const mnItems = ['mn0', 'mn1', 'mn2', 'mn3', 'mn4', 'mn5'];
-  let mnIdx = 0;
-  const mnDescs = [
-    '一贴：滤纸紧贴漏斗内壁（无气泡）',
-    '二低①：滤纸边缘低于漏斗边缘',
-    '二低②：液面低于滤纸边缘',
-    '三靠①：烧杯口靠玻璃棒',
-    '三靠②：玻璃棒靠三层滤纸侧',
-    '三靠③：漏斗下端靠烧杯壁'
-  ];
-
-  function highlightNext() {
-    if (mnIdx > 0) $(mnItems[mnIdx - 1]).classList.replace('active', 'done');
-    if (mnIdx < mnItems.length) {
-      $(mnItems[mnIdx]).classList.add('active');
-      $('mnemonicDesc').textContent = mnDescs[mnIdx];
-      mnIdx++;
-      setTimeout(highlightNext, 600);
-    } else {
-      startPourAnimation();
-    }
-  }
-  highlightNext();
-}
-
-function startPourAnimation() {
-  // Show pour stream
-  $('pourStream').setAttribute('opacity', '0.6');
-  $('filterState').textContent = '过滤中…滤液流入下方烧杯';
-
-  // Filtrate fills receiving beaker
-  const startTime = performance.now();
-  const duration = 2000;
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-    // Filtrate drop
-    $('filtrateDrop').setAttribute('opacity', (Math.sin(t * Math.PI * 10) + 1) / 2 * 0.5);
-
-    // Filtrate in receiving beaker
-    const h = 40 * eased;
-    $('filtrate').setAttribute('y', 70 - h);
-    $('filtrate').setAttribute('height', h);
-
-    // Source liquid decreases
-    $('srcLiquid').setAttribute('opacity', 0.35 * (1 - eased * 0.7));
-
-    if (t < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      $('pourStream').setAttribute('opacity', '0');
-      $('filtrateDrop').setAttribute('opacity', '0');
-      $('filterState').textContent = '过滤完成！滤液澄清';
-      checkObs('obs2');
-      state.animating = false;
-      advanceStep();
-    }
-  }
-  requestAnimationFrame(tick);
-}
-
-// ===== STEP 3: EVAPORATE =====
-let evapAnimId = null;
-let autoStopTimer = null;
-
-function startEvaporate() {
-  state.evapStarted = true;
-  state.animating = true;
-  ($('stepBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '加热蒸发中…';
-  $('rod3').classList.add('active');
-  $('evapFlame').setAttribute('opacity', '1');
-
-  const startTime = performance.now();
-  const duration = 4000; // 4 seconds total
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
+function doAction(act, target) {
+  if (act === 'salt' && target === 'dropSalt') {
+    if (step >= 1) { toast('粗盐已加入'); return; }
+    step = 1;
+    $('toolSalt').classList.add('used');
+    $('saltGrains').setAttribute('opacity', '1');
+    checkObs('obs1');
+    markBox(1);
+    $('dropWater').setAttribute('opacity', '0.4');
+    updateHint();
+  } else if (act === 'water' && target === 'dropWater') {
+    if (step < 1) { toast('先加粗盐'); return; }
+    if (step >= 2) { toast('已加水'); return; }
+    step = 2;
+    $('toolWater').classList.add('used');
+    $('dissolveLiquid').setAttribute('opacity', '1');
+    checkObs('obs2');
+    $('dropRod1').setAttribute('opacity', '0.4');
+    updateHint();
+  } else if (act === 'rod' && target === 'dropRod1') {
+    if (step < 2) { toast('先加水'); return; }
+    if (step >= 3) { toast('已溶解'); return; }
+    step = 3;
+    $('rod1').setAttribute('opacity', '1');
+    // Stir animation then transition to filter
+    let angle = 0;
+    (function stir() {
+      if (step > 3) return;
+      angle += 3;
+      const dx = Math.sin(angle * Math.PI / 180) * 10;
+      $('rod1').querySelector('line').setAttribute('x1', String(105 + dx));
+      $('rod1').querySelector('line').setAttribute('x2', String(105 + dx));
+      $('rod1').querySelector('circle').setAttribute('cx', String(105 + dx));
+      requestAnimationFrame(stir);
+    })();
+    // Salt dissolves
+    setTimeout(() => {
+      $('saltGrains').setAttribute('opacity', '0.1');
+      checkObs('obs3');
+      $('dropFilter').setAttribute('opacity', '0.4');
+      markBox(2);
+      updateHint();
+    }, 1500);
+  } else if (act === 'rod' && target === 'dropFilter') {
+    if (step < 3) { toast('先完成溶解'); return; }
+    if (step >= 4) { toast('已过滤'); return; }
+    step = 4;
+    $('toolRod').classList.add('used');
+    $('guideRod').setAttribute('opacity', '1');
+    $('filtrate').setAttribute('opacity', '1');
+    $('residue').setAttribute('opacity', '1');
+    checkObs('obs4');
+    markBox(3);
+    $('dropMatch').setAttribute('opacity', '0.4');
+    // Put filtrate in evap dish
+    $('evapLiquid').setAttribute('opacity', '1');
+    updateHint();
+  } else if (act === 'match' && target === 'dropMatch') {
+    if (step < 4) { toast('先完成过滤'); return; }
+    if (step >= 5) { toast('已蒸发'); return; }
+    step = 5;
+    $('toolMatch').classList.add('used');
+    $('evapFlame').setAttribute('opacity', '1');
+    checkObs('obs5');
     // Flame flicker
-    const s = 0.85 + Math.random() * 0.3;
-    $('evapFlame').setAttribute('transform', `scale(${s})`);
-
-    // Rod oscillates (prevent splashing)
-    const dx = Math.sin(t * Math.PI * 12) * 8;
-    $('evapRod').setAttribute('x1', 50 + dx);
-    $('evapRod').setAttribute('x2', 50 + dx);
-
-    // Liquid shrinks
-    const liquidR = 48 * (1 - eased * 0.8);
-    $('evapLiquid').setAttribute('rx', Math.max(10, liquidR));
-    $('evapLiquid').setAttribute('opacity', 0.25 * (1 - eased * 0.6));
-
-    // Salt crystals appear
-    $('evapSaltGroup').setAttribute('opacity', eased);
-    checkObs('obs3');
-
-    $('evapState').textContent = `蒸发中…${Math.round(eased * 100)}%`;
-
-    // At 70%, show warning and unlock stop button
-    if (t >= 0.7 && !$('evapWarning').classList.contains('flash-warn')) {
-      $('evapWarning').setAttribute('opacity', '1');
-      $('evapWarning').classList.add('flash-warn');
-      checkObs('obs4');
-      state.animating = false;
-      $('lampHint').textContent = '点击 → 停止加热！';
-      $('statusBadge').textContent = '出现大量固体，点击酒精灯停止加热！';
-
-      // Auto-stop after 3 seconds if user doesn't click
-      autoStopTimer = setTimeout(() => {
-        if (!state.evapStopped) {
-          stopEvaporate();
-          $('evapState').textContent = '已自动停火（NaCl 可能飞溅损失）';
-        }
-      }, 3000);
-    }
-
-    if (t < 1 && !state.evapStopped) {
-      evapAnimId = requestAnimationFrame(tick);
-    }
-  }
-  evapAnimId = requestAnimationFrame(tick);
-}
-
-function stopEvaporate() {
-  state.evapStopped = true;
-  if (evapAnimId) { cancelAnimationFrame(evapAnimId); evapAnimId = null; }
-  if (autoStopTimer) { clearTimeout(autoStopTimer); autoStopTimer = null; }
-
-  // Extinguish flame
-  $('evapFlame').setAttribute('opacity', '0');
-  $('evapRod').setAttribute('x1', '50');
-  $('evapRod').setAttribute('x2', '50');
-  checkObs('obs5');
-
-  // Show yield
-  const pureMass = (5 * state.yieldPct / 100).toFixed(1);
-  const yieldStr = state.yieldPct.toFixed(1);
-  $('evapState').textContent = '余热蒸干完成，得到精盐';
-  $('evapYield').textContent = `产率：${yieldStr}%`;
-  $('dataSection').style.display = 'block';
-  $('dispPure').textContent = pureMass;
-  $('dispYield').textContent = yieldStr;
-
-  $('evapLamp').classList.remove('svg-click');
-  $('evapLamp').removeAttribute('onclick');
-  $('resultSection').style.display = 'block';
-  $('statusBadge').textContent = `实验完成！产率 ${yieldStr}%`;
-}
-
-// ===== UTILITIES =====
-function checkObs(id) {
-  const el = $(id);
-  if (el && !el.classList.contains('checked')) {
-    el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
+    (function flick() {
+      if (step > 5) return;
+      const s = 0.85 + Math.sin(Date.now() * 0.008) * 0.15;
+      $('evapFlame').setAttribute('transform', 'scale(' + s + ')');
+      requestAnimationFrame(flick);
+    })();
+    // Evaporation animation
+    setTimeout(() => {
+      $('evapLiquid').setAttribute('opacity', '0.1');
+      $('crystals').setAttribute('opacity', '1');
+      checkObs('obs6');
+      setTimeout(() => {
+        step = 6;
+        checkObs('obs7');
+        const pureWeight = (3 + Math.random() * 0.5).toFixed(1);
+        const yieldPct = (pureWeight / 5 * 100).toFixed(0);
+        $('pureVal').textContent = pureWeight + 'g';
+        $('yieldVal').textContent = yieldPct + '%';
+        $('microNote').innerHTML = '产率 ' + yieldPct + '% — 损失来自过滤/蒸发/转移<br>纯盐: NaCl 白色晶体';
+        $('canvasHint').textContent = '实验完成！产率 ' + yieldPct + '%';
+      }, 1000);
+    }, 2000);
+    updateHint();
+  } else {
+    toast('请拖到正确位置');
   }
 }
 
-function resetAll() {
-  if (evapAnimId) cancelAnimationFrame(evapAnimId);
-  if (autoStopTimer) clearTimeout(autoStopTimer);
-  evapAnimId = null; autoStopTimer = null;
+function markBox(n) {
+  for (let i = 1; i <= 3; i++) {
+    const b = $('box' + i);
+    if (i < n) { b.setAttribute('stroke', '#6EE7B7'); b.setAttribute('fill', '#F0FDF4'); }
+    else if (i === n) { b.setAttribute('stroke', '#0284C7'); }
+    else { b.setAttribute('stroke', '#E2E8F0'); b.setAttribute('fill', '#fff'); }
+  }
+}
 
-  Object.assign(state, { step: 0, animating: false, evapStarted: false, evapStopped: false });
-  state.yieldPct = 75 + Math.random() * 10;
+function updateHint() {
+  const hints = ['拖粗盐到烧杯 → 开始溶解', '拖水到烧杯', '拖玻璃棒搅拌溶解', '拖玻璃棒到过滤装置 → 引流过滤', '拖火柴点燃酒精灯 → 蒸发结晶', '蒸发中...等待晶体析出'];
+  $('canvasHint').textContent = hints[step] || hints[0];
+}
 
-  // Reset scene 1
-  document.querySelectorAll('.salt-p').forEach(p => p.setAttribute('opacity', '1'));
-  $('turbidLiquid').setAttribute('opacity', '0.4');
-  $('dissolveRod').setAttribute('x1', '70'); $('dissolveRod').setAttribute('x2', '70');
-  $('dissolveState').textContent = '浑浊：粗盐未完全溶解';
-  $('dissolveState2').textContent = '搅拌加速溶解';
+function toast(msg) { $('canvasHint').textContent = msg; setTimeout(updateHint, 2000); }
+function checkObs(id) { const el = $(id); if (el && !el.classList.contains('checked')) { el.classList.add('checked'); el.querySelector('.obs-check').textContent = '\u2713'; } }
 
-  // Reset scene 2
-  $('pourStream').setAttribute('opacity', '0');
-  $('filtrateDrop').setAttribute('opacity', '0');
-  $('filtrate').setAttribute('y', '70'); $('filtrate').setAttribute('height', '0');
-  $('srcLiquid').setAttribute('opacity', '0.35');
-  $('filterState').textContent = '等待开始过滤';
-  document.querySelectorAll('.mnemonic-item').forEach(el => { el.classList.remove('active', 'done'); });
-
-  // Reset scene 3
+function resetExperiment() {
+  step = 0;
+  $('saltGrains').setAttribute('opacity', '0');
+  $('dissolveLiquid').setAttribute('opacity', '0');
+  $('rod1').setAttribute('opacity', '0');
+  $('filtrate').setAttribute('opacity', '0');
+  $('residue').setAttribute('opacity', '0');
+  $('guideRod').setAttribute('opacity', '0');
+  $('evapLiquid').setAttribute('opacity', '0');
   $('evapFlame').setAttribute('opacity', '0');
-  $('evapFlame').setAttribute('transform', 'scale(1)');
-  $('evapLiquid').setAttribute('rx', '48'); $('evapLiquid').setAttribute('opacity', '0.25');
-  $('evapSaltGroup').setAttribute('opacity', '0');
-  $('evapWarning').setAttribute('opacity', '0');
-  $('evapWarning').classList.remove('flash-warn');
-  $('evapRod').setAttribute('x1', '50'); $('evapRod').setAttribute('x2', '50');
-  $('evapState').textContent = '等待点燃酒精灯';
-  $('evapYield').textContent = '产率：—';
-
-  // Reset UI
-  ['rod1', 'rod2', 'rod3'].forEach(id => $(id).classList.remove('active'));
-  $('dataSection').style.display = 'none';
-  $('resultSection').style.display = 'none';
-  $('mnemonicSection').style.display = 'none';
-  $('statusBadge').textContent = '准备实验 → 按步骤操作';
-  $('statusBadge').className = 'status-badge idle';
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-  updateScene();
-  updateStepBar();
+  $('crystals').setAttribute('opacity', '0');
+  ['dropWater','dropRod1','dropFilter','dropMatch'].forEach(id => $(id).setAttribute('opacity', '0'));
+  $('pureVal').textContent = '—g'; $('yieldVal').textContent = '—%';
+  $('microNote').innerHTML = '溶解: NaCl 离子扩散到水中<br>过滤: 固体杂质拦截<br>蒸发: 水分子蒸发, NaCl 重新结晶';
+  for (let i = 1; i <= 3; i++) { const b = $('box'+i); b.setAttribute('stroke','#E2E8F0'); b.setAttribute('fill','#fff'); }
+  $('canvasHint').textContent = '拖粗盐到烧杯 → 开始溶解';
+  ['toolSalt','toolWater','toolRod','toolMatch'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
-
-// ===== FORMULAS =====
-function renderFormulas() {
-  if (!window.katex) return;
-  try {
-    katex.render('\\text{产率} = \\frac{m_{\\text{精盐}}}{m_{\\text{粗盐}}} \\times 100\\%', $('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {}
-}
-
-(function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
-})(0);
-
-// Init
 </script>
 <script src="/shared/theme.js"></script>
 </body>
