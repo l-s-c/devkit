@@ -10,680 +10,574 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
-.compare-line{stroke-width:1.5;stroke-dasharray:6,3;opacity:0;cursor:pointer}
-.compare-line:hover{stroke-width:2.5}
-.condition-badge{font-size:7px;font-weight:700}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.cond-grid{display:flex;gap:4px;margin:8px 0}
+.cond-card{flex:1;border-radius:6px;padding:6px;text-align:center;font-size:8px;font-weight:700;border:1px solid #E2E8F0}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;text-align:center;font-size:10px;color:#0D9488}
 </style>
 </head>
 <body>
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-header">
-      <h1 class="exp-title">探究燃烧条件</h1>
-      <div class="exp-subtitle">对照实验 — 燃烧三条件缺一不可</div>
-    </div>
-    <div class="canvas-wrapper">
-      <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
-        <defs>
-          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.6"/>
-          </linearGradient>
-          <linearGradient id="copperGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#D97706"/><stop offset="100%" stop-color="#F59E0B"/>
-          </linearGradient>
-          <filter id="smokeBlur"><feGaussianBlur stdDeviation="3"/></filter>
-          <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
-          <filter id="glowOrange"><feGaussianBlur stdDeviation="4"/><feComposite in="SourceGraphic"/></filter>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#B8D4F0" stop-opacity="0.85"/>
-            <stop offset="12%" stop-color="#E8F1FA" stop-opacity="0.4"/>
-            <stop offset="50%" stop-color="#EDF4FC" stop-opacity="0.3"/>
-            <stop offset="88%" stop-color="#E8F1FA" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#C8DCF0" stop-opacity="0.7"/>
-          </linearGradient>
-        </defs>
-
-        <!-- ===== BEAKER ===== -->
-        <g id="beakerGroup" transform="translate(80,30)">
-          <rect x="0" y="0" width="320" height="320" rx="10" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.8"/>
-          <line x1="4" y1="10" x2="4" y2="310" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Water (upper half visible) -->
-          <rect id="beakerWater" x="4" y="165" width="312" height="151" rx="6" fill="url(#waterGrad)"/>
-          <text x="160" y="335" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">烧杯（热水）</text>
-
-          <!-- Copper plate across water surface -->
-          <rect id="copperPlate" x="15" y="157" width="290" height="10" rx="3" fill="url(#copperGrad)" stroke="#B45309" stroke-width="0.8"/>
-          <text x="310" y="153" font-size="7" fill="#B45309" font-weight="600">铜片</text>
-
-          <!-- ===== WHITE PHOSPHORUS on copper (left) ===== -->
-          <g id="whiteP_top" transform="translate(70,130)">
-            <circle id="wpTop" cx="0" cy="0" r="11" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
-            <text x="0" y="34" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">白磷</text>
-            <text x="0" y="45" font-size="7" fill="#64748B" text-anchor="middle">着火点 40°C</text>
-            <!-- Condition badges -->
-            <g id="wpTopBadges" transform="translate(-30,-30)">
-              <text class="condition-badge" x="0" y="0" fill="#059669">✓ 可燃物</text>
-              <text class="condition-badge" x="0" y="10" fill="#059669" id="wpTopO2">✓ 接触O₂</text>
-              <text class="condition-badge" x="0" y="20" fill="#94A3B8" id="wpTopTemp">✗ 未达着火点</text>
-            </g>
-            <!-- Flame (hidden) -->
-            <g id="wpTopFlame" opacity="0">
-              <ellipse cx="0" cy="-12" rx="10" ry="18" fill="#F97316" opacity="0.7" filter="url(#flameBlur)"/>
-              <ellipse cx="0" cy="-8" rx="5" ry="10" fill="#FEF3C7" opacity="0.8"/>
-            </g>
-            <!-- Smoke container -->
-            <g id="wpTopSmoke"></g>
-            <!-- Result badge -->
-            <g id="wpTopResult" opacity="0" transform="translate(20,-20)">
-              <rect x="0" y="0" width="40" height="16" rx="4" fill="#DC2626"/>
-              <text x="20" y="12" font-size="7" fill="#FFF" text-anchor="middle" font-weight="800">燃烧！</text>
-            </g>
-          </g>
-
-          <!-- ===== RED PHOSPHORUS on copper (right) ===== -->
-          <g id="redP_top" transform="translate(230,130)">
-            <circle id="rpTop" cx="0" cy="0" r="11" fill="#DC2626" stroke="#991B1B" stroke-width="1"/>
-            <text x="0" y="30" font-size="6" fill="#0F172A" text-anchor="middle" font-weight="600">红磷</text>
-            <text x="0" y="39" font-size="5" fill="#64748B" text-anchor="middle">着火点 240°C</text>
-            <g id="rpTopBadges" transform="translate(-30,-30)">
-              <text class="condition-badge" x="0" y="0" fill="#059669">✓ 可燃物</text>
-              <text class="condition-badge" x="0" y="10" fill="#059669">✓ 接触O₂</text>
-              <text class="condition-badge" x="0" y="20" fill="#94A3B8" id="rpTopTemp">✗ 未达着火点</text>
-            </g>
-            <!-- Result badge -->
-            <g id="rpTopResult" opacity="0" transform="translate(20,-20)">
-              <rect x="0" y="0" width="40" height="16" rx="4" fill="#64748B"/>
-              <text x="20" y="12" font-size="7" fill="#FFF" text-anchor="middle" font-weight="800">不燃</text>
-            </g>
-          </g>
-
-          <!-- ===== WHITE PHOSPHORUS underwater ===== -->
-          <g id="whiteP_water" transform="translate(140,240)">
-            <circle id="wpWater" cx="0" cy="0" r="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
-            <text x="0" y="20" font-size="6" fill="#0F172A" text-anchor="middle" font-weight="600">白磷</text>
-            <text x="0" y="29" font-size="5" fill="#64748B" text-anchor="middle">（水中）</text>
-            <g id="wpWaterBadges" transform="translate(-30,-30)">
-              <text class="condition-badge" x="0" y="0" fill="#059669">✓ 可燃物</text>
-              <text class="condition-badge" x="0" y="10" fill="#DC2626" id="wpWaterO2">✗ 无O₂</text>
-              <text class="condition-badge" x="0" y="20" fill="#059669" id="wpWaterTemp">✓ 达到着火点</text>
-            </g>
-            <!-- Result badge -->
-            <g id="wpWaterResult" opacity="0" transform="translate(20,-20)">
-              <rect x="0" y="0" width="40" height="16" rx="4" fill="#64748B"/>
-              <text id="wpWaterResultText" x="20" y="12" font-size="7" fill="#FFF" text-anchor="middle" font-weight="800">不燃</text>
-            </g>
-            <!-- Underwater flame (Step 3) -->
-            <g id="wpWaterFlame" opacity="0">
-              <ellipse cx="0" cy="-10" rx="8" ry="14" fill="#FBBF24" opacity="0.6" filter="url(#flameBlur)"/>
-              <ellipse cx="0" cy="-7" rx="4" ry="8" fill="#FEF3C7" opacity="0.7"/>
-            </g>
-            <!-- O₂ bubbles around (Step 3) -->
-            <g id="o2BubbleContainer"></g>
-          </g>
-
-          <!-- ===== O₂ TUBE (Step 3, initially hidden) ===== -->
-          <g id="o2Tube" opacity="0">
-            <path d="M-20,0 L-20,150 Q-20,170 0,170 L100,170 Q120,170 120,150 L120,140" transform="translate(120,60)" fill="none" stroke="#78716C" stroke-width="3" stroke-linecap="round"/>
-            <text x="80" y="80" font-size="6" fill="#64748B">导管（通入O₂）</text>
-            <!-- O₂ source label -->
-            <text x="85" y="55" font-size="5" fill="#0284C7" font-weight="600">O₂↓</text>
-          </g>
-        </g>
-
-        <!-- ===== THERMOMETER ===== -->
-        <g id="thermometer" class="clickable" transform="translate(90,80)" onclick="startHeating()">
-          <rect x="0" y="0" width="12" height="200" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="0.8"/>
-          <rect id="mercuryCol" x="3" y="170" width="6" height="27" rx="3" fill="#DC2626"/>
-          <circle cx="6" cy="200" r="8" fill="#DC2626" stroke="#991B1B" stroke-width="0.5"/>
-          <text id="tempText" x="6" y="213" font-size="7" fill="#DC2626" text-anchor="middle" font-weight="800">25°C</text>
-          <text class="svg-hint" x="6" y="225" font-size="5" fill="#0284C7" text-anchor="middle" id="thermHint">点击升温</text>
-          <!-- Scale marks -->
-          <text x="15" y="175" font-size="4" fill="#94A3B8">20</text>
-          <text x="15" y="145" font-size="4" fill="#94A3B8">40</text>
-          <text x="15" y="115" font-size="4" fill="#94A3B8">60</text>
-          <text x="15" y="85" font-size="4" fill="#94A3B8">80</text>
-          <text x="15" y="55" font-size="4" fill="#94A3B8">100</text>
-        </g>
-
-        <!-- ===== COMPARISON LINES (Step 2) ===== -->
-        <!-- Blue: white P ↔ red P (variable = ignition point) -->
-        <g id="compareLine1" class="clickable" opacity="0" onclick="clickCompare(1)">
-          <line x1="195" y1="170" x2="305" y2="170" class="compare-line" stroke="#3B82F6" opacity="1"/>
-          <rect x="220" y="158" width="60" height="16" rx="4" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
-          <text x="250" y="170" font-size="6" fill="#2563EB" text-anchor="middle" font-weight="700">变量=着火点</text>
-        </g>
-        <!-- Green: top white P ↔ water white P (variable = O₂) -->
-        <g id="compareLine2" class="clickable" opacity="0" onclick="clickCompare(2)">
-          <line x1="185" y1="185" x2="245" y2="260" class="compare-line" stroke="#059669" opacity="1"/>
-          <rect x="188" y="215" width="55" height="16" rx="4" fill="#F0FDF4" stroke="#059669" stroke-width="1"/>
-          <text x="215" y="227" font-size="6" fill="#059669" text-anchor="middle" font-weight="700">变量=O₂</text>
-        </g>
-
-        <!-- ===== O₂ TUBE CLICKABLE (Step 3) ===== -->
-        <g id="o2TubeClick" class="clickable" opacity="0" onclick="startO2()">
-          <text x="440" y="310" font-size="8" fill="#0284C7" font-weight="700">点击导管 → 通入O₂</text>
-        </g>
-
-        <!-- ===== COMBUSTION TRIANGLE (shown after analysis) ===== -->
-        <g id="triangleCard" transform="translate(430,30)" opacity="0">
-          <rect x="0" y="0" width="250" height="100" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
-          <text x="125" y="20" font-size="9" fill="#92400E" text-anchor="middle" font-weight="800">燃烧三条件</text>
-          <text x="20" y="42" font-size="8" fill="#059669" font-weight="700">✓ 可燃物</text>
-          <text x="20" y="60" font-size="8" fill="#059669" font-weight="700">✓ 接触氧气（助燃物）</text>
-          <text x="20" y="78" font-size="8" fill="#059669" font-weight="700">✓ 达到着火点</text>
-          <text x="125" y="95" font-size="8" fill="#DC2626" text-anchor="middle" font-weight="800">缺一不可！</text>
-        </g>
-
-        <!-- ===== IGNITION POINT COMPARISON ===== -->
-        <g id="ignitionCard" transform="translate(430,150)" opacity="0">
-          <rect x="0" y="0" width="250" height="55" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
-          <text x="125" y="18" font-size="8" fill="#9A3412" text-anchor="middle" font-weight="700">着火点对比</text>
-          <text x="30" y="38" font-size="9" fill="#F59E0B" font-weight="800">白磷 40°C</text>
-          <text x="125" y="38" font-size="9" fill="#64748B">≪</text>
-          <text x="180" y="38" font-size="9" fill="#DC2626" font-weight="800">红磷 240°C</text>
-          <text x="125" y="50" font-size="5" fill="#78716C" text-anchor="middle">着火点是固有属性，不能"降低"</text>
-        </g>
-
-        <!-- ===== CONTRAST TABLE ===== -->
-        <g id="contrastTable" transform="translate(430,230)" opacity="0">
-          <rect x="0" y="0" width="250" height="110" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="125" y="18" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="700">对照记录</text>
-          <!-- Header -->
-          <text x="15" y="35" font-size="5" fill="#64748B" font-weight="600">实验组</text>
-          <text x="95" y="35" font-size="5" fill="#64748B" font-weight="600">可燃</text>
-          <text x="135" y="35" font-size="5" fill="#64748B" font-weight="600">O₂</text>
-          <text x="175" y="35" font-size="5" fill="#64748B" font-weight="600">着火点</text>
-          <text x="220" y="35" font-size="5" fill="#64748B" font-weight="600">结果</text>
-          <line x1="10" y1="40" x2="240" y2="40" stroke="#E2E8F0" stroke-width="0.5"/>
-          <!-- Row 1 -->
-          <text x="15" y="55" font-size="6" fill="#0F172A">铜片白磷</text>
-          <text x="100" y="55" font-size="6" fill="#059669">✓</text>
-          <text x="140" y="55" font-size="6" fill="#059669">✓</text>
-          <text x="175" y="55" font-size="6" fill="#059669">✓ 40°C</text>
-          <text x="220" y="55" font-size="6" fill="#DC2626" font-weight="700">燃烧</text>
-          <!-- Row 2 -->
-          <text x="15" y="72" font-size="6" fill="#0F172A">铜片红磷</text>
-          <text x="100" y="72" font-size="6" fill="#059669">✓</text>
-          <text x="140" y="72" font-size="6" fill="#059669">✓</text>
-          <text x="175" y="72" font-size="6" fill="#DC2626">✗ 240°C</text>
-          <text x="220" y="72" font-size="6" fill="#64748B" font-weight="700">不燃</text>
-          <!-- Row 3 -->
-          <text x="15" y="89" font-size="6" fill="#0F172A">水中白磷</text>
-          <text x="100" y="89" font-size="6" fill="#059669">✓</text>
-          <text x="140" y="89" font-size="6" fill="#DC2626">✗</text>
-          <text x="175" y="89" font-size="6" fill="#059669">✓ 40°C</text>
-          <text x="220" y="89" font-size="6" fill="#64748B" font-weight="700">不燃</text>
-          <!-- Row 4 (Step 3 追加) -->
-          <g id="contrastRow4" opacity="0">
-            <text x="15" y="105" font-size="6" fill="#0F172A" font-weight="700">通O₂白磷</text>
-            <text x="100" y="105" font-size="6" fill="#059669">✓</text>
-            <text x="140" y="105" font-size="6" fill="#059669">✓</text>
-            <text x="175" y="105" font-size="6" fill="#059669">✓ 40°C</text>
-            <text x="220" y="105" font-size="6" fill="#DC2626" font-weight="700">燃烧!</text>
-          </g>
-        </g>
-
-        <!-- Pre-drawn smoke particles (30) -->
-        <g id="smokePool">
-          <circle class="smoke-p" cx="0" cy="0" r="3" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="4" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="2.5" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3.5" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="4" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="2.5" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3.5" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="4" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="2.5" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3.5" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="4" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="2.5" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3.5" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="4" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="2.5" fill="#D6D3D1" opacity="0" filter="url(#smokeBlur)"/>
-          <circle class="smoke-p" cx="0" cy="0" r="3.5" fill="#E7E5E4" opacity="0" filter="url(#smokeBlur)"/>
-        </g>
-
-        <!-- Pre-drawn O₂ bubbles for underwater (15) -->
-        <g id="o2Pool">
-          <circle class="o2-bub" cx="0" cy="0" r="2" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.8" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.8" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.8" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="1.5" fill="#7DD3FC" opacity="0"/>
-          <circle class="o2-bub" cx="0" cy="0" r="2.5" fill="#7DD3FC" opacity="0"/>
-        </g>
-
-        <!-- Canvas hint -->
-        <text id="canvasHint" x="360" y="390" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击温度计升温 → 观察三组实验</text>
-      </svg>
-    </div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">探究燃烧条件</strong>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Step bar -->
-      <div class="panel-section">
-        <div class="section-title">实验步骤</div>
-        <div class="step-bar" id="stepBar">
-          <div class="step-item active" data-step="0"><span class="step-num">1</span>观察</div>
-          <div class="step-item" data-step="1"><span class="step-num">2</span>分析</div>
-          <div class="step-item" data-step="2"><span class="step-num">3</span>追加</div>
-        </div>
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
+            <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <linearGradient id="copperGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#D97706"/><stop offset="100%" stop-color="#F59E0B"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ===== BIG BEAKER with hot water ===== -->
+          <g transform="translate(80,30)">
+            <!-- Beaker body -->
+            <path d="M8,0 L2,8 L2,330 Q2,348 16,348 L304,348 Q318,348 318,330 L318,8 L312,0 Z" fill="#B8D4EA" stroke="none"/>
+            <path d="M8,0 L2,8 L2,330 Q2,348 16,348 L304,348 Q318,348 318,330 L318,8 L312,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2.5"/>
+            <path d="M8,0 Q-3,-3 -2,-10" fill="none" stroke="url(#glassEdge)" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="6" y="10" width="14" height="310" rx="7" fill="url(#hlGrad)" opacity="0.9"/>
+
+            <!-- Hot water -->
+            <rect id="hotWater" x="4" y="80" width="312" height="264" rx="6" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Water label -->
+            <text id="waterLabel" x="160" y="320" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="600" opacity="0">80°C 热水</text>
+
+            <!-- Copper plate across top -->
+            <rect x="20" y="70" width="280" height="10" rx="2" fill="url(#copperGrad)" stroke="#B45309" stroke-width="0.8"/>
+            <text x="160" y="66" font-size="8" fill="#92400E" text-anchor="middle" font-weight="600">铜片</text>
+
+            <!-- White phosphorus ON copper (left) -->
+            <g transform="translate(80,50)">
+              <circle id="wpOnCopper" cx="0" cy="0" r="10" fill="#FEFCE8" stroke="#FDE68A" stroke-width="1"/>
+              <text x="0" y="4" font-size="5" fill="#854D0E" text-anchor="middle" font-weight="700">白磷</text>
+              <text x="0" y="-16" font-size="7" fill="#64748B" text-anchor="middle">着火点 40°C</text>
+              <!-- Flame for white P on copper -->
+              <g id="flameWpCopper" opacity="0" filter="url(#flameGlow)">
+                <ellipse cx="0" cy="-10" rx="8" ry="14" fill="#F97316" opacity="0.6"/>
+                <ellipse cx="0" cy="-12" rx="5" ry="9" fill="#FBBF24" opacity="0.7"/>
+                <ellipse cx="0" cy="-14" rx="3" ry="4" fill="#FEF3C7" opacity="0.8"/>
+              </g>
+              <!-- Smoke -->
+              <g id="smokeWpCopper" opacity="0" filter="url(#smokeBlur)">
+                <circle cx="-5" cy="-25" r="6" fill="#FFF" opacity="0.3"/>
+                <circle cx="5" cy="-35" r="8" fill="#FFF" opacity="0.25"/>
+                <circle cx="-3" cy="-45" r="5" fill="#FFF" opacity="0.2"/>
+              </g>
+              <!-- Result badge -->
+              <g id="badgeWpCopper" opacity="0" transform="translate(0,-55)">
+                <rect x="-30" y="-8" width="60" height="16" rx="4" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1"/>
+                <text x="0" y="4" font-size="7" fill="#166534" text-anchor="middle" font-weight="700">燃烧</text>
+              </g>
+            </g>
+
+            <!-- Red phosphorus ON copper (right) -->
+            <g transform="translate(240,50)">
+              <circle cx="0" cy="0" r="10" fill="#DC2626" stroke="#B91C1C" stroke-width="1"/>
+              <text x="0" y="4" font-size="5" fill="#FFF" text-anchor="middle" font-weight="700">红磷</text>
+              <text x="0" y="-16" font-size="7" fill="#64748B" text-anchor="middle">着火点 240°C</text>
+              <!-- Result badge -->
+              <g id="badgeRedP" opacity="0" transform="translate(0,-55)">
+                <rect x="-30" y="-8" width="60" height="16" rx="4" fill="#FEE2E2" stroke="#FECACA" stroke-width="1"/>
+                <text x="0" y="4" font-size="7" fill="#991B1B" text-anchor="middle" font-weight="700">不燃烧</text>
+              </g>
+            </g>
+
+            <!-- White phosphorus IN water (bottom) -->
+            <g transform="translate(160,250)">
+              <circle id="wpInWater" cx="0" cy="0" r="10" fill="#FEFCE8" stroke="#FDE68A" stroke-width="1" opacity="0"/>
+              <text id="wpInWaterLabel" x="0" y="4" font-size="5" fill="#854D0E" text-anchor="middle" font-weight="700" opacity="0">白磷</text>
+              <text id="wpInWaterNote" x="0" y="18" font-size="7" fill="#64748B" text-anchor="middle" opacity="0">水中隔绝O₂</text>
+              <!-- Flame (after O₂ is piped in) -->
+              <g id="flameWpWater" opacity="0" filter="url(#flameGlow)">
+                <ellipse cx="0" cy="-10" rx="7" ry="12" fill="#F97316" opacity="0.5"/>
+                <ellipse cx="0" cy="-12" rx="4" ry="7" fill="#FBBF24" opacity="0.6"/>
+              </g>
+              <!-- Bubbles (O₂ input) -->
+              <g id="o2Bubbles" opacity="0">
+                <circle cx="-8" cy="-15" r="3" fill="none" stroke="#7DD3FC" stroke-width="0.8"/>
+                <circle cx="5" cy="-25" r="2.5" fill="none" stroke="#7DD3FC" stroke-width="0.8"/>
+                <circle cx="-3" cy="-35" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8"/>
+              </g>
+              <!-- Result badge -->
+              <g id="badgeWpWater" opacity="0" transform="translate(0,-45)">
+                <rect x="-30" y="-8" width="60" height="16" rx="4" fill="#FEE2E2" stroke="#FECACA" stroke-width="1"/>
+                <text id="badgeWpWaterText" x="0" y="4" font-size="7" fill="#991B1B" text-anchor="middle" font-weight="700">不燃烧</text>
+              </g>
+            </g>
+
+            <text x="160" y="370" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">大烧杯</text>
+          </g>
+
+          <!-- Drop zone: thermometer on beaker -->
+          <rect id="dropThermo" class="drop-zone" x="80" y="30" width="320" height="100" rx="5"/>
+
+          <!-- Drop zone: O₂ on underwater white P -->
+          <rect id="dropO2" class="drop-zone" x="200" y="240" width="80" height="80" rx="5" opacity="0"/>
+
+          <!-- ===== COMPARISON TABLE (right side) ===== -->
+          <g transform="translate(440,40)">
+            <rect x="0" y="0" width="240" height="150" rx="10" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1.5"/>
+            <text x="120" y="22" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">燃烧条件对照表</text>
+            <!-- Header -->
+            <text x="20" y="44" font-size="8" fill="#64748B" font-weight="600">物质</text>
+            <text x="90" y="44" font-size="8" fill="#64748B" font-weight="600">可燃?</text>
+            <text x="140" y="44" font-size="8" fill="#64748B" font-weight="600">O₂?</text>
+            <text x="190" y="44" font-size="8" fill="#64748B" font-weight="600">着火点?</text>
+            <line x1="10" y1="50" x2="230" y2="50" stroke="#E2E8F0" stroke-width="1"/>
+            <!-- Row 1: White P on copper -->
+            <text x="20" y="68" font-size="8" fill="#0F172A">白磷(铜片)</text>
+            <text x="90" y="68" font-size="8" fill="#059669" font-weight="700">Y</text>
+            <text x="140" y="68" font-size="8" fill="#059669" font-weight="700">Y</text>
+            <text id="tableRow1Temp" x="190" y="68" font-size="8" fill="#64748B">—</text>
+            <text id="tableRow1Result" x="215" y="68" font-size="8" fill="#64748B" font-weight="700"></text>
+            <!-- Row 2: Red P on copper -->
+            <text x="20" y="90" font-size="8" fill="#0F172A">红磷(铜片)</text>
+            <text x="90" y="90" font-size="8" fill="#059669" font-weight="700">Y</text>
+            <text x="140" y="90" font-size="8" fill="#059669" font-weight="700">Y</text>
+            <text id="tableRow2Temp" x="190" y="90" font-size="8" fill="#64748B">—</text>
+            <text id="tableRow2Result" x="215" y="90" font-size="8" fill="#64748B" font-weight="700"></text>
+            <!-- Row 3: White P in water -->
+            <text x="20" y="112" font-size="8" fill="#0F172A">白磷(水中)</text>
+            <text x="90" y="112" font-size="8" fill="#059669" font-weight="700">Y</text>
+            <text id="tableRow3O2" x="140" y="112" font-size="8" fill="#DC2626" font-weight="700">N</text>
+            <text id="tableRow3Temp" x="190" y="112" font-size="8" fill="#64748B">—</text>
+            <text id="tableRow3Result" x="215" y="112" font-size="8" fill="#64748B" font-weight="700"></text>
+            <!-- Conclusion -->
+            <text id="tableConclusion" x="120" y="140" font-size="9" fill="#059669" text-anchor="middle" font-weight="700" opacity="0">三个条件缺一不可！</text>
+          </g>
+
+          <!-- Temp display -->
+          <g transform="translate(440,210)">
+            <rect x="0" y="0" width="240" height="50" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+            <text x="20" y="20" font-size="9" fill="#9A3412" font-weight="600">水温</text>
+            <text id="tempDisplay" x="120" y="38" font-size="22" fill="#F97316" text-anchor="middle" font-weight="800">25°C</text>
+          </g>
+
+          <!-- Canvas hint -->
+          <text id="canvasHint" x="350" y="450" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">拖温度计到烧杯 → 加热到 80°C</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
+
+      <div class="tool-card" id="toolThermo" data-action="thermo">
+        <svg viewBox="0 0 48 48"><rect x="20" y="4" width="8" height="36" rx="4" fill="#F0F9FF" stroke="#94A3B8" stroke-width="0.8"/><circle cx="24" cy="40" r="6" fill="#DC2626" stroke="#B91C1C" stroke-width="0.8"/><rect x="22" y="20" width="4" height="18" rx="2" fill="#DC2626"/></svg>
+        <div class="tool-name">温度计</div>
       </div>
 
-      <div class="panel-section">
-        <div class="section-title" id="stepTitle">第 1 步：对照观察</div>
-        <div class="step-desc" id="stepDesc">点击画布上的温度计，将水温从 25°C 升至 80°C，观察三组实验现象。</div>
+      <div class="tool-card" id="toolO2" data-action="o2">
+        <svg viewBox="0 0 48 48"><rect x="14" y="6" width="20" height="32" rx="4" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="1"/><rect x="18" y="2" width="12" height="6" rx="2" fill="#94A3B8"/><text x="24" y="26" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="700">O₂</text><path d="M20,38 Q24,44 28,38" fill="none" stroke="#0EA5E9" stroke-width="1"/></svg>
+        <div class="tool-name">氧气瓶</div>
       </div>
+    </div>
 
-      <!-- Observation checklist -->
-      <div class="panel-section">
-        <div class="section-title">观察记录</div>
-        <ul class="obs-list" id="obsList">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>白磷在铜片上燃烧（白烟）</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>红磷在铜片上不燃烧</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>白磷在水中不燃烧</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>分析对照变量（着火点）</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>分析对照变量（O₂接触）</li>
-          <li class="obs-item" id="obs6"><span class="obs-check"></span>通入O₂后水中白磷燃烧</li>
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:12px">
+        <div class="section-title">操作清单</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>加热水到 80°C</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>铜片上白磷燃烧</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>铜片上红磷不燃烧</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>水中白磷不燃烧</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>通入 O₂ 后水中白磷燃烧</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>得出结论：缺一不可</li>
         </ul>
       </div>
 
-      <!-- Equation -->
-      <div class="panel-section">
-        <div class="section-title">相关方程式</div>
-        <div class="chem-equation" id="formula1"></div>
-      </div>
-
-      <!-- Knowledge -->
-      <div class="panel-section">
-        <div class="section-title">知识拓展</div>
-        <div style="font-size:10px;color:#475569;line-height:1.6">
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">燃烧三条件</h3>
-          <p>1. 可燃物<br>2. 与氧气（助燃物）接触<br>3. 温度达到着火点<br><strong>三个条件同时满足</strong>才能燃烧，缺一不可。</p>
-
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">对照实验</h3>
-          <p>对照实验中<strong>只改变一个变量</strong>，其余条件相同。<br>白磷↔红磷：变量是着火点<br>铜片白磷↔水中白磷：变量是否接触O₂</p>
-
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">灭火原理</h3>
-          <p>燃烧条件反推灭火方法：<br>- 移走可燃物（森林防火隔离带）<br>- 隔绝氧气（盖灭、CO₂灭火器）<br>- 降温到着火点以下（水灭火）</p>
-
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考易错</h3>
-          <p style="color:#DC2626"><strong>不能说"降低着火点"！</strong><br>着火点是物质的固有属性，不能改变。灭火是"降温到着火点以下"，而不是降低着火点本身。</p>
+      <div>
+        <div class="section-title">燃烧三条件</div>
+        <div class="cond-grid">
+          <div class="cond-card" id="cond1" style="background:#FEF2F2;color:#991B1B">可燃物</div>
+          <div class="cond-card" id="cond2" style="background:#EFF6FF;color:#1E40AF">接触 O₂</div>
+          <div class="cond-card" id="cond3" style="background:#FFF7ED;color:#9A3412">达着火点</div>
         </div>
       </div>
 
-      <!-- Reset -->
-      <div class="panel-section">
-        <button class="step-btn" onclick="resetExperiment()">重做实验</button>
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px">微观 → 宏观</div>
+        <div id="microNote">分子获得足够能量 → 与 O₂ 剧烈反应 → 发光放热</div>
+      </div>
+
+      <div id="resultCard" style="display:none;background:#ECFDF5;border:1px solid #6EE7B7;border-radius:8px;padding:10px;margin:8px 0;text-align:center">
+        <div style="font-size:10px;font-weight:800;color:#059669;margin-bottom:4px">实验结论</div>
+        <div style="font-size:11px;color:#065F46">燃烧需同时满足三个条件：<br>可燃物 + 接触O₂ + 达到着火点<br><strong>缺一不可！</strong></div>
+      </div>
+
+      <button onclick="resetExperiment()" style="width:100%;margin-top:16px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
+    </div>
+  </div>
+
+  <!-- Knowledge -->
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>燃烧的条件</h4>
+        <p>1. 可燃物<br>2. 与氧气（或空气）接触<br>3. 温度达到着火点<br><strong>三者缺一不可，同时满足</strong></p>
+      </div>
+      <div class="knowledge-card">
+        <h4>着火点对比</h4>
+        <p>白磷：40°C（极易自燃）<br>红磷：240°C<br>木材：约 250°C<br>铁：约 1500°C（需纯 O₂）</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>灭火原理</h4>
+        <p>破坏任一条件即可灭火：<br>隔绝 O₂（盖灭）<br>降温至着火点以下（水浇）<br>移走可燃物（隔离带）</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>化学方程式</h4>
+        <div id="formula1" style="text-align:center;margin:6px 0"></div>
+        <p>白磷在空气中燃烧生成白色固体 P₂O₅</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>中考易错</h4>
+        <p style="color:#DC2626"><strong>着火点是物质固有属性，不能改变！</strong>只能改变温度，不能说"降低着火点"。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>实验改进</h4>
+        <p>用密封装置收集 P₂O₅ 白烟，防止污染空气。可改用铜片换成石棉网。</p>
       </div>
     </div>
   </div>
 </div>
 
-<script src="/shared/theme.js"></script>
 <script src="/shared/lab-utils.js"></script>
 <script src="/shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const svg = $('mainSvg');
 
-const STEPS = ['observe', 'analyze', 'extra'];
-const STEP_INFO = [
-  { title: '第 1 步：对照观察', desc: '点击画布上的温度计，将水温从 25°C 升至 80°C，观察三组实验现象。' },
-  { title: '第 2 步：分析变量', desc: '点击画布上的对照连线，分析每组实验的控制变量。' },
-  { title: '第 3 步：追加实验', desc: '点击画布上的导管，向水中白磷通入O₂，观察是否燃烧。' }
-];
+// ===== STATE =====
+const flags = { heated: false, heating: false, wpCopperBurning: false, wpCopperDone: false, redPDone: false, wpWaterShown: false, o2Added: false, wpWaterBurning: false, allDone: false };
+let temp = 25;
 
-const state = {
-  step: 0,
-  temp: 25,
-  heating: false,
-  wpBurning: false,
-  compare1Done: false,
-  compare2Done: false,
-  o2Started: false,
-  o2Timer: 0,
-  wpWaterBurning: false,
-  animFrame: null
+// ===== DROP TARGETS =====
+const DROP_TARGETS = {
+  thermo: ['dropThermo'],
+  o2: ['dropO2']
+};
+const ACTION_MAP = {
+  dropThermo: 'heat',
+  dropO2: 'addO2'
 };
 
-// Smoke pool
-const smokeParticles = [];
-document.querySelectorAll('.smoke-p').forEach(el => {
-  smokeParticles.push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 });
-});
-
-// O₂ bubble pool
-const o2Bubbles = [];
-document.querySelectorAll('.o2-bub').forEach(el => {
-  o2Bubbles.push({ el, active: false, x: 0, y: 0, vy: 0 });
-});
-
-// ===== HEATING =====
-function startHeating() {
-  if (state.step !== 0 || state.heating) return;
-  state.heating = true;
-  $('thermHint').textContent = '升温中...';
-
-  function tick() {
-    if (state.temp >= 80) {
-      state.heating = false;
-      $('thermHint').textContent = '';
-      // Show results
-      $('rpTopResult').setAttribute('opacity', '1');
-      $('wpWaterResult').setAttribute('opacity', '1');
-      checkObs('obs2');
-      checkObs('obs3');
-      $('wpTopTemp').textContent = '✓ 达到着火点';
-      $('wpTopTemp').setAttribute('fill', '#059669');
-      $('rpTopTemp').textContent = '✗ 80°C < 240°C';
-      $('rpTopTemp').setAttribute('fill', '#DC2626');
-      $('wpWaterTemp').textContent = '✓ 达到着火点';
-      $('wpWaterTemp').setAttribute('fill', '#059669');
-      setTimeout(() => advanceStep(), 800);
-      return;
-    }
-
-    state.temp += 0.5;
-    updateThermometer();
-
-    // White phosphorus ignites at 40°C
-    if (state.temp >= 40 && !state.wpBurning) {
-      state.wpBurning = true;
-      $('wpTopFlame').setAttribute('opacity', '1');
-      $('wpTopResult').setAttribute('opacity', '1');
-      $('wpTopTemp').textContent = '✓ 达到着火点';
-      $('wpTopTemp').setAttribute('fill', '#059669');
-      checkObs('obs1');
-      startSmoke();
-    }
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function updateThermometer() {
-  // Mercury column: 170 is 25°C, 50 is 100°C → 120px for 75°C range
-  const pxPerDeg = 120 / 75;
-  const height = 27 + (state.temp - 25) * pxPerDeg;
-  const y = 197 - height;
-  $('mercuryCol').setAttribute('y', y);
-  $('mercuryCol').setAttribute('height', height);
-  $('tempText').textContent = Math.round(state.temp) + '°C';
-}
-
-// ===== SMOKE ANIMATION =====
-let smokeRunning = false;
-function startSmoke() {
-  smokeRunning = true;
-  let timer = 0;
-  function tick() {
-    if (!smokeRunning) return;
-    timer++;
-    // Spawn smoke
-    if (timer % 6 === 0) {
-      const p = smokeParticles.find(p => !p.active);
-      if (p) {
-        p.active = true;
-        // Smoke origin: white phosphorus on copper (global coords ~180, 170)
-        p.x = 178 + (Math.random() - 0.5) * 10;
-        p.y = 155;
-        p.vy = -0.5 - Math.random() * 0.5;
-        p.life = 60 + Math.random() * 40;
-        p.el.setAttribute('opacity', '0.5');
-      }
-    }
-    // Animate
-    for (const p of smokeParticles) {
-      if (!p.active) continue;
-      p.y += p.vy;
-      p.x += (Math.random() - 0.5) * 0.8;
-      p.life--;
-      p.el.setAttribute('cx', p.x);
-      p.el.setAttribute('cy', p.y);
-      if (p.life <= 20) {
-        p.el.setAttribute('opacity', String(p.life / 40));
-      }
-      if (p.life <= 0) {
-        p.active = false;
-        p.el.setAttribute('opacity', '0');
-      }
-    }
-    // Flame flicker + phosphorus shrink
-    if (state.wpBurning) {
-      const s = 0.9 + Math.sin(timer * 0.3) * 0.1;
-      $('wpTopFlame').setAttribute('transform', 'scale(' + s + ')');
-      const r = parseFloat($('wpTop').getAttribute('r'));
-      if (r > 2) $('wpTop').setAttribute('r', (r - 0.02).toFixed(2));
-    }
-    if (state.wpWaterBurning) {
-      const s = 0.85 + Math.sin(timer * 0.35) * 0.15;
-      $('wpWaterFlame').setAttribute('transform', 'scale(' + s + ')');
-    }
-    state.animFrame = requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-// ===== COMPARISON LINES (Step 2) =====
-function clickCompare(n) {
-  if (state.step !== 1) return;
-  if (n === 1 && !state.compare1Done) {
-    state.compare1Done = true;
-    $('compareLine1').querySelector('.compare-line').setAttribute('opacity', '1');
-    $('ignitionCard').setAttribute('opacity', '1');
-    checkObs('obs4');
-  }
-  if (n === 2 && !state.compare2Done) {
-    state.compare2Done = true;
-    $('compareLine2').querySelector('.compare-line').setAttribute('opacity', '1');
-    checkObs('obs5');
-  }
-  if (state.compare1Done && state.compare2Done) {
-    $('triangleCard').setAttribute('opacity', '1');
-    $('contrastTable').setAttribute('opacity', '1');
-    setTimeout(() => advanceStep(), 600);
-  }
-}
-
-// ===== O₂ SUPPLY (Step 3) =====
-function startO2() {
-  if (state.step !== 2 || state.o2Started) return;
-  state.o2Started = true;
-  $('o2TubeClick').setAttribute('opacity', '0');
-  $('canvasHint').textContent = 'O₂ 通入中...';
-
-  let timer = 0;
-  const O2_DURATION = 300; // ~5 seconds at 60fps
-
-  function tick() {
-    timer++;
-
-    // Spawn O₂ bubbles around underwater white phosphorus
-    if (timer % 10 === 0 && timer < O2_DURATION) {
-      const b = o2Bubbles.find(b => !b.active);
-      if (b) {
-        b.active = true;
-        // Around underwater white phosphorus (global ~240, 270)
-        b.x = 238 + (Math.random() - 0.5) * 20;
-        b.y = 270 + (Math.random() - 0.5) * 10;
-        b.vy = -0.6 - Math.random() * 0.4;
-        b.el.setAttribute('opacity', '0.6');
-      }
-    }
-
-    // Animate bubbles
-    for (const b of o2Bubbles) {
-      if (!b.active) continue;
-      b.y += b.vy;
-      b.x += (Math.random() - 0.5) * 0.5;
-      b.el.setAttribute('cx', b.x);
-      b.el.setAttribute('cy', b.y);
-      if (b.y < 200) { // reached water surface
-        b.active = false;
-        b.el.setAttribute('opacity', '0');
-      }
-    }
-
-    // After 1.5s, underwater phosphorus catches fire
-    if (timer === 90 && !state.wpWaterBurning) {
-      state.wpWaterBurning = true;
-      $('wpWaterFlame').setAttribute('opacity', '1');
-      $('wpWaterResult').querySelector('rect').setAttribute('fill', '#DC2626');
-      $('wpWaterResultText').textContent = '燃烧!';
-      $('wpWaterO2').textContent = '✓ 通入O₂';
-      $('wpWaterO2').setAttribute('fill', '#059669');
-      $('contrastRow4').setAttribute('opacity', '1');
-      checkObs('obs6');
-      $('canvasHint').textContent = '水中白磷也能燃烧！三条件全满足';
-    }
-
-    // After 5s, O₂ stops → fire goes out
-    if (timer >= O2_DURATION) {
-      state.wpWaterBurning = false;
-      $('wpWaterFlame').setAttribute('opacity', '0');
-      $('canvasHint').textContent = '实验完成！O₂ 断供 → 火焰熄灭';
-      $('stepTitle').textContent = '实验完成';
-      $('stepDesc').textContent = '三个条件缺一不可。水中白磷通入 O₂ 后燃烧，证明 O₂ 是必要条件。';
-      return;
-    }
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-// ===== STATE MACHINE =====
-function advanceStep() {
-  if (state.step >= 2) return;
-  state.step++;
-  updateStepUI();
-
-  if (state.step === 1) {
-    // Show comparison lines
-    $('compareLine1').setAttribute('opacity', '1');
-    $('compareLine2').setAttribute('opacity', '1');
-    $('canvasHint').textContent = '点击对照连线 → 分析变量';
-  } else if (state.step === 2) {
-    // Show O₂ tube
-    $('o2Tube').setAttribute('opacity', '1');
-    $('o2TubeClick').setAttribute('opacity', '1');
-    $('canvasHint').textContent = '点击导管 → 向水中白磷通入 O₂';
-  }
-}
-
-function updateStepUI() {
-  const info = STEP_INFO[state.step];
-  $('stepTitle').textContent = info.title;
-  $('stepDesc').textContent = info.desc;
-  document.querySelectorAll('.step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < state.step) el.classList.add('done');
-    if (i === state.step) el.classList.add('active');
+// ===== DRAG =====
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
   });
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
+  });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) doAction(ACTION_MAP[hit]);
+    dragState = null;
+  });
+});
+
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
+}
+
+// ===== ACTIONS =====
+function doAction(action) {
+  switch(action) {
+    case 'heat':
+      if (flags.heated) { toast('已经加热过了'); return; }
+      startHeating(); break;
+    case 'addO2':
+      if (!flags.heated) { toast('先加热水到 80°C'); return; }
+      if (flags.o2Added) { toast('已经通入 O₂ 了'); return; }
+      addO2(); break;
+  }
+}
+
+function startHeating() {
+  flags.heating = true;
+  $('toolThermo').classList.add('used');
+  updateHint();
+
+  const start = performance.now();
+  const duration = 3000;
+  function tick(now) {
+    const t = Math.min(1, (now - start) / duration);
+    temp = 25 + t * 55; // 25 → 80
+    $('tempDisplay').textContent = Math.round(temp) + '°C';
+
+    // Show water
+    $('hotWater').setAttribute('opacity', String(Math.min(0.5, t)));
+    $('waterLabel').setAttribute('opacity', String(Math.min(1, t * 2)));
+
+    // At 40°C, white P on copper ignites
+    if (temp >= 40 && !flags.wpCopperBurning) {
+      flags.wpCopperBurning = true;
+      $('flameWpCopper').setAttribute('opacity', '1');
+      $('smokeWpCopper').setAttribute('opacity', '0.6');
+      checkObs('obs1');
+      checkObs('obs2');
+    }
+
+    // Show underwater white P
+    if (temp >= 50 && !flags.wpWaterShown) {
+      flags.wpWaterShown = true;
+      $('wpInWater').setAttribute('opacity', '1');
+      $('wpInWaterLabel').setAttribute('opacity', '1');
+      $('wpInWaterNote').setAttribute('opacity', '1');
+    }
+
+    // Flame flicker
+    if (flags.wpCopperBurning && !flags.wpCopperDone) {
+      const s = 0.85 + Math.sin(now * 0.01) * 0.15;
+      const flame = $('flameWpCopper');
+      flame.querySelector('ellipse').setAttribute('ry', String(14 * s));
+    }
+
+    if (t < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      flags.heated = true;
+      flags.heating = false;
+      // White P on copper done
+      flags.wpCopperDone = true;
+      $('wpOnCopper').setAttribute('r', '4');
+      $('wpOnCopper').setAttribute('fill', '#E5E7EB');
+      $('badgeWpCopper').setAttribute('opacity', '1');
+      // Red P: not burning (temp only 80, needs 240)
+      flags.redPDone = true;
+      $('badgeRedP').setAttribute('opacity', '1');
+      checkObs('obs3');
+      // Underwater white P: not burning (no O₂)
+      $('badgeWpWater').setAttribute('opacity', '1');
+      checkObs('obs4');
+      // Update table
+      $('tableRow1Temp').textContent = '80>40';
+      $('tableRow1Result').textContent = '燃烧';
+      $('tableRow1Result').setAttribute('fill', '#059669');
+      $('tableRow2Temp').textContent = '80<240';
+      $('tableRow2Result').textContent = '不燃';
+      $('tableRow2Result').setAttribute('fill', '#DC2626');
+      $('tableRow3Temp').textContent = '80>40';
+      $('tableRow3Result').textContent = '不燃';
+      $('tableRow3Result').setAttribute('fill', '#DC2626');
+      // Show O₂ drop zone
+      $('dropO2').setAttribute('opacity', '0.4');
+      // Fade flame
+      setTimeout(() => {
+        $('flameWpCopper').setAttribute('opacity', '0.2');
+        $('smokeWpCopper').setAttribute('opacity', '0.2');
+      }, 500);
+      updateHint();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+function addO2() {
+  flags.o2Added = true;
+  $('toolO2').classList.add('used');
+  $('o2Bubbles').setAttribute('opacity', '1');
+  $('tableRow3O2').textContent = 'Y';
+  $('tableRow3O2').setAttribute('fill', '#059669');
+  updateHint();
+
+  // Bubble animation then fire
+  let bubbleT = 0;
+  function bubbleAnim() {
+    bubbleT++;
+    const circles = $('o2Bubbles').querySelectorAll('circle');
+    circles.forEach((c, i) => {
+      const baseY = [-15, -25, -35][i];
+      c.setAttribute('cy', String(baseY - (bubbleT % 30) * 0.5));
+      c.setAttribute('opacity', String(0.3 + Math.sin(bubbleT * 0.1 + i) * 0.2));
+    });
+    if (bubbleT < 90) requestAnimationFrame(bubbleAnim);
+    else finishO2();
+  }
+  requestAnimationFrame(bubbleAnim);
+}
+
+function finishO2() {
+  // Water white P now burns
+  flags.wpWaterBurning = true;
+  $('flameWpWater').setAttribute('opacity', '1');
+  $('badgeWpWaterText').textContent = '燃烧!';
+  $('badgeWpWater').querySelector('rect').setAttribute('fill', '#DCFCE7');
+  $('badgeWpWater').querySelector('rect').setAttribute('stroke', '#86EFAC');
+  $('badgeWpWaterText').setAttribute('fill', '#166534');
+  checkObs('obs5');
+
+  $('tableRow3Result').textContent = '燃烧';
+  $('tableRow3Result').setAttribute('fill', '#059669');
+  $('tableConclusion').setAttribute('opacity', '1');
+
+  // Brief flame then complete
+  let ft = 0;
+  function flickWater() {
+    ft++;
+    if (ft < 90) {
+      const s = 0.85 + Math.sin(ft * 0.15) * 0.15;
+      $('flameWpWater').querySelector('ellipse').setAttribute('ry', String(12 * s));
+      requestAnimationFrame(flickWater);
+    } else {
+      $('flameWpWater').setAttribute('opacity', '0.2');
+      $('wpInWater').setAttribute('r', '4');
+      $('wpInWater').setAttribute('fill', '#E5E7EB');
+      flags.allDone = true;
+      checkObs('obs6');
+      $('resultCard').style.display = 'block';
+      $('microNote').textContent = '三条件同时满足 → 燃烧 / 缺任一条件 → 不燃烧';
+      $('canvasHint').textContent = '实验完成！';
+      // Highlight condition cards
+      ['cond1','cond2','cond3'].forEach(id => {
+        $(id).style.background = '#DCFCE7';
+        $(id).style.color = '#166534';
+        $(id).style.borderColor = '#86EFAC';
+      });
+    }
+  }
+  requestAnimationFrame(flickWater);
+}
+
+function updateHint() {
+  if (!flags.heated && !flags.heating) $('canvasHint').textContent = '拖温度计到烧杯 → 加热到 80°C';
+  else if (flags.heating) $('canvasHint').textContent = '加热中...观察白磷在 40°C 时变化';
+  else if (!flags.o2Added) $('canvasHint').textContent = '拖 O₂ 瓶到水中白磷 → 通入氧气';
+  else if (!flags.allDone) $('canvasHint').textContent = '水中白磷接触 O₂ 后...';
+}
+
+function toast(msg) {
+  $('canvasHint').textContent = msg;
+  setTimeout(updateHint, 2000);
 }
 
 function checkObs(id) {
   const el = $(id);
-  if (!el.classList.contains('checked')) {
+  if (el && !el.classList.contains('checked')) {
     el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
+    el.querySelector('.obs-check').textContent = '\u2713';
   }
 }
 
-// ===== RESET =====
 function resetExperiment() {
-  if (state.animFrame) cancelAnimationFrame(state.animFrame);
-  smokeRunning = false;
-
-  Object.assign(state, {
-    step: 0, temp: 25, heating: false, wpBurning: false,
-    compare1Done: false, compare2Done: false,
-    o2Started: false, o2Timer: 0, wpWaterBurning: false
+  Object.keys(flags).forEach(k => flags[k] = false);
+  temp = 25;
+  $('tempDisplay').textContent = '25°C';
+  $('hotWater').setAttribute('opacity', '0');
+  $('waterLabel').setAttribute('opacity', '0');
+  $('wpOnCopper').setAttribute('r', '10'); $('wpOnCopper').setAttribute('fill', '#FEFCE8');
+  $('wpInWater').setAttribute('opacity', '0'); $('wpInWaterLabel').setAttribute('opacity', '0'); $('wpInWaterNote').setAttribute('opacity', '0');
+  $('wpInWater').setAttribute('r', '10'); $('wpInWater').setAttribute('fill', '#FEFCE8');
+  ['flameWpCopper','smokeWpCopper','flameWpWater','o2Bubbles'].forEach(id => $(id).setAttribute('opacity', '0'));
+  ['badgeWpCopper','badgeRedP','badgeWpWater'].forEach(id => $(id).setAttribute('opacity', '0'));
+  $('badgeWpWaterText').textContent = '不燃烧';
+  $('badgeWpWater').querySelector('rect').setAttribute('fill', '#FEE2E2');
+  $('badgeWpWater').querySelector('rect').setAttribute('stroke', '#FECACA');
+  $('badgeWpWaterText').setAttribute('fill', '#991B1B');
+  $('tableRow1Temp').textContent = '—'; $('tableRow1Result').textContent = '';
+  $('tableRow2Temp').textContent = '—'; $('tableRow2Result').textContent = '';
+  $('tableRow3Temp').textContent = '—'; $('tableRow3Result').textContent = '';
+  $('tableRow3O2').textContent = 'N'; $('tableRow3O2').setAttribute('fill', '#DC2626');
+  $('tableConclusion').setAttribute('opacity', '0');
+  $('dropO2').setAttribute('opacity', '0');
+  $('resultCard').style.display = 'none';
+  $('microNote').textContent = '分子获得足够能量 → 与 O₂ 剧烈反应 → 发光放热';
+  $('canvasHint').textContent = '拖温度计到烧杯 → 加热到 80°C';
+  ['cond1','cond2','cond3'].forEach((id, i) => {
+    const colors = [['#FEF2F2','#991B1B'],['#EFF6FF','#1E40AF'],['#FFF7ED','#9A3412']][i];
+    $(id).style.background = colors[0]; $(id).style.color = colors[1]; $(id).style.borderColor = '#E2E8F0';
   });
-
-  // White phosphorus radius
-  $('wpTop').setAttribute('r', '8');
-
-  // Thermometer
-  $('mercuryCol').setAttribute('y', '170');
-  $('mercuryCol').setAttribute('height', '27');
-  $('tempText').textContent = '25°C';
-  $('thermHint').textContent = '点击升温';
-
-  // Flames
-  $('wpTopFlame').setAttribute('opacity', '0');
-  $('wpWaterFlame').setAttribute('opacity', '0');
-
-  // Results
-  ['wpTopResult', 'rpTopResult', 'wpWaterResult'].forEach(id => $(id).setAttribute('opacity', '0'));
-  $('wpWaterResult').querySelector('rect').setAttribute('fill', '#64748B');
-  $('wpWaterResultText').textContent = '不燃';
-
-  // Badges
-  $('wpTopTemp').textContent = '✗ 未达着火点';
-  $('wpTopTemp').setAttribute('fill', '#94A3B8');
-  $('rpTopTemp').textContent = '✗ 未达着火点';
-  $('rpTopTemp').setAttribute('fill', '#94A3B8');
-  $('wpWaterTemp').textContent = '✓ 达到着火点';
-  $('wpWaterTemp').setAttribute('fill', '#059669');
-  $('wpWaterO2').textContent = '✗ 无O₂';
-  $('wpWaterO2').setAttribute('fill', '#DC2626');
-
-  // Comparison lines
-  ['compareLine1', 'compareLine2'].forEach(id => $(id).setAttribute('opacity', '0'));
-
-  // Cards
-  ['triangleCard', 'ignitionCard', 'contrastTable'].forEach(id => $(id).setAttribute('opacity', '0'));
-  $('contrastRow4').setAttribute('opacity', '0');
-
-  // O₂ tube
-  $('o2Tube').setAttribute('opacity', '0');
-  $('o2TubeClick').setAttribute('opacity', '0');
-
-  // Particles
-  smokeParticles.forEach(p => { p.active = false; p.el.setAttribute('opacity', '0'); });
-  o2Bubbles.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
-
-  // Observations
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-
-  // UI
-  $('canvasHint').textContent = '点击温度计升温 → 观察三组实验';
-  updateStepUI();
+  ['toolThermo','toolO2'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
 
-// ===== KATEX =====
+// KaTeX
 function renderFormulas() {
   if (!window.katex) return;
-  try {
-    katex.render('4\\text{P} + 5\\text{O}_2 \\xrightarrow{\\text{点燃}} 2\\text{P}_2\\text{O}_5', $('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {}
+  try { katex.render('4P + 5O_2 \\xrightarrow{\\text{点燃}} 2P_2O_5', $('formula1'), { throwOnError: false, displayMode: true }); } catch(e) {}
 }
-function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
-}
+function tryKatex(n) { if (window.katex) { renderFormulas(); return; } if ((n||0) < 20) setTimeout(() => tryKatex((n||0)+1), 500); }
 tryKatex();
 </script>
+<script src="/shared/theme.js"></script>
 </body>
 </html>
