@@ -3,844 +3,563 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>电解水实验 - 虚拟实验室</title>
+<title>电解水 - 虚拟实验室</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <link rel="stylesheet" href="/shared/chem-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
 :root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
-.clickable{cursor:pointer;transition:stroke .15s,stroke-width .15s,filter .15s}
-.clickable:hover{stroke:var(--lab-accent);stroke-width:2;filter:brightness(1.08)}
-.wire-endpoint{cursor:pointer;transition:fill .2s,r .2s}.wire-endpoint:hover{r:8;fill:#059669}
-.reading-option{cursor:pointer;transition:fill .15s,stroke .15s}
-.reading-option:hover{fill:#E0F2FE;stroke:#0284C7;stroke-width:1.5}
-html[data-theme="dark"] #svgBg{fill:#0F172A}
-html[data-theme="dark"] #canvasHint{fill:#7DD3FC}
-html[data-theme="dark"] .reading-option rect{fill:#1E293B;stroke:#475569}
-html[data-theme="dark"] .reading-option:hover rect{fill:#0C4A6E;stroke:#0284C7}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;font-size:10px;color:#0D9488}
+.data-row{display:flex;gap:6px;margin:8px 0}
+.data-card{flex:1;border-radius:8px;padding:8px;text-align:center}
+.data-card.h2{background:#EFF6FF;border:1px solid #93C5FD}
+.data-card.o2{background:#FEF2F2;border:1px solid #FCA5A5}
+.data-val{font-size:18px;font-weight:900}
+.data-label{font-size:8px;color:#64748B;margin-top:2px}
 </style>
 </head>
 <body>
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-header">
-      <h1 class="exp-title">电解水实验</h1>
-      <div class="exp-subtitle">探究水的组成 — 正氧负氢，氢二氧一</div>
-    </div>
-    <div class="canvas-wrapper" id="canvasMain">
-      <svg id="mainSvg" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect id="svgBg" width="720" height="400" fill="#F8FAFC"/>
-        <defs>
-          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.7"/>
-          </linearGradient>
-          <linearGradient id="h2Grad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.5"/>
-          </linearGradient>
-          <linearGradient id="o2Grad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#FCA5A5" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#EF4444" stop-opacity="0.5"/>
-          </linearGradient>
-          <filter id="flameBlur"><feGaussianBlur stdDeviation="2"/></filter>
-          <filter id="glowBlue"><feGaussianBlur stdDeviation="3"/><feComposite in="SourceGraphic"/></filter>
-        </defs>
-
-        <!-- ===== HOFFMANN APPARATUS ===== -->
-        <!-- Left tube (cathode, H₂) -->
-        <g id="leftTubeGroup" transform="translate(200,20)">
-          <rect id="leftTube" x="0" y="0" width="65" height="290" rx="6" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
-          <line x1="3" y1="10" x2="3" y2="280" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <!-- Scale markings 0-20mL -->
-          <g id="leftScale" font-size="5" fill="#94A3B8" text-anchor="end">
-            <line x1="5" y1="20" x2="15" y2="20" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="22">20</text>
-            <line x1="5" y1="46" x2="12" y2="46" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="5" y1="72" x2="15" y2="72" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="74">15</text>
-            <line x1="5" y1="98" x2="12" y2="98" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="5" y1="124" x2="15" y2="124" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="126">10</text>
-            <line x1="5" y1="150" x2="12" y2="150" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="5" y1="176" x2="15" y2="176" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="178">5</text>
-            <line x1="5" y1="202" x2="12" y2="202" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="5" y1="228" x2="15" y2="228" stroke="#CBD5E1" stroke-width="0.5"/><text x="48" y="230">0</text>
-          </g>
-          <!-- Gas column (H₂) -->
-          <rect id="h2Gas" x="4" y="238" width="57" height="0" rx="3" fill="url(#h2Grad)"/>
-          <!-- Water surface in left tube -->
-          <rect id="leftWater" x="4" y="238" width="57" height="50" rx="3" fill="url(#waterGrad)"/>
-          <!-- Electrode (cathode) -->
-          <rect id="cathode" x="18" y="275" width="30" height="10" rx="2" fill="#4B5563" stroke="#374151" stroke-width="0.8"/>
-          <!-- Valve at top -->
-          <g id="leftValve" class="clickable" transform="translate(18,-10)" onclick="testGas('H2')">
-            <rect x="0" y="0" width="30" height="10" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.8"/>
-            <text class="svg-hint" x="15" y="-6" text-anchor="middle" opacity="0" id="leftValveHint">点击验气</text>
-          </g>
-          <text x="33" y="302" font-size="9" fill="#3B82F6" text-anchor="middle" font-weight="700">负极 (−)</text>
-          <text x="33" y="316" font-size="10" fill="#3B82F6" text-anchor="middle" font-weight="800" id="h2Label">H₂</text>
-        </g>
-
-        <!-- Right tube (anode, O₂) -->
-        <g id="rightTubeGroup" transform="translate(420,20)">
-          <rect id="rightTube" x="0" y="0" width="65" height="290" rx="6" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.5"/>
-          <line x1="3" y1="10" x2="3" y2="280" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <!-- Scale markings 0-20mL -->
-          <g id="rightScale" font-size="5" fill="#94A3B8">
-            <line x1="35" y1="20" x2="45" y2="20" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="22">20</text>
-            <line x1="38" y1="46" x2="45" y2="46" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="35" y1="72" x2="45" y2="72" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="74">15</text>
-            <line x1="38" y1="98" x2="45" y2="98" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="35" y1="124" x2="45" y2="124" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="126">10</text>
-            <line x1="38" y1="150" x2="45" y2="150" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="35" y1="176" x2="45" y2="176" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="178">5</text>
-            <line x1="38" y1="202" x2="45" y2="202" stroke="#CBD5E1" stroke-width="0.3"/>
-            <line x1="35" y1="228" x2="45" y2="228" stroke="#CBD5E1" stroke-width="0.5"/><text x="2" y="230">0</text>
-          </g>
-          <!-- Gas column (O₂) -->
-          <rect id="o2Gas" x="4" y="238" width="57" height="0" rx="3" fill="url(#o2Grad)"/>
-          <!-- Water surface in right tube -->
-          <rect id="rightWater" x="4" y="238" width="57" height="50" rx="3" fill="url(#waterGrad)"/>
-          <!-- Electrode (anode) -->
-          <rect id="anode" x="18" y="275" width="30" height="10" rx="2" fill="#4B5563" stroke="#374151" stroke-width="0.8"/>
-          <!-- Valve at top -->
-          <g id="rightValve" class="clickable" transform="translate(18,-10)" onclick="testGas('O2')">
-            <rect x="0" y="0" width="30" height="10" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.8"/>
-            <text class="svg-hint" x="15" y="-6" text-anchor="middle" opacity="0" id="rightValveHint">点击验气</text>
-          </g>
-          <text x="33" y="302" font-size="9" fill="#EF4444" text-anchor="middle" font-weight="700">正极 (+)</text>
-          <text x="33" y="316" font-size="10" fill="#EF4444" text-anchor="middle" font-weight="800" id="o2Label">O₂</text>
-        </g>
-
-        <!-- Bottom connecting tube -->
-        <path id="connectTube" d="M232,308 L232,345 Q232,365 255,365 L425,365 Q448,365 448,345 L448,308" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
-        <!-- Water in connecting tube -->
-        <path id="connectWater" d="M234,310 L234,343 Q234,363 255,363 L425,363 Q446,363 446,343 L446,310" fill="url(#waterGrad)" stroke="none"/>
-
-        <!-- ===== DC POWER SUPPLY ===== -->
-        <g id="powerGroup" transform="translate(290,372)">
-          <rect x="0" y="0" width="110" height="45" rx="8" fill="#1E293B" stroke="#475569" stroke-width="1.2"/>
-          <text x="55" y="16" font-size="9" fill="#E2E8F0" text-anchor="middle" font-weight="700">直流电源</text>
-          <!-- Power switch -->
-          <g id="powerSwitch" class="clickable" transform="translate(35,22)" onclick="togglePower()">
-            <rect x="0" y="0" width="36" height="16" rx="8" fill="#334155" stroke="#475569" stroke-width="0.8"/>
-            <circle id="switchKnob" cx="8" cy="8" r="6" fill="#94A3B8"/>
-            <text id="switchLabel" x="50" y="13" font-size="7" fill="#94A3B8">OFF</text>
-          </g>
-          <!-- Terminals -->
-          <circle id="posTerminal" cx="98" cy="12" r="7" fill="#EF4444" stroke="#DC2626" stroke-width="1"/>
-          <text x="98" y="4" font-size="7" fill="#EF4444" text-anchor="middle" font-weight="800">+</text>
-          <circle id="negTerminal" cx="12" cy="12" r="7" fill="#3B82F6" stroke="#2563EB" stroke-width="1"/>
-          <text x="12" y="4" font-size="7" fill="#3B82F6" text-anchor="middle" font-weight="800">−</text>
-        </g>
-
-        <!-- ===== WIRES (initially disconnected) ===== -->
-        <!-- Negative wire (black): power neg → left tube cathode -->
-        <line id="wireNeg" x1="302" y1="384" x2="302" y2="384" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
-        <circle id="wireNegEnd" class="wire-endpoint" cx="302" cy="384" r="9" fill="#3B82F6" stroke="#1E293B" stroke-width="1.5" onclick="connectWire('neg')"/>
-
-        <!-- Positive wire (red): power pos → right tube anode -->
-        <line id="wirePos" x1="388" y1="384" x2="388" y2="384" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
-        <circle id="wirePosEnd" class="wire-endpoint" cx="388" cy="384" r="9" fill="#EF4444" stroke="#DC2626" stroke-width="1.5" onclick="connectWire('pos')"/>
-
-        <!-- Connection labels -->
-        <text id="wireNegLabel" x="270" y="383" font-size="8" fill="#3B82F6" font-weight="700">负极导线</text>
-        <text id="wirePosLabel" x="395" y="383" font-size="8" fill="#EF4444" font-weight="700">正极导线</text>
-
-        <!-- ===== BUBBLE CONTAINERS (pre-allocated 30 each) ===== -->
-        <g id="leftBubbles" clip-path="url(#leftClip)">
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.8" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-          <circle class="bub-l" cx="0" cy="0" r="2" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="1.5" fill="#BFDBFE" opacity="0"/><circle class="bub-l" cx="0" cy="0" r="2.2" fill="#BFDBFE" opacity="0"/>
-        </g>
-        <g id="rightBubbles" clip-path="url(#rightClip)">
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.8" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-          <circle class="bub-r" cx="0" cy="0" r="2" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="1.5" fill="#FECACA" opacity="0"/><circle class="bub-r" cx="0" cy="0" r="2.2" fill="#FECACA" opacity="0"/>
-        </g>
-        <defs>
-          <clipPath id="leftClip"><rect x="204" y="20" width="57" height="270"/></clipPath>
-          <clipPath id="rightClip"><rect x="424" y="20" width="57" height="270"/></clipPath>
-        </defs>
-
-        <!-- ===== VOLUME RATIO CARD (shown after read) ===== -->
-        <g id="ratioCard" transform="translate(285,120)" opacity="0">
-          <rect x="0" y="0" width="110" height="70" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
-          <text x="55" y="20" font-size="8" fill="#92400E" text-anchor="middle" font-weight="700">体积比</text>
-          <text id="ratioText" x="55" y="48" font-size="22" fill="#0F172A" text-anchor="middle" font-weight="900">2 : 1</text>
-          <text x="55" y="63" font-size="6" fill="#059669" text-anchor="middle" font-weight="600">正氧负氢 ✓</text>
-        </g>
-
-        <!-- ===== READING OVERLAY (shown in Step 3) ===== -->
-        <g id="readingOverlay" opacity="0" pointer-events="none">
-          <rect x="140" y="40" width="400" height="320" rx="12" fill="#F8FAFC" stroke="#0284C7" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.1))"/>
-          <text x="340" y="70" font-size="10" fill="#0F172A" text-anchor="middle" font-weight="700">读取量气管体积</text>
-
-          <!-- Enlarged left tube -->
-          <g transform="translate(170,85)">
-            <rect x="0" y="0" width="60" height="200" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
-            <rect id="readH2Gas" x="3" y="0" width="54" height="0" rx="2" fill="url(#h2Grad)"/>
-            <rect id="readH2Water" x="3" y="100" width="54" height="98" rx="2" fill="url(#waterGrad)"/>
-            <text x="30" y="215" font-size="8" fill="#3B82F6" text-anchor="middle" font-weight="700">负极 H₂</text>
-            <!-- Scale labels for reading -->
-            <g font-size="6" fill="#64748B" text-anchor="end">
-              <line x1="5" y1="5" x2="15" y2="5" stroke="#94A3B8" stroke-width="0.5"/><text x="58" y="8">20</text>
-              <line x1="5" y1="55" x2="15" y2="55" stroke="#94A3B8" stroke-width="0.5"/><text x="58" y="58">15</text>
-              <line x1="5" y1="105" x2="15" y2="105" stroke="#94A3B8" stroke-width="0.5"/><text x="58" y="108">10</text>
-              <line x1="5" y1="155" x2="15" y2="155" stroke="#94A3B8" stroke-width="0.5"/><text x="58" y="158">5</text>
-              <line x1="5" y1="200" x2="15" y2="200" stroke="#94A3B8" stroke-width="0.5"/><text x="58" y="203">0</text>
-            </g>
-            <!-- Reading line indicator -->
-            <line id="readH2Line" x1="0" y1="100" x2="60" y2="100" stroke="#059669" stroke-width="1" stroke-dasharray="3,2"/>
-          </g>
-
-          <!-- Enlarged right tube -->
-          <g transform="translate(360,85)">
-            <rect x="0" y="0" width="60" height="200" rx="4" fill="rgba(219,234,254,0.08)" stroke="#93C5FD" stroke-width="1.2"/>
-            <rect id="readO2Gas" x="3" y="0" width="54" height="0" rx="2" fill="url(#o2Grad)"/>
-            <rect id="readO2Water" x="3" y="150" width="54" height="48" rx="2" fill="url(#waterGrad)"/>
-            <text x="30" y="215" font-size="8" fill="#EF4444" text-anchor="middle" font-weight="700">正极 O₂</text>
-            <g font-size="6" fill="#64748B">
-              <line x1="45" y1="5" x2="55" y2="5" stroke="#94A3B8" stroke-width="0.5"/><text x="2" y="8">20</text>
-              <line x1="45" y1="55" x2="55" y2="55" stroke="#94A3B8" stroke-width="0.5"/><text x="2" y="58">15</text>
-              <line x1="45" y1="105" x2="55" y2="105" stroke="#94A3B8" stroke-width="0.5"/><text x="2" y="108">10</text>
-              <line x1="45" y1="155" x2="55" y2="155" stroke="#94A3B8" stroke-width="0.5"/><text x="2" y="158">5</text>
-              <line x1="45" y1="200" x2="55" y2="200" stroke="#94A3B8" stroke-width="0.5"/><text x="2" y="203">0</text>
-            </g>
-            <line id="readO2Line" x1="0" y1="150" x2="60" y2="150" stroke="#059669" stroke-width="1" stroke-dasharray="3,2"/>
-          </g>
-
-          <!-- Reading options (3 choices) -->
-          <g id="readingChoices" transform="translate(170,295)">
-            <text x="170" y="-5" font-size="8" fill="#0F172A" text-anchor="middle" font-weight="600">请选择负极 H₂ 体积读数：</text>
-            <g id="readOpt1" class="reading-option" onclick="selectReading(0)">
-              <rect x="0" y="0" width="100" height="28" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
-              <text id="readOptText1" x="50" y="18" font-size="10" fill="#0F172A" text-anchor="middle" font-weight="600"></text>
-            </g>
-            <g id="readOpt2" class="reading-option" onclick="selectReading(1)">
-              <rect x="120" y="0" width="100" height="28" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
-              <text id="readOptText2" x="170" y="18" font-size="10" fill="#0F172A" text-anchor="middle" font-weight="600"></text>
-            </g>
-            <g id="readOpt3" class="reading-option" onclick="selectReading(2)">
-              <rect x="240" y="0" width="100" height="28" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
-              <text id="readOptText3" x="290" y="18" font-size="10" fill="#0F172A" text-anchor="middle" font-weight="600"></text>
-            </g>
-          </g>
-          <text id="readFeedback" x="340" y="340" font-size="8" text-anchor="middle" fill="#059669" font-weight="600" opacity="0"></text>
-        </g>
-
-        <!-- ===== GAS TEST FLAME (H₂) ===== -->
-        <g id="h2Flame" opacity="0" transform="translate(233,8)">
-          <ellipse cx="0" cy="0" rx="6" ry="14" fill="#60A5FA" opacity="0.7" filter="url(#flameBlur)"/>
-          <ellipse cx="0" cy="2" rx="3" ry="8" fill="#BFDBFE" opacity="0.8"/>
-          <text x="15" y="5" font-size="6" fill="#2563EB" font-weight="700">H₂ 燃烧！</text>
-          <text x="15" y="14" font-size="5" fill="#3B82F6">淡蓝色火焰</text>
-        </g>
-
-        <!-- ===== GAS TEST SPLINT (O₂) ===== -->
-        <g id="o2Splint" opacity="0" transform="translate(453,8)">
-          <rect x="-2" y="-5" width="4" height="25" rx="1" fill="#92400E"/>
-          <ellipse cx="0" cy="-5" rx="5" ry="8" fill="#F97316" opacity="0.8" filter="url(#flameBlur)"/>
-          <ellipse cx="0" cy="-3" rx="3" ry="5" fill="#FEF3C7" opacity="0.7"/>
-          <text x="15" y="5" font-size="6" fill="#EA580C" font-weight="700">木条复燃！</text>
-          <text x="15" y="14" font-size="5" fill="#F97316">O₂ 助燃</text>
-        </g>
-
-        <!-- Step hint -->
-        <text id="canvasHint" x="340" y="410" font-size="8" fill="#0284C7" text-anchor="middle" font-weight="600">点击导线端点连接电路</text>
-      </svg>
-    </div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">电解水</strong>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Step bar -->
-      <div class="panel-section">
-        <div class="section-title">实验步骤</div>
-        <div class="step-bar" id="stepBar">
-          <div class="step-item active" data-step="0"><span class="step-num">1</span>连线</div>
-          <div class="step-item" data-step="1"><span class="step-num">2</span>通电</div>
-          <div class="step-item" data-step="2"><span class="step-num">3</span>读数</div>
-          <div class="step-item" data-step="3"><span class="step-num">4</span>验气</div>
-        </div>
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5"/>
+            </linearGradient>
+            <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
+          </defs>
+
+          <!-- ===== DC POWER SOURCE ===== -->
+          <g transform="translate(280,20)">
+            <rect x="0" y="0" width="140" height="55" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+            <text x="70" y="18" font-size="9" fill="#475569" text-anchor="middle" font-weight="700">DC 电源</text>
+            <!-- Switch -->
+            <rect id="switchBody" x="50" y="25" width="40" height="18" rx="9" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1" cursor="pointer"/>
+            <circle id="switchKnob" cx="62" cy="34" r="7" fill="#fff" stroke="#94A3B8" stroke-width="1"/>
+            <text id="switchLabel" x="70" y="53" font-size="6" fill="#94A3B8" text-anchor="middle">OFF</text>
+            <!-- Positive terminal (red) -->
+            <circle cx="20" cy="34" r="8" fill="#FEE2E2" stroke="#EF4444" stroke-width="1.5"/>
+            <text x="20" y="37" font-size="8" fill="#EF4444" text-anchor="middle" font-weight="900">+</text>
+            <!-- Negative terminal (blue) -->
+            <circle cx="120" cy="34" r="8" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1.5"/>
+            <text x="120" y="37" font-size="8" fill="#3B82F6" text-anchor="middle" font-weight="900">−</text>
+
+            <!-- Drop zones for wires -->
+            <rect id="dropRed" class="drop-zone" x="5" y="20" width="30" height="30" rx="5"/>
+            <rect id="dropBlack" class="drop-zone" x="105" y="20" width="30" height="30" rx="5"/>
+          </g>
+
+          <!-- Wires (hidden initially) -->
+          <path id="wireRed" d="M300,54 L300,100 Q300,120 280,120 L200,120 L200,160" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="8,4" opacity="0"/>
+          <path id="wireBlack" d="M400,54 L400,100 Q400,120 420,120 L500,120 L500,160" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-dasharray="8,4" opacity="0"/>
+
+          <!-- ===== WATER TROUGH ===== -->
+          <g transform="translate(100,300)">
+            <path d="M6,0 L0,6 L0,100 Q0,112 10,112 L490,112 Q500,112 500,100 L500,6 L494,0 Z" fill="#B8D4EA" stroke="none"/>
+            <path d="M6,0 L0,6 L0,100 Q0,112 10,112 L490,112 Q500,112 500,100 L500,6 L494,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="4" y="20" width="492" height="88" rx="4" fill="url(#waterGrad)"/>
+            <rect x="4" y="20" width="12" height="88" rx="6" fill="url(#hlGrad)" opacity="0.6"/>
+          </g>
+
+          <!-- ===== NEGATIVE TUBE (H₂ — left, larger) ===== -->
+          <g transform="translate(150,140)">
+            <rect x="0" y="0" width="60" height="200" rx="6" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="3" y="5" width="8" height="180" rx="4" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- Water level (drops as gas collects) -->
+            <rect id="h2Water" x="2" y="10" width="56" height="185" rx="4" fill="url(#waterGrad)"/>
+            <!-- Gas label -->
+            <text id="h2Label" x="30" y="90" font-size="18" fill="#3B82F6" text-anchor="middle" font-weight="900" opacity="0">H₂</text>
+            <!-- Scale marks -->
+            <line x1="52" y1="50" x2="58" y2="50" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="53" font-size="5" fill="#94A3B8">8</text>
+            <line x1="52" y1="80" x2="58" y2="80" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="83" font-size="5" fill="#94A3B8">6</text>
+            <line x1="52" y1="110" x2="58" y2="110" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="113" font-size="5" fill="#94A3B8">4</text>
+            <line x1="52" y1="140" x2="58" y2="140" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="143" font-size="5" fill="#94A3B8">2</text>
+            <!-- Electrode -->
+            <rect x="22" y="160" width="16" height="30" rx="3" fill="#64748B" stroke="#475569" stroke-width="0.5"/>
+            <text x="30" y="210" font-size="7" fill="#3B82F6" text-anchor="middle" font-weight="700">负极(−)</text>
+
+            <!-- Bubbles pool -->
+            <g id="h2Bubbles">
+              <circle class="h2b" cx="0" cy="0" r="2" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+              <circle class="h2b" cx="0" cy="0" r="2.5" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+              <circle class="h2b" cx="0" cy="0" r="1.5" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+              <circle class="h2b" cx="0" cy="0" r="2" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+              <circle class="h2b" cx="0" cy="0" r="2.5" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+              <circle class="h2b" cx="0" cy="0" r="2" fill="none" stroke="#93C5FD" stroke-width="0.8" opacity="0"/>
+            </g>
+
+            <!-- Drop zone: test H₂ -->
+            <rect id="dropTestH2" class="drop-zone" x="-5" y="-10" width="70" height="40" rx="5" opacity="0"/>
+          </g>
+
+          <!-- ===== POSITIVE TUBE (O₂ — right, smaller) ===== -->
+          <g transform="translate(400,140)">
+            <rect x="0" y="0" width="60" height="200" rx="6" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="3" y="5" width="8" height="180" rx="4" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- Water level -->
+            <rect id="o2Water" x="2" y="10" width="56" height="185" rx="4" fill="url(#waterGrad)"/>
+            <!-- Gas label -->
+            <text id="o2Label" x="30" y="90" font-size="18" fill="#EF4444" text-anchor="middle" font-weight="900" opacity="0">O₂</text>
+            <!-- Scale marks -->
+            <line x1="52" y1="80" x2="58" y2="80" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="83" font-size="5" fill="#94A3B8">4</text>
+            <line x1="52" y1="110" x2="58" y2="110" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="113" font-size="5" fill="#94A3B8">3</text>
+            <line x1="52" y1="140" x2="58" y2="140" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="143" font-size="5" fill="#94A3B8">2</text>
+            <line x1="52" y1="170" x2="58" y2="170" stroke="#94A3B8" stroke-width="0.5"/><text x="62" y="173" font-size="5" fill="#94A3B8">1</text>
+            <!-- Electrode -->
+            <rect x="22" y="160" width="16" height="30" rx="3" fill="#64748B" stroke="#475569" stroke-width="0.5"/>
+            <text x="30" y="210" font-size="7" fill="#EF4444" text-anchor="middle" font-weight="700">正极(+)</text>
+
+            <!-- Bubbles pool -->
+            <g id="o2Bubbles">
+              <circle class="o2b" cx="0" cy="0" r="1.5" fill="none" stroke="#FCA5A5" stroke-width="0.8" opacity="0"/>
+              <circle class="o2b" cx="0" cy="0" r="2" fill="none" stroke="#FCA5A5" stroke-width="0.8" opacity="0"/>
+              <circle class="o2b" cx="0" cy="0" r="1.5" fill="none" stroke="#FCA5A5" stroke-width="0.8" opacity="0"/>
+              <circle class="o2b" cx="0" cy="0" r="2" fill="none" stroke="#FCA5A5" stroke-width="0.8" opacity="0"/>
+            </g>
+
+            <!-- Drop zone: test O₂ -->
+            <rect id="dropTestO2" class="drop-zone" x="-5" y="-10" width="70" height="40" rx="5" opacity="0"/>
+          </g>
+
+          <!-- Volume ratio annotation (shown after collection) -->
+          <g id="ratioAnnotation" opacity="0">
+            <text x="350" y="155" font-size="10" fill="#475569" text-anchor="middle" font-weight="700">V(H₂) : V(O₂) = 2 : 1</text>
+            <line x1="210" y1="148" x2="310" y2="148" stroke="#3B82F6" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="390" y1="148" x2="460" y2="148" stroke="#EF4444" stroke-width="1" stroke-dasharray="4,3"/>
+          </g>
+
+          <!-- Mnemonic card -->
+          <g transform="translate(240,400)">
+            <rect x="0" y="0" width="220" height="30" rx="6" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+            <text x="110" y="13" font-size="8" fill="#9A3412" text-anchor="middle" font-weight="700">口诀：正氧负氢 氢二氧一</text>
+            <text x="110" y="24" font-size="6" fill="#C2410C" text-anchor="middle">正极产O₂ 负极产H₂ H₂体积是O₂的2倍</text>
+          </g>
+
+          <!-- Splint test glow -->
+          <g id="splintH2" opacity="0" transform="translate(180,125)">
+            <line x1="0" y1="0" x2="0" y2="20" stroke="#A16207" stroke-width="1.5" stroke-linecap="round"/>
+            <g filter="url(#flameGlow)"><ellipse cx="0" cy="-6" rx="5" ry="8" fill="#FBBF24" opacity="0.7"/></g>
+            <text x="10" y="5" font-size="6" fill="#059669" font-weight="700">爆鸣!</text>
+          </g>
+          <g id="splintO2" opacity="0" transform="translate(430,125)">
+            <line x1="0" y1="0" x2="0" y2="20" stroke="#A16207" stroke-width="1.5" stroke-linecap="round"/>
+            <g filter="url(#flameGlow)"><ellipse cx="0" cy="-6" rx="6" ry="10" fill="#F97316" opacity="0.7"/></g>
+            <text x="10" y="5" font-size="6" fill="#059669" font-weight="700">复燃!</text>
+          </g>
+
+          <text id="canvasHint" x="350" y="450" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">连接红导线到正极（+）</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
+
+      <div class="tool-card" id="toolRed" data-action="red">
+        <svg viewBox="0 0 48 48"><line x1="12" y1="38" x2="36" y2="10" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="38" r="4" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/><circle cx="36" cy="10" r="4" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/></svg>
+        <div class="tool-name">红导线</div>
       </div>
 
-      <div class="panel-section">
-        <div class="section-title" id="stepTitle">第 1 步：连接电路</div>
-        <div class="step-desc" id="stepDesc">点击画布上的导线端点，将电源与电极连接（红正黑负）。</div>
+      <div class="tool-card" id="toolBlack" data-action="black">
+        <svg viewBox="0 0 48 48"><line x1="12" y1="38" x2="36" y2="10" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="38" r="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/><circle cx="36" cy="10" r="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/></svg>
+        <div class="tool-name">黑导线</div>
       </div>
 
-      <!-- Data display -->
-      <div class="panel-section" id="dataPanel" style="display:none">
-        <div class="section-title">实验数据</div>
-        <div style="display:flex;gap:12px;margin-bottom:6px">
-          <div style="flex:1;text-align:center;padding:6px;background:#EFF6FF;border-radius:6px">
-            <div style="font-size:8px;color:#3B82F6">负极 H₂</div>
-            <div style="font-size:16px;font-weight:800;color:#1E40AF" id="h2Volume">0.0 mL</div>
-          </div>
-          <div style="flex:1;text-align:center;padding:6px;background:#FEF2F2;border-radius:6px">
-            <div style="font-size:8px;color:#EF4444">正极 O₂</div>
-            <div style="font-size:16px;font-weight:800;color:#991B1B" id="o2Volume">0.0 mL</div>
-          </div>
-        </div>
-        <div style="text-align:center;padding:4px;background:#FEF9C3;border-radius:6px">
-          <span style="font-size:8px;color:#92400E">体积比 V(H₂):V(O₂) = </span>
-          <span style="font-size:14px;font-weight:800;color:#0F172A" id="ratioDisplay">—</span>
-        </div>
+      <div class="tool-card" id="toolSplint" data-action="splint">
+        <svg viewBox="0 0 48 48"><line x1="24" y1="40" x2="24" y2="14" stroke="#A16207" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="12" r="3" fill="#F97316" opacity="0.5"/><text x="24" y="10" font-size="5" fill="#DC2626" text-anchor="middle">火</text></svg>
+        <div class="tool-name">燃着木条</div>
       </div>
+    </div>
 
-      <!-- Observation checklist -->
-      <div class="panel-section">
-        <div class="section-title">观察记录</div>
-        <ul class="obs-list" id="obsList">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>电路连接完成</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>两极均有气泡产生</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>负极气泡多于正极</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>体积比约 2:1</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>H₂ 可燃（淡蓝色火焰）</li>
-          <li class="obs-item" id="obs6"><span class="obs-check"></span>O₂ 助燃（木条复燃）</li>
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:12px">
+        <div class="section-title">操作清单</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>连接红导线到正极</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>连接黑导线到负极</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>通电开始电解</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>观察两管气泡产生</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>读取体积比 2:1</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>负极气体验气（爆鸣）</li>
+          <li class="obs-item" id="obs7"><span class="obs-check"></span>正极气体验气（复燃）</li>
         </ul>
       </div>
 
-      <!-- Gas test results -->
-      <div class="panel-section" id="testResultPanel" style="display:none">
-        <div class="section-title">验气结果</div>
-        <div id="testH2Result" style="padding:4px 8px;margin-bottom:4px;border-radius:6px;font-size:10px;background:#F1F5F9;color:#64748B">
-          负极气体：<strong>待检验</strong>
+      <div>
+        <div class="section-title">气体数据</div>
+        <div class="data-row">
+          <div class="data-card h2">
+            <div class="data-val" id="h2Vol" style="color:#3B82F6">0</div>
+            <div class="data-label">H₂ (mL) 负极</div>
+          </div>
+          <div class="data-card o2">
+            <div class="data-val" id="o2Vol" style="color:#EF4444">0</div>
+            <div class="data-label">O₂ (mL) 正极</div>
+          </div>
         </div>
-        <div id="testO2Result" style="padding:4px 8px;border-radius:6px;font-size:10px;background:#F1F5F9;color:#64748B">
-          正极气体：<strong>待检验</strong>
-        </div>
+        <div id="ratioText" style="text-align:center;font-size:9px;color:#64748B">等待通电</div>
       </div>
 
-      <!-- Equation -->
-      <div class="panel-section">
-        <div class="section-title">化学方程式</div>
-        <div class="chem-equation" id="formula1"></div>
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px;text-align:center">微观 → 宏观</div>
+        <div id="microNote" style="text-align:center">H₂O 分子在电极上分解<br>2H₂O → 2H₂↑ + O₂↑</div>
       </div>
 
-      <!-- Mnemonics -->
-      <div class="panel-section">
-        <div class="section-title">口诀</div>
-        <div style="text-align:center;padding:8px;background:#FEF3C7;border-radius:8px;border:1px solid #FDE68A">
-          <div style="font-size:14px;font-weight:800;color:#92400E">正氧负氢，氢二氧一</div>
-          <div style="font-size:9px;color:#A16207;margin-top:4px">正极产氧气，负极产氢气</div>
-          <div style="font-size:9px;color:#A16207">氢气体积是氧气的 2 倍</div>
-        </div>
+      <div style="background:#FFF7ED;border:1px solid #FDBA74;border-radius:8px;padding:8px;margin:8px 0;font-size:9px;color:#9A3412;text-align:center">
+        <strong>正氧负氢 氢二氧一</strong><br>正极产O₂ 负极产H₂ 体积比2:1
       </div>
 
-      <!-- Knowledge -->
-      <div class="panel-section">
-        <div class="section-title">知识拓展</div>
-        <div style="font-size:10px;color:#475569;line-height:1.6">
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">水的组成</h3>
-          <p>电解水生成氢气和氧气，说明水由<strong>氢元素</strong>和<strong>氧元素</strong>组成。</p>
+      <button onclick="resetExperiment()" style="width:100%;margin-top:12px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
+    </div>
+  </div>
 
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">为什么加 NaOH？</h3>
-          <p>纯水导电性极弱。加入少量 NaOH（或 H₂SO₄）增强导电性，加速电解。NaOH 本身不参与反应。</p>
-
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">体积比为什么不是精确 2:1？</h3>
-          <p>实际中 O₂ 在水中溶解度略大于 H₂，部分 O₂ 溶解在水中，导致收集到的 O₂ 偏少，比值略大于 2:1（如 2.1:1）。这是中考常考知识点。</p>
-
-          <h3 style="font-size:11px;color:#0F172A;margin:6px 0 3px">中考易错</h3>
-          <p>电解水是<strong>分解反应</strong>（一变多），不是化合反应。<br>正氧负氢不能记反！记忆口诀：<strong>"父亲"→ 负氢</strong>。</p>
-        </div>
+  <!-- Knowledge -->
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>化学方程式</h4>
+        <div id="formula1" style="text-align:center;margin:6px 0"></div>
+        <p>水在直流电作用下分解为氢气和氧气</p>
       </div>
-
-      <!-- Reset -->
-      <div class="panel-section">
-        <button class="step-btn" onclick="resetExperiment()">重做实验</button>
+      <div class="knowledge-card">
+        <h4>正氧负氢</h4>
+        <p>正极产生氧气（O₂），负极产生氢气（H₂）。记忆口诀：<strong style="color:#DC2626">正氧负氢</strong></p>
+      </div>
+      <div class="knowledge-card">
+        <h4>体积比 2:1</h4>
+        <p>V(H₂):V(O₂)=2:1，对应方程式中系数比。实际实验中O₂略少（溶解性更大）。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>验气方法</h4>
+        <p><strong>H₂</strong>：点燃发出淡蓝色火焰（纯净H₂安静燃烧，不纯H₂爆鸣）<br><strong>O₂</strong>：带火星木条复燃</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>为什么加少量 NaOH？</h4>
+        <p>纯水导电性很弱，加入少量 NaOH（或 H₂SO₄）增强导电性，加快电解速度。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>水的组成</h4>
+        <p>电解水实验证明：水由氢元素和氧元素组成（H 和 O），不是单质。</p>
       </div>
     </div>
   </div>
 </div>
 
-<script src="/shared/theme.js"></script>
 <script src="/shared/lab-utils.js"></script>
 <script src="/shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 
-const STEPS = ['connect', 'electrolyze', 'read_volume', 'test_gas'];
-const STEP_INFO = [
-  { title: '第 1 步：连接电路', desc: '点击画布上的导线端点，将电源与电极连接（红正黑负）。' },
-  { title: '第 2 步：通电电解', desc: '点击画布上的电源开关通电，观察两极气泡和量气管变化。' },
-  { title: '第 3 步：读取体积', desc: '观察量气管刻度，点击画布选择正确读数。' },
-  { title: '第 4 步：验气', desc: '点击画布上管口阀门，检验两极收集的气体（顺序自由）。' }
-];
+// ===== STATE =====
+const flags = { redWire: false, blackWire: false, powerOn: false, electrolyzing: false, collected: false, testedH2: false, testedO2: false };
+let progress = 0; // 0-100
+let animFrame = null;
+const h2Bubs = [], o2Bubs = [];
+document.querySelectorAll('.h2b').forEach(el => h2Bubs.push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 }));
+document.querySelectorAll('.o2b').forEach(el => o2Bubs.push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 }));
 
-const state = {
-  step: 0,
-  negConnected: false,
-  posConnected: false,
-  powerOn: false,
-  animating: false,
-  electrolyzing: false,
-  h2Target: 0,
-  o2Target: 0,
-  h2Current: 0,
-  o2Current: 0,
-  readDone: false,
-  readAttempts: 0,
-  correctIdx: 0,
-  testedH2: false,
-  testedO2: false,
-  bubbleTimer: null,
-  animFrame: null
+// ===== DROP TARGETS =====
+const DROP_TARGETS = {
+  red: ['dropRed'],
+  black: ['dropBlack'],
+  splint: ['dropTestH2', 'dropTestO2']
+};
+const ACTION_MAP = {
+  dropRed: 'connectRed',
+  dropBlack: 'connectBlack',
+  dropTestH2: 'testH2',
+  dropTestO2: 'testO2'
 };
 
-// ===== WIRE CONNECTION =====
-function connectWire(which) {
-  if (state.step !== 0) return;
-  if (which === 'neg' && !state.negConnected) {
-    state.negConnected = true;
-    animateWire("wireNeg", "wireNegEnd", 302, 384, 233, 340);
-    $('wireNegLabel').textContent = '负极 ✓';
-    $('wireNegLabel').setAttribute('fill', '#059669');
-  }
-  if (which === 'pos' && !state.posConnected) {
-    state.posConnected = true;
-    animateWire("wirePos", "wirePosEnd", 388, 384, 453, 340);
-    $('wirePosLabel').textContent = '正极 ✓';
-    $('wirePosLabel').setAttribute('fill', '#059669');
-  }
-  if (state.negConnected && state.posConnected) {
-    checkObs('obs1');
-    setTimeout(() => advanceStep(), 400);
-  }
+// ===== DRAG =====
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
+  });
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
+  });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) doAction(ACTION_MAP[hit]);
+    dragState = null;
+  });
+});
+
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
 }
 
-function animateWire(lineId, endId, x1, y1, x2, y2) {
-  const line = $(lineId);
-  const end = $(endId);
-  let t = 0;
-  function tick() {
-    t = Math.min(t + 0.05, 1);
-    const cx = x1 + (x2 - x1) * t;
-    const cy = y1 + (y2 - y1) * t;
-    line.setAttribute('x2', cx);
-    line.setAttribute('y2', cy);
-    end.setAttribute('cx', cx);
-    end.setAttribute('cy', cy);
-    if (t < 1) requestAnimationFrame(tick);
-    else {
-      end.style.display = 'none';
-      line.setAttribute('stroke-dasharray', '');
-    }
-  }
-  requestAnimationFrame(tick);
-}
+// ===== SWITCH CLICK (optional: can also auto-turn on) =====
+$('switchBody').addEventListener('click', togglePower);
+$('switchKnob').addEventListener('click', togglePower);
 
-// ===== POWER TOGGLE =====
 function togglePower() {
-  if (state.step !== 1) return;
-  if (state.powerOn) return;
-  state.powerOn = true;
-  $('switchKnob').setAttribute('cx', '23');
-  $('switchKnob').setAttribute('fill', '#059669');
-  $('switchLabel').textContent = 'ON';
-  $('switchLabel').setAttribute('fill', '#059669');
-  $('dataPanel').style.display = 'block';
+  if (!flags.redWire || !flags.blackWire) { toast('先连接两根导线'); return; }
+  if (flags.powerOn) return;
   startElectrolysis();
 }
 
-// ===== ELECTROLYSIS ANIMATION =====
+// ===== ACTIONS =====
+function doAction(action) {
+  switch(action) {
+    case 'connectRed':
+      if (flags.redWire) { toast('红导线已连接'); return; }
+      flags.redWire = true;
+      $('toolRed').classList.add('used');
+      $('wireRed').setAttribute('opacity', '1');
+      checkObs('obs1');
+      updateHint();
+      if (flags.redWire && flags.blackWire) setTimeout(startElectrolysis, 500);
+      break;
+    case 'connectBlack':
+      if (flags.blackWire) { toast('黑导线已连接'); return; }
+      flags.blackWire = true;
+      $('toolBlack').classList.add('used');
+      $('wireBlack').setAttribute('opacity', '1');
+      checkObs('obs2');
+      updateHint();
+      if (flags.redWire && flags.blackWire) setTimeout(startElectrolysis, 500);
+      break;
+    case 'testH2':
+      if (!flags.collected) { toast('还没收集完'); return; }
+      if (flags.testedH2) { toast('已验气'); return; }
+      flags.testedH2 = true;
+      $('splintH2').setAttribute('opacity', '1');
+      checkObs('obs6');
+      if (flags.testedH2 && flags.testedO2) { $('toolSplint').classList.add('used'); finishExperiment(); }
+      updateHint();
+      break;
+    case 'testO2':
+      if (!flags.collected) { toast('还没收集完'); return; }
+      if (flags.testedO2) { toast('已验气'); return; }
+      flags.testedO2 = true;
+      $('splintO2').setAttribute('opacity', '1');
+      checkObs('obs7');
+      if (flags.testedH2 && flags.testedO2) { $('toolSplint').classList.add('used'); finishExperiment(); }
+      updateHint();
+      break;
+  }
+}
+
 function startElectrolysis() {
-  state.electrolyzing = true;
-  state.h2Target = 15.5 + Math.random(); // 15.5-16.5 mL
-  state.o2Target = state.h2Target / 2 * (0.95 + Math.random() * 0.05); // slightly less than half → ratio > 2
-  state.h2Current = 0;
-  state.o2Current = 0;
+  if (flags.powerOn) return;
+  flags.powerOn = true;
+  flags.electrolyzing = true;
+  // Switch ON
+  $('switchBody').setAttribute('fill', '#059669');
+  $('switchKnob').setAttribute('cx', '78');
+  $('switchLabel').textContent = 'ON';
+  $('switchLabel').setAttribute('fill', '#059669');
+  checkObs('obs3');
+  updateHint();
 
-  checkObs('obs2');
-  setTimeout(() => checkObs('obs3'), 2000);
-
-  // Bubble pools (pre-drawn elements)
-  const leftPool = initBubblePool('bub-l', 207, 280, 55, -250);
-  const rightPool = initBubblePool('bub-r', 427, 280, 55, -250);
-
-  let leftTimer = 0, rightTimer = 0;
-  const SPEED_H2 = 0.03; // mL per frame at 60fps → ~1.8 mL/s
-  const SPEED_O2 = 0.015;
-
-  function animate() {
-    if (!state.electrolyzing) return;
-
-    // Gas volumes
-    if (state.h2Current < state.h2Target) {
-      state.h2Current = Math.min(state.h2Current + SPEED_H2, state.h2Target);
-    }
-    if (state.o2Current < state.o2Target) {
-      state.o2Current = Math.min(state.o2Current + SPEED_O2, state.o2Target);
-    }
-
-    // Update gas columns (238 is 0mL line, each mL = ~10.4px)
-    const PX_PER_ML = 208 / 20; // 208px for 20mL
-    const h2Height = state.h2Current * PX_PER_ML;
-    const o2Height = state.o2Current * PX_PER_ML;
-
-    $('h2Gas').setAttribute('y', 238 - h2Height);
-    $('h2Gas').setAttribute('height', h2Height);
-    $('leftWater').setAttribute('y', 238);
-    $('leftWater').setAttribute('height', Math.max(0, 50 - h2Height * 0.2));
-
-    $('o2Gas').setAttribute('y', 238 - o2Height);
-    $('o2Gas').setAttribute('height', o2Height);
-    $('rightWater').setAttribute('y', 238);
-    $('rightWater').setAttribute('height', Math.max(0, 50 - o2Height * 0.2));
-
-    // Panel data
-    $('h2Volume').textContent = state.h2Current.toFixed(1) + ' mL';
-    $('o2Volume').textContent = state.o2Current.toFixed(1) + ' mL';
-    if (state.o2Current > 0.5) {
-      $('ratioDisplay').textContent = (state.h2Current / state.o2Current).toFixed(2) + ':1';
-    }
-
-    // Bubbles
-    leftTimer++;
-    rightTimer++;
-    if (leftTimer % 8 === 0 && state.h2Current < state.h2Target) spawnBubble(leftPool);
-    if (rightTimer % 16 === 0 && state.o2Current < state.o2Target) spawnBubble(rightPool);
-
-    // Animate existing bubbles
-    animateBubbles(leftPool);
-    animateBubbles(rightPool);
-
-    // Check completion
-    if (state.h2Current >= state.h2Target && state.o2Current >= state.o2Target) {
-      state.electrolyzing = false;
-      checkObs('obs4');
-      setTimeout(() => advanceStep(), 500);
-      return;
-    }
-
-    state.animFrame = requestAnimationFrame(animate);
-  }
-
-  state.animFrame = requestAnimationFrame(animate);
-}
-
-// Bubble pool helpers (pre-drawn elements, no createElement)
-function initBubblePool(className, baseX, baseY, width, travel) {
-  const els = document.querySelectorAll('.' + className);
-  const pool = { baseX, baseY, width, travel, bubbles: [] };
-  els.forEach(el => {
-    pool.bubbles.push({ el, active: false, x: 0, y: 0, speed: 0 });
-  });
-  return pool;
-}
-
-function spawnBubble(pool) {
-  const b = pool.bubbles.find(b => !b.active);
-  if (!b) return;
-  b.active = true;
-  b.x = pool.baseX + 5 + Math.random() * (pool.width - 10);
-  b.y = pool.baseY;
-  b.speed = 0.8 + Math.random() * 0.6;
-  b.el.setAttribute('cx', b.x);
-  b.el.setAttribute('cy', b.y);
-  b.el.setAttribute('opacity', '0.6');
-}
-
-function animateBubbles(pool) {
-  for (const b of pool.bubbles) {
-    if (!b.active) continue;
-    b.y -= b.speed;
-    b.x += (Math.random() - 0.5) * 0.5;
-    b.el.setAttribute('cx', b.x);
-    b.el.setAttribute('cy', b.y);
-    if (b.y < pool.baseY + pool.travel) {
-      b.active = false;
-      b.el.setAttribute('opacity', '0');
-    }
-  }
-}
-
-// ===== READING =====
-function showReadingOverlay() {
-  const overlay = $('readingOverlay');
-  overlay.setAttribute('opacity', '1');
-  overlay.setAttribute('pointer-events', 'all');
-
-  // Position gas columns in reading view
-  const PX_PER_ML_READ = 200 / 20;
-  const h2H = state.h2Current * PX_PER_ML_READ;
-  const o2H = state.o2Current * PX_PER_ML_READ;
-  $('readH2Gas').setAttribute('height', h2H);
-  $('readH2Gas').setAttribute('y', 200 - h2H);
-  $('readH2Water').setAttribute('y', 200 - h2H);
-  $('readH2Water').setAttribute('height', h2H > 0 ? Math.max(5, 98 - h2H * 0.3) : 98);
-  $('readH2Line').setAttribute('y1', 200 - h2H);
-  $('readH2Line').setAttribute('y2', 200 - h2H);
-
-  $('readO2Gas').setAttribute('height', o2H);
-  $('readO2Gas').setAttribute('y', 200 - o2H);
-  $('readO2Water').setAttribute('y', 200 - o2H);
-  $('readO2Water').setAttribute('height', o2H > 0 ? Math.max(5, 98 - o2H * 0.3) : 98);
-  $('readO2Line').setAttribute('y1', 200 - o2H);
-  $('readO2Line').setAttribute('y2', 200 - o2H);
-
-  // Generate 3 reading choices
-  const correct = Math.round(state.h2Current * 2) / 2; // round to 0.5
-  const options = [correct - 1, correct, correct + 0.5].sort(() => Math.random() - 0.5);
-  state.correctIdx = options.indexOf(correct);
-
-  $('readOptText1').textContent = options[0].toFixed(1) + ' mL';
-  $('readOptText2').textContent = options[1].toFixed(1) + ' mL';
-  $('readOptText3').textContent = options[2].toFixed(1) + ' mL';
-
-  // Store correct
-  state._readOptions = options;
-  state._readCorrect = correct;
-}
-
-function selectReading(idx) {
-  if (state.readDone) return;
-  state.readAttempts++;
-  const selected = state._readOptions[idx];
-
-  if (Math.abs(selected - state._readCorrect) < 0.01) {
-    // Correct!
-    state.readDone = true;
-    const optEl = $('readOpt' + (idx + 1)).querySelector('rect');
-    optEl.setAttribute('fill', '#D1FAE5');
-    optEl.setAttribute('stroke', '#059669');
-    $('readFeedback').textContent = '正确！V(H₂) = ' + selected.toFixed(1) + ' mL';
-    $('readFeedback').setAttribute('opacity', '1');
-    $('readFeedback').setAttribute('fill', '#059669');
-
-    setTimeout(() => {
-      $('readingOverlay').setAttribute('opacity', '0');
-      $('readingOverlay').setAttribute('pointer-events', 'none');
-      // Show ratio card
-      $('ratioCard').setAttribute('opacity', '1');
-      const ratio = (state.h2Current / state.o2Current).toFixed(2);
-      $('ratioText').textContent = ratio + ' : 1';
-      advanceStep();
-    }, 1200);
-  } else {
-    // Wrong
-    const optEl = $('readOpt' + (idx + 1)).querySelector('rect');
-    optEl.setAttribute('fill', '#FEE2E2');
-    optEl.setAttribute('stroke', '#EF4444');
-    if (state.readAttempts >= 3) {
-      // Auto-reveal
-      state.readDone = true;
-      const correctOptEl = $('readOpt' + (state._readOptions.indexOf(state._readCorrect) + 1)).querySelector('rect');
-      correctOptEl.setAttribute('fill', '#D1FAE5');
-      correctOptEl.setAttribute('stroke', '#059669');
-      $('readFeedback').textContent = '正确答案：' + state._readCorrect.toFixed(1) + ' mL';
-      $('readFeedback').setAttribute('opacity', '1');
-      $('readFeedback').setAttribute('fill', '#F59E0B');
-      setTimeout(() => {
-        $('readingOverlay').setAttribute('opacity', '0');
-        $('readingOverlay').setAttribute('pointer-events', 'none');
-        $('ratioCard').setAttribute('opacity', '1');
-        const ratio = (state.h2Current / state.o2Current).toFixed(2);
-        $('ratioText').textContent = ratio + ' : 1';
-        advanceStep();
-      }, 1500);
-    } else {
-      $('readFeedback').textContent = '再看看刻度（第 ' + state.readAttempts + '/3 次）';
-      $('readFeedback').setAttribute('opacity', '1');
-      $('readFeedback').setAttribute('fill', '#DC2626');
-    }
-  }
-}
-
-// ===== GAS TEST =====
-function testGas(gas) {
-  if (state.step !== 3) return;
-
-  if (gas === 'H2' && !state.testedH2) {
-    state.testedH2 = true;
-    $('h2Flame').setAttribute('opacity', '1');
-    checkObs('obs5');
-    $('testH2Result').innerHTML = '负极气体：<strong style="color:#2563EB">H₂（氢气）— 可燃，淡蓝色火焰</strong>';
-    $('testH2Result').style.background = '#EFF6FF';
-    flickerFlame('h2Flame');
-  }
-
-  if (gas === 'O2' && !state.testedO2) {
-    state.testedO2 = true;
-    $('o2Splint').setAttribute('opacity', '1');
-    checkObs('obs6');
-    $('testO2Result').innerHTML = '正极气体：<strong style="color:#DC2626">O₂（氧气）— 助燃，木条复燃</strong>';
-    $('testO2Result').style.background = '#FEF2F2';
-    flickerFlame('o2Splint');
-  }
-
-  if (state.testedH2 && state.testedO2) {
-    $('canvasHint').textContent = '实验完成！水 → 氢气 + 氧气';
-    $('stepTitle').textContent = '实验完成';
-    $('stepDesc').textContent = '水通电分解为氢气和氧气，证明水由氢元素和氧元素组成。';
-  }
-}
-
-function flickerFlame(id) {
-  const el = $(id);
-  let t = 0;
   function tick() {
-    t++;
-    const s = 0.9 + Math.sin(t * 0.3) * 0.1;
-    el.setAttribute('transform', el.getAttribute('transform').replace(/scale\([^)]*\)/, '') + ' scale(' + s + ')');
-    if (t < 300) requestAnimationFrame(tick);
+    if (!flags.electrolyzing) return;
+    progress = Math.min(100, progress + 0.1);
+
+    // H₂ volume (2x)
+    const h2ml = (progress / 100 * 10).toFixed(1);
+    const o2ml = (progress / 100 * 5).toFixed(1);
+    $('h2Vol').textContent = h2ml;
+    $('o2Vol').textContent = o2ml;
+
+    // Water levels drop (H₂ tube drops faster — 2x gas)
+    const h2WaterH = 185 * (1 - progress * 2 / 100);
+    const h2WaterY = 10 + (185 - Math.max(0, h2WaterH));
+    $('h2Water').setAttribute('y', String(h2WaterY));
+    $('h2Water').setAttribute('height', String(Math.max(0, h2WaterH)));
+
+    const o2WaterH = 185 * (1 - progress / 100);
+    const o2WaterY = 10 + (185 - Math.max(0, o2WaterH));
+    $('o2Water').setAttribute('y', String(o2WaterY));
+    $('o2Water').setAttribute('height', String(Math.max(0, o2WaterH)));
+
+    // Labels
+    if (progress > 15) {
+      $('h2Label').setAttribute('opacity', String(Math.min(0.5, (progress - 15) / 100)));
+      $('o2Label').setAttribute('opacity', String(Math.min(0.5, (progress - 15) / 100)));
+    }
+
+    // Bubbles — H₂ (more)
+    h2Bubs.forEach(b => {
+      if (!b.active && Math.random() < 0.1) {
+        b.active = true; b.x = 30 + (Math.random() - 0.5) * 20; b.y = 170;
+        b.vy = -0.8 - Math.random() * 0.4; b.life = 50 + Math.random() * 20;
+      }
+      if (b.active) {
+        b.y += b.vy; b.x += (Math.random() - 0.5) * 0.3; b.life--;
+        b.el.setAttribute('cx', b.x); b.el.setAttribute('cy', b.y);
+        b.el.setAttribute('opacity', String(Math.max(0, b.life / 50)));
+        if (b.life <= 0) { b.active = false; b.el.setAttribute('opacity', '0'); }
+      }
+    });
+
+    // O₂ (fewer)
+    o2Bubs.forEach(b => {
+      if (!b.active && Math.random() < 0.05) {
+        b.active = true; b.x = 30 + (Math.random() - 0.5) * 20; b.y = 170;
+        b.vy = -0.6 - Math.random() * 0.3; b.life = 40 + Math.random() * 20;
+      }
+      if (b.active) {
+        b.y += b.vy; b.x += (Math.random() - 0.5) * 0.3; b.life--;
+        b.el.setAttribute('cx', b.x); b.el.setAttribute('cy', b.y);
+        b.el.setAttribute('opacity', String(Math.max(0, b.life / 40)));
+        if (b.life <= 0) { b.active = false; b.el.setAttribute('opacity', '0'); }
+      }
+    });
+
+    if (progress >= 20 && !flags._obs4) { flags._obs4 = true; checkObs('obs4'); }
+    if (progress >= 60 && !flags._obs5) { flags._obs5 = true; checkObs('obs5'); $('ratioText').textContent = 'V(H₂):V(O₂) ≈ 2:1'; }
+
+    if (progress >= 100) {
+      flags.electrolyzing = false;
+      flags.collected = true;
+      $('ratioAnnotation').setAttribute('opacity', '1');
+      $('ratioText').textContent = 'V(H₂):V(O₂) = 2:1 ✓';
+      $('dropTestH2').setAttribute('opacity', '0.4');
+      $('dropTestO2').setAttribute('opacity', '0.4');
+      h2Bubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+      o2Bubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+      updateHint();
+    } else {
+      animFrame = requestAnimationFrame(tick);
+    }
   }
-  requestAnimationFrame(tick);
+  animFrame = requestAnimationFrame(tick);
 }
 
-// ===== STATE MACHINE =====
-function advanceStep() {
-  if (state.step >= 3) return;
-  state.step++;
-  updateStepUI();
+function finishExperiment() {
+  $('microNote').innerHTML = 'H₂ 爆鸣 → 可燃气体<br>O₂ 复燃 → 助燃气体<br>水 = H + O 组成';
+  $('canvasHint').textContent = '实验完成！水由氢元素和氧元素组成';
+}
 
-  if (state.step === 1) {
-    $('canvasHint').textContent = '点击电源开关通电';
-  } else if (state.step === 2) {
-    $('canvasHint').textContent = '观察量气管刻度';
-    setTimeout(() => showReadingOverlay(), 300);
-  } else if (state.step === 3) {
-    $('canvasHint').textContent = '点击管口阀门验气（顺序自由）';
-    $('leftValveHint').setAttribute('opacity', '1');
-    $('rightValveHint').setAttribute('opacity', '1');
-    $('testResultPanel').style.display = 'block';
+function updateHint() {
+  if (!flags.redWire) $('canvasHint').textContent = '拖红导线到正极（+）';
+  else if (!flags.blackWire) $('canvasHint').textContent = '拖黑导线到负极（−）';
+  else if (flags.electrolyzing) $('canvasHint').textContent = '电解中...观察两管气泡速度差异';
+  else if (flags.collected && !(flags.testedH2 && flags.testedO2)) {
+    if (!flags.testedH2) $('canvasHint').textContent = '拖燃着木条到负极管口 → 检验 H₂';
+    else $('canvasHint').textContent = '拖燃着木条到正极管口 → 检验 O₂';
   }
 }
 
-function updateStepUI() {
-  const info = STEP_INFO[state.step];
-  $('stepTitle').textContent = info.title;
-  $('stepDesc').textContent = info.desc;
+function toast(msg) { $('canvasHint').textContent = msg; setTimeout(updateHint, 2000); }
+function checkObs(id) { const el = $(id); if (el && !el.classList.contains('checked')) { el.classList.add('checked'); el.querySelector('.obs-check').textContent = '\u2713'; } }
 
-  document.querySelectorAll('.step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < state.step) el.classList.add('done');
-    if (i === state.step) el.classList.add('active');
-  });
-}
-
-function checkObs(id) {
-  const el = $(id);
-  if (!el.classList.contains('checked')) {
-    el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
-  }
-}
-
-// ===== RESET =====
 function resetExperiment() {
-  // Cancel animations
-  if (state.animFrame) cancelAnimationFrame(state.animFrame);
-  state.electrolyzing = false;
-
-  // Reset state
-  Object.assign(state, {
-    step: 0, negConnected: false, posConnected: false, powerOn: false,
-    animating: false, electrolyzing: false, h2Current: 0, o2Current: 0,
-    readDone: false, readAttempts: 0, testedH2: false, testedO2: false
-  });
-
-  // Randomize new targets
-  state.h2Target = 15.5 + Math.random();
-  state.o2Target = state.h2Target / 2 * (0.95 + Math.random() * 0.05);
-
-  // Reset wires
-  ['wireNeg', 'wirePos'].forEach(id => {
-    const l = $(id);
-    const x1 = parseFloat(l.getAttribute('x1'));
-    const y1 = parseFloat(l.getAttribute('y1'));
-    l.setAttribute('x2', x1);
-    l.setAttribute('y2', y1);
-    l.setAttribute('stroke-dasharray', '4,0');
-  });
-  $('wireNegEnd').setAttribute('cx', '302');
-  $('wireNegEnd').setAttribute('cy', '384');
-  $('wireNegEnd').style.display = '';
-  $('wirePosEnd').setAttribute('cx', '388');
-  $('wirePosEnd').setAttribute('cy', '384');
-  $('wirePosEnd').style.display = '';
-  $('wireNegLabel').textContent = '负极导线';
-  $('wireNegLabel').setAttribute('fill', '#3B82F6');
-  $('wirePosLabel').textContent = '正极导线';
-  $('wirePosLabel').setAttribute('fill', '#EF4444');
-
-  // Reset power
-  $('switchKnob').setAttribute('cx', '7');
-  $('switchKnob').setAttribute('fill', '#94A3B8');
+  if (animFrame) cancelAnimationFrame(animFrame);
+  Object.keys(flags).forEach(k => flags[k] = false);
+  progress = 0;
+  $('wireRed').setAttribute('opacity', '0');
+  $('wireBlack').setAttribute('opacity', '0');
+  $('switchBody').setAttribute('fill', '#E2E8F0');
+  $('switchKnob').setAttribute('cx', '62');
   $('switchLabel').textContent = 'OFF';
   $('switchLabel').setAttribute('fill', '#94A3B8');
-
-  // Reset gas columns
-  ['h2Gas', 'o2Gas'].forEach(id => {
-    $(id).setAttribute('y', '238');
-    $(id).setAttribute('height', '0');
-  });
-  $('leftWater').setAttribute('height', '50');
-  $('rightWater').setAttribute('height', '50');
-
-  // Reset bubbles (reuse pre-drawn, just hide)
-  document.querySelectorAll('.bub-l,.bub-r').forEach(el => el.setAttribute('opacity', '0'));
-
-  // Reset overlays
-  $('readingOverlay').setAttribute('opacity', '0');
-  $('readingOverlay').setAttribute('pointer-events', 'none');
-  $('ratioCard').setAttribute('opacity', '0');
-  $('h2Flame').setAttribute('opacity', '0');
-  $('o2Splint').setAttribute('opacity', '0');
-  $('leftValveHint').setAttribute('opacity', '0');
-  $('rightValveHint').setAttribute('opacity', '0');
-
-  // Reset panel
-  $('dataPanel').style.display = 'none';
-  $('testResultPanel').style.display = 'none';
-  $('h2Volume').textContent = '0.0 mL';
-  $('o2Volume').textContent = '0.0 mL';
-  $('ratioDisplay').textContent = '—';
-  $('testH2Result').innerHTML = '负极气体：<strong>待检验</strong>';
-  $('testH2Result').style.background = '#F1F5F9';
-  $('testO2Result').innerHTML = '正极气体：<strong>待检验</strong>';
-  $('testO2Result').style.background = '#F1F5F9';
-
-  // Reset observations
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-
-  // Reset step UI
-  $('canvasHint').textContent = '点击导线端点连接电路';
-  updateStepUI();
-
-  // Reset reading options
-  document.querySelectorAll('.reading-option rect').forEach(r => {
-    r.setAttribute('fill', '#F8FAFC');
-    r.setAttribute('stroke', '#CBD5E1');
-    r.setAttribute('stroke-width', '1');
-  });
-  $('readFeedback').setAttribute('opacity', '0');
+  $('h2Water').setAttribute('y', '10'); $('h2Water').setAttribute('height', '185');
+  $('o2Water').setAttribute('y', '10'); $('o2Water').setAttribute('height', '185');
+  $('h2Label').setAttribute('opacity', '0'); $('o2Label').setAttribute('opacity', '0');
+  $('ratioAnnotation').setAttribute('opacity', '0');
+  $('splintH2').setAttribute('opacity', '0'); $('splintO2').setAttribute('opacity', '0');
+  $('dropTestH2').setAttribute('opacity', '0'); $('dropTestO2').setAttribute('opacity', '0');
+  $('h2Vol').textContent = '0'; $('o2Vol').textContent = '0';
+  $('ratioText').textContent = '等待通电';
+  $('microNote').innerHTML = 'H₂O 分子在电极上分解<br>2H₂O → 2H₂↑ + O₂↑';
+  $('canvasHint').textContent = '拖红导线到正极（+）';
+  h2Bubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  o2Bubs.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  ['toolRed','toolBlack','toolSplint'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
 
-// ===== KATEX =====
+// KaTeX
 function renderFormulas() {
   if (!window.katex) return;
-  try {
-    katex.render('2\\text{H}_2\\text{O} \\xrightarrow{\\text{通电}} 2\\text{H}_2\\uparrow + \\text{O}_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true });
-  } catch(e) {}
+  try { katex.render('2H_2O \\xrightarrow{\\text{通电}} 2H_2\\uparrow + O_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true }); } catch(e) {}
 }
-
-function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if ((n || 0) < 20) setTimeout(() => tryKatex((n || 0) + 1), 500);
-}
-
-// Init
+function tryKatex(n) { if (window.katex) { renderFormulas(); return; } if ((n||0) < 20) setTimeout(() => tryKatex((n||0)+1), 500); }
 tryKatex();
 </script>
+<script src="/shared/theme.js"></script>
 </body>
 </html>
