@@ -433,7 +433,7 @@ function startDistillation() {
         $('distillate').setAttribute('opacity', String(Math.min(0.8, collected / 50)));
         checkPhen('phen2'); checkPhen('phen3');
       }
-      if (collected > 20) $('distLabel').setAttribute('opacity', String(Math.min(1, (collected - 20) / 30));
+      if (collected > 20) $('distLabel').setAttribute('opacity', String(Math.min(1, (collected - 20) / 30)));
 
       // Flask water level drops
       const waterDrop = collected / 50 * 30;
