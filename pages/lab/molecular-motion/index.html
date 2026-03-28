@@ -51,49 +51,33 @@
         <!-- ===== LEFT GROUP: Normal Temperature ===== -->
         <g id="groupNormal" transform="translate(20,15) scale(0.85)">
           <text x="180" y="-2" font-size="13" fill="#0284C7" text-anchor="middle" font-weight="800">常温</text>
-          <!-- Large beaker -->
           <g>
-            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z"
-                  fill="#B8D4EA" stroke="none"/>
-            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z"
-                  fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="3"/>
+            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z" fill="#B8D4EA" stroke="none"/>
+            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="3"/>
             <path d="M8,0 Q-5,-3 -4,-10" fill="none" stroke="url(#glassEdge)" stroke-width="3" stroke-linecap="round"/>
             <rect x="8" y="12" width="20" height="260" rx="10" fill="url(#highlightGrad)" opacity="0.9"/>
             <line x1="294" y1="10" x2="294" y2="275" stroke="rgba(100,150,190,0.3)" stroke-width="1.5"/>
-
-            <!-- Glass cover -->
             <rect id="coverL" x="-4" y="-8" width="308" height="12" rx="3" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1" opacity="0"/>
             <text id="sealLabelL" x="150" y="-14" font-size="8" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
-            <!-- Drop zone: cover -->
             <rect id="dropCoverL" class="drop-zone" x="-4" y="-25" width="308" height="40" rx="4"/>
-
-            <!-- Small beaker A (ammonia) -->
+            <!-- Beaker A -->
             <g transform="translate(20,120)">
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="#B8D4EA" stroke="none"/>
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="#B8D4EA" stroke="none"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
               <rect x="3" y="5" width="8" height="100" rx="4" fill="url(#highlightGrad)" opacity="0.8"/>
               <rect id="ammoniaL" x="2" y="58" width="76" height="57" rx="3" fill="hsl(185,70%,65%)" opacity="0"/>
-              <!-- Drop zone: ammonia -->
               <rect id="dropAL" class="drop-zone" x="-4" y="-8" width="88" height="130" rx="5"/>
               <text x="40" y="133" font-size="8" fill="#475569" text-anchor="middle" font-weight="600">A 浓氨水</text>
             </g>
-
-            <!-- Small beaker B (phenolphthalein) -->
+            <!-- Beaker B -->
             <g transform="translate(190,120)">
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="#B8D4EA" stroke="none"/>
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="#B8D4EA" stroke="none"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
               <rect x="3" y="5" width="8" height="100" rx="4" fill="url(#highlightGrad)" opacity="0.8"/>
               <rect id="phenolL" x="2" y="58" width="76" height="57" rx="3" fill="hsl(0,0%,95%)" opacity="0"/>
-              <!-- Drop zone: phenol -->
               <rect id="dropBL" class="drop-zone" x="-4" y="-8" width="88" height="130" rx="5"/>
               <text x="40" y="133" font-size="8" fill="#475569" text-anchor="middle" font-weight="600">B 酚酞</text>
             </g>
-
-            <!-- Diffusion arrow -->
             <g id="arrowL" opacity="0">
               <line x1="110" y1="190" x2="180" y2="190" stroke="#06B6D4" stroke-width="1.5" stroke-dasharray="5,3"/>
               <polygon points="180,186 192,190 180,194" fill="#06B6D4"/>
@@ -128,60 +112,47 @@
         <!-- ===== RIGHT GROUP: Heated ===== -->
         <g id="groupHeated" transform="translate(440,15) scale(0.85)">
           <text x="180" y="-2" font-size="13" fill="#F97316" text-anchor="middle" font-weight="800">加热</text>
-          <!-- Large beaker -->
           <g>
-            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z"
-                  fill="#B8D4EA" stroke="none"/>
-            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z"
-                  fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="3"/>
+            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z" fill="#B8D4EA" stroke="none"/>
+            <path d="M8,0 L2,8 L2,275 Q2,290 14,290 L286,290 Q298,290 298,275 L298,8 L292,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="3"/>
             <path d="M8,0 Q-5,-3 -4,-10" fill="none" stroke="url(#glassEdge)" stroke-width="3" stroke-linecap="round"/>
             <rect x="8" y="12" width="20" height="260" rx="10" fill="url(#highlightGrad)" opacity="0.9"/>
             <line x1="294" y1="10" x2="294" y2="275" stroke="rgba(100,150,190,0.3)" stroke-width="1.5"/>
-
-            <!-- Glass cover -->
             <rect id="coverR" x="-4" y="-8" width="308" height="12" rx="3" fill="rgba(148,163,184,0.3)" stroke="#94A3B8" stroke-width="1" opacity="0"/>
             <text id="sealLabelR" x="150" y="-14" font-size="8" fill="#64748B" text-anchor="middle" opacity="0">密封</text>
-
-            <!-- Small beaker A (ammonia) -->
+            <rect id="dropCoverR" class="drop-zone" x="-4" y="-25" width="308" height="40" rx="4"/>
+            <!-- Beaker A -->
             <g transform="translate(20,120)">
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="#B8D4EA" stroke="none"/>
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="#B8D4EA" stroke="none"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
               <rect x="3" y="5" width="8" height="100" rx="4" fill="url(#highlightGrad)" opacity="0.8"/>
               <rect id="ammoniaR" x="2" y="58" width="76" height="57" rx="3" fill="hsl(185,70%,65%)" opacity="0"/>
+              <rect id="dropAR" class="drop-zone" x="-4" y="-8" width="88" height="130" rx="5"/>
               <text x="40" y="133" font-size="8" fill="#475569" text-anchor="middle" font-weight="600">A 浓氨水</text>
             </g>
-
-            <!-- Small beaker B (phenolphthalein) -->
+            <!-- Beaker B -->
             <g transform="translate(190,120)">
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="#B8D4EA" stroke="none"/>
-              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z"
-                    fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="#B8D4EA" stroke="none"/>
+              <path d="M2,0 L0,3 L0,110 Q0,118 7,118 L73,118 Q80,118 80,110 L80,3 L78,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
               <rect x="3" y="5" width="8" height="100" rx="4" fill="url(#highlightGrad)" opacity="0.8"/>
               <rect id="phenolR" x="2" y="58" width="76" height="57" rx="3" fill="hsl(0,0%,95%)" opacity="0"/>
+              <rect id="dropBR" class="drop-zone" x="-4" y="-8" width="88" height="130" rx="5"/>
               <text x="40" y="133" font-size="8" fill="#475569" text-anchor="middle" font-weight="600">B 酚酞</text>
             </g>
-
-            <!-- Diffusion arrow -->
             <g id="arrowR" opacity="0">
               <line x1="110" y1="190" x2="180" y2="190" stroke="#F97316" stroke-width="1.5" stroke-dasharray="5,3"/>
               <polygon points="180,186 192,190 180,194" fill="#F97316"/>
               <text x="150" y="182" font-size="7" fill="#F97316" text-anchor="middle" font-weight="600">NH₃ 扩散 (加速)</text>
             </g>
           </g>
-
           <!-- Alcohol lamp -->
           <g transform="translate(120,300)">
-            <path d="M8,10 Q5,10 5,13 L5,38 Q5,44 11,44 L39,44 Q45,44 45,38 L45,13 Q45,10 42,10 Z"
-                  fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+            <path d="M8,10 Q5,10 5,13 L5,38 Q5,44 11,44 L39,44 Q45,44 45,38 L45,13 Q45,10 42,10 Z" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
             <path d="M10,12 L10,36" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
             <rect x="8" y="25" width="34" height="16" rx="2" fill="#FEF3C7" opacity="0.5"/>
             <rect x="18" y="4" width="14" height="8" rx="3" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
             <rect x="22" y="-2" width="6" height="10" rx="2" fill="#B0B0B0"/>
             <line x1="25" y1="-2" x2="25" y2="-10" stroke="#4B5563" stroke-width="1.2" stroke-linecap="round"/>
-            <!-- Drop zone: match -->
             <rect id="dropWick" class="drop-zone" x="5" y="-25" width="40" height="45" rx="4"/>
             <g id="lampFlame" opacity="0" filter="url(#flameGlow)">
               <ellipse cx="25" cy="-16" rx="8" ry="14" fill="#F97316" opacity="0.45"/>
@@ -214,21 +185,18 @@
         <!-- ===== BOTTOM COMPARISON BAR ===== -->
         <g transform="translate(20,375)">
           <rect x="0" y="0" width="860" height="38" rx="8" fill="rgba(248,250,252,0.9)" stroke="#E2E8F0" stroke-width="1"/>
-          <!-- Left progress -->
           <text x="20" y="14" font-size="8" fill="#0284C7" font-weight="700">常温</text>
           <rect x="60" y="6" width="300" height="8" rx="4" fill="#E2E8F0"/>
           <rect id="barL" x="60" y="6" width="0" height="8" rx="4" fill="#06B6D4"/>
           <text id="timeL" x="370" y="14" font-size="8" fill="#64748B">0.0s</text>
-          <!-- Right progress -->
           <text x="460" y="14" font-size="8" fill="#F97316" font-weight="700">加热</text>
           <rect x="500" y="6" width="300" height="8" rx="4" fill="#E2E8F0"/>
           <rect id="barR" x="500" y="6" width="0" height="8" rx="4" fill="#F97316"/>
           <text id="timeR" x="810" y="14" font-size="8" fill="#64748B">0.0s</text>
-          <!-- Result -->
           <text id="resultText" x="430" y="32" font-size="9" fill="#059669" text-anchor="middle" font-weight="700" opacity="0"></text>
         </g>
 
-        <!-- ===== DRAGGABLE TOOLBAR (top-right corner) ===== -->
+        <!-- ===== DRAGGABLE TOOLBAR ===== -->
         <g transform="translate(830,15)">
           <rect x="-5" y="0" width="72" height="350" rx="8" fill="rgba(255,255,255,0.7)" stroke="#CBD5E1" stroke-width="1"/>
           <text x="31" y="16" font-size="7" fill="#64748B" text-anchor="middle" font-weight="600">器材</text>
@@ -262,8 +230,7 @@
           </g>
         </g>
 
-        <!-- Canvas hint -->
-        <text id="canvasHint" x="410" y="415" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">拖拽右侧器材到实验区 · 两组同步操作</text>
+        <text id="canvasHint" x="410" y="415" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">拖拽器材分别操作两组实验 · 自由探索</text>
       </svg>
     </div>
   </div>
@@ -273,11 +240,12 @@
       <div class="panel-section">
         <div class="section-title">操作清单</div>
         <ul class="obs-list" id="obsList">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>两组倒入浓氨水</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>两组滴入酚酞</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>两组密封烧杯</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>常温组酚酞变红</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>加热组酚酞更快变红</li>
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>左组倒入氨水 + 酚酞</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>右组倒入氨水 + 酚酞</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>左组密封</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>右组密封</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>点燃酒精灯 → 两组同时扩散</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>加热组更快变红</li>
         </ul>
       </div>
 
@@ -313,49 +281,21 @@
 const $ = id => document.getElementById(id);
 const svg = $('mainSvg');
 
-// ===== STATE (condition flags) =====
-const state = {
-  ammoniaAdded: false,
-  phenolAdded: false,
-  sealed: false,
-  lampLit: false,
-  diffusing: false,
-  animFrame: null
-};
+// ===== PER-SIDE STATE (independent!) =====
+const left = { ammonia: false, phenol: false, sealed: false };
+const right = { ammonia: false, phenol: false, sealed: false };
+const state = { lampLit: false, diffusing: false, animFrame: null };
 
-// Two groups share structure
 const groups = {
   normal: { diffTime: 0, done: false, speed: 1, particles: [] },
-  heated: { diffTime: 0, done: false, speed: 1, particles: [] }
+  heated: { diffTime: 0, done: false, speed: 2, particles: [] }
 };
 
-// Pre-conditions
-const PRE = {
-  seal:  () => state.ammoniaAdded && state.phenolAdded,
-  light: () => state.sealed
-};
-const HINTS = {
-  seal:  '先倒入浓氨水和酚酞，再盖玻璃片密封',
-  light: '先盖玻璃片密封再加热'
-};
+// Regions (in screen coords after scale 0.85)
+const L = { srcX: 88, srcY: 190, dstXMin: 185, dstXMax: 250, dstYMin: 175, dstYMax: 235, xMin: 22, xMax: 275, yMin: 20, yMax: 265 };
+const R = { srcX: 508, srcY: 190, dstXMin: 605, dstXMax: 670, dstYMin: 175, dstYMax: 235, xMin: 442, xMax: 695, yMin: 20, yMax: 265 };
 
-// Regions (in scaled coordinates, adjusted for scale 0.85)
-// Left group at translate(20,15) scale(0.85): beaker A at +20,+120, liquid at +2,+58 w76 h57
-// Source (A center): 20+20+40=80 scaled → 20+80*0.85=88, 15+(120+80)*0.85=185
-// Dest B region: 20+190=210 scaled → 20+210*0.85=198.5, same y
-const L = {
-  srcX: 88, srcY: 190,
-  dstXMin: 185, dstXMax: 250, dstYMin: 175, dstYMax: 235,
-  xMin: 22, xMax: 275, yMin: 20, yMax: 265
-};
-// Right group at translate(440,15) scale(0.85)
-const R = {
-  srcX: 508, srcY: 190,
-  dstXMin: 605, dstXMax: 670, dstYMin: 175, dstYMax: 235,
-  xMin: 442, xMax: 695, yMin: 20, yMax: 265
-};
-
-// Init particle pools
+// Init particles
 document.querySelectorAll('.molL').forEach(el => {
   groups.normal.particles.push({el, active:false, x:0, y:0, baseR:parseFloat(el.getAttribute('r')), r:0, opacity:0});
 });
@@ -363,21 +303,26 @@ document.querySelectorAll('.molR').forEach(el => {
   groups.heated.particles.push({el, active:false, x:0, y:0, baseR:parseFloat(el.getAttribute('r')), r:0, opacity:0});
 });
 
-// ===== DRAG SETUP =====
+// Store original transforms for reset
+const toolIds = ['toolAmmonia','toolPhenol','toolCover','toolMatch'];
+const origTransforms = {};
+toolIds.forEach(id => origTransforms[id] = $(id).getAttribute('transform'));
+
+// ===== DRAG: each tool can drop on EITHER side =====
 function initDrag() {
-  // Ammonia → both groups (drop on left A beaker)
+  // Ammonia → left A or right A
   ChemDrag.makeDraggable($('toolAmmonia'), {
-    snapTargets: [{id:'dropAL', action:'ammonia'}],
+    snapTargets: [{id:'dropAL', action:'ammoniaL'}, {id:'dropAR', action:'ammoniaR'}],
     onDrop: (action) => doAction(action), resetOnFail: true
   });
-  // Phenol → both groups (drop on left B... actually any beaker)
+  // Phenol → left B or right B
   ChemDrag.makeDraggable($('toolPhenol'), {
-    snapTargets: [{id:'dropBL', action:'phenol'}],
+    snapTargets: [{id:'dropBL', action:'phenolL'}, {id:'dropBR', action:'phenolR'}],
     onDrop: (action) => doAction(action), resetOnFail: true
   });
-  // Glass cover → seal both
+  // Cover → left or right beaker top
   ChemDrag.makeDraggable($('toolCover'), {
-    snapTargets: [{id:'dropCoverL', action:'seal'}],
+    snapTargets: [{id:'dropCoverL', action:'sealL'}, {id:'dropCoverR', action:'sealR'}],
     onDrop: (action) => doAction(action), resetOnFail: true
   });
   // Match → right lamp only
@@ -389,56 +334,57 @@ function initDrag() {
 
 function doAction(action) {
   switch(action) {
-    case 'ammonia': addAmmonia(); break;
-    case 'phenol':  addPhenol(); break;
-    case 'seal':
-      if (!PRE.seal()) { ChemDrag.showToast(svg, HINTS.seal); return; }
-      sealBeakers(); break;
+    case 'ammoniaL': addAmmonia('L'); break;
+    case 'ammoniaR': addAmmonia('R'); break;
+    case 'phenolL':  addPhenol('L'); break;
+    case 'phenolR':  addPhenol('R'); break;
+    case 'sealL':
+      if (!left.ammonia || !left.phenol) { ChemDrag.showToast(svg, '先往左组倒入氨水和酚酞'); return; }
+      seal('L'); break;
+    case 'sealR':
+      if (!right.ammonia || !right.phenol) { ChemDrag.showToast(svg, '先往右组倒入氨水和酚酞'); return; }
+      seal('R'); break;
     case 'light':
-      if (!PRE.light()) { ChemDrag.showToast(svg, HINTS.light); return; }
+      if (!left.sealed || !right.sealed) { ChemDrag.showToast(svg, '先把两组都密封'); return; }
       lightLamp(); break;
   }
 }
 
-// ===== ACTIONS (both groups sync) =====
-function addAmmonia() {
-  if (state.ammoniaAdded) return;
-  state.ammoniaAdded = true;
-  $('toolAmmonia').classList.add('used');
-  $('ammoniaL').setAttribute('opacity','1');
-  $('ammoniaR').setAttribute('opacity','1');
-  checkObs('obs1');
+// ===== INDEPENDENT ACTIONS =====
+function addAmmonia(side) {
+  const s = side === 'L' ? left : right;
+  if (s.ammonia) { ChemDrag.showToast(svg, (side === 'L' ? '左' : '右') + '组已倒入氨水'); return; }
+  s.ammonia = true;
+  $('ammonia' + side).setAttribute('opacity', '1');
+  checkSideReady(side);
+  // Grey out only when BOTH sides done
+  if (left.ammonia && right.ammonia) $('toolAmmonia').classList.add('used');
   updateHint();
 }
 
-function addPhenol() {
-  if (state.phenolAdded) return;
-  state.phenolAdded = true;
-  $('toolPhenol').classList.add('used');
-  $('phenolL').setAttribute('opacity','1');
-  $('phenolR').setAttribute('opacity','1');
-  checkObs('obs2');
+function addPhenol(side) {
+  const s = side === 'L' ? left : right;
+  if (s.phenol) { ChemDrag.showToast(svg, (side === 'L' ? '左' : '右') + '组已滴入酚酞'); return; }
+  s.phenol = true;
+  $('phenol' + side).setAttribute('opacity', '1');
+  checkSideReady(side);
+  if (left.phenol && right.phenol) $('toolPhenol').classList.add('used');
   updateHint();
 }
 
-function sealBeakers() {
-  if (state.sealed) return;
-  state.sealed = true;
-  $('toolCover').classList.add('used');
-  // Both covers
-  $('coverL').setAttribute('opacity','1');
-  $('coverR').setAttribute('opacity','1');
-  $('sealLabelL').setAttribute('opacity','1');
-  $('sealLabelR').setAttribute('opacity','1');
-  $('arrowL').setAttribute('opacity','1');
-  $('arrowR').setAttribute('opacity','1');
-  checkObs('obs3');
+function checkSideReady(side) {
+  const s = side === 'L' ? left : right;
+  if (s.ammonia && s.phenol) checkObs(side === 'L' ? 'obs1' : 'obs2');
+}
 
-  // Init particles for both groups
-  initParticles(groups.normal, L);
-  initParticles(groups.heated, R);
-  state.diffusing = true;
-  startDiffusion();
+function seal(side) {
+  const s = side === 'L' ? left : right;
+  if (s.sealed) { ChemDrag.showToast(svg, (side === 'L' ? '左' : '右') + '组已密封'); return; }
+  s.sealed = true;
+  $('cover' + side).setAttribute('opacity', '1');
+  $('sealLabel' + side).setAttribute('opacity', '1');
+  checkObs(side === 'L' ? 'obs3' : 'obs4');
+  if (left.sealed && right.sealed) $('toolCover').classList.add('used');
   updateHint();
 }
 
@@ -446,8 +392,16 @@ function lightLamp() {
   if (state.lampLit) return;
   state.lampLit = true;
   $('toolMatch').classList.add('used');
-  $('lampFlame').setAttribute('opacity','1');
-  groups.heated.speed = 2;
+  $('lampFlame').setAttribute('opacity', '1');
+  $('arrowL').setAttribute('opacity', '1');
+  $('arrowR').setAttribute('opacity', '1');
+  checkObs('obs5');
+
+  // Init both particle sets
+  initParticles(groups.normal, L);
+  initParticles(groups.heated, R);
+  state.diffusing = true;
+  startDiffusion();
 
   // Flame flicker
   (function flick() {
@@ -471,10 +425,9 @@ function initParticles(g, region) {
   });
 }
 
-// ===== SINGLE RAF LOOP FOR BOTH GROUPS =====
+// ===== SINGLE RAF FOR BOTH =====
 function startDiffusion() {
-  const TARGET = 480; // 8s at 60fps for speed=1
-
+  const TARGET = 480;
   function tick() {
     if (!state.diffusing) return;
     let anyActive = false;
@@ -485,15 +438,12 @@ function startDiffusion() {
       if (g.done) return;
       anyActive = true;
       g.diffTime++;
-
       const effectiveTime = g.diffTime * g.speed;
       const progress = Math.min(effectiveTime / TARGET, 1);
       const elapsed = (g.diffTime / 60).toFixed(1);
-
       $(barId).setAttribute('width', String(progress * 300));
       $(timeId).textContent = elapsed + 's';
 
-      // Move particles
       const speed = 1.5 * g.speed;
       for (const m of g.particles) {
         if (!m.active) continue;
@@ -510,18 +460,15 @@ function startDiffusion() {
         m.el.setAttribute('r', m.r); m.el.setAttribute('opacity', m.opacity);
       }
 
-      // Phenol color
       const s = progress * 70, l = 95 - progress * 35;
       $(phenolId).setAttribute('fill', 'hsl(340,' + s + '%,' + l + '%)');
 
       if (progress >= 1) {
         g.done = true;
-        if (key === 'normal') checkObs('obs4');
-        if (key === 'heated') checkObs('obs5');
+        if (key === 'heated') checkObs('obs6');
       }
     });
 
-    // Check completion
     if (groups.normal.done && groups.heated.done) {
       const tN = (groups.normal.diffTime / 60).toFixed(1);
       const tH = (groups.heated.diffTime / 60).toFixed(1);
@@ -531,7 +478,6 @@ function startDiffusion() {
       state.diffusing = false;
       return;
     }
-
     if (anyActive) state.animFrame = requestAnimationFrame(tick);
   }
   state.animFrame = requestAnimationFrame(tick);
@@ -539,12 +485,14 @@ function startDiffusion() {
 
 // ===== HINT =====
 function updateHint() {
-  if (!state.ammoniaAdded || !state.phenolAdded) {
-    $('canvasHint').textContent = '拖拽氨水和酚酞到烧杯（两组同步）';
-  } else if (!state.sealed) {
-    $('canvasHint').textContent = '拖拽玻璃片密封烧杯';
+  const lReady = left.ammonia && left.phenol;
+  const rReady = right.ammonia && right.phenol;
+  if (!lReady || !rReady) {
+    $('canvasHint').textContent = '分别往两组烧杯倒入氨水和酚酞';
+  } else if (!left.sealed || !right.sealed) {
+    $('canvasHint').textContent = '分别盖上两组的玻璃片密封';
   } else if (!state.lampLit) {
-    $('canvasHint').textContent = '拖火柴到右组酒精灯加热，对比速度！';
+    $('canvasHint').textContent = '拖火柴到右组酒精灯 → 两组同时开始扩散！';
   } else if (state.diffusing) {
     $('canvasHint').textContent = '观察对比：加热组变红更快...';
   }
@@ -561,10 +509,11 @@ function checkObs(id) {
 
 function resetExperiment() {
   if (state.animFrame) cancelAnimationFrame(state.animFrame);
-  state.diffusing = false;
-  Object.assign(state, {ammoniaAdded:false, phenolAdded:false, sealed:false, lampLit:false, diffusing:false});
-  groups.normal.diffTime = 0; groups.normal.done = false; groups.normal.speed = 1;
-  groups.heated.diffTime = 0; groups.heated.done = false; groups.heated.speed = 1;
+  state.diffusing = false; state.lampLit = false;
+  Object.assign(left, {ammonia:false, phenol:false, sealed:false});
+  Object.assign(right, {ammonia:false, phenol:false, sealed:false});
+  groups.normal.diffTime = 0; groups.normal.done = false;
+  groups.heated.diffTime = 0; groups.heated.done = false;
 
   ['ammoniaL','ammoniaR'].forEach(id => $(id).setAttribute('opacity','0'));
   ['phenolL','phenolR'].forEach(id => { $(id).setAttribute('opacity','0'); $(id).setAttribute('fill','hsl(0,0%,95%)'); });
@@ -577,11 +526,17 @@ function resetExperiment() {
   [...groups.normal.particles, ...groups.heated.particles].forEach(m => {
     m.active = false; m.el.setAttribute('opacity','0');
   });
-  ['toolAmmonia','toolPhenol','toolCover','toolMatch'].forEach(id => $(id).classList.remove('used'));
+
+  // Reset tools: remove used class AND restore original transforms
+  toolIds.forEach(id => {
+    $(id).classList.remove('used');
+    $(id).setAttribute('transform', origTransforms[id]);
+  });
+
   document.querySelectorAll('.obs-item').forEach(el => {
     el.classList.remove('checked'); el.querySelector('.obs-check').textContent = '';
   });
-  $('canvasHint').textContent = '拖拽右侧器材到实验区 · 两组同步操作';
+  $('canvasHint').textContent = '拖拽器材分别操作两组实验 · 自由探索';
 }
 
 initDrag();
