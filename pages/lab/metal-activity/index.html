@@ -2,321 +2,260 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>探究金属活动性顺序 - 金属与酸和盐溶液反应 | DevKit</title>
-<meta name="keywords" content="金属活动性, 置换反应, Zn Fe Cu Ag, 初中化学">
-<meta name="description" content="探究金属活动性顺序：金属与酸反应对比、Fe置换Cu、Cu置换Ag">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>金属活动性顺序 - 虚拟实验室</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <link rel="stylesheet" href="/shared/chem-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
-.scene{display:none}.scene.active{display:block}
-.tab-bar{display:flex;gap:4px;margin-bottom:8px}
-.tab-btn{flex:1;padding:6px 4px;border:1px solid #E2E8F0;border-radius:6px;background:#FFF;font-size:9px;cursor:pointer;text-align:center;font-weight:600;color:#64748B}
-.tab-btn.active{background:var(--lab-accent);color:#FFF;border-color:var(--lab-accent)}
-.tab-btn.done{background:#BBF7D0;color:#166534;border-color:#86EFAC}
-.activity-bar{display:flex;gap:2px;margin:6px 0;flex-wrap:wrap}
-.activity-el{padding:3px 5px;border-radius:4px;font-size:8px;font-weight:700;background:#F1F5F9;color:#94A3B8}
-.activity-el.highlight{background:var(--lab-accent);color:#FFF}
-.activity-el.h-line{background:#F59E0B;color:#FFF}
-.record-table{width:100%;border-collapse:collapse;font-size:8px;margin:6px 0}
-.record-table th,.record-table td{border:1px solid #E2E8F0;padding:3px 4px;text-align:center}
-.record-table th{background:#F8FAFC;font-weight:600;color:#64748B}
-.record-table td.filled{color:#0284C7;font-weight:600}
-.badge{display:inline-block;padding:2px 6px;border-radius:8px;font-size:6px;font-weight:700}
-.badge-green{background:#DCFCE7;color:#166534}
-.badge-yellow{background:#FEF9C3;color:#854D0E}
-.badge-red{background:#FEE2E2;color:#991B1B}
-.svg-click{cursor:pointer}.svg-click:hover{filter:brightness(1.08)}
-.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;font-size:10px;color:#0D9488}
+.tab-row{display:flex;gap:2px;margin-bottom:8px}
+.tab-btn{flex:1;padding:5px 0;border-radius:6px;border:1px solid #E2E8F0;background:#F8FAFC;font-size:8px;font-weight:700;color:#64748B;cursor:pointer;text-align:center}
+.tab-btn.active{background:#0284C7;color:#fff;border-color:#0284C7}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
-  <h1>探究金属活动性顺序</h1>
-</div>
-<div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>金属与酸 · 置换反应 · 活动性顺序 · 初中化学</div>
-  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
-</div>
-
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-wrapper">
-      <div id="statusBadge" class="status-badge idle">选择实验组 → 开始观察</div>
-
-      <!-- ===== TAB A: Metal + Acid ===== -->
-      <svg id="sceneA" class="scene active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <text x="360" y="25" font-size="10" fill="#64748B" text-anchor="middle">三种金属分别加入稀盐酸（HCl）</text>
-
-        <!-- Zn tube -->
-        <!-- Click zone for all 3 tubes -->
-        <rect id="tubesClick" class="clickable" x="70" y="40" width="420" height="300" fill="transparent" onclick="startExperiment()"/>
-        <text id="tubesHint" class="svg-hint" x="270" y="350" text-anchor="middle">点击试管 → 开始实验</text>
-        <text class="svg-hint" x="360" y="365" text-anchor="middle">点击试管开始实验</text>
-        <g id="tubeZn" class="clickable" transform="translate(80,50)" onclick="if(state.tab==='A')startExperiment()">
-          <rect x="0" y="20" width="60" height="260" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
-          <rect id="znLiquid" x="2" y="100" width="56" height="178" rx="3" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.3"/>
-          <rect id="znMetal" x="15" y="240" width="30" height="20" rx="2" fill="#A1A1AA" stroke="#71717A" stroke-width="0.5"/>
-          <text x="30" y="300" font-size="7" fill="#64748B" text-anchor="middle">Zn + HCl</text>
-          <text id="znBadge" x="30" y="315" font-size="6" fill="#64748B" text-anchor="middle" opacity="0"></text>
-          <!-- Bubbles (pre-allocated, 15 for vigorous) -->
-          <g id="znBubbles">
-            <circle class="zn-b" cx="20" cy="200" r="2" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="30" cy="210" r="1.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="40" cy="195" r="2.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="25" cy="180" r="1.8" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="35" cy="170" r="2" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="22" cy="160" r="1.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="38" cy="150" r="2.2" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="28" cy="140" r="1.8" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="42" cy="130" r="2" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="18" cy="120" r="1.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="zn-b" cx="33" cy="110" r="2.5" fill="#7DD3FC" opacity="0"/>
-          </g>
-        </g>
-
-        <!-- ">" symbol -->
-        <text x="195" y="200" font-size="30" fill="#0284C7" text-anchor="middle" font-weight="700">&gt;</text>
-
-        <!-- Fe tube -->
-        <g id="tubeFe" class="clickable" transform="translate(240,50)" onclick="if(state.tab==='A')startExperiment()">
-          <rect x="0" y="20" width="60" height="260" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
-          <rect id="feLiquid" x="2" y="100" width="56" height="178" rx="3" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.3"/>
-          <rect id="feMetal" x="15" y="240" width="30" height="20" rx="2" fill="#57534E" stroke="#44403C" stroke-width="0.5"/>
-          <text x="30" y="300" font-size="7" fill="#64748B" text-anchor="middle">Fe + HCl</text>
-          <text id="feBadge" x="30" y="315" font-size="6" fill="#64748B" text-anchor="middle" opacity="0"></text>
-          <!-- Bubbles (sparse, 5) -->
-          <g id="feBubbles">
-            <circle class="fe-b" cx="25" cy="200" r="1.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="fe-b" cx="35" cy="185" r="2" fill="#7DD3FC" opacity="0"/>
-            <circle class="fe-b" cx="30" cy="160" r="1.5" fill="#7DD3FC" opacity="0"/>
-            <circle class="fe-b" cx="28" cy="140" r="1.8" fill="#7DD3FC" opacity="0"/>
-          </g>
-        </g>
-
-        <!-- ">" symbol -->
-        <text x="355" y="200" font-size="30" fill="#0284C7" text-anchor="middle" font-weight="700">&gt;</text>
-
-        <!-- Cu tube -->
-        <g id="tubeCu" class="clickable" transform="translate(400,50)" onclick="if(state.tab==='A')startExperiment()">
-          <rect x="0" y="20" width="60" height="260" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1"/>
-          <rect id="cuLiquid" x="2" y="100" width="56" height="178" rx="3" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.3"/>
-          <rect id="cuMetal" x="15" y="240" width="30" height="20" rx="2" fill="#D97706" stroke="#B45309" stroke-width="0.5"/>
-          <text x="30" y="300" font-size="7" fill="#64748B" text-anchor="middle">Cu + HCl</text>
-          <text id="cuBadge" x="30" y="315" font-size="6" fill="#64748B" text-anchor="middle" opacity="0"></text>
-        </g>
-
-        <!-- Conclusion (shown after) -->
-        <g id="tabAConcl" opacity="0" transform="translate(500,100)">
-          <rect x="0" y="0" width="180" height="100" rx="8" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="1"/>
-          <text x="90" y="22" font-size="9" fill="#0284C7" text-anchor="middle" font-weight="700">实验 A 结论</text>
-          <text x="90" y="42" font-size="8" fill="#0F172A" text-anchor="middle">活动性：Zn &gt; Fe &gt; H &gt; Cu</text>
-          <text x="90" y="60" font-size="7" fill="#64748B" text-anchor="middle">Zn、Fe 能置换酸中的 H</text>
-          <text x="90" y="75" font-size="7" fill="#64748B" text-anchor="middle">Cu 不能（排在 H 后面）</text>
-        </g>
-      </svg>
-
-      <!-- ===== TAB B: Fe + CuSO4 ===== -->
-      <svg id="sceneB" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <text x="360" y="25" font-size="10" fill="#64748B" text-anchor="middle">铁片浸入硫酸铜溶液</text>
-
-        <g id="beakerB" class="clickable" transform="translate(180,50)" onclick="startExperiment()">
-          <rect x="0" y="0" width="140" height="200" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
-          <text class="svg-hint" x="70" y="225" text-anchor="middle">点击烧杯 → 开始实验</text>
-          <!-- Solution (blue → green) -->
-          <rect id="bSolution" x="2" y="60" width="136" height="138" rx="3" fill="hsl(210,70%,55%)" opacity="0.4"/>
-          <!-- Iron strip -->
-          <rect id="bIron" x="55" y="20" width="10" height="170" rx="1" fill="#57534E" stroke="#44403C" stroke-width="0.5"/>
-          <!-- Cu deposits on iron (pre-drawn, opacity=0) -->
-          <g id="bDeposits" opacity="0">
-            <circle cx="52" cy="100" r="2" fill="#DC2626"/>
-            <circle cx="68" cy="110" r="1.5" fill="#B91C1C"/>
-            <circle cx="53" cy="130" r="2.5" fill="#DC2626"/>
-            <circle cx="67" cy="140" r="1.8" fill="#B91C1C"/>
-            <circle cx="54" cy="160" r="2" fill="#DC2626"/>
-            <circle cx="66" cy="150" r="1.5" fill="#B91C1C"/>
-            <circle cx="55" cy="120" r="1" fill="#DC2626"/>
-            <circle cx="65" cy="170" r="2" fill="#DC2626"/>
-          </g>
-          <text x="70" y="215" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
-          <text x="70" y="230" font-size="6" fill="#94A3B8" text-anchor="middle">Fe + CuSO₄ 溶液</text>
-        </g>
-
-        <!-- Status -->
-        <g transform="translate(400,100)">
-          <rect x="0" y="0" width="240" height="100" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="20" font-size="8" fill="#0F172A" font-weight="600">现象观察</text>
-          <text id="bStatus1" x="10" y="40" font-size="7" fill="#64748B">等待开始实验</text>
-          <text id="bStatus2" x="10" y="55" font-size="7" fill="#64748B"></text>
-          <text id="bStatus3" x="10" y="70" font-size="7" fill="#64748B"></text>
-          <text id="bConclusion" x="10" y="88" font-size="7" fill="#0284C7" font-weight="600" opacity="0">结论：Fe &gt; Cu（铁比铜活泼）</text>
-        </g>
-      </svg>
-
-      <!-- ===== TAB C: Cu + AgNO3 ===== -->
-      <svg id="sceneC" class="scene" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <rect width="720" height="400" fill="#F8FAFC"/>
-        <text x="360" y="25" font-size="10" fill="#64748B" text-anchor="middle">铜丝浸入硝酸银溶液</text>
-
-        <g id="beakerC" class="clickable" transform="translate(180,50)" onclick="startExperiment()">
-          <rect x="0" y="0" width="140" height="200" rx="4" fill="url(#glassGrad)" stroke="#93C5FD" stroke-width="1.2"/>
-          <text class="svg-hint" x="70" y="225" text-anchor="middle">点击烧杯 → 开始实验</text>
-          <!-- Solution (colorless → blue) -->
-          <rect id="cSolution" x="2" y="60" width="136" height="138" rx="3" fill="hsl(0,0%,95%)" opacity="0.4"/>
-          <!-- Copper wire -->
-          <line id="cCopper" x1="60" y1="20" x2="60" y2="190" stroke="#D97706" stroke-width="3" stroke-linecap="round"/>
-          <!-- Ag deposits on copper (pre-drawn, opacity=0) -->
-          <g id="cDeposits" opacity="0">
-            <circle cx="56" cy="100" r="2" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.3"/>
-            <circle cx="64" cy="115" r="1.5" fill="#D4D4D8" stroke="#A1A1AA" stroke-width="0.3"/>
-            <circle cx="57" cy="135" r="2.5" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.3"/>
-            <circle cx="63" cy="150" r="1.8" fill="#D4D4D8" stroke="#A1A1AA" stroke-width="0.3"/>
-            <circle cx="58" cy="165" r="2" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.3"/>
-            <circle cx="62" cy="125" r="1" fill="#D4D4D8" stroke="#A1A1AA" stroke-width="0.3"/>
-            <circle cx="57" cy="180" r="1.5" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="0.3"/>
-          </g>
-          <text x="70" y="215" font-size="7" fill="#64748B" text-anchor="middle">烧杯</text>
-          <text x="70" y="230" font-size="6" fill="#94A3B8" text-anchor="middle">Cu + AgNO₃ 溶液</text>
-        </g>
-
-        <!-- Status -->
-        <g transform="translate(400,100)">
-          <rect x="0" y="0" width="240" height="100" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="20" font-size="8" fill="#0F172A" font-weight="600">现象观察</text>
-          <text id="cStatus1" x="10" y="40" font-size="7" fill="#64748B">等待开始实验</text>
-          <text id="cStatus2" x="10" y="55" font-size="7" fill="#64748B"></text>
-          <text id="cStatus3" x="10" y="70" font-size="7" fill="#64748B"></text>
-          <text id="cConclusion" x="10" y="88" font-size="7" fill="#0284C7" font-weight="600" opacity="0">结论：Cu &gt; Ag（铜比银活泼）</text>
-        </g>
-      </svg>
-    </div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">金属活动性顺序</strong>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Tab selector -->
-      <div class="panel-section">
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ===== TEST TUBE 1: Zn ===== -->
+          <g transform="translate(80,30)">
+            <rect x="0" y="0" width="60" height="260" rx="30" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="4" y="10" width="8" height="220" rx="4" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- HCl liquid (hidden) -->
+            <rect id="hcl1" x="3" y="100" width="54" height="155" rx="27" fill="rgba(14,165,233,0.15)" opacity="0"/>
+            <!-- Metal piece (hidden) -->
+            <rect id="metal1" x="15" y="200" width="30" height="30" rx="4" fill="#94A3B8" stroke="#78716C" stroke-width="1" opacity="0"/>
+            <text id="metal1Label" x="30" y="220" font-size="10" fill="#fff" text-anchor="middle" font-weight="800" opacity="0">Zn</text>
+            <!-- Bubble pool -->
+            <g id="bub1">
+              <circle class="b1" cx="0" cy="0" r="2.5" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="b1" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="b1" cx="0" cy="0" r="3" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="b1" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+            </g>
+            <!-- Reaction label -->
+            <text id="rxn1" x="30" y="285" font-size="9" fill="#059669" text-anchor="middle" font-weight="700" opacity="0"></text>
+            <rect id="drop1" class="drop-zone" x="-5" y="0" width="70" height="260" rx="30"/>
+            <text x="30" y="305" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">Zn + HCl</text>
+          </g>
+
+          <!-- ===== TEST TUBE 2: Fe ===== -->
+          <g transform="translate(260,30)">
+            <rect x="0" y="0" width="60" height="260" rx="30" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="4" y="10" width="8" height="220" rx="4" fill="url(#hlGrad)" opacity="0.7"/>
+            <rect id="hcl2" x="3" y="100" width="54" height="155" rx="27" fill="rgba(14,165,233,0.15)" opacity="0"/>
+            <rect id="metal2" x="15" y="200" width="30" height="30" rx="4" fill="#57534E" stroke="#44403C" stroke-width="1" opacity="0"/>
+            <text id="metal2Label" x="30" y="220" font-size="10" fill="#D6D3D1" text-anchor="middle" font-weight="800" opacity="0">Fe</text>
+            <g id="bub2">
+              <circle class="b2" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="b2" cx="0" cy="0" r="2.5" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="b2" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+            </g>
+            <text id="rxn2" x="30" y="285" font-size="9" fill="#059669" text-anchor="middle" font-weight="700" opacity="0"></text>
+            <rect id="drop2" class="drop-zone" x="-5" y="0" width="70" height="260" rx="30"/>
+            <text x="30" y="305" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">Fe + HCl</text>
+          </g>
+
+          <!-- ===== TEST TUBE 3: Cu ===== -->
+          <g transform="translate(440,30)">
+            <rect x="0" y="0" width="60" height="260" rx="30" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="4" y="10" width="8" height="220" rx="4" fill="url(#hlGrad)" opacity="0.7"/>
+            <rect id="hcl3" x="3" y="100" width="54" height="155" rx="27" fill="rgba(14,165,233,0.15)" opacity="0"/>
+            <rect id="metal3" x="15" y="200" width="30" height="30" rx="4" fill="#EA580C" stroke="#C2410C" stroke-width="1" opacity="0"/>
+            <text id="metal3Label" x="30" y="220" font-size="10" fill="#FFF7ED" text-anchor="middle" font-weight="800" opacity="0">Cu</text>
+            <text id="rxn3" x="30" y="285" font-size="9" fill="#DC2626" text-anchor="middle" font-weight="700" opacity="0"></text>
+            <rect id="drop3" class="drop-zone" x="-5" y="0" width="70" height="260" rx="30"/>
+            <text x="30" y="305" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">Cu + HCl</text>
+          </g>
+
+          <!-- ===== ACTIVITY SERIES BAR ===== -->
+          <g transform="translate(50,370)">
+            <rect x="0" y="0" width="600" height="35" rx="6" fill="#fff" stroke="#E2E8F0" stroke-width="1"/>
+            <text x="300" y="12" font-size="7" fill="#475569" text-anchor="middle" font-weight="700">金属活动性顺序（由强到弱）</text>
+            <!-- Elements -->
+            <text x="20" y="28" font-size="8" fill="#0284C7" font-weight="700">K</text>
+            <text x="60" y="28" font-size="8" fill="#0284C7" font-weight="700">Ca</text>
+            <text x="100" y="28" font-size="8" fill="#0284C7" font-weight="700">Na</text>
+            <text x="140" y="28" font-size="8" fill="#0284C7" font-weight="700">Mg</text>
+            <text x="180" y="28" font-size="8" fill="#0284C7" font-weight="700">Al</text>
+            <text id="serZn" x="220" y="28" font-size="9" fill="#0284C7" font-weight="900">Zn</text>
+            <text id="serFe" x="260" y="28" font-size="9" fill="#0284C7" font-weight="900">Fe</text>
+            <text x="300" y="28" font-size="8" fill="#64748B" font-weight="700">Ni</text>
+            <text x="335" y="28" font-size="8" fill="#64748B" font-weight="700">Sn</text>
+            <text x="370" y="28" font-size="8" fill="#64748B" font-weight="700">Pb</text>
+            <!-- H divider -->
+            <rect x="395" y="17" width="25" height="16" rx="3" fill="#FEF2F2" stroke="#EF4444" stroke-width="1"/>
+            <text x="407" y="29" font-size="9" fill="#EF4444" text-anchor="middle" font-weight="900">(H)</text>
+            <text id="serCu" x="445" y="28" font-size="9" fill="#EA580C" font-weight="900">Cu</text>
+            <text x="480" y="28" font-size="8" fill="#94A3B8" font-weight="700">Hg</text>
+            <text x="515" y="28" font-size="8" fill="#94A3B8" font-weight="700">Ag</text>
+            <text x="545" y="28" font-size="8" fill="#94A3B8" font-weight="700">Pt</text>
+            <text x="580" y="28" font-size="8" fill="#94A3B8" font-weight="700">Au</text>
+          </g>
+
+          <!-- Canvas hint -->
+          <text id="canvasHint" x="350" y="440" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">拖金属片入试管 → 对比反应速度 → 验证活动性</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
+
+      <div class="tool-card" id="toolZn" data-action="zn">
+        <svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="24" rx="4" fill="#94A3B8" stroke="#78716C" stroke-width="1.2"/><text x="24" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">Zn</text></svg>
+        <div class="tool-name">锌片</div>
+      </div>
+
+      <div class="tool-card" id="toolFe" data-action="fe">
+        <svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="24" rx="4" fill="#57534E" stroke="#44403C" stroke-width="1.2"/><text x="24" y="27" font-size="10" fill="#D6D3D1" text-anchor="middle" font-weight="800">Fe</text></svg>
+        <div class="tool-name">铁钉</div>
+      </div>
+
+      <div class="tool-card" id="toolCu" data-action="cu">
+        <svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="24" rx="4" fill="#EA580C" stroke="#C2410C" stroke-width="1.2"/><text x="24" y="27" font-size="10" fill="#FFF7ED" text-anchor="middle" font-weight="800">Cu</text></svg>
+        <div class="tool-name">铜片</div>
+      </div>
+
+      <div class="tool-card" id="toolHCl" data-action="hcl">
+        <svg viewBox="0 0 48 48"><rect x="14" y="8" width="20" height="32" rx="4" fill="rgba(14,165,233,0.25)" stroke="#0EA5E9" stroke-width="1.2"/><rect x="18" y="4" width="12" height="6" rx="2" fill="#D1D5DB"/><text x="24" y="30" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="700">HCl</text></svg>
+        <div class="tool-name">稀盐酸</div>
+      </div>
+    </div>
+
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:8px">
         <div class="section-title">实验组</div>
-        <div class="tab-bar" id="tabBar">
-          <div class="tab-btn active" id="tabA" onclick="switchTab('A')">A 金属与酸</div>
-          <div class="tab-btn" id="tabB" onclick="switchTab('B')">B Fe+CuSO₄</div>
-          <div class="tab-btn" id="tabC" onclick="switchTab('C')">C Cu+AgNO₃</div>
+        <div class="tab-row">
+          <div class="tab-btn active" id="tabA">A 金属+酸</div>
+          <div class="tab-btn" id="tabB">B Fe+CuSO₄</div>
+          <div class="tab-btn" id="tabC">C Cu+AgNO₃</div>
         </div>
       </div>
 
-      <!-- Control -->
-      <div class="panel-section">
-        <div class="section-title" id="expTitle">实验 A：三种金属与稀盐酸</div>
-        <div class="step-desc" id="expDesc">将 Zn、Fe、Cu 分别加入稀盐酸中，观察反应剧烈程度。<strong>点击画布器材</strong>开始。</div>
-      </div>
-
-      <!-- Activity series -->
-      <div class="panel-section">
-        <div class="section-title">金属活动性顺序</div>
-        <div class="activity-bar" id="activityBar">
-          <div class="activity-el" id="el-K">K</div>
-          <div class="activity-el" id="el-Ca">Ca</div>
-          <div class="activity-el" id="el-Na">Na</div>
-          <div class="activity-el" id="el-Mg">Mg</div>
-          <div class="activity-el" id="el-Al">Al</div>
-          <div class="activity-el" id="el-Zn">Zn</div>
-          <div class="activity-el" id="el-Fe">Fe</div>
-          <div class="activity-el h-line" id="el-H">(H)</div>
-          <div class="activity-el" id="el-Cu">Cu</div>
-          <div class="activity-el" id="el-Hg">Hg</div>
-          <div class="activity-el" id="el-Ag">Ag</div>
-          <div class="activity-el" id="el-Pt">Pt</div>
-          <div class="activity-el" id="el-Au">Au</div>
-        </div>
-        <div style="font-size:8px;color:#64748B;margin-top:4px">从左到右活动性递减 | (H) 为分界线</div>
-      </div>
-
-      <!-- Record table -->
-      <div class="panel-section">
-        <div class="section-title">实验记录表</div>
-        <table class="record-table" id="recordTable">
-          <tr><th>实验</th><th>金属</th><th>试剂</th><th>现象</th><th>结论</th></tr>
-          <tr id="recA"><td>A</td><td>Zn/Fe/Cu</td><td>稀HCl</td><td id="recAph">—</td><td id="recAcl">—</td></tr>
-          <tr id="recB"><td>B</td><td>Fe</td><td>CuSO₄液</td><td id="recBph">—</td><td id="recBcl">—</td></tr>
-          <tr id="recC"><td>C</td><td>Cu</td><td>AgNO₃液</td><td id="recCph">—</td><td id="recCcl">—</td></tr>
-        </table>
-      </div>
-
-      <!-- Observations -->
-      <div class="panel-section">
-        <div class="section-title">现象观察</div>
+      <div style="margin-bottom:10px">
+        <div class="section-title">操作清单</div>
         <ul class="obs-list">
-          <li class="obs-item" id="obs1"><span class="obs-check"></span>Zn + HCl 剧烈冒泡</li>
-          <li class="obs-item" id="obs2"><span class="obs-check"></span>Fe + HCl 缓慢冒泡</li>
-          <li class="obs-item" id="obs3"><span class="obs-check"></span>Cu + HCl 无反应</li>
-          <li class="obs-item" id="obs4"><span class="obs-check"></span>Fe 表面析出红色 Cu</li>
-          <li class="obs-item" id="obs5"><span class="obs-check"></span>Cu 表面析出银白色 Ag</li>
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>拖 Zn 入第 1 管 + 加酸</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>拖 Fe 入第 2 管 + 加酸</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>拖 Cu 入第 3 管 + 加酸</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>对比三管反应速度</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>观察 Cu 无反应</li>
+          <li class="obs-item" id="obs6"><span class="obs-check"></span>排列活动性顺序</li>
         </ul>
       </div>
 
-      <!-- Reset -->
-      <div class="panel-section">
-        <button class="ctrl-btn secondary" onclick="resetAll()">重做实验</button>
+      <div>
+        <div class="section-title">现象观察</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="phen1"><span class="obs-check"></span>Zn+HCl 剧烈冒泡 (H₂↑)</li>
+          <li class="obs-item" id="phen2"><span class="obs-check"></span>Fe+HCl 缓慢冒泡 (H₂↑)</li>
+          <li class="obs-item" id="phen3"><span class="obs-check"></span>Cu+HCl 无反应 (H 后)</li>
+        </ul>
       </div>
 
-      <!-- Final conclusion -->
-      <div class="panel-section" id="resultSection" style="display:none">
-        <div class="section-title">综合结论</div>
-        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
-          <strong style="color:#0284C7">金属活动性：Zn &gt; Fe &gt; H &gt; Cu &gt; Ag</strong>
-          <div style="margin-top:4px;font-size:10px;color:#64748B">活动性强的金属能将活动性弱的金属从其盐溶液中置换出来。</div>
-        </div>
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px;text-align:center">微观 → 宏观</div>
+        <div id="microNote" style="text-align:center;line-height:1.6">活泼金属可置换酸中 H⁺<br>反应速度 → 活动性强弱<br>H 前金属能与酸反应，H 后不能</div>
       </div>
+
+      <button onclick="resetExperiment()" style="width:100%;margin-top:10px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
     </div>
   </div>
-</div>
 
-<!-- Knowledge -->
-<div class="knowledge-section">
-  <div class="knowledge-container">
-    <h2>实验原理</h2>
-    <p>通过金属与酸、金属与盐溶液的反应，探究不同金属的活动性强弱，验证金属活动性顺序。</p>
-
-    <h3>金属活动性顺序</h3>
-    <p><strong>K Ca Na Mg Al Zn Fe (H) Cu Hg Ag Pt Au</strong></p>
-    <p>口诀：<em>钾钙钠镁铝 锌铁氢铜汞 银铂金</em></p>
-    <ul>
-      <li>排在 <strong>(H) 前面</strong>的金属能与稀酸反应产生 H₂</li>
-      <li>排在 <strong>(H) 后面</strong>的金属不能与稀酸反应</li>
-      <li>活动性<strong>强的金属能置换弱的金属</strong>的盐溶液</li>
-    </ul>
-
-    <h3>实验中的化学方程式</h3>
-    <div class="formula-block" id="formula1"></div>
-    <div class="formula-block" id="formula2"></div>
-    <div class="formula-block" id="formula3"></div>
-
-    <h3>置换反应</h3>
-    <ul>
-      <li>一种单质与一种化合物反应，生成另一种单质和另一种化合物</li>
-      <li>通式：A + BC → AC + B</li>
-      <li>条件：A 的活动性必须强于 B</li>
-    </ul>
-
-    <h3>实验现象总结</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
-      <div style="background:#DBEAFE;padding:10px;border-radius:8px">
-        <strong>金属 + 酸</strong><br>
-        Zn：剧烈冒泡<br>
-        Fe：缓慢冒泡<br>
-        Cu：无反应
+  <!-- Knowledge -->
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>化学方程式</h4>
+        <div id="formula1" style="text-align:center;margin:4px 0"></div>
+        <div id="formula2" style="text-align:center;margin:4px 0"></div>
+        <p>Zn 反应更快 → 活动性更强</p>
       </div>
-      <div style="background:#E0F2FE;padding:10px;border-radius:8px">
-        <strong>金属 + 盐溶液</strong><br>
-        Fe + CuSO₄：表面红色<br>
-        Cu + AgNO₃：表面银白
+      <div class="knowledge-card">
+        <h4>活动性顺序口诀</h4>
+        <p><strong>钾钙钠镁铝 锌铁锡铅(氢) 铜汞银铂金</strong><br>氢前金属能与酸反应产生 H₂，氢后不能</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>置换反应</h4>
+        <p>活泼金属 + 酸 → 盐 + H₂↑<br>活泼金属 + 盐溶液 → 新盐 + 新金属<br>条件：活动性前者 > 后者</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>Cu 为什么不反应？</h4>
+        <p>Cu 在活动性顺序中排在 H 之后，不能置换酸中的 H⁺，因此不产生 H₂。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>Fe + CuSO₄ 置换</h4>
+        <div id="formula3" style="text-align:center;margin:4px 0"></div>
+        <p>铁钉表面析出红色铜，溶液变浅绿色（Fe²⁺）</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>应用</h4>
+        <p>湿法冶金（用铁置换铜）<br>金属防腐（牺牲阳极保护法）<br>判断反应能否发生</p>
       </div>
     </div>
   </div>
@@ -328,279 +267,212 @@
 const $ = id => document.getElementById(id);
 
 // ===== STATE =====
-const state = { tab: 'A', doneA: false, doneB: false, doneC: false, animating: false };
+const tubes = {
+  1: { metal: false, acid: false, reacting: false },
+  2: { metal: false, acid: false, reacting: false },
+  3: { metal: false, acid: false, reacting: false }
+};
+const bubPools = { 1: [], 2: [] };
+document.querySelectorAll('.b1').forEach(el => bubPools[1].push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 }));
+document.querySelectorAll('.b2').forEach(el => bubPools[2].push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 }));
+let animRunning = false;
+let doneCount = 0;
 
-// ===== TAB SWITCHING =====
-function switchTab(tab) {
-  if (state.animating) return;
-  state.tab = tab;
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  $('scene' + tab).classList.add('active');
+// ===== DROP TARGETS =====
+// Each metal goes to its specific tube, HCl goes to any tube that has metal
+const DROP_TARGETS = {
+  zn: ['drop1'],
+  fe: ['drop2'],
+  cu: ['drop3'],
+  hcl: ['drop1','drop2','drop3']
+};
 
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  $('tab' + tab).classList.add('active');
+// ===== DRAG =====
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
+  });
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
+  });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    const act = dragState.action;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) handleDrop(act, hit);
+    dragState = null;
+  });
+});
 
-  const info = {
-    A: { title: '实验 A：三种金属与稀盐酸', desc: '将 Zn、Fe、Cu 分别加入稀盐酸中，观察反应剧烈程度。' },
-    B: { title: '实验 B：铁片浸入硫酸铜溶液', desc: '观察铁片表面和溶液颜色变化。' },
-    C: { title: '实验 C：铜丝浸入硝酸银溶液', desc: '观察铜丝表面和溶液颜色变化。' }
-  };
-  $('expTitle').textContent = info[tab].title;
-  $('expDesc').textContent = info[tab].desc + (state['done' + tab] ? '' : ' 点击画布器材开始。');
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
 }
 
-// ===== START EXPERIMENT =====
-function startExperiment() {
-  if (state.animating) return;
-  if (state.tab === 'A') startA();
-  else if (state.tab === 'B') startB();
-  else if (state.tab === 'C') startC();
-}
+function handleDrop(action, target) {
+  const tubeNum = target.replace('drop', '');
+  const tube = tubes[tubeNum];
 
-// ===== EXPERIMENT A: Metals + Acid =====
-let aAnimId = null;
-function startA() {
-  state.animating = true;
-  ($('expBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '反应中…观察气泡差异';
-  $('statusBadge').className = 'status-badge done';
-
-  const startTime = performance.now();
-  const duration = 4000;
-  const znBubbles = document.querySelectorAll('.zn-b');
-  const feBubbles = document.querySelectorAll('.fe-b');
-
-  function tick(now) {
-    const t = (now - startTime) / duration;
-    if (t > 1) { finishA(); return; }
-
-    // Zn bubbles: vigorous, continuous
-    znBubbles.forEach((b, i) => {
-      const phase = (t * 8 + i * 0.3) % 1;
-      const baseY = 230 - phase * 140;
-      b.setAttribute('cy', baseY);
-      b.setAttribute('opacity', phase < 0.9 ? 0.6 : 0);
-    });
-
-    // Fe bubbles: slow, sparse
-    feBubbles.forEach((b, i) => {
-      const phase = (t * 3 + i * 0.5) % 1;
-      const baseY = 220 - phase * 120;
-      b.setAttribute('cy', baseY);
-      b.setAttribute('opacity', phase < 0.8 ? 0.3 : 0);
-    });
-
-    aAnimId = requestAnimationFrame(tick);
+  if (action === 'hcl') {
+    if (!tube.metal) { toast('先放入金属片'); return; }
+    if (tube.acid) { toast('已加入盐酸'); return; }
+    tube.acid = true;
+    $('hcl' + tubeNum).setAttribute('opacity', '1');
+    startReaction(tubeNum);
+  } else {
+    // Metal
+    const metalMap = { zn: '1', fe: '2', cu: '3' };
+    const expected = metalMap[action];
+    if (tubeNum !== expected) { toast('请放入对应试管'); return; }
+    if (tube.metal) { toast('金属已放入'); return; }
+    tube.metal = true;
+    $('tool' + action.charAt(0).toUpperCase() + action.slice(1)).classList.add('used');
+    $('metal' + tubeNum).setAttribute('opacity', '1');
+    $('metal' + tubeNum + 'Label').setAttribute('opacity', '1');
+    checkObs('obs' + tubeNum);
+    updateHint();
   }
-  aAnimId = requestAnimationFrame(tick);
 }
 
-function finishA() {
-  if (aAnimId) cancelAnimationFrame(aAnimId);
-  state.doneA = true;
-  state.animating = false;
+function startReaction(n) {
+  const tube = tubes[n];
+  tube.reacting = true;
+  doneCount++;
 
-  // Keep some bubbles visible
-  document.querySelectorAll('.zn-b').forEach((b, i) => b.setAttribute('opacity', i < 6 ? '0.4' : '0'));
-  document.querySelectorAll('.fe-b').forEach((b, i) => b.setAttribute('opacity', i < 2 ? '0.2' : '0'));
+  if (n === '1') {
+    // Zn: vigorous bubbles
+    $('rxn1').textContent = '剧烈冒泡!';
+    $('rxn1').setAttribute('opacity', '1');
+    checkPhen('phen1');
+  } else if (n === '2') {
+    // Fe: slow bubbles
+    $('rxn2').textContent = '缓慢冒泡';
+    $('rxn2').setAttribute('opacity', '1');
+    checkPhen('phen2');
+  } else {
+    // Cu: no reaction
+    $('rxn3').textContent = '无反应';
+    $('rxn3').setAttribute('opacity', '1');
+    checkPhen('phen3');
+    checkObs('obs5');
+  }
 
-  // Badges
-  $('znBadge').textContent = '剧烈冒泡'; $('znBadge').setAttribute('opacity', '1'); $('znBadge').setAttribute('fill', '#059669');
-  $('feBadge').textContent = '缓慢冒泡'; $('feBadge').setAttribute('opacity', '1'); $('feBadge').setAttribute('fill', '#D97706');
-  $('cuBadge').textContent = '无反应 ✗'; $('cuBadge').setAttribute('opacity', '1'); $('cuBadge').setAttribute('fill', '#DC2626');
+  if (!animRunning && (n === '1' || n === '2')) {
+    animRunning = true;
+    startBubbleAnim();
+  }
 
-  $('tabAConcl').setAttribute('opacity', '1');
-  checkObs('obs1'); checkObs('obs2'); checkObs('obs3');
-
-  // Record table
-  $('recAph').textContent = 'Zn 剧烈/Fe 缓慢/Cu 无'; $('recAph').classList.add('filled');
-  $('recAcl').textContent = 'Zn>Fe>H>Cu'; $('recAcl').classList.add('filled');
-
-  $('tabA').classList.add('done');
-  $('tubesClick').style.pointerEvents = 'none';
-  $('tubesHint').textContent = '';
-  highlightActivity(['Zn', 'Fe', 'Cu']);
-  checkAllDone();
+  if (doneCount >= 3) {
+    checkObs('obs4');
+    checkObs('obs6');
+    // Highlight activity series
+    $('serZn').setAttribute('fill', '#059669');
+    $('serFe').setAttribute('fill', '#059669');
+    $('serCu').setAttribute('fill', '#DC2626');
+    $('microNote').innerHTML = 'Zn > Fe > (H) > Cu<br>活动性：Zn 剧烈 > Fe 缓慢 > Cu 不反应<br>验证了金属活动性顺序!';
+    $('canvasHint').textContent = '实验完成！Zn > Fe > (H) > Cu';
+  }
+  updateHint();
 }
 
-// ===== EXPERIMENT B: Fe + CuSO4 =====
-function startB() {
-  state.animating = true;
-  ($('expBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '置换反应中…观察颜色变化';
-
-  const startTime = performance.now();
-  const duration = 3000;
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-    // Solution: blue → green (HSL interpolation)
-    const h = 210 - 70 * eased; // 210→140
-    const s = 70 - 30 * eased;  // 70→40
-    const l = 55 - 5 * eased;   // 55→50
-    $('bSolution').setAttribute('fill', `hsl(${h},${s}%,${l}%)`);
-
-    // Cu deposits appear
-    $('bDeposits').setAttribute('opacity', eased);
-
-    // Status
-    $('bStatus1').textContent = eased < 0.3 ? '铁片浸入蓝色溶液中…' : '铁片表面出现红色物质';
-    $('bStatus2').textContent = eased > 0.3 ? `溶液颜色：蓝色 → ${eased > 0.7 ? '浅绿色' : '蓝绿色'}` : '';
-    $('bStatus3').textContent = eased > 0.5 ? '红色物质是析出的铜（Cu）' : '';
-
-    if (t < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      finishB();
+function startBubbleAnim() {
+  (function tick() {
+    // Tube 1 (Zn): fast bubbles
+    if (tubes[1].reacting) {
+      bubPools[1].forEach(b => {
+        if (!b.active && Math.random() < 0.15) {
+          b.active = true; b.x = 30 + (Math.random() - 0.5) * 25; b.y = 190;
+          b.vy = -1 - Math.random() * 0.6; b.life = 40 + Math.random() * 20;
+        }
+        if (b.active) {
+          b.y += b.vy; b.x += (Math.random() - 0.5) * 0.4; b.life--;
+          b.el.setAttribute('cx', b.x); b.el.setAttribute('cy', b.y);
+          b.el.setAttribute('opacity', String(Math.max(0, b.life / 40)));
+          if (b.life <= 0) { b.active = false; b.el.setAttribute('opacity', '0'); }
+        }
+      });
     }
-  }
-  requestAnimationFrame(tick);
-}
-
-function finishB() {
-  state.doneB = true;
-  state.animating = false;
-  $('bConclusion').setAttribute('opacity', '1');
-  checkObs('obs4');
-
-  $('recBph').textContent = '铁面红色Cu/液蓝→绿'; $('recBph').classList.add('filled');
-  $('recBcl').textContent = 'Fe>Cu'; $('recBcl').classList.add('filled');
-
-  $('tabB').classList.add('done');
-  $('beakerB').classList.remove('svg-click');
-  $('beakerB').removeAttribute('onclick');
-  highlightActivity(['Fe', 'Cu']);
-  checkAllDone();
-}
-
-// ===== EXPERIMENT C: Cu + AgNO3 =====
-function startC() {
-  state.animating = true;
-  ($('expBtn')||{}).disabled = true;
-  $('statusBadge').textContent = '置换反应中…观察颜色变化';
-
-  const startTime = performance.now();
-  const duration = 3000;
-
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-    // Solution: colorless → blue (HSL interpolation)
-    const h = 210;
-    const s = 70 * eased;       // 0→70
-    const l = 95 - 40 * eased;  // 95→55
-    $('cSolution').setAttribute('fill', `hsl(${h},${s}%,${l}%)`);
-
-    // Ag deposits appear
-    $('cDeposits').setAttribute('opacity', eased);
-
-    $('cStatus1').textContent = eased < 0.3 ? '铜丝浸入无色溶液中…' : '铜丝表面出现银白色物质';
-    $('cStatus2').textContent = eased > 0.3 ? `溶液颜色：无色 → ${eased > 0.7 ? '蓝色' : '浅蓝色'}` : '';
-    $('cStatus3').textContent = eased > 0.5 ? '银白色物质是析出的银（Ag）' : '';
-
-    if (t < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      finishC();
+    // Tube 2 (Fe): slow bubbles
+    if (tubes[2].reacting) {
+      bubPools[2].forEach(b => {
+        if (!b.active && Math.random() < 0.04) {
+          b.active = true; b.x = 30 + (Math.random() - 0.5) * 25; b.y = 190;
+          b.vy = -0.5 - Math.random() * 0.3; b.life = 50 + Math.random() * 20;
+        }
+        if (b.active) {
+          b.y += b.vy; b.x += (Math.random() - 0.5) * 0.3; b.life--;
+          b.el.setAttribute('cx', b.x); b.el.setAttribute('cy', b.y);
+          b.el.setAttribute('opacity', String(Math.max(0, b.life / 50)));
+          if (b.life <= 0) { b.active = false; b.el.setAttribute('opacity', '0'); }
+        }
+      });
     }
-  }
-  requestAnimationFrame(tick);
+    if (animRunning) requestAnimationFrame(tick);
+  })();
 }
 
-function finishC() {
-  state.doneC = true;
-  state.animating = false;
-  $('cConclusion').setAttribute('opacity', '1');
-  checkObs('obs5');
-
-  $('recCph').textContent = '铜面银白Ag/液无→蓝'; $('recCph').classList.add('filled');
-  $('recCcl').textContent = 'Cu>Ag'; $('recCcl').classList.add('filled');
-
-  $('tabC').classList.add('done');
-  $('beakerC').classList.remove('svg-click');
-  $('beakerC').removeAttribute('onclick');
-  highlightActivity(['Cu', 'Ag']);
-  checkAllDone();
-}
-
-// ===== HELPERS =====
-function highlightActivity(metals) {
-  metals.forEach(m => {
-    const el = $('el-' + m);
-    if (el) el.classList.add('highlight');
-  });
-}
-
-function checkAllDone() {
-  if (state.doneA && state.doneB && state.doneC) {
-    $('resultSection').style.display = 'block';
-    $('statusBadge').textContent = '全部完成！Zn > Fe > H > Cu > Ag';
+function updateHint() {
+  const needs = [];
+  if (!tubes[1].metal) needs.push('Zn→管1');
+  else if (!tubes[1].acid) needs.push('HCl→管1');
+  if (!tubes[2].metal) needs.push('Fe→管2');
+  else if (!tubes[2].acid) needs.push('HCl→管2');
+  if (!tubes[3].metal) needs.push('Cu→管3');
+  else if (!tubes[3].acid) needs.push('HCl→管3');
+  if (needs.length > 0 && doneCount < 3) {
+    $('canvasHint').textContent = '下一步: ' + needs[0];
   }
 }
 
-function checkObs(id) {
-  const el = $(id);
-  if (el && !el.classList.contains('checked')) {
-    el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
-  }
+function toast(msg) { $('canvasHint').textContent = msg; setTimeout(updateHint, 2000); }
+function checkObs(id) { const el = $(id); if (el && !el.classList.contains('checked')) { el.classList.add('checked'); el.querySelector('.obs-check').textContent = '\u2713'; } }
+function checkPhen(id) { checkObs(id); }
+
+function resetExperiment() {
+  animRunning = false; doneCount = 0;
+  [1,2,3].forEach(n => { tubes[n].metal = false; tubes[n].acid = false; tubes[n].reacting = false; });
+  [1,2,3].forEach(n => {
+    $('hcl'+n).setAttribute('opacity','0');
+    $('metal'+n).setAttribute('opacity','0');
+    $('metal'+n+'Label').setAttribute('opacity','0');
+    $('rxn'+n).setAttribute('opacity','0');
+  });
+  Object.values(bubPools).forEach(pool => pool.forEach(b => { b.active = false; b.el.setAttribute('opacity','0'); }));
+  $('serZn').setAttribute('fill','#0284C7'); $('serFe').setAttribute('fill','#0284C7'); $('serCu').setAttribute('fill','#EA580C');
+  $('microNote').innerHTML = '活泼金属可置换酸中 H⁺<br>反应速度 → 活动性强弱<br>H 前金属能与酸反应，H 后不能';
+  $('canvasHint').textContent = '拖金属片入试管 → 对比反应速度 → 验证活动性';
+  ['toolZn','toolFe','toolCu'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
 
-function resetAll() {
-  if (aAnimId) cancelAnimationFrame(aAnimId);
-  aAnimId = null;
-  Object.assign(state, { tab: 'A', doneA: false, doneB: false, doneC: false, animating: false });
-
-  // Reset A
-  document.querySelectorAll('.zn-b, .fe-b').forEach(b => b.setAttribute('opacity', '0'));
-  ['znBadge', 'feBadge', 'cuBadge'].forEach(id => $(id).setAttribute('opacity', '0'));
-  $('tabAConcl').setAttribute('opacity', '0');
-
-  // Reset B
-  $('bSolution').setAttribute('fill', 'hsl(210,70%,55%)');
-  $('bDeposits').setAttribute('opacity', '0');
-  $('bStatus1').textContent = '等待开始实验'; $('bStatus2').textContent = ''; $('bStatus3').textContent = '';
-  $('bConclusion').setAttribute('opacity', '0');
-
-  // Reset C
-  $('cSolution').setAttribute('fill', 'hsl(0,0%,95%)');
-  $('cDeposits').setAttribute('opacity', '0');
-  $('cStatus1').textContent = '等待开始实验'; $('cStatus2').textContent = ''; $('cStatus3').textContent = '';
-  $('cConclusion').setAttribute('opacity', '0');
-
-  // Reset UI
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('done'));
-  document.querySelectorAll('.activity-el').forEach(e => e.classList.remove('highlight'));
-  ['recAph', 'recAcl', 'recBph', 'recBcl', 'recCph', 'recCcl'].forEach(id => {
-    $(id).textContent = '—'; $(id).classList.remove('filled');
-  });
-  $('resultSection').style.display = 'none';
-  $('statusBadge').textContent = '选择实验组 → 开始观察';
-  $('statusBadge').className = 'status-badge idle';
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-  switchTab('A');
-}
-
-// ===== FORMULAS =====
+// KaTeX
 function renderFormulas() {
   if (!window.katex) return;
   try {
-    katex.render('\\text{Zn} + 2\\text{HCl} \\rightarrow \\text{ZnCl}_2 + \\text{H}_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true });
-    katex.render('\\text{Fe} + \\text{CuSO}_4 \\rightarrow \\text{FeSO}_4 + \\text{Cu}', $('formula2'), { throwOnError: false, displayMode: true });
-    katex.render('\\text{Cu} + 2\\text{AgNO}_3 \\rightarrow \\text{Cu(NO}_3\\text{)}_2 + 2\\text{Ag}', $('formula3'), { throwOnError: false, displayMode: true });
+    katex.render('Zn + 2HCl \\rightarrow ZnCl_2 + H_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true });
+    katex.render('Fe + 2HCl \\rightarrow FeCl_2 + H_2\\uparrow', $('formula2'), { throwOnError: false, displayMode: true });
+    katex.render('Fe + CuSO_4 \\rightarrow FeSO_4 + Cu', $('formula3'), { throwOnError: false, displayMode: true });
   } catch(e) {}
 }
-
-(function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
-})(0);
+function tryKatex(n) { if (window.katex) { renderFormulas(); return; } if ((n||0) < 20) setTimeout(() => tryKatex((n||0)+1), 500); }
+tryKatex();
 </script>
 <script src="/shared/theme.js"></script>
 </body>
