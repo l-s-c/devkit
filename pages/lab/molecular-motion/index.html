@@ -65,8 +65,8 @@
 <div class="lab-container-chem">
   <!-- Breadcrumb -->
   <div class="breadcrumb">
-    <a href="/pages/lab/">实验室</a><span>/</span>
-    <a href="/pages/lab/">化学实验</a><span>/</span>
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
     <strong style="color:#0F172A">分子运动实验</strong>
   </div>
 
@@ -303,12 +303,6 @@
         <div id="microNote">NH₃ 分子扩散（不可见）→ 酚酞变红（可见）</div>
       </div>
 
-      <div style="margin-top:12px">
-        <div class="section-title">原理</div>
-        <div id="formula1" style="text-align:center;margin:8px 0"></div>
-        <div style="font-size:9px;color:#64748B">氨水呈碱性，使酚酞变红</div>
-      </div>
-
       <button onclick="resetExperiment()" style="width:100%;margin-top:16px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
     </div>
   </div>
@@ -339,7 +333,8 @@
       </div>
       <div class="knowledge-card">
         <h4>化学方程式</h4>
-        <p>NH₃ + H₂O ⇌ NH₃·H₂O（氨水，碱性）<br>酚酞遇碱变红</p>
+        <div id="formula1" style="text-align:center;margin:6px 0"></div>
+        <p>酚酞遇碱变红</p>
       </div>
     </div>
   </div>
