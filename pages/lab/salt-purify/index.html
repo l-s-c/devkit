@@ -88,11 +88,16 @@ html,body{margin:0;padding:0;overflow-x:hidden}
           <g transform="translate(10,20)">
             <rect x="0" y="0" width="210" height="310" rx="12" fill="#fff" stroke="#E2E8F0" stroke-width="2" id="box1"/>
             <text x="105" y="22" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="800">① 溶解</text>
-            <!-- Beaker -->
-            <path d="M35,40 L28,48 L28,250 Q28,265 42,265 L168,265 Q182,265 182,250 L182,48 L175,40 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
-            <rect x="32" y="50" width="10" height="190" rx="5" fill="url(#hlGrad)" opacity="0.7"/>
-            <!-- Water (hidden) -->
-            <path id="dissolveLiquid" d="M30,120 L30,250 Q30,262 42,262 L168,262 Q180,262 180,250 L180,120 Z" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Beaker (arc bottom + spout + scales) -->
+            <path d="M35,40 L28,48 L28,240 Q28,265 105,265 Q182,265 182,240 L182,48 L175,40 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <path d="M35,40 L28,35" fill="none" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="32" y="50" width="10" height="180" rx="5" fill="url(#hlGrad)" opacity="0.7"/>
+            <!-- Beaker scale marks -->
+            <line x1="165" y1="90" x2="175" y2="90" stroke="#94A3B8" stroke-width="0.5"/><text x="178" y="93" font-size="5" fill="#94A3B8">100</text>
+            <line x1="168" y1="130" x2="175" y2="130" stroke="#94A3B8" stroke-width="0.3"/>
+            <line x1="165" y1="170" x2="175" y2="170" stroke="#94A3B8" stroke-width="0.5"/><text x="178" y="173" font-size="5" fill="#94A3B8">50</text>
+            <!-- Water (hidden, arc bottom) -->
+            <path id="dissolveLiquid" d="M30,120 L30,240 Q30,262 105,262 Q180,262 180,240 L180,120 Z" fill="url(#waterGrad)" opacity="0"/>
             <!-- Salt grains (hidden) -->
             <g id="saltGrains" opacity="0">
               <rect x="60" y="230" width="6" height="6" rx="1" fill="#D1D5DB" stroke="#94A3B8" stroke-width="0.5"/>
@@ -121,15 +126,18 @@ html,body{margin:0;padding:0;overflow-x:hidden}
             <rect x="70" y="260" width="56" height="6" rx="2" fill="#78716C"/>
             <!-- Iron ring -->
             <ellipse cx="98" cy="100" rx="40" ry="10" fill="none" stroke="#78716C" stroke-width="2"/>
-            <!-- Funnel -->
-            <path d="M58,90 L80,160 Q85,170 98,170 Q111,170 116,160 L138,90" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
-            <!-- Filter paper (V shape) -->
-            <path d="M65,95 L98,155 L131,95" fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="3,2"/>
-            <text x="98" y="125" font-size="6" fill="#94A3B8" text-anchor="middle">滤纸</text>
-            <!-- Beaker below -->
-            <path d="M55,190 L50,198 L50,270 Q50,280 60,280 L136,280 Q146,280 146,270 L146,198 L141,190 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
-            <!-- Filtrate (hidden) -->
-            <rect id="filtrate" x="52" y="220" width="92" height="55" rx="4" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Funnel (smooth cone + neck arc transition) -->
+            <path d="M55,88 Q55,85 58,85 L138,85 Q141,85 141,88 L118,155 Q115,168 105,172 L105,195 Q105,200 98,200 Q91,200 91,195 L91,172 Q81,168 78,155 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="59" y="90" width="6" height="55" rx="3" fill="url(#hlGrad)" opacity="0.6"/>
+            <!-- Filter paper (smooth V) -->
+            <path d="M62,90 Q80,140 98,155 Q116,140 134,90" fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="98" y="130" font-size="6" fill="#94A3B8" text-anchor="middle">滤纸</text>
+            <!-- Beaker below (arc bottom + highlight + spout) -->
+            <path d="M55,205 L50,210 L50,265 Q50,280 98,280 Q146,280 146,265 L146,210 L141,205 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <path d="M55,205 L50,200" fill="none" stroke="url(#glassEdge)" stroke-width="1"/>
+            <rect x="53" y="212" width="6" height="55" rx="3" fill="url(#hlGrad)" opacity="0.6"/>
+            <!-- Filtrate (hidden, arc bottom) -->
+            <path id="filtrate" d="M52,235 L52,265 Q52,278 98,278 Q144,278 144,265 L144,235 Z" fill="url(#waterGrad)" opacity="0"/>
             <!-- Glass rod for guiding (hidden) -->
             <g id="guideRod" opacity="0">
               <line x1="50" y1="70" x2="85" y2="100" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
@@ -153,10 +161,13 @@ html,body{margin:0;padding:0;overflow-x:hidden}
             <rect x="70" y="240" width="56" height="6" rx="2" fill="#78716C"/>
             <!-- Iron ring -->
             <ellipse cx="98" cy="120" rx="45" ry="8" fill="none" stroke="#78716C" stroke-width="2"/>
-            <!-- Evaporating dish -->
-            <path d="M50,115 Q50,145 98,145 Q146,145 146,115" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
-            <!-- Liquid in dish (hidden) -->
-            <path id="evapLiquid" d="M55,118 Q55,138 98,138 Q141,138 141,118" fill="url(#waterGrad)" opacity="0"/>
+            <!-- Evaporating dish (deep bowl arc + handle) -->
+            <path d="M42,112 Q42,155 98,155 Q154,155 154,112" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <path d="M42,112 L36,108" fill="none" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <path d="M154,112 L160,108" fill="none" stroke="url(#glassEdge)" stroke-width="1.5"/>
+            <rect x="46" y="116" width="6" height="28" rx="3" fill="url(#hlGrad)" opacity="0.6"/>
+            <!-- Liquid in dish (hidden, deep arc) -->
+            <path id="evapLiquid" d="M48,118 Q48,148 98,148 Q148,148 148,118" fill="url(#waterGrad)" opacity="0"/>
             <!-- Crystals (hidden) -->
             <g id="crystals" opacity="0">
               <rect x="70" y="125" width="5" height="4" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="0.5"/>
