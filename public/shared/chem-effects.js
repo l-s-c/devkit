@@ -354,9 +354,8 @@ const ChemDrag = (() => {
           if (tEl) tEl.classList.remove('drop-highlight');
         }
       }
-      if (!dropped && opts.resetOnFail !== false) {
-        el.setAttribute('transform', active.origTransform);
-      }
+      // Always snap back to original position (success or fail)
+      el.setAttribute('transform', active.origTransform);
       if (opts.onEnd) opts.onEnd(el, dropped);
       active = null;
     });
