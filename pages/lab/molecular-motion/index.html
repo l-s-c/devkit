@@ -285,14 +285,16 @@
         </ul>
       </div>
 
-      <div style="display:flex;gap:8px;margin:8px 0">
-        <div style="flex:1;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:9px;color:#64748B;margin-bottom:4px">&#10052; 常温</div>
-          <div id="panelTimeL" style="font-size:18px;font-weight:800;color:#0284C7">—</div>
+      <div style="display:flex;gap:6px;margin:8px 0">
+        <div style="flex:1;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:6px;padding:8px;text-align:center">
+          <div style="font-size:8px;color:#0284C7;font-weight:600">&#10052; 常温</div>
+          <div id="panelTimeL" style="font-size:20px;color:#0284C7;font-weight:800;margin:4px 0">—</div>
+          <div id="panelHintL" style="font-size:7px;color:#64748B">等待结果</div>
         </div>
-        <div style="flex:1;background:#FFF7ED;border:1px solid #FDBA74;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:9px;color:#64748B;margin-bottom:4px">&#128293; 加热</div>
-          <div id="panelTimeR" style="font-size:18px;font-weight:800;color:#F97316">—</div>
+        <div style="flex:1;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:8px;text-align:center">
+          <div style="font-size:8px;color:#D97706;font-weight:600">&#128293; 加热</div>
+          <div id="panelTimeR" style="font-size:20px;color:#D97706;font-weight:800;margin:4px 0">—</div>
+          <div id="panelHintR" style="font-size:7px;color:#64748B">等待结果</div>
         </div>
       </div>
       <div id="panelResult" style="font-size:9px;color:#059669;text-align:center;font-weight:700;margin-bottom:4px"></div>
@@ -553,8 +555,8 @@ function startDiffusion() {
     });
 
     // Update panel
-    if (groups.normal.done) $('panelTimeL').textContent = (groups.normal.diffTime / 60).toFixed(1) + 's';
-    if (groups.heated.done) $('panelTimeR').textContent = (groups.heated.diffTime / 60).toFixed(1) + 's';
+    if (groups.normal.done) { $('panelTimeL').textContent = (groups.normal.diffTime / 60).toFixed(1) + 's'; $('panelHintL').textContent = ''; }
+    if (groups.heated.done) { $('panelTimeR').textContent = (groups.heated.diffTime / 60).toFixed(1) + 's'; $('panelHintR').textContent = ''; }
 
     if (groups.normal.done && groups.heated.done) {
       const tN = (groups.normal.diffTime / 60).toFixed(1);
@@ -609,6 +611,7 @@ function resetExperiment() {
   ['timeL','timeR'].forEach(id => $(id).textContent = '0.0s');
   $('resultText').setAttribute('opacity','0');
   $('panelTimeL').textContent = '—'; $('panelTimeR').textContent = '—';
+  $('panelHintL').textContent = '等待结果'; $('panelHintR').textContent = '等待结果';
   $('panelResult').textContent = '';
   $('microNote').textContent = 'NH₃ 分子扩散（不可见）→ 酚酞变红（可见）';
   [...groups.normal.particles, ...groups.heated.particles].forEach(m => { m.active = false; m.el.setAttribute('opacity','0'); });
