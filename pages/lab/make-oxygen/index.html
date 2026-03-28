@@ -2,416 +2,284 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实验室制取氧气 - 高锰酸钾法与过氧化氢法 | DevKit</title>
-<meta name="keywords" content="制取氧气, 高锰酸钾, 过氧化氢, 排水集气, 初中化学">
-<meta name="description" content="通过高锰酸钾加热分解或过氧化氢催化分解制取氧气，排水集气法收集，带火星木条验满">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>实验室制取氧气 - 虚拟实验室</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/shared/lab-base.css">
 <link rel="stylesheet" href="/shared/chem-base.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" onload="if(typeof renderFormulas==='function')renderFormulas()"></script>
 <style>
-:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-border:#7DD3FC;--lab-accent-dark-bg:#0C4A6E;--lab-accent-dark-border:#075985}
-.tab-bar{display:flex;gap:2px;margin-bottom:8px}
-.tab-btn{flex:1;padding:6px 0;border:1px solid #E2E8F0;border-radius:6px 6px 0 0;background:#F8FAFC;font-size:10px;font-weight:600;color:#64748B;cursor:pointer;text-align:center;transition:all .2s}
-.tab-btn.active{background:var(--lab-accent);color:#FFF;border-color:var(--lab-accent)}
-.tab-content{display:none}.tab-content.active{display:block}
-.mnemonic-card{display:flex;gap:3px;margin:6px 0}
-.mnemonic-item{flex:1;text-align:center;padding:4px 0;border-radius:4px;font-size:9px;font-weight:700;background:#E2E8F0;color:#64748B}
-.mnemonic-item.done{background:#BBF7D0;color:#166534}
-.mnemonic-item.active{background:var(--lab-accent);color:#FFF}
-.warn-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 8px;font-size:9px;color:#991B1B;margin-top:6px}
-.svg-click{cursor:pointer}.svg-click:hover{filter:brightness(1.08)}
-.svg-hint{font-size:7px;fill:#0284C7;font-weight:600;pointer-events:none}
+:root{--lab-accent:#0284C7;--lab-accent-bg:#E0F2FE;--lab-accent-dark:#0369A1}
+html,body{margin:0;padding:0;overflow-x:hidden}
+.breadcrumb{height:36px;display:flex;align-items:center;padding:0 16px;font-size:12px;color:#64748B;border-bottom:1px solid #E2E8F0;background:#F8FAFC;flex-shrink:0}
+.breadcrumb a{color:#0284C7;text-decoration:none}
+.breadcrumb span{margin:0 6px;color:#CBD5E1}
+.lab-container-chem{display:flex;flex-direction:column;background:#F1F5F9}
+.main-row{display:flex;height:calc(100vh - 36px);overflow:hidden;flex-shrink:0}
+.canvas-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#E8EDF3}
+.canvas-col .canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:8px}
+.canvas-col svg{width:100%;height:100%;max-height:100%}
+.tool-col{width:88px;background:#F8FAFC;border-left:1px solid #E2E8F0;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.tool-col-title{font-size:10px;color:#64748B;font-weight:600;margin-bottom:4px}
+.panel-col{width:260px;background:#fff;border-left:1px solid #E2E8F0;overflow-y:auto;padding:12px;flex-shrink:0}
+.tool-card{width:72px;padding:6px 4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;cursor:grab;text-align:center;user-select:none;touch-action:none;transition:opacity 0.3s,box-shadow 0.2s}
+.tool-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tool-card.used{opacity:0.25;pointer-events:none}
+.tool-card svg{width:48px;height:48px;display:block;margin:0 auto 4px}
+.tool-card .tool-name{font-size:9px;font-weight:600;color:#0284C7}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:0.8;transform:scale(1.1)}
+.drop-zone{stroke-dasharray:6,4;stroke:#0EA5E9;stroke-width:1.5;fill:none;opacity:0.4;pointer-events:none}
+.drop-active{opacity:0.8;stroke-width:2.5;stroke:#0284C7}
+.knowledge-section{padding:16px 24px;background:#F8FAFC;border-top:1px solid #E2E8F0}
+.knowledge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.knowledge-section .knowledge-card{background:#fff;border-radius:10px;padding:12px !important;border:1px solid #E2E8F0;overflow:visible !important;box-shadow:none;margin-bottom:0}
+.knowledge-section .knowledge-card h4{font-size:11px;color:#0F172A;margin:0 0 6px;padding:0}
+.knowledge-section .knowledge-card p{font-size:10px;color:#475569;line-height:1.5;margin:0;padding:0}
+.section-title{font-size:11px;font-weight:700;color:#0F172A;margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #F1F5F9}
+.obs-list{list-style:none;padding:0;margin:0}
+.obs-item{font-size:10px;color:#475569;padding:4px 0;display:flex;align-items:center;gap:6px}
+.obs-check{width:14px;height:14px;border:1.5px solid #CBD5E1;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#059669;flex-shrink:0}
+.obs-item.checked .obs-check{background:#ECFDF5;border-color:#059669}
+.micro-card{background:#F0FDFA;border:1px solid #5EEAD4;border-radius:8px;padding:10px;margin:8px 0;text-align:center;font-size:10px;color:#0D9488}
+.mnemonic{display:flex;gap:3px;margin:8px 0}
+.mnemonic span{flex:1;text-align:center;padding:4px 0;border-radius:4px;font-size:9px;font-weight:700;background:#E2E8F0;color:#64748B}
+.mnemonic span.done{background:#BBF7D0;color:#166534}
+.progress-bar{height:10px;border-radius:5px;background:#E2E8F0;margin:8px 0;overflow:hidden}
+.progress-fill{height:100%;border-radius:5px;background:#0284C7;width:0;transition:width 0.3s}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <button class="back" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div class="breadcrumb"><a href="../">实验室</a><span>/</span><a href="#">初中化学</a><span>/</span></div>
-  <h1>实验室制取氧气</h1>
-</div>
-<div class="purpose-bar">
-  <div class="purpose-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>制取氧气 · 排水集气 · 查装定点收离熄 · 初中化学</div>
-  <div class="purpose-tag highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>中考必考</div>
-</div>
+<div class="lab-container-chem">
+  <div class="breadcrumb">
+    <a href="/pages/lab/" style="display:inline-flex;align-items:center;gap:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>实验室</a><span>/</span>
+    <a href="/pages/lab/#chemistry">化学实验</a><span>/</span>
+    <strong style="color:#0F172A">实验室制取氧气</strong>
+  </div>
 
-<div class="lab-container">
-  <div class="canvas-area">
-    <div class="canvas-wrapper">
-      <div id="statusBadge" class="status-badge idle">准备实验 → 按步骤操作</div>
+  <div class="main-row">
+    <div class="canvas-col">
+      <div class="canvas-wrapper">
+        <svg id="mainSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <rect width="700" height="460" fill="#E8EDF3"/>
+          <defs>
+            <filter id="flameGlow"><feGaussianBlur stdDeviation="3"/></filter>
+            <filter id="bubbleBlur"><feGaussianBlur stdDeviation="1"/></filter>
+            <linearGradient id="glassBody" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(130,185,230,0.35)"/>
+              <stop offset="15%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="85%" stop-color="rgba(170,210,240,0.1)"/>
+              <stop offset="100%" stop-color="rgba(130,185,230,0.35)"/>
+            </linearGradient>
+            <linearGradient id="glassEdge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="50%" stop-color="#0EA5E9"/>
+              <stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="hlGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,0.6)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
 
-      <!-- ===== TAB A: 高锰酸钾法 SVG ===== -->
-      <svg id="canvasA" class="tab-content active" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <filter id="flameGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <filter id="smokeBlur"><feGaussianBlur stdDeviation="4"/></filter>
-          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.25)"/><stop offset="100%" stop-color="rgba(255,255,255,0.05)"/></linearGradient>
-        </defs>
-        <rect width="720" height="400" fill="#F8FAFC"/>
+          <!-- ===== IRON STAND + TEST TUBE ===== -->
+          <g transform="translate(40,80)">
+            <!-- Stand base -->
+            <rect x="-10" y="300" width="60" height="8" rx="2" fill="#78716C"/>
+            <!-- Vertical rod -->
+            <rect x="12" y="30" width="6" height="275" rx="2" fill="#8D8680"/>
+            <!-- Horizontal clamp -->
+            <rect x="18" y="120" width="80" height="6" rx="2" fill="#78716C"/>
+            <rect x="90" y="110" width="10" height="28" rx="3" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
 
-        <!-- ===== IRON STAND ===== -->
-        <g id="ironStand" transform="translate(80,50)">
-          <!-- Base -->
-          <rect x="-30" y="300" width="80" height="8" rx="2" fill="#78716C" stroke="#57534E" stroke-width="1"/>
-          <!-- Vertical rod -->
-          <rect x="8" y="20" width="6" height="285" rx="2" fill="linear-gradient(#A8A29E,#78716C)" stroke="#57534E" stroke-width="0.5"/>
-          <rect x="8" y="20" width="6" height="285" rx="2" fill="#8D8680"/>
-          <line x1="10" y1="20" x2="10" y2="305" stroke="#A8A29E" stroke-width="1" opacity="0.4"/>
-          <!-- Clamp -->
-          <rect id="clampArm" x="14" y="120" width="60" height="6" rx="2" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-          <circle cx="14" cy="123" r="5" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-          <text x="10" y="15" font-size="6" fill="#64748B" text-anchor="middle">铁架台</text>
-        </g>
+            <!-- Test tube (tilted slightly down) -->
+            <g transform="translate(100,100) rotate(-10)">
+              <rect x="0" y="0" width="180" height="28" rx="14" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+              <rect x="2" y="3" width="6" height="22" rx="3" fill="url(#hlGrad)" opacity="0.7"/>
+              <!-- KMnO₄ (purple) -->
+              <rect id="kmno4" x="8" y="6" width="60" height="16" rx="8" fill="#7C3AED" opacity="0.7"/>
+              <!-- Cotton plug -->
+              <rect x="70" y="6" width="12" height="16" rx="4" fill="#FEF3C7" stroke="#FDE68A" stroke-width="0.5"/>
+              <text x="76" y="16" font-size="4" fill="#92400E" text-anchor="middle">棉</text>
+              <!-- Tube opening (right end) -->
+              <text x="90" y="-5" font-size="7" fill="#7C3AED" font-weight="600">KMnO₄</text>
+            </g>
 
-        <!-- ===== TEST TUBE (tilted ~15° down) ===== -->
-        <g id="testTubeGroup" transform="translate(155,155) rotate(-15)">
-          <!-- Tube body -->
-          <rect id="tubeBody" x="0" y="-10" width="140" height="22" rx="10" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-          <line x1="3" y1="-7" x2="3" y2="9" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
-          <!-- KMnO4 inside (purple-black) -->
-          <rect id="kmno4Solid" x="80" y="-6" width="45" height="14" rx="4" fill="#581C87" opacity="0.85"/>
-          <text x="102" y="2" font-size="5" fill="#E9D5FF" text-anchor="middle">KMnO₄</text>
-          <!-- Cotton at mouth -->
-          <ellipse id="cottonPlug" cx="12" cy="1" rx="6" ry="8" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="0.5"/>
-          <text x="12" y="18" font-size="4" fill="#64748B" text-anchor="middle">棉花</text>
-          <!-- Tube mouth label -->
-          <text x="70" y="-15" font-size="6" fill="#64748B" text-anchor="middle">大试管（口略向下倾斜）</text>
-        </g>
-
-        <!-- ===== ALCOHOL LAMP ===== -->
-        <g id="alcoholLamp" class="clickable" transform="translate(220,275)" onclick="nextStepA()">
-          <!-- 1. Lamp body -->
-          <rect x="-30" y="15" width="60" height="32" rx="7" fill="#FEF3C7" stroke="#D97706" stroke-width="1.2"/>
-          <!-- 2. Alcohol liquid -->
-          <rect x="-26" y="30" width="52" height="14" rx="4" fill="#FDE68A" opacity="0.6"/>
-          <!-- 3. Wick tube -->
-          <rect x="-7" y="4" width="14" height="14" rx="3" fill="#78716C" stroke="#6B7280" stroke-width="0.6"/>
-          <!-- 4. Wick -->
-          <line x1="0" y1="4" x2="0" y2="-6" stroke="#1E293B" stroke-width="1.5"/>
-          <!-- 5. Three-layer flame (hidden initially) -->
-          <g id="flameA" opacity="0" filter="url(#flameGlow)">
-            <ellipse cx="0" cy="-22" rx="6" ry="14" fill="#F97316" opacity="0.7"/>
-            <ellipse cx="0" cy="-18" rx="3" ry="8" fill="#FBBF24" opacity="0.8"/>
-            <ellipse cx="0" cy="-16" rx="1.5" ry="5" fill="#FEF3C7" opacity="0.6"/>
+            <!-- Delivery tube from test tube to water trough -->
+            <path d="M270,115 Q300,115 320,140 Q340,170 360,200 L420,310" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+            <text x="330" y="175" font-size="7" fill="#64748B">导管</text>
           </g>
-          <text x="0" y="62" font-size="8" fill="#64748B" text-anchor="middle" font-weight="600">酒精灯</text>
-        </g>
 
-        <!-- ===== RUBBER TUBE (from test tube to trough) ===== -->
-        <g id="tubeConnector">
-          <path id="rubberTubeA" d="M158,168 Q140,175 135,200 Q130,240 150,270 L420,270" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-          <text x="130" y="230" font-size="5" fill="#64748B">导管</text>
-        </g>
-
-        <!-- ===== WATER TROUGH ===== -->
-        <g id="troughA" transform="translate(380,240)">
-          <rect x="0" y="0" width="160" height="80" rx="3" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-          <!-- Water -->
-          <rect id="troughWaterA" x="2" y="20" width="156" height="58" rx="2" fill="#7DD3FC" opacity="0.35"/>
-          <text x="80" y="90" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
-
-          <!-- ===== COLLECTING BOTTLE (inverted in water) ===== -->
-          <g id="collectBottle" class="clickable" transform="translate(60,5)" onclick="nextStepA()">
-            <!-- Bottle body (inverted: mouth down) -->
-            <rect id="bottleBodyA" x="0" y="0" width="60" height="70" rx="3" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-            <line x1="2" y1="3" x2="2" y2="67" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-            <!-- Water inside bottle (starts full, decreases as O2 collected) -->
-            <rect id="bottleWaterA" x="2" y="2" width="56" height="66" rx="2" fill="#7DD3FC" opacity="0.35"/>
-            <!-- O2 gas space (top of inverted bottle, grows) -->
-            <rect id="gasSpaceA" x="2" y="2" width="56" height="0" rx="2" fill="rgba(255,255,255,0.05)"/>
-            <!-- Bottle mouth (bottom, submerged) -->
-            <rect x="22" y="68" width="16" height="6" rx="2" fill="#F0F7FF" stroke="#93C5FD" stroke-width="0.5"/>
-            <!-- Tube end entering bottle -->
-            <line x1="-20" y1="30" x2="30" y2="65" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="30" y="-5" font-size="6" fill="#64748B" text-anchor="middle">集气瓶（倒扣）</text>
+          <!-- ===== ALCOHOL LAMP ===== -->
+          <g transform="translate(120,340)">
+            <path d="M8,10 Q5,10 5,13 L5,45 Q5,52 13,52 L47,52 Q55,52 55,45 L55,13 Q55,10 52,10 Z" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+            <rect x="8" y="28" width="44" height="20" rx="2" fill="#FEF3C7" opacity="0.5"/>
+            <rect x="20" y="3" width="20" height="10" rx="3" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
+            <rect x="26" y="-4" width="8" height="12" rx="2" fill="#B0B0B0"/>
+            <line x1="30" y1="-4" x2="30" y2="-12" stroke="#4B5563" stroke-width="1.2" stroke-linecap="round"/>
+            <g id="lampFlame" opacity="0" filter="url(#flameGlow)">
+              <ellipse cx="30" cy="-18" rx="9" ry="14" fill="#F97316" opacity="0.45"/>
+              <ellipse cx="30" cy="-20" rx="6" ry="10" fill="#FBBF24" opacity="0.6"/>
+              <ellipse cx="30" cy="-22" rx="3.5" ry="5" fill="#FEF3C3" opacity="0.75"/>
+            </g>
+            <rect id="dropLamp" class="drop-zone" x="5" y="-25" width="50" height="45" rx="5"/>
+            <text x="30" y="66" font-size="8" fill="#64748B" text-anchor="middle" font-weight="600">酒精灯</text>
           </g>
-        </g>
 
-        <!-- ===== BUBBLE CONTAINER ===== -->
-        <g id="bubbleContainer"></g>
+          <!-- ===== WATER TROUGH + COLLECTING BOTTLE ===== -->
+          <g transform="translate(400,250)">
+            <!-- Trough -->
+            <path d="M6,0 L0,6 L0,100 Q0,112 10,112 L210,112 Q220,112 220,100 L220,6 L214,0 Z" fill="#B8D4EA" stroke="none"/>
+            <path d="M6,0 L0,6 L0,100 Q0,112 10,112 L210,112 Q220,112 220,100 L220,6 L214,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="2"/>
+            <rect x="4" y="25" width="212" height="83" rx="4" fill="url(#waterGrad)"/>
+            <rect x="4" y="25" width="10" height="83" rx="5" fill="url(#hlGrad)" opacity="0.6"/>
+            <!-- Tube end in water -->
+            <line x1="60" y1="0" x2="60" y2="60" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
 
-        <!-- ===== VERIFICATION WOOD STICK (hidden) ===== -->
-        <g id="woodStick" opacity="0" transform="translate(560,250)">
-          <line x1="0" y1="0" x2="0" y2="50" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="0" cy="0" r="4" fill="#F97316" opacity="0.6"/>
-          <text x="15" y="5" font-size="6" fill="#EA580C">带火星木条</text>
-          <text id="verifyResult" x="15" y="18" font-size="7" fill="#DC2626" font-weight="700" opacity="0"></text>
-        </g>
+            <!-- Collecting bottle (inverted, submerged) -->
+            <g id="collectBottle" transform="translate(120,10)">
+              <path d="M5,0 L0,5 L0,80 Q0,90 8,90 L62,90 Q70,90 70,80 L70,5 L65,0 Z" fill="#B8D4EA" stroke="none"/>
+              <path d="M5,0 L0,5 L0,80 Q0,90 8,90 L62,90 Q70,90 70,80 L70,5 L65,0 Z" fill="url(#glassBody)" stroke="url(#glassEdge)" stroke-width="1.5"/>
+              <rect x="3" y="5" width="6" height="75" rx="3" fill="url(#hlGrad)" opacity="0.7"/>
+              <!-- Water level inside bottle (goes down as O₂ displaces) -->
+              <rect id="bottleWater" x="2" y="5" width="66" height="80" rx="4" fill="url(#waterGrad)"/>
+              <!-- O₂ label -->
+              <text id="o2Label" x="35" y="50" font-size="16" fill="#0EA5E9" text-anchor="middle" font-weight="900" opacity="0">O₂</text>
+            </g>
 
-        <!-- ===== RIGHT SIDE INFO ===== -->
-        <g transform="translate(480,30)">
-          <rect x="0" y="0" width="210" height="36" rx="6" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
-          <text x="105" y="14" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">化学方程式（高锰酸钾法）</text>
-          <text id="eqA" x="105" y="28" font-size="7" fill="#0F172A" text-anchor="middle">2KMnO₄ →(△) K₂MnO₄ + MnO₂ + O₂↑</text>
-        </g>
+            <!-- Bubbles (pre-drawn) -->
+            <g id="bubblePool">
+              <circle class="bub" cx="0" cy="0" r="3" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="2.5" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="3.5" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="2" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="3" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="2.5" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+              <circle class="bub" cx="0" cy="0" r="3" fill="none" stroke="#7DD3FC" stroke-width="0.8" opacity="0"/>
+            </g>
 
-        <!-- Warning box -->
-        <g transform="translate(480,80)">
-          <rect x="0" y="0" width="210" height="50" rx="6" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
-          <text x="10" y="15" font-size="7" fill="#991B1B" font-weight="700">注意事项</text>
-          <text x="10" y="28" font-size="6" fill="#991B1B">· 试管口略向下倾斜（防冷凝水回流）</text>
-          <text x="10" y="40" font-size="6" fill="#991B1B">· 先撤导管，后熄灭酒精灯（防水倒吸）</text>
-        </g>
+            <!-- Drop zone: splint test -->
+            <rect id="dropSplint" class="drop-zone" x="120" y="-10" width="70" height="50" rx="5" opacity="0"/>
 
-        <!-- State display -->
-        <g transform="translate(480,145)">
-          <rect x="0" y="0" width="210" height="65" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="16" font-size="8" fill="#0F172A" font-weight="600">实验状态</text>
-          <text id="stateTemp" x="10" y="32" font-size="7" fill="#64748B">温度：室温</text>
-          <text id="stateBubble" x="10" y="46" font-size="7" fill="#64748B">气泡：无</text>
-          <text id="stateCollect" x="10" y="60" font-size="7" fill="#64748B">收集：未开始</text>
-        </g>
-        <!-- Canvas click zone -->
-        <!-- removed canvas click zone, use器材 onclick -->
-        <text class="svg-hint" x="240" y="390" text-anchor="middle">点击实验装置 → 下一步操作</text>
-      </svg>
-
-      <!-- ===== TAB B: 过氧化氢法 SVG ===== -->
-      <svg id="canvasB" class="tab-content" viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <filter id="flameGlowB"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
-        <rect width="720" height="400" fill="#F8FAFC"/>
-
-        <!-- ===== CONICAL FLASK ===== -->
-        <g id="conicalFlask" transform="translate(180,100)">
-          <!-- Flask body (triangle) -->
-          <polygon id="flaskBody" points="40,0 0,120 80,120" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-          <!-- Neck -->
-          <rect x="32" y="-20" width="16" height="22" rx="2" fill="#F0F7FF" stroke="#93C5FD" stroke-width="0.8"/>
-          <!-- MnO2 at bottom -->
-          <rect id="mno2" x="20" y="100" width="40" height="12" rx="3" fill="#1E1B4B" opacity="0.8"/>
-          <text x="40" y="95" font-size="5" fill="#4338CA" text-anchor="middle">MnO₂（催化剂）</text>
-          <!-- Liquid (H2O2 dripped in) -->
-          <polygon id="h2o2Liquid" points="30,80 15,120 65,120 50,80" fill="#7DD3FC" opacity="0" stroke="none"/>
-          <text x="40" y="140" font-size="7" fill="#64748B" text-anchor="middle">锥形瓶</text>
-        </g>
-
-        <!-- ===== SEPARATING FUNNEL ===== -->
-        <g id="sepFunnel" class="clickable" transform="translate(195,30)" onclick="nextStepB()">
-          <!-- Funnel body -->
-          <ellipse cx="25" cy="25" rx="15" ry="18" fill="#F0F7FF" stroke="#93C5FD" stroke-width="0.8"/>
-          <!-- H2O2 liquid inside -->
-          <ellipse id="h2o2InFunnel" cx="25" cy="28" rx="13" ry="12" fill="#7DD3FC" opacity="0.3"/>
-          <!-- Stem -->
-          <rect x="23" y="43" width="4" height="28" rx="1" fill="#F0F7FF" stroke="#93C5FD" stroke-width="0.5"/>
-          <!-- Stopcock -->
-          <rect id="stopcockB" x="19" y="55" width="12" height="5" rx="1.5" fill="#78716C" stroke="#57534E" stroke-width="0.5"/>
-          <text x="25" y="12" font-size="6" fill="#64748B" text-anchor="middle">分液漏斗</text>
-          <text x="25" y="4" font-size="5" fill="#0284C7" text-anchor="middle">H₂O₂</text>
-        </g>
-
-        <!-- ===== RUBBER TUBE B ===== -->
-        <path id="rubberTubeB" d="M260,160 Q280,170 300,200 Q320,240 350,270 L420,270" fill="none" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-        <text x="290" y="230" font-size="5" fill="#64748B">导管</text>
-
-        <!-- ===== WATER TROUGH B ===== -->
-        <g id="troughB" transform="translate(380,240)">
-          <rect x="0" y="0" width="160" height="80" rx="3" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-          <rect id="troughWaterB" x="2" y="20" width="156" height="58" rx="2" fill="#7DD3FC" opacity="0.35"/>
-          <text x="80" y="90" font-size="7" fill="#64748B" text-anchor="middle">水槽</text>
-
-          <!-- Collecting bottle B (inverted) -->
-          <g id="collectBottleB" class="clickable" transform="translate(60,5)" onclick="nextStepB()">
-            <rect id="bottleBodyB" x="0" y="0" width="60" height="70" rx="3" fill="#F0F7FF" stroke="#93C5FD" stroke-width="1"/>
-            <rect id="bottleWaterB" x="2" y="2" width="56" height="66" rx="2" fill="#7DD3FC" opacity="0.35"/>
-            <rect id="gasSpaceB" x="2" y="2" width="56" height="0" rx="2" fill="rgba(255,255,255,0.05)"/>
-            <rect x="22" y="68" width="16" height="6" rx="2" fill="#F0F7FF" stroke="#93C5FD" stroke-width="0.5"/>
-            <line x1="-20" y1="30" x2="30" y2="65" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="30" y="-5" font-size="6" fill="#64748B" text-anchor="middle">集气瓶（倒扣）</text>
+            <text x="110" y="125" font-size="9" fill="#64748B" text-anchor="middle" font-weight="600">水槽 + 集气瓶（排水集气）</text>
           </g>
-        </g>
 
-        <!-- Bubble container B -->
-        <g id="bubbleContainerB"></g>
+          <!-- Verification splint glow -->
+          <g id="splintGlow" opacity="0" transform="translate(560,245)">
+            <line x1="0" y1="0" x2="0" y2="30" stroke="#A16207" stroke-width="2" stroke-linecap="round"/>
+            <g filter="url(#flameGlow)">
+              <ellipse cx="0" cy="-4" rx="5" ry="10" fill="#F97316" opacity="0.6"/>
+              <ellipse cx="0" cy="-6" rx="3" ry="6" fill="#FBBF24" opacity="0.7"/>
+            </g>
+            <text x="10" y="8" font-size="7" fill="#059669" font-weight="700">复燃!</text>
+          </g>
 
-        <!-- Wood stick B -->
-        <g id="woodStickB" opacity="0" transform="translate(560,250)">
-          <line x1="0" y1="0" x2="0" y2="50" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="0" cy="0" r="4" fill="#F97316" opacity="0.6"/>
-          <text x="15" y="5" font-size="6" fill="#EA580C">带火星木条</text>
-          <text id="verifyResultB" x="15" y="18" font-size="7" fill="#DC2626" font-weight="700" opacity="0"></text>
-        </g>
+          <!-- Canvas hint -->
+          <text id="canvasHint" x="350" y="450" font-size="10" fill="#0284C7" text-anchor="middle" font-weight="700">拖火柴到酒精灯 → 加热</text>
+        </svg>
+      </div>
+    </div>
 
-        <!-- Equation B -->
-        <g transform="translate(480,30)">
-          <rect x="0" y="0" width="210" height="36" rx="6" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
-          <text x="105" y="14" font-size="7" fill="#0284C7" text-anchor="middle" font-weight="600">化学方程式（过氧化氢法）</text>
-          <text id="eqB" x="105" y="28" font-size="7" fill="#0F172A" text-anchor="middle">2H₂O₂ →(MnO₂) 2H₂O + O₂↑</text>
-        </g>
+    <!-- Tool column -->
+    <div class="tool-col">
+      <div class="tool-col-title">器材</div>
 
-        <!-- State B -->
-        <g transform="translate(480,80)">
-          <rect x="0" y="0" width="210" height="50" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
-          <text x="10" y="16" font-size="8" fill="#0F172A" font-weight="600">实验状态</text>
-          <text id="stateBubbleB" x="10" y="32" font-size="7" fill="#64748B">气泡：无</text>
-          <text id="stateCollectB" x="10" y="46" font-size="7" fill="#64748B">收集：未开始</text>
-        </g>
-        <!-- Canvas click zone -->
-        <!-- removed canvas click zone, use器材 onclick -->
-        <text class="svg-hint" x="240" y="390" text-anchor="middle">点击实验装置 → 下一步操作</text>
-      </svg>
+      <div class="tool-card" id="toolMatch" data-action="match">
+        <svg viewBox="0 0 48 48"><line x1="14" y1="38" x2="34" y2="12" stroke="#A16207" stroke-width="2.5" stroke-linecap="round"/><circle cx="34" cy="12" r="4" fill="#DC2626"/><circle cx="34" cy="12" r="2.5" fill="#F97316"/></svg>
+        <div class="tool-name">火柴</div>
+      </div>
+
+      <div class="tool-card" id="toolSplint" data-action="splint">
+        <svg viewBox="0 0 48 48"><line x1="24" y1="40" x2="24" y2="14" stroke="#A16207" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="12" r="3" fill="#F97316" opacity="0.5"/><text x="24" y="10" font-size="5" fill="#DC2626" text-anchor="middle">火</text></svg>
+        <div class="tool-name">带火星木条</div>
+      </div>
+    </div>
+
+    <!-- Panel -->
+    <div class="panel-col">
+      <div style="margin-bottom:12px">
+        <div class="section-title">口诀：查装定点收离熄</div>
+        <div class="mnemonic" id="mnemonic">
+          <span id="mn1">查</span>
+          <span id="mn2">装</span>
+          <span id="mn3">定</span>
+          <span id="mn4">点</span>
+          <span id="mn5">收</span>
+          <span id="mn6">离</span>
+          <span id="mn7">熄</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div class="section-title">操作清单</div>
+        <ul class="obs-list">
+          <li class="obs-item" id="obs1"><span class="obs-check"></span>点燃酒精灯加热</li>
+          <li class="obs-item" id="obs2"><span class="obs-check"></span>导管口出现气泡</li>
+          <li class="obs-item" id="obs3"><span class="obs-check"></span>连续均匀冒泡时收集</li>
+          <li class="obs-item" id="obs4"><span class="obs-check"></span>集气瓶水被排出</li>
+          <li class="obs-item" id="obs5"><span class="obs-check"></span>带火星木条复燃验满</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-title">收集进度</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="progressText" style="font-size:9px;color:#64748B;text-align:center">0%</div>
+      </div>
+
+      <div class="micro-card">
+        <div style="font-weight:800;margin-bottom:4px">微观 → 宏观</div>
+        <div id="microNote">KMnO₄ 分解产生 O₂ 分子 → 气泡 → 排水收集</div>
+      </div>
+
+      <div id="resultCard" style="display:none;background:#ECFDF5;border:1px solid #6EE7B7;border-radius:8px;padding:10px;margin:8px 0;text-align:center">
+        <div style="font-size:10px;font-weight:800;color:#059669;margin-bottom:4px">验满成功</div>
+        <div style="font-size:11px;color:#065F46">带火星木条复燃，证明是 O₂</div>
+      </div>
+
+      <div style="background:#FFF7ED;border:1px solid #FDBA74;border-radius:8px;padding:8px;margin:8px 0;font-size:9px;color:#9A3412">
+        <strong>注意：先撤导管再熄灯！</strong><br>否则水会倒流炸裂试管
+      </div>
+
+      <button onclick="resetExperiment()" style="width:100%;margin-top:12px;padding:8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#475569;font-size:11px;cursor:pointer;font-weight:600">重做实验</button>
     </div>
   </div>
 
-  <div class="panel-area">
-    <div class="panel-scroll">
-      <!-- Tab selector -->
-      <div class="panel-section">
-        <div class="tab-bar">
-          <button class="tab-btn active" id="tabBtnA" onclick="switchTab('A')">高锰酸钾法（加热）</button>
-          <button class="tab-btn" id="tabBtnB" onclick="switchTab('B')">过氧化氢法（常温）</button>
-        </div>
+  <!-- Knowledge -->
+  <div class="knowledge-section">
+    <h3 style="font-size:13px;color:#0F172A;margin:0 0 12px">知识拓展</h3>
+    <div class="knowledge-grid">
+      <div class="knowledge-card">
+        <h4>化学方程式</h4>
+        <div id="formula1" style="text-align:center;margin:6px 0"></div>
+        <p>高锰酸钾受热分解生成锰酸钾+二氧化锰+氧气</p>
       </div>
-
-      <!-- ========== TAB A PANEL ========== -->
-      <div id="panelA" class="tab-content active">
-        <!-- Step bar -->
-        <div class="panel-section">
-          <div class="section-title">实验步骤</div>
-          <div class="step-bar" id="stepBarA">
-            <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
-            <div class="step-item" data-step="1"><span class="step-num">2</span>加热</div>
-            <div class="step-item" data-step="2"><span class="step-num">3</span>收集</div>
-            <div class="step-item" data-step="3"><span class="step-num">4</span>停止</div>
-          </div>
-        </div>
-
-        <!-- Mnemonic card -->
-        <div class="panel-section">
-          <div class="section-title">口诀：查装定点收离熄</div>
-          <div class="mnemonic-card" id="mnemonicCard">
-            <div class="mnemonic-item" data-m="0" id="m0">查</div>
-            <div class="mnemonic-item" data-m="1" id="m1">装</div>
-            <div class="mnemonic-item" data-m="2" id="m2">定</div>
-            <div class="mnemonic-item" data-m="3" id="m3">点</div>
-            <div class="mnemonic-item" data-m="4" id="m4">收</div>
-            <div class="mnemonic-item" data-m="5" id="m5">离</div>
-            <div class="mnemonic-item" data-m="6" id="m6">熄</div>
-          </div>
-          <div class="step-desc" id="mnemonicDesc" style="font-size:9px;color:#64748B;margin-top:4px">
-            查 = 检查气密性 · 装 = 装入药品 · 定 = 固定装置
-          </div>
-        </div>
-
-        <!-- Current step -->
-        <div class="panel-section">
-          <div class="section-title" id="stepTitleA">第 1 步：准备装置</div>
-          <div class="step-desc" id="stepDescA">检查气密性，装入高锰酸钾，固定试管（口略向下倾斜），管口塞棉花。</div>
-          <div class="step-desc" id="stepBtnA" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
-        </div>
-
-        <!-- Observations A -->
-        <div class="panel-section">
-          <div class="section-title">现象观察</div>
-          <ul class="obs-list" id="obsListA">
-            <li class="obs-item" id="obsA1"><span class="obs-check"></span>点燃酒精灯加热试管</li>
-            <li class="obs-item" id="obsA2"><span class="obs-check"></span>导管口有气泡冒出</li>
-            <li class="obs-item" id="obsA3"><span class="obs-check"></span>气泡连续均匀冒出</li>
-            <li class="obs-item" id="obsA4"><span class="obs-check"></span>排水集气：水面下降</li>
-            <li class="obs-item" id="obsA5"><span class="obs-check"></span>带火星木条复燃</li>
-            <li class="obs-item" id="obsA6"><span class="obs-check"></span>先撤导管，后熄灭酒精灯</li>
-          </ul>
-        </div>
-
-        <!-- Warning -->
-        <div class="warn-box" id="warnBox">
-          <strong>先离后熄！</strong> 必须先撤导管再熄灭酒精灯，否则水槽中的水会倒吸进热试管，导致试管炸裂。
-        </div>
+      <div class="knowledge-card">
+        <h4>查装定点收离熄</h4>
+        <p>查气密性→装药品→定(固定装置)→点(点燃加热)→收(收集气体)→离(先撤导管)→熄(后熄灯)</p>
       </div>
-
-      <!-- ========== TAB B PANEL ========== -->
-      <div id="panelB" class="tab-content">
-        <!-- Step bar B -->
-        <div class="panel-section">
-          <div class="section-title">实验步骤</div>
-          <div class="step-bar" id="stepBarB">
-            <div class="step-item active" data-step="0"><span class="step-num">1</span>准备</div>
-            <div class="step-item" data-step="1"><span class="step-num">2</span>反应</div>
-            <div class="step-item" data-step="2"><span class="step-num">3</span>验满</div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="section-title" id="stepTitleB">第 1 步：准备装置</div>
-          <div class="step-desc" id="stepDescB">在锥形瓶中放入少量 MnO₂，分液漏斗中装入 H₂O₂ 溶液，连接导管。</div>
-          <div class="step-desc" id="stepBtnB" style="color:#0284C7;font-weight:600">点击画布上的器材操作</div>
-        </div>
-
-        <div class="panel-section">
-          <div class="section-title">现象观察</div>
-          <ul class="obs-list" id="obsListB">
-            <li class="obs-item" id="obsB1"><span class="obs-check"></span>打开分液漏斗旋塞</li>
-            <li class="obs-item" id="obsB2"><span class="obs-check"></span>锥形瓶中产生大量气泡</li>
-            <li class="obs-item" id="obsB3"><span class="obs-check"></span>排水集气：水面下降</li>
-            <li class="obs-item" id="obsB4"><span class="obs-check"></span>带火星木条复燃</li>
-          </ul>
-        </div>
+      <div class="knowledge-card">
+        <h4>为什么先撤导管？</h4>
+        <p style="color:#DC2626"><strong>先熄灯会导致试管内温度骤降，水倒吸进热试管导致炸裂！</strong>这是中考必考易错点。</p>
       </div>
-
-      <!-- Reset (shared) -->
-      <div class="panel-section">
-        <button class="ctrl-btn secondary" id="btnReset" onclick="resetAll()">重做实验</button>
+      <div class="knowledge-card">
+        <h4>棉花的作用</h4>
+        <p>防止 KMnO₄ 粉末随气流进入导管，堵塞导管。</p>
       </div>
-
-      <!-- Conclusion -->
-      <div class="panel-section" id="resultSection" style="display:none">
-        <div class="section-title">实验结论</div>
-        <div style="background:var(--lab-accent-bg);border:1px solid var(--lab-accent-border);border-radius:8px;padding:10px;font-size:11px;color:#0F172A">
-          带火星木条伸入集气瓶口，木条<strong style="color:#0284C7">复燃</strong>，证明收集到的气体是<strong style="color:#0284C7">氧气</strong>。
-        </div>
+      <div class="knowledge-card">
+        <h4>排水集气法</h4>
+        <p>O₂ 不易溶于水，密度比空气略大。排水集气法收集的 O₂ 较纯净。也可用向上排空气法。</p>
+      </div>
+      <div class="knowledge-card">
+        <h4>验满方法</h4>
+        <p>将带火星的木条伸到集气瓶口，若木条复燃，说明 O₂ 已收满。</p>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Knowledge -->
-<div class="knowledge-section">
-  <div class="knowledge-container">
-    <h2>实验原理</h2>
-    <div class="formula-block" id="formula1"></div>
-    <div class="formula-block" id="formula2"></div>
-
-    <h3>两种方法对比</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0">
-      <div style="background:#F0F9FF;padding:10px;border-radius:8px">
-        <strong style="color:#0284C7">高锰酸钾法</strong><br>
-        药品：KMnO₄（固体）<br>
-        条件：加热<br>
-        装置：固固加热型<br>
-        优点：操作规范，中考必考<br>
-        缺点：需要加热，操作步骤多
-      </div>
-      <div style="background:#F0F9FF;padding:10px;border-radius:8px">
-        <strong style="color:#0284C7">过氧化氢法</strong><br>
-        药品：H₂O₂ + MnO₂<br>
-        条件：常温，催化剂<br>
-        装置：固液常温型<br>
-        优点：操作简单，可随时控制<br>
-        缺点：H₂O₂ 不稳定
-      </div>
-    </div>
-
-    <h3>查装定点收离熄（中考口诀）</h3>
-    <ul>
-      <li><strong>查</strong>：检查装置气密性</li>
-      <li><strong>装</strong>：装入药品（KMnO₄），管口塞棉花</li>
-      <li><strong>定</strong>：固定装置（试管口略向下倾斜）</li>
-      <li><strong>点</strong>：点燃酒精灯，先预热再集中加热</li>
-      <li><strong>收</strong>：气泡连续均匀时，排水集气收集 O₂</li>
-      <li><strong>离</strong>：先撤离导管（从水中取出）</li>
-      <li><strong>熄</strong>：再熄灭酒精灯</li>
-    </ul>
-
-    <h3>为什么必须"先离后熄"？</h3>
-    <p>熄灭酒精灯后，试管内温度降低、气压减小。如果导管仍在水中，水槽中的水会在大气压作用下<strong>倒吸</strong>进热试管，导致试管因骤冷而<strong>炸裂</strong>。</p>
-
-    <h3>排水集气法</h3>
-    <p>利用氧气<strong>不易溶于水</strong>的性质。将集气瓶装满水倒扣在水槽中，气体从导管进入瓶内，将水排出。当瓶内水全部排出时，在水面下用玻璃片盖住瓶口，取出正放。</p>
-
-    <h3>验满方法</h3>
-    <p>将<strong>带火星的木条</strong>伸到集气瓶口（不是伸入瓶内），若木条<strong>复燃</strong>，说明氧气已满。</p>
   </div>
 </div>
 
@@ -419,464 +287,226 @@
 <script src="/shared/chem-effects.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = $('mainSvg');
 
 // ===== STATE =====
-const stateA = { step: 0, animating: false, bubbleAnim: null, collectPct: 0, bubblesReady: false };
-const stateB = { step: 0, animating: false, bubbleAnim: null, collectPct: 0 };
-let currentTab = 'A';
-let waterDispA = null, waterDispB = null;
+const flags = { lampLit: false, heating: false, collecting: false, collected: false, verified: false };
+let collectProgress = 0;
+let animFrame = null;
+const bubbles = [];
+document.querySelectorAll('.bub').forEach(el => bubbles.push({ el, active: false, x: 0, y: 0, vy: 0, life: 0 }));
 
-// ===== TAB SWITCH =====
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  $('canvas' + tab).classList.add('active');
-  $('panel' + tab).classList.add('active');
-  $('tabBtnA').classList.toggle('active', tab === 'A');
-  $('tabBtnB').classList.toggle('active', tab === 'B');
-  updateStatusBadge();
+// ===== DROP TARGETS =====
+const DROP_TARGETS = { match: ['dropLamp'], splint: ['dropSplint'] };
+const ACTION_MAP = { dropLamp: 'light', dropSplint: 'verify' };
+
+// ===== DRAG =====
+let dragState = null;
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('pointerdown', e => {
+    if (card.classList.contains('used')) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.className = 'tool-card drag-ghost';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = (e.clientX - rect.width/2) + 'px';
+    ghost.style.top = (e.clientY - rect.height/2) + 'px';
+    document.body.appendChild(ghost);
+    dragState = { card, ghost, action: card.dataset.action, targets: DROP_TARGETS[card.dataset.action] || [] };
+  });
+  card.addEventListener('pointermove', e => {
+    if (!dragState || dragState.card !== card) return;
+    const g = dragState.ghost;
+    g.style.left = (e.clientX - g.offsetWidth/2) + 'px';
+    g.style.top = (e.clientY - g.offsetHeight/2) + 'px';
+    dragState.targets.forEach(id => { const el = $(id); if (el) el.classList.toggle('drop-active', isOver(e.clientX, e.clientY, el)); });
+  });
+  card.addEventListener('pointerup', e => {
+    if (!dragState || dragState.card !== card) return;
+    dragState.ghost.remove();
+    let hit = null;
+    dragState.targets.forEach(id => { const el = $(id); if (el) { el.classList.remove('drop-active'); if (isOver(e.clientX, e.clientY, el)) hit = id; } });
+    if (hit) doAction(ACTION_MAP[hit]);
+    dragState = null;
+  });
+});
+
+function isOver(cx, cy, svgEl) {
+  const r = svgEl.getBoundingClientRect();
+  const pad = 20;
+  return cx > r.left - pad && cx < r.right + pad && cy > r.top - pad && cy < r.bottom + pad;
 }
 
-// ===== TAB A: 高锰酸钾法 (4 steps) =====
-const STEPS_A = ['ready', 'heating', 'collecting', 'shutdown'];
-const STEP_INFO_A = [
-  { title: '第 1 步：准备装置', desc: '检查气密性，装入高锰酸钾，固定试管（口略向下倾斜），管口塞棉花。', btn: '点燃酒精灯 → 开始加热' },
-  { title: '第 2 步：加热', desc: '点燃酒精灯，先预热后集中加热。观察导管口气泡，等待气泡连续均匀。', btn: '等待气泡连续均匀…' },
-  { title: '第 3 步：收集', desc: '气泡连续均匀，开始排水集气。观察集气瓶中水面下降。', btn: '收集完成 → 验满' },
-  { title: '第 4 步：停止（先离后熄）', desc: '先将导管从水中撤出，再熄灭酒精灯。注意顺序！', btn: '实验完成' }
-];
-const MNEMONIC_MAP = [
-  { steps: [0], desc: '查 = 检查气密性 · 装 = 装入药品 · 定 = 固定装置' },
-  { steps: [3], desc: '点 = 点燃酒精灯，先预热再集中加热' },
-  { steps: [4], desc: '收 = 气泡连续均匀时，排水集气收集 O₂' },
-  { steps: [5, 6], desc: '离 = 先撤导管 · 熄 = 再熄灭酒精灯（顺序不能反！）' }
-];
-
-function nextStepA() {
-  if (stateA.animating) return;
-  if (stateA.step >= STEPS_A.length - 1) return;
-
-  stateA.step++;
-  updateStepBarA();
-
-  switch (STEPS_A[stateA.step]) {
-    case 'heating': startHeating(); break;
-    case 'collecting': startCollecting(); break;
-    case 'shutdown': startShutdown(); break;
+// ===== ACTIONS =====
+function doAction(action) {
+  switch(action) {
+    case 'light':
+      if (flags.lampLit) { toast('酒精灯已点燃'); return; }
+      startHeating(); break;
+    case 'verify':
+      if (!flags.collected) { toast('还没收集满'); return; }
+      if (flags.verified) { toast('已验满'); return; }
+      verifySplint(); break;
   }
 }
 
-function updateStepBarA() {
-  document.querySelectorAll('#stepBarA .step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < stateA.step) el.classList.add('done');
-    if (i === stateA.step) el.classList.add('active');
-  });
-
-  const info = STEP_INFO_A[stateA.step];
-  $('stepTitleA').textContent = info.title;
-  $('stepDescA').textContent = info.desc;
-  $('stepBtnA').textContent = info.btn;
-  $('stepBtnA').disabled = stateA.animating;
-
-  // Update mnemonic highlights
-  const mInfo = MNEMONIC_MAP[stateA.step];
-  document.querySelectorAll('.mnemonic-item').forEach((el, i) => {
-    el.className = 'mnemonic-item';
-    if (mInfo.steps.includes(i)) el.classList.add('active');
-    // Mark done for previous steps
-    const prevSteps = [];
-    for (let s = 0; s < stateA.step; s++) MNEMONIC_MAP[s].steps.forEach(x => prevSteps.push(x));
-    if (prevSteps.includes(i)) el.classList.add('done');
-  });
-  $('mnemonicDesc').textContent = mInfo.desc;
-}
-
-// Step 2: Heating
 function startHeating() {
-  stateA.animating = true;
-  $('stepBtnA').disabled = true;
-
-  // Light flame
-  $('flameA').setAttribute('opacity', '1');
-  checkObs('obsA1');
-  updateMnemonicDone([0, 1, 2]); // 查装定 done
-
-  // Update state
-  $('stateTemp').textContent = '温度：升高中…';
+  flags.lampLit = true;
+  flags.heating = true;
+  $('toolMatch').classList.add('used');
+  $('lampFlame').setAttribute('opacity', '1');
+  checkObs('obs1');
+  setMnemonic(4); // 点
+  updateHint();
 
   // Flame flicker
-  let flickerFrame = 0;
-  function flicker() {
-    if (STEPS_A[stateA.step] !== 'heating' && STEPS_A[stateA.step] !== 'collecting') return;
-    const s = 0.85 + Math.random() * 0.3;
-    $('flameA').setAttribute('transform', `scale(${s})`);
-    flickerFrame++;
-    requestAnimationFrame(flicker);
-  }
-  requestAnimationFrame(flicker);
+  (function flick() {
+    if (!flags.lampLit) return;
+    const s = 0.85 + Math.sin(Date.now() * 0.008) * 0.15;
+    $('lampFlame').setAttribute('transform', 'scale(' + s + ')');
+    requestAnimationFrame(flick);
+  })();
 
-  // After 1s, sparse bubbles appear
+  // Start bubbling after 1s delay
   setTimeout(() => {
-    checkObs('obsA2');
-    $('stateBubble').textContent = '气泡：稀疏';
-    startBubblesA(1.5); // slow rate
+    flags.collecting = true;
+    checkObs('obs2');
+    setMnemonic(5); // 收
+    startCollecting();
   }, 1000);
-
-  // After 2.5s, bubbles become continuous → unlock collect
-  setTimeout(() => {
-    stateA.bubblesReady = true;
-    checkObs('obsA3');
-    $('stateBubble').textContent = '气泡：连续均匀';
-    $('stateTemp').textContent = '温度：加热中';
-    updateMnemonicDone([0, 1, 2, 3]); // 点 done
-    stateA.animating = false;
-    $('stepBtnA').disabled = false;
-    $('stepBtnA').textContent = '开始收集 → 排水集气';
-  }, 2500);
 }
 
-// Bubble animation for Tab A
-let bubblePoolA = [];
-function startBubblesA(rate) {
-  const container = $('bubbleContainer');
-  // Pre-allocate bubbles
-  if (bubblePoolA.length === 0) {
-    for (let i = 0; i < 30; i++) {
-      const c = document.createElementNS(SVG_NS, 'circle');
-      c.setAttribute('r', '0');
-      c.setAttribute('fill', '#BAE6FD');
-      c.setAttribute('opacity', '0');
-      container.appendChild(c);
-      bubblePoolA.push({ el: c, active: false, x: 0, y: 0, r: 0, vy: 0, life: 0 });
-    }
-  }
-
-  let lastEmit = 0;
-  const emitInterval = 1000 / rate;
-
-  function animate(now) {
-    if (!stateA.bubbleAnim) return;
-
-    // Emit
-    if (now - lastEmit > emitInterval) {
-      lastEmit = now;
-      const b = bubblePoolA.find(b => !b.active);
-      if (b) {
-        b.active = true;
-        // Bubbles enter from tube end into inverted bottle (around x=470, y=310)
-        b.x = 468 + (Math.random() - 0.5) * 8;
-        b.y = 310;
-        b.r = 2 + Math.random() * 2.5;
-        b.vy = 0.4 + Math.random() * 0.3;
-        b.life = 0;
-      }
-    }
-
-    // Update
-    bubblePoolA.forEach(b => {
-      if (!b.active) return;
-      b.y -= b.vy;
-      b.x += (Math.random() - 0.5) * 0.3;
-      b.life++;
-      if (b.y < 248 || b.life > 200) {
-        b.active = false;
-        b.el.setAttribute('opacity', '0');
-        return;
-      }
-      b.el.setAttribute('cx', b.x);
-      b.el.setAttribute('cy', b.y);
-      b.el.setAttribute('r', b.r);
-      b.el.setAttribute('opacity', '0.5');
-    });
-
-    stateA.bubbleAnim = requestAnimationFrame(animate);
-  }
-  stateA.bubbleAnim = requestAnimationFrame(animate);
-}
-
-// Step 3: Collecting (排水集气) — uses shared createWaterDisplacement
 function startCollecting() {
-  stateA.animating = true;
-  $('stepBtnA').disabled = true;
-  checkObs('obsA4');
-  $('stateCollect').textContent = '收集：进行中…';
-  updateMnemonicDone([0, 1, 2, 3, 4]);
+  const BASE_X = 460; // tube end in trough
+  const BASE_Y = 310;
+  const BOTTLE_X = 540;
 
-  // Increase bubble rate
-  if (stateA.bubbleAnim) cancelAnimationFrame(stateA.bubbleAnim);
-  startBubblesA(4);
+  function tick() {
+    if (!flags.collecting) return;
 
-  waterDispA = ChemEffects.createWaterDisplacement($('gasSpaceA'), $('bottleWaterA'), {
-    bottleH: 66, duration: 3000, offsetY: 2,
-    onProgress(pct) {
-      stateA.collectPct = pct;
-      $('stateCollect').textContent = `收集：${pct}%`;
-    },
-    onDone() {
-      $('stateCollect').textContent = '收集：完成';
-      $('woodStick').setAttribute('opacity', '1');
-      setTimeout(() => {
-        $('verifyResult').textContent = '复燃！→ O₂';
-        $('verifyResult').setAttribute('opacity', '1');
-        checkObs('obsA5');
-        stateA.animating = false;
-        $('stepBtnA').disabled = false;
-        $('stepBtnA').textContent = '先撤导管 → 后熄酒精灯';
-      }, 800);
-    }
-  });
-  waterDispA.start();
-}
+    collectProgress = Math.min(100, collectProgress + 0.15);
+    $('progressFill').style.width = collectProgress + '%';
+    $('progressText').textContent = Math.round(collectProgress) + '%';
 
-// Step 4: Shutdown (先离后熄)
-function startShutdown() {
-  stateA.animating = true;
-  $('stepBtnA').disabled = true;
+    // Update bottle water level (goes down)
+    const waterH = 80 * (1 - collectProgress / 100);
+    const waterY = 5 + (80 - waterH);
+    $('bottleWater').setAttribute('y', String(waterY));
+    $('bottleWater').setAttribute('height', String(waterH));
 
-  // Stop bubbles
-  if (stateA.bubbleAnim) { cancelAnimationFrame(stateA.bubbleAnim); stateA.bubbleAnim = null; }
-  bubblePoolA.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+    // O₂ label
+    if (collectProgress > 30) $('o2Label').setAttribute('opacity', String(Math.min(0.4, (collectProgress - 30) / 100)));
 
-  checkObs('obsA6');
-  updateMnemonicDone([0, 1, 2, 3, 4, 5, 6]);
+    // KMnO₄ fades
+    $('kmno4').setAttribute('opacity', String(0.7 - collectProgress / 200));
 
-  // 1. Remove tube from water (fade rubber tube)
-  $('rubberTubeA').setAttribute('opacity', '0.3');
-  $('stateBubble').textContent = '气泡：已停止';
-
-  // 2. After delay, extinguish flame
-  setTimeout(() => {
-    $('flameA').setAttribute('opacity', '0');
-    $('stateTemp').textContent = '温度：冷却中';
-
-    setTimeout(() => {
-      stateA.animating = false;
-      $('stepBtnA').textContent = '实验完成';
-      $('stepBtnA').disabled = true;
-      $('resultSection').style.display = 'block';
-      $('statusBadge').textContent = '高锰酸钾法实验完成！';
-      $('statusBadge').className = 'status-badge done';
-    }, 500);
-  }, 800);
-}
-
-// ===== TAB B: 过氧化氢法 (3 steps) =====
-const STEPS_B = ['ready', 'reacting', 'verify'];
-const STEP_INFO_B = [
-  { title: '第 1 步：准备装置', desc: '在锥形瓶中放入少量 MnO₂，分液漏斗中装入 H₂O₂ 溶液，连接导管。', btn: '打开旋塞 → 开始反应' },
-  { title: '第 2 步：反应收集', desc: '打开旋塞，H₂O₂ 滴入锥形瓶，在 MnO₂ 催化下分解产生 O₂。排水集气收集。', btn: '等待收集…' },
-  { title: '第 3 步：验满', desc: '用带火星的木条检验，木条复燃证明是氧气。', btn: '实验完成' }
-];
-
-function nextStepB() {
-  if (stateB.animating) return;
-  if (stateB.step >= STEPS_B.length - 1) return;
-
-  stateB.step++;
-  updateStepBarB();
-
-  switch (STEPS_B[stateB.step]) {
-    case 'reacting': startReacting(); break;
-    case 'verify': startVerifyB(); break;
-  }
-}
-
-function updateStepBarB() {
-  document.querySelectorAll('#stepBarB .step-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i < stateB.step) el.classList.add('done');
-    if (i === stateB.step) el.classList.add('active');
-  });
-  const info = STEP_INFO_B[stateB.step];
-  $('stepTitleB').textContent = info.title;
-  $('stepDescB').textContent = info.desc;
-  $('stepBtnB').textContent = info.btn;
-  $('stepBtnB').disabled = stateB.animating;
-}
-
-let bubblePoolB = [];
-function startBubblesB(rate) {
-  const container = $('bubbleContainerB');
-  if (bubblePoolB.length === 0) {
-    for (let i = 0; i < 30; i++) {
-      const c = document.createElementNS(SVG_NS, 'circle');
-      c.setAttribute('r', '0');
-      c.setAttribute('fill', '#BAE6FD');
-      c.setAttribute('opacity', '0');
-      container.appendChild(c);
-      bubblePoolB.push({ el: c, active: false, x: 0, y: 0, r: 0, vy: 0, life: 0 });
-    }
-  }
-
-  let lastEmit = 0;
-  const emitInterval = 1000 / rate;
-  function animate(now) {
-    if (!stateB.bubbleAnim) return;
-    if (now - lastEmit > emitInterval) {
-      lastEmit = now;
-      const b = bubblePoolB.find(b => !b.active);
-      if (b) {
+    // Bubbles
+    bubbles.forEach(b => {
+      if (!b.active && Math.random() < 0.08) {
         b.active = true;
-        b.x = 468 + (Math.random() - 0.5) * 8;
-        b.y = 310;
-        b.r = 2 + Math.random() * 2.5;
-        b.vy = 0.5 + Math.random() * 0.3;
-        b.life = 0;
+        b.x = BASE_X + (Math.random() - 0.5) * 10;
+        b.y = BASE_Y;
+        b.vy = -0.8 - Math.random() * 0.5;
+        b.life = 60 + Math.random() * 30;
       }
-    }
-    bubblePoolB.forEach(b => {
-      if (!b.active) return;
-      b.y -= b.vy;
-      b.x += (Math.random() - 0.5) * 0.3;
-      b.life++;
-      if (b.y < 248 || b.life > 200) { b.active = false; b.el.setAttribute('opacity', '0'); return; }
-      b.el.setAttribute('cx', b.x);
-      b.el.setAttribute('cy', b.y);
-      b.el.setAttribute('r', b.r);
-      b.el.setAttribute('opacity', '0.5');
+      if (b.active) {
+        b.y += b.vy;
+        b.x += (Math.random() - 0.5) * 0.3;
+        b.life--;
+        b.el.setAttribute('cx', b.x);
+        b.el.setAttribute('cy', b.y);
+        b.el.setAttribute('opacity', String(Math.max(0, b.life / 60)));
+        if (b.life <= 0) { b.active = false; b.el.setAttribute('opacity', '0'); }
+      }
     });
-    stateB.bubbleAnim = requestAnimationFrame(animate);
-  }
-  stateB.bubbleAnim = requestAnimationFrame(animate);
-}
 
-function startReacting() {
-  stateB.animating = true;
-  $('stepBtnB').disabled = true;
-  checkObs('obsB1');
+    if (collectProgress >= 20 && !flags._obs3) { flags._obs3 = true; checkObs('obs3'); }
+    if (collectProgress >= 60 && !flags._obs4) { flags._obs4 = true; checkObs('obs4'); }
 
-  // Show H2O2 dripping into flask
-  $('h2o2Liquid').setAttribute('opacity', '0.3');
-  $('stateBubbleB').textContent = '气泡：产生中';
-  checkObs('obsB2');
-
-  // Start bubbles
-  startBubblesB(4);
-
-  checkObs('obsB3');
-  waterDispB = ChemEffects.createWaterDisplacement($('gasSpaceB'), $('bottleWaterB'), {
-    bottleH: 66, duration: 3000, offsetY: 2,
-    onProgress(pct) {
-      $('stateCollectB').textContent = `收集：${pct}%`;
-    },
-    onDone() {
-      if (stateB.bubbleAnim) { cancelAnimationFrame(stateB.bubbleAnim); stateB.bubbleAnim = null; }
-      bubblePoolB.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
-      $('stateCollectB').textContent = '收集：完成';
-      $('stateBubbleB').textContent = '气泡：已停止';
-      stateB.animating = false;
-      $('stepBtnB').disabled = false;
-      $('stepBtnB').textContent = '验满 → 带火星木条';
+    if (collectProgress >= 100) {
+      flags.collecting = false;
+      flags.collected = true;
+      setMnemonic(6); // 离
+      $('dropSplint').setAttribute('opacity', '0.4');
+      bubbles.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+      updateHint();
+    } else {
+      animFrame = requestAnimationFrame(tick);
     }
-  });
-  waterDispB.start();
+  }
+  animFrame = requestAnimationFrame(tick);
 }
 
-function startVerifyB() {
-  stateB.animating = true;
-  $('stepBtnB').disabled = true;
-  $('woodStickB').setAttribute('opacity', '1');
-
-  setTimeout(() => {
-    $('verifyResultB').textContent = '复燃！→ O₂';
-    $('verifyResultB').setAttribute('opacity', '1');
-    checkObs('obsB4');
-    stateB.animating = false;
-    $('stepBtnB').textContent = '实验完成';
-    $('stepBtnB').disabled = true;
-    $('resultSection').style.display = 'block';
-    $('statusBadge').textContent = '过氧化氢法实验完成！';
-    $('statusBadge').className = 'status-badge done';
-  }, 800);
+function verifySplint() {
+  flags.verified = true;
+  $('toolSplint').classList.add('used');
+  $('splintGlow').setAttribute('opacity', '1');
+  checkObs('obs5');
+  setMnemonic(7); // 熄
+  $('resultCard').style.display = 'block';
+  $('microNote').textContent = 'KMnO₄ 分解 → O₂ 排水入瓶 → 木条复燃验证';
+  $('canvasHint').textContent = '实验完成！O₂ 收集成功';
 }
 
-// ===== UTILITIES =====
+function setMnemonic(n) {
+  for (let i = 1; i <= 7; i++) {
+    const el = $('mn' + i);
+    if (i < n) el.className = 'done';
+    else if (i === n) el.className = 'done';
+    else el.className = '';
+  }
+}
+
+function updateHint() {
+  if (!flags.lampLit) $('canvasHint').textContent = '拖火柴到酒精灯 → 加热';
+  else if (flags.collecting) $('canvasHint').textContent = '气泡连续均匀冒出...正在收集 O₂';
+  else if (flags.collected && !flags.verified) $('canvasHint').textContent = '拖带火星木条到集气瓶口 → 验满';
+}
+
+function toast(msg) {
+  $('canvasHint').textContent = msg;
+  setTimeout(updateHint, 2000);
+}
+
 function checkObs(id) {
   const el = $(id);
   if (el && !el.classList.contains('checked')) {
     el.classList.add('checked');
-    el.querySelector('.obs-check').textContent = '✓';
+    el.querySelector('.obs-check').textContent = '\u2713';
   }
 }
 
-function updateMnemonicDone(doneIndices) {
-  document.querySelectorAll('.mnemonic-item').forEach((el, i) => {
-    if (doneIndices.includes(i)) el.classList.add('done');
-  });
+function resetExperiment() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  Object.keys(flags).forEach(k => flags[k] = false);
+  collectProgress = 0;
+  $('lampFlame').setAttribute('opacity', '0');
+  $('lampFlame').setAttribute('transform', '');
+  $('bottleWater').setAttribute('y', '5');
+  $('bottleWater').setAttribute('height', '80');
+  $('o2Label').setAttribute('opacity', '0');
+  $('kmno4').setAttribute('opacity', '0.7');
+  $('splintGlow').setAttribute('opacity', '0');
+  $('dropSplint').setAttribute('opacity', '0');
+  $('progressFill').style.width = '0';
+  $('progressText').textContent = '0%';
+  $('resultCard').style.display = 'none';
+  $('microNote').textContent = 'KMnO₄ 分解产生 O₂ 分子 → 气泡 → 排水收集';
+  $('canvasHint').textContent = '拖火柴到酒精灯 → 加热';
+  bubbles.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
+  for (let i = 1; i <= 7; i++) $('mn' + i).className = '';
+  ['toolMatch','toolSplint'].forEach(id => $(id).classList.remove('used'));
+  document.querySelectorAll('.obs-item').forEach(el => { el.classList.remove('checked'); el.querySelector('.obs-check').textContent = ''; });
 }
 
-function updateStatusBadge() {
-  const st = currentTab === 'A' ? stateA : stateB;
-  const steps = currentTab === 'A' ? STEPS_A : STEPS_B;
-  if (st.step === 0) {
-    $('statusBadge').textContent = '准备实验 → 按步骤操作';
-    $('statusBadge').className = 'status-badge idle';
-  }
-}
-
-// ===== RESET =====
-function resetAll() {
-  // Stop animations
-  if (stateA.bubbleAnim) { cancelAnimationFrame(stateA.bubbleAnim); stateA.bubbleAnim = null; }
-  if (stateB.bubbleAnim) { cancelAnimationFrame(stateB.bubbleAnim); stateB.bubbleAnim = null; }
-
-  // Reset state A
-  if (waterDispA) waterDispA.reset();
-  if (waterDispB) waterDispB.reset();
-  Object.assign(stateA, { step: 0, animating: false, collectPct: 0, bubblesReady: false });
-  $('flameA').setAttribute('opacity', '0');
-  $('rubberTubeA').setAttribute('opacity', '1');
-  $('woodStick').setAttribute('opacity', '0');
-  $('verifyResult').setAttribute('opacity', '0');
-  $('stateTemp').textContent = '温度：室温';
-  $('stateBubble').textContent = '气泡：无';
-  $('stateCollect').textContent = '收集：未开始';
-  bubblePoolA.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
-
-  // Reset state B
-  Object.assign(stateB, { step: 0, animating: false, collectPct: 0 });
-  $('h2o2Liquid').setAttribute('opacity', '0');
-  $('woodStickB').setAttribute('opacity', '0');
-  $('verifyResultB').setAttribute('opacity', '0');
-  $('stateBubbleB').textContent = '气泡：无';
-  $('stateCollectB').textContent = '收集：未开始';
-  bubblePoolB.forEach(b => { b.active = false; b.el.setAttribute('opacity', '0'); });
-
-  // Reset UI
-  $('resultSection').style.display = 'none';
-  $('statusBadge').textContent = '准备实验 → 按步骤操作';
-  $('statusBadge').className = 'status-badge idle';
-
-  // Reset observations
-  document.querySelectorAll('.obs-item').forEach(el => {
-    el.classList.remove('checked');
-    el.querySelector('.obs-check').textContent = '';
-  });
-
-  // Reset mnemonic
-  document.querySelectorAll('.mnemonic-item').forEach(el => {
-    el.className = 'mnemonic-item';
-  });
-
-  updateStepBarA();
-  updateStepBarB();
-}
-
-// ===== FORMULAS =====
+// KaTeX
 function renderFormulas() {
   if (!window.katex) return;
-  try {
-    katex.render('2KMnO_4 \\xrightarrow{\\Delta} K_2MnO_4 + MnO_2 + O_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true });
-    katex.render('2H_2O_2 \\xrightarrow{MnO_2} 2H_2O + O_2\\uparrow', $('formula2'), { throwOnError: false, displayMode: true });
-  } catch(e) {}
+  try { katex.render('2KMnO_4 \\xrightarrow{\\Delta} K_2MnO_4 + MnO_2 + O_2\\uparrow', $('formula1'), { throwOnError: false, displayMode: true }); } catch(e) {}
 }
-
-(function tryKatex(n) {
-  if (window.katex) { renderFormulas(); return; }
-  if (n < 50) setTimeout(() => tryKatex(n + 1), 100);
-})(0);
+function tryKatex(n) { if (window.katex) { renderFormulas(); return; } if ((n||0) < 20) setTimeout(() => tryKatex((n||0)+1), 500); }
+tryKatex();
 </script>
 <script src="/shared/theme.js"></script>
 </body>
