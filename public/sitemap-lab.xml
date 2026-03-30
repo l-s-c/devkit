@@ -1,297 +1,297 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://example.com/lab/</loc>
+    <loc>https://devkittool.cn/lab/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/boiling/</loc>
+    <loc>https://devkittool.cn/lab/boiling/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/bulb/</loc>
+    <loc>https://devkittool.cn/lab/bulb/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/buoyancy/</loc>
+    <loc>https://devkittool.cn/lab/buoyancy/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/circuit/</loc>
+    <loc>https://devkittool.cn/lab/circuit/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/circuit-builder/</loc>
+    <loc>https://devkittool.cn/lab/circuit-builder/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/co2-properties/</loc>
+    <loc>https://devkittool.cn/lab/co2-properties/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/combustion-conditions/</loc>
+    <loc>https://devkittool.cn/lab/combustion-conditions/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/density/</loc>
+    <loc>https://devkittool.cn/lab/density/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/dispersion/</loc>
+    <loc>https://devkittool.cn/lab/dispersion/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/distillation/</loc>
+    <loc>https://devkittool.cn/lab/distillation/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/double-slit/</loc>
+    <loc>https://devkittool.cn/lab/double-slit/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/electrolysis-water/</loc>
+    <loc>https://devkittool.cn/lab/electrolysis-water/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/electromagnet/</loc>
+    <loc>https://devkittool.cn/lab/electromagnet/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/emf-internal-resistance/</loc>
+    <loc>https://devkittool.cn/lab/emf-internal-resistance/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/engine-demo/</loc>
+    <loc>https://devkittool.cn/lab/engine-demo/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/friction/</loc>
+    <loc>https://devkittool.cn/lab/friction/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/glass-refraction/</loc>
+    <loc>https://devkittool.cn/lab/glass-refraction/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/hookes-law/</loc>
+    <loc>https://devkittool.cn/lab/hookes-law/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/iron-burning/</loc>
+    <loc>https://devkittool.cn/lab/iron-burning/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/lens/</loc>
+    <loc>https://devkittool.cn/lab/lens/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/lenz-law/</loc>
+    <loc>https://devkittool.cn/lab/lenz-law/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/lever/</loc>
+    <loc>https://devkittool.cn/lab/lever/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/liquid-pressure/</loc>
+    <loc>https://devkittool.cn/lab/liquid-pressure/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/make-co2/</loc>
+    <loc>https://devkittool.cn/lab/make-co2/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/make-oxygen/</loc>
+    <loc>https://devkittool.cn/lab/make-oxygen/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/mass-conservation/</loc>
+    <loc>https://devkittool.cn/lab/mass-conservation/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/mechanical-energy-conservation/</loc>
+    <loc>https://devkittool.cn/lab/mechanical-energy-conservation/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/melting/</loc>
+    <loc>https://devkittool.cn/lab/melting/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/metal-activity/</loc>
+    <loc>https://devkittool.cn/lab/metal-activity/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/metal-resistivity/</loc>
+    <loc>https://devkittool.cn/lab/metal-resistivity/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/micrometer/</loc>
+    <loc>https://devkittool.cn/lab/micrometer/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/mirror/</loc>
+    <loc>https://devkittool.cn/lab/mirror/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/molecular-motion/</loc>
+    <loc>https://devkittool.cn/lab/molecular-motion/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/momentum-conservation/</loc>
+    <loc>https://devkittool.cn/lab/momentum-conservation/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/multimeter/</loc>
+    <loc>https://devkittool.cn/lab/multimeter/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/neutralization/</loc>
+    <loc>https://devkittool.cn/lab/neutralization/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/newton-first-law/</loc>
+    <loc>https://devkittool.cn/lab/newton-first-law/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/newton-second-law/</loc>
+    <loc>https://devkittool.cn/lab/newton-second-law/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/ohm/</loc>
+    <loc>https://devkittool.cn/lab/ohm/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/oil-film/</loc>
+    <loc>https://devkittool.cn/lab/oil-film/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/oxygen-content/</loc>
+    <loc>https://devkittool.cn/lab/oxygen-content/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/parallelogram-rule/</loc>
+    <loc>https://devkittool.cn/lab/parallelogram-rule/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/pendulum/</loc>
+    <loc>https://devkittool.cn/lab/pendulum/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/pendulum-gravity/</loc>
+    <loc>https://devkittool.cn/lab/pendulum-gravity/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/projectile-motion/</loc>
+    <loc>https://devkittool.cn/lab/projectile-motion/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/pulley/</loc>
+    <loc>https://devkittool.cn/lab/pulley/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/refraction/</loc>
+    <loc>https://devkittool.cn/lab/refraction/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/salt-purify/</loc>
+    <loc>https://devkittool.cn/lab/salt-purify/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/sensor/</loc>
+    <loc>https://devkittool.cn/lab/sensor/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/series-parallel/</loc>
+    <loc>https://devkittool.cn/lab/series-parallel/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/solution/</loc>
+    <loc>https://devkittool.cn/lab/solution/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/sound/</loc>
+    <loc>https://devkittool.cn/lab/sound/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/spring/</loc>
+    <loc>https://devkittool.cn/lab/spring/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/transformer/</loc>
+    <loc>https://devkittool.cn/lab/transformer/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/uniform-acceleration/</loc>
+    <loc>https://devkittool.cn/lab/uniform-acceleration/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/va-characteristic/</loc>
+    <loc>https://devkittool.cn/lab/va-characteristic/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/vernier-caliper/</loc>
+    <loc>https://devkittool.cn/lab/vernier-caliper/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://example.com/lab/work-velocity/</loc>
+    <loc>https://devkittool.cn/lab/work-velocity/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
