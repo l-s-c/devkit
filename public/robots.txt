@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://devkittool.cn/sitemap-lab.xml
+Sitemap: https://devkittool.cn/sitemap-tools.xml
