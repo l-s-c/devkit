@@ -26,11 +26,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 a{text-decoration:none;color:inherit}
 
 /* Hero */
-.hero{background:linear-gradient(135deg,#0C4A6E,#0284C7,#059669);padding:40px 24px 32px;text-align:center;color:#fff}
-.hero h1{font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
-.hero p{font-size:13px;opacity:0.85;max-width:400px;margin:0 auto 16px}
-.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.hero-stat{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px)}
+.hero{background:linear-gradient(135deg,#0284C7 0%,#7C3AED 100%);color:#fff;padding:48px 24px;text-align:center}
+.hero h1{font-size:32px;font-weight:800;margin-bottom:12px}
+.hero .subtitle{font-size:16px;opacity:0.9;margin-bottom:24px}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:24px}
+.hero .stat-num{font-size:36px;font-weight:800}
+.hero .stat-label{font-size:12px;opacity:0.8}
+.hero .cta-btn{display:inline-block;background:#fff;color:#0284C7;padding:12px 32px;border-radius:8px;font-weight:600;text-decoration:none;transition:transform .15s}
+.hero .cta-btn:hover{transform:translateY(-2px)}
+
+/* FAQ */
+.faq-section{max-width:800px;margin:0 auto;padding:32px 24px}
+.faq-title{font-size:18px;font-weight:800;margin-bottom:16px;text-align:center}
+.faq-list{display:grid;gap:12px}
+.faq-item{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px}
+.faq-q{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.faq-a{font-size:12px;color:var(--text-sub);line-height:1.6}
 
 /* Search */
 .search-wrap{max-width:800px;margin:-20px auto 0;padding:0 24px;position:relative;z-index:1}
@@ -78,14 +89,14 @@ a{text-decoration:none;color:inherit}
 <body>
 
 <div class="hero">
-  <h1>DevKit 互动实验室</h1>
-  <p>拖一拖、点一点，比课本有趣 100 倍</p>
+  <h1>初高中理化虚拟实验室</h1>
+  <p class="subtitle">拖一拖、点一点，中考实验操作练习神器 — 免费在线体验</p>
   <div class="hero-stats">
-    <span class="hero-stat">58 个实验</span>
-    <span class="hero-stat">44 物理</span>
-    <span class="hero-stat">14 化学</span>
-    <span class="hero-stat">初高中全覆盖</span>
+    <div class="stat"><div class="stat-num">58</div><div class="stat-label">在线实验</div></div>
+    <div class="stat"><div class="stat-num">44</div><div class="stat-label">物理实验</div></div>
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">化学实验</div></div>
   </div>
+  <a href="#panel-physics" class="cta-btn">立即体验</a>
 </div>
 
 <div class="search-wrap">
@@ -304,7 +315,34 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<div class="footer">DevKit 互动实验室 — 58 个在线实验 · 持续更新中</div>
+<!-- FAQ -->
+<div class="faq-section">
+  <h2 class="faq-title">常见问题</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">这个虚拟实验室需要付费吗？</div>
+      <div class="faq-a">完全免费！所有 58 个实验都可以免费使用，无需注册、无需下载，打开网页即可操作。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">支持哪些实验？</div>
+      <div class="faq-a">目前支持 44 个物理实验和 14 个化学实验，覆盖初高中全部核心考点，包括力学、电学、光学、热学、化学反应等。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">中考实验操作考试能用吗？</div>
+      <div class="faq-a">非常适合！覆盖河南、陕西、江西等省份中考实验操作考试的全部核心实验，支持自由探索模式练习操作步骤。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">如何操作实验？</div>
+      <div class="faq-a">拖拽式交互！把器材拖到实验台上，点击按钮触发操作，观察实验现象。每个实验都有操作提示和知识点讲解。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">手机上能用吗？</div>
+      <div class="faq-a">支持！网页响应式设计，手机、平板、电脑都能流畅使用。推荐横屏操作效果更佳。</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">初高中理化虚拟实验室 — 58 个在线实验 · 持续更新中</div>
 
 <script>
 function switchTab(tab) {
