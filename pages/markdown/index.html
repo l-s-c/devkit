@@ -6,18 +6,18 @@
 <title>Markdown编辑器 - 在线实时预览 | DevKit</title>
 <meta name="keywords" content="Markdown预览, Markdown渲染, markdown preview, MD编辑器">
 <meta name="description" content="在线Markdown编辑器，实时预览，支持表格、代码高亮、数学公式。导出HTML/PDF。">
-  <meta property="og:image" content="https://l-s-c.github.io/devkit/shared/og-image.png">
-<meta property="og:title" content="Markdown预览 - 在线Markdown编辑器 \">
-  <meta property="og:description" content="DevKit">
+  <meta property="og:image" content="https://devkittool.cn/shared/og-image.png">
+<meta property="og:title" content="Markdown预览 - 在线Markdown编辑器 ">
+  <meta property="og:description" content="在线Markdown编辑器，实时预览，支持表格、代码高亮、数学公式。导出HTML/PDF。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://l-s-c.github.io/devkit/markdown">
+  <meta property="og:url" content="https://devkittool.cn/pages/markdown/">
   <meta property="og:site_name" content="DevKit">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Markdown 预览 — DevKit">
   <meta name="twitter:description" content="在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown 预览","description":"在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML","url":"https://l-s-c.github.io/devkit/markdown","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown 预览","description":"在线 Markdown 实时预览，支持 GFM 表格和任务列表，导出 HTML","url":"https://devkittool.cn/markdown","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="canonical" href="https://l-s-c.github.io/devkit/markdown">
+<link rel="canonical" href="https://devkittool.cn/pages/markdown/">
 <link rel="stylesheet" href="../../shared/liquid-glass.css">
 <style>
 body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -251,7 +251,7 @@ document.getElementById('btnCopyHtml').addEventListener('click', () => {
 });
 document.getElementById('btnExport').addEventListener('click', () => {
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Markdown Export</title><style>body{max-width:960px;margin:40px auto;padding:0 20px;font-family:-apple-system,sans-serif;line-height:1.7}code{background:#f4f4f5;padding:2px 6px;border-radius:3px}pre{background:#f4f4f5;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:3px solid #6366f1;padding:4px 16px;color:#666}</style></head><body>${preview.innerHTML}
-</body></html>`;
+<div style="text-align:center;padding:20px;font-size:12px;color:#666;"><a href="https://beian.miit.gov.cn/" target="_blank" style="color:#666;">京ICP备2026012917号-2</a></div></body></html>`;
   const blob = new Blob([html], {type:'text/html'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='export.html'; a.click();
 });
@@ -259,5 +259,5 @@ document.getElementById('btnClear').addEventListener('click', () => { editor.val
 </script>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Markdown 预览 — DevKit 在线万能工具箱</h1>
 <noscript><p>Markdown 预览 — DevKit 在线万能工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
-</body>
+<div style="text-align:center;padding:20px;font-size:12px;color:#666;"><a href="https://beian.miit.gov.cn/" target="_blank" style="color:#666;">京ICP备2026012917号-2</a></div></body>
 </html>

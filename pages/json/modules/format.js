@@ -9,7 +9,7 @@ const SAMPLE_JSON = JSON.stringify({
   "features": ["格式化", "校验", "树形视图", "转换", "对比"],
   "author": {
     "name": "开发团队",
-    "url": "https://l-s-c.github.io/devkit"
+    "url": "https://devkittool.cn"
   },
   "users": [
     { "id": 1, "name": "Alice", "age": 30, "active": true },
