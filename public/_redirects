@@ -1,0 +1,2 @@
+/tools/*  /pages/:splat  200
+/lab/*    /pages/lab/:splat  200
