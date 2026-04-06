@@ -251,7 +251,7 @@ document.getElementById('btnCopyHtml').addEventListener('click', () => {
 });
 document.getElementById('btnExport').addEventListener('click', () => {
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Markdown Export</title><style>body{max-width:960px;margin:40px auto;padding:0 20px;font-family:-apple-system,sans-serif;line-height:1.7}code{background:#f4f4f5;padding:2px 6px;border-radius:3px}pre{background:#f4f4f5;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:3px solid #6366f1;padding:4px 16px;color:#666}</style></head><body>${preview.innerHTML}
-</body></html>`;
+<div style="text-align:center;padding:20px;font-size:12px;color:#666;"><a href="https://beian.miit.gov.cn/" target="_blank" style="color:#666;">京ICP备2026012917号-2</a></div></body></html>`;
   const blob = new Blob([html], {type:'text/html'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='export.html'; a.click();
 });
@@ -259,5 +259,5 @@ document.getElementById('btnClear').addEventListener('click', () => { editor.val
 </script>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Markdown 预览 — DevKit 在线万能工具箱</h1>
 <noscript><p>Markdown 预览 — DevKit 在线万能工具箱。请启用 JavaScript 以使用本工具。</p></noscript>
-</body>
+<div style="text-align:center;padding:20px;font-size:12px;color:#666;"><a href="https://beian.miit.gov.cn/" target="_blank" style="color:#666;">京ICP备2026012917号-2</a></div></body>
 </html>
