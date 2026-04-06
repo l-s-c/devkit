@@ -6,18 +6,18 @@
 <title>二维码工具 - 在线生成/识别 | DevKit</title>
 <meta name="keywords" content="二维码生成器,在线二维码,二维码制作,免费二维码">
 <meta name="description" content="免费在线二维码生成与识别，支持文本、网址、WiFi。可自定义颜色、Logo。">
-<meta property="og:image" content="https://l-s-c.github.io/devkit/shared/og-image.png">
+<meta property="og:image" content="https://devkittool.cn/shared/og-image.png">
 <meta property="og:title" content="二维码生成器 - 在线生成二维码 \">
 <meta property="og:description" content="DevKit">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://l-s-c.github.io/devkit/pages/qrcode/">
+<meta property="og:url" content="https://devkittool.cn/pages/qrcode/">
 <meta property="og:site_name" content="DevKit">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二维码生成器 — DevKit">
 <meta name="twitter:description" content="在线二维码生成，自定义颜色、Logo、多种模板">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"二维码生成器","description":"在线二维码生成器，支持自定义颜色、Logo、多种模板","url":"https://l-s-c.github.io/devkit/pages/qrcode/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"二维码生成器","description":"在线二维码生成器，支持自定义颜色、Logo、多种模板","url":"https://devkittool.cn/pages/qrcode/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="canonical" href="https://l-s-c.github.io/devkit/pages/qrcode/">
+<link rel="canonical" href="https://devkittool.cn/pages/qrcode/">
 <link rel="stylesheet" href="../../shared/liquid-glass.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" integrity="sha384-HGmnkDZJy7mRkoARekrrj0VjEFSh9a0Z8qxGri/kTTAJkgR8hqD1lHsYSh3JdzRi" crossorigin="anonymous"></script>
 <style>
@@ -207,7 +207,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
         <!-- 通用文本输入 -->
         <div id="textInputWrap">
-          <textarea class="text-input" id="textInput" placeholder="输入链接或文本...&#10;例如：https://l-s-c.github.io/devkit/"></textarea>
+          <textarea class="text-input" id="textInput" placeholder="输入链接或文本...&#10;例如：https://devkittool.cn/"></textarea>
           <div class="char-count" id="charCount">0 / 2953 字符</div>
         </div>
 
@@ -522,7 +522,7 @@ document.getElementById('typeTabs').addEventListener('click', (e) => {
   document.getElementById('wifiForm').classList.toggle('show', currentType === 'wifi');
   document.getElementById('emailForm').classList.toggle('show', currentType === 'email');
 
-  if (currentType === 'link') textInput.placeholder = '输入链接...\n例如：https://l-s-c.github.io/devkit/';
+  if (currentType === 'link') textInput.placeholder = '输入链接...\n例如：https://devkittool.cn/';
   else if (currentType === 'text') textInput.placeholder = '输入任意文本...';
 
   debouncedGenerate();
