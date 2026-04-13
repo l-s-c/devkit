@@ -212,6 +212,7 @@ export default defineConfig({
         'ion-equation': resolve(__dirname, 'pages/ion-equation/index.html'),
         'china-provinces': resolve(__dirname, 'pages/china-provinces/index.html'),
         'world-records': resolve(__dirname, 'pages/world-records/index.html'),
+        'personality-test': resolve(__dirname, 'pages/personality-test/index.html'),
       },
     },
   },
