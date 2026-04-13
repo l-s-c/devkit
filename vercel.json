@@ -17,7 +17,8 @@
     { "source": "/cron", "destination": "/pages/cron/index.html" },
     { "source": "/text-diff", "destination": "/pages/text-diff/index.html" },
     { "source": "/code-formatter", "destination": "/pages/code-formatter/index.html" },
-    { "source": "/sql-formatter", "destination": "/pages/sql-formatter/index.html" }
+    { "source": "/sql-formatter", "destination": "/pages/sql-formatter/index.html" },
+    { "source": "/personality-test", "destination": "/pages/personality-test/index.html" }
   ],
   "headers": [
     {
